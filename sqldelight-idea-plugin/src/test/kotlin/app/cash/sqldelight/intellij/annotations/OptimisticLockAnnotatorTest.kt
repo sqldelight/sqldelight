@@ -3,7 +3,7 @@ package app.cash.sqldelight.intellij.annotations
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.intellij.SqlDelightProjectTestCase
 
-class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
+class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
   fun testWorkingLock() {
     myFixture.configureByText(
       SqlDelightFileType,
@@ -40,7 +40,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -63,7 +63,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -87,7 +87,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be queried exactly like \"version == :version\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version + 1
@@ -111,7 +111,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be set exactly like \"version = :version + 1\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version + 2
@@ -136,7 +136,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be set exactly like \"version = :version + 1\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version - 1
@@ -150,7 +150,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
     myFixture.checkHighlighting()
   }
 
-  fun testLockCheckedIncorrectl() {
+  fun testLockCheckedIncorrectly() {
     myFixture.configureByText(
       SqlDelightFileType,
       """
@@ -161,7 +161,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be queried exactly like \"version == :version\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version + 1
@@ -212,7 +212,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -236,7 +236,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="This statement is missing the optimistic lock in it's SET clause.">UPDATE test
         |SET
         |  text = :text
         |WHERE
@@ -261,7 +261,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be queried exactly like \"version == :version\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version + 1
@@ -286,7 +286,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be set exactly like \"version = :version + 1\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version + 2
@@ -312,7 +312,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be set exactly like \"version = :version + 1\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version - 1
@@ -338,7 +338,7 @@ class OptimisticLockValidatorTest : SqlDelightProjectTestCase() {
         |);
         |
         |updateText:
-        |<error descr="This query updates a table with an optimistic lock but does not correctly use the lock.">UPDATE test
+        |<error descr="The optimistic lock must be queried exactly like \"version == :version\".">UPDATE test
         |SET
         |  text = :text,
         |  version = :version + 1
