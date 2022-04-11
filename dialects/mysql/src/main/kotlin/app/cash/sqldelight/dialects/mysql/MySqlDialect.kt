@@ -4,6 +4,7 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.mysql.grammar.MySqlParserUtil
 import app.cash.sqldelight.dialects.mysql.grammar.mixins.ColumnDefMixin
+import app.cash.sqldelight.dialects.mysql.grammar.mixins.MySqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.icons.AllIcons
@@ -27,6 +28,7 @@ class MySqlDialect : SqlDelightDialect {
     MySqlParserUtil.createElement = {
       when (it.elementType) {
         SqlTypes.COLUMN_DEF -> ColumnDefMixin(it)
+        SqlTypes.BINARY_EQUALITY_EXPR -> MySqlBinaryEqualityExpr(it)
         else -> currentElementCreation(it)
       }
     }

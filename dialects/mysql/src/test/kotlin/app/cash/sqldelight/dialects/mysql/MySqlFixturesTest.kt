@@ -12,7 +12,8 @@ class MySqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fi
     "TEXT" to "VARCHAR(8)",
     "AUTOINCREMENT" to "AUTO_INCREMENT",
     "?1" to ":one",
-    "?2" to ":two"
+    "?2" to ":two",
+    "==" to "=",
   )
 
   override fun setupDialect() {
