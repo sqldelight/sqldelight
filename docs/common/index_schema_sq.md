@@ -4,7 +4,7 @@ Put your SQL statements in a `.sq` file under `src/main/sqldelight`. Typically t
 -- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq
 
 CREATE TABLE hockeyPlayer (
-  player_number INTEGER NOT NULL,
+  player_number INTEGER PRIMARY KEY NOT NULL,
   full_name TEXT NOT NULL
 );
 
