@@ -17,7 +17,6 @@ import co.touchlab.stately.collections.SharedHashMap
 import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
-import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.ensureNeverFrozen
 
 sealed class ConnectionWrapper : SqlDriver {
