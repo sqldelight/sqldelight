@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 
 class ObservingTest {
-  private val o = RecordingObserver()
+  private val o = RecordingObserver(numberOfColumns = 2)
 
   private lateinit var db: TestDb
 

@@ -17,12 +17,11 @@ package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlCursor
-import app.cash.sqldelight.db.use
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 fun <T : Any> Query<T>.assert(body: QueryAssert.() -> Unit) {
-  execute().use { cursor ->
+  execute { cursor ->
     QueryAssert(cursor).apply(body)
     val remainingRows = mutableListOf<String>()
     while (cursor.next()) {

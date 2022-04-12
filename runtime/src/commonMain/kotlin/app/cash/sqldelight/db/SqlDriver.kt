@@ -24,21 +24,26 @@ import app.cash.sqldelight.Transacter
  */
 interface SqlDriver : Closeable {
   /**
-   * Execute a SQL statement and return a [SqlCursor] that iterates the result set.
+   * Execute a SQL statement and evaluate its result set using the given block.
    *
    * @param [identifier] An opaque, unique value that can be used to implement any driver-side
    *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
    * @param [sql] The SQL string to be executed.
+   * @param [mapper] A lambda which is called with the cursor when the statement is executed
+   *   successfully. The generic result of the lambda is returned to the caller, as soon as the
+   *   mutual exclusion on the database connection ends. The cursor **must not escape** the block
+   *   scope.
    * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
    */
-  fun executeQuery(
+  fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
-  ): SqlCursor
+  ): R
 
   /**
    * Execute a SQL statement.

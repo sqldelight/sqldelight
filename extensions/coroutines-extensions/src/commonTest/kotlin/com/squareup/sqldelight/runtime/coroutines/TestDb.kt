@@ -4,7 +4,6 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.use
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
 import app.cash.sqldelight.internal.setValue
@@ -34,8 +33,8 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(mapper) {
-      override fun execute(): SqlCursor {
-        return db.executeQuery(null, query, 0)
+      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+        return db.executeQuery(null, query, mapper, 0, null)
       }
 
       override fun addListener(listener: Listener) {
@@ -71,10 +70,11 @@ class TestDb(
     notify(TABLE_EMPLOYEE)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
     return transactionWithResult {
-      db.executeQuery(2, "SELECT last_insert_rowid()", 0).use {
+      val mapper: (SqlCursor) -> Long = {
         it.next()
         it.getLong(0)!!
       }
+      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0)
     }
   }
 
@@ -96,10 +96,11 @@ class TestDb(
     notify(TABLE_MANAGER)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
     return transactionWithResult {
-      db.executeQuery(2, "SELECT last_insert_rowid()", 0).use {
+      val mapper: (SqlCursor) -> Long = {
         it.next()
         it.getLong(0)!!
       }
+      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0)
     }
   }
 

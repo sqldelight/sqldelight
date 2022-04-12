@@ -802,8 +802,9 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("song"))
       |    }
       |
-      |    public override fun execute(): SqlCursor = driver.executeQuery(null,
-      |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, 1) {
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null,
+      |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
+      |        1) {
       |      bindLong(1, album_id)
       |    }
       |
@@ -895,13 +896,14 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("userEntity"))
       |    }
       |
-      |    public override fun execute(): SqlCursor = driver.executeQuery(${result.compiledFile.namedQueries[0].id}, ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${result.compiledFile.namedQueries[0].id},
+      |        ""${'"'}
       |    |WITH inserted_ids AS (
       |    |  INSERT INTO userEntity(slack_user_id)
       |    |  VALUES (?)
       |    |  RETURNING user_id AS insert_id
       |    |) SELECT insert_id FROM inserted_ids
-      |    ""${'"'}.trimMargin(), 1) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      check(this is JdbcPreparedStatement)
       |      bindString(1, slack_user_id)
       |    }

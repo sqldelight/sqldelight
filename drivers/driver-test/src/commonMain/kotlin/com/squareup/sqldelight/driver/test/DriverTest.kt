@@ -2,10 +2,10 @@ package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlDriver.Schema
 import app.cash.sqldelight.db.SqlPreparedStatement
-import app.cash.sqldelight.db.use
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
 import app.cash.sqldelight.internal.setValue
@@ -63,10 +63,11 @@ abstract class DriverTest {
   private fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection
     return transacter!!.transactionWithResult {
-      driver.executeQuery(null, "SELECT changes()", 0).use {
+      val mapper: (SqlCursor) -> Long? = {
         it.next()
         it.getLong(0)
       }
+      driver.executeQuery(null, "SELECT changes()", mapper, 0)
     }
   }
 
@@ -84,11 +85,11 @@ abstract class DriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    val query = {
-      driver.executeQuery(3, "SELECT * FROM test", 0)
+    fun query(mapper: (SqlCursor) -> Unit) {
+      driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
     }
 
-    query().use {
+    query {
       assertFalse(it.next())
     }
 
@@ -97,14 +98,14 @@ abstract class DriverTest {
       bindString(2, "Alec")
     }
 
-    query().use {
+    query {
       assertTrue(it.next())
       assertFalse(it.next())
     }
 
     assertEquals(1, changes())
 
-    query().use {
+    query {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
@@ -116,7 +117,7 @@ abstract class DriverTest {
     }
     assertEquals(1, changes())
 
-    query().use {
+    query {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
@@ -128,7 +129,7 @@ abstract class DriverTest {
     driver.execute(5, "DELETE FROM test", 0)
     assertEquals(2, changes())
 
-    query().use {
+    query {
       assertFalse(it.next())
     }
   }
@@ -149,25 +150,32 @@ abstract class DriverTest {
     }
     assertEquals(1, changes())
 
-    val query = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", 1, binders)
-    }
-    query {
-      bindString(1, "Jake")
-    }.use {
-      assertTrue(it.next())
-      assertEquals(2, it.getLong(0))
-      assertEquals("Jake", it.getString(1))
+    fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
+      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
 
+    query(
+      binders = {
+        bindString(1, "Jake")
+      },
+      mapper = {
+        assertTrue(it.next())
+        assertEquals(2, it.getLong(0))
+        assertEquals("Jake", it.getString(1))
+      }
+    )
+
     // Second time running the query is fine
-    query {
-      bindString(1, "Jake")
-    }.use {
-      assertTrue(it.next())
-      assertEquals(2, it.getLong(0))
-      assertEquals("Jake", it.getString(1))
-    }
+    query(
+      binders = {
+        bindString(1, "Jake")
+      },
+      mapper = {
+        assertTrue(it.next())
+        assertEquals(2, it.getLong(0))
+        assertEquals("Jake", it.getString(1))
+      }
+    )
   }
 
   @Test fun `SqlResultSet getters return null if the column values are NULL`() {
@@ -183,7 +191,7 @@ abstract class DriverTest {
     }
     assertEquals(1, changes())
 
-    driver.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
+    val mapper: (SqlCursor) -> Unit = {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))
@@ -191,5 +199,6 @@ abstract class DriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }
 }

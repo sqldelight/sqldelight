@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.runtime.coroutines
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.turbine.test
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.MAPPER
 import com.squareup.sqldelight.runtime.coroutines.Employee.Companion.SELECT_EMPLOYEES
@@ -46,7 +47,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -99,7 +100,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -171,7 +172,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -223,7 +224,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -286,7 +287,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun execute() = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> R): R = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }

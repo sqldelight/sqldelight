@@ -7,6 +7,7 @@ import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -176,7 +177,7 @@ class KeyedQueryPagingSourceTest {
     """.trimMargin()
 
     return object : Query<Long>({ cursor -> cursor.getLong(0)!! }) {
-      override fun execute() = driver.executeQuery(identifier = 3, sql = sql, parameters = 2) {
+      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 3, sql = sql, mapper = mapper, parameters = 2) {
         bindLong(1, limit)
         bindLong(2, anchor)
       }
@@ -196,7 +197,7 @@ class KeyedQueryPagingSourceTest {
     return object : Query<Long>(
       { cursor -> cursor.getLong(0)!! }
     ) {
-      override fun execute() = driver.executeQuery(identifier = 2, sql = sql, parameters = 2) {
+      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameters = 2) {
         bindLong(1, beginInclusive)
         bindLong(2, endExclusive)
       }
