@@ -66,8 +66,8 @@ kotlin {
     }
     browser {
       testTask {
-        useMocha {
-          timeout = "5s"
+        useKarma {
+          useChromeHeadless()
         }
       }
     }
