@@ -260,7 +260,7 @@ abstract class QueryGenerator(
         "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
       )
-    }  else {
+    } else {
       result.addStatement(
         "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
