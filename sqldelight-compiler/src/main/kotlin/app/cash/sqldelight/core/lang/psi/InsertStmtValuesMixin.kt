@@ -1,12 +1,12 @@
 package app.cash.sqldelight.core.lang.psi
 
 import app.cash.sqldelight.core.lang.acceptsTableInterface
+import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.psi.SqlDelightInsertStmtValues
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojure
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtValuesImpl
-import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.psi.util.parentOfType
 
@@ -25,7 +25,7 @@ open class InsertStmtValuesMixin(
       }
 
       val table = tableAvailable(this, parent.tableName.name).firstOrNull() ?: return
-      val columns = table.columns.map { (it.element as SqlColumnName).name }
+      val columns = table.columns.map { (it.element as NamedElement).name }
       val setColumns =
         if (parent.columnNameList.isEmpty()) {
           columns
@@ -35,11 +35,11 @@ open class InsertStmtValuesMixin(
 
       val needsDefaultValue = table.columns
         .filter { (element, _) ->
-          element is SqlColumnName &&
+          element is NamedElement &&
             element.name !in setColumns &&
-            !(element.parent as ColumnDefMixin).hasDefaultValue()
+            !(element.columnDefSource()?.hasDefaultValue() ?: return)
         }
-        .map { it.element as SqlColumnName }
+        .map { it.element as NamedElement }
       if (needsDefaultValue.size == 1) {
         annotationHolder.createErrorAnnotation(
           parent,

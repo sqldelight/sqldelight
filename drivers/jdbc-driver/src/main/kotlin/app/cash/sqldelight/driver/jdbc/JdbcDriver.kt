@@ -292,7 +292,7 @@ open class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   fun getFloat(index: Int): Float? = getAtIndex(index, resultSet::getFloat)
   override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
   fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
-  inline fun <reified T : Any> getObject(index: Int): T = resultSet.getObject(index + 1, T::class.java)
+  inline fun <reified T : Any> getObject(index: Int): T? = resultSet.getObject(index + 1, T::class.java)
   @Suppress("UNCHECKED_CAST")
   fun <T> getArray(index: Int) = getAtIndex(index, resultSet::getArray)?.array as Array<T>?
 

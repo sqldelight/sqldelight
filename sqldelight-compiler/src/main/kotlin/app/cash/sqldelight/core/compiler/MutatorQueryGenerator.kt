@@ -20,19 +20,19 @@ class MutatorQueryGenerator(
     }
 
     query.containingFile.iterateSqlFiles { psiFile ->
-      val tablesAffected = mutableListOf(query.tableEffected)
+      val tablesAffected = query.tablesAffected.toMutableList()
 
       if (foreignKeyCascadeCheck != null) {
         psiFile.sqlStmtList?.stmtList?.mapNotNull { it.createTableStmt }?.forEach { table ->
           val effected = table.findChildrenOfType<SqlForeignKeyClause>().any {
-            (it.foreignTable.name == query.tableEffected.name) && it.node.findChildByType(foreignKeyCascadeCheck) != null
+            (it.foreignTable.name in query.tablesAffected.map { it.name }) && it.node.findChildByType(foreignKeyCascadeCheck) != null
           }
           if (effected) tablesAffected.add(TableNameElement.CreateTableName(table.tableName))
         }
       }
 
       psiFile.triggers.forEach { trigger ->
-        if (trigger.tableName?.name == query.tableEffected.name) {
+        if (trigger.tableName?.name in query.tablesAffected.map { it.name }) {
           val triggered = when (query) {
             is NamedMutator.Delete -> trigger.childOfType(SqlTypes.DELETE) != null
             is NamedMutator.Insert -> {
@@ -42,7 +42,7 @@ class MutatorQueryGenerator(
             is NamedMutator.Update -> {
               val columns = trigger.columnNameList.map { it.name }
               val updateColumns = query.update.updateStmtSubsequentSetterList.map { it.columnName?.name } +
-                query.update.columnName?.name
+                query.update.columnNameList.map { it.name }
               trigger.childOfType(SqlTypes.UPDATE) != null && (
                 columns.isEmpty() ||
                   updateColumns.any { it in columns }

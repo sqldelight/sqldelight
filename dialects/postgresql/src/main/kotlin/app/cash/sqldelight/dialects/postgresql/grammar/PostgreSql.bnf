@@ -20,6 +20,8 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
@@ -48,13 +50,17 @@
 }
 overrides ::= type_name
   | column_constraint
+  | string_literal
   | bind_parameter
   | with_clause_auxiliary_stmt
   | delete_stmt_limited
   | insert_stmt
   | update_stmt_limited
+  | generated_clause
   | alter_table_rules
   | compound_select_stmt
+  | extension_expr
+  | extension_stmt
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -99,7 +105,11 @@ bind_parameter ::= ( '?' | ':' {identifier} ) {
 
 identity_clause ::= 'IDENTITY'
 
-generated_clause ::= 'GENERATED' ( ('ALWAYS' 'AS' <<expr '-1'>> 'STORED') | ( ('ALWAYS' | 'BY' 'DEFAULT') 'AS' identity_clause ) )
+generated_clause ::= 'GENERATED' ( ('ALWAYS' 'AS' <<expr '-1'>> 'STORED') | ( ('ALWAYS' | 'BY' 'DEFAULT') 'AS' identity_clause ) ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
+  override = true
+}
 
 small_int_data_type ::= 'SMALLINT' | 'INT2'
 int_data_type ::= 'INTEGER' | 'INT' | 'INT4'
@@ -137,6 +147,12 @@ delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ W
   override = true
 }
 
+string_literal ::= string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.StringLiteralMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlStringLiteral"
+  override = true
+}
+
 insert_stmt ::= [ {with_clause} ]
     INSERT INTO [ {database_name} '.' ] {table_name} [ AS {table_alias} ]
     [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values}
@@ -157,10 +173,19 @@ conflict_assign ::= {column_name} '=' conflict_value
 
 conflict_value ::= <<expr '-1'>> | DEFAULT
 
-update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name} SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] [ returning_clause ] {
+update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
+  update_set_clause
+  [ WHERE <<expr '-1'>> ]
+  [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
+  LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ]
+  [ returning_clause ]{
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
   override = true
+  pin = 4
+}
+private update_set_clause ::= SET (( {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * ) | ( '(' {column_name} ( ',' {column_name} ) * ')' ) '=' ( '(' {setter_expression} ( ',' {setter_expression} ) * ')' )) {
+  pin(".*") = 1
 }
 
 returning_clause ::= 'RETURNING' {result_column} ( ',' {result_column} ) * {
@@ -179,9 +204,18 @@ alter_table_rules ::= (
   override = true
 }
 
-alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
+alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO alter_table_column_alias {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableRenameColumnMixin"
   pin = 1
+}
+
+alter_table_column_alias ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableColumnAliasMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.AliasElement";
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  ]
 }
 
 alter_table_drop_column ::= 'DROP' [ COLUMN ] {column_name} {
@@ -194,3 +228,40 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true
 }
+
+extension_expr ::= json_expression | boolean_literal {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+  override = true
+}
+
+boolean_literal ::= 'TRUE' | 'FALSE'
+
+json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
+  pin = 2
+}
+jsona_binary_operator ::= '->' | '->>' | '#>'
+jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+
+extension_stmt ::= copy_stdin {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
+  override = true
+}
+
+copy_stdin ::= 'COPY' [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] FROM 'STDIN' [ [ 'WITH' ] '(' copy_option ( ',' copy_option) * ')' ] [ WHERE <<expr '-1'>> ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
+}
+
+copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
+copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
+copy_option_freeze ::= 'FREEZE' [ (boolean_literal) ]
+copy_option_delimiter ::= 'DELIMITER' string_literal
+copy_option_null ::= 'NULL' string_literal
+copy_option_header ::= 'HEADER' [ (boolean_literal) ]
+copy_option_quote ::= 'QUOTE' string_literal
+copy_option_escape ::= 'ESCAPE' string_literal
+copy_option_force_not_null ::= 'FORCE_NOT_NULL' '(' {column_name} ( ',' {column_name}) * ')'
+copy_option_force_null ::= 'FORCE_NULL' '(' {column_name} ( ',' {column_name}) * ')'
+copy_option_encoding ::= 'ENCODING' string_literal

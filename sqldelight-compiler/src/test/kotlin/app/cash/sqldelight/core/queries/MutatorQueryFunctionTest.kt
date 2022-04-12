@@ -469,6 +469,53 @@ class MutatorQueryFunctionTest {
     )
   }
 
+  @Test fun `bind parameters in list`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import kotlin.String;
+      |import kotlin.collections.List;
+      |
+      |CREATE TABLE paymentHistoryConfig (
+      |  a TEXT DEFAULT NULL,
+      |  b TEXT DEFAULT NULL,
+      |  c BLOB AS List<String> DEFAULT NULL,
+      |  d BLOB AS List<String> DEFAULT NULL
+      |);
+      |
+      |update:
+      |UPDATE paymentHistoryConfig
+      |SET (a, b, c, d) = (?, ?, ?, ?);
+      """.trimMargin(),
+      tempFolder
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public fun update(
+      |  a: kotlin.String?,
+      |  b: kotlin.String?,
+      |  c: kotlin.collections.List<kotlin.String>?,
+      |  d: kotlin.collections.List<kotlin.String>?,
+      |): kotlin.Unit {
+      |  driver.execute(${mutator.id}, ""${'"'}
+      |      |UPDATE paymentHistoryConfig
+      |      |SET (a, b, c, d) = (?, ?, ?, ?)
+      |      ""${'"'}.trimMargin(), 4) {
+      |        bindString(1, a)
+      |        bindString(2, b)
+      |        bindBytes(3, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
+      |        bindBytes(4, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
+      |      }
+      |  notifyQueries(-1559802298) { emit ->
+      |    emit("paymentHistoryConfig")
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
   @Test fun `mutator method generates proper method signature for all nullable fields`() {
     val file = FixtureCompiler.parseSql(
       """

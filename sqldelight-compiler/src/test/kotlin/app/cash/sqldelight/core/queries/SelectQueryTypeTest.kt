@@ -1280,18 +1280,20 @@ class SelectQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value)
-      |      }
-      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value)
-      |      }
+      |  transaction {
+      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value)
+      |        }
+      |    driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value)
+      |        }
+      |  }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1327,18 +1329,20 @@ class SelectQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value_)
-      |      }
-      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value__)
-      |      }
+      |  transaction {
+      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value_)
+      |        }
+      |    driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value__)
+      |        }
+      |  }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1374,18 +1378,20 @@ class SelectQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertTwice(value_: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value_)
-      |      }
-      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value_)
-      |      }
+      |  transaction {
+      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value_)
+      |        }
+      |    driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value_)
+      |        }
+      |  }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1421,18 +1427,20 @@ class SelectQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value_)
-      |      }
-      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value__)
-      |      }
+      |  transaction {
+      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value_)
+      |        }
+      |    driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value__)
+      |        }
+      |  }
       |  notifyQueries(-609468782) { emit ->
       |    emit("data")
       |  }
@@ -1472,18 +1480,20 @@ class SelectQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${query.idForIndex(0)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value_)
-      |      }
-      |  driver.execute(${query.idForIndex(1)}, ""${'"'}
-      |      |INSERT INTO data (value)
-      |      |  VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, value__)
-      |      }
+      |  transaction {
+      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value_)
+      |        }
+      |    driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          bindLong(1, value__)
+      |        }
+      |  }
       |  notifyQueries(${query.id}) { emit ->
       |    emit("data")
       |  }
@@ -1615,14 +1625,14 @@ class SelectQueryTypeTest {
       |  public val value_: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): R {
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): R = transactionWithResult {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          bindLong(1, value_)
       |        }
-      |    return driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
+      |    driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
       |        |SELECT value
       |        |  FROM data
       |        |  WHERE id = last_insert_rowid()

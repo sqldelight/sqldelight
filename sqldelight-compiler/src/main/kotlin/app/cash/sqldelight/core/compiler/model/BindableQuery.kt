@@ -17,26 +17,27 @@ package app.cash.sqldelight.core.compiler.model
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.acceptsTableInterface
-import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
+import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin.ValueTypeDialectType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.core.lang.util.interfaceType
 import app.cash.sqldelight.core.lang.util.sqFile
-import app.cash.sqldelight.core.lang.util.table
+import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
+import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindParameter
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
+import com.squareup.kotlinpoet.ClassName
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
@@ -54,12 +55,12 @@ abstract class BindableQuery(
    */
   internal val parameters: List<IntermediateType> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
-      val table = statement.table.tableName.parent as SqlCreateTableStmt
+      val table = statement.tableName.reference!!.resolve()!!
       return@lazy listOf(
         IntermediateType(
           ARGUMENT,
-          table.interfaceType,
-          name = allocateName(table.tableName)
+          javaType = ClassName(table.sqFile().packageName!!, allocateName(statement.tableName).capitalize()),
+          name = allocateName(statement.tableName)
         )
       )
     }
@@ -74,7 +75,7 @@ abstract class BindableQuery(
       return@lazy statement.columns.mapIndexed { index, column ->
         Argument(
           index + 1,
-          (column.columnType as ColumnTypeMixin).type().let {
+          column.type().let {
             it.copy(
               name = "${allocateName(statement.tableName)}.${it.name}"
             )
@@ -146,16 +147,20 @@ abstract class BindableQuery(
   ) {
     val current = first(condition)
     current.bindArgs.add(bindArg)
+    val newType = typeResolver.argumentType(bindArg)
 
     val newArgumentType = when {
       // If we currently have a NULL type for this argument but encounter a different type later,
       // then the new type must be nullable.
       // i.e. WHERE (:foo IS NULL OR data = :foo)
-      current.type.dialectType == NULL -> typeResolver.argumentType(bindArg)
+      current.type.dialectType == NULL -> newType
+      current.type.dialectType == INTEGER && newType.dialectType == BOOLEAN -> newType
       // If we'd previously assigned a type to this argument other than NULL, and later encounter NULL,
       // we should update the existing type to be nullable.
       // i.e. WHERE (data = :foo OR :foo IS NULL)
-      typeResolver.argumentType(bindArg).dialectType == NULL && current.type.dialectType != NULL -> current.type
+      newType.dialectType == NULL && current.type.dialectType != NULL -> current.type
+      // If the new type is just a wrapped type, use it.
+      newType.dialectType is ValueTypeDialectType -> newType
       // Nothing to update
       else -> null
     }
@@ -167,7 +172,7 @@ abstract class BindableQuery(
           index = index ?: current.index,
           type = newArgumentType.run {
             copy(
-              javaType = javaType.copy(nullable = true),
+              javaType = javaType.copy(nullable = current.type.javaType.isNullable || newType.javaType.isNullable),
               name = bindArg.bindParameter.identifier?.text ?: name
             )
           }

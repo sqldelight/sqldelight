@@ -15,10 +15,10 @@ public class TeamQueries(
   private val driver: SqlDriver,
   private val teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver) {
-  public fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) -> T):
+  public fun <T : Any> teamForCoach(coach: String, mapper: (name: Team.Name, captain: Long) -> T):
       Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Team.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!
     )
   }
@@ -32,13 +32,13 @@ public class TeamQueries(
   }
 
   public fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
-    name: String,
+    name: Team.Name,
     captain: Long,
     inner_type: Shoots.Type?,
     coach: String,
   ) -> T): Query<T> = ForInnerTypeQuery(inner_type) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Team.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!,
       cursor.getString(2)?.let { teamAdapter.inner_typeAdapter.decode(it) },
       cursor.getString(3)!!

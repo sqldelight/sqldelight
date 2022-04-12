@@ -32,6 +32,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -78,6 +79,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
     }
   }
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
+  is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
@@ -126,6 +128,14 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
           (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
+        second = ""
+      )
+    )
+  } else if (this is ColumnTypeMixin && node.getChildren(null).any { it.text == "VALUE" || it.text == "LOCK" }) {
+    listOf(
+      Pair(
+        first = (typeName.node.startOffset + typeName.node.textLength) until
+          (node.getChildren(null).single { it.text == "VALUE" || it.text == "LOCK" }.let { it.startOffset + it.textLength }),
         second = ""
       )
     )

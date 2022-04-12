@@ -25,6 +25,8 @@
   parserImports=[
     // If you want to use a token from the core grammar it must be statically imported.
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LOCK"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JAVADOC"
   ]
@@ -47,7 +49,7 @@ stmt_clojure_stmt_list ::= {stmt} ';' ( {stmt} ';' ) * {
   extends="app.cash.sqldelight.core.lang.psi.ClojureStmtListMixin"
   pin(".*") = 1
 }
-column_type ::= {type_name} [ 'AS' ('@' annotation) * java_type_name ] {
+column_type ::= {type_name} [ 'AS' ( VALUE | LOCK | ('@' annotation) * java_type_name ) ] {
   implements=[
     "com.alecstrong.sql.psi.core.psi.SqlColumnType";
     "app.cash.sqldelight.core.lang.psi.TypedColumn"
