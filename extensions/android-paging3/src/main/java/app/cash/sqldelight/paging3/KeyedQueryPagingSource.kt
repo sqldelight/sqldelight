@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.android.paging3
+package app.cash.sqldelight.paging3
 
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
