@@ -82,7 +82,8 @@ public class TeamQueries(
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(1839882838, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(1839882838,
+        """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?
@@ -105,7 +106,7 @@ public class TeamQueries(
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
     |SELECT *
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
