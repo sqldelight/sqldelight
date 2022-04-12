@@ -63,6 +63,7 @@ internal class MySqlTypeResolver(
     "unix_timestamp" -> IntermediateType(TEXT)
     "to_seconds" -> IntermediateType(INTEGER)
     "json_arrayagg" -> IntermediateType(TEXT)
+    "date_add", "date_sub" -> IntermediateType(TEXT)
     else -> null
   }
 
@@ -72,7 +73,16 @@ internal class MySqlTypeResolver(
       when {
         approximateNumericDataType != null -> REAL
         binaryDataType != null -> BLOB
-        dateDataType != null -> TEXT
+        dateDataType != null -> {
+          when (dateDataType!!.firstChild.text) {
+            "DATE" -> MySqlType.DATE
+            "TIME" -> MySqlType.TIME
+            "DATETIME" -> MySqlType.DATETIME
+            "TIMESTAMP" -> MySqlType.TIMESTAMP
+            "YEAR" -> TEXT
+            else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
+          }
+        }
         tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
           MySqlType.TINY_INT_BOOL
         } else {

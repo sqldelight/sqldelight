@@ -211,7 +211,7 @@ placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 
 alter_table_convert_character_set ::= 'CONVERT' TO 'CHARACTER' SET {identifier} [COLLATE {identifier}]
 
-extension_expr ::= if_expr | json_expression {
+extension_expr ::= if_expr | json_expression | interval_expression {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -232,6 +232,17 @@ json_expression ::= {column_name} json_binary_operator <<expr '-1'>> {
   pin = 2
 }
 json_binary_operator ::= '->' | '->>'
+
+interval_expression ::= 'INTERVAL' <<expr '-1'>> interval_unit
+
+interval_unit ::= (
+  'MICROSECOND' | 'SECOND' | 'MINUTE' | 'HOUR'
+  | 'DAY' | 'WEEK' | 'MONTH' | 'QUARTER' | 'YEAR'
+  | 'SECOND_MICROSECOND' | 'MINUTE_MICROSECOND' | 'MINUTE_SECOND'
+  | 'HOUR_MICROSECOND' | 'HOUR_SECOND' | 'HOUR_MINUTE'
+  | 'DAY_MICROSECOND' | 'DAY_SECOND' | 'DAY_MINUTE' | 'DAY_HOUR'
+  | 'YEAR_MONTH'
+)
 
 drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name} ( ',' [ {database_name} '.' ] {table_name} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDropTableStmtImpl"
