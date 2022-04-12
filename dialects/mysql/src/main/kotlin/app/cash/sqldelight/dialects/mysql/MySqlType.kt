@@ -1,4 +1,4 @@
-package app.cash.sqldelight.core.dialect.mysql
+package app.cash.sqldelight.dialects.mysql
 
 import app.cash.sqldelight.dialect.api.DialectType
 import com.squareup.kotlinpoet.BOOLEAN

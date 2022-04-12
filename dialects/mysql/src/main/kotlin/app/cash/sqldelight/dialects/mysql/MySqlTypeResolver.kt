@@ -1,9 +1,5 @@
 package app.cash.sqldelight.dialects.mysql
 
-import app.cash.sqldelight.core.dialect.mysql.MySqlType
-import app.cash.sqldelight.core.dialect.mysql.MySqlType.BIG_INT
-import app.cash.sqldelight.core.dialect.mysql.MySqlType.SMALL_INT
-import app.cash.sqldelight.core.dialect.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
@@ -13,6 +9,9 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialects.mysql.MySqlType.BIG_INT
+import app.cash.sqldelight.dialects.mysql.MySqlType.SMALL_INT
+import app.cash.sqldelight.dialects.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlExtensionExpr
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlExpr
