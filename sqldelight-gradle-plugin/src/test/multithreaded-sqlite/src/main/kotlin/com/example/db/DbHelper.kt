@@ -1,5 +1,6 @@
 package com.example.db
 
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.example.db.Database.Companion.Schema
 import com.example.db.Database.Companion.invoke
