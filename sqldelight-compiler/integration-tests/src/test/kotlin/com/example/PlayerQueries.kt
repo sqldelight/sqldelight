@@ -176,11 +176,11 @@ public class PlayerQueries(
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun execute(): SqlCursor = driver.executeQuery(null, """
+    override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
     |SELECT *
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
-    """.trimMargin(), 1) {
+    """.trimMargin(), mapper, 1) {
       bindString(1, team)
     }
 
@@ -199,13 +199,13 @@ public class PlayerQueries(
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun execute(): SqlCursor {
+    override fun <R> execute(mapper: (SqlCursor) -> R): R {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
           |SELECT *
           |FROM player
           |WHERE number IN $numberIndexes
-          """.trimMargin(), number.size) {
+          """.trimMargin(), mapper, number.size) {
             number.forEachIndexed { index, number_ ->
               bindLong(index + 1, number_)
             }
