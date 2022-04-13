@@ -2,11 +2,11 @@ package app.cash.sqldelight.intellij.inspections
 
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
-import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlVisitor
@@ -52,13 +52,20 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
       val project = o.project
       val psiManager = PsiManager.getInstance(project)
 
+      fun PsiElement.columnDef(): SqlColumnDef? {
+        if (this is SqlColumnName) return parent.columnDef()
+        if (this is SqlColumnDef) return this
+        if (this is AliasElement) return source().columnDef()
+        return null
+      }
+
       FileTypeIndex.getFiles(SqlDelightFileType, GlobalSearchScope.allScope(project))
         .mapNotNull { vFile -> psiManager.findFile(vFile) as SqlDelightFile? }
         .flatMap { file -> file.sqlStmtList?.stmtList.orEmpty() }
         .flatMap { stmt -> stmt.compoundSelectStmt?.queryExposed().orEmpty() }
         .flatMap { queryResult -> queryResult.columns }
         .forEach { column ->
-          (column.element as NamedElement).columnDefSource()?.let(candidates::remove)
+          column.element.columnDef()?.let(candidates::remove)
         }
 
       candidates.forEach { columnDef ->
