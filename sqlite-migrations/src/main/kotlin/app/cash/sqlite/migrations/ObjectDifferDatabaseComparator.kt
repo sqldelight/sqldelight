@@ -13,7 +13,11 @@ class ObjectDifferDatabaseComparator(
 ) : DatabaseComparator<CatalogDatabase> {
 
   override fun compare(db1: CatalogDatabase, db2: CatalogDatabase): DatabaseDiff {
-    return ObjectDifferDatabaseDiff(differBuilder().compare(db1.catalog, db2.catalog))
+    return ObjectDifferDatabaseDiff(
+      differBuilder().compare(db1.catalog, db2.catalog),
+      db1,
+      db2
+    )
   }
 
   private fun differBuilder() = ObjectDifferBuilder.startBuilding().apply {
@@ -50,7 +54,9 @@ class ObjectDifferDatabaseComparator(
         }
       }
 
-      private fun String.normalizeDefinition() = replace(Regex("--(.*)"), "").replace(Regex("\\s+"), "")
+      private fun String.normalizeDefinition() =
+        replace(Regex("--(.*)"), "")
+          .replace(Regex("[\\s\"]+"), "")
     })
 
     // Custom error handler for circular reference warnings which allows to override SL4J warning log

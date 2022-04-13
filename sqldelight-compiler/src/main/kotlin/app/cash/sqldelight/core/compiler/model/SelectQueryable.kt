@@ -1,12 +1,12 @@
 package app.cash.sqldelight.core.compiler.model
 
-import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement.QueryColumn
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.intellij.psi.util.PsiTreeUtil
 
 class SelectQueryable(
   override val select: SqlCompoundSelectStmt,
@@ -32,8 +32,9 @@ class SelectQueryable(
 
     // First check to see if its just the table we're observing directly.
     val tablesSelected = select.selectStmtList.flatMap {
-      it.joinClause?.tableOrSubqueryList?.mapNotNull {
-        it.tableName?.reference?.resolve()?.parentOfType<Queryable>()?.tableExposed()
+      it.joinClause?.tableOrSubqueryList?.mapNotNull { tableOrSubquery ->
+        val resolvedTable = tableOrSubquery.tableName?.reference?.resolve() ?: return@mapNotNull null
+        PsiTreeUtil.getParentOfType(resolvedTable, Queryable::class.java)?.tableExposed()
       }.orEmpty()
     }
     tablesSelected.forEach {
