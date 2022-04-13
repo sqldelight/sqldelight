@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.android.paging3
+package app.cash.sqldelight.paging3
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource.LoadParams.Refresh
