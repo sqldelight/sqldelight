@@ -18,6 +18,8 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.lang.MigrationFileType
+import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
@@ -47,6 +49,7 @@ import com.squareup.kotlinpoet.ClassName
 import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
+import kotlin.reflect.jvm.jvmName
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
   private var fileIndexes: FileIndexMap?
@@ -122,15 +125,17 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
   override var dialect: SqlDelightDialect = MissingDialect()
 
   override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
-    if (shouldInvalidate) {
+    if (shouldInvalidate || dialect::class.jvmName != this.dialect::class.jvmName) {
       Timber.i("Setting dialect from ${this.dialect} to $dialect")
       this.dialect = dialect
+      MigrationParserDefinition.stubVersion++
       val files = mutableListOf<VirtualFile>()
       ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
-        if (vFile.fileType != SqlDelightFileType) {
+        if (vFile.fileType != SqlDelightFileType && vFile.fileType != MigrationFileType) {
           return@iterateContent true
         }
         files += vFile
+        PsiManager.getInstance(project).findFile(vFile)?.subtreeChanged()
         return@iterateContent true
       }
       Timber.i("Invalidating ${files.size} files")
