@@ -1,9 +1,5 @@
 package app.cash.sqldelight.dialects.mysql
 
-import app.cash.sqldelight.core.dialect.mysql.MySqlType
-import app.cash.sqldelight.core.dialect.mysql.MySqlType.BIG_INT
-import app.cash.sqldelight.core.dialect.mysql.MySqlType.SMALL_INT
-import app.cash.sqldelight.core.dialect.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
@@ -13,6 +9,9 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialects.mysql.MySqlType.BIG_INT
+import app.cash.sqldelight.dialects.mysql.MySqlType.SMALL_INT
+import app.cash.sqldelight.dialects.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlExtensionExpr
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlExpr
@@ -63,6 +62,7 @@ internal class MySqlTypeResolver(
     "unix_timestamp" -> IntermediateType(TEXT)
     "to_seconds" -> IntermediateType(INTEGER)
     "json_arrayagg" -> IntermediateType(TEXT)
+    "date_add", "date_sub" -> IntermediateType(TEXT)
     else -> null
   }
 
@@ -72,7 +72,16 @@ internal class MySqlTypeResolver(
       when {
         approximateNumericDataType != null -> REAL
         binaryDataType != null -> BLOB
-        dateDataType != null -> TEXT
+        dateDataType != null -> {
+          when (dateDataType!!.firstChild.text) {
+            "DATE" -> MySqlType.DATE
+            "TIME" -> MySqlType.TIME
+            "DATETIME" -> MySqlType.DATETIME
+            "TIMESTAMP" -> MySqlType.TIMESTAMP
+            "YEAR" -> TEXT
+            else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
+          }
+        }
         tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
           MySqlType.TINY_INT_BOOL
         } else {

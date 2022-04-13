@@ -8,10 +8,16 @@ import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class MySqlTest {
   lateinit var connection: Connection
   lateinit var dogQueries: DogQueries
+  lateinit var datesQueries: DatesQueries
 
   @Before
   fun before() {
@@ -27,6 +33,7 @@ class MySqlTest {
 
     MyDatabase.Schema.create(driver)
     dogQueries = database.dogQueries
+    datesQueries = database.datesQueries
   }
 
   @After
@@ -68,6 +75,28 @@ class MySqlTest {
           name = "Buddy",
           breed = "Pomeranian",
           is_good = true
+        )
+      )
+  }
+
+  @Test
+  fun testDates() {
+    assertThat(
+      datesQueries.insertDate(
+        date = LocalDate.of(2020, 1, 1),
+        time = LocalTime.of(21, 30, 59),
+        datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
+        timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+        year = "2022"
+      ).executeAsOne()
+    )
+      .isEqualTo(
+        Dates(
+          date = LocalDate.of(2020, 1, 1),
+          time = LocalTime.of(21, 30, 59),
+          datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
+          timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+          year = "2022-01-01"
         )
       )
   }
