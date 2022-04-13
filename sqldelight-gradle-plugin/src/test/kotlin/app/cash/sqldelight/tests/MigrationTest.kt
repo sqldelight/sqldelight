@@ -18,11 +18,32 @@ class MigrationTest {
       |Error migrating from 1.db, fresh database looks different from migration database:
       |/tables[testView] - ADDED
       |/tables[test]/columns[test."value"]/ordinalPosition - CHANGED
+      |  BEFORE:
+      |    2
+      |  AFTER:
+      |    1
       |/tables[test]/columns[test."value"]/partOfIndex - ADDED
       |/tables[test]/columns[test.value2]/attributes{IS_NULLABLE} - CHANGED
+      |  BEFORE:
+      |    NO
+      |  AFTER:
+      |    YES
       |/tables[test]/columns[test.value2]/nullable - REMOVED
       |/tables[test]/columns[test.value2]/ordinalPosition - CHANGED
+      |  BEFORE:
+      |    1
+      |  AFTER:
+      |    2
       |/tables[test]/definition - CHANGED
+      |  BEFORE:
+      |    CREATE TABLE test (
+      |      value2 TEXT NOT NULL,
+      |      value TEXT NOT NULL
+      |    )
+      |  AFTER:
+      |    CREATE TABLE test (
+      |      value TEXT NOT NULL
+      |    , value2 TEXT)
       |/tables[test]/indexes[test.testIndex] - ADDED
       |/tables[test]/triggers[test.testTrigger] - ADDED
       |""".trimMargin()
@@ -43,7 +64,28 @@ class MigrationTest {
       |/tables[test]/indexes[test.testIndex]/columns[test.value2] - ADDED
       |/tables[test]/indexes[test.testIndex]/columns[test."value"] - REMOVED
       |/tables[test]/triggers[test.testTrigger]/actionStatement - CHANGED
+      |  BEFORE:
+      |    CREATE TRIGGER testTrigger
+      |    AFTER DELETE ON test
+      |    BEGIN
+      |    INSERT INTO test VALUES ("3", "4");
+      |    END
+      |  AFTER:
+      |    CREATE TRIGGER testTrigger
+      |    AFTER DELETE ON test
+      |    BEGIN
+      |    INSERT INTO test VALUES ("1", "2");
+      |    END
       |/tables[testView]/definition - CHANGED
+      |  BEFORE:
+      |    CREATE VIEW testView AS
+      |    SELECT *
+      |    FROM test
+      |    WHERE value = 'sup'
+      |  AFTER:
+      |    CREATE VIEW testView AS
+      |    SELECT *
+      |    FROM test
       |""".trimMargin()
     )
   }
