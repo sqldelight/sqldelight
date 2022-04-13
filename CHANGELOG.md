@@ -1,5 +1,67 @@
 # Change Log
 
+## [2.0.0-alpha02] - 2022-04-13
+### Added
+- [Compiler] Support returning at the end of a grouped statement
+- [Compiler] Support compiler extensions via dialect modules and add a SQLite JSON extension (#1379, #2087)
+- [Compiler] Support PRAGMA statements which return a value (#1106)
+- [Compiler] Support generating value types for marked columns
+- [Compiler] Add support for optimistic locks and validation (#1952)
+- [Compiler] Support multi-update statements
+- [PostgreSQL] Support postgres returning statements
+- [PostgreSQL] Support postgres date types
+- [PostgreSQL] Support pg intervals
+- [PostgreSQL] Support PG Booleans and fix inserts on alter tables
+- [PostgreSQL] Support optional limits in Postgres
+- [PostgreSQL] Support PG BYTEA type
+- [PostgreSQL] Add a test for postgres serials
+- [PostgreSQL] Support for update postgres syntax
+- [PostgreSQL] Support PostgreSQL array types
+- [PostgreSQL] Properly store/retrieve UUID types in PG
+- [PostgreSQL] Support PostgreSQL NUMERIC type (#1882)
+- [PostgreSQL] Support returning queries inside of common table expressions (#2471)
+- [PostgreSQL] Support json specific operators
+- [PostgreSQL] Add Postgres Copy (by [Philip Wedemann][hfhbd])
+- [MySQL] Support MySQL Replace
+- [MySQL] Support NUMERIC/BigDecimal MySQL types (#2051)
+- [MySQL] Support MySQL truncate statement
+- [MySQL] Support json specific operators in Mysql (by [Eliezer Graber][eygraber])
+- [MySQL] Support MySql INTERVAL (#2969 by [Eliezer Graber][eygraber])
+- [HSQL] Add HSQL Window functionality
+- [SQLite] Don't replace equality checks for nullable parameters in a WHERE (#1490 by [Eliezer Graber][eygraber])
+- [SQLite] Support Sqlite 3.35 returning statements (#1490 by [Eliezer Graber][eygraber])
+- [SQLite] Support GENERATED clause
+- [SQLite] Add support for Sqlite 3.38 dialect (by [Eliezer Graber][eygraber])
+
+### Changed
+- [Compiler] Clean up generated code a bit
+- [Compiler] Forbid usage of table parameters in grouped statements (#1822)
+- [Compiler] Put grouped queries inside a transaction (#2785)
+- [Runtime] Return the updated row count from the drivers execute method
+- [Runtime] Confine SqlCursor to the critical section accessing the connection. (#2123 by [Anders Ha][andersio])
+- [Gradle Plugin] Compare schema definitions for migrations (#841)
+- [PostgreSQL] Disallow double quotes for PG
+- [MySQL] Error on usage of == in MySQL (#2673)
+
+### Fixed
+- [Compiler] Same adapter type from different tables causing a compilation error in 2.0 alpha
+- [Compiler] Problem compiling upsert statement (#2791)
+- [Compiler] Query result should use tables in the select if there are multiple matches (#1874, #2313)
+- [Compiler] Support updating a view which has a INSTEAD OF trigger (#1018)
+- [Compiler] Support from and for in function names
+- [Compiler] Allow SEPARATOR keyword in function expressions
+- [Compiler] Cannot access ROWID of aliased table in ORDER BY
+- [Compiler] Aliased column name is not recognized in HAVING clause in MySQL
+- [Compiler] Erroneous 'Multiple columns found' error
+- [Compiler] Unable to set PRAGMA locking_mode = EXCLUSIVE;
+- [PostgreSQL] Postgresql rename column
+- [MySQL] UNIX_TIMESTAMP, TO_SECONDS, JSON_ARRAYAGG MySQL functions not recognized
+- [SQLite] fix SQLite window functionality
+- [IDE Plugin] Run the goto handler in an empty progress indicator (#2990)
+- [IDE Plugin] Ensure the highlight visitor doesnt run if the project isnt configured (#2981, #2976)
+- [IDE Plugin] Ensure transitive generated code is also updated in the IDE (#1837)
+- [IDE Plugin] Invalidate indexes when updating the dialect
+
 ## [2.0.0-alpha01] - 2022-03-31
 ### Added
 - [IDE Plugin] Basic suggested migration (by [Alexander Perfilyev][aperfilyev])
