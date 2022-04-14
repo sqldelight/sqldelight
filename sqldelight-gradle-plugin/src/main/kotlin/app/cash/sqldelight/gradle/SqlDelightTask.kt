@@ -103,7 +103,14 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
       when (generationStatus) {
         is Failure -> {
-          logger.log(ERROR, "")
+          logger.log(
+            ERROR,
+            """
+            |
+            |Compiling with dialect ${environment.dialect::class.qualifiedName}
+            |
+          """.trimMargin()
+          )
           generationStatus.errors.forEach { logger.log(ERROR, it) }
           throw SqlDelightException(
             "Generation failed; see the generator error output for details."
