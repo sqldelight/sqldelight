@@ -26,6 +26,7 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
+import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.ProjectUtil
@@ -129,22 +130,29 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
       Timber.i("Setting dialect from ${this.dialect} to $dialect")
       this.dialect = dialect
       MigrationParserDefinition.stubVersion++
-      val files = mutableListOf<VirtualFile>()
-      ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
-        if (vFile.fileType != SqlDelightFileType && vFile.fileType != MigrationFileType) {
-          return@iterateContent true
-        }
-        files += vFile
-        PsiManager.getInstance(project).findFile(vFile)?.subtreeChanged()
+      ApplicationManager.getApplication().runReadAction { invalidateAllFiles() }
+    }
+  }
+
+  private fun invalidateAllFiles() {
+    val files = mutableListOf<VirtualFile>()
+    ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
+      if (vFile.fileType != SqlDelightFileType && vFile.fileType != MigrationFileType) {
         return@iterateContent true
       }
-      Timber.i("Invalidating ${files.size} files")
-      ApplicationManager.getApplication().invokeLater {
-        if (project.isDisposed) return@invokeLater
-        Timber.i("Reparsing ${files.size} files")
-        (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
-          .reparseFiles(files, true)
+      files += vFile
+      (PsiManager.getInstance(project).findFile(vFile) as SqlFileBase?)?.apply {
+        setTreeElementPointer(null)
+        subtreeChanged()
       }
+      return@iterateContent true
+    }
+    Timber.i("Invalidating ${files.size} files")
+    ApplicationManager.getApplication().invokeLater {
+      if (project.isDisposed) return@invokeLater
+      Timber.i("Reparsing ${files.size} files")
+      (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
+        .reparseFiles(files, true)
     }
   }
 
