@@ -110,8 +110,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
             project = project,
             name = "Database",
             packageName = project.packageName(),
-            dialect = project.sqliteVersion()
-          )
+          ).apply {
+            project.sqliteVersion()?.let(::dialect)
+          }
         )
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
@@ -131,11 +132,11 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         if (database.packageName == null && android.get() && !isMultiplatform) {
           database.packageName = project.packageName()
         }
-        if (database.dialect == null && android.get() && !isMultiplatform) {
-          database.dialect = project.sqliteVersion()
+        if (!database.addedDialect && android.get() && !isMultiplatform) {
+          project.sqliteVersion()?.let(database::dialect)
         }
-        if (database.dialect == null) {
-          database.dialect = "app.cash.sqldelight:sqlite-3-18-dialect:$VERSION"
+        if (!database.addedDialect) {
+          database.dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
         database.registerTasks()
       }

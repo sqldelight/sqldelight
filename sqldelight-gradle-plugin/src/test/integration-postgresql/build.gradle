@@ -8,7 +8,7 @@ apply plugin: 'app.cash.sqldelight'
 sqldelight {
   MyDatabase {
     packageName = "app.cash.sqldelight.postgresql.integration"
-    dialect = "app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
+    dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
   }
 }
 
