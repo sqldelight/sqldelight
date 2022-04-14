@@ -87,10 +87,15 @@ internal class DatabaseFileViewProvider(
   }
 
   private fun createConnection(path: String): Connection {
+    val previousContextLoader = Thread.currentThread().contextClassLoader
     return try {
+      // When it iterates the ServiceLoader we want to make sure its on the plugins classpath.
+      Thread.currentThread().contextClassLoader = this::class.java.classLoader
       DriverManager.getConnection("jdbc:sqlite:$path")
     } catch (e: SQLException) {
       DriverManager.getConnection("jdbc:sqlite:$path")
+    } finally {
+      Thread.currentThread().contextClassLoader = previousContextLoader
     }
   }
 }
