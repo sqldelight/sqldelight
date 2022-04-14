@@ -1,5 +1,6 @@
 package app.cash.sqldelight.gradle
 
+import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source
@@ -18,7 +19,6 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  dialect: String? = null,
   var deriveSchemaFromMigrations: Boolean = false,
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
@@ -26,22 +26,22 @@ class SqlDelightDatabase(
 ) {
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isTransitive = false
-    if (dialect != null) dependencies.add(project.dependencies.create(dialect))
   }
 
   internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath").apply {
     isTransitive = false
   }
 
-  var dialect: String? = dialect
-    set(value) {
-      if (field != null) throw IllegalStateException("Can only set a single dialect.")
-      field = value
-      if (value != null) configuration.dependencies.add(project.dependencies.create(value))
-    }
+  internal var addedDialect: Boolean = false
 
   fun module(module: Any) {
     moduleConfiguration.dependencies.add(project.dependencies.create(module))
+  }
+
+  fun dialect(dialect: Any) {
+    if (addedDialect) throw IllegalStateException("Can only set a single dialect.")
+    configuration.dependencies.add(project.dependencies.create(dialect))
+    addedDialect = true
   }
 
   /**
@@ -115,13 +115,13 @@ class SqlDelightDatabase(
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
 
-    if (dialect == null) throw GradleException(
+    if (!addedDialect) throw GradleException(
       """
       A dialect is needed for SQLDelight. For example for sqlite:
 
       sqldelight {
         $name {
-          dialect = "sqlite:3.18"
+          dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
       }
       """.trimIndent()
