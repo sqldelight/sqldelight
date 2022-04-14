@@ -95,7 +95,7 @@ internal class FileIndexMap {
 
             Timber.i("Fetching SQLDelight models")
             val javaHome =
-              ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
+              ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_JAVA_HOME)
                 ?.homeDirectory?.path?.let { File(it) }
             val properties =
               connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
@@ -133,6 +133,13 @@ internal class FileIndexMap {
         EditorNotifications.getInstance(module.project).updateAllNotifications()
       } catch (externalException: ExternalSystemException) {
         // It's a gradle error, ignore and let the user fix when they try and build the project
+
+        FileIndexingNotification.getInstance(project).unconfiguredReason =
+          FileIndexingNotification.UnconfiguredReason.Incompatible(
+            """
+            Connecting with the SQLDelight plugin failed: try building from the command line.
+            """.trimIndent()
+          )
       } finally {
         fetchThread = null
         initialized = false
