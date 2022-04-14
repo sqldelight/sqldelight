@@ -60,6 +60,53 @@ class SelectQueryTypeTest {
     )
   }
 
+  @Test fun `returning clause in an update correctly generates a query function`(dialect: TestDialect) {
+    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE IF NOT EXISTS users(
+      |    id ${dialect.intType} PRIMARY KEY,
+      |    firstname ${dialect.textType} NOT NULL,
+      |    lastname ${dialect.textType} NOT NULL
+      |);
+      |
+      |update:
+      |UPDATE users SET
+      |    firstname = :firstname,
+      |    lastname = :lastname
+      |WHERE id = :id
+      |RETURNING id, firstname, lastname;
+      |""".trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect()
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> update(
+      |  firstname: kotlin.String,
+      |  lastname: kotlin.String,
+      |  id: kotlin.Int,
+      |  mapper: (
+      |    id: kotlin.Int,
+      |    firstname: kotlin.String,
+      |    lastname: kotlin.String,
+      |  ) -> T,
+      |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getLong(0)!!.toInt(),
+      |    cursor.getString(1)!!,
+      |    cursor.getString(2)!!
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
   @Test fun `query type generates properly`() {
     val file = FixtureCompiler.parseSql(
       """
