@@ -76,7 +76,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.5.2" }
+intellij = { id = "org.jetbrains.intellij", version = "1.5.3" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.9" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.19.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.4.2" } # When updating, check if we can remove base plugin from root build.gradle
