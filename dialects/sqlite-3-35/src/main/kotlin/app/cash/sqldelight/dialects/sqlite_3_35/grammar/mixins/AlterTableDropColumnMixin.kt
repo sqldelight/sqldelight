@@ -65,7 +65,7 @@ internal abstract class AlterTableDropColumnMixin(
         containingFile
           .schema(SqlCreateIndexStmt::class, this)
           .find { index ->
-            index.indexedColumnList.any { it.columnName.textMatches(columnName) }
+            index.indexedColumnList.any { it.columnName?.textMatches(columnName) == true }
           }
           ?.let { indexForColumnToDrop ->
             annotationHolder.createErrorAnnotation(
