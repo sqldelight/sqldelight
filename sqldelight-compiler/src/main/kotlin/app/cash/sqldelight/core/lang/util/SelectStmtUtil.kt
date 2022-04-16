@@ -57,7 +57,7 @@ internal fun PsiElement.referencedTables(
             .findChildOfType<SqlCompoundSelectStmt>()?.tablesObserved().orEmpty()
         }
       }
-      else -> reference!!.resolve()!!.referencedTables()
+      else -> reference?.resolve()?.referencedTables().orEmpty()
     }
   }
   else -> throw IllegalStateException("Cannot get reference table for psi type ${this.javaClass}")

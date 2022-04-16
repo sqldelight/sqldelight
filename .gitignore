@@ -1,5 +1,8 @@
 .gradle
-/.idea
+**/.idea
+sqldelight-gradle-plugin/**/gradle
+sqldelight-gradle-plugin/**/gradlew
+sqldelight-gradle-plugin/**/gradlew.bat
 *.iml
 build
 local.properties
