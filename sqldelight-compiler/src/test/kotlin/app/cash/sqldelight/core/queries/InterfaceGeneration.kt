@@ -915,6 +915,121 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `value types correctly generated`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE item (
+      |    id INTEGER PRIMARY KEY AUTOINCREMENT,
+      |    parent_id INTEGER,
+      |    children INTEGER NOT NULL
+      |);
+      |
+      |recursiveQuery:
+      |WITH RECURSIVE
+      |descendants AS (
+      |    SELECT id, parent_id
+      |    FROM item
+      |    WHERE item.id = :id
+      |    UNION ALL
+      |    SELECT item.id, item.parent_id
+      |    FROM item, descendants
+      |    WHERE item.id = descendants.parent_id
+      |)
+      |SELECT descendants.id, descendants.parent_id
+      |FROM descendants;
+      |""".trimMargin(),
+      temporaryFolder, fileName = "Recursive.sq"
+    )
+
+    val query = result.compiledFile.namedQueries[0]
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQuery.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |
+      |public data class RecursiveQuery(
+      |  public val id: Long,
+      |  public val parent_id: Long?,
+      |)
+      |""".trimMargin()
+    )
+
+    val generatedQueries = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQueries.kt"))
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class RecursiveQueries(
+      |  private val driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> recursiveQuery(id: Long, mapper: (id: Long, parent_id: Long?) -> T): Query<T>
+      |      = RecursiveQueryQuery(id) { cursor ->
+      |    mapper(
+      |      cursor.getLong(0)!!,
+      |      cursor.getLong(1)
+      |    )
+      |  }
+      |
+      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id) { id_,
+      |      parent_id ->
+      |    RecursiveQuery(
+      |      id_,
+      |      parent_id
+      |    )
+      |  }
+      |
+      |  private inner class RecursiveQueryQuery<out T : Any>(
+      |    public val id: Long,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, arrayOf("item"))
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, arrayOf("item"))
+      |    }
+      |
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${query.id},
+      |        ""${'"'}
+      |    |WITH RECURSIVE
+      |    |descendants AS (
+      |    |    SELECT id, parent_id
+      |    |    FROM item
+      |    |    WHERE item.id = ?
+      |    |    UNION ALL
+      |    |    SELECT item.id, item.parent_id
+      |    |    FROM item, descendants
+      |    |    WHERE item.id = descendants.parent_id
+      |    |)
+      |    |SELECT descendants.id, descendants.parent_id
+      |    |FROM descendants
+      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |      bindLong(1, id)
+      |    }
+      |
+      |    public override fun toString(): String = "Recursive.sq:recursiveQuery"
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",

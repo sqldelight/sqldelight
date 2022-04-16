@@ -6,6 +6,7 @@ import com.alecstrong.sql.psi.core.psi.QueryElement.QueryColumn
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlCteTableName
 import com.intellij.psi.util.PsiTreeUtil
 
 class SelectQueryable(
@@ -44,7 +45,8 @@ class SelectQueryable(
     }
 
     return@lazy select.tablesAvailable(select).firstOrNull {
-      it.query.columns.flattenCompounded() == pureColumns
+      (it.tableName.parent !is SqlCteTableName) &&
+        it.query.columns.flattenCompounded() == pureColumns
     }?.tableName
   }
 }
