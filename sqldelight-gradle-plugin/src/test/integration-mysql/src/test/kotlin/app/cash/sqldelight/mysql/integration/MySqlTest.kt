@@ -1,9 +1,12 @@
 package app.cash.sqldelight.mysql.integration
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
@@ -18,11 +21,12 @@ class MySqlTest {
   lateinit var connection: Connection
   lateinit var dogQueries: DogQueries
   lateinit var datesQueries: DatesQueries
+  lateinit var driver: JdbcDriver
 
   @Before
   fun before() {
     connection = DriverManager.getConnection("jdbc:tc:mysql:///myDb")
-    val driver = object : JdbcDriver() {
+    driver = object : JdbcDriver() {
       override fun getConnection() = connection
       override fun closeConnection(connection: Connection) = Unit
       override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
@@ -100,4 +104,26 @@ class MySqlTest {
         )
       )
   }
+
+  @Test
+  fun transactionCrashRollsBack() {
+    val transacter = SqlDriverTransacter(driver)
+
+    try {
+      transacter.transaction {
+        driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
+        afterRollback { driver.execute(null, "DROP TABLE throw_test", 0, null) }
+        throw ExpectedException()
+        Assert.fail()
+      }
+      Assert.fail()
+    } catch (_: ExpectedException) {
+      transacter.transaction {
+        driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
+      }
+    }
+  }
+
+  private class ExpectedException : Exception()
+  private class SqlDriverTransacter(driver: SqlDriver) : TransacterImpl(driver)
 }
