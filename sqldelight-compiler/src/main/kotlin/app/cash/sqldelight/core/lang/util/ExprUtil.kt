@@ -75,10 +75,6 @@ internal class AnsiSqlTypeResolver : TypeResolver {
     return functionExpr.typeReturned()
   }
 
-  override fun argumentType(bindArg: SqlBindExpr): IntermediateType {
-    return bindArg.inferredType().copy(bindArg = bindArg)
-  }
-
   override fun definitionType(typeName: SqlTypeName) =
     throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
 
@@ -165,6 +161,10 @@ internal class AnsiSqlTypeResolver : TypeResolver {
     }
     return null
   }
+}
+
+internal fun TypeResolver.argumentType(bindArg: SqlBindExpr): IntermediateType {
+  return bindArg.inferredType().copy(bindArg = bindArg)
 }
 
 private fun SqlExpr.type(): IntermediateType {

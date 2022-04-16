@@ -34,6 +34,15 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsSqliteJsonModule() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-sqlite-json"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun migrationCallbackIntegrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-migration-callbacks"))
