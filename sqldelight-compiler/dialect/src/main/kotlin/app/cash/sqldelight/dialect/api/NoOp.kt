@@ -1,6 +1,6 @@
 package app.cash.sqldelight.dialect.api
 
-class NoOp : SqlGeneratorStrategy {
+internal class NoOp : SqlGeneratorStrategy {
 
   override fun tableNameChanged(oldName: String, newName: String): String {
     return ""
