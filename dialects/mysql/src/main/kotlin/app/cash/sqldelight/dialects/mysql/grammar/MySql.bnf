@@ -51,6 +51,7 @@ overrides ::= type_name
   | drop_table_stmt
   | blob_literal
   | insert_stmt
+  | compound_select_stmt
 
 type_name ::= (
   bit_data_type |
@@ -263,3 +264,9 @@ assignment_value ::= VALUES '(' {column_name} ')' | { <<expr '-1'>> | DEFAULT}
 assignment ::= {column_name} '=' assignment_value
 
 assignment_list ::= assignment ( ',' assignment ) *
+
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ 'ORDER' 'BY' {ordering_term} ( ',' {ordering_term} ) * ] [ 'LIMIT' {limiting_term} [ ( 'OFFSET' | ',' ) {limiting_term} ] ] [ 'FOR' ( 'UPDATE' | 'SHARE') ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
+  override = true
+}

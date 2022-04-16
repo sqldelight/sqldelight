@@ -1,0 +1,12 @@
+CREATE TABLE test(
+  someColumn VARCHAR(8) NOT NULL,
+  someColumn2 VARCHAR(8) NOT NULL
+);
+
+SELECT *
+FROM test
+FOR SHARE;
+
+SELECT *
+FROM test
+FOR UPDATE;
