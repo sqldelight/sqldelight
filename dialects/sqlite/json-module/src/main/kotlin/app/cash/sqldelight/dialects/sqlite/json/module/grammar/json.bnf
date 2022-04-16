@@ -1,0 +1,27 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "SqliteJson"
+}
+overrides ::= table_or_subquery
+
+table_or_subquery ::= ( json_function_name '(' <<expr '-1'>> ( ',' <<expr '-1'>> ) * ')'
+                      | [ {database_name} '.' ] {table_name} [ [ 'AS' ] {table_alias} ] [ 'INDEXED' 'BY' {index_name} | 'NOT' 'INDEXED' ]
+                      | '(' ( {table_or_subquery} ( ',' {table_or_subquery} ) * | {join_clause} ) ')'
+                      | '(' {compound_select_stmt} ')' [ [ 'AS' ] {table_alias} ] ) {
+  mixin = "app.cash.sqldelight.dialects.sqlite.json.module.grammar.mixins.TableOrSubqueryMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery"
+  override = true
+}
+
+json_function_name ::= 'json_each' | 'json_tree' {
+  mixin = "app.cash.sqldelight.dialects.sqlite.json.module.grammar.mixins.JsonFunctionNameMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  ]
+}

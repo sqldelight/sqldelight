@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.core.lang.types.typeResolver
+import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.dialect.api.PrimitiveType

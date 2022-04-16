@@ -1,0 +1,21 @@
+CREATE TABLE user(
+  name TEXT NOT NULL PRIMARY KEY,
+  phone TEXT
+);
+
+insertUser:
+INSERT INTO user
+VALUES (?, ?);
+
+byAreaCode:
+SELECT DISTINCT user.name
+  FROM user, json_each(user.phone)
+ WHERE json_each.value LIKE :areaCode || '-%';
+
+byAreaCode2:
+SELECT name FROM user WHERE phone LIKE :areaCode || '-%'
+UNION
+SELECT user.name
+  FROM user, json_each(user.phone)
+ WHERE json_valid(user.phone)
+   AND json_each.value LIKE :areaCode || '-%';
