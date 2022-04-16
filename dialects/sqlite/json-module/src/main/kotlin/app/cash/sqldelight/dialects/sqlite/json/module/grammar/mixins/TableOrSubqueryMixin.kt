@@ -20,13 +20,15 @@ import com.intellij.psi.PsiElement
 internal abstract class TableOrSubqueryMixin(node: ASTNode?) : SqlTableOrSubqueryImpl(node), SqliteJsonTableOrSubquery {
   private val queryExposed = ModifiableFileLazy lazy@{
     if (jsonFunctionName != null) {
-      return@lazy listOf(QueryResult(
-        table = jsonFunctionName!!,
-        columns = emptyList(),
-        synthesizedColumns = listOf(
-          SynthesizedColumn(jsonFunctionName!!, acceptableValues = listOf("key", "value", "type", "atom", "id", "parent", "fullkey", "path", "json", "root"))
+      return@lazy listOf(
+        QueryResult(
+          table = jsonFunctionName!!,
+          columns = emptyList(),
+          synthesizedColumns = listOf(
+            SynthesizedColumn(jsonFunctionName!!, acceptableValues = listOf("key", "value", "type", "atom", "id", "parent", "fullkey", "path", "json", "root"))
+          )
         )
-      ))
+      )
     }
     super.queryExposed()
   }
@@ -42,7 +44,7 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode?) : SqlTableOrSubquer
   }
 }
 
-internal abstract class JsonFunctionNameMixin(node: ASTNode): SqlNamedElementImpl(node), SqlTableName, ExposableType {
+internal abstract class JsonFunctionNameMixin(node: ASTNode) : SqlNamedElementImpl(node), SqlTableName, ExposableType {
   override fun getId(): PsiElement? = null
   override fun getString(): PsiElement? = null
   override val parseRule: (PsiBuilder, Int) -> Boolean = JsonParser::json_function_name_real
