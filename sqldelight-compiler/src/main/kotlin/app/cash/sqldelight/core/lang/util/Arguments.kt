@@ -169,8 +169,10 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
     else -> {
       // Check if this is part of an inner expression of a resulit column.
       val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqlResultColumn::class.java)
-        ?: return null
-      (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
+
+      if (parentResult == null) NamedQuery("temp", SelectQueryable(compoundSelect, compoundSelect))
+        .resultColumns[resultColumnList.indexOf(result)]
+      else (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
     }
   }
 }

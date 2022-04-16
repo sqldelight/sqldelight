@@ -1718,4 +1718,27 @@ class SelectQueryFunctionTest {
         |""".trimMargin()
     )
   }
+
+  @Test fun `parameter correctly generated for union`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |query:
+      |SELECT 'foo'
+      |UNION
+      |SELECT ?;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun query(expr: kotlin.String): app.cash.sqldelight.Query<kotlin.String> = QueryQuery(expr) { cursor ->
+        |  cursor.getString(0)!!
+        |}
+        |""".trimMargin()
+    )
+  }
 }
