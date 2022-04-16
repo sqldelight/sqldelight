@@ -1,11 +1,25 @@
 plugins {
   alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.grammarKitComposer)
   alias(deps.plugins.publish)
   alias(deps.plugins.dokka)
 }
 
+grammarKit {
+  intellijRelease.set(deps.versions.idea)
+}
+
 dependencies {
   compileOnly project(':sqldelight-compiler:dialect')
+  compileOnly deps.intellij.lang
+
+  testImplementation project(':dialects:sqlite-3-18')
+  testImplementation deps.intellij.core
+  testImplementation deps.intellij.lang
+  testImplementation deps.junit
+  testImplementation deps.truth
+  testImplementation project(':sqldelight-compiler:dialect')
+  testImplementation deps.sqlPsiTestFixtures
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
