@@ -368,6 +368,38 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `postgres primary keys are non null`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  bioguide_id VARCHAR,
+      |  score_year INTEGER,
+      |  score INTEGER NOT NULL,
+      |  PRIMARY KEY(bioguide_id, score_year)
+      |);
+      |""".trimMargin(),
+      tempFolder, overrideDialect = PostgreSqlDialect()
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/Test.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Int
+      |import kotlin.String
+      |
+      |public data class Test(
+      |  public val bioguide_id: String,
+      |  public val score_year: Int,
+      |  public val score: Int,
+      |)
+      |""".trimMargin()
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/table-interface-fixtures/$fixtureRoot",
