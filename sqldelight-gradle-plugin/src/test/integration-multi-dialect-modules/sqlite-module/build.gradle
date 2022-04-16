@@ -1,0 +1,9 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'app.cash.sqldelight'
+
+sqldelight {
+  TestDb {
+    packageName = "com.example.sqlite.module"
+    dialect("app.cash.sqldelight:sqlite-3-35-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+  }
+}
