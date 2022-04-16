@@ -44,6 +44,8 @@ overrides ::= type_name
   | table_constraint
   | default_constraint
   | table_option
+  | table_or_subquery
+  | qualified_table_name
   | extension_stmt
   | alter_table_rules
   | alter_table_add_column
@@ -163,6 +165,31 @@ table_option ::= 'ENGINE' ['='] {identifier} |
 }
 
 row_format_clause ::= 'ROW_FORMAT' [ '=' ] ( DEFAULT | 'DYNAMIC' | 'FIXED' | 'COMPRESSED' | 'REDUNDANT' | 'COMPACT' )
+
+table_or_subquery ::= ( [ {database_name} '.' ] {table_name} [ [ 'AS' ] {table_alias} ] [ index_hint_list ]
+                      | '(' ( {table_or_subquery} ( ',' {table_or_subquery} ) * | {join_clause} ) ')'
+                      | '(' {compound_select_stmt} ')' [ [ 'AS' ] {table_alias} ] ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOrSubqueryImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery"
+  override = true
+}
+
+qualified_table_name ::= [ {database_name} '.' ] {table_name} [ index_hint_list ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlQualifiedTableNameImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlQualifiedTableName"
+  override = true
+}
+
+index_hint_list ::= index_hint ( index_hint ) *
+
+index_hint ::=
+  ( 'USE' ( 'INDEX' | 'KEY' ) [ 'FOR' ( 'JOIN' | 'ORDER' 'BY' | 'GROUP' 'BY' )] [index_list] )
+  |
+  ( ('IGNORE' | 'FORCE' ) ( 'INDEX' | 'KEY' ) [ 'FOR' ( 'JOIN' | 'ORDER' 'BY' | 'GROUP' 'BY' )] index_list ) {
+  pin = 1
+}
+
+index_list ::= '(' {index_name} ( ',' {index_name} ) * ')'
 
 alter_table_rules ::= (
   alter_table_add_column
