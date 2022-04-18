@@ -18,6 +18,7 @@ intellij {
       "org.jetbrains.kotlin",
       "com.intellij.gradle",
       "com.intellij.java",
+      "org.jetbrains.android"
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
     patchPluginXml {
