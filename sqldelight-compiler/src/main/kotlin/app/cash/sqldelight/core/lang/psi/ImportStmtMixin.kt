@@ -4,12 +4,12 @@ import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.core.psi.SqlDelightImportStmtList
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
-import com.intellij.extapi.psi.ASTWrapperPsiElement
+import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
 import com.intellij.lang.ASTNode
 
 abstract class ImportStmtMixin(
   node: ASTNode
-) : ASTWrapperPsiElement(node),
+) : SqlCompositeElementImpl(node),
   SqlDelightImportStmt,
   SqlAnnotatedElement {
   private fun type(): String {

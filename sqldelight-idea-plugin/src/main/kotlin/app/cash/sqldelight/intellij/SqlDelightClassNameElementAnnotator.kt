@@ -18,7 +18,6 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildOfType
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.core.psi.SqlDelightImportStmtList
 import app.cash.sqldelight.intellij.intentions.AddImportIntention
@@ -85,7 +84,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
     val className = classes.map { clazz -> findMissingNestedClassName(clazz, elementText) }
       .maxBy { it.length }
       ?.substringBefore(".") ?: return javaTypeMixin.firstChild
-    return javaTypeMixin.findChildrenOfType<PsiElement>().first { it.textMatches(className) }
+    return javaTypeMixin.children.first { it.textMatches(className) }
   }
 
   private fun findMissingNestedClassName(psiClass: ImportableType, className: String): String {

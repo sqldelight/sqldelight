@@ -25,8 +25,8 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.TableElement
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
@@ -134,7 +134,7 @@ private class SqlDelightFileViewProvider(
     threadPool.schedule(
       {
         ReadAction.nonBlocking {
-          file.findChildrenOfType<Queryable>().forEach { queryable ->
+          file.findChildrenOfType<TableElement>().forEach { queryable ->
             val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
               .mapNotNull { it.element.containingFile as? SqlDelightFile }
               .distinct()

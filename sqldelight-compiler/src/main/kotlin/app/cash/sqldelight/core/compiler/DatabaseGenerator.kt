@@ -22,15 +22,14 @@ import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
-import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
-import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
+import app.cash.sqldelight.core.lang.util.migrationFiles
+import app.cash.sqldelight.core.lang.util.queryFiles
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.module.Module
@@ -77,7 +76,7 @@ internal class DatabaseGenerator(
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
-    moduleFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+    moduleFolders.flatMap { it.queryFiles() }
       .sortedBy { it.name }
       .forEach { file ->
         // queries property added to QueryWrapper type:
@@ -120,7 +119,7 @@ internal class DatabaseGenerator(
     block: (PropertySpec) -> Unit
   ) {
     val queriesFile = sourceFolders
-      .flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+      .flatMap { it.queryFiles() }
       .sortedBy { it.name }
       .firstOrNull() ?: return
     queriesFile.tables(true)
@@ -162,7 +161,7 @@ internal class DatabaseGenerator(
       constructor.addParameter(it.name, it.type)
     }
 
-    sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+    sourceFolders.flatMap { it.queryFiles() }
       .sortedBy { it.name }
       .forEach { file ->
         var adapters = ""
@@ -184,13 +183,13 @@ internal class DatabaseGenerator(
 
     if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
-      sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+      sourceFolders.flatMap { it.queryFiles() }
         .sortedBy { it.name }
         .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
     } else {
-      val orderedMigrations = sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+      val orderedMigrations = sourceFolders.flatMap { it.migrationFiles() }
         .sortedBy { it.order }
 
       // Derive the schema from migration files.
@@ -203,7 +202,7 @@ internal class DatabaseGenerator(
 
     var maxVersion = 1
 
-    sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+    sourceFolders.flatMap { it.migrationFiles() }
       .sortedBy { it.version }
       .forEach { migrationFile ->
         try {

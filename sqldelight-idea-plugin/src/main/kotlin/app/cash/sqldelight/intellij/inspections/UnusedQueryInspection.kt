@@ -4,7 +4,6 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.util.findChildOfType
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import app.cash.sqldelight.core.psi.SqlDelightVisitor
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
@@ -28,7 +27,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.asJava.toLightMethods
-import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtFile
 
 internal class UnusedQueryInspection : LocalInspectionTool() {
 
@@ -43,8 +42,8 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
     val fileName = "${sqlDelightFile.virtualFile?.queriesName}.kt"
     val generatedFile = FilenameIndex.getFilesByName(
       sqlDelightFile.project, fileName, GlobalSearchScope.moduleScope(module)
-    ).firstOrNull() ?: return PsiElementVisitor.EMPTY_VISITOR
-    val allMethods = generatedFile.findChildrenOfType<KtNamedFunction>()
+    ).firstOrNull() as KtFile? ?: return PsiElementVisitor.EMPTY_VISITOR
+    val allMethods = generatedFile.classes[0].methods
     return object : SqlDelightVisitor() {
       override fun visitStmtIdentifier(o: SqlDelightStmtIdentifier) {
         if (o !is StmtIdentifierMixin || o.identifier() == null) {
