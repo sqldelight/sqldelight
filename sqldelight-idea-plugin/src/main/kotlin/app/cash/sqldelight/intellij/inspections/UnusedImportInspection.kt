@@ -14,6 +14,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.util.PsiTreeUtil
 
 internal class UnusedImportInspection : LocalInspectionTool() {
 
@@ -59,7 +60,8 @@ internal class UnusedImportInspection : LocalInspectionTool() {
 fun PsiFile.columnJavaTypes(): Set<String> =
   findChildrenOfType<SqlDelightColumnType>()
     .flatMap { columnType ->
-      columnType.findChildrenOfType<SqlDelightJavaType>() + columnType.findChildrenOfType<SqlDelightJavaTypeName>()
+      PsiTreeUtil.collectElements(columnType) { it is SqlDelightJavaType || it is SqlDelightJavaTypeName }
+        .asList()
     }
     .mapNotNull { it.text.substringBefore(".") }
     .toSet()

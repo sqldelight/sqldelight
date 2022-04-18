@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core.lang.util
 
+import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.acceptsTableInterface
@@ -26,6 +27,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.AliasElement
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
@@ -40,6 +42,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
@@ -95,13 +98,33 @@ private fun synthesizedColumnType(columnName: String): IntermediateType {
   return IntermediateType(dialectType, name = columnName)
 }
 
+fun PsiDirectory.queryFiles(): Sequence<SqlDelightQueriesFile> {
+  return children.asSequence().flatMap {
+    when (it) {
+      is PsiDirectory -> it.queryFiles()
+      is SqlDelightQueriesFile -> sequenceOf(it)
+      else -> emptySequence()
+    }
+  }
+}
+
+fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
+  return children.asSequence().flatMap {
+    when (it) {
+      is PsiDirectory -> it.migrationFiles()
+      is MigrationFile -> sequenceOf(it)
+      else -> emptySequence()
+    }
+  }
+}
+
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
 
-inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
+inline fun <reified T : SqlAnnotatedElement> PsiElement.findChildrenOfType(): Collection<T> {
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
 }
 
-inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+inline fun <reified T : SqlAnnotatedElement> PsiElement.findChildOfType(): T? {
   return PsiTreeUtil.findChildOfType(this, T::class.java)
 }
 
