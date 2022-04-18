@@ -5,7 +5,6 @@ import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.psi.parameterValue
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSignatureBuilder
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringExecution
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSuggestedRefactoringExecution.SuggestedMigrationData
@@ -16,6 +15,7 @@ import com.intellij.codeInspection.LocalQuickFixOnPsiElement
 import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
@@ -34,10 +34,20 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
       val file = createTable.containingFile as? SqlDelightQueriesFile ?: return
       val module = file.module ?: return
 
+      fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
+        return children.asSequence().flatMap {
+          when (it) {
+            is PsiDirectory -> it.migrationFiles()
+            is MigrationFile -> sequenceOf(it)
+            else -> emptySequence()
+          }
+        }
+      }
+
       val dbFile = file.findDbFile() ?: return
       val fileIndex = SqlDelightFileIndex.getInstance(module)
-      val topMigrationFile = fileIndex.sourceFolders(file)
-        .flatMap { it.findChildrenOfType<MigrationFile>() }
+      val topMigrationFile = fileIndex.sourceFolders(file).asSequence()
+        .flatMap { it.migrationFiles() }
         .maxByOrNull { it.version }
 
       val tables = (topMigrationFile ?: dbFile).tables(true)
