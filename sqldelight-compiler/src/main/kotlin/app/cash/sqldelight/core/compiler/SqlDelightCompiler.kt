@@ -27,6 +27,7 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -215,6 +216,8 @@ internal fun <T> tryWithElement(
 ): T {
   try {
     return block()
+  } catch (e: ProcessCanceledException) {
+    throw e
   } catch (e: Throwable) {
     val exception = IllegalStateException("Failed to compile $element :\n${element.text}")
     exception.initCause(e)
