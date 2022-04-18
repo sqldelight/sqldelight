@@ -91,5 +91,11 @@ jobs:
           name: error-report
           path: build-reports.zip
 
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: github.repository_owner == 'cashapp' # always run even if the previous step fails
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError -XX:MetaspaceSize=1g"
