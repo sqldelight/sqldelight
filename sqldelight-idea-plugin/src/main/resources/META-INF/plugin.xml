@@ -8,6 +8,7 @@
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
   <depends>com.intellij.gradle</depends>
+  <depends optional="true" config-file="com.squareup.sqldelight-withAndroid.xml">org.jetbrains.android</depends>
 
   <description><![CDATA[
       Generates typesafe Kotlin APIs from SQL, and provides language
