@@ -67,8 +67,12 @@ insert_stmt_values ::= ( VALUES ( {bind_expr} | {values_expression}
 // New rules.
 import_stmt ::= 'import' java_type ';' {
   extends="app.cash.sqldelight.core.lang.psi.ImportStmtMixin"
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
 }
-import_stmt_list ::= import_stmt *
+import_stmt_list ::= import_stmt * {
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+}
 stmt_identifier ::= [ JAVADOC ] [ {identifier} ':' ] {
   extends="app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin"
   implements="app.cash.sqldelight.core.lang.psi.StmtIdentifier"

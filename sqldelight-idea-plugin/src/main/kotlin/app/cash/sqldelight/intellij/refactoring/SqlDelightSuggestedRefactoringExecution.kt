@@ -6,7 +6,7 @@ import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.ColumnConstraints
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.lang.util.migrationFiles
 import com.intellij.ide.util.DirectoryUtil
 import com.intellij.ide.util.EditorHelper
 import com.intellij.openapi.command.WriteCommandAction
@@ -40,7 +40,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
 
     val fileIndex = SqlDelightFileIndex.getInstance(file.module ?: return null)
     val migrationFile = fileIndex.sourceFolders(file)
-      .flatMap { it.findChildrenOfType<MigrationFile>() }
+      .flatMap { it.migrationFiles() }
       .maxByOrNull { it.version }
 
     var oldList = oldSignature.parameters
@@ -198,7 +198,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
         document.insertString(document.textLength, migration)
       } else {
         fileIndex.sourceFolders(element.containingFile as SqlDelightFile)
-          .flatMap { it.findChildrenOfType<MigrationFile>() }
+          .flatMap { it.migrationFiles() }
           .firstOrNull { it.name == migrationFile.name }
           ?.let { EditorHelper.openInEditor(it) }
       }
