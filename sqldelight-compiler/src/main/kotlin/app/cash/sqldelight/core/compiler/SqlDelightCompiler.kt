@@ -44,9 +44,13 @@ object SqlDelightCompiler {
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
-    writeTableInterfaces(file, output)
-    writeQueryInterfaces(file, output)
-    writeQueries(module, dialect, file, output)
+    try {
+      writeTableInterfaces(file, output)
+      writeQueryInterfaces(file, output)
+      writeQueries(module, dialect, file, output)
+    } catch (e: InvalidElementDetectedException) {
+      // It's okay if compilation is cut short, we can just quit out.
+    }
   }
 
   fun writeInterfaces(

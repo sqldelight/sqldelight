@@ -8,4 +8,5 @@ CREATE VIEW hockeyPlayerView AS
 SELECT *
 FROM hockeyPlayer;
 
+someSelect:
 SELECT * FROM hockeyPlayerView;
