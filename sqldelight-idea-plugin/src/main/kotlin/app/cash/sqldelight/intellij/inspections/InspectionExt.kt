@@ -43,8 +43,6 @@ private inline fun <T> Any.ensureReady(
     return defaultValue()
   } catch (_: PsiInvalidElementAccessException) {
     return defaultValue()
-  } catch (e: Throwable) {
-    throw e
   }
 }
 
