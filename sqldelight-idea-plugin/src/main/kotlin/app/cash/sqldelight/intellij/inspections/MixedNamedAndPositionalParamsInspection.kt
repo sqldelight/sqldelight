@@ -10,16 +10,15 @@ import com.alecstrong.sql.psi.core.psi.SqlVisitor
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.PsiElementVisitor
 
 private val positional = "^\\?\\d*\$".toRegex()
 private val named = "^[:@$][a-zA-Z0-9]*\$".toRegex()
 
 internal class MixedNamedAndPositionalParamsInspection : LocalInspectionTool() {
 
-  override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+  override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean) = ensureReady(holder.file) {
     return object : SqlVisitor() {
-      override fun visitExpr(o: SqlExpr) {
+      override fun visitExpr(o: SqlExpr) = ignoreInvalidElements {
         if (o !is SqlBinaryExpr) return
 
         checkExpression(o)

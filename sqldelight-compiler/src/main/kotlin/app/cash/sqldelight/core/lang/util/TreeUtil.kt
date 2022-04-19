@@ -41,7 +41,6 @@ import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
@@ -57,7 +56,7 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
   return PsiTreeUtil.getParentOfType(this, R::class.java)!!
 }
 
-internal fun PsiElement.type(): IntermediateType = if (!isValid) throw ProcessCanceledException() else when (this) {
+internal fun PsiElement.type(): IntermediateType = when (this) {
   is ExposableType -> type()
   is SqlTypeName -> sqFile().typeResolver.definitionType(this)
   is AliasElement -> source().type().copy(name = name)
