@@ -44,7 +44,7 @@ class SqlDelightQueriesFile(
     }
   }
 
-  internal val namedQueries by lazy {
+  val namedQueries by lazy {
     transactions().filterIsInstance<NamedQuery>() + sqlStatements()
       .filter { typeResolver.queryWithResults(it.statement) != null && it.identifier.name != null }
       .map {
