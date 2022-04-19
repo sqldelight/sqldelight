@@ -1,9 +1,7 @@
 package app.cash.sqldelight.intellij.inspections
 
-import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.MigrationFile
-import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.psi.parameterValue
 import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSignatureBuilder
@@ -17,7 +15,6 @@ import com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
 import com.intellij.psi.SmartPointerManager
 import com.intellij.refactoring.suggested.SuggestedRefactoringSupport.Signature
@@ -29,22 +26,21 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
   override fun buildVisitor(
     holder: ProblemsHolder,
     isOnTheFly: Boolean
-  ): PsiElementVisitor = object : SqlVisitor() {
-    override fun visitCreateTableStmt(createTable: SqlCreateTableStmt) {
-      val file = createTable.containingFile as? SqlDelightQueriesFile ?: return
-      val module = file.module ?: return
+  ) = ensureReady(holder.file) {
+    object : SqlVisitor() {
+      override fun visitCreateTableStmt(createTable: SqlCreateTableStmt) = ignoreInvalidElements {
+        val dbFile = sqlDelightFile.findDbFile() ?: return
+        val topMigrationFile = fileIndex.sourceFolders(sqlDelightFile).asSequence()
+          .flatMap { it.migrationFiles() }
+          .maxByOrNull { it.version }
 
-      val dbFile = file.findDbFile() ?: return
-      val fileIndex = SqlDelightFileIndex.getInstance(module)
-      val topMigrationFile = fileIndex.sourceFolders(file).asSequence()
-        .flatMap { it.migrationFiles() }
-        .maxByOrNull { it.version }
+        val tables = (topMigrationFile ?: dbFile).tables(true)
+        val tableWithSameName = tables.find { it.tableName.name == createTable.tableName.name }
+        val signature = signatureBuilder.signature(createTable) ?: return
 
-      val tables = (topMigrationFile ?: dbFile).tables(true)
-      val tableWithSameName = tables.find { it.tableName.name == createTable.tableName.name }
-      val signature = signatureBuilder.signature(createTable) ?: return
-
-      if (tableWithSameName == null) {
+        if (tableWithSameName == null) {
+        /*
+         * TODO: Reenable this once it performs faster. Evaluating oldQuery.query is expensive.
         val tableWithDifferentName = tables.find { oldQuery ->
           val oldColumns = oldQuery.query.columns
           oldColumns.size == signature.parameters.size &&
@@ -59,27 +55,28 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
             )
           )
           return
+        }*/
+
+          holder.registerProblem(
+            createTable.tableName, "Table needs to be added in a migration", GENERIC_ERROR,
+            CreateTableMigrationQuickFix(createTable, topMigrationFile)
+          )
+          return
         }
 
-        holder.registerProblem(
-          createTable.tableName, "Table needs to be added in a migration", GENERIC_ERROR,
-          CreateTableMigrationQuickFix(createTable, topMigrationFile)
-        )
-        return
-      }
+        val oldSignature = Signature.create(
+          name = tableWithSameName.tableName.name,
+          type = null,
+          parameters = tableWithSameName.query.columns.mapNotNull { it.parameterValue() },
+          additionalData = null,
+        ) ?: return
 
-      val oldSignature = Signature.create(
-        name = tableWithSameName.tableName.name,
-        type = null,
-        parameters = tableWithSameName.query.columns.mapNotNull { it.parameterValue() },
-        additionalData = null,
-      ) ?: return
-
-      if (oldSignature != signature) {
-        holder.registerProblem(
-          createTable.tableName, "Table needs to be altered in a migration", GENERIC_ERROR,
-          AlterTableMigrationQuickFix(createTable, oldSignature, signature)
-        )
+        if (oldSignature != signature) {
+          holder.registerProblem(
+            createTable.tableName, "Table needs to be altered in a migration", GENERIC_ERROR,
+            AlterTableMigrationQuickFix(createTable, oldSignature, signature)
+          )
+        }
       }
     }
   }

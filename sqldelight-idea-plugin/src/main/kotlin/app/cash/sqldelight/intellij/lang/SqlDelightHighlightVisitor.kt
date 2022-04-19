@@ -19,8 +19,6 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.psi.util.PsiTreeUtil
 
 class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
 
@@ -108,14 +106,10 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
   }
 
   private fun visitImportStmt(o: SqlDelightImportStmt) {
-    PsiTreeUtil.findChildrenOfType(o, LeafPsiElement::class.java).forEach {
-      if (it.textMatches("import")) {
-        val info = HighlightInfo.newHighlightInfo(createSymbolTypeInfo(SQL_TYPE_NAME))
-          .range(it.textRange)
-          .create()
-        myHolder?.add(info)
-      }
-    }
+    val info = HighlightInfo.newHighlightInfo(createSymbolTypeInfo(SQL_TYPE_NAME))
+      .range(o.firstChild.textRange)
+      .create()
+    myHolder?.add(info)
   }
 
   private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {

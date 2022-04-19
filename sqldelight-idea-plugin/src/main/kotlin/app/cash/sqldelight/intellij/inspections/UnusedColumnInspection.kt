@@ -1,12 +1,9 @@
 package app.cash.sqldelight.intellij.inspections
 
-import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.findChildOfType
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
-import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlVisitor
@@ -19,7 +16,6 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.ReadOnlyModificationException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
@@ -35,44 +31,38 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
     session: LocalInspectionToolSession
-  ): PsiElementVisitor = object : SqlVisitor() {
-    override fun visitCreateTableStmt(o: SqlCreateTableStmt) {
-      val candidates = o.findChildrenOfType<SqlColumnDef>()
-        .filter { columnDef ->
-          val columnName = columnDef.columnName
-          ReferencesSearch.search(columnName, columnName.useScope)
-            .allMatch { reference -> reference.element.parent is SqlColumnDef }
-        }
-        .toMutableList()
+  ) = ensureReady(session.file) {
+    object : SqlVisitor() {
+      override fun visitCreateTableStmt(o: SqlCreateTableStmt) = ignoreInvalidElements {
+        val candidates = o.columnDefList
+          .filter { columnDef ->
+            val columnName = columnDef.columnName
+            ReferencesSearch.search(columnName, columnName.useScope)
+              .allMatch { reference -> reference.element.parent is SqlColumnDef }
+          }
+          .toMutableList()
 
-      if (candidates.isEmpty()) {
-        return
-      }
-
-      val project = o.project
-      val psiManager = PsiManager.getInstance(project)
-
-      fun PsiElement.columnDef(): SqlColumnDef? {
-        if (this is SqlColumnName) return parent.columnDef()
-        if (this is SqlColumnDef) return this
-        if (this is AliasElement) return source().columnDef()
-        return null
-      }
-
-      FileTypeIndex.getFiles(SqlDelightFileType, GlobalSearchScope.allScope(project))
-        .mapNotNull { vFile -> psiManager.findFile(vFile) as SqlDelightFile? }
-        .flatMap { file -> file.sqlStmtList?.stmtList.orEmpty() }
-        .flatMap { stmt -> stmt.compoundSelectStmt?.queryExposed().orEmpty() }
-        .flatMap { queryResult -> queryResult.columns }
-        .forEach { column ->
-          column.element.columnDef()?.let(candidates::remove)
+        if (candidates.isEmpty()) {
+          return
         }
 
-      candidates.forEach { columnDef ->
-        holder.registerProblem(
-          columnDef.columnName, "Unused symbol", ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-          SafeDeleteQuickFix(o, columnDef)
-        )
+        val project = o.project
+        val psiManager = PsiManager.getInstance(project)
+
+        FileTypeIndex.getFiles(SqlDelightFileType, GlobalSearchScope.allScope(project)).asSequence()
+          .mapNotNull { vFile -> psiManager.findFile(vFile) as SqlDelightQueriesFile? }
+          .flatMap { file -> file.namedQueries }
+          .flatMap { it.resultColumns.mapNotNull { it.column } }
+          .forEach { column ->
+            column.let(candidates::remove)
+          }
+
+        candidates.forEach { columnDef ->
+          holder.registerProblem(
+            columnDef.columnName, "Unused symbol", ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+            SafeDeleteQuickFix(o, columnDef)
+          )
+        }
       }
     }
   }
