@@ -1,7 +1,5 @@
 package app.cash.sqldelight.intellij.inspections
 
-import app.cash.sqldelight.core.SqlDelightProjectService
-import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.isColumnSameAs
 import app.cash.sqldelight.core.lang.psi.isTypeSameAs
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -12,7 +10,6 @@ import com.alecstrong.sql.psi.core.psi.SqlJoinConstraint
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.LocalInspectionTool
-import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.psi.PsiFile
 
@@ -21,15 +18,7 @@ internal class MismatchJoinColumnInspection : LocalInspectionTool() {
     file: PsiFile,
     manager: InspectionManager,
     isOnTheFly: Boolean
-  ): Array<ProblemDescriptor> {
-    if (file !is SqlDelightFile) return emptyArray()
-
-    val projectService = SqlDelightProjectService.getInstance(file.project)
-    if (file.module?.let { module -> projectService.fileIndex(module).isConfigured } != true) {
-      // Do not attempt to inspect the file types if the project is not configured yet.
-      return emptyArray()
-    }
-
+  ) = ensureFileReady(file) {
     val joinConstraints = file.findChildrenOfType<SqlJoinConstraint>()
       .mapNotNull { it.expr?.binaryEqualityExpr() }
 

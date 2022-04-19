@@ -4,4 +4,5 @@ CREATE TABLE example2 (
   dateTime TEXT
 );
 
+someSelect:
 SELECT date, time FROM example2;

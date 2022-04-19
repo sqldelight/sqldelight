@@ -8,7 +8,6 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.PsiElementVisitor
 
 internal class NullEqualityInspection : LocalInspectionTool() {
 
@@ -16,10 +15,10 @@ internal class NullEqualityInspection : LocalInspectionTool() {
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
     session: LocalInspectionToolSession
-  ): PsiElementVisitor {
+  ) = ensureReady(session.file) {
     return object : SqlVisitor() {
 
-      override fun visitBinaryEqualityExpr(o: SqlBinaryEqualityExpr) {
+      override fun visitBinaryEqualityExpr(o: SqlBinaryEqualityExpr) = ignoreInvalidElements {
         val exprList = o.getExprList()
         if (exprList.size < 2) return
         val (expr1, expr2) = exprList

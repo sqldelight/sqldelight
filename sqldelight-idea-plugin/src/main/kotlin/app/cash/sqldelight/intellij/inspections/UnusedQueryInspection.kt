@@ -1,6 +1,5 @@
 package app.cash.sqldelight.intellij.inspections
 
-import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.util.findChildOfType
@@ -15,12 +14,10 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.ReadOnlyModificationException
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiInvalidElementAccessException
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -30,22 +27,18 @@ import org.jetbrains.kotlin.asJava.toLightMethods
 import org.jetbrains.kotlin.psi.KtFile
 
 internal class UnusedQueryInspection : LocalInspectionTool() {
-
   override fun buildVisitor(
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
     session: LocalInspectionToolSession
-  ): PsiElementVisitor {
-    val sqlDelightFile = session.file as SqlDelightFile
-    val module =
-      ModuleUtil.findModuleForPsiElement(sqlDelightFile) ?: return PsiElementVisitor.EMPTY_VISITOR
+  ) = ensureReady(session.file) {
     val fileName = "${sqlDelightFile.virtualFile?.queriesName}.kt"
     val generatedFile = FilenameIndex.getFilesByName(
       sqlDelightFile.project, fileName, GlobalSearchScope.moduleScope(module)
     ).firstOrNull() as KtFile? ?: return PsiElementVisitor.EMPTY_VISITOR
     val allMethods = generatedFile.classes[0].methods
     return object : SqlDelightVisitor() {
-      override fun visitStmtIdentifier(o: SqlDelightStmtIdentifier) {
+      override fun visitStmtIdentifier(o: SqlDelightStmtIdentifier) = ignoreInvalidElements {
         if (o !is StmtIdentifierMixin || o.identifier() == null) {
           return
         }
@@ -54,16 +47,8 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
         }
         for (generatedMethod in generatedMethods) {
           val lightMethods = generatedMethod.toLightMethods()
-          for (psiMethod in lightMethods) {
-            val reference = try {
-              ReferencesSearch.search(psiMethod, psiMethod.useScope).findFirst()
-            } catch (e: PsiInvalidElementAccessException) {
-              // Failing during this search should be non fatal and ignored.
-              return
-            }
-            if (reference != null) {
-              return
-            }
+          if (lightMethods.any { ReferencesSearch.search(it, it.useScope).findFirst() != null }) {
+            return
           }
         }
         holder.registerProblem(
