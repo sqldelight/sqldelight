@@ -27,7 +27,7 @@ internal inline fun PsiElementVisitor.ignoreInvalidElements(block: () -> Unit) {
   }
 }
 
-private inline fun <T> Any.ensureReady(
+private inline fun <T> ensureReady(
   file: PsiFile,
   defaultValue: () -> T,
   block: InspectionProperties.() -> T

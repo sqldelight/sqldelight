@@ -36,7 +36,6 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiManager
@@ -202,7 +201,6 @@ private class SqlDelightFileViewProvider(
   private fun writeFiles(fileContent: Map<GeneratedFile, StringBuilder>?) {
     if (fileContent == null) return
 
-    PsiDocumentManager.getInstance(this.file.project).commitAllDocuments()
     ApplicationManager.getApplication().runWriteAction {
       val files = mutableListOf<VirtualFile>()
       fileContent.forEach { (file, content) ->
