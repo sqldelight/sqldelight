@@ -1,7 +1,6 @@
 package app.cash.sqldelight.intellij.run
 
-import app.cash.sqldelight.intellij.util.dialectPreset
-import app.cash.sqldelight.intellij.util.isSqlite
+import app.cash.sqldelight.core.SqlDelightProjectService
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.ide.util.propComponentProperty
 import com.intellij.openapi.actionSystem.AnAction
@@ -34,7 +33,7 @@ internal class SelectConnectionTypeAction : AnAction() {
 
   override fun update(e: AnActionEvent) {
     val project = e.project ?: return
-    e.presentation.isEnabledAndVisible = project.dialectPreset.isSqlite
+    e.presentation.isEnabledAndVisible = SqlDelightProjectService.getInstance(project).dialect.isSqlite
   }
 }
 
@@ -88,7 +87,8 @@ internal class SelectConnectionTypeDialog(
           row {
             textFieldWithHistoryWithBrowseButton(
               browseDialogTitle = "Choose File",
-              value = options.filePath,
+              getter = { options.filePath },
+              setter = { options.filePath = it },
               fileChooserDescriptor = FileTypeDescriptor("Choose File", "db"),
               historyProvider = { recentsManager.getRecentEntries(RECENT_DB_PATH).orEmpty() },
               fileChosen = { vFile ->

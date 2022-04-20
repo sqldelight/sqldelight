@@ -1,12 +1,10 @@
 package app.cash.sqldelight.intellij.run
 
-import app.cash.sqldelight.intellij.util.dialectPreset
-import app.cash.sqldelight.intellij.util.isSqlite
+import app.cash.sqldelight.core.SqlDelightProjectService
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.SQLException
 
 internal interface ConnectionManager {
   fun getConnection(): Connection
@@ -27,19 +25,18 @@ internal class ConnectionManagerImpl(private val project: Project) : ConnectionM
   }
 
   override fun getConnection(): Connection {
-    val dialect = project.dialectPreset
-    if (!dialect.isSqlite) {
-      throw SQLException("Unsupported dialect $dialect")
+    if (!SqlDelightProjectService.getInstance(project).dialect.isSqlite) {
+      throw IllegalArgumentException("Unsupported dialect")
     }
 
     val connectionType = connectionOptions.connectionType
     if (connectionType != ConnectionType.FILE) {
-      throw SQLException("Unsupported connection type $connectionType")
+      throw IllegalArgumentException("Unsupported connection type $connectionType")
     }
 
     val filePath = connectionOptions.filePath
     if (filePath.isEmpty()) {
-      throw SQLException("The file path is empty")
+      throw IllegalArgumentException("The file path is empty")
     }
 
     return DriverManager.getConnection("jdbc:sqlite:$filePath")

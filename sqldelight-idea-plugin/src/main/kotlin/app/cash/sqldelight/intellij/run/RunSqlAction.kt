@@ -1,7 +1,6 @@
 package app.cash.sqldelight.intellij.run
 
-import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
@@ -71,21 +70,7 @@ internal class RunSqlAction(
     sqlStmt: SqlStmt,
     identifier: StmtIdentifierMixin
   ): List<SqlParameter> {
-    val bindableQuery = when {
-      sqlStmt.compoundSelectStmt != null -> NamedQuery(
-        identifier.name!!, sqlStmt.compoundSelectStmt!!, identifier
-      )
-      sqlStmt.deleteStmtLimited != null -> NamedMutator.Delete(
-        sqlStmt.deleteStmtLimited!!, identifier
-      )
-      sqlStmt.insertStmt != null -> NamedMutator.Insert(
-        sqlStmt.insertStmt!!, identifier
-      )
-      sqlStmt.updateStmtLimited != null -> NamedMutator.Update(
-        sqlStmt.updateStmtLimited!!, identifier
-      )
-      else -> null
-    } ?: return emptyList()
+    val bindableQuery = NamedExecute(identifier, sqlStmt)
     val offset = sqlStmt.textOffset
     val argumentList: List<IntRange> = bindableQuery.arguments
       .flatMap { it.bindArgs }
