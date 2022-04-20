@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.run
 
+import app.cash.sqldelight.core.ConnectionManager
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.filters.TextConsoleBuilderFactory
 import com.intellij.execution.ui.ConsoleView
@@ -51,7 +52,7 @@ internal class SqlDelightStatementExecutorImpl @NonInjectable @TestOnly construc
       val path = connectionOptions.filePath
       if (path.isEmpty()) return
 
-      connectionManager.getConnection().use { connection ->
+      connectionManager.getConnection(path).use { connection ->
         val statement = connection.createStatement()
         val hasResult = statement.execute(sqlStmt)
         if (hasResult) {
