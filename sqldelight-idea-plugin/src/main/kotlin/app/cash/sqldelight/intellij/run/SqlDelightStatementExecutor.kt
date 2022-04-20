@@ -2,7 +2,7 @@ package app.cash.sqldelight.intellij.run
 
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.filters.TextConsoleBuilderFactory
-import com.intellij.execution.impl.ConsoleViewImpl
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.execution.ui.RunContentManager
@@ -67,7 +67,7 @@ internal class SqlDelightStatementExecutorImpl @NonInjectable @TestOnly construc
     }
   }
 
-  private fun getConsoleView(project: Project): ConsoleViewImpl? {
+  private fun getConsoleView(project: Project): ConsoleView? {
     val consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).console
     val toolbarActions = DefaultActionGroup()
     val panel: JComponent = JPanel(BorderLayout())
@@ -80,10 +80,10 @@ internal class SqlDelightStatementExecutorImpl @NonInjectable @TestOnly construc
     toolbarActions.addAll(*consoleView.createConsoleActions())
     toolbarActions.add(CloseAction(executor, descriptor, project))
     RunContentManager.getInstance(project).showRunContent(executor, descriptor)
-    return descriptor.executionConsole as? ConsoleViewImpl
+    return descriptor.executionConsole as? ConsoleView
   }
 
-  private fun processResultSet(consoleView: ConsoleViewImpl, resultSet: ResultSet) {
+  private fun processResultSet(consoleView: ConsoleView, resultSet: ResultSet) {
     val metaData = resultSet.metaData
     val range = 1..metaData.columnCount
     val columnNames = range.map(metaData::getColumnName)
