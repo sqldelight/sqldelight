@@ -13,7 +13,8 @@ class RunSqliteAnnotatorTest : SqlDelightFixtureTestCase() {
       filePath = "/path/to/file"
     }
     myFixture.configureByText(
-      SqlDelightFileType, """
+      SqlDelightFileType,
+      """
       |CREATE TABLE test ( <caret>
       | id INTEGER
       |);
@@ -29,7 +30,8 @@ class RunSqliteAnnotatorTest : SqlDelightFixtureTestCase() {
       connectionType = ConnectionType.NONE
     }
     myFixture.configureByText(
-      SqlDelightFileType, """
+      SqlDelightFileType,
+      """
       |CREATE TABLE test ( <caret>
       | id INTEGER
       |);
