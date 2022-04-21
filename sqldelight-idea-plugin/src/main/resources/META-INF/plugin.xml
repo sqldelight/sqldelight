@@ -106,9 +106,6 @@
 
     <projectService serviceInterface="app.cash.sqldelight.core.SqlDelightProjectService"
         serviceImplementation="app.cash.sqldelight.intellij.ProjectService"/>
-    <projectService serviceInterface="app.cash.sqldelight.intellij.run.SqlDelightStatementExecutor"
-        serviceImplementation="app.cash.sqldelight.intellij.run.SqlDelightStatementExecutorImpl"/>
-
     <highlightVisitor implementation="app.cash.sqldelight.intellij.lang.SqlDelightHighlightVisitor"/>
 
     <!-- Migration Extensions -->
