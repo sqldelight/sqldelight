@@ -3,6 +3,7 @@ package app.cash.sqldelight.dialects.postgresql.ide
 import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.openapi.project.Project
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import java.sql.Connection
 import java.sql.DriverManager
@@ -47,7 +48,8 @@ internal class PostgresConnectionManager : ConnectionManager {
     }
   }
 
-  private data class ConnectionSettings(
+  @JsonClass(generateAdapter = true)
+  internal data class ConnectionSettings(
     val host: String,
     val port: String,
     val databaseName: String?,
