@@ -208,7 +208,7 @@ fun PsiElement.rawSqlText(
     ).second
 }
 
-internal val PsiElement.range: IntRange
+val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(

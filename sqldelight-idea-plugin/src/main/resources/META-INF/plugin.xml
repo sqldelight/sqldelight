@@ -61,6 +61,8 @@
         implementationClass="app.cash.sqldelight.intellij.SqlDelightClassNameElementAnnotator"/>
     <annotator language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.inspections.OptimisticLockAnnotator"/>
+    <annotator language="SqlDelight"
+        implementationClass="app.cash.sqldelight.intellij.run.SqlDelightRunAnnotator"/>
     <completion.contributor language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
     <completion.contributor language="SqlDelight"
