@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.lang
 
-import app.cash.sqldelight.core.ConnectionManager
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.lang.Language
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
@@ -63,8 +63,10 @@ internal class DatabaseFileViewProvider(
 
     val virtualFile = super.getVirtualFile()
     try {
-      val connectionManager = ConnectionManager.getInstance(manager.project)
-      val statements = connectionManager.getConnection(virtualFile.path).use {
+      val connectionManager = SqlDelightProjectService.getInstance(manager.project)
+        .dialect.connectionManager() ?: return null
+      val properties = ConnectionProperties("temp",  virtualFile.path)
+      val statements = connectionManager.getConnection(properties).use {
         it.prepareStatement("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL;").use {
           it.executeQuery().use {
             mutableListOf<String>().apply {

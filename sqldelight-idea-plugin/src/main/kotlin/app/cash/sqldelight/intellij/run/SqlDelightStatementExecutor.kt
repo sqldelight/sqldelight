@@ -1,58 +1,35 @@
 package app.cash.sqldelight.intellij.run
 
-import app.cash.sqldelight.core.ConnectionManager
-import com.intellij.execution.executors.DefaultRunExecutor
+import app.cash.sqldelight.core.lang.psi.StmtIdentifier
+import app.cash.sqldelight.dialect.api.ConnectionManager
+import app.cash.sqldelight.intellij.run.window.createWithConnectionSidePanel
 import com.intellij.execution.filters.TextConsoleBuilderFactory
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
-import com.intellij.execution.ui.RunContentDescriptor
-import com.intellij.execution.ui.RunContentManager
-import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import com.intellij.serviceContainer.NonInjectable
+import com.intellij.openapi.wm.ToolWindowManager
 import com.jakewharton.picnic.BorderStyle
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.renderText
 import com.jakewharton.picnic.table
-import org.jetbrains.annotations.TestOnly
 import java.awt.BorderLayout
 import java.sql.ResultSet
 import java.sql.SQLException
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-internal interface SqlDelightStatementExecutor {
-  fun execute(sqlStmt: String)
-
-  companion object {
-    fun getInstance(project: Project): SqlDelightStatementExecutor {
-      return ServiceManager.getService(project, SqlDelightStatementExecutor::class.java)!!
-    }
-  }
-}
-
-internal class SqlDelightStatementExecutorImpl @NonInjectable @TestOnly constructor(
+internal class SqlDelightStatementExecutor(
   private val project: Project,
   private val connectionManager: ConnectionManager
-) : SqlDelightStatementExecutor {
-
-  @Suppress("unused")
-  constructor(project: Project) : this(
-    project = project,
-    connectionManager = ConnectionManager.getInstance(project)
-  )
-
-  override fun execute(sqlStmt: String) {
-    val consoleView = getConsoleView(project) ?: return
+) {
+  fun execute(sqlStmt: String, identifier: StmtIdentifier?) {
+    val consoleView = getConsoleView(project, identifier) ?: return
     try {
       val connectionOptions = ConnectionOptions(project)
-      val path = connectionOptions.filePath
-      if (path.isEmpty()) return
 
-      connectionManager.getConnection(path).use { connection ->
+      connectionManager.getConnection(connectionOptions.selectedProperties()).use { connection ->
         val statement = connection.createStatement()
         val hasResult = statement.execute(sqlStmt)
         if (hasResult) {
@@ -68,7 +45,11 @@ internal class SqlDelightStatementExecutorImpl @NonInjectable @TestOnly construc
     }
   }
 
-  private fun getConsoleView(project: Project): ConsoleView? {
+  private fun getConsoleView(project: Project, identifier: StmtIdentifier?): ConsoleView? {
+    val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("SqlDelight") ?: return null
+    val contentManager = toolWindow.contentManager
+
+    // Create the console view.
     val consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).console
     val toolbarActions = DefaultActionGroup()
     val panel: JComponent = JPanel(BorderLayout())
@@ -76,12 +57,21 @@ internal class SqlDelightStatementExecutorImpl @NonInjectable @TestOnly construc
     val toolbar = ActionManager.getInstance().createActionToolbar("RunIdeConsole", toolbarActions, false)
     toolbar.setTargetComponent(consoleView.component)
     panel.add(toolbar.component, BorderLayout.WEST)
-    val descriptor = RunContentDescriptor(consoleView, null, panel, "SqlDelight")
-    val executor = DefaultRunExecutor.getRunExecutorInstance()
-    toolbarActions.addAll(*consoleView.createConsoleActions())
-    toolbarActions.add(CloseAction(executor, descriptor, project))
-    RunContentManager.getInstance(project).showRunContent(executor, descriptor)
-    return descriptor.executionConsole as? ConsoleView
+
+    // Create a new content tab inside the tool window.
+    val newExecution = contentManager.createWithConnectionSidePanel(
+      project,
+      connectionManager,
+      consoleView.component,
+      name = identifier?.name ?: "SQL"
+    )
+    contentManager.addContent(newExecution)
+
+    // Request that the content is focused.
+    contentManager.setSelectedContent(newExecution, true)
+    toolWindow.activate(null)
+
+    return consoleView
   }
 
   private fun processResultSet(consoleView: ConsoleView, resultSet: ResultSet) {

@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.6.21"
+kotlin = "1.6.10"
 dokka = "1.6.10"
 kotlinCoroutines = "1.6.1"
 idea = "211.7628.21" # Android Studio Bumblebee (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
@@ -45,6 +45,7 @@ picnic = { module = "com.jakewharton.picnic:picnic", version = "0.6.0" }
 
 intellij-java = { module = "com.jetbrains.intellij.java:java-psi", version.ref = "idea" }
 intellij-core = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
+intellij-core-ui = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "idea" }
 intellij-lang = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }

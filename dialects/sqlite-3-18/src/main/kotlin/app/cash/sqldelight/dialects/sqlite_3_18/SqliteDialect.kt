@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialects.sqlite_3_18
 
+import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.sqlite_3_18.grammar.SqliteParserUtil
@@ -45,6 +46,8 @@ open class SqliteDialect : SqlDelightDialect {
       }
     }
   }
+
+  override fun connectionManager() = SqliteConnectionManager()
 
   private fun registerTypeHolder() {
     ApplicationManager.getApplication()?.apply {

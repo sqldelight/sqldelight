@@ -3,9 +3,11 @@ package app.cash.sqldelight.intellij.run
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.psi.StmtIdentifier
 import app.cash.sqldelight.core.lang.util.findChildOfType
 import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.dialect.api.ConnectionManager
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -13,13 +15,16 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
 import org.jetbrains.annotations.VisibleForTesting
+import org.jetbrains.kotlin.psi.psiUtil.getPrevSiblingIgnoringWhitespace
 
 @VisibleForTesting
 internal class RunSqlAction(
   private val stmt: SqlStmt,
+  private val connectionManager: ConnectionManager,
   private val project: Project = stmt.project,
-  private val executor: SqlDelightStatementExecutor = SqlDelightStatementExecutor.getInstance(
-    project
+  private val executor: SqlDelightStatementExecutor = SqlDelightStatementExecutor(
+    project,
+    connectionManager,
   ),
   private val dialogFactory: ArgumentsInputDialog.Factory = ArgumentsInputDialogFactoryImpl()
 ) : AnAction() {
@@ -37,7 +42,8 @@ internal class RunSqlAction(
 
       bindParameters(sql, dialog.result) ?: return
     }
-    executor.execute(sqlStmt)
+    val identifier = stmt.getPrevSiblingIgnoringWhitespace() as? StmtIdentifier
+    executor.execute(sqlStmt, identifier)
   }
 
   private fun findParameters(

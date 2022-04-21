@@ -242,15 +242,5 @@
         text="Delete By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>
-
-    <group id="app.cash.sqldelight.intellij.actions.SqlDelightActionGroup"
-        text="SQLDelight"
-        popup="true">
-      <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="KotlinToolsGroup"/>
-
-      <action id="app.cash.sqldelight.intellij.run.SelectConnectionTypeAction"
-          class="app.cash.sqldelight.intellij.run.SelectConnectionTypeAction"
-          text="Select Connection Type"/>
-    </group>
   </actions>
 </idea-plugin>

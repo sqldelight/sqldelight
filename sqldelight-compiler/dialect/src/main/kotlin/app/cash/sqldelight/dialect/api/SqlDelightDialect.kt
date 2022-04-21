@@ -42,4 +42,6 @@ interface SqlDelightDialect {
    * Called when this dialect should initialize its parser.
    */
   fun setup()
+
+  fun connectionManager(): ConnectionManager? = null
 }

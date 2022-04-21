@@ -1,5 +1,7 @@
 package app.cash.sqldelight.intellij.run
 
+import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.dialect.api.ConnectionManager
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlVisitor
 import com.intellij.icons.AllIcons
@@ -15,27 +17,22 @@ internal class RunSqliteAnnotator(
 ) : SqlVisitor() {
 
   override fun visitStmt(o: SqlStmt) {
-    if (connectionOptions.connectionType != ConnectionType.FILE) {
-      return
-    }
-
-    val filePath = connectionOptions.filePath
-    if (filePath.isEmpty()) {
-      return
-    }
+    val connectionManager = SqlDelightProjectService.getInstance(o.project).dialect.connectionManager() ?: return
+    if (connectionOptions.selectedOption.isEmpty()) return
 
     holder.newAnnotation(HighlightSeverity.INFORMATION, "")
-      .gutterIconRenderer(RunSqliteStatementGutterIconRenderer(o))
+      .gutterIconRenderer(RunSqliteStatementGutterIconRenderer(o, connectionManager))
       .create()
   }
 
   private data class RunSqliteStatementGutterIconRenderer(
     private val stmt: SqlStmt,
+    private val connectionManager: ConnectionManager
   ) : GutterIconRenderer() {
     override fun getIcon(): Icon = AllIcons.RunConfigurations.TestState.Run
 
     override fun getTooltipText(): String = "Run statement"
 
-    override fun getClickAction(): AnAction = RunSqlAction(stmt)
+    override fun getClickAction(): AnAction = RunSqlAction(stmt, connectionManager)
   }
 }

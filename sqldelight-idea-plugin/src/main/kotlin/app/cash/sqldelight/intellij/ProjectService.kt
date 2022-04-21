@@ -25,6 +25,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
+import app.cash.sqldelight.intellij.run.window.SqlDelightToolWindowFactory
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.SqlParserUtil
@@ -43,6 +44,9 @@ import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
+import com.intellij.openapi.wm.RegisterToolWindowTask
+import com.intellij.openapi.wm.ToolWindowAnchor
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
@@ -131,6 +135,25 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
       this.dialect = dialect
       MigrationParserDefinition.stubVersion++
       ApplicationManager.getApplication().runReadAction { invalidateAllFiles() }
+      ApplicationManager.getApplication().invokeLater {
+        ToolWindowManager.getInstance(project).getToolWindow("SqlDelight")?.remove()
+
+        val connectionManager = dialect.connectionManager()
+        if (connectionManager != null) {
+          ToolWindowManager.getInstance(project).registerToolWindow(
+            RegisterToolWindowTask(
+              id = "SqlDelight",
+              anchor = ToolWindowAnchor.BOTTOM,
+              contentFactory = SqlDelightToolWindowFactory(connectionManager),
+              canCloseContent = true,
+              icon = dialect.icon,
+            )
+          ).apply {
+            show()
+            hide()
+          }
+        }
+      }
     }
   }
 
