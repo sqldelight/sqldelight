@@ -1,9 +1,11 @@
 package app.cash.sqldelight.dialects.postgresql
 
+import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.postgresql.grammar.PostgreSqlParserUtil
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ColumnDefMixin
+import app.cash.sqldelight.dialects.postgresql.ide.PostgresConnectionManager
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.icons.AllIcons
@@ -18,6 +20,7 @@ class PostgreSqlDialect : SqlDelightDialect {
   override val preparedStatementType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   override val allowsReferenceCycles = false
   override val icon = AllIcons.Providers.Postgresql
+  override val connectionManager: ConnectionManager by lazy { PostgresConnectionManager() }
 
   override fun setup() {
     SqlParserUtil.reset()
