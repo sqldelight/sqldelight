@@ -29,7 +29,7 @@ internal class SqlDelightStatementExecutor(
     try {
       val connectionOptions = ConnectionOptions(project)
 
-      connectionManager.getConnection(connectionOptions.selectedProperties()).use { connection ->
+      connectionManager.getConnection(connectionOptions.currentOption()).use { connection ->
         val statement = connection.createStatement()
         val hasResult = statement.execute(sqlStmt)
         if (hasResult) {
