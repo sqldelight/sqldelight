@@ -21,32 +21,40 @@ internal class ConnectionListPanel(
 
   init {
     layout = GridBagLayout()
-    add(JBScrollPane(list.apply {
-      selectionMode = ListSelectionModel.SINGLE_SELECTION
-      layoutOrientation = JList.VERTICAL
-      addListSelectionListener {
-        connectionOptions.selectedOption = list.selectedValue ?: ""
+    add(
+      JBScrollPane(
+        list.apply {
+          selectionMode = ListSelectionModel.SINGLE_SELECTION
+          layoutOrientation = JList.VERTICAL
+          addListSelectionListener {
+            connectionOptions.selectedOption = list.selectedValue ?: ""
+          }
+        }
+      ),
+      GridBagConstraints().apply {
+        fill = GridBagConstraints.BOTH
+        weighty = 1.0
+        weightx = 1.0
+        gridx = 0
+        gridy = 0
       }
-    }), GridBagConstraints().apply {
-      fill = GridBagConstraints.BOTH
-      weighty = 1.0
-      weightx = 1.0
-      gridx = 0
-      gridy = 0
-    })
-    add(JButton("Add Connection").apply {
-      addActionListener {
-        val properties = connectionManager.createNewConnectionProperties(project)
-          ?: return@addActionListener
-        connectionOptions.addOption(properties)
-        list.model = JBList.createDefaultListModel(*connectionOptions.getKeys().toTypedArray())
+    )
+    add(
+      JButton("Add Connection").apply {
+        addActionListener {
+          val properties = connectionManager.createNewConnectionProperties(project)
+            ?: return@addActionListener
+          connectionOptions.addOption(properties)
+          list.model = JBList.createDefaultListModel(*connectionOptions.getKeys().toTypedArray())
+        }
+      },
+      GridBagConstraints().apply {
+        fill = GridBagConstraints.HORIZONTAL
+        weighty = 0.0
+        weightx = 1.0
+        gridx = 0
+        gridy = 1
       }
-    }, GridBagConstraints().apply {
-      fill = GridBagConstraints.HORIZONTAL
-      weighty = 0.0
-      weightx = 1.0
-      gridx = 0
-      gridy = 1
-    })
+    )
   }
 }

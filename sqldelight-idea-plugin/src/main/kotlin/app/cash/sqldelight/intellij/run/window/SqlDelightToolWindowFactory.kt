@@ -22,10 +22,13 @@ internal class SqlDelightToolWindowFactory(
     toolWindow: ToolWindow
   ) {
     val runSqlText = JPanel(BorderLayout()).apply {
-      add(JBTextArea("Create a connection to get started.").apply {
-        margin = Insets(8, 8, 8, 8)
-        isEditable = false
-      }, BorderLayout.CENTER)
+      add(
+        JBTextArea("Create a connection to get started.").apply {
+          margin = Insets(8, 8, 8, 8)
+          isEditable = false
+        },
+        BorderLayout.CENTER
+      )
     }
 
     toolWindow.contentManager.apply {

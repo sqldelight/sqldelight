@@ -16,6 +16,10 @@ internal class ConnectionOptions(val project: Project) {
     selectedOption = properties.key
   }
 
+  fun unselectOption() {
+    selectedOption = ""
+  }
+
   fun getKeys(): Collection<String> {
     return adapter.fromJson(options.ifEmpty { return emptyList() })!!.map.keys
   }
