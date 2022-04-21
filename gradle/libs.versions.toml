@@ -43,6 +43,7 @@ turbine = { module = "app.cash.turbine:turbine", version = "0.7.0" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.6.3" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.6.0" }
 moshi = { module = "com.squareup.moshi:moshi", version = "1.13.0" }
+moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version = "1.13.0" }
 
 intellij-java = { module = "com.jetbrains.intellij.java:java-psi", version.ref = "idea" }
 intellij-core = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
@@ -86,3 +87,4 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.19.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.5.0" } # When updating, check if we can remove base plugin from root build.gradle
 changelog = { id = "org.jetbrains.changelog", version = "1.3.1" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
+ksp = { id = "com.google.devtools.ksp", version = "1.6.21-1.0.5" }

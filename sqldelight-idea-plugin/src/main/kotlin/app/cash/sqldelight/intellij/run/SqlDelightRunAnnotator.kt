@@ -19,7 +19,7 @@ internal class SqlDelightRunAnnotator : Annotator {
     }
     val project = element.project
     val connectionOptions = ConnectionOptions(project)
-    element.accept(RunSqliteAnnotator(holder, connectionOptions))
+    element.accept(SqlDelightRunVisitor(holder, connectionOptions))
   }
 
   private val PsiElement.isValidParent: Boolean
