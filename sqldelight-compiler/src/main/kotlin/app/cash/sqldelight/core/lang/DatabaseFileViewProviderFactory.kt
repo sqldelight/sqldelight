@@ -64,7 +64,7 @@ internal class DatabaseFileViewProvider(
     val virtualFile = super.getVirtualFile()
     try {
       val connectionManager = SqlDelightProjectService.getInstance(manager.project)
-        .dialect.connectionManager() ?: return null
+        .dialect.connectionManager ?: return null
       val properties = ConnectionProperties("temp", virtualFile.path)
       val statements = connectionManager.getConnection(properties).use {
         it.prepareStatement("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL;").use {

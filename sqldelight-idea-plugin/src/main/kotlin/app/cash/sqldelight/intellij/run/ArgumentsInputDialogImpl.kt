@@ -25,7 +25,7 @@ internal class ArgumentsInputDialogImpl(
   }
 
   private val _result = mutableListOf<SqlParameter>()
-  override val result: List<SqlParameter> = _result
+  override val result: List<SqlParameter> get() = _result
 
   override fun createCenterPanel(): JComponent {
     return panel {

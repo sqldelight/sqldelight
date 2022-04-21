@@ -138,7 +138,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
       ApplicationManager.getApplication().invokeLater {
         ToolWindowManager.getInstance(project).getToolWindow("SqlDelight")?.remove()
 
-        val connectionManager = dialect.connectionManager()
+        val connectionManager = dialect.connectionManager
         if (connectionManager != null) {
           ToolWindowManager.getInstance(project).registerToolWindow(
             RegisterToolWindowTask(

@@ -26,6 +26,7 @@ open class SqliteDialect : SqlDelightDialect {
   override val isSqlite = true
   override val icon = AllIcons.Providers.Sqlite
   override val migrationStrategy = SqliteMigrationStrategy()
+  override val connectionManager = SqliteConnectionManager()
 
   override fun setup() {
     Timber.i("Setting up SQLite Dialect")
@@ -45,8 +46,6 @@ open class SqliteDialect : SqlDelightDialect {
       }
     }
   }
-
-  override fun connectionManager() = SqliteConnectionManager()
 
   private fun registerTypeHolder() {
     ApplicationManager.getApplication()?.apply {

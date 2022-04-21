@@ -17,7 +17,7 @@ internal class RunSqliteAnnotator(
 ) : SqlVisitor() {
 
   override fun visitStmt(o: SqlStmt) {
-    val connectionManager = SqlDelightProjectService.getInstance(o.project).dialect.connectionManager() ?: return
+    val connectionManager = SqlDelightProjectService.getInstance(o.project).dialect.connectionManager ?: return
     if (connectionOptions.selectedOption.isEmpty()) return
 
     holder.newAnnotation(HighlightSeverity.INFORMATION, "")
