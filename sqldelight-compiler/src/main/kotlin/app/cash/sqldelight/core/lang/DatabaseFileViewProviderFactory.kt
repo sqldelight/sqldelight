@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
+import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.lang.Language
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
@@ -10,9 +11,6 @@ import com.intellij.psi.FileViewProviderFactory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.intellij.testFramework.LightVirtualFile
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
 
 class DatabaseFileViewProviderFactory : FileViewProviderFactory {
   override fun createFileViewProvider(
@@ -65,7 +63,10 @@ internal class DatabaseFileViewProvider(
 
     val virtualFile = super.getVirtualFile()
     try {
-      val statements = createConnection(virtualFile.path).use {
+      val connectionManager = SqlDelightProjectService.getInstance(manager.project)
+        .dialect.connectionManager ?: return null
+      val properties = ConnectionProperties("temp", virtualFile.path)
+      val statements = connectionManager.getConnection(properties).use {
         it.prepareStatement("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL;").use {
           it.executeQuery().use {
             mutableListOf<String>().apply {
@@ -83,19 +84,6 @@ internal class DatabaseFileViewProvider(
       ).also { schemaFile = it }
     } catch (e: Exception) {
       return null
-    }
-  }
-
-  private fun createConnection(path: String): Connection {
-    val previousContextLoader = Thread.currentThread().contextClassLoader
-    return try {
-      // When it iterates the ServiceLoader we want to make sure its on the plugins classpath.
-      Thread.currentThread().contextClassLoader = this::class.java.classLoader
-      DriverManager.getConnection("jdbc:sqlite:$path")
-    } catch (e: SQLException) {
-      DriverManager.getConnection("jdbc:sqlite:$path")
-    } finally {
-      Thread.currentThread().contextClassLoader = previousContextLoader
     }
   }
 }

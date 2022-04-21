@@ -33,6 +33,8 @@ interface SqlDelightDialect {
 
   val migrationStrategy: SqlGeneratorStrategy get() = NoOp()
 
+  val connectionManager: ConnectionManager? get() = null
+
   /**
    * A type resolver specific to this dialect.
    */
