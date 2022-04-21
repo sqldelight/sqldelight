@@ -24,7 +24,7 @@ internal class SelectConnectionTypeDialog(
   private var filePath: String = ""
 
   init {
-    title = "Select Connection Type"
+    title = "Create SQLite Connection"
     init()
   }
 
