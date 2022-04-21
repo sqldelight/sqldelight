@@ -54,7 +54,7 @@ abstract class BindableQuery(
   /**
    * The collection of parameters exposed in the generated api for this query.
    */
-  internal val parameters: List<IntermediateType> by lazy {
+  val parameters: List<IntermediateType> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
       val table = statement.tableName.reference!!.resolve()!!
       return@lazy listOf(
@@ -71,7 +71,7 @@ abstract class BindableQuery(
   /**
    * The collection of all bind expressions in this query.
    */
-  internal val arguments: List<Argument> by lazy {
+  val arguments: List<Argument> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
       return@lazy statement.columns.mapIndexed { index, column ->
         Argument(
@@ -194,7 +194,7 @@ abstract class BindableQuery(
   private val SqlBindParameter.identifier: SqlIdentifier?
     get() = childOfType(SqlTypes.IDENTIFIER) as? SqlIdentifier
 
-  internal data class Argument(
+  data class Argument(
     val index: Int,
     val type: IntermediateType,
     val bindArgs: MutableList<SqlBindExpr> = mutableListOf()

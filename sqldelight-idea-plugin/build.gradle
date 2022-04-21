@@ -90,6 +90,7 @@ dependencies {
   implementation(deps.bugsnag) {
     exclude group: "org.slf4j"
   }
+  implementation deps.picnic
 
   testImplementation deps.truth
   testImplementation project(':dialects:sqlite-3-18')
