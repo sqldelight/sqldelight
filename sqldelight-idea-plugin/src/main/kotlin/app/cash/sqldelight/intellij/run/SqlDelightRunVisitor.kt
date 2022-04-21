@@ -17,7 +17,7 @@ internal class SqlDelightRunVisitor(
 
   override fun visitStmt(o: SqlStmt) {
     val connectionManager = SqlDelightProjectService.getInstance(o.project).dialect.connectionManager ?: return
-    if (connectionOptions.selectedOption.isEmpty()) return
+    if (connectionOptions.selectedOption() == null) return
 
     holder.newAnnotation(HighlightSeverity.INFORMATION, "")
       .gutterIconRenderer(RunSqliteStatementGutterIconRenderer(o, connectionManager))

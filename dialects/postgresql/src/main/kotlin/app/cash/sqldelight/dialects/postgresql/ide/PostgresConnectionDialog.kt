@@ -3,6 +3,7 @@ package app.cash.sqldelight.dialects.postgresql.ide
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
+import com.intellij.ui.layout.GrowPolicy.MEDIUM_TEXT
 import com.intellij.ui.layout.ValidationInfoBuilder
 import com.intellij.ui.layout.panel
 import javax.swing.JComponent
@@ -30,6 +31,7 @@ internal class PostgresConnectionDialog(project: Project) : DialogWrapper(projec
           setter = { connectionName = it }
         ).withValidationOnApply(validateNonEmpty(connectionNameNonEmpty))
           .withValidationOnInput(validateNonEmpty(connectionNameNonEmpty))
+          .growPolicy(MEDIUM_TEXT)
       }
       row("Host") {
         textField(
@@ -37,31 +39,36 @@ internal class PostgresConnectionDialog(project: Project) : DialogWrapper(projec
           setter = { host = it }
         ).withValidationOnApply(validateNonEmpty(hostNonEmpty))
           .withValidationOnInput(validateNonEmpty(hostNonEmpty))
+          .growPolicy(MEDIUM_TEXT)
       }
-      row("Connection Name") {
+      row("Port") {
         textField(
           getter = { port },
           setter = { port = it }
         ).withValidationOnApply(validateNonEmpty(portNonEmpty))
           .withValidationOnInput(validateNonEmpty(portNonEmpty))
+          .growPolicy(MEDIUM_TEXT)
       }
       row("Database Name") {
         textField(
           getter = { databaseName },
           setter = { databaseName = it }
         )
+          .growPolicy(MEDIUM_TEXT)
       }
       row("Username") {
         textField(
           getter = { username },
           setter = { username = it }
         )
+          .growPolicy(MEDIUM_TEXT)
       }
       row("Password") {
         textField(
           getter = { password },
           setter = { password = it }
         )
+          .growPolicy(MEDIUM_TEXT)
       }
     }
   }
