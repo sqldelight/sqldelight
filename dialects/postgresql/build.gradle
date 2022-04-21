@@ -1,6 +1,7 @@
 plugins {
   alias(deps.plugins.shadow)
   alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.ksp)
   alias(deps.plugins.grammarKitComposer)
   alias(deps.plugins.publish)
   alias(deps.plugins.dokka)
@@ -11,6 +12,8 @@ grammarKit {
 }
 
 dependencies {
+  ksp deps.moshiCodegen
+
   api deps.postgresJdbc
 
   compileOnly project(':sqldelight-compiler:dialect')

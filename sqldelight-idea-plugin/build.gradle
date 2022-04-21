@@ -4,6 +4,7 @@ plugins {
   alias(deps.plugins.intellij)
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.changelog)
+  alias(deps.plugins.ksp)
 }
 
 intellij {
@@ -84,6 +85,8 @@ repositories {
 }
 
 dependencies {
+  ksp deps.moshiCodegen
+
   implementation project(':sqldelight-compiler')
 
   implementation deps.sqliteJdbc
@@ -91,6 +94,7 @@ dependencies {
     exclude group: "org.slf4j"
   }
   implementation deps.picnic
+  implementation deps.moshi
 
   testImplementation deps.truth
   testImplementation project(':dialects:sqlite-3-18')
