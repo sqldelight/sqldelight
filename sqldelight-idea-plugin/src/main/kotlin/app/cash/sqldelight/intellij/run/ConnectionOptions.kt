@@ -3,6 +3,7 @@ package app.cash.sqldelight.intellij.run
 import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.ide.util.propComponentProperty
 import com.intellij.openapi.project.Project
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 
 internal class ConnectionOptions(val project: Project) {
@@ -34,7 +35,8 @@ internal class ConnectionOptions(val project: Project) {
       .adapter(StoredOptions::class.java)
   }
 
-  private class StoredOptions(
+  @JsonClass(generateAdapter = true)
+  internal class StoredOptions(
     val map: MutableMap<String, String> = linkedMapOf()
   )
 }
