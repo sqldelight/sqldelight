@@ -9,11 +9,27 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 internal class PostgresConnectionManager : ConnectionManager {
-  override fun createNewConnectionProperties(project: Project): ConnectionProperties? {
-    val dialog = PostgresConnectionDialog(project)
+  override fun createNewConnectionProperties(
+    project: Project,
+    prefilledProperties: ConnectionProperties?
+  ): ConnectionProperties? {
+    val dialog =
+      if (prefilledProperties == null) PostgresConnectionDialog(project)
+      else {
+        val properties = adapter.fromJson(prefilledProperties.serializedProperties)!!
+        PostgresConnectionDialog(
+          project = project,
+          connectionName = prefilledProperties.key,
+          host = properties.host,
+          port = properties.port,
+          databaseName = properties.databaseName ?: "",
+          username = properties.username ?: "",
+          password = properties.password ?: "",
+        )
+      }
     if (!dialog.showAndGet()) return null
     return ConnectionProperties(
-      key = dialog.connectionName,
+      key = dialog.connectionKey,
       serializedProperties = adapter.toJson(
         ConnectionSettings(
           host = dialog.host,

@@ -4,7 +4,10 @@ import com.intellij.openapi.project.Project
 import java.sql.Connection
 
 interface ConnectionManager {
-  fun createNewConnectionProperties(project: Project): ConnectionProperties?
+  fun createNewConnectionProperties(
+    project: Project,
+    prefilledProperties: ConnectionProperties? = null
+  ): ConnectionProperties?
 
   fun getConnection(connectionProperties: ConnectionProperties): Connection
 
