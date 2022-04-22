@@ -86,7 +86,7 @@ internal class ConnectionListPanel(
 
     list.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
-        if (e.clickCount == 2) {
+        if (e.clickCount == 2 && e.button == MouseEvent.BUTTON1) {
           val currentProperties = connectionOptions.currentOption()
           val properties = connectionManager.createNewConnectionProperties(project, currentProperties)
             ?: return
