@@ -10,6 +10,9 @@ dependencies {
   compileOnly deps.objectDiff
   compileOnly deps.schemaCrawler.tools
   compileOnly deps.schemaCrawler.sqlite
+  implementation deps.schemaCrawler.scripting
+  runtimeOnly deps.jackson
+  runtimeOnly deps.jackson.time
 
   implementation deps.sqlPsi
 

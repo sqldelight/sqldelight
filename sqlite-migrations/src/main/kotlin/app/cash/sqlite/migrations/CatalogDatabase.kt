@@ -5,7 +5,10 @@ import schemacrawler.schemacrawler.LimitOptionsBuilder
 import schemacrawler.schemacrawler.LoadOptionsBuilder
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
+import schemacrawler.tools.formatter.serialize.JsonSerializedCatalog
 import schemacrawler.tools.utility.SchemaCrawlerUtility
+import java.io.File
+import java.io.ObjectOutputStream
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -13,6 +16,19 @@ import java.sql.SQLException
 class CatalogDatabase private constructor(
   internal val catalog: Catalog
 ) : Database() {
+
+  fun serialize(output: File) {
+    output.outputStream().use {
+      ObjectOutputStream(it).use { it.writeObject(catalog) }
+    }
+  }
+
+  fun toJson(output: File) {
+    output.outputStream().use {
+      val jsonCatalog = JsonSerializedCatalog(catalog)
+      jsonCatalog.save(it)
+    }
+  }
 
   companion object {
 
