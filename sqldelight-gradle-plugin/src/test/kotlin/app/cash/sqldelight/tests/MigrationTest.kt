@@ -7,9 +7,9 @@ import org.junit.Test
 import java.io.File
 
 class MigrationTest {
-  @Test fun `migration fails with no database file present`() {
+  @Test fun `verification enabled fails when database file is missing`() {
     val output = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/missing-database-file"))
+      .withCommonConfiguration(File("src/test/missing-database-file-verification-enabled"))
       .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
       .buildAndFail()
 
@@ -18,6 +18,15 @@ class MigrationTest {
       |Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task.
       |""".trimMargin()
     )
+  }
+
+  @Test fun `verification disabled succeeds when database file is missing`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/missing-database-file-verification-disabled"))
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
   @Test fun `failing migration errors properly`() {

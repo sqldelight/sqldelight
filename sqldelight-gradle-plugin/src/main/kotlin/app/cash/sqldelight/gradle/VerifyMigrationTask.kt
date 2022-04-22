@@ -117,7 +117,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       val databaseFiles = sourceFolders.asSequence()
         .findDatabaseFiles()
 
-      check(databaseFiles.count() > 0) {
+      check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
         "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
       }
 
