@@ -8,7 +8,10 @@ import java.sql.DriverManager
 import java.sql.SQLException
 
 class SqliteConnectionManager : ConnectionManager {
-  override fun createNewConnectionProperties(project: Project): ConnectionProperties? {
+  override fun createNewConnectionProperties(
+    project: Project,
+    prefilledProperties: ConnectionProperties?
+  ): ConnectionProperties? {
     val dialog = SelectConnectionTypeDialog(project)
     if (!dialog.showAndGet()) return null
     return dialog.connectionProperties()

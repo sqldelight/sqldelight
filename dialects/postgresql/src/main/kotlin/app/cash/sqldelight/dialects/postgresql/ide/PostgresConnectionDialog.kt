@@ -5,40 +5,44 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.layout.GrowPolicy.MEDIUM_TEXT
 import com.intellij.ui.layout.ValidationInfoBuilder
+import com.intellij.ui.layout.applyToComponent
 import com.intellij.ui.layout.panel
 import javax.swing.JComponent
 import javax.swing.JTextField
 
-internal class PostgresConnectionDialog(project: Project) : DialogWrapper(project) {
+internal class PostgresConnectionDialog(
+  project: Project,
+  private var connectionName: String? = null,
+  internal var host: String = "localhost",
+  internal var port: String = "5432",
+  internal var databaseName: String = "",
+  internal var username: String = "",
+  internal var password: String = "",
+) : DialogWrapper(project) {
+  internal val connectionKey get() = connectionName ?: "Default Postgres"
 
   init {
     title = "Create PostgreSQL Connection"
     init()
   }
 
-  internal var connectionName: String = "Default Postgres"
-  internal var host: String = "localhost"
-  internal var port: String = "5432"
-  internal var databaseName: String = ""
-  internal var username: String = ""
-  internal var password: String = ""
-
   override fun createCenterPanel(): JComponent {
     return panel {
       row("Connection Name") {
         textField(
-          getter = { connectionName },
+          getter = { connectionKey },
           setter = { connectionName = it }
         ).withValidationOnApply(validateNonEmpty(connectionNameNonEmpty))
-          .withValidationOnInput(validateNonEmpty(connectionNameNonEmpty))
           .growPolicy(MEDIUM_TEXT)
+          .applyToComponent {
+            if (connectionName != null) this.isEditable = false
+          }
       }
       row("Host") {
         textField(
           getter = { host },
           setter = { host = it }
         ).withValidationOnApply(validateNonEmpty(hostNonEmpty))
-          .withValidationOnInput(validateNonEmpty(hostNonEmpty))
           .growPolicy(MEDIUM_TEXT)
       }
       row("Port") {
@@ -46,7 +50,6 @@ internal class PostgresConnectionDialog(project: Project) : DialogWrapper(projec
           getter = { port },
           setter = { port = it }
         ).withValidationOnApply(validateNonEmpty(portNonEmpty))
-          .withValidationOnInput(validateNonEmpty(portNonEmpty))
           .growPolicy(MEDIUM_TEXT)
       }
       row("Database Name") {

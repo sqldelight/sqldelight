@@ -14,6 +14,8 @@ import com.intellij.ui.components.JBList
 import org.jetbrains.kotlin.utils.addToStdlib.firstNotNullResult
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
@@ -81,6 +83,18 @@ internal class ConnectionListPanel(
       updateModel()
       PsiDocumentManager.getInstance(project).reparseFiles(emptyList(), true)
     }
+
+    list.addMouseListener(object : MouseAdapter() {
+      override fun mouseClicked(e: MouseEvent) {
+        if (e.clickCount == 2 && e.button == MouseEvent.BUTTON1) {
+          val currentProperties = connectionOptions.currentOption()
+          val properties = connectionManager.createNewConnectionProperties(project, currentProperties)
+            ?: return
+          connectionOptions.replaceOption(properties)
+          updateModel()
+        }
+      }
+    })
 
     updateModel()
   }
