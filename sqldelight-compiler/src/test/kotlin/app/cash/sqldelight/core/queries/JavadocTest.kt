@@ -118,7 +118,7 @@ class JavadocTest {
     )
   }
 
-  @Test fun `select - javadoc containing * symbols`(testDialect: TestDialect) {
+  @Test fun `select - javadoc containing star symbols`(testDialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
       createTable(testDialect) + """
       |/**
