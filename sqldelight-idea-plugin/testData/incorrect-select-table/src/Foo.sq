@@ -1,0 +1,17 @@
+CREATE TABLE foo(
+  id TEXT PRIMARY KEY NOT NULL,
+  otherStuff INTEGER
+);
+
+-- Warning - this should be in Bar.sq
+SELECT *
+FROM bar;
+
+-- Allowed.
+SELECT
+  bar.id,
+  foo.id
+  FROM bar
+  JOIN foo
+    ON foo.id = bar.foo
+;

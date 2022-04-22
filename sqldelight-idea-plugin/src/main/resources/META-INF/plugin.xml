@@ -188,6 +188,14 @@
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
+        implementationClass="app.cash.sqldelight.intellij.inspections.IncorrectSelectTableInspection"
+        displayName="Incorrect select table inspection"
+        groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.NullEqualityInspection"
         displayName="Null comparison"
         groupName="Declaration redundancy"/>

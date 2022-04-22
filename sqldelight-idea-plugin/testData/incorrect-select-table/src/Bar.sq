@@ -1,0 +1,30 @@
+CREATE TABLE bar(
+  id TEXT PRIMARY KEY NOT NULL,
+  foo TEXT REFERENCES foo(id)
+);
+
+-- Allowed.
+SELECT DISTINCT id FROM
+(
+  SELECT DISTINCT id FROM foo
+  UNION ALL
+  SELECT DISTINCT id FROM bar
+)
+;
+
+-- Allowed.
+SELECT *
+  FROM bar
+  WHERE foo IN (SELECT id FROM foo)
+;
+
+-- Allowed.
+DELETE FROM bar
+  WHERE foo NOT IN (SELECT id FROM foo)
+;
+
+-- Allowed.
+UPDATE bar
+  SET foo = '1'
+  WHERE foo NOT IN (SELECT id FROM foo)
+;

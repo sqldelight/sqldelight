@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problems>
+  <problem>
+    <file>Foo.sq</file>
+    <line>7</line>
+    <description>Selecting from bar although that table isn't created in this file</description>
+    <highlighted_element>SELECT * FROM bar</highlighted_element>
+  </problem>
+</problems>

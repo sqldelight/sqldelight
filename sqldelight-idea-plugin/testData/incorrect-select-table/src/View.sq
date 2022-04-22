@@ -1,0 +1,13 @@
+CREATE TABLE myTable(
+  id TEXT PRIMARY KEY NOT NULL,
+  otherStuff INTEGER
+);
+
+CREATE VIEW myTableView AS
+SELECT
+  id
+  FROM myTable
+;
+
+-- Allowed.
+SELECT * FROM myTableView;
