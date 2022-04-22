@@ -46,6 +46,10 @@ internal class ConnectionOptions(val project: Project) {
     selectedOption = properties.key
   }
 
+  fun replaceOption(properties: ConnectionProperties) = withCurrentDialect {
+    serializedProperties[properties.key] = properties.serializedProperties
+  }
+
   fun currentOption() = withCurrentDialect {
     ConnectionProperties(selectedOption!!, serializedProperties[selectedOption]!!)
   }
