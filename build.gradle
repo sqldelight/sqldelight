@@ -18,7 +18,6 @@ plugins {
   alias(deps.plugins.publish) apply false
   alias(deps.plugins.dokka) apply false
   alias(deps.plugins.spotless)
-  id 'base'
 }
 
 spotless {
