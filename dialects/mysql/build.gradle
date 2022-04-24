@@ -1,5 +1,7 @@
 plugins {
+  alias(deps.plugins.shadow)
   alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.ksp)
   alias(deps.plugins.grammarKitComposer)
   alias(deps.plugins.publish)
   alias(deps.plugins.dokka)
@@ -10,9 +12,15 @@ grammarKit {
 }
 
 dependencies {
+  ksp deps.moshiCodegen
+
+  api deps.mysqlJdbc
+
   compileOnly project(':sqldelight-compiler:dialect')
   compileOnly deps.intellij.core
   compileOnly deps.intellij.lang
+  compileOnly deps.intellij.core.ui
+  compileOnly deps.moshi
 
   testImplementation deps.intellij.core
   testImplementation deps.intellij.lang
@@ -23,3 +31,16 @@ dependencies {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+tasks.getByName("shadowJar").configure {
+  classifier = ''
+  include "*.jar"
+  include "app/cash/sqldelight/**"
+  include "com/mysql/**"
+  include 'META-INF/services/*'
+}
+
+artifacts {
+  runtimeOnly(shadowJar)
+  archives(shadowJar)
+}
