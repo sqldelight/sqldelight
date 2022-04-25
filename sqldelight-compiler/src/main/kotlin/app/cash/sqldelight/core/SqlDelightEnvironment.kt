@@ -25,7 +25,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
@@ -188,7 +188,7 @@ class SqlDelightEnvironment(
     val migrationFiles: Collection<MigrationFile> = sourceFolders
       .map { localFileSystem.findFileByPath(it.absolutePath)!! }
       .map { psiManager.findDirectory(it)!! }
-      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() }
+      .flatMap { directory: PsiDirectory -> directory.migrationFiles() }
     migrationFiles.sortedBy { it.version }
       .forEach {
         val errorElements = ArrayList<PsiErrorElement>()

@@ -35,6 +35,8 @@ jobs:
           java-version: 11
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          cache-disabled: true
 
       # Linux tests
       - name: Run gradle tests
@@ -80,6 +82,7 @@ jobs:
         with:
           arguments: build --stacktrace
           build-root-directory: sample
+          cache-disabled: true
 
       - name: Bundle the build report
         if: failure()

@@ -125,7 +125,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     val columnDef = intermediateType.column ?: return intermediateType
     val tableDef = columnDef.parent as? SqlCreateTableStmt ?: return intermediateType
     tableDef.tableConstraintList.forEach {
-      if (columnDef.columnName.name in it.indexedColumnList.map { it.columnName.name }) {
+      if (columnDef.columnName.name in it.indexedColumnList.mapNotNull { it.columnName?.name }) {
         return intermediateType.asNonNullable()
       }
     }

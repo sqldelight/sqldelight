@@ -1,10 +1,12 @@
 package app.cash.sqldelight.dialects.mysql
 
+import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.mysql.grammar.MySqlParserUtil
 import app.cash.sqldelight.dialects.mysql.grammar.mixins.ColumnDefMixin
 import app.cash.sqldelight.dialects.mysql.grammar.mixins.MySqlBinaryEqualityExpr
+import app.cash.sqldelight.dialects.mysql.ide.MySqlConnectionManager
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.icons.AllIcons
@@ -18,6 +20,7 @@ class MySqlDialect : SqlDelightDialect {
   override val cursorType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor")
   override val preparedStatementType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   override val icon = AllIcons.Providers.Mysql
+  override val connectionManager: ConnectionManager by lazy { MySqlConnectionManager() }
 
   override fun setup() {
     SqlParserUtil.reset()

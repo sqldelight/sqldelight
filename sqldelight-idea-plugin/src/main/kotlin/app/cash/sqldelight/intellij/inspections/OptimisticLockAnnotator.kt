@@ -7,7 +7,7 @@ import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.psi.PsiElement
 
 class OptimisticLockAnnotator : OptimisticLockValidator() {
-  override fun quickFix(element: PsiElement, lock: ColumnDefMixin): IntentionAction? {
+  override fun quickFix(element: PsiElement, lock: ColumnDefMixin): IntentionAction {
     return AddOptimisticLockIntention(element, lock)
   }
 }

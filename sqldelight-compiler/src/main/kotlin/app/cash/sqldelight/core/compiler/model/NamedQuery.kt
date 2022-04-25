@@ -56,7 +56,7 @@ data class NamedQuery(
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
    * by the generated api.
    */
-  internal val resultColumns: List<IntermediateType> by lazy {
+  val resultColumns: List<IntermediateType> by lazy {
     if (queryable is SelectQueryable) resultColumns(queryable.select)
     else queryable.select.typesExposed(LinkedHashSet())
   }
