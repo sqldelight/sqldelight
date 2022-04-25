@@ -58,6 +58,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   companion object {
     private const val schemaJson = "schema.json"
     private const val schema = "schema.schema"
+    private const val schemaMermaid = "schema.mermaid"
   }
 
   @TaskAction
@@ -75,6 +76,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     outputFolder.ensureParentDirsCreated()
     schema.moveDBSchema()
     schemaJson.moveDBSchema()
+    schemaMermaid.moveDBSchema()
     workingDirectory.deleteRecursively()
   }
 
@@ -149,6 +151,10 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       val schemaJsonFile = File(workingDirectory, schemaJson)
       schemaJsonFile.createNewFile()
       catalog.toJson(schemaJsonFile)
+
+      val mermaidFile = File(workingDirectory, schemaMermaid)
+      mermaidFile.createNewFile()
+      catalog.mermaidDiagram(mermaidFile)
     }
 
     private fun createCurrentDb(): CatalogDatabase {

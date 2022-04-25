@@ -1,6 +1,7 @@
 package app.cash.sqlite.migrations
 
 import schemacrawler.schema.Catalog
+import schemacrawler.schema.Table
 import schemacrawler.schemacrawler.LimitOptionsBuilder
 import schemacrawler.schemacrawler.LoadOptionsBuilder
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
@@ -28,6 +29,35 @@ class CatalogDatabase private constructor(
       val jsonCatalog = JsonSerializedCatalog(catalog)
       jsonCatalog.save(it)
     }
+  }
+
+  private val replaceMermaidType = """\([\d ,]+\)|\[[\d ,]+]|\s+""".toRegex()
+  private val Table.mermaidName get() = fullName.replace(".", "-")
+
+  fun mermaidDiagram(output: File) {
+    val diagramm = buildString {
+      appendLine("erDiagram")
+      for (table in catalog.tables) {
+        appendLine("${table.mermaidName} {")
+        for (column in table.columns) {
+          val type = column.columnDataType.name.replace(replaceMermaidType, "")
+          append(type)
+          append(" ${column.name}")
+          when {
+            column.isPartOfPrimaryKey -> append(" PK")
+            column.isPartOfForeignKey -> append(" FK")
+          }
+          appendLine()
+        }
+        appendLine("}")
+      }
+      for (table in catalog.tables) {
+        for (childTable in table.referencingTables) {
+          appendLine("${table.mermaidName} ||--o{ ${childTable.mermaidName}")
+        }
+      }
+    }
+    output.writeText(diagramm)
   }
 
   companion object {
