@@ -9,6 +9,7 @@ buildscript {
 }
 
 plugins {
+  alias(deps.plugins.grammarKitComposer) apply false
   alias(deps.plugins.kotlin.multiplatform) apply false
   alias(deps.plugins.kotlin.jvm) apply false
   alias(deps.plugins.kotlin.android) apply false
@@ -49,6 +50,20 @@ allprojects {
   tasks.withType(JavaCompile) {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+  }
+
+  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask) {
+    doFirst {
+      // https://github.com/JetBrains/gradle-grammar-kit-plugin/pull/78.
+      logging.captureStandardOutput(LogLevel.INFO)
+    }
+  }
+
+  // https://youtrack.jetbrains.com/issue/KT-46466
+  tasks.withType(org.gradle.plugins.signing.Sign) { signingTask ->
+    tasks.withType(org.gradle.api.publish.maven.tasks.AbstractPublishToMaven) { publishTask ->
+      publishTask.dependsOn(signingTask)
+    }
   }
 
   configurations.all {
