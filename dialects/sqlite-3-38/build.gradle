@@ -3,7 +3,6 @@ plugins {
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.grammarKitComposer)
   alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
 }
 
 grammarKit {
