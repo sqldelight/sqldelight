@@ -64,6 +64,9 @@ internal abstract class AlterTableDropColumnMixin(
       } else {
         containingFile
           .schema(SqlCreateIndexStmt::class, this)
+          .filter { index ->
+            index.tableName?.textMatches(alterStmt.tableName) == true
+          }
           .find { index ->
             index.indexedColumnList.any { it.columnName?.textMatches(columnName) == true }
           }
