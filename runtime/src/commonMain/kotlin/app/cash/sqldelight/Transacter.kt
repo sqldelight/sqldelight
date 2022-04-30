@@ -48,6 +48,49 @@ interface TransactionWithoutReturn : TransactionCallbacks {
   fun transaction(body: TransactionWithoutReturn.() -> Unit)
 }
 
+abstract class TransactionBase<TransactionType : TransactionBase<TransactionType>> : TransactionCallbacks {
+  private val ownerThreadId = currentThreadId()
+
+  internal val postCommitHooks = mutableListOf<() -> Unit>()
+  internal val postRollbackHooks = mutableListOf<() -> Unit>()
+
+  internal val registeredQueries = mutableSetOf<Int>()
+  internal val pendingTables = mutableSetOf<String>()
+
+  internal var successful: Boolean = false
+  internal var childrenSuccessful: Boolean = true
+
+  /**
+   * The parent transaction, if there is any.
+   */
+  protected abstract val enclosingTransaction: TransactionType?
+
+  internal fun enclosingTransaction() = enclosingTransaction
+
+  /**
+   * Queues [function] to be run after this transaction successfully commits.
+   */
+  override fun afterCommit(function: () -> Unit) {
+    checkThreadConfinement()
+    postCommitHooks.add(function)
+  }
+
+  /**
+   * Queues [function] to be run after this transaction rolls back.
+   */
+  override fun afterRollback(function: () -> Unit) {
+    checkThreadConfinement()
+    postRollbackHooks.add(function)
+  }
+
+  internal fun checkThreadConfinement() = check(ownerThreadId == currentThreadId()) {
+    """
+        Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
+        only within the transaction lambda scope.
+    """.trimIndent()
+  }
+}
+
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
@@ -81,25 +124,8 @@ interface Transacter {
    * A transaction is expected never to escape the thread it is created on, or more specifically,
    * never to escape the lambda scope of [Transacter.transaction] and [Transacter.transactionWithResult].
    */
-  abstract class Transaction : TransactionCallbacks {
-    private val ownerThreadId = currentThreadId()
-
-    internal val postCommitHooks = mutableListOf<() -> Unit>()
-    internal val postRollbackHooks = mutableListOf<() -> Unit>()
-
-    internal val registeredQueries = mutableSetOf<Int>()
-    internal val pendingTables = mutableSetOf<String>()
-
-    internal var successful: Boolean = false
-    internal var childrenSuccessful: Boolean = true
+  abstract class Transaction : TransactionBase<Transaction>() {
     internal var transacter: Transacter? = null
-
-    /**
-     * The parent transaction, if there is any.
-     */
-    protected abstract val enclosingTransaction: Transaction?
-
-    internal fun enclosingTransaction() = enclosingTransaction
 
     /**
      * Signal to the underlying SQL driver that this transaction should be finished.
@@ -112,33 +138,10 @@ interface Transacter {
       checkThreadConfinement()
       endTransaction(successful && childrenSuccessful)
     }
-    /**
-     * Queues [function] to be run after this transaction successfully commits.
-     */
-
-    override fun afterCommit(function: () -> Unit) {
-      checkThreadConfinement()
-      postCommitHooks.add(function)
-    }
-
-    /**
-     * Queues [function] to be run after this transaction rolls back.
-     */
-    override fun afterRollback(function: () -> Unit) {
-      checkThreadConfinement()
-      postRollbackHooks.add(function)
-    }
-
-    internal fun checkThreadConfinement() = check(ownerThreadId == currentThreadId()) {
-      """
-        Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
-        only within the transaction lambda scope.
-      """.trimIndent()
-    }
   }
 }
 
-private class RollbackException(val value: Any? = null) : Throwable()
+internal class RollbackException(val value: Any? = null) : Throwable()
 
 private class TransactionWrapper<R>(
   val transaction: Transaction

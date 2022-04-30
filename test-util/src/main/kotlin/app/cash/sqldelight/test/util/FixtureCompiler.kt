@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable, Boolean) -> Unit
 
 object FixtureCompiler {
 
@@ -40,13 +40,15 @@ object FixtureCompiler {
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     fileName: String = "Test.sq",
     treatNullAsUnknownForEquality: Boolean = false,
+    generateAsync: Boolean = false
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
       temporaryFolder.fixtureRoot().path,
       compilationMethod,
       overrideDialect = overrideDialect,
-      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
+      generateAsync = generateAsync
     )
   }
 
@@ -98,6 +100,7 @@ object FixtureCompiler {
     outputDirectory: File = File(fixtureRoot, "output"),
     deriveSchemaFromMigrations: Boolean = false,
     treatNullAsUnknownForEquality: Boolean = false,
+    generateAsync: Boolean = false,
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
@@ -120,7 +123,7 @@ object FixtureCompiler {
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
         if (errors.isEmpty()) {
-          compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
+          compilationMethod(environment.module, environment.dialect, psiFile, fileWriter, generateAsync)
         }
         file = psiFile
       } else if (psiFile is MigrationFile) {
@@ -139,12 +142,13 @@ object FixtureCompiler {
     }
 
     if (generateDb) {
-      SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter)
+      SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter, generateAsync)
       SqlDelightCompiler.writeImplementations(
         environment.module,
         file!!,
         "testmodule",
         fileWriter,
+        generateAsync
       )
     }
 

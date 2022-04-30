@@ -14,6 +14,9 @@ import com.squareup.kotlinpoet.ClassName
  */
 class HsqlDialect : SqlDelightDialect {
   override val driverType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver")
+  override val asyncDriverType: ClassName? = null
+  override val asyncCursorType: ClassName? = null
+  override val asyncPreparedStatementType: ClassName? = null
   override val cursorType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor")
   override val preparedStatementType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   override val icon = AllIcons.Providers.Hsqldb

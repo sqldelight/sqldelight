@@ -1,0 +1,14 @@
+plugins {
+  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
+}
+
+archivesBaseName = 'sqldelight-r2dbc-driver'
+
+dependencies {
+  api project(':runtime')
+  implementation deps.r2dbc
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

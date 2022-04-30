@@ -73,6 +73,8 @@ stately-collections = { module = "co.touchlab:stately-collections", version.ref 
 testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
 
+r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
+
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-application = { id = "com.android.application", version.ref = "agp" }

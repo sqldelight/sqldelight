@@ -18,6 +18,11 @@ package app.cash.sqldelight.core.compiler
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
+import app.cash.sqldelight.core.lang.ASYNC_DRIVER_CALLBACK_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_EXECUTABLE_QUERY_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_QUERY_TYPE
+import app.cash.sqldelight.core.lang.CALLBACK_ERROR_NAME
+import app.cash.sqldelight.core.lang.CALLBACK_SUCCESS_NAME
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
@@ -49,11 +54,13 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
+import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
-  private val query: NamedQuery
-) : QueryGenerator(query) {
+  private val query: NamedQuery,
+  private val generateAsync: Boolean = false,
+) : QueryGenerator(query, generateAsync) {
   /**
    * The exposed query method which returns the default data class implementation.
    *
@@ -166,6 +173,7 @@ class SelectQueryGenerator(
    */
   fun customResultTypeFunction(): FunSpec {
     val function = customResultTypeFunctionInterface()
+    val dialectCursorType = if (generateAsync) dialect.asyncCursorType else dialect.cursorType
 
     query.resultColumns.forEach { resultColumn ->
       (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)
@@ -199,8 +207,8 @@ class SelectQueryGenerator(
       .addStatement("·{ $CURSOR_NAME ->")
       .indent()
 
-    if (CURSOR_TYPE != dialect.cursorType) {
-      mapperLambda.addStatement("check(cursor is %T)", dialect.cursorType)
+    if (CURSOR_TYPE != dialectCursorType) {
+      mapperLambda.addStatement("check(cursor is %T)", dialectCursorType)
     }
 
     if (query.needsWrapper()) {
@@ -224,19 +232,21 @@ class SelectQueryGenerator(
     }
     mapperLambda.unindent().add("}\n")
 
+    val queryType = if (generateAsync) ASYNC_QUERY_TYPE else QUERY_TYPE
+
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       if (query.tablesObserved != null) {
         function.addCode(
           "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
-          QUERY_TYPE, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
+          queryType, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
           query.statement.rawSqlText(), mapperLambda.build()
         )
       } else {
         function.addCode(
           "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
-          QUERY_TYPE, query.statement.containingFile.name, query.name,
+          queryType, query.statement.containingFile.name, query.name,
           query.statement.rawSqlText(), mapperLambda.build()
         )
       }
@@ -263,9 +273,16 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
-    else QUERY_TYPE
+  private fun NamedQuery.supertype() = when {
+    generateAsync -> {
+      if (tablesObserved == null) ASYNC_EXECUTABLE_QUERY_TYPE
+      else ASYNC_QUERY_TYPE
+    }
+    else -> {
+      if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
+      else QUERY_TYPE
+    }
+  }
 
   /**
    * The private query subtype for this specific query.
@@ -298,9 +315,14 @@ class SelectQueryGenerator(
     val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
-      .addTypeVariable(genericResultType)
+      .addTypeVariable(genericResultType).apply {
+        if (generateAsync) {
+          addParameter(CALLBACK_SUCCESS_NAME, LambdaTypeName.get(parameters = arrayOf(genericResultType), returnType = Unit::class.asTypeName()))
+          addParameter(CALLBACK_ERROR_NAME, LambdaTypeName.get(parameters = arrayOf(Throwable::class.asTypeName()), returnType = Unit::class.asTypeName()))
+        }
+      }
       .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = *arrayOf(CURSOR_TYPE), returnType = genericResultType))
-      .returns(genericResultType)
+      .returns(if (generateAsync) ASYNC_DRIVER_CALLBACK_TYPE.parameterizedBy(genericResultType) else genericResultType)
       .addCode(executeBlock())
 
     // For each bind argument the query has.

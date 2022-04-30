@@ -1,0 +1,34 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'app.cash.sqldelight'
+
+sqldelight {
+  MyDatabase {
+    packageName = "app.cash.sqldelight.mysql.integration"
+    dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+    generateAsync = true
+  }
+}
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}
+
+dependencies {
+  implementation deps.mysqlJdbc
+  implementation "org.testcontainers:mysql:1.16.2"
+  implementation "org.testcontainers:r2dbc:1.16.2"
+  implementation "dev.miku:r2dbc-mysql:0.8.2.RELEASE"
+  implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
+  implementation "app.cash.sqldelight:coroutines-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
+  implementation deps.truth
+  implementation deps.kotlin.coroutines.core
+  implementation deps.kotlin.coroutines.test
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${deps.versions.kotlinCoroutines.get()}"
+}

@@ -31,7 +31,8 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
 abstract class QueryGenerator(
-  private val query: BindableQuery
+  private val query: BindableQuery,
+  private val generateAsync: Boolean,
 ) {
   protected val dialect = query.statement.sqFile().dialect
   protected val treatNullAsUnknownForEquality = query.statement.sqFile().treatNullAsUnknownForEquality
@@ -76,6 +77,11 @@ abstract class QueryGenerator(
     statement: PsiElement,
     id: Int
   ): CodeBlock {
+    if (generateAsync) {
+      check(dialect.asyncPreparedStatementType != null) { "Dialect $dialect does not support async drivers" }
+    }
+    val dialectPreparedStatementType = if (generateAsync) dialect.asyncPreparedStatementType!! else dialect.preparedStatementType
+
     val result = CodeBlock.builder()
 
     val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
@@ -232,8 +238,8 @@ abstract class QueryGenerator(
         .add(" {\n")
         .indent()
 
-      if (PREPARED_STATEMENT_TYPE != dialect.preparedStatementType) {
-        binderLambda.add("check(this is %T)\n", dialect.preparedStatementType)
+      if (PREPARED_STATEMENT_TYPE != dialectPreparedStatementType) {
+        binderLambda.add("check(this is %T)\n", dialectPreparedStatementType)
       }
 
       binderLambda.add(bindStatements.build())
@@ -256,18 +262,24 @@ abstract class QueryGenerator(
         *arguments.toTypedArray()
       )
     } else if (optimisticLock != null) {
+      val execute = if (generateAsync) "return «$DRIVER_NAME.execute" else "val result = $DRIVER_NAME.execute"
       result.addStatement(
-        "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        "$execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
       )
     } else {
+      // TODO: Maybe remove this « hack
+      val execute = if (generateAsync) "return «$DRIVER_NAME.execute" else "$DRIVER_NAME.execute"
       result.addStatement(
-        "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        "$execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
       )
     }
 
     if (query is NamedMutator.Update && optimisticLock != null) {
+      if (generateAsync) {
+        result.beginControlFlow(".onSuccess { result ->")
+      }
       result.addStatement(
         """
         if (result == 0L) throw %T(%S)
@@ -275,6 +287,9 @@ abstract class QueryGenerator(
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
         "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
       )
+      if (generateAsync) {
+        result.endControlFlow()
+      }
     }
 
     return result.build()

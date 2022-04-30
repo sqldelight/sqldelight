@@ -156,7 +156,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
+        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer, properties.generateAsync)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -175,9 +175,9 @@ class SqlDelightEnvironment(
     }
 
     sourceFile?.let {
-      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
+      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer, properties.generateAsync)
       if (it is SqlDelightQueriesFile)
-        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer, properties.generateAsync)
     }
 
     return CompilationStatus.Success()

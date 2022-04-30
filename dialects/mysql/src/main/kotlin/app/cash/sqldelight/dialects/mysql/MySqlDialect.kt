@@ -17,6 +17,9 @@ import com.squareup.kotlinpoet.ClassName
  */
 class MySqlDialect : SqlDelightDialect {
   override val driverType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver")
+  override val asyncDriverType: ClassName = ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcDriver")
+  override val asyncCursorType: ClassName = ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcCursor")
+  override val asyncPreparedStatementType: ClassName = ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcPreparedStatement")
   override val cursorType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor")
   override val preparedStatementType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   override val icon = AllIcons.Providers.Mysql

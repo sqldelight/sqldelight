@@ -18,7 +18,8 @@ internal class TestEnvironment(
   private val outputDirectory: File = File("output"),
   private val deriveSchemaFromMigrations: Boolean = false,
   private val treatNullAsUnknownForEquality: Boolean = false,
-  private val dialect: SqlDelightDialect = SqliteDialect()
+  private val dialect: SqlDelightDialect = SqliteDialect(),
+  private val generateAsync: Boolean = false,
 ) {
   fun build(
     root: String,
@@ -40,6 +41,7 @@ internal class TestEnvironment(
         override val deriveSchemaFromMigrations = this@TestEnvironment.deriveSchemaFromMigrations
         override val treatNullAsUnknownForEquality = this@TestEnvironment.treatNullAsUnknownForEquality
         override val rootDirectory = File(root)
+        override val generateAsync: Boolean = this@TestEnvironment.generateAsync
       },
       dialect = dialect,
       verifyMigrations = true,

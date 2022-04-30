@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
+import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
@@ -17,6 +18,7 @@ class QueriesTypeGenerator(
   private val module: Module,
   private val file: SqlDelightQueriesFile,
   private val dialect: SqlDelightDialect,
+  private val generateAsync: Boolean,
 ) {
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
@@ -29,19 +31,24 @@ class QueriesTypeGenerator(
    *     ) : TransacterImpl(driver, transactions)
    */
   fun generateType(packageName: String): TypeSpec {
+    if (generateAsync) {
+      check(dialect.asyncDriverType != null) { "Dialect $dialect does not support async drivers" }
+    }
+    val driverType = if (generateAsync) dialect.asyncDriverType!! else dialect.driverType
+
     val type = TypeSpec.classBuilder(file.queriesType.simpleName)
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
 
     val constructor = FunSpec.constructorBuilder()
 
     // Add the driver as a constructor property and superclass parameter:
     // private val driver: SqlDriver
     type.addProperty(
-      PropertySpec.builder(DRIVER_NAME, dialect.driverType, PRIVATE)
+      PropertySpec.builder(DRIVER_NAME, driverType, PRIVATE)
         .initializer(DRIVER_NAME)
         .build()
     )
-    constructor.addParameter(DRIVER_NAME, dialect.driverType)
+    constructor.addParameter(DRIVER_NAME, driverType)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 
     // Add any required adapters.
@@ -53,7 +60,7 @@ class QueriesTypeGenerator(
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query)
+        val generator = SelectQueryGenerator(query, generateAsync)
 
         type.addFunction(generator.customResultTypeFunction())
 
@@ -82,9 +89,9 @@ class QueriesTypeGenerator(
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
-        MutatorQueryGenerator(execute)
+        MutatorQueryGenerator(execute, generateAsync)
       } else {
-        ExecuteQueryGenerator(execute)
+        ExecuteQueryGenerator(execute, generateAsync)
       }
 
       addFunction(generator.function())

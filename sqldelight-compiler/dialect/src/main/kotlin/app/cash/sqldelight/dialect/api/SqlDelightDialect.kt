@@ -10,14 +10,24 @@ interface SqlDelightDialect {
   val driverType: ClassName
 
   /**
+   * Dialect-specific implementation of an `AsyncSqlDriver`.
+   * TODO: Check if this needs to be nullable, also maybe combine these into a class
+   */
+  val asyncDriverType: ClassName?
+
+  /**
    * Dialect-specific implementation of a `SqlCursor`.
    */
   val cursorType: ClassName
+
+  val asyncCursorType: ClassName?
 
   /**
    * Dialect-specific implementation of a `SqlPreparedStatement`.
    */
   val preparedStatementType: ClassName
+
+  val asyncPreparedStatementType: ClassName?
 
   /**
    * Whether the dialect supports reference cycles in `CREATE TABLE` statements.
