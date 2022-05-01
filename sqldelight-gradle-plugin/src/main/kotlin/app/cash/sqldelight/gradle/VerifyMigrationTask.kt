@@ -28,18 +28,13 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import org.gradle.workers.WorkerExecutor
 import java.io.File
 import java.util.ServiceLoader
-import javax.inject.Inject
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
-
-  @get:Inject
-  abstract override val workerExecutor: WorkerExecutor
 
   @Input val projectName: Property<String> = project.objects.property(String::class.java)
 
