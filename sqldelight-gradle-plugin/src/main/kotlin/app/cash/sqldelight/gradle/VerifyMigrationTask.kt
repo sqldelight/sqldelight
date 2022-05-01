@@ -16,6 +16,7 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
@@ -77,6 +78,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
