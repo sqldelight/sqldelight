@@ -42,7 +42,6 @@ import org.gradle.workers.WorkParameters
 import java.io.File
 import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.

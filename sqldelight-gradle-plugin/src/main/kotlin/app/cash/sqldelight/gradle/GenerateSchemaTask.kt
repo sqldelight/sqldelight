@@ -27,7 +27,6 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
