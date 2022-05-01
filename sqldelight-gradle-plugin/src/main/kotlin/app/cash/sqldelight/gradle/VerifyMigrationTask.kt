@@ -36,13 +36,13 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @Internal lateinit var workingDirectory: File
+  @get:Internal abstract var workingDirectory: File
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 

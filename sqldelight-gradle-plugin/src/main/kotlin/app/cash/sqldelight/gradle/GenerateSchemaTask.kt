@@ -36,10 +36,10 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 

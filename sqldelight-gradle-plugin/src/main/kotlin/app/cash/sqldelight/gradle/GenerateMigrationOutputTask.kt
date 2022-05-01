@@ -32,11 +32,11 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
-  @Input lateinit var migrationOutputExtension: String
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Input abstract var migrationOutputExtension: String
 
   @TaskAction
   fun generateSchemaFile() {
