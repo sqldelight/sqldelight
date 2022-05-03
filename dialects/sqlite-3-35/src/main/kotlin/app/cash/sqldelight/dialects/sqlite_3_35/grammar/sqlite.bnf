@@ -89,11 +89,19 @@ upsert_do_update ::= SET {column_name} '=' {setter_expression} {update_stmt_subs
   implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertDoUpdate"
 }
 
-update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name} SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ] [ returning_clause ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] {
+update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
+  update_set_clause
+  [ WHERE <<expr '-1'>> ]
+  [ returning_clause ]
+  [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
+  LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
   pin = 4
   override = true
+}
+private update_set_clause ::= SET (( {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * ) | ( '(' {column_name} ( ',' {column_name} ) * ')' ) '=' ( '(' {setter_expression} ( ',' {setter_expression} ) * ')' )) {
+  pin(".*") = 1
 }
 
 delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ returning_clause ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] {

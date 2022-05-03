@@ -24,9 +24,11 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -42,9 +44,13 @@ object SqlDelightCompiler {
     file: SqlDelightQueriesFile,
     output: FileAppender
   ) {
-    writeTableInterfaces(file, output)
-    writeQueryInterfaces(file, output)
-    writeQueries(module, dialect, file, output)
+    try {
+      writeTableInterfaces(file, output)
+      writeQueryInterfaces(file, output)
+      writeQueries(module, dialect, file, output)
+    } catch (e: InvalidElementDetectedException) {
+      // It's okay if compilation is cut short, we can just quit out.
+    }
   }
 
   fun writeInterfaces(
@@ -175,7 +181,7 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    return filter { tryWithElement(it.select) { it.needsInterface() } }
+    return filter { tryWithElement(it.select) { it.needsInterface() } == true }
       .forEach { namedQuery ->
         val fileSpec = FileSpec.builder(namedQuery.interfaceType.packageName, namedQuery.name)
           .apply {
@@ -212,9 +218,14 @@ object SqlDelightCompiler {
 internal fun <T> tryWithElement(
   element: PsiElement,
   block: () -> T
-): T {
+): T? {
   try {
     return block()
+  } catch (e: ProcessCanceledException) {
+    throw e
+  } catch (e: InvalidElementDetectedException) {
+    // It's okay if compilation is cut short, we can just quit out.
+    return null
   } catch (e: Throwable) {
     val exception = IllegalStateException("Failed to compile $element :\n${element.text}")
     exception.initCause(e)

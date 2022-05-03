@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.SqlDelightSourceFolder
 import app.cash.sqldelight.core.lang.MigrationLanguage
 import app.cash.sqldelight.core.lang.SqlDelightLanguage
+import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
@@ -48,7 +49,7 @@ internal class TestEnvironment(
     )
     LanguageParserDefinitions.INSTANCE.forLanguage(SqlDelightLanguage).createParser(environment.project)
     LanguageParserDefinitions.INSTANCE.forLanguage(MigrationLanguage).createParser(environment.project)
-    environment.annotate(annotationHolder)
+    environment.annotate(annotationHolder, listOf(OptimisticLockValidator()))
     return environment
   }
 }

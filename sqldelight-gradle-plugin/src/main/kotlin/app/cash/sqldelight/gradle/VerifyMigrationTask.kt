@@ -16,6 +16,7 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
@@ -27,27 +28,21 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import org.gradle.workers.WorkerExecutor
 import java.io.File
 import java.util.ServiceLoader
-import javax.inject.Inject
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
-  @get:Inject
-  abstract override val workerExecutor: WorkerExecutor
-
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @Internal lateinit var workingDirectory: File
+  @get:Internal abstract var workingDirectory: File
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 
@@ -78,6 +73,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
@@ -114,11 +110,16 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
       val catalog = createCurrentDb()
 
-      sourceFolders.asSequence()
+      val databaseFiles = sourceFolders.asSequence()
         .findDatabaseFiles()
-        .forEach { dbFile ->
-          checkMigration(dbFile, catalog)
-        }
+
+      check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
+        "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+      }
+
+      databaseFiles.forEach { dbFile ->
+        checkMigration(dbFile, catalog)
+      }
 
       checkForGaps()
     }

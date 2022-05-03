@@ -30,8 +30,8 @@ sealed class ConnectionWrapper : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
-    accessConnection(false) {
+  ): Long {
+    return accessConnection(false) {
       val statement = useStatement(identifier, sql)
       if (binders != null) {
         try {
@@ -43,18 +43,20 @@ sealed class ConnectionWrapper : SqlDriver {
         }
       }
 
-      statement.execute()
+      val result = statement.executeUpdateDelete().toLong()
       statement.resetStatement()
       clearIfNeeded(identifier, statement)
+      return@accessConnection result
     }
   }
 
-  final override fun executeQuery(
+  final override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
+  ): R {
     return accessConnection(true) {
       val statement = getStatement(identifier, sql)
 
@@ -68,9 +70,10 @@ sealed class ConnectionWrapper : SqlDriver {
         }
       }
 
-      val cursor = statement.query()
-
-      SqliterSqlCursor(cursor) {
+      try {
+        val cursor = statement.query()
+        mapper(SqliterSqlCursor(cursor))
+      } finally {
         statement.resetStatement()
         if (closed)
           statement.finalizeStatement()

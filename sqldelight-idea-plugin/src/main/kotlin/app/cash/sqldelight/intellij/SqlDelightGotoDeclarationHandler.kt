@@ -20,7 +20,6 @@ import app.cash.sqldelight.core.lang.QUERIES_SUFFIX_NAME
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.queriesName
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import app.cash.sqldelight.intellij.util.isAncestorOf
 import com.alecstrong.sql.psi.core.psi.QueryElement
@@ -28,6 +27,9 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.progress.EmptyProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -47,6 +49,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 import org.jetbrains.kotlin.psi.psiUtil.getNextSiblingIgnoringWhitespaceAndComments
 import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
+import org.jetbrains.plugins.groovy.lang.psi.util.childrenOfType
 
 class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   override fun getGotoDeclarationTargets(
@@ -58,7 +61,10 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
       return emptyArray()
     }
 
-    val targetData = targetData(sourceElement) ?: return emptyArray()
+    val targetData = ProgressManager.getInstance().runProcess(
+      Computable { targetData(sourceElement) },
+      EmptyProgressIndicator().also { it.start() }
+    ) ?: return emptyArray()
     val function = targetData.function
     val elementFile = targetData.containingFile
 
@@ -82,7 +88,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
         .filter { it.sqlStmtList != null }
         .forEach inner@{ sqlDelightFile ->
           val identifier = sqlDelightFile.sqlStmtList!!
-            .findChildrenOfType<SqlDelightStmtIdentifier>()
+            .childrenOfType<SqlDelightStmtIdentifier>()
             .mapNotNull { it.identifier() }
             .firstOrNull { it.textMatches(function.name!!) } ?: return@inner
           result = if (targetData.parameter != null) {

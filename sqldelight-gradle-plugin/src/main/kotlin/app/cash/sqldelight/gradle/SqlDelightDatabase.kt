@@ -1,5 +1,6 @@
 package app.cash.sqldelight.gradle
 
+import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source
@@ -8,7 +9,6 @@ import com.android.builder.model.AndroidProject.FD_GENERATED
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Provider
 import java.io.File
@@ -19,7 +19,6 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  dialect: String? = null,
   var deriveSchemaFromMigrations: Boolean = false,
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
@@ -27,15 +26,23 @@ class SqlDelightDatabase(
 ) {
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isTransitive = false
-    if (dialect != null) dependencies.add(project.dependencies.create(dialect))
   }
 
-  var dialect: String? = dialect
-    set(value) {
-      if (field != null) throw IllegalStateException("Can only set a single dialect.")
-      field = value
-      if (value != null) configuration.dependencies.add(project.dependencies.create(value))
-    }
+  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath").apply {
+    isTransitive = false
+  }
+
+  internal var addedDialect: Boolean = false
+
+  fun module(module: Any) {
+    moduleConfiguration.dependencies.add(project.dependencies.create(module))
+  }
+
+  fun dialect(dialect: Any) {
+    if (addedDialect) throw IllegalStateException("Can only set a single dialect.")
+    configuration.dependencies.add(project.dependencies.create(dialect))
+    addedDialect = true
+  }
 
   /**
    * When SqlDelight finds an equality operation with a nullable typed rvalue such as:
@@ -108,13 +115,13 @@ class SqlDelightDatabase(
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
 
-    if (dialect == null) throw GradleException(
+    if (!addedDialect) throw GradleException(
       """
       A dialect is needed for SQLDelight. For example for sqlite:
 
       sqldelight {
         $name {
-          dialect = "sqlite:3.18"
+          dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
       }
       """.trimIndent()
@@ -186,7 +193,8 @@ class SqlDelightDatabase(
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
         it.verifyMigrations = verifyMigrations
-        it.classpath.setFrom(configuration.files)
+        it.classpath.setFrom(configuration.fileCollection { true })
+        it.classpath.from(moduleConfiguration.fileCollection { true })
       }
 
       val outputDirectoryProvider: Provider<File> = task.map { it.outputDirectory!! }
@@ -203,11 +211,11 @@ class SqlDelightDatabase(
       }
 
       if (!deriveSchemaFromMigrations) {
-        addMigrationTasks(sourceFiles.files + dependencyFiles.files, source, configuration)
+        addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
       }
 
       if (migrationOutputDirectory != null) {
-        addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source, configuration)
+        addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source)
       }
     }
   }
@@ -215,7 +223,6 @@ class SqlDelightDatabase(
   private fun addMigrationTasks(
     sourceSet: Collection<File>,
     source: Source,
-    configuration: Configuration,
   ) {
     val verifyMigrationTask =
       project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
@@ -229,7 +236,8 @@ class SqlDelightDatabase(
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations
-        it.classpath.setFrom(configuration.files)
+        it.classpath.setFrom(configuration.fileCollection { true })
+        it.classpath.from(moduleConfiguration.fileCollection { true })
       }
 
     if (schemaOutputDirectory != null) {
@@ -244,7 +252,8 @@ class SqlDelightDatabase(
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations
-        it.classpath.setFrom(configuration.files)
+        it.classpath.setFrom(configuration.fileCollection { true })
+        it.classpath.from(moduleConfiguration.fileCollection { true })
       }
     }
     project.tasks.named("check").configure {
@@ -258,7 +267,6 @@ class SqlDelightDatabase(
   private fun addMigrationOutputTasks(
     sourceSet: Collection<File>,
     source: Source,
-    configuration: Configuration,
   ) {
     project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
       it.projectName.set(project.name)
@@ -270,7 +278,8 @@ class SqlDelightDatabase(
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
       it.properties = getProperties()
-      it.classpath.setFrom(configuration.files)
+      it.classpath.setFrom(configuration.fileCollection { true })
+      it.classpath.from(moduleConfiguration.fileCollection { true })
     }
   }
 

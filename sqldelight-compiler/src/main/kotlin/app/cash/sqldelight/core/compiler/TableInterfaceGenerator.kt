@@ -20,10 +20,10 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.childOfType
-import app.cash.sqldelight.core.lang.util.parentOfType
+import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
-import com.alecstrong.sql.psi.core.psi.SqlColumnDef
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.util.PsiTreeUtil
@@ -50,9 +50,10 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
 
     val constructor = FunSpec.constructorBuilder()
 
-    table.columns.forEach { column ->
-      val columnName = allocateName(column.columnName)
-      val columnType = column.columnType as ColumnTypeMixin
+    table.query.columns.map { it.element as NamedElement }.forEach { column ->
+      val columnName = allocateName(column)
+      val columnDef = column.columnDefSource()!!
+      val columnType = columnDef.columnType as ColumnTypeMixin
       val javaType = columnType.type().javaType
       val typeWithoutAnnotations = javaType.copy(annotations = emptyList())
       typeSpec.addProperty(
@@ -62,11 +63,13 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
           .build()
       )
       val param = ParameterSpec.builder(columnName, typeWithoutAnnotations)
-      column.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
+      columnDef.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
       constructor.addParameter(param.build())
     }
 
-    val adapters = table.columns.mapNotNull { (it.columnType as ColumnTypeMixin).adapter() }
+    val adapters = table.query.columns
+      .map { (it.element as NamedElement).columnDefSource()!! }
+      .mapNotNull { (it.columnType as ColumnTypeMixin).adapter() }
 
     if (adapters.isNotEmpty()) {
       typeSpec.addType(
@@ -91,11 +94,18 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       )
     }
 
+    table.query.columns
+      .mapNotNull { column ->
+        val columnDef = (column.element as NamedElement).columnDefSource()!!
+        val columnType = columnDef.columnType as ColumnTypeMixin
+        columnType.valueClass()
+      }
+      .forEach {
+        typeSpec.addType(it)
+      }
+
     return typeSpec
       .primaryConstructor(constructor.build())
       .build()
   }
-
-  private val LazyQuery.columns: Collection<SqlColumnDef>
-    get() = query.columns.map { it.element.parentOfType() }
 }

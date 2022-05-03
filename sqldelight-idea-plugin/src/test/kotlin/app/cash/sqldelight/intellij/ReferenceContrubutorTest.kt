@@ -1,10 +1,10 @@
 package app.cash.sqldelight.intellij
 
 import app.cash.sqldelight.core.lang.SqlDelightFileType
-import app.cash.sqldelight.core.lang.util.findChildOfType
 import com.google.common.truth.Truth.assertThat
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtTypeAlias
+import org.jetbrains.plugins.groovy.lang.psi.util.childrenOfType
 
 class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
 
@@ -126,8 +126,8 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       """.trimMargin()
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
-    val psiClass = psiFile.findChildOfType<KtClassOrObject>()
-    assertThat(reference.isReferenceTo(psiClass!!)).isTrue()
+    val psiClass = psiFile.childrenOfType<KtClassOrObject>().single()
+    assertThat(reference.isReferenceTo(psiClass)).isTrue()
   }
 
   fun testImportedExpectClassResolvesCorrectly() {
@@ -150,8 +150,8 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       """.trimMargin()
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
-    val psiClass = file.findChildOfType<KtClassOrObject>()
-    assertThat(reference.isReferenceTo(psiClass!!)).isTrue()
+    val psiClass = file.childrenOfType<KtClassOrObject>().single()
+    assertThat(reference.isReferenceTo(psiClass)).isTrue()
   }
 
   fun testKotlinPrimitiveTypeImportResolvesCorrectly() {
@@ -174,8 +174,8 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       """.trimMargin()
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
-    val psiClass = file.findChildOfType<KtClassOrObject>()
-    assertThat(reference.isReferenceTo(psiClass!!)).isTrue()
+    val psiClass = file.childrenOfType<KtClassOrObject>().single()
+    assertThat(reference.isReferenceTo(psiClass)).isTrue()
   }
 
   fun testImportedPrimitiveTypeResolvesCorrectly() {
@@ -198,8 +198,8 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       """.trimMargin()
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
-    val psiClass = file.findChildOfType<KtClassOrObject>()
-    assertThat(reference.isReferenceTo(psiClass!!)).isTrue()
+    val psiClass = file.childrenOfType<KtClassOrObject>().single()
+    assertThat(reference.isReferenceTo(psiClass)).isTrue()
   }
 
   fun testSamePackageClassResolvesWithoutImport() {
@@ -220,8 +220,8 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       """.trimMargin()
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
-    val psiClass = file.findChildOfType<KtClassOrObject>()
-    assertThat(reference.isReferenceTo(psiClass!!)).isTrue()
+    val psiClass = file.childrenOfType<KtClassOrObject>().single()
+    assertThat(reference.isReferenceTo(psiClass)).isTrue()
   }
 
   fun testUnimportedClassDoesntResolve() {
@@ -290,7 +290,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |);
       """.trimMargin()
     )
-    val typeAlias = file.findChildOfType<KtTypeAlias>()!!.psiOrParent
+    val typeAlias = file.childrenOfType<KtTypeAlias>().single().psiOrParent
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     assertThat(reference.isReferenceTo(typeAlias)).isTrue()
   }

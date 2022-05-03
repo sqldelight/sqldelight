@@ -1,0 +1,1 @@
+ALTER TABLE Products RENAME COLUMN requires_dpi TO requiresDpi;

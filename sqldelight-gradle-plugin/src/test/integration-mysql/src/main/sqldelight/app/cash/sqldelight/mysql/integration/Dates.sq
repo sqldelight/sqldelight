@@ -1,0 +1,13 @@
+CREATE TABLE dates(
+  time TIME NOT NULL,
+  date DATE NOT NULL,
+  datetime DATETIME NOT NULL,
+  timestamp TIMESTAMP NOT NULL,
+  year YEAR NOT NULL
+);
+
+insertDate {
+INSERT INTO dates VALUES (?, ?, ?, ?, ?);
+
+SELECT * FROM dates LIMIT 1;
+}

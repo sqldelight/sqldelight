@@ -117,10 +117,10 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
+  ): Long {
     val (connection, onClose) = connectionAndClose()
     try {
-      connection.prepareStatement(sql).use { jdbcStatement ->
+      return connection.prepareStatement(sql).use { jdbcStatement ->
         JdbcPreparedStatement(jdbcStatement)
           .apply { if (binders != null) this.binders() }
           .execute()
@@ -130,20 +130,20 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     }
   }
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
+  ): R {
     val (connection, onClose) = connectionAndClose()
     try {
       return JdbcPreparedStatement(connection.prepareStatement(sql))
         .apply { if (binders != null) this.binders() }
-        .executeQuery(onClose)
-    } catch (e: Exception) {
+        .executeQuery(mapper)
+    } finally {
       onClose()
-      throw e
     }
   }
 
@@ -258,11 +258,22 @@ open class JdbcPreparedStatement(
     }
   }
 
-  fun executeQuery(onClose: () -> Unit) =
-    JdbcCursor(preparedStatement, preparedStatement.executeQuery(), onClose)
+  fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
+    try {
+      return preparedStatement.executeQuery()
+        .use { resultSet -> mapper(JdbcCursor(resultSet)) }
+    } finally {
+      preparedStatement.close()
+    }
+  }
 
-  fun execute() {
-    preparedStatement.execute()
+  fun execute(): Long {
+    return if (preparedStatement.execute()) {
+      // returned true so this is a result set return type.
+      0L
+    } else {
+      preparedStatement.updateCount.toLong()
+    }
   }
 }
 
@@ -270,11 +281,7 @@ open class JdbcPreparedStatement(
  * Iterate each row in [resultSet] and map the columns to Kotlin classes by calling [getString], [getLong] etc.
  * Use [next] to retrieve the next row and [close] to close the connection.
  */
-open class JdbcCursor(
-  private val preparedStatement: PreparedStatement,
-  val resultSet: ResultSet,
-  private val onClose: () -> Unit
-) : SqlCursor {
+open class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   override fun getString(index: Int): String? = resultSet.getString(index + 1)
   override fun getBytes(index: Int): ByteArray? = resultSet.getBytes(index + 1)
   override fun getBoolean(index: Int): Boolean? = getAtIndex(index, resultSet::getBoolean)
@@ -285,15 +292,12 @@ open class JdbcCursor(
   fun getFloat(index: Int): Float? = getAtIndex(index, resultSet::getFloat)
   override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
   fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
-  inline fun <reified T : Any> getObject(index: Int): T = resultSet.getObject(index + 1, T::class.java)
+  inline fun <reified T : Any> getObject(index: Int): T? = resultSet.getObject(index + 1, T::class.java)
+  @Suppress("UNCHECKED_CAST")
+  fun <T> getArray(index: Int) = getAtIndex(index, resultSet::getArray)?.array as Array<T>?
 
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
     converter(index + 1).takeUnless { resultSet.wasNull() }
 
-  override fun close() {
-    resultSet.close()
-    preparedStatement.close()
-    onClose()
-  }
   override fun next() = resultSet.next()
 }

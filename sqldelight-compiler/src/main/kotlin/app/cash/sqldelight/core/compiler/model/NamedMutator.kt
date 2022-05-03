@@ -35,8 +35,8 @@ sealed class NamedMutator(
 ) : NamedExecute(identifier, statement) {
   val containingFile = statement.sqFile() as SqlDelightQueriesFile
 
-  internal val tableEffected: TableNameElement by lazy {
-    tableName.referencedTables().single()
+  internal val tablesAffected: Collection<TableNameElement> by lazy {
+    tableName.referencedTables()
   }
 
   class Insert(

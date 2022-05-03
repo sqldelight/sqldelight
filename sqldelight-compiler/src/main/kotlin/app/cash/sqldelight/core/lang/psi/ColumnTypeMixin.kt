@@ -18,6 +18,7 @@ package app.cash.sqldelight.core.lang.psi
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.parentOfType
+import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightAnnotation
 import app.cash.sqldelight.core.psi.SqlDelightAnnotationValue
 import app.cash.sqldelight.core.psi.SqlDelightColumnType
@@ -25,9 +26,12 @@ import app.cash.sqldelight.core.psi.SqlDelightJavaType
 import app.cash.sqldelight.core.psi.SqlDelightJavaTypeName
 import app.cash.sqldelight.core.psi.SqlDelightParameterizedJavaType
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
+import app.cash.sqldelight.dialect.api.DialectType
 import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -35,16 +39,19 @@ import com.alecstrong.sql.psi.core.psi.impl.SqlColumnTypeImpl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.TokenSet
-import com.squareup.kotlinpoet.ARRAY
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.castSafelyTo
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.joinToCode
+import com.squareup.kotlinpoet.jvm.jvmInline
 
 internal abstract class ColumnTypeMixin(
   node: ASTNode
@@ -57,6 +64,28 @@ internal abstract class ColumnTypeMixin(
 
     var type = typeResolver.definitionType(typeName).copy(column = (parent as SqlColumnDef), name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
+
+    // Ensure we use the same value type for a foreign key.
+    columnConstraintList.mapNotNull { it.foreignKeyClause }.singleOrNull() // Foreign Key
+      ?.columnNameList?.singleOrNull() // Foreign Column
+      ?.reference?.resolve()?.let { resolvedKey -> // Resolved Column
+        val dialectType = resolvedKey.castSafelyTo<SqlColumnName>() // Column Name
+          ?.parent?.castSafelyTo<SqlColumnDef>() // Column Definition
+          ?.columnType?.castSafelyTo<ColumnTypeMixin>() // Column type
+          ?.type()?.dialectType?.castSafelyTo<ValueTypeDialectType>() ?: return@let // SqlDelight type
+        type = type.copy(
+          dialectType = dialectType,
+          javaType = dialectType.javaType
+        )
+      }
+
+    valueClass()?.let { valueType ->
+      val newDialectType = ValueTypeDialectType(valueType.name!!, type.dialectType)
+      type = type.copy(
+        dialectType = newDialectType,
+        javaType = newDialectType.javaType
+      )
+    }
     if (columnConstraintList.none {
       (it.node.findChildByType(SqlTypes.NOT) != null && it.node.findChildByType(SqlTypes.NULL) != null) ||
         it.node.findChildByType(SqlTypes.PRIMARY) != null
@@ -91,6 +120,27 @@ internal abstract class ColumnTypeMixin(
         .build()
     }
     return null
+  }
+
+  internal fun valueClass(): TypeSpec? {
+    if (node.getChildren(null).all { it.text != "VALUE" && it.text != "LOCK" }) return null
+
+    val columnName = (parent as SqlColumnDef).columnName.name
+    val type = typeResolver.definitionType(typeName).javaType
+    return TypeSpec.classBuilder(columnName.capitalize())
+      .primaryConstructor(
+        FunSpec.constructorBuilder()
+          .addParameter(columnName, type)
+          .build()
+      )
+      .addProperty(
+        PropertySpec.builder(columnName, type)
+          .initializer(columnName)
+          .build()
+      )
+      .addModifiers(KModifier.VALUE)
+      .jvmInline()
+      .build()
   }
 
   private fun SqlDelightJavaTypeName.type(): TypeName? {
@@ -173,24 +223,28 @@ internal abstract class ColumnTypeMixin(
       }
   }
 
+  internal inner class ValueTypeDialectType(
+    name: String,
+    val wrappedType: DialectType
+  ) : DialectType by wrappedType {
+    override val javaType: TypeName by lazy {
+      val tableName = PsiTreeUtil.getParentOfType(this@ColumnTypeMixin, Queryable::class.java)!!.tableExposed().tableName
+      ClassName(tableName.sqFile().packageName!!, allocateName(tableName).capitalize(), name)
+    }
+
+    override fun encode(value: CodeBlock): CodeBlock {
+      val columnName = (parent as SqlColumnDef).columnName
+      return wrappedType.encode(CodeBlock.of("$value.${columnName.text}"))
+    }
+
+    override fun decode(value: CodeBlock) = CodeBlock.of("%T(%L)", javaType, wrappedType.decode(value))
+  }
+
   private val ASTNode.prevVisibleSibling: ASTNode?
     get() = generateSequence(treePrev) { it.treePrev }
       .firstOrNull { it.psi !is PsiWhiteSpace }
 
   companion object {
     private val columnAdapterType = ClassName("app.cash.sqldelight", "ColumnAdapter")
-
-    internal val TypeName.isArrayType get() = when (this) {
-      is ParameterizedTypeName -> rawType == ARRAY
-      BooleanArray::class.asClassName(),
-      ByteArray::class.asClassName(),
-      CharArray::class.asClassName(),
-      DoubleArray::class.asClassName(),
-      FloatArray::class.asClassName(),
-      IntArray::class.asClassName(),
-      LongArray::class.asClassName(),
-      ShortArray::class.asClassName() -> true
-      else -> false
-    }
   }
 }

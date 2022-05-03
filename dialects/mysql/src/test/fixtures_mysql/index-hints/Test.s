@@ -1,0 +1,31 @@
+CREATE TABLE t1(
+  a VARCHAR(8) NOT NULL
+);
+
+CREATE INDEX i1 ON t1(a);
+
+CREATE INDEX i2 ON t1(a);
+
+SELECT * FROM t1 USE INDEX;
+
+SELECT * FROM t1 USE INDEX (i1) IGNORE INDEX FOR ORDER BY (i2) ORDER BY a;
+
+SELECT * FROM t1 USE INDEX (i1) USE INDEX (i1,i1);
+
+SELECT * FROM t1 USE INDEX FOR JOIN (i1) FORCE INDEX FOR JOIN (i2);
+
+CREATE TABLE table1(
+  col1 TEXT,
+  col2 TEXT,
+  col3 TEXT
+);
+
+CREATE INDEX col1_index ON table1(col1);
+CREATE INDEX col2_index ON table1(col2);
+CREATE INDEX col3_index ON table1(col3);
+
+SELECT * FROM table1 USE INDEX (col1_index,col2_index)
+  WHERE col1=1 AND col2=2 AND col3=3;
+
+SELECT * FROM table1 IGNORE INDEX (col3_index)
+  WHERE col1=1 AND col2=2 AND col3=3;

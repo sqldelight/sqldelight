@@ -1,0 +1,23 @@
+CREATE TABLE test (
+  -- This shouldn't cause issues because
+  -- it's a comment.
+  value TEXT NOT NULL,
+  value2 TEXT
+);
+
+CREATE INDEX testIndex ON test(value2);
+
+CREATE TRIGGER testTrigger
+AFTER DELETE ON test
+BEGIN
+INSERT INTO test VALUES ("3", "4");
+END;
+
+CREATE VIEW testView AS
+SELECT *
+FROM test
+WHERE value = 'sup';
+
+select:
+SELECT *
+FROM test;

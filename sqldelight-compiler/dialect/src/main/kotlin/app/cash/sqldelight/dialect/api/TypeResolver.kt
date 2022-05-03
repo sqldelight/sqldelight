@@ -1,6 +1,5 @@
 package app.cash.sqldelight.dialect.api
 
-import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -13,8 +12,6 @@ interface TypeResolver {
    * @return The type for [expr] for null if this resolver cannot solve.
    */
   fun resolvedType(expr: SqlExpr): IntermediateType
-
-  fun argumentType(bindArg: SqlBindExpr): IntermediateType
 
   /**
    * In the context of [parent], @return the type [argument] (which is a child expression) should have.

@@ -169,16 +169,18 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
     else -> {
       // Check if this is part of an inner expression of a resulit column.
       val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqlResultColumn::class.java)
-        ?: return null
-      (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
+
+      if (parentResult == null) NamedQuery("temp", SelectQueryable(compoundSelect, compoundSelect))
+        .resultColumns[resultColumnList.indexOf(result)]
+      else (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
     }
   }
 }
 
 internal fun SqlSetterExpression.argumentType(): IntermediateType {
   return when (val parentRule = parent!!) {
-    is SqlUpdateStmt -> parentRule.columnName!!.type()
-    is SqlUpdateStmtLimited -> parentRule.columnName!!.type()
+    is SqlUpdateStmt -> parentRule.columnNameList[parentRule.setterExpressionList.indexOf(this)].type()
+    is SqlUpdateStmtLimited -> parentRule.columnNameList[parentRule.setterExpressionList.indexOf(this)].type()
     is SqlUpdateStmtSubsequentSetter -> parentRule.columnName!!.type()
     else -> throw AssertionError()
   }

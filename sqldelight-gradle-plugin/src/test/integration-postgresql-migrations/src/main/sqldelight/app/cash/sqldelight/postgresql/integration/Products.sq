@@ -1,0 +1,7 @@
+insert:
+INSERT INTO Products(sku, requiresDpi)
+VALUES ?;
+
+selectAll:
+SELECT *
+FROM Products;

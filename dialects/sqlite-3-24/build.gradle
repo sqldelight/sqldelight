@@ -3,7 +3,6 @@ plugins {
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.grammarKitComposer)
   alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
 }
 
 grammarKit {
@@ -24,8 +23,6 @@ dependencies {
   testImplementation project(':sqldelight-compiler:dialect')
   testImplementation deps.sqlPsiTestFixtures
 }
-
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 tasks.getByName("shadowJar").configure {
   classifier = ''

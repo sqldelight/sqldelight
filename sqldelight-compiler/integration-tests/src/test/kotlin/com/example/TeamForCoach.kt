@@ -1,9 +1,8 @@
 package com.example
 
 import kotlin.Long
-import kotlin.String
 
 public data class TeamForCoach(
-  public val name: String,
+  public val name: Team.Name,
   public val captain: Long,
 )

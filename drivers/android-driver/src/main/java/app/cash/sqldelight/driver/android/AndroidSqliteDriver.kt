@@ -12,12 +12,10 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.db.AfterVersion
-import app.cash.sqldelight.db.AfterVersionWithDriver
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.migrateWithCallbacks
-import app.cash.sqldelight.db.toAfterVersionWithDriver
 
 private val DEFAULT_CACHE_SIZE = 20
 
@@ -166,14 +164,15 @@ class AndroidSqliteDriver private constructor(
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, AndroidStatement::execute)
+  ): Long = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, { execute() })
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders, AndroidStatement::executeQuery)
+  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
 
   override fun close() {
     statements.evictAll()
@@ -182,18 +181,13 @@ class AndroidSqliteDriver private constructor(
 
   open class Callback(
     private val schema: SqlDriver.Schema,
-    vararg callbacks: AfterVersionWithDriver,
+    vararg callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     private val callbacks = callbacks
 
     constructor(
       schema: SqlDriver.Schema
-    ) : this(schema, *emptyArray<AfterVersionWithDriver>())
-
-    constructor(
-      schema: SqlDriver.Schema,
-      vararg callbacks: AfterVersion
-    ) : this(schema, *callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray())
+    ) : this(schema, *emptyArray<AfterVersion>())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
@@ -217,8 +211,8 @@ class AndroidSqliteDriver private constructor(
 }
 
 internal interface AndroidStatement : SqlPreparedStatement {
-  fun execute()
-  fun executeQuery(): SqlCursor
+  fun execute(): Long
+  fun <R> executeQuery(mapper: (SqlCursor) -> R): R
   fun close()
 }
 
@@ -246,10 +240,10 @@ private class AndroidPreparedStatement(
     else statement.bindLong(index, if (boolean) 1L else 0L)
   }
 
-  override fun executeQuery() = throw UnsupportedOperationException()
+  override fun <R> executeQuery(mapper: (SqlCursor) -> R): R = throw UnsupportedOperationException()
 
-  override fun execute() {
-    statement.execute()
+  override fun execute(): Long {
+    return statement.executeUpdateDelete().toLong()
   }
 
   override fun close() {
@@ -289,7 +283,10 @@ private class AndroidQuery(
 
   override fun execute() = throw UnsupportedOperationException()
 
-  override fun executeQuery() = AndroidCursor(database.query(this))
+  override fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
+    return database.query(this)
+      .use { cursor -> mapper(AndroidCursor(cursor)) }
+  }
 
   override fun bindTo(statement: SupportSQLiteProgram) {
     for (action in binds.values) {
@@ -315,5 +312,4 @@ private class AndroidCursor(
   override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)
   override fun getDouble(index: Int) = if (cursor.isNull(index)) null else cursor.getDouble(index)
   override fun getBoolean(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index) == 1L
-  override fun close() = cursor.close()
 }

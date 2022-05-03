@@ -2,7 +2,6 @@ plugins {
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.grammarKitComposer)
   alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
 }
 
 grammarKit {
@@ -11,8 +10,8 @@ grammarKit {
 
 dependencies {
   compileOnly project(':sqldelight-compiler:dialect')
-  compileOnly deps.intellij.core
   compileOnly deps.intellij.lang
+  compileOnly deps.intellij.core.ui
 
   testImplementation deps.intellij.core
   testImplementation deps.intellij.lang

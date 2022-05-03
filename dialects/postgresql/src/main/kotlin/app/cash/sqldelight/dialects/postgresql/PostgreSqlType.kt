@@ -25,6 +25,8 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
   TIMESTAMP(ClassName("java.time", "LocalDateTime")),
   TIMESTAMP_TIMEZONE(ClassName("java.time", "OffsetDateTime")),
   INTERVAL(ClassName("org.postgresql.util", "PGInterval")),
+  UUID(ClassName("java.util", "UUID")),
+  NUMERIC(ClassName("java.math", "BigDecimal")),
   ;
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
@@ -32,7 +34,8 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
       .add(
         when (this) {
           SMALL_INT, INTEGER, BIG_INT -> "bindLong"
-          DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL -> "bindObject"
+          DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "bindObject"
+          NUMERIC -> "bindBigDecimal"
         }
       )
       .add("($columnIndex, %L)\n", value)
@@ -43,7 +46,8 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
     return CodeBlock.of(
       when (this) {
         SMALL_INT, INTEGER, BIG_INT -> "$cursorName.getLong($columnIndex)"
-        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL -> "$cursorName.getObject($columnIndex)"
+        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject($columnIndex)"
+        NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
       }
     )
   }

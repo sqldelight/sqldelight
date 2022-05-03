@@ -52,7 +52,7 @@ class LogSqliteDriverTest {
   @JsName("queryLogsCorrect")
   @Test fun `query logs are correct`() {
     val query = {
-      driver.executeQuery(3, "SELECT * FROM test", 0)
+      driver.executeQuery(3, "SELECT * FROM test", {}, 0)
     }
 
     query()
@@ -87,13 +87,14 @@ class LogSqliteDriverTest {
 }
 
 class FakeSqlDriver : SqlDriver {
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor {
-    return FakeSqlCursor()
+  ): R {
+    return mapper(FakeSqlCursor())
   }
 
   override fun execute(
@@ -101,7 +102,8 @@ class FakeSqlDriver : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ) {
+  ): Long {
+    return 0
   }
 
   override fun newTransaction(): Transaction {
@@ -148,9 +150,6 @@ class FakeSqlCursor : SqlCursor {
 
   override fun getBoolean(index: Int): Boolean? {
     return null
-  }
-
-  override fun close() {
   }
 }
 

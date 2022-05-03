@@ -55,11 +55,13 @@ test {
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:hsql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite:json-module:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-24:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-25:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-30:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-35:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-38:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
       ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
       ":runtime:publishJvmPublicationToInstallLocallyRepository",
@@ -87,6 +89,10 @@ test {
       excludeCategories 'app.cash.sqldelight.Instrumentation'
     }
   }
+}
+
+validatePlugins {
+  enableStricterValidation = true
 }
 
 if (System.getenv("CI") == "true") {

@@ -15,6 +15,7 @@ class FailureTest {
       .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
       .buildAndFail()
 
+    assertThat(output.output).contains("Compiling with dialect app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect")
     assertThat(output.output).contains(
       """
       |NoPackage.sq: (1, 0): SqlDelight files must be placed in a package directory.

@@ -55,9 +55,19 @@ dependencies {
   testImplementation project(':dialects:sqlite-3-25')
   testImplementation project(':dialects:sqlite-3-30')
   testImplementation project(':dialects:sqlite-3-35')
+  testImplementation project(':dialects:sqlite-3-38')
 }
 
 task pluginVersion {
+  def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+      commandLine 'git', 'rev-parse', '--short', 'HEAD'
+      standardOutput = stdout
+    }
+    return stdout.toString().trim()
+  }
+
   def outputDir = file("gen")
 
   inputs.property 'version', version
@@ -70,6 +80,7 @@ task pluginVersion {
 package app.cash.sqldelight
 
 val VERSION = "${project.version}"
+val GIT_SHA = "${getGitHash}"
 """
   }
 }
@@ -79,4 +90,5 @@ apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 afterEvaluate {
   tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
   tasks.named('dokkaHtml').configure { dependsOn('pluginVersion') }
+  tasks.named('javaSourcesJar').configure { dependsOn('pluginVersion') }
 }

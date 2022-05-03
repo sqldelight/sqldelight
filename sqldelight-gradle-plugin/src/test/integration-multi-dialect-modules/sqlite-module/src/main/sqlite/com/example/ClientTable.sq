@@ -1,0 +1,14 @@
+CREATE TABLE ClientTable (
+    guid TEXT PRIMARY KEY NOT NULL,
+    someValue TEXT NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO ClientTable(
+    guid,
+    someValue
+) VALUES ?
+RETURNING *;
+
+selectAll:
+SELECT * FROM ClientTable;

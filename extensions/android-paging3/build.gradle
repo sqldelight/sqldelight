@@ -4,7 +4,7 @@ plugins {
   alias(deps.plugins.dokka)
 }
 
-archivesBaseName = 'sqldelight-android-paging3'
+archivesBaseName = 'sqldelight-androidx-paging3'
 
 dependencies {
   // workaround for https://youtrack.jetbrains.com/issue/KT-27059

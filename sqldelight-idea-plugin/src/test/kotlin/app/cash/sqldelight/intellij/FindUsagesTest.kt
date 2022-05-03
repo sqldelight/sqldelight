@@ -1,9 +1,11 @@
 package app.cash.sqldelight.intellij
 
+import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlNewTableName
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlViewName
@@ -242,6 +244,25 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       *columnAlias.drop(1).map {
         UsageInfo(it)
       }.toTypedArray()
+    )
+  }
+
+  fun testFindsUsagesNewTableName() {
+    myFixture.configureByText(
+      MigrationFileType,
+      """
+      |CREATE TABLE test (
+      |  stuff TEXT NOT NULL
+      |);
+      |
+      |ALTER TABLE test RENAME TO test2;
+      |ALTER TABLE test2 RENAME TO test3;
+    """.trimMargin()
+    )
+    val newName = searchForElement<SqlNewTableName>("test2").single()
+
+    assertThat(myFixture.findUsages(newName)).containsExactly(
+      *(searchForElement<SqlTableName>("test2") + newName).map(::UsageInfo).toTypedArray()
     )
   }
 }

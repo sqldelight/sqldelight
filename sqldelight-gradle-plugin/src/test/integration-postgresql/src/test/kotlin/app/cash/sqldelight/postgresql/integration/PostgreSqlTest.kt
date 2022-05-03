@@ -1,9 +1,11 @@
 package app.cash.sqldelight.postgresql.integration
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
@@ -85,5 +87,58 @@ class PostgreSqlTest {
           timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
         )
       )
+  }
+
+  @Test fun testSerial() {
+    database.run {
+      oneEntityQueries.transaction {
+        oneEntityQueries.insert("name1")
+        oneEntityQueries.insert("name2")
+        oneEntityQueries.insert("name3")
+      }
+      assertThat(oneEntityQueries.selectAll().executeAsList().map { it.id }).containsExactly(1, 2, 3)
+    }
+  }
+
+  @Test fun testArrays() {
+    with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).executeAsOne()) {
+      assertThat(intArray!!.asList()).containsExactly(1, 2).inOrder()
+      assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
+    }
+  }
+
+  @Test fun successfulOptimisticLock() {
+    with(database.withLockQueries) {
+      val row = insertText("sup").executeAsOne()
+
+      updateText(
+        id = row.id,
+        version = row.version,
+        text = "sup2"
+      )
+
+      assertThat(selectForId(row.id).executeAsOne().text).isEqualTo("sup2")
+    }
+  }
+
+  @Test fun unsuccessfulOptimisticLock() {
+    with(database.withLockQueries) {
+      val row = insertText("sup").executeAsOne()
+
+      updateText(
+        id = row.id,
+        version = row.version,
+        text = "sup2"
+      )
+
+      try {
+        updateText(
+          id = row.id,
+          version = row.version,
+          text = "sup3"
+        )
+        Assert.fail()
+      } catch (e: OptimisticLockException) { }
+    }
   }
 }

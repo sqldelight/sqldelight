@@ -1,8 +1,8 @@
 package com.squareup.sqldelight.drivers.sqljs
 
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
-import app.cash.sqldelight.db.use
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import kotlin.js.Promise
 import kotlin.test.AfterTest
@@ -72,14 +72,14 @@ class JsDriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    val query = {
-      driver.executeQuery(3, "SELECT * FROM test", 0)
+    fun query(mapper: (SqlCursor) -> Unit) {
+      driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
     }
-    val changes = {
-      driver.executeQuery(4, "SELECT changes()", 0)
+    fun changes(mapper: (SqlCursor) -> Long?): Long? {
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
     }
 
-    query().use {
+    query {
       assertFalse(it.next())
     }
 
@@ -88,14 +88,14 @@ class JsDriverTest {
       bindString(2, "Alec")
     }
 
-    query().use {
+    query {
       assertTrue(it.next())
       assertFalse(it.next())
     }
 
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes { it.next(); it.getLong(0) })
 
-    query().use {
+    query {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
@@ -105,9 +105,9 @@ class JsDriverTest {
       bindLong(1, 2)
       bindString(2, "Jake")
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes { it.next(); it.getLong(0) })
 
-    query().use {
+    query {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
@@ -117,9 +117,9 @@ class JsDriverTest {
     }
 
     driver.execute(5, "DELETE FROM test", 0)
-    assertEquals(2, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(2, changes { it.next(); it.getLong(0) })
 
-    query().use {
+    query {
       assertFalse(it.next())
     }
   }
@@ -129,40 +129,46 @@ class JsDriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    val changes = {
-      driver.executeQuery(4, "SELECT changes()", 0)
+    fun changes(mapper: (SqlCursor) -> Long?): Long? {
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
     }
 
     insert {
       bindLong(1, 1)
       bindString(2, "Alec")
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes { it.next(); it.getLong(0) })
     insert {
       bindLong(1, 2)
       bindString(2, "Jake")
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes { it.next(); it.getLong(0) })
 
-    val query = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", 1, binders)
+    fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
+      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
-    query {
-      bindString(1, "Jake")
-    }.use {
-      assertTrue(it.next())
-      assertEquals(2, it.getLong(0))
-      assertEquals("Jake", it.getString(1))
-    }
+    query(
+      binders = {
+        bindString(1, "Jake")
+      },
+      mapper = {
+        assertTrue(it.next())
+        assertEquals(2, it.getLong(0))
+        assertEquals("Jake", it.getString(1))
+      }
+    )
 
     // Second time running the query is fine
-    query {
-      bindString(1, "Jake")
-    }.use {
-      assertTrue(it.next())
-      assertEquals(2, it.getLong(0))
-      assertEquals("Jake", it.getString(1))
-    }
+    query(
+      binders = {
+        bindString(1, "Jake")
+      },
+      mapper = {
+        assertTrue(it.next())
+        assertEquals(2, it.getLong(0))
+        assertEquals("Jake", it.getString(1))
+      }
+    )
   }
 
   @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = driverPromise.then { driver ->
@@ -170,7 +176,10 @@ class JsDriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
-    val changes = { driver.executeQuery(4, "SELECT changes()", 0) }
+    fun changes(mapper: (SqlCursor) -> Long?): Long? {
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
+    }
+
     insert {
       bindLong(1, 1)
       bindLong(2, null)
@@ -178,9 +187,9 @@ class JsDriverTest {
       bindBytes(4, null)
       bindDouble(5, null)
     }
-    assertEquals(1, changes().apply { next() }.use { it.getLong(0) })
+    assertEquals(1, changes { it.next(); it.getLong(0) })
 
-    driver.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
+    val mapper: (SqlCursor) -> Unit = {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))
@@ -188,6 +197,7 @@ class JsDriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }
 
   @Test fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = driverPromise.then { driver ->
@@ -204,7 +214,7 @@ class JsDriverTest {
       bindDouble(5, Float.MAX_VALUE.toDouble())
     }
 
-    driver.executeQuery(8, "SELECT * FROM nullability_test", 0).use {
+    val mapper: (SqlCursor) -> Unit = {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals(Long.MAX_VALUE, it.getLong(1))
@@ -212,5 +222,6 @@ class JsDriverTest {
       it.getBytes(3)?.forEachIndexed { index, byte -> assertEquals(index.toByte(), byte) }
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }
 }

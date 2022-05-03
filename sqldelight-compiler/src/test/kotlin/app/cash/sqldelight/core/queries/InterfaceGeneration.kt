@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.QueryInterfaceGenerator
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.google.common.truth.Truth.assertThat
@@ -725,6 +726,306 @@ class InterfaceGeneration {
       |  @java.lang.Deprecated
       |  public val other_thing: kotlin.String,
       |)
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `query does not return type of unrelated view`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE VIEW first_song_in_album AS
+      |SELECT * FROM song WHERE track_number = 1;
+      |
+      |CREATE TABLE song(
+      |    title TEXT,
+      |    track_number INTEGER,
+      |    album_id INTEGER
+      |);
+      |
+      |selectSongsByAlbumId:
+      |SELECT * FROM song WHERE album_id = ?;
+    """.trimMargin(),
+      temporaryFolder, fileName = "song.sq"
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SongQueries.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class SongQueries(
+      |  private val driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectSongsByAlbumId(album_id: Long?, mapper: (
+      |    title: String?,
+      |    track_number: Long?,
+      |    album_id: Long?,
+      |  ) -> T): Query<T> = SelectSongsByAlbumIdQuery(album_id) { cursor ->
+      |    mapper(
+      |      cursor.getString(0),
+      |      cursor.getLong(1),
+      |      cursor.getLong(2)
+      |    )
+      |  }
+      |
+      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id) {
+      |      title, track_number, album_id_ ->
+      |    Song(
+      |      title,
+      |      track_number,
+      |      album_id_
+      |    )
+      |  }
+      |
+      |  private inner class SelectSongsByAlbumIdQuery<out T : Any>(
+      |    public val album_id: Long?,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, arrayOf("song"))
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, arrayOf("song"))
+      |    }
+      |
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null,
+      |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
+      |        1) {
+      |      bindLong(1, album_id)
+      |    }
+      |
+      |    public override fun toString(): String = "song.sq:selectSongsByAlbumId"
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `returning statement in select works fine`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE IF NOT EXISTS userEntity (
+      |    user_id SERIAL PRIMARY KEY,
+      |    slack_user_id VARCHAR NOT NULL
+      |);
+      |
+      |CREATE TABLE IF NOT EXISTS subscriptionEntity (
+      |    user_id2 SERIAL NOT NULL,
+      |    FOREIGN KEY (user_id2) REFERENCES userEntity(user_id)
+      |);
+      |
+      |insertSubscription:
+      |INSERT INTO subscriptionEntity(user_id2)
+      |VALUES (?);
+      |
+      |insertUser:
+      |WITH inserted_ids AS (
+      |  INSERT INTO userEntity(slack_user_id)
+      |  VALUES (?)
+      |  RETURNING user_id AS insert_id
+      |) SELECT insert_id FROM inserted_ids;
+    """.trimMargin(),
+      temporaryFolder, fileName = "Subscription.sq", overrideDialect = PostgreSqlDialect()
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SubscriptionQueries.kt")
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.driver.jdbc.JdbcCursor
+      |import app.cash.sqldelight.driver.jdbc.JdbcDriver
+      |import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
+      |import kotlin.Any
+      |import kotlin.Int
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class SubscriptionQueries(
+      |  private val driver: JdbcDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun insertUser(slack_user_id: String): Query<Int> = InsertUserQuery(slack_user_id) {
+      |      cursor ->
+      |    check(cursor is JdbcCursor)
+      |    cursor.getLong(0)!!.toInt()
+      |  }
+      |
+      |  public fun insertSubscription(user_id2: Int): Unit {
+      |    driver.execute(${result.compiledFile.namedMutators[0].id}, ""${'"'}
+      |        |INSERT INTO subscriptionEntity(user_id2)
+      |        |VALUES (?)
+      |        ""${'"'}.trimMargin(), 1) {
+      |          check(this is JdbcPreparedStatement)
+      |          bindLong(1, user_id2.toLong())
+      |        }
+      |    notifyQueries(${result.compiledFile.namedMutators[0].id}) { emit ->
+      |      emit("subscriptionEntity")
+      |    }
+      |  }
+      |
+      |  private inner class InsertUserQuery<out T : Any>(
+      |    public val slack_user_id: String,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, arrayOf("userEntity"))
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, arrayOf("userEntity"))
+      |    }
+      |
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${result.compiledFile.namedQueries[0].id},
+      |        ""${'"'}
+      |    |WITH inserted_ids AS (
+      |    |  INSERT INTO userEntity(slack_user_id)
+      |    |  VALUES (?)
+      |    |  RETURNING user_id AS insert_id
+      |    |) SELECT insert_id FROM inserted_ids
+      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |      check(this is JdbcPreparedStatement)
+      |      bindString(1, slack_user_id)
+      |    }
+      |
+      |    public override fun toString(): String = "Subscription.sq:insertUser"
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `value types correctly generated`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE item (
+      |    id INTEGER PRIMARY KEY AUTOINCREMENT,
+      |    parent_id INTEGER,
+      |    children INTEGER NOT NULL
+      |);
+      |
+      |recursiveQuery:
+      |WITH RECURSIVE
+      |descendants AS (
+      |    SELECT id, parent_id
+      |    FROM item
+      |    WHERE item.id = :id
+      |    UNION ALL
+      |    SELECT item.id, item.parent_id
+      |    FROM item, descendants
+      |    WHERE item.id = descendants.parent_id
+      |)
+      |SELECT descendants.id, descendants.parent_id
+      |FROM descendants;
+      |""".trimMargin(),
+      temporaryFolder, fileName = "Recursive.sq"
+    )
+
+    val query = result.compiledFile.namedQueries[0]
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQuery.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |
+      |public data class RecursiveQuery(
+      |  public val id: Long,
+      |  public val parent_id: Long?,
+      |)
+      |""".trimMargin()
+    )
+
+    val generatedQueries = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQueries.kt"))
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |import kotlin.Unit
+      |
+      |public class RecursiveQueries(
+      |  private val driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> recursiveQuery(id: Long, mapper: (id: Long, parent_id: Long?) -> T): Query<T>
+      |      = RecursiveQueryQuery(id) { cursor ->
+      |    mapper(
+      |      cursor.getLong(0)!!,
+      |      cursor.getLong(1)
+      |    )
+      |  }
+      |
+      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id) { id_,
+      |      parent_id ->
+      |    RecursiveQuery(
+      |      id_,
+      |      parent_id
+      |    )
+      |  }
+      |
+      |  private inner class RecursiveQueryQuery<out T : Any>(
+      |    public val id: Long,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    public override fun addListener(listener: Query.Listener): Unit {
+      |      driver.addListener(listener, arrayOf("item"))
+      |    }
+      |
+      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |      driver.removeListener(listener, arrayOf("item"))
+      |    }
+      |
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${query.id},
+      |        ""${'"'}
+      |    |WITH RECURSIVE
+      |    |descendants AS (
+      |    |    SELECT id, parent_id
+      |    |    FROM item
+      |    |    WHERE item.id = ?
+      |    |    UNION ALL
+      |    |    SELECT item.id, item.parent_id
+      |    |    FROM item, descendants
+      |    |    WHERE item.id = descendants.parent_id
+      |    |)
+      |    |SELECT descendants.id, descendants.parent_id
+      |    |FROM descendants
+      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |      bindLong(1, id)
+      |    }
+      |
+      |    public override fun toString(): String = "Recursive.sq:recursiveQuery"
+      |  }
+      |}
       |""".trimMargin()
     )
   }

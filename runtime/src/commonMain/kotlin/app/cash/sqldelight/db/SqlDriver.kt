@@ -24,21 +24,26 @@ import app.cash.sqldelight.Transacter
  */
 interface SqlDriver : Closeable {
   /**
-   * Execute a SQL statement and return a [SqlCursor] that iterates the result set.
+   * Execute a SQL statement and evaluate its result set using the given block.
    *
    * @param [identifier] An opaque, unique value that can be used to implement any driver-side
    *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
    * @param [sql] The SQL string to be executed.
+   * @param [mapper] A lambda which is called with the cursor when the statement is executed
+   *   successfully. The generic result of the lambda is returned to the caller, as soon as the
+   *   mutual exclusion on the database connection ends. The cursor **must not escape** the block
+   *   scope.
    * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
    */
-  fun executeQuery(
+  fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
-  ): SqlCursor
+  ): R
 
   /**
    * Execute a SQL statement.
@@ -49,13 +54,18 @@ interface SqlDriver : Closeable {
    * @param [parameters] The number of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
+   *
+   * @return The number of rows updated for an INSERT/DELETE/UPDATE, or 0 for other SQL statements.
+   *
+   * NOTE it is up to the specific driver to correctly return the row changes. Notably the SQLJS
+   * driver does not do this and you should query changes() manually.
    */
   fun execute(
     identifier: Int?,
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
-  )
+  ): Long
 
   /**
    * Start a new [Transacter.Transaction] on the database.
@@ -100,43 +110,13 @@ interface SqlDriver : Closeable {
 
 /**
  * Represents a block of code [block] that should be executed during a migration after the migration
- * has finished migrating to [afterVersion].
- */
-class AfterVersion(
-  internal val afterVersion: Int,
-  internal val block: () -> Unit
-)
-
-/**
- * Represents a block of code [block] that should be executed during a migration after the migration
  * has finished migrating to [afterVersion]. Unlike [AfterVersion], this version's lambda accepts a
  * [SqlDriver] as a parameter to make migrations easier.
  */
-class AfterVersionWithDriver(
+class AfterVersion(
   internal val afterVersion: Int,
   internal val block: (SqlDriver) -> Unit
 )
-
-/**
- * Wrap an [AfterVersion] as an [AfterVersionWithDriver].
- */
-fun AfterVersion.toAfterVersionWithDriver() =
-  AfterVersionWithDriver(afterVersion) { block() }
-
-/**
- * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
- * it finished upgrading to a version specified by [AfterVersion.afterVersion]. This method
- * takes [AfterVersion] callbacks, which receive no parameters when invoked.
- */
-fun SqlDriver.Schema.migrateWithCallbacks(
-  driver: SqlDriver,
-  oldVersion: Int,
-  newVersion: Int,
-  vararg callbacks: AfterVersion
-) {
-  val wrappedCallbacks = callbacks.map { it.toAfterVersionWithDriver() }.toTypedArray()
-  migrateWithCallbacks(driver, oldVersion, newVersion, *wrappedCallbacks)
-}
 
 /**
  * Run [SqlDriver.Schema.migrate] normally but execute [callbacks] during the migration whenever
@@ -147,7 +127,7 @@ fun SqlDriver.Schema.migrateWithCallbacks(
   driver: SqlDriver,
   oldVersion: Int,
   newVersion: Int,
-  vararg callbacks: AfterVersionWithDriver
+  vararg callbacks: AfterVersion
 ) {
   var lastVersion = oldVersion
 

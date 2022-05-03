@@ -56,5 +56,9 @@ CREATE TABLE all_types(
   some_boolean BOOLEAN,
   some_bool BOOL,
   some_json JSON,
-  some_jsonb JSONB
+  some_jsonb JSONB,
+
+  some_bytea BYTEA,
+
+  some_int2_array INT2[]
 );

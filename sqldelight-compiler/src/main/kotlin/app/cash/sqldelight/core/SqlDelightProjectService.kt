@@ -25,6 +25,10 @@ interface SqlDelightProjectService {
   var dialect: SqlDelightDialect
   var treatNullAsUnknownForEquality: Boolean
 
+  fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
+    this.dialect = dialect
+  }
+
   fun module(vFile: VirtualFile): Module?
 
   fun fileIndex(module: Module): SqlDelightFileIndex

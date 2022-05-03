@@ -15,27 +15,33 @@
  */
 package app.cash.sqldelight.core.lang.util
 
+import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.InsertStmtValuesMixin
+import app.cash.sqldelight.dialect.api.ExposableType
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.AliasElement
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
+import com.alecstrong.sql.psi.core.psi.SqlPragmaName
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
@@ -51,9 +57,11 @@ internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
 }
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
+  is ExposableType -> type()
   is SqlTypeName -> sqFile().typeResolver.definitionType(this)
   is AliasElement -> source().type().copy(name = name)
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
+  is SqlPragmaName -> IntermediateType(TEXT)
   is SqlColumnName -> {
     when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()
@@ -76,6 +84,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
     }
   }
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
+  is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
@@ -88,13 +97,33 @@ private fun synthesizedColumnType(columnName: String): IntermediateType {
   return IntermediateType(dialectType, name = columnName)
 }
 
+fun PsiDirectory.queryFiles(): Sequence<SqlDelightQueriesFile> {
+  return children.asSequence().flatMap {
+    when (it) {
+      is PsiDirectory -> it.queryFiles()
+      is SqlDelightQueriesFile -> sequenceOf(it)
+      else -> emptySequence()
+    }
+  }
+}
+
+fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
+  return children.asSequence().flatMap {
+    when (it) {
+      is PsiDirectory -> it.migrationFiles()
+      is MigrationFile -> sequenceOf(it)
+      else -> emptySequence()
+    }
+  }
+}
+
 internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
 
-inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): Collection<T> {
+inline fun <reified T : SqlAnnotatedElement> PsiElement.findChildrenOfType(): Collection<T> {
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
 }
 
-inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+inline fun <reified T : SqlAnnotatedElement> PsiElement.findChildOfType(): T? {
   return PsiTreeUtil.findChildOfType(this, T::class.java)
 }
 
@@ -124,6 +153,14 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
           (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
+        second = ""
+      )
+    )
+  } else if (this is ColumnTypeMixin && node.getChildren(null).any { it.text == "VALUE" || it.text == "LOCK" }) {
+    listOf(
+      Pair(
+        first = (typeName.node.startOffset + typeName.node.textLength) until
+          (node.getChildren(null).single { it.text == "VALUE" || it.text == "LOCK" }.let { it.startOffset + it.textLength }),
         second = ""
       )
     )
@@ -171,7 +208,7 @@ fun PsiElement.rawSqlText(
     ).second
 }
 
-internal val PsiElement.range: IntRange
+val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(

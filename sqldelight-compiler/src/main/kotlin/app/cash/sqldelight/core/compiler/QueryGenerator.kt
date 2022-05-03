@@ -2,12 +2,15 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
+import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.DRIVER_NAME
+import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
 import app.cash.sqldelight.core.lang.util.childOfType
+import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.core.lang.util.range
@@ -22,6 +25,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
@@ -52,9 +56,15 @@ abstract class QueryGenerator(
     val result = CodeBlock.builder()
 
     if (query.statement is SqlDelightStmtClojureStmtList) {
+      if (query is NamedQuery) {
+        result.add("return transactionWithResult {\n").indent()
+      } else {
+        result.add("transaction {\n").indent()
+      }
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))
       }
+      result.unindent().add("}\n")
     } else {
       result.add(executeBlock(query.statement, query.id))
     }
@@ -190,15 +200,21 @@ abstract class QueryGenerator(
       }
     }
 
+    val optimisticLock = if (query is NamedMutator.Update) {
+      val columnsUpdated =
+        query.update.updateStmtSubsequentSetterList.mapNotNull { it.columnName } +
+          query.update.columnNameList
+      columnsUpdated.singleOrNull {
+        it.columnDefSource()!!.columnType.node.getChildren(null).any { it.text == "LOCK" }
+      }
+    } else {
+      null
+    }
+
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    val executeMethod = if (query is NamedQuery &&
+    val isNamedQuery = query is NamedQuery &&
       (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
-    ) {
-      "return $DRIVER_NAME.executeQuery"
-    } else {
-      "$DRIVER_NAME.execute"
-    }
     if (nonArrayBindArgsCount != 0) {
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
@@ -206,6 +222,7 @@ abstract class QueryGenerator(
       statement.rawSqlText(replacements),
       argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
+
     val binder: String
 
     if (argumentCounts.isEmpty()) {
@@ -225,10 +242,40 @@ abstract class QueryGenerator(
       arguments.add(binderLambda.build())
       binder = "%L"
     }
-    result.addStatement(
-      "$executeMethod(${if (needsFreshStatement) "null" else "$id"}, %P, %L)$binder",
-      *arguments.toTypedArray()
-    )
+
+    val statementId = if (needsFreshStatement) "null" else "$id"
+
+    if (isNamedQuery) {
+      val execute = if (query.statement is SqlDelightStmtClojureStmtList) {
+        "$DRIVER_NAME.executeQuery"
+      } else {
+        "return $DRIVER_NAME.executeQuery"
+      }
+      result.addStatement(
+        "$execute($statementId, %P, $MAPPER_NAME, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    } else if (optimisticLock != null) {
+      result.addStatement(
+        "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    } else {
+      result.addStatement(
+        "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    }
+
+    if (query is NamedMutator.Update && optimisticLock != null) {
+      result.addStatement(
+        """
+        if (result == 0L) throw %T(%S)
+        """.trimIndent(),
+        ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
+        "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
+      )
+    }
 
     return result.build()
   }

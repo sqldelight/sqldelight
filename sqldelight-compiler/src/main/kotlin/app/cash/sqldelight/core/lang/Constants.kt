@@ -24,6 +24,7 @@ internal val QUERY_LISTENER_LIST_TYPE = ClassName("kotlin.collections", "Mutable
   .parameterizedBy(QUERY_LISTENER_TYPE)
 
 internal const val MAPPER_NAME = "mapper"
+internal const val EXECUTE_BLOCK_NAME = "block"
 
 internal const val EXECUTE_METHOD = "execute"
 

@@ -95,16 +95,17 @@ internal class FileIndexMap {
 
             Timber.i("Fetching SQLDelight models")
             val javaHome =
-              ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_PROJECT_JDK)
+              ExternalSystemJdkUtil.getJdk(project, ExternalSystemJdkUtil.USE_JAVA_HOME)
                 ?.homeDirectory?.path?.let { File(it) }
             val properties =
               connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
 
             Timber.i("Assembling file index")
             return@execute properties.mapValues { (_, value) ->
-              if (value == null) return@mapValues defaultIndex
+              val compatibility = if (value == null) {
+                Incompatible("The IDE and Gradle versions of SQLDelight are incompatible, please update the lower version.")
+              } else GradleCompatibility.validate(value)
 
-              val compatibility = GradleCompatibility.validate(value)
               if (compatibility is Incompatible) {
                 FileIndexingNotification.getInstance(project).unconfiguredReason =
                   FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason)
@@ -112,11 +113,15 @@ internal class FileIndexMap {
               }
 
               val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
-              pluginDescriptor.addDialect(value.dialectJar.toURI())
+              val shouldInvalidate = pluginDescriptor.addDialect(
+                listOf(value!!.dialectJar.toURI()) +
+                  value.moduleJars.map { it.toURI() }
+              )
 
               val database = value.databases.first()
               SqlDelightProjectService.getInstance(module.project).apply {
-                dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+                val dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).single()
+                setDialect(dialect, shouldInvalidate)
                 treatNullAsUnknownForEquality = database.treatNullAsUnknownForEquality
               }
 
@@ -128,6 +133,13 @@ internal class FileIndexMap {
         EditorNotifications.getInstance(module.project).updateAllNotifications()
       } catch (externalException: ExternalSystemException) {
         // It's a gradle error, ignore and let the user fix when they try and build the project
+
+        FileIndexingNotification.getInstance(project).unconfiguredReason =
+          FileIndexingNotification.UnconfiguredReason.Incompatible(
+            """
+            Connecting with the SQLDelight plugin failed: try building from the command line.
+            """.trimIndent()
+          )
       } finally {
         fetchThread = null
         initialized = false
@@ -138,11 +150,12 @@ internal class FileIndexMap {
   companion object {
     internal var defaultIndex: SqlDelightFileIndex = SqlDelightFileIndexImpl()
 
-    private var previouslyAddedDialect: Path? = null
+    private var previouslyAddedDialect: Collection<Path>? = null
 
     @Suppress("UnstableApiUsage", "UNCHECKED_CAST") // Naughty method.
-    private fun PluginDescriptor.addDialect(uri: URI) {
-      val dialectPath = Path.of(uri)
+    private fun PluginDescriptor.addDialect(uris: Collection<URI>): Boolean {
+      val dialectPath = uris.map(Path::of)
+      val shouldInvalidate = previouslyAddedDialect != dialectPath
       val pluginClassLoader = pluginClassLoader as UrlClassLoader
 
       // We need to remove the last loaded dialect as well as add our new one.
@@ -155,13 +168,15 @@ internal class FileIndexMap {
 
       // Remove the last loaded dialect.
       previouslyAddedDialect?.let {
-        files.remove(it)
+        files.removeAll(it)
       }
       previouslyAddedDialect = dialectPath
 
       // Add the new one in.
-      files.add(dialectPath)
+      files.addAll(dialectPath)
       pluginClassLoader.classPath.reset(files)
+
+      return shouldInvalidate
     }
   }
 }

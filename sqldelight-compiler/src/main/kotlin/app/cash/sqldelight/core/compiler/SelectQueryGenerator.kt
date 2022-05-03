@@ -188,7 +188,7 @@ class SelectQueryGenerator(
     }
 
     // Assemble the actual mapper lambda:
-    // { resultSet ->
+    // { cursor ->
     //   check(cursor is SqlCursorSubclass)
     //   mapper(
     //       resultSet.getLong(0),
@@ -295,9 +295,12 @@ class SelectQueryGenerator(
     // Query<T>
     queryType.superclass(query.supertype().parameterizedBy(returnType))
 
+    val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
-      .returns(CURSOR_TYPE)
+      .addTypeVariable(genericResultType)
+      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = *arrayOf(CURSOR_TYPE), returnType = genericResultType))
+      .returns(genericResultType)
       .addCode(executeBlock())
 
     // For each bind argument the query has.

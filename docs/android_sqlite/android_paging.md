@@ -1,38 +1,8 @@
 # Android Paging
 
-## AndroidX Paging2
+## AndroidX Paging
 
-To use SQLDelight with [Android's Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) add a dependency on the paging extension artifact.
-
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:android-paging-extensions:{{ versions.sqldelight }}"
-}
-```
-
-To create a `DataSource` write a query to get the number of rows and a query that takes an offset and a limit.
-
-```sql
-countPlayers:
-SELECT count(*) FROM hockeyPlayer;
-
-players:
-SELECT *
-FROM hockeyPlayer
-LIMIT :limit OFFSET :offset;
-```
-
-```kotlin
-val dataSource = QueryDataSourceFactory(
-  queryProvider = playerQueries::players,
-  countQuery = playerQueries.countPlayers(),
-  transacter = playerQueries,
-).create()
-```
-
-## AndroidX Paging3
-
-SQLDelight maintains an extension for AndroidX Paging3, which is currently in beta. To include SQLDelight Paging3 extensions:
+To use SQLDelight with [Android's Paging 3 Library](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) add a dependency on the paging extension artifact.
 
 ```groovy
 dependencies {
@@ -71,7 +41,7 @@ By default, queries are performed on `Dispatchers.IO` if no dispatcher is specif
 
 ### Keyset Paging
 
-Offset paging is simple and easy to maintain. Unfortunately it performs poorly on large datasets. The `OFFSET` clause of a SQL statement really just drops already executed rows in a SQL query. Therefore, as the number to `OFFSET` grows, so does the amount of time it takes to execute your query. To overcome this, SQLDelight offers a "keyset paging" imlementation of `PagingSource`. Rather than querying an entire dataset and inefficiently dropping the first `OFFSET` elements, keyset paging operates using a unique column to restrict the bounds of your queries. This performs better at the expense of higher developer maintenance. 
+Offset paging is simple and easy to maintain. Unfortunately it performs poorly on large datasets. The `OFFSET` clause of a SQL statement really just drops already executed rows in a SQL query. Therefore, as the number to `OFFSET` grows, so does the amount of time it takes to execute your query. To overcome this, SQLDelight offers a "keyset paging" implementation of `PagingSource`. Rather than querying an entire dataset and inefficiently dropping the first `OFFSET` elements, keyset paging operates using a unique column to restrict the bounds of your queries. This performs better at the expense of higher developer maintenance. 
 
 The `queryProvider` callback that this paging source accepts has two parameters -- a `beginInclusive` non-null unique `Key` as well as an `endExclusive` nullable unique `Key?`. An example of the core paging query is shown below. 
 

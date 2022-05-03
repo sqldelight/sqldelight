@@ -11,6 +11,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
@@ -27,7 +28,6 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -36,10 +36,10 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 
@@ -56,6 +56,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
