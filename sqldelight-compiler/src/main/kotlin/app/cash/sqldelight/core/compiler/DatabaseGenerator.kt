@@ -260,7 +260,7 @@ internal class DatabaseGenerator(
       }
 
     if (generateAsync) {
-      val combineMember = MemberName("app.cash.sqldelight.db", "combine")
+      val combineMember = MemberName("app.cash.sqldelight.async.db", "combine")
       createFunction.addStatement("return statements.%M()", combineMember)
       migrateFunction.addStatement("return statements.%M()", combineMember)
     }

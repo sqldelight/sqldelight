@@ -7,7 +7,7 @@ plugins {
 archivesBaseName = 'sqldelight-r2dbc-driver'
 
 dependencies {
-  api project(':runtime')
+  api project(':runtime:runtime')
   implementation deps.r2dbc
 }
 

@@ -8,7 +8,6 @@ import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
 import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
-import platform.posix.sleep
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest

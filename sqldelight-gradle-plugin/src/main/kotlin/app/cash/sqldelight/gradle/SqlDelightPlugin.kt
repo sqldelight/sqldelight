@@ -23,6 +23,7 @@ import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
@@ -81,20 +82,24 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
+    val needsSyncRuntime = extension.databases.any { !it.generateAsync }
+    val needsAsyncRuntime = extension.databases.any { it.generateAsync }
+    val runtimeDependencies = mutableListOf<Dependency>().apply {
+      if (needsSyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
+      if (needsAsyncRuntime) add (project.dependencies.create("app.cash.sqldelight:runtime-async:$VERSION"))
+    }
+
     // Add the runtime dependency.
     when {
       isMultiplatform -> {
         val sourceSets =
           project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
         val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
-        project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-          project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
-        )
+        project.configurations.getByName(sourceSet.apiConfigurationName)
+                .dependencies.addAll(runtimeDependencies)
       }
       else -> {
-        project.configurations.getByName("api").dependencies.add(
-          project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
-        )
+        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
       }
     }
 

@@ -53,9 +53,9 @@ class AsyncTest {
       """
       |package com.example.testmodule
       |
-      |import app.cash.sqldelight.AsyncTransacterImpl
-      |import app.cash.sqldelight.db.AsyncSqlDriver
-      |import app.cash.sqldelight.db.combine
+      |import app.cash.sqldelight.async.AsyncTransacterImpl
+      |import app.cash.sqldelight.async.db.AsyncSqlDriver
+      |import app.cash.sqldelight.async.db.combine
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.Other
@@ -121,12 +121,12 @@ class AsyncTest {
       """
       |package com.example
       |
-      |import app.cash.sqldelight.AsyncQuery
-      |import app.cash.sqldelight.AsyncTransacterImpl
-      |import app.cash.sqldelight.Query
-      |import app.cash.sqldelight.db.AsyncSqlDriver
-      |import app.cash.sqldelight.db.SqlCursor
-      |import app.cash.sqldelight.db.map
+      |import app.cash.sqldelight.async.AsyncQuery
+      |import app.cash.sqldelight.async.AsyncTransacterImpl
+      |import app.cash.sqldelight.async.Query
+      |import app.cash.sqldelight.async.db.AsyncSqlDriver
+      |import app.cash.sqldelight.async.db.SqlCursor
+      |import app.cash.sqldelight.async.db.map
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String

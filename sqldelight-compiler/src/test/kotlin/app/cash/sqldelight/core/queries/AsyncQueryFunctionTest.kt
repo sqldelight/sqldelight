@@ -34,7 +34,7 @@ class AsyncQueryFunctionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first(), generateAsync = true)
     Truth.assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun selectForId(id: kotlin.Long): app.cash.sqldelight.AsyncQuery<com.example.Data_> = selectForId(id) { id_, value_ ->
+      |public fun selectForId(id: kotlin.Long): app.cash.sqldelight.async.AsyncQuery<com.example.Data_> = selectForId(id) { id_, value_ ->
       |  com.example.Data_(
       |    id_,
       |    value_

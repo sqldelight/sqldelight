@@ -1,10 +1,10 @@
 package app.cash.sqldelight.driver.sqljs
 
-import app.cash.sqldelight.AsyncTransacter
-import app.cash.sqldelight.Query
-import app.cash.sqldelight.db.AsyncSqlDriver
-import app.cash.sqldelight.db.SqlCursor
-import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.async.AsyncTransacter
+import app.cash.sqldelight.async.AsyncQuery
+import app.cash.sqldelight.async.db.AsyncSqlDriver
+import app.cash.sqldelight.async.db.AsyncSqlCursor
+import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.MessageEvent
@@ -38,12 +38,12 @@ fun Promise<AsyncSqlDriver>.withSchema(schema: AsyncSqlDriver.Schema? = null): P
 
 class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   private val statements = mutableMapOf<Int, Statement>()
-  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+  private val listeners = mutableMapOf<String, MutableSet<AsyncQuery.Listener>>()
   private var messageCounter = 0
 
-  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (SqlCursor) -> R, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): AsyncSqlDriver.Callback<R> {
+  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (AsyncSqlCursor) -> R, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): AsyncSqlDriver.Callback<R> {
     return AsyncSqlDriver.SimpleCallback<R> { callback ->
-      val bound = JsSqlPreparedStatement()
+      val bound = JsWorkerSqlPreparedStatement()
       binders?.invoke(bound)
 
       val messageId = messageCounter++
@@ -91,9 +91,9 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
     }
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): AsyncSqlDriver.Callback<Long> {
+  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): AsyncSqlDriver.Callback<Long> {
     return AsyncSqlDriver.SimpleCallback { callback ->
-      val bound = JsSqlPreparedStatement()
+      val bound = JsWorkerSqlPreparedStatement()
       binders?.invoke(bound)
 
       val messageId = messageCounter++
@@ -140,16 +140,16 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
     }
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
   }
 
   override fun notifyListeners(queryKeys: Array<String>) {
   }
 
-  override fun close() = worker.terminate()
+//  override fun close() = worker.terminate()
 
   override fun newTransaction(): AsyncSqlDriver.Callback<out AsyncTransacter.Transaction> {
     TODO("Not yet implemented")
@@ -164,7 +164,7 @@ external interface Table {
   val values: Array<Array<dynamic>>
 }
 
-class JsWorkerSqlCursor(private val table: Table) : SqlCursor {
+class JsWorkerSqlCursor(private val table: Table) : AsyncSqlCursor {
   private var currentRow = -1
 
   override fun next(): Boolean = ++currentRow < table.values.size
@@ -195,4 +195,37 @@ fun <R> AsyncSqlDriver.Callback<R>.asPromise(): Promise<R> = Promise { resolve, 
   onSuccess { resolve(it) }
   onError { reject(it) }
   start()
+}
+
+internal class JsWorkerSqlPreparedStatement : AsyncSqlPreparedStatement {
+
+  val parameters = mutableListOf<Any?>()
+
+  override fun bindBytes(index: Int, bytes: ByteArray?) {
+    parameters.add(bytes?.toTypedArray())
+  }
+
+  override fun bindLong(index: Int, long: Long?) {
+    // We convert Long to Double because Kotlin's Double is mapped to JS number
+    // whereas Kotlin's Long is implemented as a JS object
+    parameters.add(long?.toDouble())
+  }
+
+  override fun bindDouble(index: Int, double: Double?) {
+    parameters.add(double)
+  }
+
+  override fun bindString(index: Int, string: String?) {
+    parameters.add(string)
+  }
+
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    parameters.add(
+            when (boolean) {
+              null -> null
+              true -> 1.0
+              false -> 0.0
+            }
+    )
+  }
 }

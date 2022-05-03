@@ -70,7 +70,7 @@ open class ExecuteQueryGenerator(
         .apply {
           if (generateAsync) {
             endControlFlow()
-            add(".%M {}", MemberName("app.cash.sqldelight.db", "map"))
+            add(".%M {}", MemberName("app.cash.sqldelight.async.db", "map"))
           }
         }
         .build()

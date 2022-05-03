@@ -1,7 +1,7 @@
 package app.cash.sqldelight.coroutines
 
-import app.cash.sqldelight.AsyncExecutableQuery
-import app.cash.sqldelight.db.AsyncSqlDriver
+import app.cash.sqldelight.async.AsyncExecutableQuery
+import app.cash.sqldelight.async.db.AsyncSqlDriver
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine

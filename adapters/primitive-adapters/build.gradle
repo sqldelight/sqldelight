@@ -12,7 +12,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api project(':runtime:runtime')
       }
     }
     commonTest {
