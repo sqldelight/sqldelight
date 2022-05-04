@@ -1,7 +1,7 @@
 package app.cash.sqldelight.async.logs
 
 import app.cash.sqldelight.async.AsyncQuery
-import app.cash.sqldelight.async.AsyncTransacter.*
+import app.cash.sqldelight.async.AsyncTransacter.Transaction
 import app.cash.sqldelight.async.AsyncTransacterImpl
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver

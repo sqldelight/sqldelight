@@ -1,8 +1,5 @@
 package app.cash.sqldelight.mysql.integration
 
-import app.cash.sqldelight.coroutines.await
-import app.cash.sqldelight.coroutines.awaitAsList
-import app.cash.sqldelight.coroutines.awaitAsOne
 import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
