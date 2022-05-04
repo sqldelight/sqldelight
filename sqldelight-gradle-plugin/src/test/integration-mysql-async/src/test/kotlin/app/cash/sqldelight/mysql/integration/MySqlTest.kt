@@ -21,15 +21,15 @@ class MySqlTest {
     val connection = factory.create().awaitSingle()
     val driver = R2dbcDriver(connection)
 
-    return MyDatabase(driver).also { MyDatabase.Schema.create(driver).await() }
+    return MyDatabase(driver).also { MyDatabase.Schema.create(driver) }
   }
 
   fun after() {
   }
 
   @Test fun simpleSelect() = runTest { database ->
-    database.dogQueries.insertDog("Tilda", "Pomeranian", true).await()
-    assertThat(database.dogQueries.selectDogs().awaitAsOne())
+    database.dogQueries.insertDog("Tilda", "Pomeranian", true)
+    assertThat(database.dogQueries.selectDogs().executeAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
@@ -42,15 +42,15 @@ class MySqlTest {
   @Test
   fun simpleSelectWithIn() = runTest { database ->
     with(database) {
-      dogQueries.insertDog("Tilda", "Pomeranian", true).await()
-      dogQueries.insertDog("Tucker", "Portuguese Water Dog", true).await()
-      dogQueries.insertDog("Cujo", "Pomeranian", false).await()
-      dogQueries.insertDog("Buddy", "Pomeranian", true).await()
+      dogQueries.insertDog("Tilda", "Pomeranian", true)
+      dogQueries.insertDog("Tucker", "Portuguese Water Dog", true)
+      dogQueries.insertDog("Cujo", "Pomeranian", false)
+      dogQueries.insertDog("Buddy", "Pomeranian", true)
       assertThat(
         dogQueries.selectDogsByBreedAndNames(
           breed = "Pomeranian",
           name = listOf("Tilda", "Buddy")
-        ).awaitAsList()
+        ).executeAsList()
       )
         .containsExactly(
           Dog(
@@ -67,7 +67,8 @@ class MySqlTest {
     }
   }
 
-  /*@Test
+  /* TODO: Dates are currently broken with the mysql r2dbc driver
+  @Test
   fun testDates() = runTest { database ->
     database.datesQueries.insertDate(
             date = LocalDate.of(2020, 1, 1),

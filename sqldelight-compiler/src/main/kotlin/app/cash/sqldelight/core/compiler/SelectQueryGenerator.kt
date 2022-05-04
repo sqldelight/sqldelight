@@ -44,6 +44,7 @@ import com.squareup.kotlinpoet.KModifier.INNER
 import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.NameAllocator
@@ -91,6 +92,7 @@ class SelectQueryGenerator(
       .build()
 
     return function
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addStatement(
         "return %L",
         CodeBlock
@@ -121,6 +123,8 @@ class SelectQueryGenerator(
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
+
+    if (generateAsync) function.addModifiers(SUSPEND)
 
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       // Adds each sqlite parameter to the argument list:
@@ -315,6 +319,7 @@ class SelectQueryGenerator(
     val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addTypeVariable(genericResultType)
       .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(cursorType), returnType = genericResultType))
       .returns(genericResultType)

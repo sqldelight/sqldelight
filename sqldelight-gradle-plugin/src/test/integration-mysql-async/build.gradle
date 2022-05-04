@@ -30,5 +30,5 @@ dependencies {
   implementation deps.truth
   implementation deps.kotlin.coroutines.core
   implementation deps.kotlin.coroutines.test
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${deps.versions.kotlinCoroutines.get()}"
+  implementation deps.kotlin.coroutines.reactive
 }

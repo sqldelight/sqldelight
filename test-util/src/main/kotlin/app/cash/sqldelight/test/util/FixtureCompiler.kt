@@ -71,10 +71,11 @@ object FixtureCompiler {
     fileName: String = "Test.sq",
     dialect: SqlDelightDialect = SqliteDialect(),
     treatNullAsUnknownForEquality: Boolean = false,
+    generateAsync: Boolean = false,
   ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
-    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality)
+    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality, generateAsync = generateAsync)
     val environment = parser.build(
       temporaryFolder.fixtureRoot().path,
       createAnnotationHolder(errors)
