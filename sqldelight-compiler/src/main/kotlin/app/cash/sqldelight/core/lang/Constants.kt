@@ -26,6 +26,7 @@ internal val ASYNC_QUERY_TYPE = ClassName("app.cash.sqldelight.async", "AsyncQue
 internal val EXECUTABLE_QUERY_TYPE = ClassName("app.cash.sqldelight", "ExecutableQuery")
 internal val ASYNC_EXECUTABLE_QUERY_TYPE = ClassName("app.cash.sqldelight.async", "AsyncExecutableQuery")
 internal val QUERY_LISTENER_TYPE = QUERY_TYPE.nestedClass("Listener")
+internal val ASYNC_QUERY_LISTENER_TYPE = ASYNC_QUERY_TYPE.nestedClass("Listener")
 internal val QUERY_LISTENER_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
   .parameterizedBy(QUERY_LISTENER_TYPE)
 

@@ -161,14 +161,16 @@ internal class DatabaseGenerator(
     // Static on create function:
     // fun create(driver: SqlDriver)
     val createFunction = FunSpec.builder("create")
-      .addModifiers(OVERRIDE, SUSPEND)
+      .addModifiers(OVERRIDE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addParameter(DRIVER_NAME, genericDriverType)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
-      .addModifiers(OVERRIDE, SUSPEND)
+      .addModifiers(OVERRIDE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addParameter(DRIVER_NAME, genericDriverType)
       .addParameter(oldVersion)
       .addParameter(newVersion)

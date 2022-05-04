@@ -20,6 +20,7 @@ import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.ASYNC_CURSOR_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_EXECUTABLE_QUERY_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_QUERY_LISTENER_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_QUERY_TYPE
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
@@ -298,6 +299,8 @@ class SelectQueryGenerator(
   fun querySubtype(): TypeSpec {
     val queryType = TypeSpec.classBuilder(query.customQuerySubtype)
       .addModifiers(PRIVATE, INNER)
+    val cursorType = if (generateAsync) ASYNC_CURSOR_TYPE else CURSOR_TYPE
+    val queryListenerType = if (generateAsync) ASYNC_QUERY_LISTENER_TYPE else QUERY_LISTENER_TYPE
 
     val constructor = FunSpec.constructorBuilder()
 
@@ -314,7 +317,7 @@ class SelectQueryGenerator(
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
       .addTypeVariable(genericResultType)
-      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = *arrayOf(CURSOR_TYPE), returnType = genericResultType))
+      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(cursorType), returnType = genericResultType))
       .returns(genericResultType)
       .addCode(executeBlock())
 
@@ -334,7 +337,7 @@ class SelectQueryGenerator(
     constructor.addParameter(
       MAPPER_NAME,
       LambdaTypeName.get(
-        parameters = arrayOf(CURSOR_TYPE),
+        parameters = arrayOf(cursorType),
         returnType = returnType
       )
     )
@@ -345,14 +348,14 @@ class SelectQueryGenerator(
         .addFunction(
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
-            .addParameter("listener", QUERY_LISTENER_TYPE)
+            .addParameter("listener", queryListenerType)
             .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
-            .addParameter("listener", QUERY_LISTENER_TYPE)
+            .addParameter("listener", queryListenerType)
             .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )

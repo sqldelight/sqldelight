@@ -55,13 +55,11 @@ class AsyncTest {
       |
       |import app.cash.sqldelight.async.AsyncTransacterImpl
       |import app.cash.sqldelight.async.db.AsyncSqlDriver
-      |import app.cash.sqldelight.async.db.combine
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.Other
       |import com.example.TestDatabase
       |import kotlin.Int
-      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -85,30 +83,26 @@ class AsyncTest {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: AsyncSqlDriver): AsyncSqlDriver.Callback<Unit> {
-      |      val statements = mutableListOf<AsyncSqlDriver.Callback<Long>>()
-      |      statements.add(driver.execute(null, ""${'"'}
+      |    public override suspend fun create(driver: AsyncSqlDriver): Unit {
+      |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0))
-      |      statements.add(driver.execute(null, ""${'"'}
+      |          ""${'"'}.trimMargin(), 0)
+      |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE other (
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0))
-      |      return statements.combine()
+      |          ""${'"'}.trimMargin(), 0)
       |    }
       |
-      |    public override fun migrate(
+      |    public override suspend fun migrate(
       |      driver: AsyncSqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): AsyncSqlDriver.Callback<Unit> {
-      |      val statements = mutableListOf<AsyncSqlDriver.Callback<Long>>()
-      |      return statements.combine()
+      |    ): Unit {
       |    }
       |  }
       |}
@@ -123,14 +117,11 @@ class AsyncTest {
       |
       |import app.cash.sqldelight.async.AsyncQuery
       |import app.cash.sqldelight.async.AsyncTransacterImpl
-      |import app.cash.sqldelight.async.Query
+      |import app.cash.sqldelight.async.db.AsyncSqlCursor
       |import app.cash.sqldelight.async.db.AsyncSqlDriver
-      |import app.cash.sqldelight.async.db.SqlCursor
-      |import app.cash.sqldelight.async.db.map
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
-      |import kotlin.Throwable
       |import kotlin.Unit
       |import kotlin.check
       |import kotlin.collections.List
@@ -178,38 +169,33 @@ class AsyncTest {
       |    )
       |  }
       |
-      |  public fun insertData(id: Long?, value_: List?): AsyncSqlDriver.Callback<Unit> =
-      |      driver.execute(${insert.id}, ""${'"'}
-      |      |INSERT INTO data
-      |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id)
-      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |      }
-      |  .onSuccess {
-      |    notifyQueries(${insert.id}) { emit ->
+      |  public suspend fun insertData(id: Long?, value_: List?): Unit {
+      |    driver.execute(${insert.id}, ""${'"'}
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        }
+      |    notifyQueries(208179736) { emit ->
       |      emit("data")
       |    }
       |  }
-      |  .map {}
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
-      |    mapper: (SqlCursor) -> T,
+      |    mapper: (AsyncSqlCursor) -> T,
       |  ) : AsyncQuery<T>(mapper) {
-      |    public override fun addListener(listener: Query.Listener): Unit {
+      |    public override fun addListener(listener: AsyncQuery.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun removeListener(listener: Query.Listener): Unit {
+      |    public override fun removeListener(listener: AsyncQuery.Listener): Unit {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(
-      |      onSuccess: (R) -> Unit,
-      |      onError: (Throwable) -> Unit,
-      |      mapper: (SqlCursor) -> R,
-      |    ): AsyncSqlDriver.Callback<R> = driver.executeQuery(${select.id}, ""${'"'}
+      |    public override fun <R> execute(mapper: (AsyncSqlCursor) -> R): R =
+      |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
