@@ -63,12 +63,14 @@ kotlin {
     nativeMain {
       dependsOn(commonMain)
       dependencies {
-        implementation deps.stately.core
-        implementation deps.stately.collections
+        implementation deps.stately.concurrency
       }
     }
     nativeTest{
       dependsOn(commonTest)
+      dependencies {
+        implementation deps.stately.collections
+      }
     }
 
     configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.mingwX86, targets.mingwX64, targets.linuxX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {

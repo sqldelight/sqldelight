@@ -2,6 +2,7 @@ package app.cash.sqldelight.driver.native
 
 import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.driver.native.util.PoolLock
+import app.cash.sqldelight.driver.native.util.maybeFreeze
 import co.touchlab.stately.concurrency.AtomicBoolean
 import kotlin.native.concurrent.AtomicReference
 
@@ -13,7 +14,7 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
   /**
    * Hold a list of active connections. If it is null, it means the MultiPool has been closed.
    */
-  private val entriesRef = AtomicReference<List<Entry>?>(listOf<Entry>())
+  private val entriesRef = AtomicReference<List<Entry>?>(listOf<Entry>().maybeFreeze())
   private val poolLock = PoolLock()
 
   /**
@@ -44,7 +45,7 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
         val done = newEntry.tryToAcquire()
         check(done)
 
-        entriesRef.value = (entries + listOf(newEntry))
+        entriesRef.value = (entries + listOf(newEntry)).maybeFreeze()
         return@withLock newEntry
       } else {
         // Capacity is reached — wait for the next available entry.
@@ -81,6 +82,8 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
 
   inner class Entry(val value: T) {
     val isAvailable = AtomicBoolean(true)
+
+    init { maybeFreeze() }
 
     fun tryToAcquire(): Boolean = isAvailable.compareAndSet(expected = true, new = false)
 

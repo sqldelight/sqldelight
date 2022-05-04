@@ -6,15 +6,15 @@ import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.driver.native.util.BasicMap
 import app.cash.sqldelight.driver.native.util.MutableCache
+import app.cash.sqldelight.driver.native.util.basicConcurrentMap
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.Statement
 import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.sqliter.withStatement
-import co.touchlab.stately.collections.SharedHashMap
-import co.touchlab.stately.collections.SharedSet
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
 import kotlin.native.concurrent.ensureNeverFrozen
@@ -25,29 +25,35 @@ sealed class ConnectionWrapper : SqlDriver {
     block: ThreadConnection.() -> R
   ): R
 
+  private fun <R> accessStatement(
+    readOnly: Boolean,
+    identifier: Int?,
+    sql: String,
+    binders: (SqlPreparedStatement.() -> Unit)?,
+    block: (Statement) -> R
+  ): R {
+    return accessConnection(readOnly) {
+      val statement = useStatement(identifier, sql)
+      try {
+        if (binders != null) {
+          SqliterStatement(statement).binders()
+        }
+
+        block(statement)
+      } finally {
+        statement.resetStatement()
+        clearIfNeeded(identifier, statement)
+      }
+    }
+  }
+
   final override fun execute(
     identifier: Int?,
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): Long {
-    return accessConnection(false) {
-      val statement = useStatement(identifier, sql)
-      if (binders != null) {
-        try {
-          SqliterStatement(statement).binders()
-        } catch (t: Throwable) {
-          statement.resetStatement()
-          clearIfNeeded(identifier, statement)
-          throw t
-        }
-      }
-
-      val result = statement.executeUpdateDelete().toLong()
-      statement.resetStatement()
-      clearIfNeeded(identifier, statement)
-      return@accessConnection result
-    }
+  ): Long = accessStatement(false, identifier, sql, binders) { statement ->
+    statement.executeUpdateDelete().toLong()
   }
 
   final override fun <R> executeQuery(
@@ -56,30 +62,8 @@ sealed class ConnectionWrapper : SqlDriver {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): R {
-    return accessConnection(true) {
-      val statement = getStatement(identifier, sql)
-
-      if (binders != null) {
-        try {
-          SqliterStatement(statement).binders()
-        } catch (t: Throwable) {
-          statement.resetStatement()
-          safePut(identifier, statement)
-          throw t
-        }
-      }
-
-      try {
-        val cursor = statement.query()
-        mapper(SqliterSqlCursor(cursor))
-      } finally {
-        statement.resetStatement()
-        if (closed)
-          statement.finalizeStatement()
-        safePut(identifier, statement)
-      }
-    }
+  ): R = accessStatement(true, identifier, sql, binders) { statement ->
+    mapper(SqliterSqlCursor(statement.query()))
   }
 }
 
@@ -148,7 +132,7 @@ class NativeSqliteDriver(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
-  private val listeners = SharedHashMap<String, SharedSet<Query.Listener>>()
+  private val listeners = basicConcurrentMap<String, BasicMap<Query.Listener, Unit>>()
 
   init {
     // Single connection for transactions
@@ -176,19 +160,19 @@ class NativeSqliteDriver(
 
   override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
-      listeners.getOrPut(it, { SharedSet() }).add(listener)
+      listeners.getOrPut(it) { basicConcurrentMap() }.put(listener, Unit)
     }
   }
 
   override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
-      listeners[it]?.remove(listener)
+      listeners.get(it)?.remove(listener)
     }
   }
 
   override fun notifyListeners(queryKeys: Array<String>) {
-    val listenersToNotify = SharedSet<Query.Listener>()
-    queryKeys.forEach { listeners[it]?.let(listenersToNotify::addAll) }
+    val listenersToNotify = mutableSetOf<Query.Listener>()
+    queryKeys.forEach { key -> listeners.get(key)?.let { listenersToNotify.addAll(it.keys) } }
     listenersToNotify.forEach(Query.Listener::queryResultsChanged)
   }
 
@@ -319,23 +303,9 @@ internal class ThreadConnection(
 
   internal val statementCache = MutableCache<Statement>()
 
-  fun safePut(identifier: Int?, statement: Statement) {
-    val removed = if (identifier == null) {
-      statement
-    } else {
-      statementCache.put(identifier.toString(), statement)
-    }
-    removed?.finalizeStatement()
-  }
-
-  fun getStatement(identifier: Int?, sql: String): Statement {
-    val statement = removeCreateStatement(identifier, sql)
-    return statement
-  }
-
   fun useStatement(identifier: Int?, sql: String): Statement {
     return if (identifier != null) {
-      statementCache.getOrCreate(identifier.toString()) {
+      statementCache.getOrCreate(identifier) {
         connection.createStatement(sql)
       }
     } else {
@@ -344,23 +314,9 @@ internal class ThreadConnection(
   }
 
   fun clearIfNeeded(identifier: Int?, statement: Statement) {
-    if (identifier == null) {
+    if (identifier == null || closed) {
       statement.finalizeStatement()
     }
-  }
-
-  /**
-   * For cursors. Cursors are actually backed by SQLite statement instances, so they need to be
-   * removed from the cache when in use. We're giving out a SQLite resource here, so extra care.
-   */
-  private fun removeCreateStatement(identifier: Int?, sql: String): Statement {
-    if (identifier != null) {
-      val cached = statementCache.remove(identifier.toString())
-      if (cached != null)
-        return cached
-    }
-
-    return connection.createStatement(sql)
   }
 
   fun newTransaction(): Transacter.Transaction {
@@ -395,7 +351,9 @@ internal class ThreadConnection(
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
-    init { ensureNeverFrozen() }
+    init {
+      ensureNeverFrozen()
+    }
 
     override fun endTransaction(successful: Boolean) {
       transaction.value = enclosingTransaction
