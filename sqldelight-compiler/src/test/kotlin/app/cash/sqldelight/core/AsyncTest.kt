@@ -132,22 +132,23 @@ class AsyncTest {
       |  private val data_Adapter: Data_.Adapter,
       |  private val otherAdapter: Other.Adapter,
       |) : AsyncTransacterImpl(driver) {
-      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): AsyncQuery<T>
-      |      = SelectForIdQuery(id) { cursor ->
+      |  public suspend fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T):
+      |      AsyncQuery<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): AsyncQuery<Data_> = selectForId(id) { id_, value_ ->
+      |  public suspend fun selectForId(id: Long): AsyncQuery<Data_> = selectForId(id) { id_, value_ ->
       |    Data_(
       |      id_,
       |      value_
       |    )
       |  }
       |
-      |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): AsyncQuery<T> {
+      |  public suspend fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T):
+      |      AsyncQuery<T> {
       |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) {
       |        "Adapter types are expected to be identical." }
       |    return AsyncQuery(424911250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
@@ -162,7 +163,8 @@ class AsyncTest {
       |    }
       |  }
       |
-      |  public fun selectAllValues(): AsyncQuery<SelectAllValues> = selectAllValues { id, value_ ->
+      |  public suspend fun selectAllValues(): AsyncQuery<SelectAllValues> = selectAllValues { id,
+      |      value_ ->
       |    SelectAllValues(
       |      id,
       |      value_
@@ -194,7 +196,7 @@ class AsyncTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (AsyncSqlCursor) -> R): R =
+      |    public override suspend fun <R> execute(mapper: (AsyncSqlCursor) -> R): R =
       |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
