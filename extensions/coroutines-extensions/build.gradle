@@ -104,7 +104,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
-      kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib']
+      kotlinOptions.freeCompilerArgs += ['-linker-options', '-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib -L/usr/lib64']
     }
   }
 

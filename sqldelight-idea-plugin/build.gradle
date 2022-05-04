@@ -125,3 +125,7 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
 tasks.named('compileKotlin').configure { dependsOn('bugsnagKey') }
 
 tasks.named('buildSearchableOptions').configure { enabled = false }
+
+afterEvaluate {
+  tasks.named('kspKotlin').configure { dependsOn('bugsnagKey') }
+}
