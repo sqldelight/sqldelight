@@ -1,40 +1,34 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import app.cash.sqldelight.db.AsyncSqlDriver
-import app.cash.sqldelight.db.SqlCursor
-import app.cash.sqldelight.db.SqlPreparedStatement
-import app.cash.sqldelight.db.combine
-import app.cash.sqldelight.driver.sqljs.asPromise
+import app.cash.sqldelight.async.db.AsyncSqlCursor
+import app.cash.sqldelight.async.db.AsyncSqlDriver
+import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import app.cash.sqldelight.driver.sqljs.initAsyncSqlDriver
-import kotlin.js.Promise
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class JsWorkerDriverTest {
+typealias InsertFunction = suspend (AsyncSqlPreparedStatement.() -> Unit) -> Unit
 
-  private lateinit var driverPromise: Promise<AsyncSqlDriver>
+class JsWorkerDriverTest {
   private val schema = object : AsyncSqlDriver.Schema {
     override val version: Int = 1
 
-    override fun create(driver: AsyncSqlDriver): AsyncSqlDriver.Callback<Unit> {
-      return listOf(
-        driver.execute(
-          0,
-          """
+    override suspend fun create(driver: AsyncSqlDriver) {
+      driver.execute(
+        0,
+        """
               |CREATE TABLE test (
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
             """.trimMargin(),
-          0
-        ),
-        driver.execute(
-          1,
-          """
+        0
+      )
+      driver.execute(
+        1,
+        """
               |CREATE TABLE nullability_test (
               |  id INTEGER PRIMARY KEY,
               |  integer_value INTEGER,
@@ -43,28 +37,27 @@ class JsWorkerDriverTest {
               |  real_value REAL
               |);
             """.trimMargin(),
-          0
-        )
-      ).combine()
+        0
+      )
     }
 
-    override fun migrate(driver: AsyncSqlDriver, oldVersion: Int, newVersion: Int): AsyncSqlDriver.Callback<Unit> {
+    override suspend fun migrate(driver: AsyncSqlDriver, oldVersion: Int, newVersion: Int) {
       // No-op.
-      return emptyList<AsyncSqlDriver.Callback<Unit>>().combine()
     }
   }
 
-  @BeforeTest
-  fun setup() {
-    driverPromise = initAsyncSqlDriver("/worker.sql-wasm.js").then {
-      schema.create(it)
-      it
-    }
+  fun runTest(block: suspend (AsyncSqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
+    val driver = setup()
+    block(driver)
+    tearDown(driver)
   }
 
-  @AfterTest
-  fun tearDown() {
-    driverPromise.then { it.close() }
+  private suspend fun setup(): AsyncSqlDriver {
+    return initAsyncSqlDriver("/worker.sql-wasm.js", schema)
+  }
+
+  private fun tearDown(driver: AsyncSqlDriver) {
+    driver.close()
   }
 
   // TODO: Implement/Test prepared statements
@@ -178,14 +171,14 @@ class JsWorkerDriverTest {
   }*/
 
   @Test
-  fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = driverPromise.then { driver ->
+  fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = runTest { driver ->
 
-    val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders).asPromise()
+    val insert: InsertFunction = { binders: AsyncSqlPreparedStatement.() -> Unit ->
+      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
 
-    fun changes(mapper: (SqlCursor) -> Long?): Promise<Long?> {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0).asPromise()
+    suspend fun changes(mapper: (AsyncSqlCursor) -> Long?): Long? {
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
     }
 
     val inserted = insert {
@@ -196,7 +189,7 @@ class JsWorkerDriverTest {
       bindDouble(5, null)
     }
 
-    val mapper: (SqlCursor) -> Unit = {
+    val mapper: (AsyncSqlCursor) -> Unit = {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))
@@ -204,18 +197,18 @@ class JsWorkerDriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
-    val test = driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0).asPromise()
-    Promise.all(arrayOf(inserted.then { console.log("Inserted complete!") }, test, changes { it.next(); it.getLong(0) }.then { }))
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    changes { it.next(); it.getLong(0) }
   }
 
   @Test
-  fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = driverPromise.then { driver ->
+  fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = runTest { driver ->
 
-    val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders).asPromise()
+    val insert: InsertFunction = { binders: AsyncSqlPreparedStatement.() -> Unit ->
+      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
 
-    val inserted = insert {
+    insert {
       bindLong(1, 1)
       bindLong(2, Long.MAX_VALUE)
       bindString(3, "Hello")
@@ -223,7 +216,7 @@ class JsWorkerDriverTest {
       bindDouble(5, Float.MAX_VALUE.toDouble())
     }
 
-    val mapper: (SqlCursor) -> Unit = {
+    val mapper: (AsyncSqlCursor) -> Unit = {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertEquals(Long.MAX_VALUE, it.getLong(1))
@@ -231,6 +224,6 @@ class JsWorkerDriverTest {
       it.getBytes(3)?.forEachIndexed { index, byte -> assertEquals(index.toByte(), byte) }
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
-    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0).asPromise()
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }
 }
