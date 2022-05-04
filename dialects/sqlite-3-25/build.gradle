@@ -31,6 +31,18 @@ tasks.getByName("shadowJar").configure {
   include 'META-INF/services/*'
 }
 
+tasks.jar.configure {
+  // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
+  enabled = false
+}
+
+configurations {
+  [apiElements, runtimeElements].each {
+    it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+    it.outgoing.artifact(shadowJar)
+  }
+}
+
 tasks.getByName("compileKotlin").configure {
   dependsOn(":dialects:sqlite-3-24:shadowJar")
 }
