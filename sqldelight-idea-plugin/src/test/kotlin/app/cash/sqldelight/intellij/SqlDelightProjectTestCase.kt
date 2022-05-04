@@ -69,7 +69,8 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       dependencies = emptyList(),
       rootDirectory = File(tempRoot.path).absoluteFile,
       deriveSchemaFromMigrations = false,
-      treatNullAsUnknownForEquality = false
+      treatNullAsUnknownForEquality = false,
+      generateAsync = false
     )
   }
 
@@ -80,7 +81,8 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     override val dependencies: List<SqlDelightDatabaseName>,
     override val deriveSchemaFromMigrations: Boolean,
     override val treatNullAsUnknownForEquality: Boolean,
-    override val rootDirectory: File
+    override val rootDirectory: File,
+    override val generateAsync: Boolean,
   ) : SqlDelightDatabaseProperties
 
   private data class SqlDelightSourceFolderImpl(
