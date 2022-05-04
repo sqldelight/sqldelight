@@ -45,6 +45,8 @@ interface SqlDelightDialect {
    */
   fun typeResolver(parentResolver: TypeResolver): TypeResolver
 
+  fun migrationSquasher(parentSquasher: MigrationSquasher): MigrationSquasher = parentSquasher
+
   /**
    * Called when this dialect should initialize its parser.
    */

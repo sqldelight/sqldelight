@@ -1,6 +1,7 @@
 package app.cash.sqldelight.dialects.mysql
 
 import app.cash.sqldelight.dialect.api.ConnectionManager
+import app.cash.sqldelight.dialect.api.MigrationSquasher
 import app.cash.sqldelight.dialect.api.RuntimeTypes
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
@@ -49,5 +50,9 @@ class MySqlDialect : SqlDelightDialect {
 
   override fun typeResolver(parentResolver: TypeResolver): TypeResolver {
     return MySqlTypeResolver(parentResolver)
+  }
+
+  override fun migrationSquasher(parentSquasher: MigrationSquasher): MigrationSquasher {
+    return MySqlMigrationSquasher(parentSquasher)
   }
 }

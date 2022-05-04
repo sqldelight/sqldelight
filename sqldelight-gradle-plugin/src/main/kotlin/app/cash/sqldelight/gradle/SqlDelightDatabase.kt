@@ -5,6 +5,7 @@ import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.kotlin.sources
+import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import com.android.builder.model.AndroidProject.FD_GENERATED
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
@@ -216,6 +217,10 @@ class SqlDelightDatabase(
         addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
       }
 
+      if (deriveSchemaFromMigrations) {
+        addSquashTask(sourceFiles.files + dependencyFiles.files, source)
+      }
+
       if (migrationOutputDirectory != null) {
         addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source)
       }
@@ -277,6 +282,23 @@ class SqlDelightDatabase(
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       it.migrationOutputExtension = migrationOutputFileFormat
       it.outputDirectory = migrationOutputDirectory
+      it.group = SqlDelightPlugin.GROUP
+      it.description = "Generate valid sql migration files for ${source.name} $name."
+      it.properties = getProperties()
+      it.classpath.setFrom(configuration.fileCollection { true })
+      it.classpath.from(moduleConfiguration.fileCollection { true })
+    }
+  }
+
+  private fun addSquashTask(
+    sourceSet: Collection<File>,
+    source: Source,
+  ) {
+    project.tasks.register("squash${source.name.capitalize()}${name}Migrations", MigrationSquashTask::class.java) {
+      it.projectName.set(project.name)
+      it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+      it.source(sourceSet)
+      it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
       it.properties = getProperties()

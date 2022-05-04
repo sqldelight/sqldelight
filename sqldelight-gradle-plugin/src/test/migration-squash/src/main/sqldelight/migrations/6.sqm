@@ -1,0 +1,7 @@
+DROP TRIGGER trigger2;
+
+DROP VIEW view2;
+
+DROP TABLE test2;
+
+ALTER TABLE test RENAME TO test3;
