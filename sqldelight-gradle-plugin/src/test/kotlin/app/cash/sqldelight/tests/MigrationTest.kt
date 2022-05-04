@@ -14,9 +14,7 @@ class MigrationTest {
       .buildAndFail()
 
     assertThat(output.output).contains(
-      """
-      |Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task.
-      |""".trimMargin()
+      "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
     )
   }
 
