@@ -20,8 +20,7 @@ import com.squareup.kotlinpoet.PropertySpec
 
 open class ExecuteQueryGenerator(
   private val query: NamedExecute,
-  private val generateAsync: Boolean = false
-) : QueryGenerator(query, generateAsync) {
+) : QueryGenerator(query) {
   internal open fun tablesUpdated(): List<TableNameElement> {
     if (query.statement is SqlDelightStmtClojureStmtList) {
       return PsiTreeUtil.findChildrenOfAnyType(
@@ -36,8 +35,7 @@ open class ExecuteQueryGenerator(
             is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
             is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
             else -> throw IllegalArgumentException("Unexpected statement $it")
-          },
-          generateAsync
+          }
         ).tablesUpdated()
       }.distinctBy { it.name }
     }

@@ -52,7 +52,6 @@ import com.squareup.kotlinpoet.TypeSpec
 internal class DatabaseGenerator(
   module: Module,
   sourceFile: SqlDelightFile,
-  private val generateAsync: Boolean
 ) {
   private val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
   private val moduleFolders = SqlDelightFileIndex.getInstance(module)
@@ -60,6 +59,7 @@ internal class DatabaseGenerator(
   private val fileIndex = SqlDelightFileIndex.getInstance(module)
   private val type = ClassName(fileIndex.packageName, fileIndex.className)
   private val dialect = sourceFile.dialect
+  private val generateAsync = sourceFile.generateAsync
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)

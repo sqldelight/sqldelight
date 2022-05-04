@@ -99,6 +99,8 @@ class SqlDelightEnvironment(
 
   override var treatNullAsUnknownForEquality: Boolean = properties.treatNullAsUnknownForEquality
 
+  override var generateAsync: Boolean = properties.generateAsync
+
   override fun module(vFile: VirtualFile) = module
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
@@ -156,7 +158,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer, properties.generateAsync)
+        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -175,9 +177,9 @@ class SqlDelightEnvironment(
     }
 
     sourceFile?.let {
-      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer, properties.generateAsync)
+      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
       if (it is SqlDelightQueriesFile)
-        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer, properties.generateAsync)
+        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
     }
 
     return CompilationStatus.Success()

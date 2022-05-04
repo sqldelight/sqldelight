@@ -10,8 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 
 class MutatorQueryGenerator(
   private val query: NamedMutator,
-  generateAsync: Boolean = false
-) : ExecuteQueryGenerator(query, generateAsync) {
+) : ExecuteQueryGenerator(query) {
   override fun tablesUpdated(): List<TableNameElement> {
     val tablesUpdated = mutableListOf<TableNameElement>()
     val foreignKeyCascadeCheck = when (query) {

@@ -43,12 +43,11 @@ object SqlDelightCompiler {
     dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender,
-    generateAsync: Boolean,
   ) {
     try {
       writeTableInterfaces(file, output)
       writeQueryInterfaces(file, output)
-      writeQueries(module, dialect, file, output, generateAsync)
+      writeQueries(module, dialect, file, output)
     } catch (e: InvalidElementDetectedException) {
       // It's okay if compilation is cut short, we can just quit out.
     }
@@ -67,9 +66,8 @@ object SqlDelightCompiler {
     file: SqlDelightFile,
     implementationFolder: String,
     output: FileAppender,
-    generateAsync: Boolean
   ) {
-    writeQueryWrapperInterface(module, file, implementationFolder, output, generateAsync)
+    writeQueryWrapperInterface(module, file, implementationFolder, output)
   }
 
   fun writeImplementations(
@@ -77,12 +75,11 @@ object SqlDelightCompiler {
     sourceFile: SqlDelightQueriesFile,
     implementationFolder: String,
     output: FileAppender,
-    generateAsync: Boolean,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
-    val databaseImplementationType = DatabaseGenerator(module, sourceFile, generateAsync).type()
-    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex, generateAsync)
+    val databaseImplementationType = DatabaseGenerator(module, sourceFile).type()
+    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex, sourceFile.generateAsync)
 
     val fileSpec = FileSpec.builder(packageName, databaseImplementationType.name!!)
       .addProperty(exposer.exposedSchema())
@@ -101,11 +98,10 @@ object SqlDelightCompiler {
     sourceFile: SqlDelightFile,
     implementationFolder: String,
     output: FileAppender,
-    generateAsync: Boolean,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
-    val queryWrapperType = DatabaseGenerator(module, sourceFile, generateAsync).interfaceType()
+    val queryWrapperType = DatabaseGenerator(module, sourceFile).interfaceType()
     val fileSpec = FileSpec.builder(packageName, queryWrapperType.name!!)
       // TODO: Remove these when kotlinpoet supports top level types.
       .addImport("$packageName.$implementationFolder", "newInstance", "schema")
@@ -166,10 +162,9 @@ object SqlDelightCompiler {
     dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender,
-    generateAsync: Boolean
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file, dialect, generateAsync)
+    val queriesType = QueriesTypeGenerator(module, file, dialect)
       .generateType(packageName)
 
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())

@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable, Boolean) -> Unit
+private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -105,7 +105,7 @@ object FixtureCompiler {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect)
+    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect, generateAsync)
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 
@@ -123,7 +123,7 @@ object FixtureCompiler {
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
         if (errors.isEmpty()) {
-          compilationMethod(environment.module, environment.dialect, psiFile, fileWriter, generateAsync)
+          compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
         }
         file = psiFile
       } else if (psiFile is MigrationFile) {
@@ -142,13 +142,12 @@ object FixtureCompiler {
     }
 
     if (generateDb) {
-      SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter, generateAsync)
+      SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter)
       SqlDelightCompiler.writeImplementations(
         environment.module,
         file!!,
         "testmodule",
-        fileWriter,
-        generateAsync
+        fileWriter
       )
     }
 

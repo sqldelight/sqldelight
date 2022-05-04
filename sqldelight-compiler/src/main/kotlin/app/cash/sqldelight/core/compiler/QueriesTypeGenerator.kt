@@ -18,8 +18,8 @@ class QueriesTypeGenerator(
   private val module: Module,
   private val file: SqlDelightQueriesFile,
   private val dialect: SqlDelightDialect,
-  private val generateAsync: Boolean,
 ) {
+  private val generateAsync = file.generateAsync
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
    * mutator queries.
@@ -60,7 +60,7 @@ class QueriesTypeGenerator(
 
     file.namedQueries.forEach { query ->
       tryWithElement(query.select) {
-        val generator = SelectQueryGenerator(query, generateAsync)
+        val generator = SelectQueryGenerator(query)
 
         type.addFunction(generator.customResultTypeFunction())
 
@@ -89,9 +89,9 @@ class QueriesTypeGenerator(
   private fun TypeSpec.Builder.addExecute(execute: NamedExecute) {
     tryWithElement(execute.statement) {
       val generator = if (execute is NamedMutator) {
-        MutatorQueryGenerator(execute, generateAsync)
+        MutatorQueryGenerator(execute)
       } else {
-        ExecuteQueryGenerator(execute, generateAsync)
+        ExecuteQueryGenerator(execute)
       }
 
       addFunction(generator.function())

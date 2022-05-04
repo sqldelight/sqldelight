@@ -57,8 +57,7 @@ import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
   private val query: NamedQuery,
-  private val generateAsync: Boolean = false,
-) : QueryGenerator(query, generateAsync) {
+) : QueryGenerator(query) {
   /**
    * The exposed query method which returns the default data class implementation.
    *

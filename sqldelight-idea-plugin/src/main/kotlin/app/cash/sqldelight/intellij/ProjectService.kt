@@ -127,6 +127,8 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   override var treatNullAsUnknownForEquality: Boolean = false
 
+  override var generateAsync: Boolean = false
+
   override var dialect: SqlDelightDialect = MissingDialect()
 
   override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {

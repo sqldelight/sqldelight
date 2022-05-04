@@ -41,6 +41,9 @@ abstract class SqlDelightFile(
   internal val treatNullAsUnknownForEquality
     get() = SqlDelightProjectService.getInstance(project).treatNullAsUnknownForEquality
 
+  internal val generateAsync
+    get() = SqlDelightProjectService.getInstance(project).generateAsync
+
   internal val typeResolver: TypeResolver by lazy {
     var parentResolver: TypeResolver = AnsiSqlTypeResolver()
     ServiceLoader.load(SqlDelightModule::class.java, dialect::class.java.classLoader).forEach {

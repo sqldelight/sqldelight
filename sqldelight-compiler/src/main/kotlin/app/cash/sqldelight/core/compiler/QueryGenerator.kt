@@ -33,10 +33,10 @@ import com.squareup.kotlinpoet.NameAllocator
 
 abstract class QueryGenerator(
   private val query: BindableQuery,
-  private val generateAsync: Boolean,
 ) {
   protected val dialect = query.statement.sqFile().dialect
   protected val treatNullAsUnknownForEquality = query.statement.sqFile().treatNullAsUnknownForEquality
+  protected val generateAsync = query.statement.sqFile().generateAsync
 
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
