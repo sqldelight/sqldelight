@@ -40,6 +40,11 @@ tasks.getByName("shadowJar").configure {
   include 'META-INF/services/*'
 }
 
+tasks.jar.configure {
+  // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
+  enabled = false
+}
+
 artifacts {
   runtimeOnly(shadowJar)
   archives(shadowJar)

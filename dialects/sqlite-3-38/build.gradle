@@ -31,6 +31,11 @@ tasks.getByName("shadowJar").configure {
   include 'META-INF/services/*'
 }
 
+tasks.jar.configure {
+  // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
+  enabled = false
+}
+
 tasks.getByName("compileKotlin").configure {
   dependsOn(":dialects:sqlite-3-35:shadowJar")
 }
