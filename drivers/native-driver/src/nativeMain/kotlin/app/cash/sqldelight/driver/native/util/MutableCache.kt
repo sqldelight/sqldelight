@@ -26,8 +26,8 @@ internal fun <K : Any, V : Any> basicConcurrentMap(): BasicMap<K, V> =
 
 internal interface BasicMap<K : Any, V : Any> {
   fun getOrPut(key: K, block: () -> V): V
-  fun put(key:K, value: V)
-  fun get(key:K):V?
+  fun put(key: K, value: V)
+  fun get(key: K): V?
   fun remove(key: K)
   val keys: Collection<K>
   val values: Collection<V>
@@ -94,7 +94,7 @@ private class BasicMapStrict<K : Any, V : Any> : BasicMap<K, V> {
     val resultMap = mutableMapOf<K, V>()
     sourceMap.keys.subtract(listOf(key)).forEach { key ->
       val value = sourceMap[key]
-      if(value != null)
+      if (value != null)
         resultMap[key] = value
     }
     mapReference.value = resultMap.freeze()
