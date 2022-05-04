@@ -1,9 +1,9 @@
 package app.cash.sqldelight.driver.sqljs
 
-import app.cash.sqldelight.async.AsyncTransacter
 import app.cash.sqldelight.async.AsyncQuery
-import app.cash.sqldelight.async.db.AsyncSqlDriver
+import app.cash.sqldelight.async.AsyncTransacter
 import app.cash.sqldelight.async.db.AsyncSqlCursor
+import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import kotlinx.coroutines.await
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -212,11 +212,11 @@ internal class JsWorkerSqlPreparedStatement : AsyncSqlPreparedStatement {
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     parameters.add(
-            when (boolean) {
-              null -> null
-              true -> 1.0
-              false -> 0.0
-            }
+      when (boolean) {
+        null -> null
+        true -> 1.0
+        false -> 0.0
+      }
     )
   }
 }

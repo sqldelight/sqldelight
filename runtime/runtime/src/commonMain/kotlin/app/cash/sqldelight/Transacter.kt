@@ -19,7 +19,6 @@ import app.cash.sqldelight.Transacter.Transaction
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.internal.currentThreadId
 
-
 interface TransactionWithReturn<R> : TransactionCallbacks {
   /**
    * Rolls back this transaction.
@@ -129,7 +128,7 @@ interface Transacter {
       """
         Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
         only within the transaction lambda scope.
-    """.trimIndent()
+      """.trimIndent()
     }
   }
 }

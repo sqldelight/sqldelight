@@ -86,7 +86,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     val needsAsyncRuntime = extension.databases.any { it.generateAsync }
     val runtimeDependencies = mutableListOf<Dependency>().apply {
       if (needsSyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
-      if (needsAsyncRuntime) add (project.dependencies.create("app.cash.sqldelight:runtime-async:$VERSION"))
+      if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime-async:$VERSION"))
     }
 
     // Add the runtime dependency.
@@ -96,7 +96,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
         val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
         project.configurations.getByName(sourceSet.apiConfigurationName)
-                .dependencies.addAll(runtimeDependencies)
+          .dependencies.addAll(runtimeDependencies)
       }
       else -> {
         project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)

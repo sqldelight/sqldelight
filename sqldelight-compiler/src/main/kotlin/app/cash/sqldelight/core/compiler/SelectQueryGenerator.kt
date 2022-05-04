@@ -36,12 +36,23 @@ import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.INNER
 import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.NameAllocator
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.TypeVariableName
+import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
   private val query: NamedQuery,

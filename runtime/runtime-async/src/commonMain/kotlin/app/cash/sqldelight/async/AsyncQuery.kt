@@ -1,40 +1,40 @@
 package app.cash.sqldelight.async
 
-import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlCursor
+import app.cash.sqldelight.async.db.AsyncSqlDriver
 
 @Suppress("FunctionName") // Emulating a constructor.
 fun <RowType : Any> AsyncQuery(
-        identifier: Int,
-        queryKeys: Array<String>,
-        driver: AsyncSqlDriver,
-        query: String,
-        mapper: (AsyncSqlCursor) -> RowType
+  identifier: Int,
+  queryKeys: Array<String>,
+  driver: AsyncSqlDriver,
+  query: String,
+  mapper: (AsyncSqlCursor) -> RowType
 ): AsyncQuery<RowType> {
   return AsyncQuery(identifier, queryKeys, driver, "unknown", "unknown", query, mapper)
 }
 
 @Suppress("FunctionName") // Emulating a constructor.
 fun <RowType : Any> AsyncQuery(
-        identifier: Int,
-        queryKeys: Array<String>,
-        driver: AsyncSqlDriver,
-        fileName: String,
-        label: String,
-        query: String,
-        mapper: (AsyncSqlCursor) -> RowType
+  identifier: Int,
+  queryKeys: Array<String>,
+  driver: AsyncSqlDriver,
+  fileName: String,
+  label: String,
+  query: String,
+  mapper: (AsyncSqlCursor) -> RowType
 ): AsyncQuery<RowType> {
   return SimpleAsyncQuery(identifier, queryKeys, driver, fileName, label, query, mapper)
 }
 
 private class SimpleAsyncQuery<out RowType : Any>(
-        private val identifier: Int,
-        private val queryKeys: Array<String>,
-        private val driver: AsyncSqlDriver,
-        private val fileName: String,
-        private val label: String,
-        private val query: String,
-        mapper: (AsyncSqlCursor) -> RowType,
+  private val identifier: Int,
+  private val queryKeys: Array<String>,
+  private val driver: AsyncSqlDriver,
+  private val fileName: String,
+  private val label: String,
+  private val query: String,
+  mapper: (AsyncSqlCursor) -> RowType,
 ) : AsyncQuery<RowType>(mapper) {
   override suspend fun <R> execute(mapper: (AsyncSqlCursor) -> R): R {
     return driver.executeQuery(identifier, query, mapper, 0, null)
@@ -52,12 +52,12 @@ private class SimpleAsyncQuery<out RowType : Any>(
 }
 
 private class SimpleAsyncExecutableQuery<out RowType : Any>(
-        private val identifier: Int,
-        private val driver: AsyncSqlDriver,
-        private val fileName: String,
-        private val label: String,
-        private val query: String,
-        mapper: (AsyncSqlCursor) -> RowType
+  private val identifier: Int,
+  private val driver: AsyncSqlDriver,
+  private val fileName: String,
+  private val label: String,
+  private val query: String,
+  mapper: (AsyncSqlCursor) -> RowType
 ) : AsyncExecutableQuery<RowType>(mapper) {
   override suspend fun <R> execute(mapper: (AsyncSqlCursor) -> R): R {
     return driver.executeQuery(identifier, query, mapper, 0, null)
@@ -79,7 +79,7 @@ abstract class AsyncExecutableQuery<out RowType : Any>(
 
   suspend fun executeAsOne(): RowType {
     return executeAsOneOrNull()
-            ?: throw NullPointerException("ResultSet returned null for $this")
+      ?: throw NullPointerException("ResultSet returned null for $this")
   }
 
   suspend fun executeAsOneOrNull(): RowType? = execute { cursor ->

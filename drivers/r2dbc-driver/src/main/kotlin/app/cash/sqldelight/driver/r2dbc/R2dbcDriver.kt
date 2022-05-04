@@ -1,9 +1,9 @@
 package app.cash.sqldelight.driver.r2dbc
 
-import app.cash.sqldelight.async.AsyncTransacter
 import app.cash.sqldelight.async.AsyncQuery
-import app.cash.sqldelight.async.db.AsyncSqlDriver
+import app.cash.sqldelight.async.AsyncTransacter
 import app.cash.sqldelight.async.db.AsyncSqlCursor
+import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
@@ -57,7 +57,7 @@ class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
       transactions.set(value)
     }
 
-  override suspend fun newTransaction():AsyncTransacter.Transaction {
+  override suspend fun newTransaction(): AsyncTransacter.Transaction {
     val enclosing = transaction
     val transaction = Transaction(enclosing, this.connection)
     connection.beginTransaction().awaitSingle()

@@ -5,18 +5,18 @@ import app.cash.sqldelight.async.AsyncTransacter
 
 interface AsyncSqlDriver : Closeable {
   suspend fun <R> executeQuery(
-          identifier: Int?,
-          sql: String,
-          mapper: (AsyncSqlCursor) -> R,
-          parameters: Int,
-          binders: (AsyncSqlPreparedStatement.() -> Unit)? = null,
+    identifier: Int?,
+    sql: String,
+    mapper: (AsyncSqlCursor) -> R,
+    parameters: Int,
+    binders: (AsyncSqlPreparedStatement.() -> Unit)? = null,
   ): R
 
   suspend fun execute(
-          identifier: Int?,
-          sql: String,
-          parameters: Int,
-          binders: (AsyncSqlPreparedStatement.() -> Unit)? = null,
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (AsyncSqlPreparedStatement.() -> Unit)? = null,
   ): Long
 
   /**

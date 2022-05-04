@@ -15,8 +15,8 @@ interface AsyncTransacter {
    *   [Transaction] on this thread.
    */
   suspend fun <R> transactionWithResult(
-          noEnclosing: Boolean = false,
-          bodyWithReturn: suspend AsyncTransactionWithReturn<R>.() -> R
+    noEnclosing: Boolean = false,
+    bodyWithReturn: suspend AsyncTransactionWithReturn<R>.() -> R
   ): R
 
   /**
@@ -89,7 +89,7 @@ interface AsyncTransacter {
       """
         Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
         only within the transaction lambda scope.
-    """.trimIndent()
+      """.trimIndent()
     }
   }
 }
