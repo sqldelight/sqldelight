@@ -5,6 +5,7 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.free
 import kotlinx.cinterop.nativeHeap
 import kotlinx.cinterop.ptr
+import platform.posix.PTHREAD_MUTEX_RECURSIVE
 import platform.posix.pthread_cond_destroy
 import platform.posix.pthread_cond_init
 import platform.posix.pthread_cond_signal
@@ -15,11 +16,21 @@ import platform.posix.pthread_mutex_init
 import platform.posix.pthread_mutex_lock
 import platform.posix.pthread_mutex_tVar
 import platform.posix.pthread_mutex_unlock
+import platform.posix.pthread_mutexattr_destroy
+import platform.posix.pthread_mutexattr_init
+import platform.posix.pthread_mutexattr_settype
+import platform.posix.pthread_mutexattr_tVar
 
-internal actual class PoolLock actual constructor() {
+internal actual class PoolLock actual constructor(reentrant: Boolean) {
   private val isActive = AtomicBoolean(true)
+  private val attr = nativeHeap.alloc<pthread_mutexattr_tVar>()
+    .apply {
+      pthread_mutexattr_init(ptr)
+      if (reentrant)
+        pthread_mutexattr_settype(ptr, PTHREAD_MUTEX_RECURSIVE.toInt())
+    }
   private val mutex = nativeHeap.alloc<pthread_mutex_tVar>()
-    .apply { pthread_mutex_init(ptr, null) }
+    .apply { pthread_mutex_init(ptr, attr.ptr) }
   private val cond = nativeHeap.alloc<pthread_cond_tVar>()
     .apply { pthread_cond_init(ptr, null) }
 
@@ -48,8 +59,10 @@ internal actual class PoolLock actual constructor() {
     if (isActive.compareAndSet(expected = true, new = false)) {
       pthread_cond_destroy(cond.ptr)
       pthread_mutex_destroy(mutex.ptr)
+      pthread_mutexattr_destroy(attr.ptr)
       nativeHeap.free(cond)
       nativeHeap.free(mutex)
+      nativeHeap.free(attr)
       return true
     }
 

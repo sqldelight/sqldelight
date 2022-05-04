@@ -6,9 +6,8 @@ import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
-import app.cash.sqldelight.driver.native.util.BasicMap
-import app.cash.sqldelight.driver.native.util.MutableCache
-import app.cash.sqldelight.driver.native.util.basicConcurrentMap
+import app.cash.sqldelight.driver.native.util.BasicMutableMap
+import app.cash.sqldelight.driver.native.util.basicMutableMap
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
@@ -132,7 +131,7 @@ class NativeSqliteDriver(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
-  private val listeners = basicConcurrentMap<String, BasicMap<Query.Listener, Unit>>()
+  private val listeners = basicMutableMap<String, BasicMutableMap<Query.Listener, Unit>>()
 
   init {
     // Single connection for transactions
@@ -160,7 +159,7 @@ class NativeSqliteDriver(
 
   override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
-      listeners.getOrPut(it) { basicConcurrentMap() }.put(listener, Unit)
+      listeners.getOrPut(it) { basicMutableMap() }.put(listener, Unit)
     }
   }
 
@@ -301,11 +300,11 @@ internal class ThreadConnection(
   internal val closed: Boolean
     get() = connection.closed
 
-  internal val statementCache = MutableCache<Statement>()
+  internal val statementCache = basicMutableMap<Int, Statement>()
 
   fun useStatement(identifier: Int?, sql: String): Statement {
     return if (identifier != null) {
-      statementCache.getOrCreate(identifier) {
+      statementCache.getOrPut(identifier) {
         connection.createStatement(sql)
       }
     } else {
