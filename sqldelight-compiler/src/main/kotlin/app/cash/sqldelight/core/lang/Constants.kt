@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 internal val CURSOR_TYPE = ClassName("app.cash.sqldelight.db", "SqlCursor")
+internal val ASYNC_CURSOR_TYPE = ClassName("app.cash.sqldelight.async.db", "AsyncSqlCursor")
 internal const val CURSOR_NAME = "cursor"
 
 internal val DRIVER_TYPE = ClassName("app.cash.sqldelight.db", "SqlDriver")
@@ -14,6 +15,7 @@ internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
 internal val ASYNC_DATABASE_SCHEMA_TYPE = ASYNC_DRIVER_TYPE.nestedClass("Schema")
 
 internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
+internal val ASYNC_PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.async.db", "AsyncSqlPreparedStatement")
 
 internal const val CUSTOM_DATABASE_NAME = "database"
 
@@ -26,11 +28,6 @@ internal val ASYNC_EXECUTABLE_QUERY_TYPE = ClassName("app.cash.sqldelight.async"
 internal val QUERY_LISTENER_TYPE = QUERY_TYPE.nestedClass("Listener")
 internal val QUERY_LISTENER_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
   .parameterizedBy(QUERY_LISTENER_TYPE)
-
-internal val ASYNC_DRIVER_CALLBACK_TYPE = ASYNC_DRIVER_TYPE.nestedClass("Callback")
-
-internal const val CALLBACK_SUCCESS_NAME = "onSuccess"
-internal const val CALLBACK_ERROR_NAME = "onError"
 
 internal const val MAPPER_NAME = "mapper"
 internal const val EXECUTE_BLOCK_NAME = "block"

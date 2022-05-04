@@ -5,7 +5,7 @@ import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.internal.currentThreadId
 
 /**
- * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
+ * A transaction-aware [AsyncSqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
 interface AsyncTransacter {
   /**
@@ -13,12 +13,11 @@ interface AsyncTransacter {
    *
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
-   * TODO: Implement this in extensions, or something
    */
-  /*fun <R> transactionWithResult(
+  suspend fun <R> transactionWithResult(
           noEnclosing: Boolean = false,
-          bodyWithReturn: TransactionWithReturn<R>.() -> R
-  ): AsyncSqlDriver.Callback<R>*/
+          bodyWithReturn: suspend AsyncTransactionWithReturn<R>.() -> R
+  ): R
 
   /**
    * Starts a [Transaction] and runs [body] in that transaction.
@@ -26,10 +25,10 @@ interface AsyncTransacter {
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
    */
-  fun transaction(
+  suspend fun transaction(
     noEnclosing: Boolean = false,
-    body: AsyncTransactionWithoutReturn.() -> Unit
-  ): AsyncSqlDriver.Callback<Unit>
+    body: suspend AsyncTransactionWithoutReturn.() -> Unit
+  )
 
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
@@ -63,9 +62,9 @@ interface AsyncTransacter {
      *
      * @param successful Whether the transaction completed successfully or not.
      */
-    protected abstract fun endTransaction(successful: Boolean): AsyncSqlDriver.Callback<Unit>
+    protected abstract suspend fun endTransaction(successful: Boolean)
 
-    internal fun endTransaction(): AsyncSqlDriver.Callback<Unit> {
+    internal suspend fun endTransaction() {
       checkThreadConfinement()
       return endTransaction(successful && childrenSuccessful)
     }
@@ -104,7 +103,7 @@ interface AsyncTransactionWithReturn<R> : TransactionCallbacks {
   /**
    * Begin an inner transaction.
    */
-  fun <R> transaction(body: AsyncTransactionWithReturn<R>.() -> AsyncSqlDriver.Callback<R>): AsyncSqlDriver.Callback<R>
+  suspend fun <R> transactionWithResult(body: suspend AsyncTransactionWithReturn<R>.() -> R): R
 }
 
 interface AsyncTransactionWithoutReturn : TransactionCallbacks {
@@ -116,13 +115,18 @@ interface AsyncTransactionWithoutReturn : TransactionCallbacks {
   /**
    * Begin an inner transaction.
    */
-  fun transaction(body: AsyncTransactionWithoutReturn.() -> Unit): AsyncSqlDriver.Callback<Unit>
+  suspend fun transaction(body: suspend AsyncTransactionWithoutReturn.() -> Unit)
 }
 
 private class AsyncTransactionWrapper<R>(
   val transaction: AsyncTransacter.Transaction
-) : AsyncTransactionWithoutReturn {
+) : AsyncTransactionWithoutReturn, AsyncTransactionWithReturn<R> {
   override fun rollback(): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException()
+  }
+
+  override fun rollback(returnValue: R): Nothing {
     transaction.checkThreadConfinement()
     throw RollbackException()
   }
@@ -141,8 +145,12 @@ private class AsyncTransactionWrapper<R>(
     transaction.afterRollback(function)
   }
 
-  override fun transaction(body: AsyncTransactionWithoutReturn.() -> Unit): AsyncSqlDriver.Callback<Unit> {
-    return transaction.transacter!!.transaction(false, body)
+  override suspend fun transaction(body: suspend AsyncTransactionWithoutReturn.() -> Unit) {
+    transaction.transacter!!.transaction(false, body)
+  }
+
+  override suspend fun <R> transactionWithResult(body: suspend AsyncTransactionWithReturn<R>.() -> R): R {
+    return transaction.transacter!!.transactionWithResult(false, body)
   }
 }
 
@@ -184,74 +192,75 @@ abstract class AsyncTransacterImpl(private val driver: AsyncSqlDriver) : AsyncTr
     }
   }
 
-  override fun transaction(
+  override suspend fun transaction(
     noEnclosing: Boolean,
-    body: AsyncTransactionWithoutReturn.() -> Unit
-  ): AsyncSqlDriver.Callback<Unit> {
+    body: suspend AsyncTransactionWithoutReturn.() -> Unit
+  ) {
     return transactionWithWrapper(noEnclosing, body)
   }
 
-  private fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: AsyncTransactionWrapper<R>.() -> R): AsyncSqlDriver.Callback<R> {
-    return AsyncSqlDriver.SimpleCallback { callback ->
-      driver.newTransaction().onSuccess { transaction ->
-        val enclosing = transaction.enclosingTransaction()
+  override suspend fun <R> transactionWithResult(noEnclosing: Boolean, bodyWithReturn: suspend AsyncTransactionWithReturn<R>.() -> R): R {
+    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+  }
 
-        check(enclosing == null || !noEnclosing) { "Already in a transaction" }
+  private suspend fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend AsyncTransactionWrapper<R>.() -> R): R {
+    val transaction = driver.newTransaction()
+    val enclosing = transaction.enclosingTransaction()
 
-        var thrownException: Throwable? = null
-        var returnValue: R? = null
+    check(enclosing == null || !noEnclosing) { "Already in a transaction" }
 
-        try {
-          transaction.transacter = this
-          returnValue = AsyncTransactionWrapper<R>(transaction).wrapperBody()
-          transaction.successful = true
-        } catch (e: Throwable) {
-          thrownException = e
-        } finally {
-          transaction.endTransaction()
-          if (enclosing == null) {
-            if (!transaction.successful || !transaction.childrenSuccessful) {
-              // TODO: If this throws, and we threw in [body] then create a composite exception.
-              try {
-                transaction.postRollbackHooks.forEach { it.invoke() }
-              } catch (rollbackException: Throwable) {
-                thrownException?.let {
-                  throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
-                }
-                throw rollbackException
-              }
-              transaction.postRollbackHooks.clear()
-            } else {
-              if (transaction.pendingTables.isNotEmpty()) {
-                driver.notifyListeners(transaction.pendingTables.toTypedArray())
-              }
-              transaction.pendingTables.clear()
-              transaction.registeredQueries.clear()
-              transaction.postCommitHooks.forEach { it.invoke() }
-              transaction.postCommitHooks.clear()
+    var thrownException: Throwable? = null
+    var returnValue: R? = null
+
+    try {
+      transaction.transacter = this
+      returnValue = AsyncTransactionWrapper<R>(transaction).wrapperBody()
+      transaction.successful = true
+    } catch (e: Throwable) {
+      thrownException = e
+    } finally {
+      transaction.endTransaction()
+      if (enclosing == null) {
+        if (!transaction.successful || !transaction.childrenSuccessful) {
+          // TODO: If this throws, and we threw in [body] then create a composite exception.
+          try {
+            transaction.postRollbackHooks.forEach { it.invoke() }
+          } catch (rollbackException: Throwable) {
+            thrownException?.let {
+              throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
             }
-          } else {
-            enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
-            enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
-            enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
-            enclosing.registeredQueries.addAll(transaction.registeredQueries)
-            enclosing.pendingTables.addAll(transaction.pendingTables)
+            throw rollbackException
           }
-
-          if (enclosing == null && thrownException is RollbackException) {
-            // We can safely cast to R here because the rollback exception is always created with the
-            // correct type.
-            @Suppress("UNCHECKED_CAST")
-            callback.success(thrownException.value as R)
-          } else if (thrownException != null) {
-            throw thrownException
-          } else {
-            // We can safely cast to R here because any code path that led here will have set the
-            // returnValue to the result of the block
-            @Suppress("UNCHECKED_CAST")
-            callback.success(returnValue as R)
+          transaction.postRollbackHooks.clear()
+        } else {
+          if (transaction.pendingTables.isNotEmpty()) {
+            driver.notifyListeners(transaction.pendingTables.toTypedArray())
           }
+          transaction.pendingTables.clear()
+          transaction.registeredQueries.clear()
+          transaction.postCommitHooks.forEach { it.invoke() }
+          transaction.postCommitHooks.clear()
         }
+      } else {
+        enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
+        enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
+        enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
+        enclosing.registeredQueries.addAll(transaction.registeredQueries)
+        enclosing.pendingTables.addAll(transaction.pendingTables)
+      }
+
+      if (enclosing == null && thrownException is RollbackException) {
+        // We can safely cast to R here because the rollback exception is always created with the
+        // correct type.
+        @Suppress("UNCHECKED_CAST")
+        return thrownException.value as R
+      } else if (thrownException != null) {
+        throw thrownException
+      } else {
+        // We can safely cast to R here because any code path that led here will have set the
+        // returnValue to the result of the block
+        @Suppress("UNCHECKED_CAST")
+        return returnValue as R
       }
     }
   }

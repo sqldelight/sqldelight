@@ -36,11 +36,8 @@ private class SimpleAsyncQuery<out RowType : Any>(
         private val query: String,
         mapper: (AsyncSqlCursor) -> RowType,
 ) : AsyncQuery<RowType>(mapper) {
-  override fun <R> execute(onSuccess: (R) -> Unit, onError: (Throwable) -> Unit, mapper: (AsyncSqlCursor) -> R): AsyncSqlDriver.Callback<R> {
-    return driver.executeQuery(identifier, query, mapper, 0, null).also {
-      it.onSuccess(onSuccess)
-      it.onError(onError)
-    }
+  override suspend fun <R> execute(mapper: (AsyncSqlCursor) -> R): R {
+    return driver.executeQuery(identifier, query, mapper, 0, null)
   }
 
   override fun toString(): String = "$fileName:$label"
@@ -62,11 +59,8 @@ private class SimpleAsyncExecutableQuery<out RowType : Any>(
         private val query: String,
         mapper: (AsyncSqlCursor) -> RowType
 ) : AsyncExecutableQuery<RowType>(mapper) {
-  override fun <R> execute(onSuccess: (R) -> Unit, onError: (Throwable) -> Unit, mapper: (AsyncSqlCursor) -> R): AsyncSqlDriver.Callback<R> {
-    return driver.executeQuery(identifier, query, mapper, 0, null).also {
-      it.onSuccess(onSuccess)
-      it.onError(onError)
-    }
+  override suspend fun <R> execute(mapper: (AsyncSqlCursor) -> R): R {
+    return driver.executeQuery(identifier, query, mapper, 0, null)
   }
 
   override fun toString(): String = "$fileName:$label"
@@ -75,23 +69,20 @@ private class SimpleAsyncExecutableQuery<out RowType : Any>(
 abstract class AsyncExecutableQuery<out RowType : Any>(
   val mapper: (AsyncSqlCursor) -> RowType
 ) {
-  abstract fun <R> execute(onSuccess: (R) -> Unit, onError: (Throwable) -> Unit, mapper: (AsyncSqlCursor) -> R): AsyncSqlDriver.Callback<R>
+  abstract suspend fun <R> execute(mapper: (AsyncSqlCursor) -> R): R
 
-  fun executeAsList(onSuccess: (List<RowType>) -> Unit = {}, onError: (Throwable) -> Unit = {}): AsyncSqlDriver.Callback<out List<RowType>> = execute(onSuccess, onError) { cursor ->
+  suspend fun executeAsList(): List<RowType> = execute { cursor ->
     val result = mutableListOf<RowType>()
     while (cursor.next()) result.add(mapper(cursor))
     result
   }
 
-  // TODO: Extract common code?
-  fun executeAsOne(onSuccess: (RowType) -> Unit = {}, onError: (Throwable) -> Unit = {}): AsyncSqlDriver.Callback<out RowType> = execute(onSuccess, onError) { cursor ->
-    if (!cursor.next()) throw NullPointerException("ResultSet returned null for $this")
-    val value = mapper(cursor)
-    check(!cursor.next()) { "ResultSet returned more than 1 row for $this" }
-    value
+  suspend fun executeAsOne(): RowType {
+    return executeAsOneOrNull()
+            ?: throw NullPointerException("ResultSet returned null for $this")
   }
 
-  fun executeAsOneOrNull(onSuccess: (RowType?) -> Unit = {}, onError: (Throwable) -> Unit = {}): AsyncSqlDriver.Callback<out RowType?> = execute(onSuccess, onError) { cursor ->
+  suspend fun executeAsOneOrNull(): RowType? = execute { cursor ->
     if (!cursor.next()) return@execute null
     val value = mapper(cursor)
     check(!cursor.next()) { "ResultSet returned more than 1 row for $this" }

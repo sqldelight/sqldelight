@@ -2,7 +2,6 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.lang.ASYNC_DRIVER_CALLBACK_TYPE
 import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
@@ -15,11 +14,9 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.asTypeName
 
 open class ExecuteQueryGenerator(
   private val query: NamedExecute,
@@ -59,7 +56,6 @@ open class ExecuteQueryGenerator(
     // }
     addCode(
       CodeBlock.builder()
-        .apply { if (generateAsync) beginControlFlow(".onSuccess") }
         .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
         .apply {
           tablesUpdated.sortedBy { it.name }.forEach {
@@ -67,12 +63,6 @@ open class ExecuteQueryGenerator(
           }
         }
         .endControlFlow()
-        .apply {
-          if (generateAsync) {
-            endControlFlow()
-            add(".%M {}", MemberName("app.cash.sqldelight.async.db", "map"))
-          }
-        }
         .build()
     )
 
@@ -84,11 +74,6 @@ open class ExecuteQueryGenerator(
    */
   fun function(): FunSpec {
     return interfaceFunction()
-      .apply {
-        if (generateAsync) {
-          returns(ASYNC_DRIVER_CALLBACK_TYPE.parameterizedBy(Unit::class.asTypeName()))
-        }
-      }
       .addCode(executeBlock())
       .notifyQueries()
       .build()
@@ -96,6 +81,7 @@ open class ExecuteQueryGenerator(
 
   fun interfaceFunction(): FunSpec.Builder {
     return FunSpec.builder(query.name)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .also(this::addJavadoc)
       .addParameters(
         query.parameters.map {

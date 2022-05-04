@@ -26,6 +26,7 @@ kotlin {
   sourceSets["main"].dependencies {
     api project(':runtime:runtime')
     api project(':runtime:runtime-async')
+    implementation deps.kotlin.coroutines.core
   }
   sourceSets["test"].dependencies {
     implementation deps.kotlin.test.js

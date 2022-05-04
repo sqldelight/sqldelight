@@ -18,11 +18,9 @@ package app.cash.sqldelight.core.compiler
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
-import app.cash.sqldelight.core.lang.ASYNC_DRIVER_CALLBACK_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_CURSOR_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_EXECUTABLE_QUERY_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_QUERY_TYPE
-import app.cash.sqldelight.core.lang.CALLBACK_ERROR_NAME
-import app.cash.sqldelight.core.lang.CALLBACK_SUCCESS_NAME
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
@@ -38,24 +36,12 @@ import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.squareup.kotlinpoet.ANY
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.KModifier.INNER
 import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.LambdaTypeName
-import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.NameAllocator
-import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.TypeVariableName
-import com.squareup.kotlinpoet.asTypeName
-import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
   private val query: NamedQuery,
@@ -207,7 +193,8 @@ class SelectQueryGenerator(
       .addStatement("·{ $CURSOR_NAME ->")
       .indent()
 
-    if (CURSOR_TYPE != dialectCursorType) {
+    val defaultCursorType = if (generateAsync) ASYNC_CURSOR_TYPE else CURSOR_TYPE
+    if (defaultCursorType != dialectCursorType) {
       mapperLambda.addStatement("check(cursor is %T)", dialectCursorType)
     }
 
@@ -315,14 +302,9 @@ class SelectQueryGenerator(
     val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
-      .addTypeVariable(genericResultType).apply {
-        if (generateAsync) {
-          addParameter(CALLBACK_SUCCESS_NAME, LambdaTypeName.get(parameters = arrayOf(genericResultType), returnType = Unit::class.asTypeName()))
-          addParameter(CALLBACK_ERROR_NAME, LambdaTypeName.get(parameters = arrayOf(Throwable::class.asTypeName()), returnType = Unit::class.asTypeName()))
-        }
-      }
+      .addTypeVariable(genericResultType)
       .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = *arrayOf(CURSOR_TYPE), returnType = genericResultType))
-      .returns(if (generateAsync) ASYNC_DRIVER_CALLBACK_TYPE.parameterizedBy(genericResultType) else genericResultType)
+      .returns(genericResultType)
       .addCode(executeBlock())
 
     // For each bind argument the query has.

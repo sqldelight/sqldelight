@@ -1,67 +1,53 @@
 package app.cash.sqldelight.driver.r2dbc
 
-import app.cash.sqldelight.AsyncTransacter
-import app.cash.sqldelight.Query
-import app.cash.sqldelight.db.AsyncSqlDriver
-import app.cash.sqldelight.db.SqlCursor
-import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.async.AsyncTransacter
+import app.cash.sqldelight.async.AsyncQuery
+import app.cash.sqldelight.async.db.AsyncSqlDriver
+import app.cash.sqldelight.async.db.AsyncSqlCursor
+import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import kotlinx.coroutines.reactive.awaitLast
+import kotlinx.coroutines.reactive.awaitSingle
 import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 
 class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
-  override fun <R> executeQuery(
+  override suspend fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (AsyncSqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
-  ): AsyncSqlDriver.Callback<R> {
+    binders: (AsyncSqlPreparedStatement.() -> Unit)?
+  ): R {
     val prepared = connection.createStatement(sql).also { statement ->
       R2dbcPreparedStatement(statement).apply { if (binders != null) this.binders() }
     }
-    return AsyncSqlDriver.SimpleCallback { callback ->
-      prepared.execute().subscribe(next = { result ->
-        val rowSet = mutableListOf<Map<Int, Any?>>()
-        result.map { row, rowMetadata ->
-          rowSet.add(rowMetadata.columnMetadatas.mapIndexed { index, _ -> index to row.get(index) }.toMap())
-        }.subscribe(complete = {
-          try {
-            callback.success(mapper(R2dbcCursor(rowSet)))
-          } catch (e: Exception) {
-            callback.error(e)
-          }
-        }, error = { callback.error(it) })
-      }, error = { callback.error(it) })
-    }
+    val result = prepared.execute().awaitSingle()
+
+    val rowSet = mutableListOf<Map<Int, Any?>>()
+    result.map { row, rowMetadata ->
+      rowSet.add(rowMetadata.columnMetadatas.mapIndexed { index, _ -> index to row.get(index) }.toMap())
+    }.awaitLast()
+
+    return mapper(R2dbcCursor(rowSet))
   }
 
-  override fun execute(
+  override suspend fun execute(
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
-  ): AsyncSqlDriver.Callback<Long> {
+    binders: (AsyncSqlPreparedStatement.() -> Unit)?
+  ): Long {
     val prepared = connection.createStatement(sql).also { statement ->
       R2dbcPreparedStatement(statement).apply { if (binders != null) this.binders() }
     }
 
-    return AsyncSqlDriver.SimpleCallback<Long> { callback ->
-      prepared.execute().subscribe(next = { result ->
-        /*val complete = AtomicBoolean(false)
-        result.rowsUpdated.subscribe(
-                next = {
-                  callback.success(it)
-                  complete.set(true)
-                },
-                error = { callback.error(it) },
-                complete = { if (!complete.get()) callback.success(0) })*/
-        // TODO: r2dbc-mysql emits a java.lang.Integer instead of a java.lang.Long, mysql driver needs to support latest r2dbc-spi
-        callback.success(0)
-      }, error = { callback.error(it) })
-    }
+    val result = prepared.execute().awaitSingle()
+    // TODO: r2dbc-mysql emits a java.lang.Integer instead of a java.lang.Long, mysql driver needs to support latest r2dbc-spi
+    // return result.rowsUpdated.awaitSingle()
+    return 0L
   }
 
   private val transactions = ThreadLocal<Transaction>()
@@ -71,53 +57,44 @@ class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
       transactions.set(value)
     }
 
-  override fun newTransaction(): AsyncSqlDriver.Callback<out AsyncTransacter.Transaction> {
+  override suspend fun newTransaction():AsyncTransacter.Transaction {
     val enclosing = transaction
     val transaction = Transaction(enclosing, this.connection)
+    connection.beginTransaction().awaitSingle()
 
-    return AsyncSqlDriver.SimpleCallback<Transaction> { callback ->
-      if (enclosing == null) {
-        connection.beginTransaction().subscribe(next = {
-          this@R2dbcDriver.transaction = transaction
-          callback.success(transaction)
-        }, error = callback::error)
-      }
-    }
+    return transaction
   }
 
   override fun currentTransaction(): AsyncTransacter.Transaction? = transaction
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
   }
 
   override fun notifyListeners(queryKeys: Array<String>) {
   }
 
   override fun close() {
+    connection.close()
   }
 
   class Transaction(
     override val enclosingTransaction: AsyncTransacter.Transaction?,
-    val connection: Connection
+    private val connection: Connection
   ) : AsyncTransacter.Transaction() {
-    override fun endTransaction(successful: Boolean): AsyncSqlDriver.Callback<Unit> =
-      AsyncSqlDriver.SimpleCallback { callback ->
-        if (enclosingTransaction == null) {
-          if (successful) connection.commitTransaction().subscribe(next = {
-            callback.success(Unit)
-          }, error = callback::error)
-          else connection.rollbackTransaction().subscribe(next = {
-            callback.success(Unit)
-          }, error = callback::error)
-        }
+    override suspend fun endTransaction(successful: Boolean) {
+      if (enclosingTransaction == null) {
+        if (successful) connection.commitTransaction().awaitSingle()
+      } else {
+        connection.rollbackTransaction().awaitSingle()
       }
+    }
   }
 }
 
-open class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
+open class R2dbcPreparedStatement(private val statement: Statement) : AsyncSqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       statement.bindNull(index - 1, ByteArray::class.java)
@@ -170,7 +147,7 @@ open class R2dbcPreparedStatement(private val statement: Statement) : SqlPrepare
 /**
  * TODO: Write a better async cursor API
  */
-open class R2dbcCursor(val rowSet: List<Map<Int, Any?>>) : SqlCursor {
+open class R2dbcCursor(val rowSet: List<Map<Int, Any?>>) : AsyncSqlCursor {
   var row = -1
     private set
 

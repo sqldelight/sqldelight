@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.lang.ASYNC_PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
@@ -238,7 +239,8 @@ abstract class QueryGenerator(
         .add(" {\n")
         .indent()
 
-      if (PREPARED_STATEMENT_TYPE != dialectPreparedStatementType) {
+      val defaultStatementType = if (generateAsync) ASYNC_PREPARED_STATEMENT_TYPE else PREPARED_STATEMENT_TYPE
+      if (defaultStatementType != dialectPreparedStatementType) {
         binderLambda.add("check(this is %T)\n", dialectPreparedStatementType)
       }
 
@@ -262,14 +264,13 @@ abstract class QueryGenerator(
         *arguments.toTypedArray()
       )
     } else if (optimisticLock != null) {
-      val execute = if (generateAsync) "return «$DRIVER_NAME.execute" else "val result = $DRIVER_NAME.execute"
+      val execute = "val result = $DRIVER_NAME.execute"
       result.addStatement(
         "$execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
       )
     } else {
-      // TODO: Maybe remove this « hack
-      val execute = if (generateAsync) "return «$DRIVER_NAME.execute" else "$DRIVER_NAME.execute"
+      val execute = "$DRIVER_NAME.execute"
       result.addStatement(
         "$execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
@@ -277,9 +278,6 @@ abstract class QueryGenerator(
     }
 
     if (query is NamedMutator.Update && optimisticLock != null) {
-      if (generateAsync) {
-        result.beginControlFlow(".onSuccess { result ->")
-      }
       result.addStatement(
         """
         if (result == 0L) throw %T(%S)
@@ -287,9 +285,6 @@ abstract class QueryGenerator(
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
         "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
       )
-      if (generateAsync) {
-        result.endControlFlow()
-      }
     }
 
     return result.build()

@@ -5,12 +5,16 @@ import app.cash.sqldelight.async.AsyncQuery
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
+import kotlinx.coroutines.await
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.Worker
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.js.Promise
 
 private external interface WorkerMessage {
@@ -26,23 +30,20 @@ private fun <T> jsObject(block: T.() -> Unit): T {
   return o
 }
 
-fun initAsyncSqlDriver(workerPath: String = "/worker.sql-wasm.js", schema: AsyncSqlDriver.Schema? = null): Promise<AsyncSqlDriver> {
+suspend fun initAsyncSqlDriver(workerPath: String = "/worker.sql-wasm.js", schema: AsyncSqlDriver.Schema? = null): AsyncSqlDriver {
   val worker = Worker(workerPath)
   return Promise<AsyncSqlDriver> { resolve, _ -> resolve(JsWorkerSqlDriver(worker)) }.withSchema(schema)
 }
 
-fun Promise<AsyncSqlDriver>.withSchema(schema: AsyncSqlDriver.Schema? = null): Promise<AsyncSqlDriver> = then {
-  schema?.create(it)
-  it
-}
+suspend fun Promise<AsyncSqlDriver>.withSchema(schema: AsyncSqlDriver.Schema? = null): AsyncSqlDriver = await().also { schema?.create(it) }
 
 class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   private val statements = mutableMapOf<Int, Statement>()
   private val listeners = mutableMapOf<String, MutableSet<AsyncQuery.Listener>>()
   private var messageCounter = 0
 
-  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (AsyncSqlCursor) -> R, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): AsyncSqlDriver.Callback<R> {
-    return AsyncSqlDriver.SimpleCallback<R> { callback ->
+  override suspend fun <R> executeQuery(identifier: Int?, sql: String, mapper: (AsyncSqlCursor) -> R, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): R =
+    suspendCancellableCoroutine { continuation ->
       val bound = JsWorkerSqlPreparedStatement()
       binders?.invoke(bound)
 
@@ -56,43 +57,44 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
         }
       )
 
-      worker.addEventListener(
-        "message",
-        object : EventListener {
-          override fun handleEvent(event: Event) {
-            check(event is MessageEvent)
-            val data = event.data.asDynamic()
-            if (data.id == messageId) {
-              worker.removeEventListener("message", this)
-              if (data.error != null) {
-                callback.error(data.error as Throwable)
-              }
+      val messageListener = object : EventListener {
+        override fun handleEvent(event: Event) {
+          check(event is MessageEvent)
+          val data = event.data.asDynamic()
+          if (data.id == messageId) {
+            worker.removeEventListener("message", this)
+            if (data.error != null) {
+              continuation.resumeWithException(data.error as Throwable)
+            }
 
-              try {
-                @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE") val cursor = JsWorkerSqlCursor(data.results[0].unsafeCast<Table>())
-                callback.success(mapper(cursor))
-              } catch (e: Exception) {
-                callback.error(e)
-              }
+            try {
+              @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE") val cursor = JsWorkerSqlCursor(data.results[0].unsafeCast<Table>())
+              continuation.resume(mapper(cursor))
+            } catch (e: Exception) {
+              continuation.resumeWithException(e)
             }
           }
         }
-      )
+      }
 
-      worker.addEventListener(
-        "error",
-        object : EventListener {
-          override fun handleEvent(event: Event) {
-            worker.removeEventListener("error", this)
-            callback.error(event.asDynamic().error as Throwable)
-          }
+      val errorListener = object : EventListener {
+        override fun handleEvent(event: Event) {
+          worker.removeEventListener("error", this)
+          continuation.resumeWithException(event.asDynamic().error as Throwable)
         }
-      )
+      }
+
+      worker.addEventListener("message", messageListener)
+      worker.addEventListener("error", errorListener)
+
+      continuation.invokeOnCancellation {
+        worker.removeEventListener("message", messageListener)
+        worker.removeEventListener("error", errorListener)
+      }
     }
-  }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): AsyncSqlDriver.Callback<Long> {
-    return AsyncSqlDriver.SimpleCallback { callback ->
+  override suspend fun execute(identifier: Int?, sql: String, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): Long {
+    return suspendCancellableCoroutine { continuation ->
       val bound = JsWorkerSqlPreparedStatement()
       binders?.invoke(bound)
 
@@ -106,37 +108,39 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
         }
       )
 
-      worker.addEventListener(
-        "message",
-        object : EventListener {
-          override fun handleEvent(event: Event) {
-            check(event is MessageEvent)
-            val data = event.data.asDynamic()
-            if (data.id == messageId) {
-              worker.removeEventListener("message", this)
-              if (data.error != null) {
-                callback.error(data.error as Throwable)
-              }
+      val messageListener = object : EventListener {
+        override fun handleEvent(event: Event) {
+          check(event is MessageEvent)
+          val data = event.data.asDynamic()
+          if (data.id == messageId) {
+            worker.removeEventListener("message", this)
+            if (data.error != null) {
+              continuation.resumeWithException(data.error as Throwable)
+            }
 
-              try {
-                callback.success(0)
-              } catch (e: Exception) {
-                callback.error(e)
-              }
+            try {
+              continuation.resume(0)
+            } catch (e: Exception) {
+              continuation.resumeWithException(e)
             }
           }
         }
-      )
+      }
 
-      worker.addEventListener(
-        "error",
-        object : EventListener {
-          override fun handleEvent(event: Event) {
-            worker.removeEventListener("error", this)
-            callback.error(event.asDynamic().error as Throwable)
-          }
+      val errorListener = object : EventListener {
+        override fun handleEvent(event: Event) {
+          worker.removeEventListener("error", this)
+          continuation.resumeWithException(event.asDynamic().error as Throwable)
         }
-      )
+      }
+
+      worker.addEventListener("message", messageListener)
+      worker.addEventListener("error", errorListener)
+
+      continuation.invokeOnCancellation {
+        worker.removeEventListener("message", messageListener)
+        worker.removeEventListener("error", errorListener)
+      }
     }
   }
 
@@ -149,9 +153,9 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) {
   }
 
-//  override fun close() = worker.terminate()
+  override fun close() = worker.terminate()
 
-  override fun newTransaction(): AsyncSqlDriver.Callback<out AsyncTransacter.Transaction> {
+  override suspend fun newTransaction(): AsyncTransacter.Transaction {
     TODO("Not yet implemented")
   }
 
@@ -182,19 +186,6 @@ class JsWorkerSqlCursor(private val table: Table) : AsyncSqlCursor {
     return if (double == null) null
     else double.toLong() == 1L
   }
-}
-
-private fun <R> Promise<R>.asCallback(): AsyncSqlDriver.Callback<R> {
-  val callback = AsyncSqlDriver.SimpleCallback<R> {}
-  then(callback::success)
-  catch(callback::error)
-  return callback
-}
-
-fun <R> AsyncSqlDriver.Callback<R>.asPromise(): Promise<R> = Promise { resolve, reject ->
-  onSuccess { resolve(it) }
-  onError { reject(it) }
-  start()
 }
 
 internal class JsWorkerSqlPreparedStatement : AsyncSqlPreparedStatement {
