@@ -43,7 +43,6 @@ kotlin {
       dependsOn(commonMain)
       dependencies {
         api deps.sqliter
-        implementation deps.stately.core
       }
     }
     nativeTest {
@@ -52,8 +51,11 @@ kotlin {
         implementation project(':drivers:driver-test')
       }
     }
-    nativeDarwinMain{
+    nativeLinuxLikeMain {
       dependsOn(nativeMain)
+    }
+    nativeDarwinMain{
+      dependsOn(nativeLinuxLikeMain)
     }
     mingwMain{
       dependsOn(nativeMain)
@@ -65,7 +67,7 @@ kotlin {
       dependsOn(mingwMain)
     }
     linuxMain{
-      dependsOn(nativeMain)
+      dependsOn(nativeLinuxLikeMain)
     }
   }
 
