@@ -3,7 +3,7 @@ package app.cash.sqldelight.async.db
 import app.cash.sqldelight.async.AsyncQuery
 import app.cash.sqldelight.async.AsyncTransacter
 
-interface AsyncSqlDriver : Closeable {
+interface AsyncSqlDriver : AsyncCloseable {
   suspend fun <R> executeQuery(
     identifier: Int?,
     sql: String,

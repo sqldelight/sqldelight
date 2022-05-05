@@ -18,14 +18,33 @@ package app.cash.sqldelight.async.db
 /**
  * A type that can be closed.
  */
-expect interface Closeable {
+interface AsyncCloseable {
   /**
    * Close any resources backed by this object.
    */
-  fun close()
+  suspend fun close()
 }
 
 /**
- * Run [body] on the receiver and call [Closeable.close] before returning or throwing.
+ * Run [body] on the receiver and call [AsyncCloseable.close] before returning or throwing.
  */
-expect inline fun <T : Closeable?, R> T.use(body: (T) -> R): R
+suspend inline fun <T : AsyncCloseable?, R> T.use(body: (T) -> R): R {
+  var exception: Throwable? = null
+  try {
+    return body(this)
+  } catch (e: Throwable) {
+    exception = e
+    throw e
+  } finally {
+    when {
+      this == null -> {}
+      exception == null -> close()
+      else ->
+        try {
+          close()
+        } catch (closeException: Throwable) {
+          // Nothing to do...
+        }
+    }
+  }
+}

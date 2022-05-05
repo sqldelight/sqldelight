@@ -76,8 +76,8 @@ class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) {
   }
 
-  override fun close() {
-    connection.close()
+  override suspend fun close() {
+    connection.close().awaitSingle()
   }
 
   class Transaction(
