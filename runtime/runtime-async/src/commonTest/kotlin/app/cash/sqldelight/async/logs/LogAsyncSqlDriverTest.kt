@@ -20,19 +20,18 @@ class LogAsyncSqlDriverTest {
   private lateinit var transacter: AsyncTransacterImpl
   private val logs = LinkedList<String>()
 
-  @BeforeTest
-  fun setup() {
+  fun runTest(block: suspend () -> Unit) = kotlinx.coroutines.test.runTest {
     driver = LogAsyncSqlDriver(FakeSqlDriver()) { log ->
       logs.add(log)
     }
     transacter = object : AsyncTransacterImpl(driver) {}
-  }
 
-  @AfterTest
-  fun tearDown() {
+    block()
+
     driver.close()
     logs.clear()
   }
+
 
   @JsName("insertLogsCorrect")
   @Test
@@ -129,7 +128,7 @@ class FakeSqlDriver : AsyncSqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) {
   }
 
-  override fun close() {
+  override suspend fun close() {
   }
 }
 
