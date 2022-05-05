@@ -9,6 +9,7 @@ buildscript {
 }
 
 plugins {
+  alias(deps.plugins.dokka) apply false
   alias(deps.plugins.grammarKitComposer) apply false
   alias(deps.plugins.kotlin.multiplatform) apply false
   alias(deps.plugins.kotlin.jvm) apply false
@@ -18,7 +19,6 @@ plugins {
   alias(deps.plugins.android.application) apply false
   alias(deps.plugins.android.library) apply false
   alias(deps.plugins.publish) apply false
-  alias(deps.plugins.dokka) apply false
   alias(deps.plugins.spotless)
 }
 
