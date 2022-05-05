@@ -45,7 +45,6 @@ you can depend on the `driver-test` and extend `DriverTest` and `TransactionTest
 #### Asynchronous Drivers
 
 Drivers that make asynchronous calls can be implemented by using the `runtime-async` artifact. 
-These drivers can be tested by depending on `driver-async-test` and extending `AsyncDriverTest` and `AsyncTransactionTest` to ensure it works correctly.
 
 ### Gradle
 

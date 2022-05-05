@@ -151,26 +151,26 @@ class JsWorkerDriverTest {
       driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
     query(
-            binders = {
-              bindString(1, "Jake")
-            },
-            mapper = {
-              assertTrue(it.next())
-              assertEquals(2, it.getLong(0))
-              assertEquals("Jake", it.getString(1))
-            }
+      binders = {
+        bindString(1, "Jake")
+      },
+      mapper = {
+        assertTrue(it.next())
+        assertEquals(2, it.getLong(0))
+        assertEquals("Jake", it.getString(1))
+      }
     )
 
     // Second time running the query is fine
     query(
-            binders = {
-              bindString(1, "Jake")
-            },
-            mapper = {
-              assertTrue(it.next())
-              assertEquals(2, it.getLong(0))
-              assertEquals("Jake", it.getString(1))
-            }
+      binders = {
+        bindString(1, "Jake")
+      },
+      mapper = {
+        assertTrue(it.next())
+        assertEquals(2, it.getLong(0))
+        assertEquals("Jake", it.getString(1))
+      }
     )
   }
 
