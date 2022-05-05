@@ -17,8 +17,6 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.compiler.integration.adapterProperty
-import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.lang.ASYNC_DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_DRIVER_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_IMPL_TYPE
@@ -124,14 +122,11 @@ internal class DatabaseGenerator(
   private fun forAdapters(
     block: (PropertySpec) -> Unit
   ) {
-    val queriesFile = sourceFolders
+    sourceFolders
       .flatMap { it.queryFiles() }
+      .flatMap { it.requiredAdapters }
       .sortedBy { it.name }
-      .firstOrNull() ?: return
-    queriesFile.tables(true)
       .toSet()
-      .mapNotNull { if (it.needsAdapters()) it.adapterProperty() else null }
-      .sortedBy { it.name }
       .forEach(block)
   }
 
