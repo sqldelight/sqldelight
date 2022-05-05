@@ -2,5 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "ignoreDeps": [ "com.jetbrains.intellij.platform", "com.jetbrains.intellij.java" ]
+  "ignoreDeps": [ "com.jetbrains.intellij.platform", "com.jetbrains.intellij.java", "com.jetbrains.intellij.platform:analysis",
+                  "com.jetbrains.intellij.platform:test-framework", "com.jetbrains.intellij.platform:lang-impl",
+                  "com.jetbrains.intellij.platform:core-ui", "com.jetbrains.intellij.platform:core-impl" ]
 }
