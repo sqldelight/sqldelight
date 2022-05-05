@@ -153,7 +153,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) {
   }
 
-  override fun close() = worker.terminate()
+  override suspend fun close() = worker.terminate()
 
   override suspend fun newTransaction(): AsyncTransacter.Transaction {
     TODO("Not yet implemented")
