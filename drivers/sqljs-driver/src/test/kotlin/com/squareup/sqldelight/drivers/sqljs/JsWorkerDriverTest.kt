@@ -46,13 +46,17 @@ class JsWorkerDriverTest {
     }
   }
 
-  fun runTest(block: suspend (AsyncSqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
+  private fun runTest(block: suspend (AsyncSqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
     val driver = setup()
-    block(driver)
-    tearDown(driver)
+    // Tests are skipped if running on Node
+    if (driver != null) {
+      block(driver)
+      tearDown(driver)
+    }
   }
 
-  private suspend fun setup(): AsyncSqlDriver {
+  private suspend fun setup(): AsyncSqlDriver? {
+    if (IS_NODE) return null
     return initAsyncSqlDriver("/worker.sql-wasm.js", schema)
   }
 
@@ -172,7 +176,6 @@ class JsWorkerDriverTest {
 
   @Test
   fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = runTest { driver ->
-
     val insert: InsertFunction = { binders: AsyncSqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
@@ -203,7 +206,6 @@ class JsWorkerDriverTest {
 
   @Test
   fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = runTest { driver ->
-
     val insert: InsertFunction = { binders: AsyncSqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
@@ -225,5 +227,11 @@ class JsWorkerDriverTest {
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
     driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+  }
+
+  companion object {
+    private val IS_NODE: Boolean = js(
+      "typeof process !== 'undefined' && process.versions != null && process.versions.node != null"
+    ) as Boolean
   }
 }
