@@ -67,8 +67,13 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
               continuation.resumeWithException(data.error as Throwable)
             }
 
+            val table = if (data.results.length as Int > 0) {
+              data.results[0].unsafeCast<Table>()
+            } else {
+              jsObject { values = arrayOf() }
+            }
             try {
-              @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE") val cursor = JsWorkerSqlCursor(data.results[0].unsafeCast<Table>())
+              @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE") val cursor = JsWorkerSqlCursor(table)
               continuation.resume(mapper(cursor))
             } catch (e: Exception) {
               continuation.resumeWithException(e)
@@ -165,7 +170,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
 }
 
 external interface Table {
-  val values: Array<Array<dynamic>>
+  var values: Array<Array<dynamic>>
 }
 
 class JsWorkerSqlCursor(private val table: Table) : AsyncSqlCursor {

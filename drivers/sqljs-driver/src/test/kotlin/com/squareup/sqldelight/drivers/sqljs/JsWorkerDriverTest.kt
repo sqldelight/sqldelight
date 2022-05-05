@@ -6,6 +6,7 @@ import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import app.cash.sqldelight.driver.sqljs.initAsyncSqlDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -60,23 +61,22 @@ class JsWorkerDriverTest {
     return initAsyncSqlDriver("/worker.sql-wasm.js", schema)
   }
 
-  private fun tearDown(driver: AsyncSqlDriver) {
+  private suspend fun tearDown(driver: AsyncSqlDriver) {
     driver.close()
   }
 
-  // TODO: Implement/Test prepared statements
-  /*@Test
-  fun insert_can_run_multiple_times() = driverPromise.then { driver ->
+  @Test
+  fun insert_can_run_multiple_times() = runTest { driver ->
 
-    val insert = { binders: SqlPreparedStatement.() -> Unit ->
+    val insert: InsertFunction = { binders: AsyncSqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
 
-    fun query(mapper: (SqlCursor) -> Unit) {
+    suspend fun query(mapper: (AsyncSqlCursor) -> Unit) {
       driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
     }
 
-    fun changes(mapper: (SqlCursor) -> Long?): Long? {
+    suspend fun changes(mapper: (AsyncSqlCursor) -> Long?): Long? {
       return driver.executeQuery(4, "SELECT changes()", mapper, 0)
     }
 
@@ -123,16 +123,16 @@ class JsWorkerDriverTest {
     query {
       assertFalse(it.next())
     }
-  }*/
+  }
 
-  /*@Test
-  fun query_can_run_multiple_times() = driverPromise.then { driver ->
+  @Test
+  fun query_can_run_multiple_times() = runTest { driver ->
 
-    val insert = { binders: SqlPreparedStatement.() -> Unit ->
+    val insert: InsertFunction = { binders: AsyncSqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
 
-    fun changes(mapper: (SqlCursor) -> Long?): Long? {
+    suspend fun changes(mapper: (AsyncSqlCursor) -> Long?): Long? {
       return driver.executeQuery(4, "SELECT changes()", mapper, 0)
     }
 
@@ -147,7 +147,7 @@ class JsWorkerDriverTest {
     }
     assertEquals(1, changes { it.next(); it.getLong(0) })
 
-    fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
+    suspend fun query(binders: AsyncSqlPreparedStatement.() -> Unit, mapper: (AsyncSqlCursor) -> Unit) {
       driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
     query(
@@ -172,7 +172,7 @@ class JsWorkerDriverTest {
               assertEquals("Jake", it.getString(1))
             }
     )
-  }*/
+  }
 
   @Test
   fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = runTest { driver ->
