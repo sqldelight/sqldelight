@@ -96,6 +96,11 @@ class QueryWrapperTest {
       |  _id INTEGER NOT NULL PRIMARY KEY,
       |  value TEXT AS List<String>
       |);
+      |
+      |query:
+      |SELECT value FROM test_table
+      |UNION ALL
+      |SELECT value FROM test_table2;
       """.trimMargin(),
       tempFolder
     )
@@ -132,7 +137,8 @@ class QueryWrapperTest {
         |  test_table2Adapter: Test_table2.Adapter,
         |  test_tableAdapter: Test_table.Adapter,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
+        |  public override val testQueries: TestQueries = TestQueries(driver, test_tableAdapter,
+        |      test_table2Adapter)
         |
         |  public object Schema : SqlDriver.Schema {
         |    public override val version: Int
