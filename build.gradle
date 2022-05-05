@@ -5,6 +5,11 @@ buildscript {
         strictly '4.4.1'
       }
     }
+    classpath("org.jetbrains.dokka:dokka-gradle-plugin") {
+      version {
+        strictly deps.versions.dokka.get()
+      }
+    }
   }
 }
 
