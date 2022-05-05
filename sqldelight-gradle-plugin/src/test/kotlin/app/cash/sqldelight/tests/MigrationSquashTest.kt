@@ -23,7 +23,7 @@ class MigrationSquashTest {
       try {
         assertWithMessage(
           "The squashed migration ${expected.name} looks different when generated fresh:"
-        ).that(actual.readLines()).isEqualTo(expected.readLines())
+        ).that(actual.readText()).isEqualTo(expected.readText())
       } finally {
         actual.delete()
       }

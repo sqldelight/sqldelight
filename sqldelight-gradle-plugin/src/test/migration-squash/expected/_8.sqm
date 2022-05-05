@@ -20,5 +20,10 @@ END;
 
 
 CREATE TABLE test4(
-  stuff VARCHAR(8) AS List
-);
+  stuff5 TEXT,
+  stuff8 VARCHAR(8),
+  stuff VARCHAR(8) AS List,
+  stuff3 VARCHAR(8) AS List,
+  INDEX new_index(stuff8),
+  CONSTRAINT new_constraint UNIQUE(stuff8)
+) CHARACTER SET utf8 COLLATE noscope ROW_FORMAT = DYNAMIC;
