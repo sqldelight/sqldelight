@@ -6,10 +6,7 @@ import app.cash.sqldelight.async.AsyncTransacterImpl
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
-import kotlinx.coroutines.test.runTest
 import kotlin.js.JsName
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -31,7 +28,6 @@ class LogAsyncSqlDriverTest {
     driver.close()
     logs.clear()
   }
-
 
   @JsName("insertLogsCorrect")
   @Test
