@@ -153,7 +153,7 @@ abstract class AsyncDriverTest {
     }
     assertEquals(1, changes())
 
-    suspend fun query(binders: AsyncSqlPreparedStatement.() -> Unit, mapper:  (AsyncSqlCursor) -> Unit) {
+    suspend fun query(binders: AsyncSqlPreparedStatement.() -> Unit, mapper: (AsyncSqlCursor) -> Unit) {
       driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
 
@@ -194,7 +194,7 @@ abstract class AsyncDriverTest {
     }
     assertEquals(1, changes())
 
-    val mapper:  (AsyncSqlCursor) -> Unit = {
+    val mapper: (AsyncSqlCursor) -> Unit = {
       assertTrue(it.next())
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))
