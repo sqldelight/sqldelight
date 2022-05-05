@@ -9,9 +9,6 @@ import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
 import app.cash.sqldelight.internal.setValue
-import kotlinx.coroutines.test.runTest
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -20,7 +17,7 @@ import kotlin.test.assertTrue
 
 typealias InsertFunction = suspend (AsyncSqlPreparedStatement.() -> Unit) -> Unit
 
-abstract class AsyncDriverTest {
+abstract class AsyncDriverTest : AsyncTestBase() {
   protected lateinit var driver: AsyncSqlDriver
   protected val schema = object : Schema {
     override val version: Int = 1
@@ -61,8 +58,6 @@ abstract class AsyncDriverTest {
   }
   private var transacter by Atomic<AsyncTransacter?>(null)
 
-  abstract fun setupDatabase(schema: Schema): AsyncSqlDriver
-
   private suspend fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection
     return transacter!!.transactionWithResult {
@@ -74,12 +69,12 @@ abstract class AsyncDriverTest {
     }
   }
 
-  @BeforeTest fun setup() {
+  override suspend fun setup() {
     driver = setupDatabase(schema = schema)
     transacter = object : AsyncTransacterImpl(driver) {}
   }
 
-  @AfterTest fun tearDown() {
+  override suspend fun teardown() {
     transacter = null
     driver.close()
   }

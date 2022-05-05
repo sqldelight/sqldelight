@@ -4,15 +4,12 @@ import app.cash.sqldelight.async.AsyncQuery
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.internal.Atomic
-import kotlinx.coroutines.test.runTest
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-abstract class AsyncQueryTest {
+abstract class AsyncQueryTest : AsyncTestBase() {
   private val mapper = { cursor: AsyncSqlCursor ->
     TestData(
       cursor.getLong(0)!!, cursor.getString(1)!!
@@ -21,9 +18,7 @@ abstract class AsyncQueryTest {
 
   private lateinit var driver: AsyncSqlDriver
 
-  abstract fun setupDatabase(schema: AsyncSqlDriver.Schema): AsyncSqlDriver
-
-  @BeforeTest fun setup() {
+  override suspend fun setup() {
     driver = setupDatabase(
       schema = object : AsyncSqlDriver.Schema {
         override val version: Int = 1
@@ -52,7 +47,7 @@ abstract class AsyncQueryTest {
     )
   }
 
-  @AfterTest fun tearDown() {
+  override suspend fun teardown() {
     driver.close()
   }
 

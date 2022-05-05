@@ -3,21 +3,16 @@ package com.squareup.sqldelight.driver.test
 import app.cash.sqldelight.async.AsyncTransacterImpl
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlDriver.Schema
-import kotlinx.coroutines.test.runTest
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-abstract class AsyncTransacterTest {
+abstract class AsyncTransacterTest : AsyncTestBase() {
   protected lateinit var transacter: AsyncTransacterImpl
   private lateinit var driver: AsyncSqlDriver
 
-  abstract fun setupDatabase(schema: Schema): AsyncSqlDriver
-
-  @BeforeTest fun setup() {
+  override suspend fun setup() {
     val driver = setupDatabase(object : Schema {
       override val version = 1
       override suspend fun create(driver: AsyncSqlDriver) {}
@@ -32,7 +27,7 @@ abstract class AsyncTransacterTest {
     this.driver = driver
   }
 
-  @AfterTest fun teardown() {
+  override suspend fun teardown() {
     driver.close()
   }
 
