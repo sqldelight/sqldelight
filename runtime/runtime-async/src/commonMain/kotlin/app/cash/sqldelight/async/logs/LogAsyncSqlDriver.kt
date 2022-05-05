@@ -49,7 +49,7 @@ class LogAsyncSqlDriver(
     sqlDriver.notifyListeners(queryKeys)
   }
 
-  override fun close() {
+  override suspend fun close() {
     logger("CLOSE CONNECTION")
     sqlDriver.close()
   }
