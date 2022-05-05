@@ -551,7 +551,7 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getLong(0)!! == 1L,
       |    cursor.getLong(1)?.let { it == 1L },
@@ -653,7 +653,7 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getLong(0)!! == 1L,
       |    cursor.getLong(1)?.let { it == 1L },
@@ -739,7 +739,7 @@ class SelectQueryFunctionTest {
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getArray(0),
       |    cursor.getLong(1)!!.toShort(),

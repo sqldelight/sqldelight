@@ -31,10 +31,7 @@ class QueriesTypeGenerator(
    *     ) : TransacterImpl(driver, transactions)
    */
   fun generateType(packageName: String): TypeSpec {
-    if (generateAsync) {
-      check(dialect.asyncDriverType != null) { "Dialect $dialect does not support async drivers" }
-    }
-    val driverType = if (generateAsync) dialect.asyncDriverType!! else dialect.driverType
+    val driverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val type = TypeSpec.classBuilder(file.queriesType.simpleName)
       .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)

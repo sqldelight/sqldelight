@@ -1,4 +1,4 @@
-package app.cash.sqldelight.core.queries
+package app.cash.sqldelight.core.queries.async
 
 import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
@@ -7,19 +7,14 @@ import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
-import com.squareup.burst.BurstJUnit4
-import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import org.junit.runner.RunWith
 
-@RunWith(BurstJUnit4::class)
 class AsyncSelectQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
-  @Test fun `returning clause correctly generates an async query function`(dialect: TestDialect) {
-    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
+  @Test fun `returning clause correctly generates an async query function`() {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
@@ -42,7 +37,7 @@ class AsyncSelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public suspend fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.async.AsyncExecutableQuery<T> = app.cash.sqldelight.async.AsyncQuery(${query.id}, driver, "Test.sq", "insertReturning", ""${'"'}
+      |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.async.AsyncExecutableQuery<T> = app.cash.sqldelight.async.AsyncQuery(${query.id}, driver, "Test.sq", "insertReturning", ""${'"'}
       ||INSERT INTO data
       ||VALUES ('sup', 'dude')
       ||RETURNING *
@@ -57,8 +52,8 @@ class AsyncSelectQueryTypeTest {
     )
   }
 
-  @Test fun `returning clause in an update correctly generates an async query function`(dialect: TestDialect) {
-    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
+  @Test fun `returning clause in an update correctly generates an async query function`() {
+    val dialect = TestDialect.POSTGRESQL
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE IF NOT EXISTS users(
@@ -84,7 +79,7 @@ class AsyncSelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public suspend fun <T : kotlin.Any> update(
+      |public fun <T : kotlin.Any> update(
       |  firstname: kotlin.String,
       |  lastname: kotlin.String,
       |  id: kotlin.Int,

@@ -13,19 +13,12 @@ import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.psi.stubs.StubElementTypeHolderEP
-import com.squareup.kotlinpoet.ClassName
 import timber.log.Timber
 
 /**
  * A dialect for SQLite.
  */
 open class SqliteDialect : SqlDelightDialect {
-  override val driverType = ClassName("app.cash.sqldelight.db", "SqlDriver")
-  override val asyncDriverType: ClassName? = ClassName("app.cash.sqldelight.async.db", "AsyncSqlDriver")
-  override val asyncCursorType: ClassName? = ClassName("app.cash.sqldelight.async.db", "AsyncSqlCursor")
-  override val asyncPreparedStatementType: ClassName? = ClassName("app.cash.sqldelight.async.db", "AsyncSqlPreparedStatement")
-  override val cursorType = ClassName("app.cash.sqldelight.db", "SqlCursor")
-  override val preparedStatementType = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
   override val isSqlite = true
   override val icon = AllIcons.Providers.Sqlite
   override val migrationStrategy = SqliteMigrationStrategy()

@@ -78,10 +78,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    if (generateAsync) {
-      check(dialect.asyncDriverType != null) { "Dialect $dialect does not support async drivers" }
-    }
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, if (generateAsync) dialect.asyncDriverType!! else dialect.driverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
@@ -139,17 +136,13 @@ internal class DatabaseGenerator(
   }
 
   fun type(): TypeSpec {
-    if (generateAsync) {
-      check(dialect.asyncDriverType != null) { "Dialect $dialect does not support async drivers" }
-    }
-
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
       .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
       .addSuperclassConstructorParameter(DRIVER_NAME)
 
     val genericDriverType = if (generateAsync) ASYNC_DRIVER_TYPE else DRIVER_TYPE
-    val dialectDriverType = if (generateAsync) dialect.asyncDriverType!! else dialect.driverType
+    val dialectDriverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val constructor = FunSpec.constructorBuilder()
 

@@ -124,8 +124,6 @@ class SelectQueryGenerator(
     val function = FunSpec.builder(query.name)
     val params = mutableListOf<CodeBlock>()
 
-    if (generateAsync) function.addModifiers(SUSPEND)
-
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
@@ -174,7 +172,7 @@ class SelectQueryGenerator(
    */
   fun customResultTypeFunction(): FunSpec {
     val function = customResultTypeFunctionInterface()
-    val dialectCursorType = if (generateAsync) dialect.asyncCursorType else dialect.cursorType
+    val dialectCursorType = if (generateAsync) dialect.asyncRuntimeTypes.cursorType else dialect.runtimeTypes.cursorType
 
     query.resultColumns.forEach { resultColumn ->
       (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)

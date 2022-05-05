@@ -1,15 +1,12 @@
-package app.cash.sqldelight.core.queries
+package app.cash.sqldelight.core.queries.async
 
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
-import com.squareup.burst.BurstJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import org.junit.runner.RunWith
 
-@RunWith(BurstJUnit4::class)
 class AsyncMutatorQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
 

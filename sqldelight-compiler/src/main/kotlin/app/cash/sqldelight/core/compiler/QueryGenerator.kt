@@ -78,10 +78,7 @@ abstract class QueryGenerator(
     statement: PsiElement,
     id: Int
   ): CodeBlock {
-    if (generateAsync) {
-      check(dialect.asyncPreparedStatementType != null) { "Dialect $dialect does not support async drivers" }
-    }
-    val dialectPreparedStatementType = if (generateAsync) dialect.asyncPreparedStatementType!! else dialect.preparedStatementType
+    val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
 
     val result = CodeBlock.builder()
 
@@ -264,15 +261,13 @@ abstract class QueryGenerator(
         *arguments.toTypedArray()
       )
     } else if (optimisticLock != null) {
-      val execute = "val result = $DRIVER_NAME.execute"
       result.addStatement(
-        "$execute($statementId, %P, %L)$binder",
+        "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
       )
     } else {
-      val execute = "$DRIVER_NAME.execute"
       result.addStatement(
-        "$execute($statementId, %P, %L)$binder",
+        "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
         *arguments.toTypedArray()
       )
     }

@@ -471,7 +471,7 @@ class MutatorQueryTypeTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 20) {
-      |        check(this is ${dialect.dialect.preparedStatementType})
+      |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
       |        bindLong(1, if (boolean0) 1L else 0L)
       |        bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |        bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -567,7 +567,7 @@ class MutatorQueryTypeTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 20) {
-      |        check(this is ${dialect.dialect.preparedStatementType})
+      |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
       |        bindLong(1, if (boolean0) 1L else 0L)
       |        bindLong(2, boolean1?.let { if (it) 1L else 0L })
       |        bindLong(3, if (data_Adapter.boolean2Adapter.encode(boolean2)) 1L else 0L)
@@ -647,7 +647,7 @@ class MutatorQueryTypeTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 12) {
-      |        check(this is ${dialect.dialect.preparedStatementType})
+      |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
       |        bindLong(1, smallint0.toLong())
       |        bindLong(2, smallint1?.let { it.toLong() })
       |        bindLong(3, data_Adapter.smallint2Adapter.encode(smallint2).toLong())

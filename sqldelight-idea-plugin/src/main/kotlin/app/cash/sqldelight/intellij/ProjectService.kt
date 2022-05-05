@@ -50,7 +50,6 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
-import com.squareup.kotlinpoet.ClassName
 import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
@@ -190,12 +189,6 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
   }
 
   private class MissingDialect : SqlDelightDialect {
-    override val driverType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlDriver")
-    override val asyncDriverType: ClassName = ClassName("app.cash.sqldelight.db", "AsyncSqlDriver")
-    override val asyncCursorType: ClassName = ClassName("app.cash.sqldelight.db", "SqlCursor")
-    override val asyncPreparedStatementType: ClassName = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
-    override val cursorType: ClassName get() = ClassName("app.cash.sqldelight.db", "SqlCursor")
-    override val preparedStatementType = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
     override val icon = AllIcons.Providers.Sqlite
     override fun setup() { SqlParserUtil.reset() }
     override fun typeResolver(parentResolver: TypeResolver) = parentResolver

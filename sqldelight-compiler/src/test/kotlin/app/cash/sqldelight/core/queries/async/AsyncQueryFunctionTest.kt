@@ -1,4 +1,4 @@
-package app.cash.sqldelight.core.queries
+package app.cash.sqldelight.core.queries.async
 
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler

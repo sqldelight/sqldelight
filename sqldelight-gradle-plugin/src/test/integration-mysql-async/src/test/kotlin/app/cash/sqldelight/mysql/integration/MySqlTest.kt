@@ -10,15 +10,11 @@ class MySqlTest {
   private val factory = ConnectionFactories.get("r2dbc:tc:mysql:///myDb?TC_IMAGE_TAG=8.0")
 
   private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
-    val db = before()
-    block(db)
-  }
-
-  suspend fun before(): MyDatabase {
     val connection = factory.create().awaitSingle()
     val driver = R2dbcDriver(connection)
 
-    return MyDatabase(driver).also { MyDatabase.Schema.create(driver) }
+    val db = MyDatabase(driver).also { MyDatabase.Schema.create(driver) }
+    block(db)
   }
 
   @Test fun simpleSelect() = runTest { database ->
@@ -60,28 +56,4 @@ class MySqlTest {
         )
     }
   }
-
-  /* TODO: Dates are currently broken with the mysql r2dbc driver
-  @Test
-  fun testDates() = runTest { database ->
-    database.datesQueries.insertDate(
-            date = LocalDate.of(2020, 1, 1),
-            time = LocalTime.of(21, 30, 59),
-            datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
-            timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-            year = "2022"
-    ).await()
-    assertThat(
-      database.datesQueries.selectDate().awaitAsOne()
-    )
-      .isEqualTo(
-        Dates(
-          date = LocalDate.of(2020, 1, 1),
-          time = LocalTime.of(21, 30, 59),
-          datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
-          timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-          year = "2022-01-01"
-        )
-      )
-  }*/
 }

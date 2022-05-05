@@ -1089,7 +1089,7 @@ class SelectQueryTypeTest {
       ||SELECT greatest(token, value)
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -1122,7 +1122,7 @@ class SelectQueryTypeTest {
       ||SELECT CONCAT(first_name, last_name)
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -1250,7 +1250,7 @@ class SelectQueryTypeTest {
       ||SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
       ||FROM people
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getLong(1)!!
@@ -1289,7 +1289,7 @@ class SelectQueryTypeTest {
       ||SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
       ||FROM math
       |""${'"'}.trimMargin()) { cursor ->
-      |  check(cursor is ${dialect.dialect.cursorType})
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getDouble(0)!!,
       |    cursor.getDouble(1)!!,
