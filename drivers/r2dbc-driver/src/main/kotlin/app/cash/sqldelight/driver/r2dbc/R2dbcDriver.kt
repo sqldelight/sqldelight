@@ -13,7 +13,7 @@ import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 
-class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
+class R2dbcDriver(private val connection: Connection) : AsyncSqlDriver {
   override suspend fun <R> executeQuery(
     identifier: Int?,
     sql: String,
@@ -51,7 +51,7 @@ class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
   }
 
   private val transactions = ThreadLocal<Transaction>()
-  var transaction: Transaction?
+  private var transaction: Transaction?
     get() = transactions.get()
     set(value) {
       transactions.set(value)
@@ -59,7 +59,7 @@ class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
 
   override suspend fun newTransaction(): AsyncTransacter.Transaction {
     val enclosing = transaction
-    val transaction = Transaction(enclosing, this.connection)
+    val transaction = Transaction(enclosing, connection)
     connection.beginTransaction().awaitSingle()
 
     return transaction
@@ -67,28 +67,22 @@ class R2dbcDriver(val connection: Connection) : AsyncSqlDriver {
 
   override fun currentTransaction(): AsyncTransacter.Transaction? = transaction
 
-  override fun addListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
-  }
-
-  override fun removeListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
-  }
-
-  override fun notifyListeners(queryKeys: Array<String>) {
-  }
+  override fun addListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) = Unit
+  override fun removeListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) = Unit
+  override fun notifyListeners(queryKeys: Array<String>) = Unit
 
   override suspend fun close() {
     connection.close().awaitSingle()
   }
 
-  class Transaction(
+  private class Transaction(
     override val enclosingTransaction: AsyncTransacter.Transaction?,
     private val connection: Connection
   ) : AsyncTransacter.Transaction() {
     override suspend fun endTransaction(successful: Boolean) {
       if (enclosingTransaction == null) {
         if (successful) connection.commitTransaction().awaitSingle()
-      } else {
-        connection.rollbackTransaction().awaitSingle()
+        else connection.rollbackTransaction().awaitSingle()
       }
     }
   }
