@@ -45,7 +45,7 @@ jobs:
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
-        run: ./gradlew :sqldelight-gradle-plugin:test
+        run: ./gradlew :sqldelight-gradle-plugin:test --stacktrace
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'instrumentation'
