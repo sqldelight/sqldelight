@@ -116,11 +116,11 @@ internal class DatabaseGenerator(
   private fun forAdapters(
     block: (PropertySpec) -> Unit
   ) {
-    val queriesFile = sourceFolders
+    sourceFolders
       .flatMap { it.queryFiles() }
-      .minByOrNull { it.name } ?: return
-    queriesFile.requiredAdapters
+      .flatMap { it.requiredAdapters }
       .sortedBy { it.name }
+      .toSet()
       .forEach(block)
   }
 
