@@ -9,9 +9,6 @@ import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
 import kotlinx.coroutines.reactive.awaitLast
 import kotlinx.coroutines.reactive.awaitSingle
-import org.reactivestreams.Publisher
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
 
 class R2dbcDriver(private val connection: Connection) : AsyncSqlDriver {
   override suspend fun <R> executeQuery(
@@ -45,9 +42,7 @@ class R2dbcDriver(private val connection: Connection) : AsyncSqlDriver {
     }
 
     val result = prepared.execute().awaitSingle()
-    // TODO: r2dbc-mysql emits a java.lang.Integer instead of a java.lang.Long, mysql driver needs to support latest r2dbc-spi
-    // return result.rowsUpdated.awaitSingle()
-    return 0L
+    return result.rowsUpdated.awaitSingle()
   }
 
   private val transactions = ThreadLocal<Transaction>()
@@ -162,28 +157,3 @@ open class R2dbcCursor(val rowSet: List<Map<Int, Any?>>) : AsyncSqlCursor {
   @Suppress("UNCHECKED_CAST")
   fun <T> getArray(index: Int): Array<T>? = rowSet[row][index] as Array<T>?
 }
-
-private fun <T> Publisher<T>.subscribe(
-  next: (T) -> Unit = {},
-  error: (Throwable) -> Unit = {},
-  complete: () -> Unit = {},
-) = subscribe(object : Subscriber<T> {
-  private var subscription: Subscription? = null
-  override fun onSubscribe(s: Subscription) {
-    subscription = s
-    s.request(Long.MAX_VALUE)
-  }
-
-  override fun onNext(t: T) {
-    next(t)
-  }
-
-  override fun onError(t: Throwable) {
-    error(t)
-  }
-
-  override fun onComplete() {
-    complete()
-    subscription?.cancel()
-  }
-})

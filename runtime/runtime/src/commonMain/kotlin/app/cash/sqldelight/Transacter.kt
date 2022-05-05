@@ -133,7 +133,7 @@ interface Transacter {
   }
 }
 
-internal class RollbackException(val value: Any? = null) : Throwable()
+private class RollbackException(val value: Any? = null) : Throwable()
 
 private class TransactionWrapper<R>(
   val transaction: Transaction

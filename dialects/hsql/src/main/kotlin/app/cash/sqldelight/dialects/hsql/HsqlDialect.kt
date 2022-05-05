@@ -20,6 +20,9 @@ class HsqlDialect : SqlDelightDialect {
     ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   )
 
+  override val asyncRuntimeTypes: RuntimeTypes
+    get() = throw UnsupportedOperationException("HSQL does not support an async driver")
+
   override val icon = AllIcons.Providers.Hsqldb
 
   override fun setup() {
