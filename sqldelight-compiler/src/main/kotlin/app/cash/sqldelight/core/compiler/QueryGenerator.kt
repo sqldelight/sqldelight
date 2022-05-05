@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.lang.ASYNC_PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
@@ -31,10 +32,11 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
 abstract class QueryGenerator(
-  private val query: BindableQuery
+  private val query: BindableQuery,
 ) {
   protected val dialect = query.statement.sqFile().dialect
   protected val treatNullAsUnknownForEquality = query.statement.sqFile().treatNullAsUnknownForEquality
+  protected val generateAsync = query.statement.sqFile().generateAsync
 
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
@@ -76,6 +78,8 @@ abstract class QueryGenerator(
     statement: PsiElement,
     id: Int
   ): CodeBlock {
+    val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
+
     val result = CodeBlock.builder()
 
     val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
@@ -232,8 +236,9 @@ abstract class QueryGenerator(
         .add(" {\n")
         .indent()
 
-      if (PREPARED_STATEMENT_TYPE != dialect.preparedStatementType) {
-        binderLambda.add("check(this is %T)\n", dialect.preparedStatementType)
+      val defaultStatementType = if (generateAsync) ASYNC_PREPARED_STATEMENT_TYPE else PREPARED_STATEMENT_TYPE
+      if (defaultStatementType != dialectPreparedStatementType) {
+        binderLambda.add("check(this is %T)\n", dialectPreparedStatementType)
       }
 
       binderLambda.add(bindStatements.build())

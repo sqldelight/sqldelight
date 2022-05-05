@@ -40,13 +40,15 @@ object FixtureCompiler {
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     fileName: String = "Test.sq",
     treatNullAsUnknownForEquality: Boolean = false,
+    generateAsync: Boolean = false
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
       temporaryFolder.fixtureRoot().path,
       compilationMethod,
       overrideDialect = overrideDialect,
-      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
+      generateAsync = generateAsync
     )
   }
 
@@ -69,10 +71,11 @@ object FixtureCompiler {
     fileName: String = "Test.sq",
     dialect: SqlDelightDialect = SqliteDialect(),
     treatNullAsUnknownForEquality: Boolean = false,
+    generateAsync: Boolean = false,
   ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
-    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality)
+    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality, generateAsync = generateAsync)
     val environment = parser.build(
       temporaryFolder.fixtureRoot().path,
       createAnnotationHolder(errors)
@@ -98,11 +101,12 @@ object FixtureCompiler {
     outputDirectory: File = File(fixtureRoot, "output"),
     deriveSchemaFromMigrations: Boolean = false,
     treatNullAsUnknownForEquality: Boolean = false,
+    generateAsync: Boolean = false,
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect)
+    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect, generateAsync)
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 

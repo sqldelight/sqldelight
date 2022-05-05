@@ -99,6 +99,8 @@ class SqlDelightEnvironment(
 
   override var treatNullAsUnknownForEquality: Boolean = properties.treatNullAsUnknownForEquality
 
+  override var generateAsync: Boolean = properties.generateAsync
+
   override fun module(vFile: VirtualFile) = module
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()

@@ -18,6 +18,10 @@ package app.cash.sqldelight.core.compiler
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
+import app.cash.sqldelight.core.lang.ASYNC_CURSOR_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_EXECUTABLE_QUERY_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_QUERY_LISTENER_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_QUERY_TYPE
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
@@ -40,6 +44,7 @@ import com.squareup.kotlinpoet.KModifier.INNER
 import com.squareup.kotlinpoet.KModifier.OUT
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.NameAllocator
@@ -52,7 +57,7 @@ import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.joinToCode
 
 class SelectQueryGenerator(
-  private val query: NamedQuery
+  private val query: NamedQuery,
 ) : QueryGenerator(query) {
   /**
    * The exposed query method which returns the default data class implementation.
@@ -87,6 +92,7 @@ class SelectQueryGenerator(
       .build()
 
     return function
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addStatement(
         "return %L",
         CodeBlock
@@ -166,6 +172,7 @@ class SelectQueryGenerator(
    */
   fun customResultTypeFunction(): FunSpec {
     val function = customResultTypeFunctionInterface()
+    val dialectCursorType = if (generateAsync) dialect.asyncRuntimeTypes.cursorType else dialect.runtimeTypes.cursorType
 
     query.resultColumns.forEach { resultColumn ->
       (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)
@@ -199,8 +206,9 @@ class SelectQueryGenerator(
       .addStatement("·{ $CURSOR_NAME ->")
       .indent()
 
-    if (CURSOR_TYPE != dialect.cursorType) {
-      mapperLambda.addStatement("check(cursor is %T)", dialect.cursorType)
+    val defaultCursorType = if (generateAsync) ASYNC_CURSOR_TYPE else CURSOR_TYPE
+    if (defaultCursorType != dialectCursorType) {
+      mapperLambda.addStatement("check(cursor is %T)", dialectCursorType)
     }
 
     if (query.needsWrapper()) {
@@ -224,19 +232,21 @@ class SelectQueryGenerator(
     }
     mapperLambda.unindent().add("}\n")
 
+    val queryType = if (generateAsync) ASYNC_QUERY_TYPE else QUERY_TYPE
+
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       if (query.tablesObserved != null) {
         function.addCode(
           "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
-          QUERY_TYPE, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
+          queryType, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
           query.statement.rawSqlText(), mapperLambda.build()
         )
       } else {
         function.addCode(
           "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
-          QUERY_TYPE, query.statement.containingFile.name, query.name,
+          queryType, query.statement.containingFile.name, query.name,
           query.statement.rawSqlText(), mapperLambda.build()
         )
       }
@@ -263,9 +273,16 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
-    else QUERY_TYPE
+  private fun NamedQuery.supertype() = when {
+    generateAsync -> {
+      if (tablesObserved == null) ASYNC_EXECUTABLE_QUERY_TYPE
+      else ASYNC_QUERY_TYPE
+    }
+    else -> {
+      if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
+      else QUERY_TYPE
+    }
+  }
 
   /**
    * The private query subtype for this specific query.
@@ -283,6 +300,8 @@ class SelectQueryGenerator(
   fun querySubtype(): TypeSpec {
     val queryType = TypeSpec.classBuilder(query.customQuerySubtype)
       .addModifiers(PRIVATE, INNER)
+    val cursorType = if (generateAsync) ASYNC_CURSOR_TYPE else CURSOR_TYPE
+    val queryListenerType = if (generateAsync) ASYNC_QUERY_LISTENER_TYPE else QUERY_LISTENER_TYPE
 
     val constructor = FunSpec.constructorBuilder()
 
@@ -298,8 +317,9 @@ class SelectQueryGenerator(
     val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addTypeVariable(genericResultType)
-      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = *arrayOf(CURSOR_TYPE), returnType = genericResultType))
+      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(cursorType), returnType = genericResultType))
       .returns(genericResultType)
       .addCode(executeBlock())
 
@@ -319,7 +339,7 @@ class SelectQueryGenerator(
     constructor.addParameter(
       MAPPER_NAME,
       LambdaTypeName.get(
-        parameters = arrayOf(CURSOR_TYPE),
+        parameters = arrayOf(cursorType),
         returnType = returnType
       )
     )
@@ -330,14 +350,14 @@ class SelectQueryGenerator(
         .addFunction(
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
-            .addParameter("listener", QUERY_LISTENER_TYPE)
+            .addParameter("listener", queryListenerType)
             .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
-            .addParameter("listener", QUERY_LISTENER_TYPE)
+            .addParameter("listener", queryListenerType)
             .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )

@@ -132,7 +132,7 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
   fun close() { statement.freemem() }
 }
 
-private class JsSqlPreparedStatement : SqlPreparedStatement {
+internal class JsSqlPreparedStatement : SqlPreparedStatement {
 
   val parameters = mutableListOf<Any?>()
 

@@ -17,6 +17,10 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.ASYNC_DATABASE_SCHEMA_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_DRIVER_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_IMPL_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
@@ -38,13 +42,14 @@ import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
 internal class DatabaseGenerator(
   module: Module,
-  sourceFile: SqlDelightFile
+  sourceFile: SqlDelightFile,
 ) {
   private val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
   private val moduleFolders = SqlDelightFileIndex.getInstance(module)
@@ -52,10 +57,11 @@ internal class DatabaseGenerator(
   private val fileIndex = SqlDelightFileIndex.getInstance(module)
   private val type = ClassName(fileIndex.packageName, fileIndex.className)
   private val dialect = sourceFile.dialect
+  private val generateAsync = sourceFile.generateAsync
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
-      .addSuperinterface(TRANSACTER_TYPE)
+      .addSuperinterface(if (generateAsync) ASYNC_TRANSACTER_TYPE else TRANSACTER_TYPE)
 
     fileIndex.dependencies.forEach {
       typeSpec.addSuperinterface(ClassName(it.packageName, it.className))
@@ -70,7 +76,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.driverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
@@ -91,7 +97,7 @@ internal class DatabaseGenerator(
       .addType(
         TypeSpec.companionObjectBuilder()
           .addProperty(
-            PropertySpec.builder("Schema", DATABASE_SCHEMA_TYPE)
+            PropertySpec.builder("Schema", if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
               .getter(
                 FunSpec.getterBuilder()
                   .addStatement("return %T::class.schema", type)
@@ -126,32 +132,36 @@ internal class DatabaseGenerator(
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
       .addSuperclassConstructorParameter(DRIVER_NAME)
+
+    val genericDriverType = if (generateAsync) ASYNC_DRIVER_TYPE else DRIVER_TYPE
+    val dialectDriverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val constructor = FunSpec.constructorBuilder()
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialect.driverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialectDriverType).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
     // fun create(driver: SqlDriver)
     val createFunction = FunSpec.builder("create")
       .addModifiers(OVERRIDE)
-      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
+      .addParameter(DRIVER_NAME, genericDriverType)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
       .addModifiers(OVERRIDE)
-      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
+      .addParameter(DRIVER_NAME, genericDriverType)
       .addParameter(oldVersion)
       .addParameter(newVersion)
-
     forAdapters {
       constructor.addParameter(it.name, it.type)
     }
@@ -218,7 +228,7 @@ internal class DatabaseGenerator(
     return typeSpec
       .addType(
         TypeSpec.objectBuilder(DATABASE_SCHEMA_TYPE.simpleName)
-          .addSuperinterface(DATABASE_SCHEMA_TYPE)
+          .addSuperinterface(if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
           .addFunction(createFunction.build())
           .addFunction(migrateFunction.build())
           .addProperty(

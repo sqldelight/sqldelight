@@ -9,7 +9,7 @@ import com.alecstrong.sql.psi.core.psi.SqlForeignKeyClause
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 
 class MutatorQueryGenerator(
-  private val query: NamedMutator
+  private val query: NamedMutator,
 ) : ExecuteQueryGenerator(query) {
   override fun tablesUpdated(): List<TableNameElement> {
     val tablesUpdated = mutableListOf<TableNameElement>()

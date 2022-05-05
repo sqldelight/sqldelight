@@ -36,6 +36,7 @@ interface SqlDelightDatabaseProperties : Serializable {
   val deriveSchemaFromMigrations: Boolean
   val treatNullAsUnknownForEquality: Boolean
   val rootDirectory: File
+  val generateAsync: Boolean
 }
 
 /**

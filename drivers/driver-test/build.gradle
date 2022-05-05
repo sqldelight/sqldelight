@@ -11,7 +11,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api project(':runtime:runtime')
 
         implementation deps.kotlin.test.common
         implementation deps.kotlin.test.commonAnnotations

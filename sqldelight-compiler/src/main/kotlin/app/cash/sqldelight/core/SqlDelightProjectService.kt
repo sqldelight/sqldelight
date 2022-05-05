@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile
 interface SqlDelightProjectService {
   var dialect: SqlDelightDialect
   var treatNullAsUnknownForEquality: Boolean
+  var generateAsync: Boolean
 
   fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
     this.dialect = dialect

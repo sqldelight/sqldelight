@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialects.hsql
 
+import app.cash.sqldelight.dialect.api.RuntimeTypes
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.hsql.grammar.HsqlParserUtil
@@ -13,9 +14,15 @@ import com.squareup.kotlinpoet.ClassName
  * Base dialect for JDBC implementations.
  */
 class HsqlDialect : SqlDelightDialect {
-  override val driverType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver")
-  override val cursorType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor")
-  override val preparedStatementType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
+  override val runtimeTypes: RuntimeTypes = RuntimeTypes(
+    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver"),
+    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor"),
+    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
+  )
+
+  override val asyncRuntimeTypes: RuntimeTypes
+    get() = throw UnsupportedOperationException("HSQL does not support an async driver")
+
   override val icon = AllIcons.Providers.Hsqldb
 
   override fun setup() {

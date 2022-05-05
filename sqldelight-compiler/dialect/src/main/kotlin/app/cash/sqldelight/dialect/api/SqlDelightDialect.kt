@@ -5,19 +5,24 @@ import javax.swing.Icon
 
 interface SqlDelightDialect {
   /**
-   * Dialect-specific implementation of a `SqlDriver`.
+   * Dialect-specific runtime types
    */
-  val driverType: ClassName
+  val runtimeTypes: RuntimeTypes
+    get() = RuntimeTypes(
+      ClassName("app.cash.sqldelight.db", "SqlDriver"),
+      ClassName("app.cash.sqldelight.db", "SqlCursor"),
+      ClassName("app.cash.sqldelight.db", "SqlPreparedStatement"),
+    )
 
   /**
-   * Dialect-specific implementation of a `SqlCursor`.
+   * Dialect-specific runtime types for async drivers
    */
-  val cursorType: ClassName
-
-  /**
-   * Dialect-specific implementation of a `SqlPreparedStatement`.
-   */
-  val preparedStatementType: ClassName
+  val asyncRuntimeTypes: RuntimeTypes
+    get() = RuntimeTypes(
+      ClassName("app.cash.sqldelight.async.db", "AsyncSqlDriver"),
+      ClassName("app.cash.sqldelight.async.db", "AsyncSqlCursor"),
+      ClassName("app.cash.sqldelight.async.db", "AsyncSqlPreparedStatement"),
+    )
 
   /**
    * Whether the dialect supports reference cycles in `CREATE TABLE` statements.

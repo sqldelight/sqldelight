@@ -1,6 +1,7 @@
 package app.cash.sqldelight.dialects.mysql
 
 import app.cash.sqldelight.dialect.api.ConnectionManager
+import app.cash.sqldelight.dialect.api.RuntimeTypes
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.mysql.grammar.MySqlParserUtil
@@ -16,9 +17,18 @@ import com.squareup.kotlinpoet.ClassName
  * Base dialect for JDBC implementations.
  */
 class MySqlDialect : SqlDelightDialect {
-  override val driverType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver")
-  override val cursorType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor")
-  override val preparedStatementType = ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
+  override val runtimeTypes: RuntimeTypes = RuntimeTypes(
+    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver"),
+    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor"),
+    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
+  )
+
+  override val asyncRuntimeTypes: RuntimeTypes = RuntimeTypes(
+    ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcDriver"),
+    ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcCursor"),
+    ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcPreparedStatement"),
+  )
+
   override val icon = AllIcons.Providers.Mysql
   override val connectionManager: ConnectionManager by lazy { MySqlConnectionManager() }
 

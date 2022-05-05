@@ -42,7 +42,7 @@ object SqlDelightCompiler {
     module: Module,
     dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
-    output: FileAppender
+    output: FileAppender,
   ) {
     try {
       writeTableInterfaces(file, output)
@@ -65,7 +65,7 @@ object SqlDelightCompiler {
     module: Module,
     file: SqlDelightFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
   ) {
     writeQueryWrapperInterface(module, file, implementationFolder, output)
   }
@@ -79,7 +79,7 @@ object SqlDelightCompiler {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
     val databaseImplementationType = DatabaseGenerator(module, sourceFile).type()
-    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
+    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex, sourceFile.generateAsync)
 
     val fileSpec = FileSpec.builder(packageName, databaseImplementationType.name!!)
       .addProperty(exposer.exposedSchema())
@@ -97,7 +97,7 @@ object SqlDelightCompiler {
     module: Module,
     sourceFile: SqlDelightFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
@@ -161,7 +161,7 @@ object SqlDelightCompiler {
     module: Module,
     dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
-    output: FileAppender
+    output: FileAppender,
   ) {
     val packageName = file.packageName ?: return
     val queriesType = QueriesTypeGenerator(module, file, dialect)

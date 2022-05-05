@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
+import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
@@ -18,6 +19,7 @@ class QueriesTypeGenerator(
   private val file: SqlDelightQueriesFile,
   private val dialect: SqlDelightDialect,
 ) {
+  private val generateAsync = file.generateAsync
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
    * mutator queries.
@@ -29,19 +31,21 @@ class QueriesTypeGenerator(
    *     ) : TransacterImpl(driver, transactions)
    */
   fun generateType(packageName: String): TypeSpec {
+    val driverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
+
     val type = TypeSpec.classBuilder(file.queriesType.simpleName)
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
 
     val constructor = FunSpec.constructorBuilder()
 
     // Add the driver as a constructor property and superclass parameter:
     // private val driver: SqlDriver
     type.addProperty(
-      PropertySpec.builder(DRIVER_NAME, dialect.driverType, PRIVATE)
+      PropertySpec.builder(DRIVER_NAME, driverType, PRIVATE)
         .initializer(DRIVER_NAME)
         .build()
     )
-    constructor.addParameter(DRIVER_NAME, dialect.driverType)
+    constructor.addParameter(DRIVER_NAME, driverType)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 
     // Add any required adapters.
