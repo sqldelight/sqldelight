@@ -39,7 +39,8 @@ kotlin {
     targetFromPreset(presets.watchosArm64, 'watchosArm64')
     targetFromPreset(presets.macosX64, 'macosX64')
     targetFromPreset(presets.mingwX64, 'mingwX64')
-    targetFromPreset(presets.mingwX86, 'mingwX86')
+    // https://github.com/Kotlin/kotlinx.coroutines/issues/2157
+    // targetFromPreset(presets.mingwX86, 'mingwX86')
     targetFromPreset(presets.linuxX64, 'linux')
 
     targetFromPreset(presets.macosArm64, 'macosArm64')
