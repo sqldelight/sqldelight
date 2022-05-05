@@ -148,7 +148,7 @@ object FixtureCompiler {
         environment.module,
         file!!,
         "testmodule",
-        fileWriter
+        fileWriter,
       )
     }
 

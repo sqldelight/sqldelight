@@ -21,9 +21,6 @@ class MySqlTest {
     return MyDatabase(driver).also { MyDatabase.Schema.create(driver) }
   }
 
-  fun after() {
-  }
-
   @Test fun simpleSelect() = runTest { database ->
     database.dogQueries.insertDog("Tilda", "Pomeranian", true)
     assertThat(database.dogQueries.selectDogs().executeAsOne())

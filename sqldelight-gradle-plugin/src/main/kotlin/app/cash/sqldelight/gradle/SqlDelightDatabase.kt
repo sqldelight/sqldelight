@@ -143,7 +143,7 @@ class SqlDelightDatabase(
         dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
         deriveSchemaFromMigrations = deriveSchemaFromMigrations,
         treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
-        generateAsync = generateAsync
+        generateAsync = generateAsync,
       )
     } finally {
       recursionGuard = false
