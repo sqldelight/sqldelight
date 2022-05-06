@@ -66,6 +66,11 @@ class GeneratedVirtualFile(private val path: String, module: Module) {
       if (!parent.exists() || !parent.isDirectory) throw AssertionError()
     }
     val name = path.substring(indexOfName + 1, path.length)
-    return parent.findChild(name) ?: parent.createChildDirectory(this, name)
+    var child = parent.findChild(name)
+    if (child != null && !child.isDirectory) {
+      child.delete(this)
+      child = null
+    }
+    return child ?: parent.createChildDirectory(this, name)
   }
 }
