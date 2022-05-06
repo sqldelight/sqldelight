@@ -63,6 +63,12 @@ compileKotlin {
   }
 }
 
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(11))
+  }
+}
+
 def isReleaseBuild() {
   return VERSION_NAME.contains("SNAPSHOT") == false
 }
