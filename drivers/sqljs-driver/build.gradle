@@ -12,6 +12,7 @@ kotlin {
         useMocha {
           timeout = "5s"
         }
+        filter.excludeTestsMatching("*JsWorker*")
       }
     }
     browser {
