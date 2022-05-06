@@ -13,7 +13,7 @@ import java.io.File
 @RunWith(TestParameterInjector::class)
 class MigrationSquashTest {
   @Test fun `squash migrations`(
-    @TestParameter("mysql", "postgres") dialect: String
+    @TestParameter("mysql", "postgres", "sqlite") dialect: String
   ) {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-squash"))

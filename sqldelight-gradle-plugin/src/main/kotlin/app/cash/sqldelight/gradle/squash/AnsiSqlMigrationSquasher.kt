@@ -3,11 +3,10 @@ package app.cash.sqldelight.gradle.squash
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.dialect.api.MigrationSquasher
+import app.cash.sqldelight.dialect.api.alteredTable
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SchemaContributor
 import com.alecstrong.sql.psi.core.psi.SqlAlterTableRules
-import com.alecstrong.sql.psi.core.psi.SqlAlterTableStmt
-import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlNamedElementImpl
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.util.parentOfType
@@ -89,11 +88,5 @@ class AnsiSqlMigrationSquasher(
       }
       else -> throw IllegalStateException("Cannot squish ${alterTableRules.text}")
     }
-  }
-
-  private fun SqlAlterTableRules.alteredTable(file: SqlFileBase): SqlCreateTableStmt {
-    val tableName = (parent as SqlAlterTableStmt).tableName
-    return file.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }
-      .single { it.tableName.textMatches(tableName.text) }
   }
 }
