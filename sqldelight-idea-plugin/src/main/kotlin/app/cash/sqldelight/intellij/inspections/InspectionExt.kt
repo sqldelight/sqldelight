@@ -9,6 +9,7 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiInvalidElementAccessException
+import org.jetbrains.kotlin.resolve.lazy.NoDescriptorForDeclarationException
 
 internal inline fun LocalInspectionTool.ensureReady(file: PsiFile, block: InspectionProperties.() -> PsiElementVisitor): PsiElementVisitor {
   return ensureReady(file, { PsiElementVisitor.EMPTY_VISITOR }, block)
@@ -42,6 +43,8 @@ private inline fun <T> ensureReady(
   } catch (_: InvalidElementDetectedException) {
     return defaultValue()
   } catch (_: PsiInvalidElementAccessException) {
+    return defaultValue()
+  } catch (_: NoDescriptorForDeclarationException) {
     return defaultValue()
   }
 }
