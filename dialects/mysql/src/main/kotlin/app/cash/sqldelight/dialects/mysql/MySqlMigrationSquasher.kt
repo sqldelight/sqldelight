@@ -1,11 +1,11 @@
 package app.cash.sqldelight.dialects.mysql
 
 import app.cash.sqldelight.dialect.api.MigrationSquasher
+import app.cash.sqldelight.dialect.api.alteredTable
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlAlterTableRules
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlPlacementClause
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAlterTableRules
-import com.alecstrong.sql.psi.core.psi.SqlAlterTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -14,7 +14,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 
-class MySqlMigrationSquasher(
+internal class MySqlMigrationSquasher(
   private val parentSquasher: MigrationSquasher
 ) : MigrationSquasher by parentSquasher {
   override fun squish(
@@ -70,11 +70,6 @@ class MySqlMigrationSquasher(
       }
       else -> parentSquasher.squish(alterTableRule, into)
     }
-  }
-
-  private fun SqlAlterTableRules.alteredTable(file: SqlFileBase): SqlCreateTableStmt {
-    val tableName = (parent as SqlAlterTableStmt).tableName
-    return file.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.single { it.tableName.textMatches(tableName.text) }
   }
 
   private fun String.replaceWithPlacement(

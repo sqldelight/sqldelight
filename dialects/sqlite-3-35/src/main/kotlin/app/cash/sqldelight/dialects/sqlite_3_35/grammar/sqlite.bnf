@@ -49,13 +49,14 @@ alter_table_rules ::= (
   | alter_table_rename_column
   | alter_table_drop_column
 ) {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
-  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
+  extends = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.impl.SqliteAlterTableRulesImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.SqliteAlterTableRules"
   override = true
 }
 
 alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableRenameColumnMixin"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.SqliteAlterTableRenameColumn"
   pin = 1
 }
 

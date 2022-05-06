@@ -18,6 +18,12 @@ sqldelight {
     dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
     deriveSchemaFromMigrations = true
   }
+  sqliteDatabase {
+    sourceFolders = ["sqldelight/sqlite"]
+    packageName = "app.cash.sqldelight.sqlite.integration"
+    dialect("app.cash.sqldelight:sqlite-3-35-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+    deriveSchemaFromMigrations = true
+  }
 }
 
 repositories {
