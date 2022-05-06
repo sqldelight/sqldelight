@@ -15,6 +15,7 @@ import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.db.migrateWithCallbacks
 
 private val DEFAULT_CACHE_SIZE = 20
@@ -43,7 +44,7 @@ class AndroidSqliteDriver private constructor(
    * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
    */
   @JvmOverloads constructor(
-    schema: SqlDriver.Schema,
+    schema: SqlSchema,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
@@ -180,13 +181,13 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlDriver.Schema,
+    private val schema: SqlSchema,
     vararg callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
     private val callbacks = callbacks
 
     constructor(
-      schema: SqlDriver.Schema
+      schema: SqlSchema
     ) : this(schema, *emptyArray<AfterVersion>())
 
     override fun onCreate(db: SupportSQLiteDatabase) {

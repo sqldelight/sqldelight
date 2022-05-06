@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.async.AsyncTransacter
 import app.cash.sqldelight.async.AsyncTransacterImpl
 import app.cash.sqldelight.async.db.AsyncSqlDriver
+import app.cash.sqldelight.async.db.AsyncSqlSchema
 import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,7 +12,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class JsWorkerTransacterTest {
-  private val schema = object : AsyncSqlDriver.Schema {
+  private val schema = object : AsyncSqlSchema {
     override val version = 1
     override suspend fun create(driver: AsyncSqlDriver) {}
     override suspend fun migrate(

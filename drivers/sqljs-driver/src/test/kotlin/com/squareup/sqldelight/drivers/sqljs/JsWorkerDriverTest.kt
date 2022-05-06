@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
+import app.cash.sqldelight.async.db.AsyncSqlSchema
 import app.cash.sqldelight.driver.sqljs.worker.JsWorkerException
 import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
 import kotlin.test.Test
@@ -16,7 +17,7 @@ import kotlin.test.assertTrue
 typealias InsertFunction = suspend (AsyncSqlPreparedStatement.() -> Unit) -> Unit
 
 class JsWorkerDriverTest {
-  private val schema = object : AsyncSqlDriver.Schema {
+  private val schema = object : AsyncSqlSchema {
     override val version: Int = 1
 
     override suspend fun create(driver: AsyncSqlDriver) {

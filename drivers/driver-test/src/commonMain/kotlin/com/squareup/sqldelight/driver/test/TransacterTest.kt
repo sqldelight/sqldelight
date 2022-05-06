@@ -2,7 +2,7 @@ package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.db.SqlSchema
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -14,10 +14,10 @@ abstract class TransacterTest {
   protected lateinit var transacter: TransacterImpl
   private lateinit var driver: SqlDriver
 
-  abstract fun setupDatabase(schema: Schema): SqlDriver
+  abstract fun setupDatabase(schema: SqlSchema): SqlDriver
 
   @BeforeTest fun setup() {
-    val driver = setupDatabase(object : Schema {
+    val driver = setupDatabase(object : SqlSchema {
       override val version = 1
       override fun create(driver: SqlDriver) {}
       override fun migrate(

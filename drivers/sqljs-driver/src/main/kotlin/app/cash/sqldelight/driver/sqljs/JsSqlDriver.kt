@@ -6,20 +6,21 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Promise
 
 fun Promise<Database>.driver(): Promise<SqlDriver> = then { JsSqlDriver(it) }
 
-fun Promise<SqlDriver>.withSchema(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = then {
+fun Promise<SqlDriver>.withSchema(schema: SqlSchema? = null): Promise<SqlDriver> = then {
   schema?.create(it)
   it
 }
 
 fun Promise<SqlDriver>.transacter(): Promise<Transacter> = then { object : TransacterImpl(it) {} }
 
-fun initSqlDriver(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = initDb().driver().withSchema(schema)
+fun initSqlDriver(schema: SqlSchema? = null): Promise<SqlDriver> = initDb().driver().withSchema(schema)
 
 class JsSqlDriver(private val db: Database) : SqlDriver {
 

@@ -52,6 +52,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.Other
@@ -60,7 +61,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(
@@ -76,7 +77,7 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |
@@ -228,13 +229,14 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -245,7 +247,7 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |
@@ -317,6 +319,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
@@ -324,7 +327,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
@@ -336,7 +339,7 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |
@@ -468,13 +471,14 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.SearchQueries
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -485,7 +489,7 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val searchQueries: SearchQueries = SearchQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |

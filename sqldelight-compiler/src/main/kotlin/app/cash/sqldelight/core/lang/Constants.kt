@@ -11,8 +11,8 @@ internal const val CURSOR_NAME = "cursor"
 internal val DRIVER_TYPE = ClassName("app.cash.sqldelight.db", "SqlDriver")
 internal val ASYNC_DRIVER_TYPE = ClassName("app.cash.sqldelight.async.db", "AsyncSqlDriver")
 internal const val DRIVER_NAME = "driver"
-internal val DATABASE_SCHEMA_TYPE = DRIVER_TYPE.nestedClass("Schema")
-internal val ASYNC_DATABASE_SCHEMA_TYPE = ASYNC_DRIVER_TYPE.nestedClass("Schema")
+internal val DATABASE_SCHEMA_TYPE = ClassName("app.cash.sqldelight.db", "SqlSchema")
+internal val ASYNC_DATABASE_SCHEMA_TYPE = ClassName("app.cash.sqldelight.async.db", "AsyncSqlSchema")
 
 internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
 internal val ASYNC_PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.async.db", "AsyncSqlPreparedStatement")

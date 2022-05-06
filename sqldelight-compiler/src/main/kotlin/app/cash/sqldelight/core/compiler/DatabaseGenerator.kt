@@ -227,7 +227,7 @@ internal class DatabaseGenerator(
 
     return typeSpec
       .addType(
-        TypeSpec.objectBuilder(DATABASE_SCHEMA_TYPE.simpleName)
+        TypeSpec.objectBuilder("Schema")
           .addSuperinterface(if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
           .addFunction(createFunction.build())
           .addFunction(migrateFunction.build())

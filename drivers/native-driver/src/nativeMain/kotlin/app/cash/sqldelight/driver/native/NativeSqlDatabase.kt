@@ -6,6 +6,7 @@ import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.util.BasicMutableMap
 import app.cash.sqldelight.driver.native.util.basicMutableMap
 import co.touchlab.sqliter.DatabaseConfiguration
@@ -107,7 +108,7 @@ class NativeSqliteDriver(
   )
 
   constructor(
-    schema: SqlDriver.Schema,
+    schema: SqlSchema,
     name: String,
     maxReaderConnections: Int = 1
   ) : this(
