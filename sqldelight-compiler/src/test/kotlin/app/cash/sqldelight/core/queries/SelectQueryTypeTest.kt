@@ -1713,4 +1713,53 @@ class SelectQueryTypeTest {
       |""".trimMargin()
     )
   }
+
+  @Test
+  fun `group concat with left joins`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE place(
+      |  id TEXT
+      |);
+      |
+      |CREATE TABLE placeTag(
+      |  place TEXT,
+      |  tag TEXT
+      |);
+      |
+      |CREATE TABLE tag(
+      |  id TEXT,
+      |  emoji TEXT,
+      |  name TEXT
+      |);
+      |
+      |tags:
+      |SELECT
+      |  place.*,
+      |  GROUP_CONCAT(tag.emoji || ' ' || tag.name, ', ') AS tags
+      |  FROM place
+      |  LEFT JOIN placeTag
+      |    ON placeTag.place = place.id
+      |  LEFT JOIN tag
+      |    ON tag.id = placeTag.tag
+      |  WHERE place.id = ?
+      |;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> tags(id: kotlin.String?, mapper: (id: kotlin.String?, tags: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = TagsQuery(id) { cursor ->
+      |  mapper(
+      |    cursor.getString(0),
+      |    cursor.getString(1)
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
 }
