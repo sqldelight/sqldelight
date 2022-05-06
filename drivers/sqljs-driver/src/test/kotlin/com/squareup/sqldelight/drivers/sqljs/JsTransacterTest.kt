@@ -12,7 +12,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 class JsTransacterTest {
 
@@ -191,17 +190,15 @@ class JsTransacterTest {
   @Test fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() = transacterPromise.then { (_, transacter) ->
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
-    try {
+    val t = assertFailsWith<Throwable>() {
       transacter.transaction {
         afterRollback {
           throw ExceptionA()
         }
         throw ExceptionB()
       }
-      fail("Should have thrown!")
-    } catch (e: Throwable) {
-      assertTrue("Exception thrown in body not in message($e)") { e.toString().contains("ExceptionA") }
-      assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
     }
+    assertTrue("Exception thrown in body not in message($t)") { t.toString().contains("ExceptionA") }
+    assertTrue("Exception thrown in rollback not in message($t)") { t.toString().contains("ExceptionB") }
   }
 }
