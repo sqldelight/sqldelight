@@ -134,6 +134,7 @@ internal class AnsiSqlTypeResolver : TypeResolver {
 
     "avg" -> IntermediateType(REAL).asNullable()
     "abs" -> exprList[0].type()
+    "iif" -> exprList[1].type()
     "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
     "nullif" -> exprList[0].type().asNullable()
     "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()

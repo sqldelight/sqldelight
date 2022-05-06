@@ -693,4 +693,26 @@ class MutatorQueryFunctionTest {
       "Data.sq: (12, 32): Table parameters are not usable in a grouped statement."
     )
   }
+
+  @Test fun `expressions can infer types from an update clause`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE BasketRowEntity (
+      |  subtotal TEXT
+      |);
+      |
+      |update1:
+      |UPDATE BasketRowEntity SET subtotal = IIF(TRUE, :subtotal, NULL);
+      |
+      |update2:
+      |UPDATE BasketRowEntity SET subtotal = IIF(TRUE, :subtotal, :subtotal);
+      """.trimMargin(),
+      tempFolder
+    )
+
+    file.namedMutators.forEach {
+      val generator = MutatorQueryGenerator(it)
+      assertThat(generator.function().parameters.map { it.toString() }).containsExactly("subtotal: kotlin.String?")
+    }
+  }
 }
