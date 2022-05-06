@@ -46,6 +46,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @Input var verifyMigrations: Boolean = false
 
+  @Input var verifyDefinitions: Boolean = true
+
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
    * https://github.com/gradle/gradle/issues/14223 is resolved. */
@@ -62,6 +64,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         it.properties.set(properties)
         it.verifyMigrations.set(verifyMigrations)
         it.compilationUnit.set(compilationUnit)
+        it.verifyDefinitions.set(verifyDefinitions)
       }
       workQueue.await()
     }.onSuccess {
@@ -85,6 +88,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     val properties: Property<SqlDelightDatabaseProperties>
     val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
+    val verifyDefinitions: Property<Boolean>
   }
 
   abstract class VerifyMigrationAction : WorkAction<VerifyMigrationWorkParameters> {
@@ -141,6 +145,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     private fun checkMigration(dbFile: File, currentDb: CatalogDatabase) {
       val actualCatalog = createActualDb(dbFile)
       val databaseComparator = ObjectDifferDatabaseComparator(
+        ignoreDefinitions = !parameters.verifyDefinitions.get(),
         circularReferenceExceptionLogger = {
           logger.debug(it)
         }

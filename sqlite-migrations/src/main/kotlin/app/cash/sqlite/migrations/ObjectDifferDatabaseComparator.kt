@@ -9,6 +9,7 @@ import de.danielbechler.diff.node.DiffNode.State.REMOVED
 import de.danielbechler.diff.node.DiffNode.State.UNTOUCHED
 
 class ObjectDifferDatabaseComparator(
+  private val ignoreDefinitions: Boolean,
   private val circularReferenceExceptionLogger: ((String) -> Unit)? = null
 ) : DatabaseComparator<CatalogDatabase> {
 
@@ -30,6 +31,8 @@ class ObjectDifferDatabaseComparator(
       propertyName("importedForeignKeys")
       propertyName("deferrable")
       propertyName("initiallyDeferred")
+
+      if (ignoreDefinitions) propertyName("definition")
     }
     // Partial columns are used for unresolved columns to avoid cycles. Matching based on string
     // is fine for our purposes.
