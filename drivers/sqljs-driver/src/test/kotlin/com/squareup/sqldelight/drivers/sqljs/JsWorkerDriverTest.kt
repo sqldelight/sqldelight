@@ -3,7 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
-import app.cash.sqldelight.driver.sqljs.initAsyncSqlDriver
+import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -48,20 +48,8 @@ class JsWorkerDriverTest {
   }
 
   private fun runTest(block: suspend (AsyncSqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
-    val driver = setup()
-    // Tests are skipped if running on Node
-    if (driver != null) {
-      block(driver)
-      tearDown(driver)
-    }
-  }
-
-  private suspend fun setup(): AsyncSqlDriver? {
-    if (IS_NODE) return null
-    return initAsyncSqlDriver("/worker.sql-wasm.js", schema)
-  }
-
-  private suspend fun tearDown(driver: AsyncSqlDriver) {
+    val driver = initAsyncSqlDriver("/worker.sql-wasm.js", schema)
+    block(driver)
     driver.close()
   }
 
@@ -227,11 +215,5 @@ class JsWorkerDriverTest {
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
     driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
-  }
-
-  companion object {
-    private val IS_NODE: Boolean = js(
-      "typeof process !== 'undefined' && process.versions != null && process.versions.node != null"
-    ) as Boolean
   }
 }
