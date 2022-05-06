@@ -79,6 +79,14 @@ class AnsiSqlMigrationSquasher(
           fileText.replaceRange(element.range, newName)
         }
       }
+      alterTableRules.alterTableAddColumn != null -> {
+        val createTable = alterTableRules.alteredTable(into)
+        into.text.replaceRange(
+          createTable.columnDefList.first().startOffset until createTable.columnDefList.last().endOffset,
+          (createTable.columnDefList + alterTableRules.alterTableAddColumn!!.columnDef)
+            .joinToString(separator = ",\n  ") { it.text }
+        )
+      }
       else -> throw IllegalStateException("Cannot squish ${alterTableRules.text}")
     }
   }

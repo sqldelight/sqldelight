@@ -108,13 +108,16 @@ abstract class MigrationSquashTask : SqlDelightWorkerTask() {
         }
       }
 
-      File(migrationDirectory, "_$topVersion.sqm").writeText(
-        """
-        |${imports.joinToString(separator = "\n", prefix = "import ", postfix = ";")}
-        |
-        |${newMigrations.text}
+      var text = newMigrations.text
+      if (imports.isNotEmpty()) {
+        text = """
+          |${imports.joinToString(separator = "\n", transform = { "import $it;" })}
+          |
+          |$text
         """.trimMargin()
-      )
+      }
+
+      File(migrationDirectory, "_$topVersion.sqm").writeText(text)
     }
   }
 }

@@ -47,6 +47,7 @@ dependencies {
   testImplementation project(':sqldelight-compiler')
   testImplementation deps.junit
   testImplementation deps.truth
+  testImplementation deps.testParameterInjector
 }
 
 test {
