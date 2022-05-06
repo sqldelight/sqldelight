@@ -1,0 +1,21 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'app.cash.sqldelight'
+
+sqldelight {
+  MyDatabase {
+    packageName = "app.cash.sqldelight.mysql.integration"
+    dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+    deriveSchemaFromMigrations = true
+  }
+}
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+}

@@ -1,0 +1,5 @@
+CREATE INDEX index1 ON test(value);
+
+CREATE INDEX index2 ON test(value);
+
+CREATE INDEX index3 ON test2(value);
