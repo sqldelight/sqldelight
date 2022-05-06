@@ -35,6 +35,7 @@ import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryMultExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlCaseExpr
 import com.alecstrong.sql.psi.core.psi.SqlCastExpr
@@ -230,7 +231,10 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
     } else {
       typeResolver.encapsulatingType(
         exprList = getExprList(),
-        nullableIfAny = (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr),
+        nullableIfAny = (
+          this is SqlBinaryAddExpr || this is SqlBinaryMultExpr ||
+            this is SqlBinaryPipeExpr
+          ),
         INTEGER, REAL, TEXT, BLOB
       )
     }
