@@ -4,6 +4,8 @@ pluginManagement {
         google()
         gradlePluginPortal()
     }
+
+    includeBuild("buildLogic")
 }
 
 dependencyResolutionManagement {
