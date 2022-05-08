@@ -6,7 +6,6 @@ import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
 import app.cash.sqldelight.driver.sqljs.QueryResults
-import kotlinx.coroutines.await
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
@@ -16,7 +15,6 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.js.Promise
 
 private fun <T> jsObject(block: T.() -> Unit): T {
   val o = js("{}").unsafeCast<T>()
@@ -24,12 +22,12 @@ private fun <T> jsObject(block: T.() -> Unit): T {
   return o
 }
 
-suspend fun initAsyncSqlDriver(workerPath: String = "/worker.sql-wasm.js", schema: AsyncSqlDriver.Schema? = null): AsyncSqlDriver {
-  val worker = Worker(workerPath)
-  return Promise<AsyncSqlDriver> { resolve, _ -> resolve(JsWorkerSqlDriver(worker)) }.withSchema(schema)
-}
+suspend fun initAsyncSqlDriver(
+  workerPath: String = "/worker.sql-wasm.js",
+  schema: AsyncSqlDriver.Schema? = null
+): AsyncSqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
 
-suspend fun Promise<AsyncSqlDriver>.withSchema(schema: AsyncSqlDriver.Schema? = null): AsyncSqlDriver = await().also { schema?.create(it) }
+suspend fun AsyncSqlDriver.withSchema(schema: AsyncSqlDriver.Schema? = null): AsyncSqlDriver = this.also { schema?.create(it) }
 
 class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   private val listeners = mutableMapOf<String, MutableSet<AsyncQuery.Listener>>()
@@ -49,9 +47,6 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
     }
 
     val data = worker.sendMessage(messageId, message).unsafeCast<WorkerData>()
-    if (data.error != null) {
-      throw data.error as Throwable
-    }
 
     val table = if (data.results.isNotEmpty()) {
       data.results[0]
@@ -59,8 +54,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
       jsObject { values = arrayOf() }
     }
 
-    @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE") val cursor = JsWorkerSqlCursor(table)
-    return mapper(cursor)
+    return mapper(JsWorkerSqlCursor(table))
   }
 
   override suspend fun execute(identifier: Int?, sql: String, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): Long {
@@ -75,10 +69,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
       this.params = bound.parameters.toTypedArray()
     }
 
-    val data = worker.sendMessage(messageId, message)
-    if (data.error != null) {
-      throw data.error as Throwable
-    }
+    worker.sendMessage(messageId, message)
     return 0
   }
 
@@ -130,29 +121,32 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
     }
   }
 
-  private suspend fun Worker.sendMessage(id: Int, message: dynamic): dynamic = suspendCancellableCoroutine { continuation ->
-    postMessage(message)
-
+  private suspend fun Worker.sendMessage(id: Int, message: dynamic): WorkerData = suspendCancellableCoroutine { continuation ->
     val messageListener = object : EventListener {
       override fun handleEvent(event: Event) {
-        check(event is MessageEvent)
-
-        if (event.data.asDynamic().id == id) {
-          continuation.resume(event.data)
+        val data = event.unsafeCast<MessageEvent>().data.unsafeCast<WorkerData>()
+        if (data.id == id) {
           removeEventListener("message", this)
+          if (data.error != null) {
+            continuation.resumeWithException(JsWorkerException(data.error!!))
+          } else {
+            continuation.resume(data)
+          }
         }
       }
     }
 
     val errorListener = object : EventListener {
       override fun handleEvent(event: Event) {
-        worker.removeEventListener("error", this)
-        continuation.resumeWithException(event.asDynamic().error as Throwable)
+        removeEventListener("error", this)
+        continuation.resumeWithException(JsWorkerException(event.toString()))
       }
     }
 
     addEventListener("message", messageListener)
     addEventListener("error", errorListener)
+
+    postMessage(message)
 
     continuation.invokeOnCancellation {
       removeEventListener("message", messageListener)

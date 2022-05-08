@@ -35,7 +35,7 @@ internal external interface WorkerData {
   /**
    * An error returned by the worker, could be undefined.
    */
-  var error: dynamic
+  var error: String?
 
   /**
    * The id of the message that this data is in response to. Matches the value that was posted in [WorkerMessage.id].
