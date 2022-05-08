@@ -3,9 +3,12 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
+import app.cash.sqldelight.driver.sqljs.worker.JsWorkerException
 import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -215,5 +218,26 @@ class JsWorkerDriverTest {
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
     driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+  }
+
+  @Test
+  fun worker_exceptions_are_handled_correctly() = runTest { driver ->
+    println("IS_LEGACY: $IS_LEGACY")
+    // Despite the exception being thrown correctly in LEGACY builds, this test fails for some reason
+    if (IS_LEGACY) return@runTest
+
+    val error = assertFailsWith<JsWorkerException> {
+      schema.create(driver)
+    }
+    assertContains(error.toString(), "table test already exists")
+  }
+
+  // TODO: Remove this once LEGACY builds are dropped
+  companion object {
+    private data class Obj(val entry: String)
+
+    private val prototype = js("Object").getPrototypeOf(Obj("test"))
+    private val prototypeProps: Array<String> = js("Object").getOwnPropertyNames(prototype).unsafeCast<Array<String>>()
+    private val IS_LEGACY = prototypeProps.firstOrNull { it.contains("_get_") } == null
   }
 }

@@ -122,18 +122,14 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   }
 
   private suspend fun Worker.sendMessage(id: Int, message: dynamic): WorkerData = suspendCancellableCoroutine { continuation ->
-    postMessage(message)
-
     val messageListener = object : EventListener {
       override fun handleEvent(event: Event) {
-        check(event is MessageEvent)
-
-        val data = event.data.unsafeCast<WorkerData>()
+        val data = event.unsafeCast<MessageEvent>().data.unsafeCast<WorkerData>()
         if (data.id == id) {
+          removeEventListener("message", this)
           if (data.error != null) {
             continuation.resumeWithException(JsWorkerException(data.error!!))
           } else {
-            removeEventListener("message", this)
             continuation.resume(data)
           }
         }
@@ -149,6 +145,8 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
 
     addEventListener("message", messageListener)
     addEventListener("error", errorListener)
+
+    postMessage(message)
 
     continuation.invokeOnCancellation {
       removeEventListener("message", messageListener)
