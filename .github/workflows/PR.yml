@@ -61,7 +61,7 @@ jobs:
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-18.04'
-        run: ./gradlew linuxTest
+        run: ./gradlew linuxX64Test
 
       # iOS tests
       - name: Run instrumentation tests
