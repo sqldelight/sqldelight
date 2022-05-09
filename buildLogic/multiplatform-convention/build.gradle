@@ -1,0 +1,17 @@
+plugins {
+  alias(deps.plugins.kotlin.jvm)
+  id("java-gradle-plugin")
+}
+
+gradlePlugin {
+  plugins {
+    multiplatform {
+      id = "app.cash.sqldelight.multiplatform"
+      implementationClass = "app.cash.sqldelight.multiplatform.MultiplatformConventions"
+    }
+  }
+}
+
+dependencies {
+  compileOnly deps.kotlin.plugin
+}
