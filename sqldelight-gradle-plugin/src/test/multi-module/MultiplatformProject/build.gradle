@@ -10,6 +10,7 @@ sqldelight {
 
 android {
   compileSdkVersion versions.compileSdk
+  namespace "app.cash.sqldelight.multiplatform.project"
 
   buildTypes {
     release {}

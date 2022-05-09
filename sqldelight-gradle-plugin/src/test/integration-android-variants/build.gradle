@@ -28,6 +28,7 @@ sqldelight {
 
 android {
   compileSdkVersion versions.compileSdk
+  namespace "app.cash.sqldelight.integration"
 
   defaultConfig {
     minSdkVersion versions.minSdk

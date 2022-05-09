@@ -15,6 +15,7 @@ repositories {
 
 android {
   compileSdkVersion versions.compileSdk
+  namespace "com.example.sqldelight"
 
   defaultConfig {
     applicationId "com.sample"

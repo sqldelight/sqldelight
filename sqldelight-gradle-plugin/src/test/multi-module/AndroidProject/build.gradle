@@ -11,6 +11,7 @@ sqldelight {
 
 android {
   compileSdkVersion versions.compileSdk
+  namespace "com.example.sqldelight"
 
   buildTypes {
     release {}
