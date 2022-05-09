@@ -15,6 +15,8 @@ repositories {
 }
 
 android {
+  namespace "app.cash.sqldelight.integration"
+
   compileSdkVersion deps.versions.compileSdk.get() as int
 
   defaultConfig {

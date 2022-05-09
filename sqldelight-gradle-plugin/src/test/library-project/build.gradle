@@ -13,6 +13,8 @@ repositories {
 }
 
 android {
+  namespace "com.example.sqldelight"
+
   compileSdkVersion deps.versions.compileSdk.get() as int
 
   lintOptions {
