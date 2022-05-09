@@ -1,5 +1,3 @@
-@file:JvmName("SqlDriverAdapter")
-
 package app.cash.sqldelight.async
 
 import app.cash.sqldelight.Query
@@ -11,13 +9,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
-
-@JvmOverloads
-@JvmName("fromSqlDriver")
-fun SqlDriver.asAsyncSqlDriver(
-  cursorAdapter: (SqlCursor) -> AsyncSqlCursor = { SqlDriverAdapter.SqlCursorAdapter(it) },
-  binderAdapter: (SqlPreparedStatement) -> AsyncSqlPreparedStatement = { SqlDriverAdapter.SqlPreparedStatementAdapter(it) }
-): AsyncSqlDriver = SqlDriverAdapter(this, cursorAdapter, binderAdapter)
+import kotlin.jvm.JvmStatic
 
 internal class SqlDriverAdapter(
   private val driver: SqlDriver,
@@ -105,5 +97,15 @@ internal class SqlDriverAdapter(
     override fun bindBoolean(index: Int, boolean: Boolean?) {
       statement.bindBoolean(index, boolean)
     }
+  }
+
+  public companion object {
+    @JvmOverloads
+    @JvmName("fromSqlDriver")
+    @JvmStatic
+    fun SqlDriver.asAsyncSqlDriver(
+      cursorAdapter: (SqlCursor) -> AsyncSqlCursor = { SqlDriverAdapter.SqlCursorAdapter(it) },
+      binderAdapter: (SqlPreparedStatement) -> AsyncSqlPreparedStatement = { SqlDriverAdapter.SqlPreparedStatementAdapter(it) }
+    ): AsyncSqlDriver = SqlDriverAdapter(this, cursorAdapter, binderAdapter)
   }
 }
