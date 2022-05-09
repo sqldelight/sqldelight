@@ -6,7 +6,6 @@ import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.kotlin.sources
 import app.cash.sqldelight.gradle.squash.MigrationSquashTask
-import com.android.builder.model.AndroidProject.FD_GENERATED
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -85,7 +84,7 @@ class SqlDelightDatabase(
   var treatNullAsUnknownForEquality: Boolean = false
 
   private val generatedSourcesDirectory
-    get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
+    get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
   private val sources by lazy { sources() }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
