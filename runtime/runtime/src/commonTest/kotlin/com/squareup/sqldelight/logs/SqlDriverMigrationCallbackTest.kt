@@ -2,6 +2,7 @@ package com.squareup.sqldelight.logs
 
 import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.db.migrateWithCallbacks
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -90,7 +91,7 @@ class SqlDriverMigrationCallbackTest {
     assertFalse(callback4Invoked)
   }
 
-  private fun fakeSchema() = object : SqlDriver.Schema {
+  private fun fakeSchema() = object : SqlSchema {
     override val version: Int = 1
     override fun create(driver: SqlDriver) = Unit
     override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = Unit

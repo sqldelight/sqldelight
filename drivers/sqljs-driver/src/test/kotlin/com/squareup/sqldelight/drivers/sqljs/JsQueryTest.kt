@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import app.cash.sqldelight.internal.Atomic
 import kotlin.js.Promise
@@ -22,7 +23,7 @@ class JsQueryTest {
     )
   }
 
-  private val schema = object : SqlDriver.Schema {
+  private val schema = object : SqlSchema {
     override val version: Int = 1
 
     override fun create(driver: SqlDriver) {

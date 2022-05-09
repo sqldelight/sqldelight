@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import app.cash.sqldelight.driver.sqljs.withSchema
 import kotlin.js.Promise
@@ -15,7 +16,7 @@ import kotlin.test.assertTrue
 
 class JsTransacterTest {
 
-  private val schema = object : SqlDriver.Schema {
+  private val schema = object : SqlSchema {
     override val version = 1
     override fun create(driver: SqlDriver) {}
     override fun migrate(

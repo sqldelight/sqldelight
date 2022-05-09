@@ -5,6 +5,7 @@ import app.cash.sqldelight.async.AsyncTransacter
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
+import app.cash.sqldelight.async.db.AsyncSqlSchema
 import app.cash.sqldelight.driver.sqljs.QueryResults
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
@@ -24,10 +25,10 @@ private fun <T> jsObject(block: T.() -> Unit): T {
 
 suspend fun initAsyncSqlDriver(
   workerPath: String = "/worker.sql-wasm.js",
-  schema: AsyncSqlDriver.Schema? = null
+  schema: AsyncSqlSchema? = null
 ): AsyncSqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
 
-suspend fun AsyncSqlDriver.withSchema(schema: AsyncSqlDriver.Schema? = null): AsyncSqlDriver = this.also { schema?.create(it) }
+suspend fun AsyncSqlDriver.withSchema(schema: AsyncSqlSchema? = null): AsyncSqlDriver = this.also { schema?.create(it) }
 
 class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   private val listeners = mutableMapOf<String, MutableSet<AsyncQuery.Listener>>()

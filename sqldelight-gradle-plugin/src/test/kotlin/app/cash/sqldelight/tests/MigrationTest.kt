@@ -240,7 +240,7 @@ class MigrationTest {
       |) : TransacterImpl(driver), Database {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 2
       |

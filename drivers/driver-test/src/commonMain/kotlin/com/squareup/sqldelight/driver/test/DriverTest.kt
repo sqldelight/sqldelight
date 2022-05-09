@@ -4,8 +4,8 @@ import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlDriver.Schema
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
 import app.cash.sqldelight.internal.setValue
@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 
 abstract class DriverTest {
   protected lateinit var driver: SqlDriver
-  protected val schema = object : Schema {
+  protected val schema = object : SqlSchema {
     override val version: Int = 1
 
     override fun create(driver: SqlDriver) {
@@ -58,7 +58,7 @@ abstract class DriverTest {
   }
   private var transacter by Atomic<Transacter?>(null)
 
-  abstract fun setupDatabase(schema: Schema): SqlDriver
+  abstract fun setupDatabase(schema: SqlSchema): SqlDriver
 
   private fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection
