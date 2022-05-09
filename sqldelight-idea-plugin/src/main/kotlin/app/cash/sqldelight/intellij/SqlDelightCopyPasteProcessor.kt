@@ -65,7 +65,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
       return null
     }
 
-    val resolvedClass = element.reference.resolve() as? PsiClass ?: return null
+    val resolvedClass = element.reference?.resolve() as? PsiClass ?: return null
     val qualifiedName = resolvedClass.qualifiedName ?: return null
     val range = element.textRange
     return ReferenceData(

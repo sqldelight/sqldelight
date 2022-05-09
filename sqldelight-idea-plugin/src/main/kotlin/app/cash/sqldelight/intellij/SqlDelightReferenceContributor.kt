@@ -6,7 +6,6 @@ import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import com.intellij.openapi.module.ModuleUtilCore
-import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
@@ -35,7 +34,11 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   }
 
   internal class JavaTypeReference(element: JavaTypeMixin) :
-    PsiReferenceBase<JavaTypeMixin>(element, TextRange(0, element.textLength)) {
+    PsiReferenceBase<JavaTypeMixin>(element, element.lastChild.textRangeInParent) {
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+      return element.setName(newElementName)
+    }
 
     override fun resolve(): PsiElement? {
       val module = ModuleUtilCore.findModuleForPsiElement(element)
@@ -47,10 +50,15 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       } else {
         val prefix = elementText.substringBefore('.')
         val file = element.containingFile as SqlDelightFile
-        file.sqlStmtList
+        val withImport = file.sqlStmtList
           ?.findChildrenOfType<ImportStmtMixin>()
           ?.firstOrNull { it.javaType.text.endsWith(prefix) }
-          ?.javaType?.text?.plus(elementText.removePrefix(prefix)) ?: typeForThisPackage(file)
+          ?.javaType?.text?.plus(elementText.removePrefix(prefix))
+        when {
+          withImport != null -> withImport
+          elementText.contains('.') -> elementText
+          else -> typeForThisPackage(file)
+        }
       }
       val project = element.project
       val scope = module.getModuleWithDependenciesAndLibrariesScope(false)
