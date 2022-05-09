@@ -39,7 +39,7 @@ internal data class AnnotationData(
 
 internal class SqlDelightClassNameElementAnnotator : Annotator {
   override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-    if (element !is JavaTypeMixin || element.reference.resolve() != null) {
+    if (element !is JavaTypeMixin || element.reference?.resolve() != null) {
       return
     }
     val data = if (element.context is SqlDelightImportStmt) {
