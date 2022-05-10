@@ -5,7 +5,6 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.free
 import kotlinx.cinterop.nativeHeap
 import kotlinx.cinterop.ptr
-import platform.posix.PTHREAD_MUTEX_RECURSIVE
 import platform.posix.pthread_cond_destroy
 import platform.posix.pthread_cond_init
 import platform.posix.pthread_cond_signal
@@ -27,7 +26,7 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
     .apply {
       pthread_mutexattr_init(ptr)
       if (reentrant)
-        pthread_mutexattr_settype(ptr, PTHREAD_MUTEX_RECURSIVE.toInt())
+        pthread_mutexattr_settype(ptr, pthread_mutex_recursive)
     }
   private val mutex = nativeHeap.alloc<pthread_mutex_t>()
     .apply { pthread_mutex_init(ptr, attr.ptr) }
@@ -92,3 +91,5 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
     }
   }
 }
+
+internal expect val pthread_mutex_recursive: Int
