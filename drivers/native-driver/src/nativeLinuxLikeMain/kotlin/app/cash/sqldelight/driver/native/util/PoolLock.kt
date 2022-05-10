@@ -92,4 +92,5 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
   }
 }
 
+// https://youtrack.jetbrains.com/issue/KT-48997
 internal expect val pthread_mutex_recursive: Int
