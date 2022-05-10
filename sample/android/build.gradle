@@ -7,7 +7,7 @@ android {
   compileSdk deps.versions.compileSdk.get() as int
 
   lint {
-    textOutput 'stdout'
+    textOutput file("$reportsDir/lint-results.txt")
   }
 
   defaultConfig {

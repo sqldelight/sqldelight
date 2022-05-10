@@ -42,7 +42,7 @@ android {
   }
 
   lint {
-    textOutput 'stdout'
+    textOutput file("$reportsDir/lint-results.txt")
     textReport true
   }
 

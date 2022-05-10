@@ -11,7 +11,7 @@ android {
 
   lint {
     textReport true
-    textOutput 'stdout'
+    textOutput file("$reportsDir/lint-results.txt")
   }
 
   defaultConfig {
