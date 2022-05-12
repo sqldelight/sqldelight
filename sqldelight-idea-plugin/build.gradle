@@ -4,6 +4,7 @@ plugins {
   alias(deps.plugins.intellij)
   alias(deps.plugins.kotlin.jvm)
   alias(deps.plugins.changelog)
+  alias(deps.plugins.ksp)
 }
 
 intellij {
@@ -18,6 +19,7 @@ intellij {
       "org.jetbrains.kotlin",
       "com.intellij.gradle",
       "com.intellij.java",
+      "org.jetbrains.android"
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
     patchPluginXml {
@@ -36,11 +38,10 @@ runIde {
 
 runPluginVerifier {
   ideVersions = [
-      "IC-2020.2.4",
-      "IC-2020.3.2",
       "IC-2021.1",
       "IC-2021.2.3",
       "IC-2021.3",
+      "IC-2022.1",
   ]
 
   def customFailureLevel = FailureLevel.ALL
@@ -59,6 +60,12 @@ changelog {
 compileKotlin {
   kotlinOptions {
     freeCompilerArgs = ['-Xjvm-default=enable']
+  }
+}
+
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(11))
   }
 }
 
@@ -84,14 +91,19 @@ repositories {
 }
 
 dependencies {
+  ksp deps.moshiCodegen
+
   implementation project(':sqldelight-compiler')
 
   implementation deps.sqliteJdbc
   implementation(deps.bugsnag) {
     exclude group: "org.slf4j"
   }
+  implementation deps.picnic
+  implementation deps.moshi
 
   testImplementation deps.truth
+  testImplementation project(':dialects:sqlite-3-18')
   testImplementation project(':test-util')
 }
 
@@ -119,3 +131,7 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
 tasks.named('compileKotlin').configure { dependsOn('bugsnagKey') }
 
 tasks.named('buildSearchableOptions').configure { enabled = false }
+
+afterEvaluate {
+  tasks.named('kspKotlin').configure { dependsOn('bugsnagKey') }
+}

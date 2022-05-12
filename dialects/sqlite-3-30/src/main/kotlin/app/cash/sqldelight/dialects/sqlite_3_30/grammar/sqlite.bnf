@@ -1,0 +1,23 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+  ]
+}
+
+overrides ::= ordering_term
+
+ordering_term ::= <<expr '-1'>> [ COLLATE {collation_name} ] [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlOrderingTermImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlOrderingTerm"
+  override = true
+}

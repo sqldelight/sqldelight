@@ -1,10 +1,24 @@
+buildscript {
+  dependencies {
+    classpath("com.squareup.okhttp3:okhttp") {
+      version {
+        strictly '4.4.1'
+      }
+    }
+  }
+}
+
 plugins {
+  alias(deps.plugins.grammarKitComposer) apply false
   alias(deps.plugins.kotlin.multiplatform) apply false
   alias(deps.plugins.kotlin.jvm) apply false
   alias(deps.plugins.kotlin.android) apply false
   alias(deps.plugins.kotlin.js) apply false
+  alias(deps.plugins.ksp) apply false
   alias(deps.plugins.android.application) apply false
   alias(deps.plugins.android.library) apply false
+  alias(deps.plugins.publish) apply false
+  alias(deps.plugins.dokka) apply false
   alias(deps.plugins.spotless)
 }
 
@@ -16,11 +30,6 @@ spotless {
     trimTrailingWhitespace()
     endWithNewline()
   }
-}
-
-// https://youtrack.jetbrains.com/issue/KT-49109
-plugins.withType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin).configureEach {
-  kotlinNodeJs.nodeVersion = "16.0.0"
 }
 
 allprojects {
@@ -41,6 +50,20 @@ allprojects {
   tasks.withType(JavaCompile) {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+  }
+
+  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask) {
+    doFirst {
+      // https://github.com/JetBrains/gradle-grammar-kit-plugin/pull/78.
+      logging.captureStandardOutput(LogLevel.INFO)
+    }
+  }
+
+  // https://youtrack.jetbrains.com/issue/KT-46466
+  tasks.withType(org.gradle.plugins.signing.Sign) { signingTask ->
+    tasks.withType(org.gradle.api.publish.maven.tasks.AbstractPublishToMaven) { publishTask ->
+      publishTask.dependsOn(signingTask)
+    }
   }
 
   configurations.all {

@@ -1,0 +1,42 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+  ]
+}
+insert_stmt ::= [ {with_clause} ]
+  ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT )
+  INTO [ {database_name} '.' ] {table_name} [ AS {table_alias} ]
+  [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ upsert_clause ] {
+  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.mixins.InsertStmtMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
+  pin = 5
+  override = true
+}
+upsert_clause ::= ON CONFLICT ( upsert_conflict_target DO UPDATE upsert_do_update | [ upsert_conflict_target ] DO NOTHING ) {
+    mixin = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.mixins.UpsertClauseMixin"
+}
+upsert_conflict_target ::= '(' {indexed_column} ( ',' {indexed_column} ) * ')' [ WHERE <<expr '-1'>> ]
+upsert_do_update ::= SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ]

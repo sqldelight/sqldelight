@@ -31,16 +31,18 @@ sqldelight {
 }
 
 android {
-  compileSdkVersion deps.versions.compileSdk.get() as int
+  namespace "app.cash.sqldelight.integration"
+
+  compileSdk deps.versions.compileSdk.get() as int
 
   defaultConfig {
-    minSdkVersion deps.versions.minSdk.get() as int
+    minSdk deps.versions.minSdk.get() as int
 
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
-  lintOptions {
-    textOutput 'stdout'
+  lint {
+    textOutput file("$reportsDir/lint-results.txt")
     textReport true
   }
 

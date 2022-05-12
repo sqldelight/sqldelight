@@ -1,5 +1,151 @@
 # Change Log
 
+## [2.0.0-alpha02] - 2022-04-13
+
+### Breaking Changes
+
+- You'll need to replace all occurrences of `app.cash.sqldelight.runtime.rx` with `app.cash.sqldelight.rx2`
+
+### Added
+- [Compiler] Support returning at the end of a grouped statement
+- [Compiler] Support compiler extensions via dialect modules and add a SQLite JSON extension (#1379, #2087)
+- [Compiler] Support PRAGMA statements which return a value (#1106)
+- [Compiler] Support generating value types for marked columns
+- [Compiler] Add support for optimistic locks and validation (#1952)
+- [Compiler] Support multi-update statements
+- [PostgreSQL] Support postgres returning statements
+- [PostgreSQL] Support postgres date types
+- [PostgreSQL] Support pg intervals
+- [PostgreSQL] Support PG Booleans and fix inserts on alter tables
+- [PostgreSQL] Support optional limits in Postgres
+- [PostgreSQL] Support PG BYTEA type
+- [PostgreSQL] Add a test for postgres serials
+- [PostgreSQL] Support for update postgres syntax
+- [PostgreSQL] Support PostgreSQL array types
+- [PostgreSQL] Properly store/retrieve UUID types in PG
+- [PostgreSQL] Support PostgreSQL NUMERIC type (#1882)
+- [PostgreSQL] Support returning queries inside of common table expressions (#2471)
+- [PostgreSQL] Support json specific operators
+- [PostgreSQL] Add Postgres Copy (by [Philip Wedemann][hfhbd])
+- [MySQL] Support MySQL Replace
+- [MySQL] Support NUMERIC/BigDecimal MySQL types (#2051)
+- [MySQL] Support MySQL truncate statement
+- [MySQL] Support json specific operators in Mysql (by [Eliezer Graber][eygraber])
+- [MySQL] Support MySql INTERVAL (#2969 by [Eliezer Graber][eygraber])
+- [HSQL] Add HSQL Window functionality
+- [SQLite] Don't replace equality checks for nullable parameters in a WHERE (#1490 by [Eliezer Graber][eygraber])
+- [SQLite] Support Sqlite 3.35 returning statements (#1490 by [Eliezer Graber][eygraber])
+- [SQLite] Support GENERATED clause
+- [SQLite] Add support for Sqlite 3.38 dialect (by [Eliezer Graber][eygraber])
+
+### Changed
+- [Compiler] Clean up generated code a bit
+- [Compiler] Forbid usage of table parameters in grouped statements (#1822)
+- [Compiler] Put grouped queries inside a transaction (#2785)
+- [Runtime] Return the updated row count from the drivers execute method
+- [Runtime] Confine SqlCursor to the critical section accessing the connection. (#2123 by [Anders Ha][andersio])
+- [Gradle Plugin] Compare schema definitions for migrations (#841)
+- [PostgreSQL] Disallow double quotes for PG
+- [MySQL] Error on usage of == in MySQL (#2673)
+
+### Fixed
+- [Compiler] Same adapter type from different tables causing a compilation error in 2.0 alpha
+- [Compiler] Problem compiling upsert statement (#2791)
+- [Compiler] Query result should use tables in the select if there are multiple matches (#1874, #2313)
+- [Compiler] Support updating a view which has a INSTEAD OF trigger (#1018)
+- [Compiler] Support from and for in function names
+- [Compiler] Allow SEPARATOR keyword in function expressions
+- [Compiler] Cannot access ROWID of aliased table in ORDER BY
+- [Compiler] Aliased column name is not recognized in HAVING clause in MySQL
+- [Compiler] Erroneous 'Multiple columns found' error
+- [Compiler] Unable to set PRAGMA locking_mode = EXCLUSIVE;
+- [PostgreSQL] Postgresql rename column
+- [MySQL] UNIX_TIMESTAMP, TO_SECONDS, JSON_ARRAYAGG MySQL functions not recognized
+- [SQLite] fix SQLite window functionality
+- [IDE Plugin] Run the goto handler in an empty progress indicator (#2990)
+- [IDE Plugin] Ensure the highlight visitor doesnt run if the project isnt configured (#2981, #2976)
+- [IDE Plugin] Ensure transitive generated code is also updated in the IDE (#1837)
+- [IDE Plugin] Invalidate indexes when updating the dialect
+
+## [2.0.0-alpha01] - 2022-03-31
+
+This is the first alpha release for 2.0 and has some breaking changes. We expect more ABI breaking changes to come so don't publish any libraries with dependencies on this release (applications should be fine).
+
+### Breaking Changes
+
+- First, you'll need to replace all occurrences of `com.squareup.sqldelight` with `app.cash.sqldelight`
+- Second, you'll need to replace all occurrences of `app.cash.sqldelight.android` with `app.cash.sqldelight.driver.android`
+- Third, you'll need to replace all occurrences of `app.cash.sqldelight.sqlite.driver` with `app.cash.sqldelight.driver.jdbc.sqlite`
+- Fourth, you'll need to replace all occurrences of `app.cash.sqldelight.drivers.native` with `app.cash.sqldelight.driver.native`
+- The IDE plugin must be updated to a 2.X version, which can be found in the [alpha or eap channel](https://plugins.jetbrains.com/plugin/8191-sqldelight/versions/alpha)
+- Dialects are now dependencies which you can specify within gradle:
+
+```gradle
+sqldelight {
+  MyDatabase {
+    packageName = "com.example"
+    dialect = "app.cash.sqldelight:mysql-dialect:2.0.0-alpha01"
+  }
+}
+```
+
+The currently supported dialects are `mysql-dialect`, `postgresql-dialect`, `hsql-dialect`, `sqlite-3-18-dialect`, `sqlite-3-24-dialect`, `sqlite-3-25-dialect`, `sqlite-3-30-dialect`, and `sqlite-3-35-dialect`
+
+- Primitive types must now be imported (for example `INTEGER AS Boolean` you have to `import kotlin.Boolean`), some previously supported types now need an adapter. Primitive adapters are available in `app.cash.sqldelight:primitive-adapters:2.0.0-alpha01` for most conversions (like `IntColumnAdapter` for doing `Integer AS kotlin.Int`).
+
+### Added
+- [IDE Plugin] Basic suggested migration (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add import hint action (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add kotlin class completion (by [Alexander Perfilyev][aperfilyev])
+- [Gradle Plugin] Add shortcut for Gradle type safe project accessors (by [Philip Wedemann][hfhbd])
+- [Compiler] Customize codegen based on dialect (by [Marius Volkhart][MariusV])
+- [JDBC Driver] Add common types to JdbcDriver (by [Marius Volkhart][MariusV])
+- [SQLite] Add support for the sqlite 3.35 (by [Eliezer Graber][eygraber])
+- [SQLite] Add support for ALTER TABLE DROP COLUMN (by [Eliezer Graber][eygraber])
+- [SQLite] Add support for Sqlite 3.30 dialect (by [Eliezer Graber][eygraber])
+- [SQLite] Support NULLS FIRST/LAST in sqlite (by [Eliezer Graber][eygraber])
+- [HSQL] Add HSQL support for generated clause (by [Marius Volkhart][MariusV])
+- [HSQL] Add support for named parameters in HSQL (by [Marius Volkhart][MariusV])
+- [HSQL] Customize the HSQL insert query (by [Marius Volkhart][MariusV])
+
+### Changed
+- [Everything] Package name has changed from com.squareup.sqldelight to app.cash.sqldelight.
+- [Runtime] Move dialects into their own isolated gradle modules
+- [Runtime] Switch to driver-implemented query notifications.
+- [Runtime] Extract default column adapters to separate module (#2056, #2060)
+- [Compiler] Let modules generate the queries implementations instead of redoing it in each module
+- [Compiler] Remove the custom toString generation of generated data classes. (by [Paul Woitaschek][PaulWoitaschek])
+- [JS Driver] Remove sql.js dependency from sqljs-driver (by [Derek Ellis][dellisd])
+- [Paging] Remove the android paging 2 extension
+- [IDE Plugin] Add an editor banner while SQLDelight is syncing (#2511)
+- [IDE Plugin] Minimum supported IntelliJ version is 2021.1
+
+### Fixed
+- [Runtime] Flatten listener list to reduce allocations and pointer chasing. (by [Anders Ha][andersio])
+- [IDE Plugin] Fix error message to allow jumping to error (by [Philip Wedemann][hfhbd])
+- [IDE Plugin] Add missing inspection descriptions (#2768 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix exception in GotoDeclarationHandler (#2531, #2688, #2804 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Highlight import keyword (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix unresolved kotlin types (#1678 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix highlighting for unresolved package (#2543 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Dont attempt to inspect mismatched columns if the project index is not yet initialized
+- [IDE Plugin] Dont initialize the file index until a gradle sync has occurred
+- [IDE Plugin] Cancel the SQLDelight import if a gradle sync begins
+- [IDE Plugin] Regenerate the database outside of the thread an undo action is performed on
+- [IDE Plugin] If a reference cannot be resolves use a blank java type
+- [IDE Plugin] Correctly move off the main thread during file parsing and only move back on to write
+- [IDE Plugin] Improve compatibility with older IntelliJ versions (by [Matthew Haughton][3flex])
+- [IDE Plugin] Use faster annotation API
+- [Gradle Plugin] Explicitly support js/android plugins when adding runtime (by [Zac Sweers][ZacSweers])
+- [Gradle Plugin] Register migration output task without derviving schemas from migrations (#2744 by [Kevin Cianfarini][kevincianfarini])
+- [Gradle Plugin] If the migration task crashes, print the file it crashed running
+- [Gradle Plugin] Sort files when generating code to ensure idempotent outputs (by [Zac Sweers][ZacSweers])
+- [Compiler] Use faster APIs for iterating files and dont explore the entire PSI graph
+- [Compiler] Add keyword mangling to select function parameters (#2759 by [Alexander Perfilyev][aperfilyev])
+- [Compiler] Fix packageName for migration adapter (by [Philip Wedemann][hfhbd])
+- [Compiler] Emit annotations on properties instead of types (#2798 by [Alexander Perfilyev][aperfilyev])
+- [Compiler] Sort arguments before passing to a Query subtype (#2379 by [Alexander Perfilyev][aperfilyev])
+
 ## [1.5.3] - 2021-11-23
 ### Added
 - [JDBC Driver] Open JdbcDriver for 3rd party driver implementations (#2672 by [Philip Wedemann][hfhbd])
@@ -65,8 +211,8 @@
 
 ## [1.5.1] - 2021-07-16
 ### Added
-- [PostgreSQL Dialect] PostgreSQL JSONB and ON Conflict Do Nothing (by [Andrew Stewart][satook]) 
-- [PostgreSQL Dialect] Adds support for PostgreSQL ON CONFLICT (column, ...) DO UPDATE (by [Andrew Stewart][satook]) 
+- [PostgreSQL Dialect] PostgreSQL JSONB and ON Conflict Do Nothing (by [Andrew Stewart][satook])
+- [PostgreSQL Dialect] Adds support for PostgreSQL ON CONFLICT (column, ...) DO UPDATE (by [Andrew Stewart][satook])
 - [MySQL Dialect] Support MySQL generated columns (by [Jeff Gulbronson][JeffG])
 - [Native Driver] Add watchosX64 support
 - [IDE Plugin] Add parameter types and annotations (by [Alexander Perfilyev][aperfilyev])
@@ -214,7 +360,7 @@ Also just a general shoutout to [Matthew Haughton][3flex] who did a lot of work 
 - [Compiler] Fix Upsert statement compiler error (#1809 by [Eliezer Graber][eygraber])
 - [Compiler] Fix issue with invalid Kotlin being generated (#1925 by [Eliezer Graber][eygraber])
 - [Compiler] Have a better error message for unknown functions (#1843)
-- [Compiler] Expose string as the type for the second parameter of instr 
+- [Compiler] Expose string as the type for the second parameter of instr
 - [IDE Plugin] Fix daemon bloat and UI thread stalling for IDE plugin (#1916)
 - [IDE Plugin] Handle null module scenario (#1902)
 - [IDE Plugin] In unconfigured sq files return empty string for the package name (#1920)
@@ -327,7 +473,7 @@ Also just a general shoutout to [Matthew Haughton][3flex] who did a lot of work 
 * Fix: [Gradle] Kotlin Native 1.3.50 support.
 * Fix: [Gradle] #1380 Clean build sometimes fails.
 * Fix: [Gradle] #1348 Running verify tasks prints "Could not retrieve functions".
-* Fix: [Compile] #1405 Can't build project if query contains FTS table joined. 
+* Fix: [Compile] #1405 Can't build project if query contains FTS table joined.
 * Fix: [Gradle] #1266 Sporadic gradle build failure while having multiple database modules.
 
 ## [1.1.4] - 2019-07-11
@@ -579,3 +725,4 @@ Initial release.
   [sdoward]: https://github.com/sdoward
   [PhilipDukhov]: https://github.com/PhilipDukhov
   [julioromano]: https://github.com/julioromano
+  [PaulWoitaschek]: https://github.com/PaulWoitaschek

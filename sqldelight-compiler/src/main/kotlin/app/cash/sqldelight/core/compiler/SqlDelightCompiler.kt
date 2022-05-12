@@ -17,14 +17,18 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.util.sqFile
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -36,12 +40,17 @@ private typealias FileAppender = (fileName: String) -> Appendable
 object SqlDelightCompiler {
   fun writeInterfaces(
     module: Module,
+    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
-    output: FileAppender
+    output: FileAppender,
   ) {
-    writeTableInterfaces(file, output)
-    writeQueryInterfaces(file, output)
-    writeQueries(module, file, output)
+    try {
+      writeTableInterfaces(file, output)
+      writeQueryInterfaces(file, output)
+      writeQueries(module, dialect, file, output)
+    } catch (e: InvalidElementDetectedException) {
+      // It's okay if compilation is cut short, we can just quit out.
+    }
   }
 
   fun writeInterfaces(
@@ -56,7 +65,7 @@ object SqlDelightCompiler {
     module: Module,
     file: SqlDelightFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
   ) {
     writeQueryWrapperInterface(module, file, implementationFolder, output)
   }
@@ -70,7 +79,7 @@ object SqlDelightCompiler {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = "${fileIndex.packageName}.$implementationFolder"
     val databaseImplementationType = DatabaseGenerator(module, sourceFile).type()
-    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex)
+    val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex, sourceFile.generateAsync)
 
     val fileSpec = FileSpec.builder(packageName, databaseImplementationType.name!!)
       .addProperty(exposer.exposedSchema())
@@ -88,7 +97,7 @@ object SqlDelightCompiler {
     module: Module,
     sourceFile: SqlDelightFile,
     implementationFolder: String,
-    output: FileAppender
+    output: FileAppender,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     val packageName = fileIndex.packageName
@@ -121,7 +130,7 @@ object SqlDelightCompiler {
       val statement = query.tableName.parent
 
       if (statement is SqlCreateViewStmt && statement.compoundSelectStmt != null) {
-        listOf(NamedQuery(allocateName(statement.viewName), statement.compoundSelectStmt!!, statement.viewName))
+        listOf(NamedQuery(allocateName(statement.viewName), SelectQueryable(statement.compoundSelectStmt!!)))
           .writeQueryInterfaces(file, output)
         return@forEach
       }
@@ -150,11 +159,14 @@ object SqlDelightCompiler {
 
   internal fun writeQueries(
     module: Module,
+    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
-    output: FileAppender
+    output: FileAppender,
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file).generateType(packageName)
+    val queriesType = QueriesTypeGenerator(module, file, dialect)
+      .generateType(packageName)
+
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()
@@ -169,7 +181,7 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    return filter { tryWithElement(it.select) { it.needsInterface() } }
+    return filter { tryWithElement(it.select) { it.needsInterface() } == true }
       .forEach { namedQuery ->
         val fileSpec = FileSpec.builder(namedQuery.interfaceType.packageName, namedQuery.name)
           .apply {
@@ -206,9 +218,14 @@ object SqlDelightCompiler {
 internal fun <T> tryWithElement(
   element: PsiElement,
   block: () -> T
-): T {
+): T? {
   try {
     return block()
+  } catch (e: ProcessCanceledException) {
+    throw e
+  } catch (e: InvalidElementDetectedException) {
+    // It's okay if compilation is cut short, we can just quit out.
+    return null
   } catch (e: Throwable) {
     val exception = IllegalStateException("Failed to compile $element :\n${element.text}")
     exception.initCause(e)

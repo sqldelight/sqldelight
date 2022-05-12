@@ -1,0 +1,4 @@
+CREATE TABLE test2(
+  stuff TEXT,
+  stuff4 TEXT
+);

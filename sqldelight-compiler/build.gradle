@@ -24,7 +24,10 @@ grammarKit {
 }
 
 dependencies {
-  api deps.sqlitePsi
+  api deps.sqlPsi
+  api(project(':sqldelight-compiler:dialect')) {
+    exclude group: "com.jetbrains.intellij.platform", module: "core-impl"
+  }
 
   implementation deps.kotlinPoet
   implementation deps.jgrapht
@@ -44,9 +47,27 @@ dependencies {
   testImplementation deps.kotlin.test.junit
   testImplementation deps.truth
   testImplementation project(':test-util')
+  testImplementation project(':dialects:hsql')
+  testImplementation project(path: ':dialects:mysql', configuration: 'shadowRuntimeElements')
+  testImplementation project(path: ':dialects:postgresql', configuration: 'shadowRuntimeElements')
+  testImplementation project(':dialects:sqlite-3-18')
+  testImplementation project(path: ':dialects:sqlite-3-24', configuration: 'shadowRuntimeElements')
+  testImplementation project(path: ':dialects:sqlite-3-25', configuration: 'shadowRuntimeElements')
+  testImplementation project(path: ':dialects:sqlite-3-30', configuration: 'shadowRuntimeElements')
+  testImplementation project(path: ':dialects:sqlite-3-35', configuration: 'shadowRuntimeElements')
+  testImplementation project(path: ':dialects:sqlite-3-38', configuration: 'shadowRuntimeElements')
 }
 
 task pluginVersion {
+  def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+      commandLine 'git', 'rev-parse', '--short', 'HEAD'
+      standardOutput = stdout
+    }
+    return stdout.toString().trim()
+  }
+
   def outputDir = file("gen")
 
   inputs.property 'version', version
@@ -59,6 +80,7 @@ task pluginVersion {
 package app.cash.sqldelight
 
 val VERSION = "${project.version}"
+val GIT_SHA = "${getGitHash}"
 """
   }
 }
@@ -68,5 +90,5 @@ apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 afterEvaluate {
   tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
   tasks.named('dokkaHtml').configure { dependsOn('pluginVersion') }
-  tasks.named('sourcesJar').configure { dependsOn('pluginVersion') }
+  tasks.named('javaSourcesJar').configure { dependsOn('pluginVersion') }
 }

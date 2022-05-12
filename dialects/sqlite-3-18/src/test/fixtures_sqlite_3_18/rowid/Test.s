@@ -1,0 +1,13 @@
+CREATE TABLE test1(
+  id INTEGER PRIMARY KEY
+);
+
+SELECT rowid
+FROM test1;
+
+CREATE TABLE test2(
+  id INTEGER PRIMARY KEY
+) WITHOUT ROWID;
+
+SELECT rowid -- error
+FROM test2;

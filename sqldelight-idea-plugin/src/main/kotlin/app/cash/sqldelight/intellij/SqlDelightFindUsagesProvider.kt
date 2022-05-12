@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCteTableName
+import com.alecstrong.sql.psi.core.psi.SqlNewTableName
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlViewName
@@ -25,6 +26,7 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
       is SqlColumnAlias -> "column alias"
       is SqlCteTableName -> "common table"
       is SqlViewName -> "view"
+      is SqlNewTableName -> "renamed table"
       else -> throw IllegalArgumentException("Unexpected type $element")
     }
   }
@@ -32,7 +34,7 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
   override fun canFindUsagesFor(element: PsiElement): Boolean {
     return when (element) {
       is StmtIdentifierMixin, is SqlTableName, is SqlColumnName, is SqlTableAlias,
-      is SqlColumnAlias, is SqlViewName, is SqlCteTableName -> true
+      is SqlColumnAlias, is SqlViewName, is SqlCteTableName, is SqlNewTableName -> true
       else -> false
     }
   }

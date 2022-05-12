@@ -1,0 +1,4 @@
+apply from: "../settings.gradle"
+
+include ':mysql-module'
+include ':sqlite-module'

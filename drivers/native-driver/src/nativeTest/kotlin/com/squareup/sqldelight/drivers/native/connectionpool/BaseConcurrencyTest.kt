@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
@@ -14,14 +15,12 @@ import kotlin.test.AfterTest
 
 abstract class BaseConcurrencyTest {
   fun countRows(myDriver: SqlDriver = driver): Long {
-    val cur = myDriver.executeQuery(0, "SELECT count(*) FROM test", 0)
-    try {
-      cur.next()
-      val count = cur.getLong(0)
-      return count!!
-    } finally {
-      cur.close()
-    }
+    return myDriver.executeQuery(
+      0,
+      "SELECT count(*) FROM test",
+      { it.next(); it.getLong(0)!! },
+      0
+    )
   }
 
   private var _driver: SqlDriver? = null
@@ -52,7 +51,7 @@ abstract class BaseConcurrencyTest {
   }
 
   fun setupDatabase(
-    schema: SqlDriver.Schema,
+    schema: SqlSchema,
     dbType: DbType,
     configBase: DatabaseConfiguration,
     maxReaderConnections: Int = 4
@@ -110,7 +109,7 @@ abstract class BaseConcurrencyTest {
     configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {}),
   ): SqlDriver {
     return setupDatabase(
-      schema = object : SqlDriver.Schema {
+      schema = object : SqlSchema {
         override val version: Int = 1
 
         override fun create(driver: SqlDriver) {

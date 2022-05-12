@@ -1,6 +1,7 @@
 package com.example.testmodule
 
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.db.SqlDriver
 import com.example.GroupQueries
 import com.example.Player
@@ -12,19 +13,19 @@ import kotlin.Int
 import kotlin.Unit
 import kotlin.reflect.KClass
 
-internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+internal val KClass<TestDatabase>.schema: SqlSchema
   get() = TestDatabaseImpl.Schema
 
 internal fun KClass<TestDatabase>.newInstance(
   driver: SqlDriver,
   playerAdapter: Player.Adapter,
-  teamAdapter: Team.Adapter
+  teamAdapter: Team.Adapter,
 ): TestDatabase = TestDatabaseImpl(driver, playerAdapter, teamAdapter)
 
 private class TestDatabaseImpl(
   driver: SqlDriver,
   playerAdapter: Player.Adapter,
-  teamAdapter: Team.Adapter
+  teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver), TestDatabase {
   public override val groupQueries: GroupQueries = GroupQueries(driver)
 
@@ -32,7 +33,7 @@ private class TestDatabaseImpl(
 
   public override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
 
-  public object Schema : SqlDriver.Schema {
+  public object Schema : app.cash.sqldelight.db.SqlSchema {
     public override val version: Int
       get() = 1
 
@@ -71,7 +72,7 @@ private class TestDatabaseImpl(
     public override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ): Unit {
     }
   }

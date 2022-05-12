@@ -2,9 +2,11 @@ package app.cash.sqldelight.core.tables
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
+import app.cash.sqldelight.dialects.hsql.HsqlDialect
+import app.cash.sqldelight.dialects.mysql.MySqlDialect
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Rule
@@ -58,12 +60,12 @@ class InterfaceGeneration {
       |    cheese = ["havarti","provalone"],
       |    age = 10,
       |    type = List::class,
-      |    otherAnnotation = SomeOtherAnnotation("value")
+      |    otherAnnotation = SomeOtherAnnotation("value"),
       |  )
-      |  public val annotated: Int?
+      |  public val annotated: Int?,
       |) {
       |  public class Adapter(
-      |    public val annotatedAdapter: ColumnAdapter<Int, Long>
+      |    public val annotatedAdapter: ColumnAdapter<Int, Long>,
       |  )
       |}
       |""".trimMargin()
@@ -96,7 +98,7 @@ class InterfaceGeneration {
       |  public val is_cool: String,
       |  public val get_cheese: String?,
       |  public val isle: String?,
-      |  public val stuff: String?
+      |  public val stuff: String?,
       |)
       |""".trimMargin()
     )
@@ -112,14 +114,14 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
-      |  public val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?
+      |  public val mapValue: kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>?,
       |) {
       |  public class Adapter(
-      |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>
+      |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>,
       |  )
       |}
       |""".trimMargin()
@@ -142,17 +144,17 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
       |  public val _id: kotlin.Long,
       |  public val enabledDays: kotlin.collections.Set<java.time.DayOfWeek>?,
-      |  public val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?
+      |  public val enabledWeeks: kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>?,
       |) {
       |  public class Adapter(
       |    public val enabledDaysAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<java.time.DayOfWeek>, kotlin.String>,
-      |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>
+      |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>,
       |  )
       |}
       |""".trimMargin()
@@ -172,14 +174,14 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Group(
       |  public val index1: kotlin.String?,
       |  public val index2: kotlin.String?,
       |  public val index3: kotlin.String?,
-      |  public val index4: kotlin.String?
+      |  public val index4: kotlin.String?,
       |)
       |""".trimMargin()
     )
@@ -198,10 +200,10 @@ class InterfaceGeneration {
       |  bitValue BIT AS kotlin.Any NOT NULL
       |);
       |""".trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = MySqlDialect()
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -211,7 +213,7 @@ class InterfaceGeneration {
       |  public val mediumIntValue: kotlin.Any,
       |  public val intValue: kotlin.Any,
       |  public val bigIntValue: kotlin.Any,
-      |  public val bitValue: kotlin.Any
+      |  public val bitValue: kotlin.Any,
       |) {
       |  public class Adapter(
       |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
@@ -220,7 +222,7 @@ class InterfaceGeneration {
       |    public val mediumIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val bitValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |    public val bitValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
       |  )
       |}
       |""".trimMargin()
@@ -239,10 +241,10 @@ class InterfaceGeneration {
       |  bigSerialValue BIGSERIAL AS kotlin.Any NOT NULL
       |);
       |""".trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.POSTGRESQL
+      tempFolder, dialect = PostgreSqlDialect()
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -251,7 +253,7 @@ class InterfaceGeneration {
       |  public val bigIntValue: kotlin.Any,
       |  public val smallSerialValue: kotlin.Any?,
       |  public val serialValue: kotlin.Any,
-      |  public val bigSerialValue: kotlin.Any
+      |  public val bigSerialValue: kotlin.Any,
       |) {
       |  public class Adapter(
       |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
@@ -259,7 +261,7 @@ class InterfaceGeneration {
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
       |    public val smallSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
       |    public val serialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
-      |    public val bigSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>
+      |    public val bigSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
       |  )
       |}
       |""".trimMargin()
@@ -277,10 +279,10 @@ class InterfaceGeneration {
       |  booleanValue BOOLEAN AS kotlin.Any NOT NULL
       |);
       |""".trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = HsqlDialect()
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Test(
@@ -288,14 +290,14 @@ class InterfaceGeneration {
       |  public val smallIntValue: kotlin.Any,
       |  public val intValue: kotlin.Any,
       |  public val bigIntValue: kotlin.Any,
-      |  public val booleanValue: kotlin.Any
+      |  public val booleanValue: kotlin.Any,
       |) {
       |  public class Adapter(
       |    public val tinyIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Byte>,
       |    public val smallIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Short>,
       |    public val intValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Int>,
       |    public val bigIntValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
-      |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>
+      |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
       |  )
       |}
       |""".trimMargin()
@@ -316,20 +318,84 @@ class InterfaceGeneration {
       tempFolder
     )
 
-    val generator = TableInterfaceGenerator(result.sqliteStatements().first().statement.createTableStmt!!.tableExposed())
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
     assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
       """
       |public data class Something(
       |  @java.lang.Deprecated
       |  public val startDate: java.util.Date,
       |  @java.lang.Deprecated
-      |  public val endDate: java.util.Date
+      |  public val endDate: java.util.Date,
       |) {
       |  public class Adapter(
       |    public val startDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>,
-      |    public val endDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>
+      |    public val endDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>,
       |  )
       |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `value types correctly generated`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER AS VALUE NOT NULL
+      |);
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/Test.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.jvm.JvmInline
+      |
+      |public data class Test(
+      |  public val id: Id,
+      |) {
+      |  @JvmInline
+      |  public value class Id(
+      |    public val id: Long,
+      |  )
+      |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `postgres primary keys are non null`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  bioguide_id VARCHAR,
+      |  score_year INTEGER,
+      |  score INTEGER NOT NULL,
+      |  PRIMARY KEY(bioguide_id, score_year)
+      |);
+      |""".trimMargin(),
+      tempFolder, overrideDialect = PostgreSqlDialect()
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/Test.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Int
+      |import kotlin.String
+      |
+      |public data class Test(
+      |  public val bioguide_id: String,
+      |  public val score_year: Int,
+      |  public val score: Int,
+      |)
       |""".trimMargin()
     )
   }
@@ -337,7 +403,7 @@ class InterfaceGeneration {
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/table-interface-fixtures/$fixtureRoot",
-      compilationMethod = { _, sqlDelightQueriesFile, writer ->
+      compilationMethod = { _, _, sqlDelightQueriesFile, writer ->
         SqlDelightCompiler.writeTableInterfaces(sqlDelightQueriesFile, writer)
       },
       generateDb = false

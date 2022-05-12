@@ -6,20 +6,21 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Promise
 
 fun Promise<Database>.driver(): Promise<SqlDriver> = then { JsSqlDriver(it) }
 
-fun Promise<SqlDriver>.withSchema(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = then {
+fun Promise<SqlDriver>.withSchema(schema: SqlSchema? = null): Promise<SqlDriver> = then {
   schema?.create(it)
   it
 }
 
 fun Promise<SqlDriver>.transacter(): Promise<Transacter> = then { object : TransacterImpl(it) {} }
 
-fun initSqlDriver(schema: SqlDriver.Schema? = null): Promise<SqlDriver> = initDb().driver().withSchema(schema)
+fun initSqlDriver(schema: SqlSchema? = null): Promise<SqlDriver> = initDb().driver().withSchema(schema)
 
 class JsSqlDriver(private val db: Database) : SqlDriver {
 
@@ -45,21 +46,31 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
       .forEach(Query.Listener::queryResultsChanged)
   }
 
-  override fun executeQuery(
+  override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
+    mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): SqlCursor = createOrGetStatement(identifier, sql).run {
-    bind(binders)
-    JsSqlCursor(this)
+  ): R {
+    val cursor = createOrGetStatement(identifier, sql).run {
+      bind(binders)
+      JsSqlCursor(this)
+    }
+
+    return try {
+      mapper(cursor)
+    } finally {
+      cursor.close()
+    }
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?) =
+  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): Long =
     createOrGetStatement(identifier, sql).run {
       bind(binders)
       step()
       freemem()
+      return 0
     }
 
   private fun Statement.bind(binders: (SqlPreparedStatement.() -> Unit)?) = binders?.let {
@@ -112,10 +123,17 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
     Int8Array(it.buffer).unsafeCast<ByteArray>()
   }
   override fun getDouble(index: Int): Double? = statement.get()[index]
-  override fun close() { statement.freemem() }
+
+  override fun getBoolean(index: Int): Boolean? {
+    val double = (statement.get()[index] as? Double)
+    if (double == null) return null
+    else return double.toLong() == 1L
+  }
+
+  fun close() { statement.freemem() }
 }
 
-private class JsSqlPreparedStatement : SqlPreparedStatement {
+internal class JsSqlPreparedStatement : SqlPreparedStatement {
 
   val parameters = mutableListOf<Any?>()
 
@@ -135,5 +153,15 @@ private class JsSqlPreparedStatement : SqlPreparedStatement {
 
   override fun bindString(index: Int, string: String?) {
     parameters.add(string)
+  }
+
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    parameters.add(
+      when (boolean) {
+        null -> null
+        true -> 1.0
+        false -> 0.0
+      }
+    )
   }
 }

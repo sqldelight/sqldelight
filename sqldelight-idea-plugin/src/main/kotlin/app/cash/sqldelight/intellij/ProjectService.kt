@@ -18,11 +18,18 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.lang.MigrationFileType
+import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
+import app.cash.sqldelight.intellij.run.window.SqlDelightToolWindowFactory
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
-import com.alecstrong.sql.psi.core.DialectPreset
+import com.alecstrong.sql.psi.core.SqlFileBase
+import com.alecstrong.sql.psi.core.SqlParserUtil
+import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -37,12 +44,16 @@ import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
+import com.intellij.openapi.wm.RegisterToolWindowTask
+import com.intellij.openapi.wm.ToolWindowAnchor
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
 import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
+import kotlin.reflect.jvm.jvmName
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
   private var fileIndexes: FileIndexMap?
@@ -113,31 +124,61 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     }
   }
 
-  private var _dialectPreset: DialectPreset? = null
-  override var dialectPreset: DialectPreset
-    get() = _dialectPreset ?: DialectPreset.SQLITE_3_18
-    set(value) {
-      Timber.i("Setting dialect from $_dialectPreset to $value")
-      val invalidate = _dialectPreset != value
-      _dialectPreset = value
-      if (invalidate) {
-        val files = mutableListOf<VirtualFile>()
-        ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
-          if (vFile.fileType != SqlDelightFileType) {
-            return@iterateContent true
+  override var treatNullAsUnknownForEquality: Boolean = false
+
+  override var generateAsync: Boolean = false
+
+  override var dialect: SqlDelightDialect = MissingDialect()
+
+  override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
+    if (shouldInvalidate || dialect::class.jvmName != this.dialect::class.jvmName) {
+      Timber.i("Setting dialect from ${this.dialect} to $dialect")
+      this.dialect = dialect
+      MigrationParserDefinition.stubVersion++
+      ApplicationManager.getApplication().runReadAction { invalidateAllFiles() }
+      ApplicationManager.getApplication().invokeLater {
+        ToolWindowManager.getInstance(project).getToolWindow("SqlDelight")?.remove()
+
+        val connectionManager = dialect.connectionManager
+        if (connectionManager != null) {
+          ToolWindowManager.getInstance(project).registerToolWindow(
+            RegisterToolWindowTask(
+              id = "SqlDelight",
+              anchor = ToolWindowAnchor.BOTTOM,
+              contentFactory = SqlDelightToolWindowFactory(connectionManager),
+              canCloseContent = true,
+              icon = dialect.icon,
+            )
+          ).apply {
+            show()
+            hide()
           }
-          files += vFile
-          return@iterateContent true
-        }
-        Timber.i("Invalidating ${files.size} files")
-        ApplicationManager.getApplication().invokeLater {
-          if (project.isDisposed) return@invokeLater
-          Timber.i("Reparsing ${files.size} files")
-          (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
-            .reparseFiles(files, true)
         }
       }
     }
+  }
+
+  private fun invalidateAllFiles() {
+    val files = mutableListOf<VirtualFile>()
+    ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
+      if (vFile.fileType != SqlDelightFileType && vFile.fileType != MigrationFileType) {
+        return@iterateContent true
+      }
+      files += vFile
+      (PsiManager.getInstance(project).findFile(vFile) as SqlFileBase?)?.apply {
+        setTreeElementPointer(null)
+        subtreeChanged()
+      }
+      return@iterateContent true
+    }
+    Timber.i("Invalidating ${files.size} files")
+    ApplicationManager.getApplication().invokeLater {
+      if (project.isDisposed) return@invokeLater
+      Timber.i("Reparsing ${files.size} files")
+      (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
+        .reparseFiles(files, true)
+    }
+  }
 
   override fun module(vFile: VirtualFile): Module? {
     return ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(vFile)
@@ -145,5 +186,11 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   override fun fileIndex(module: Module): SqlDelightFileIndex {
     return fileIndexes?.get(module) ?: FileIndexMap.defaultIndex
+  }
+
+  private class MissingDialect : SqlDelightDialect {
+    override val icon = AllIcons.Providers.Sqlite
+    override fun setup() { SqlParserUtil.reset() }
+    override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

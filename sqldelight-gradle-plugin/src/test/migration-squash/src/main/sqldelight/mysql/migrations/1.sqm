@@ -1,0 +1,9 @@
+import kotlin.collections.List;
+
+CREATE TABLE test (
+  value VARCHAR(8)
+);
+
+CREATE TABLE test2 (
+  value VARCHAR(8) AS List
+);

@@ -5,12 +5,13 @@ import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
-import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
@@ -25,8 +26,8 @@ import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -35,10 +36,10 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 
@@ -55,6 +56,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
@@ -81,6 +83,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
 
       var maxVersion = 1
@@ -98,7 +101,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
           if (file is SqlDelightQueriesFile) sourceFiles.add(file)
         }
         sourceFiles.forInitializationStatements(
-          environment.dialectPreset.allowsReferenceCycles
+          environment.dialect.allowsReferenceCycles
         ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }

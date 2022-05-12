@@ -23,6 +23,7 @@ import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
@@ -81,20 +82,24 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
+    val needsSyncRuntime = extension.databases.any { !it.generateAsync }
+    val needsAsyncRuntime = extension.databases.any { it.generateAsync }
+    val runtimeDependencies = mutableListOf<Dependency>().apply {
+      if (needsSyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
+      if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime-async:$VERSION"))
+    }
+
     // Add the runtime dependency.
     when {
       isMultiplatform -> {
         val sourceSets =
           project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
         val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
-        project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-          project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
-        )
+        project.configurations.getByName(sourceSet.apiConfigurationName)
+          .dependencies.addAll(runtimeDependencies)
       }
       else -> {
-        project.configurations.getByName("api").dependencies.add(
-          project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
-        )
+        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
       }
     }
 
@@ -110,8 +115,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
             project = project,
             name = "Database",
             packageName = project.packageName(),
-            dialect = project.sqliteVersion()
-          )
+          ).apply {
+            project.sqliteVersion()?.let(::dialect)
+          }
         )
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
@@ -131,33 +137,34 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         if (database.packageName == null && android.get() && !isMultiplatform) {
           database.packageName = project.packageName()
         }
-        if (database.dialect == null && android.get() && !isMultiplatform) {
-          database.dialect = project.sqliteVersion()
+        if (!database.addedDialect && android.get() && !isMultiplatform) {
+          project.sqliteVersion()?.let(database::dialect)
         }
-        if (database.dialect == null) {
-          database.dialect = "sqlite:3.18"
+        if (!database.addedDialect) {
+          database.dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
         database.registerTasks()
       }
 
-      val properties = SqlDelightPropertiesFileImpl(
-        databases = databases.map { it.getProperties() },
-        currentVersion = VERSION,
-        minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
-      )
-      registry.register(PropertiesModelBuilder(properties))
+      registry.register(PropertiesModelBuilder(databases))
     }
   }
 
   class PropertiesModelBuilder(
-    private val properties: SqlDelightPropertiesFile
+    private val databases: Iterable<SqlDelightDatabase>
   ) : ToolingModelBuilder {
     override fun canBuild(modelName: String): Boolean {
       return modelName == SqlDelightPropertiesFile::class.java.name
     }
 
     override fun buildAll(modelName: String, project: Project): Any {
-      return properties
+      return SqlDelightPropertiesFileImpl(
+        databases = databases.map { it.getProperties() },
+        currentVersion = VERSION,
+        minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
+        dialectJar = databases.first().configuration.singleFile,
+        moduleJars = databases.first().moduleConfiguration.files,
+      )
     }
   }
 

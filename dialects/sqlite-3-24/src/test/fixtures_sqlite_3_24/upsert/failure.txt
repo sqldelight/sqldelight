@@ -1,0 +1,4 @@
+Test.s line 39:13 - No column found with name foo
+Test.s line 49:34 - Cannot use DO UPDATE while also specifying a conflict resolution algorithm (REPLACE)
+Test.s line 59:46 - No table found with name test_alias
+Test.s line 64:46 - No table found with name test

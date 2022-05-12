@@ -1,0 +1,23 @@
+import kotlin.collections.List;
+
+ALTER TABLE test4
+  ADD COLUMN stuff2 TEXT,
+  CHANGE COLUMN stuff2 stuff3 TEXT,
+  MODIFY COLUMN stuff3 VARCHAR(8) AS List;
+
+ALTER TABLE test4
+  ADD COLUMN stuff5 TEXT FIRST,
+  ADD COLUMN stuff6 TEXT FIRST,
+  CHANGE COLUMN stuff6 stuff7 TEXT AFTER stuff5,
+  ADD COLUMN stuff8 TEXT,
+  MODIFY COLUMN stuff8 VARCHAR(8) AFTER stuff7;
+
+ALTER TABLE test4 ADD CONSTRAINT new_constraint UNIQUE(stuff8);
+
+ALTER TABLE test4 ADD INDEX new_index(stuff8);
+
+ALTER TABLE test4 DROP COLUMN stuff7;
+
+ALTER TABLE test4 CONVERT TO CHARACTER SET utf8 COLLATE noscope;
+
+ALTER TABLE test4 ROW_FORMAT = DYNAMIC;

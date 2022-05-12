@@ -5,10 +5,12 @@ import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
@@ -20,8 +22,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import java.io.File
+import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API.
 @CacheableTask
 abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -30,11 +32,11 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
-  @Input lateinit var migrationOutputExtension: String
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Input abstract var migrationOutputExtension: String
 
   @TaskAction
   fun generateSchemaFile() {
@@ -49,6 +51,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
@@ -76,6 +79,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
         properties = properties,
         verifyMigrations = false,
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).single(),
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile

@@ -1,0 +1,40 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
+  ]
+}
+overrides ::= type_name | bind_parameter | alter_table_stmt
+
+type_name ::= text_data_type | blob_data_type | int_data_type | real_data_type {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
+  override = true
+}
+text_data_type ::= 'TEXT'
+blob_data_type ::= 'BLOB'
+int_data_type ::= 'INTEGER'
+real_data_type ::= 'REAL'
+
+bind_parameter ::= ( '?' [digit] | ':' {identifier} ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
+  override = true
+}
+alter_table_stmt ::= ALTER TABLE [ {database_name} '.' ] {table_name} {alter_table_rules} {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableStmt"
+  elementTypeClass = "app.cash.sqldelight.dialects.sqlite_3_18.grammar.mixins.AlterTableElementType"
+  stubClass = "com.alecstrong.sql.psi.core.psi.mixins.AlterTableStmtStub"
+  pin = 1
+  override = true
+}

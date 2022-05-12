@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.triggers
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -48,12 +48,12 @@ class TriggerNotificationTest {
       """
       |public fun insertData(id: kotlin.Long?, value_: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data
-      |  |VALUES (?, ?)
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id)
-      |    bindString(2, value_)
-      |  }
+      |      |INSERT INTO data
+      |      |VALUES (?, ?)
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, value_)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |    emit("data2")
@@ -100,11 +100,11 @@ class TriggerNotificationTest {
       """
       |public fun deleteData(id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |DELETE FROM data
-      |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), 1) {
-      |    bindLong(1, id)
-      |  }
+      |      |DELETE FROM data
+      |      |WHERE id = ?
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(1, id)
+      |      }
       |  notifyQueries(-1854133518) { emit ->
       |    emit("data")
       |  }
@@ -151,13 +151,13 @@ class TriggerNotificationTest {
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value_)
-      |    bindLong(2, id)
-      |  }
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE id = ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value_)
+      |        bindLong(2, id)
+      |      }
       |  notifyQueries(-1854133518) { emit ->
       |    emit("data")
       |  }
@@ -204,13 +204,13 @@ class TriggerNotificationTest {
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value_)
-      |    bindLong(2, id)
-      |  }
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE id = ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value_)
+      |        bindLong(2, id)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |    emit("data2")
@@ -258,13 +258,13 @@ class TriggerNotificationTest {
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value_)
-      |    bindLong(2, id)
-      |  }
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE id = ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value_)
+      |        bindLong(2, id)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |    emit("data2")
@@ -312,13 +312,13 @@ class TriggerNotificationTest {
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |UPDATE data
-      |  |SET value = ?
-      |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindString(1, value_)
-      |    bindLong(2, id)
-      |  }
+      |      |UPDATE data
+      |      |SET value = ?
+      |      |WHERE id = ?
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindString(1, value_)
+      |        bindLong(2, id)
+      |      }
       |  notifyQueries(-1854133518) { emit ->
       |    emit("data")
       |  }
@@ -355,7 +355,7 @@ class TriggerNotificationTest {
       |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = DialectPreset.SQLITE_3_24
+      dialect = TestDialect.SQLITE_3_24.dialect
     )
 
     val mutator = file.namedMutators.first()
@@ -365,12 +365,12 @@ class TriggerNotificationTest {
       """
       |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data (id, value) VALUES (?, ?)
-      |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id)
-      |    bindString(2, value)
-      |  }
+      |      |INSERT INTO data (id, value) VALUES (?, ?)
+      |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, value)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |    emit("data2")
@@ -408,7 +408,7 @@ class TriggerNotificationTest {
       |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = DialectPreset.SQLITE_3_24
+      dialect = TestDialect.SQLITE_3_24.dialect
     )
 
     val mutator = file.namedMutators.first()
@@ -418,12 +418,12 @@ class TriggerNotificationTest {
       """
       |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
       |  driver.execute(${mutator.id}, ""${'"'}
-      |  |INSERT INTO data (id, value) VALUES (?, ?)
-      |  |ON CONFLICT (id) DO UPDATE SET value = excluded.value
-      |  ""${'"'}.trimMargin(), 2) {
-      |    bindLong(1, id)
-      |    bindString(2, value)
-      |  }
+      |      |INSERT INTO data (id, value) VALUES (?, ?)
+      |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
+      |      ""${'"'}.trimMargin(), 2) {
+      |        bindLong(1, id)
+      |        bindString(2, value)
+      |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |    emit("data2")
@@ -465,7 +465,7 @@ class TriggerNotificationTest {
       |DELETE FROM foo;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = DialectPreset.SQLITE_3_24
+      dialect = TestDialect.SQLITE_3_24.dialect
     )
 
     val mutator = file.namedMutators.first()

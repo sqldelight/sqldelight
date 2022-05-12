@@ -5,9 +5,9 @@ import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
-import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqlite.migrations.CatalogDatabase
 import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
@@ -16,6 +16,7 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
@@ -27,28 +28,25 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import org.gradle.workers.WorkerExecutor
 import java.io.File
-import javax.inject.Inject
+import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
   @Input val pluginVersion = VERSION
 
-  @get:Inject
-  abstract override val workerExecutor: WorkerExecutor
-
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @Internal lateinit var workingDirectory: File
+  @get:Internal abstract var workingDirectory: File
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
+
+  @Input var verifyDefinitions: Boolean = true
 
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
@@ -66,6 +64,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         it.properties.set(properties)
         it.verifyMigrations.set(verifyMigrations)
         it.compilationUnit.set(compilationUnit)
+        it.verifyDefinitions.set(verifyDefinitions)
       }
       workQueue.await()
     }.onSuccess {
@@ -77,6 +76,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
@@ -88,6 +88,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     val properties: Property<SqlDelightDatabaseProperties>
     val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
+    val verifyDefinitions: Property<Boolean>
   }
 
   abstract class VerifyMigrationAction : WorkAction<VerifyMigrationWorkParameters> {
@@ -104,6 +105,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         compilationUnit = parameters.compilationUnit.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
     }
 
@@ -112,11 +114,16 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
       val catalog = createCurrentDb()
 
-      sourceFolders.asSequence()
+      val databaseFiles = sourceFolders.asSequence()
         .findDatabaseFiles()
-        .forEach { dbFile ->
-          checkMigration(dbFile, catalog)
-        }
+
+      check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
+        "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+      }
+
+      databaseFiles.forEach { dbFile ->
+        checkMigration(dbFile, catalog)
+      }
 
       checkForGaps()
     }
@@ -128,7 +135,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
-        environment.dialectPreset.allowsReferenceCycles
+        environment.dialect.allowsReferenceCycles
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
@@ -138,6 +145,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     private fun checkMigration(dbFile: File, currentDb: CatalogDatabase) {
       val actualCatalog = createActualDb(dbFile)
       val databaseComparator = ObjectDifferDatabaseComparator(
+        ignoreDefinitions = !parameters.verifyDefinitions.get(),
         circularReferenceExceptionLogger = {
           logger.debug(it)
         }

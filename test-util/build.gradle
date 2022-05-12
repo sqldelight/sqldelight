@@ -3,9 +3,10 @@ plugins {
 }
 
 dependencies {
-  implementation project(':sqldelight-compiler')
+  api project(':sqldelight-compiler')
+  api project(':dialects:sqlite-3-18')
 
-  implementation deps.sqlitePsi
+  implementation deps.sqlPsi
   implementation deps.intellij.core
   implementation deps.intellij.lang
   implementation deps.intellij.java

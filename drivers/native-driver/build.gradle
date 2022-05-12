@@ -30,7 +30,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project (':runtime')
+        api project (':runtime:runtime')
       }
     }
     commonTest {
@@ -43,7 +43,6 @@ kotlin {
       dependsOn(commonMain)
       dependencies {
         api deps.sqliter
-        implementation deps.stately.core
       }
     }
     nativeTest {
@@ -52,8 +51,11 @@ kotlin {
         implementation project(':drivers:driver-test')
       }
     }
-    nativeDarwinMain{
+    nativeLinuxLikeMain {
       dependsOn(nativeMain)
+    }
+    nativeDarwinMain{
+      dependsOn(nativeLinuxLikeMain)
     }
     mingwMain{
       dependsOn(nativeMain)
@@ -65,7 +67,7 @@ kotlin {
       dependsOn(mingwMain)
     }
     linuxMain{
-      dependsOn(nativeMain)
+      dependsOn(nativeLinuxLikeMain)
     }
   }
 
@@ -81,7 +83,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.linuxMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     compilations.test {
-      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib"]
+      kotlinOptions.freeCompilerArgs += ["-linker-options", "-lsqlite3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib -L/usr/lib64"]
     }
   }
 

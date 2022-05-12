@@ -15,11 +15,10 @@ public data class Person(
   public val is_cool: Boolean,
   public val friends: List<Person>?,
   @Redacted
-  public val shhh_its_secret: String
+  public val shhh_its_secret: String,
 ) {
   public class Adapter(
-    public val is_coolAdapter: ColumnAdapter<Boolean, Long>,
     public val friendsAdapter: ColumnAdapter<List<Person>, ByteArray>,
-    public val shhh_its_secretAdapter: ColumnAdapter<String, String>
+    public val shhh_its_secretAdapter: ColumnAdapter<String, String>,
   )
 }

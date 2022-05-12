@@ -3,11 +3,12 @@
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
-  <idea-version since-build="202"/>
+  <idea-version since-build="211"/>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
   <depends>com.intellij.gradle</depends>
+  <depends optional="true" config-file="com.squareup.sqldelight-withAndroid.xml">org.jetbrains.android</depends>
 
   <description><![CDATA[
       Generates typesafe Kotlin APIs from SQL, and provides language
@@ -53,12 +54,15 @@
 
     <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
     <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
-    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.sqlite_3_18.psi.SqliteTypes"/>
 
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
     <annotator language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.SqlDelightClassNameElementAnnotator"/>
+    <annotator language="SqlDelight"
+        implementationClass="app.cash.sqldelight.intellij.inspections.OptimisticLockAnnotator"/>
+    <annotator language="SqlDelight"
+        implementationClass="app.cash.sqldelight.intellij.run.SqlDelightRunAnnotator"/>
     <completion.contributor language="SqlDelight"
         implementationClass="app.cash.sqldelight.intellij.SqlDelightClassCompletionContributor"/>
     <completion.contributor language="SqlDelight"

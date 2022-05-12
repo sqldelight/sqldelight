@@ -15,8 +15,8 @@
  */
 package app.cash.sqldelight.core.lang.psi
 
-import app.cash.sqldelight.core.lang.IntermediateType
 import app.cash.sqldelight.core.lang.util.type
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.squareup.kotlinpoet.PropertySpec
 

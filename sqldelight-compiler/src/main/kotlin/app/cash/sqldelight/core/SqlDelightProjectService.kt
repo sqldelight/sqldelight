@@ -15,14 +15,20 @@
  */
 package app.cash.sqldelight.core
 
-import com.alecstrong.sql.psi.core.DialectPreset
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 interface SqlDelightProjectService {
-  var dialectPreset: DialectPreset
+  var dialect: SqlDelightDialect
+  var treatNullAsUnknownForEquality: Boolean
+  var generateAsync: Boolean
+
+  fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
+    this.dialect = dialect
+  }
 
   fun module(vFile: VirtualFile): Module?
 

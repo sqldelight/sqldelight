@@ -15,9 +15,11 @@ repositories {
 }
 
 android {
-  compileSdkVersion deps.versions.compileSdk.get() as int
+  namespace "com.example.sqldelight"
 
-  lintOptions {
+  compileSdk deps.versions.compileSdk.get() as int
+
+  lint {
     textReport true
   }
 

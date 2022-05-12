@@ -1,0 +1,43 @@
+plugins {
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
+  id("app.cash.sqldelight.multiplatform")
+}
+
+// https://youtrack.jetbrains.com/issue/KTIJ-14471
+sourceSets {
+  main
+}
+
+kotlin {
+  mingwX86()
+  js()
+
+  sourceSets {
+    commonTest {
+      dependencies {
+        implementation deps.kotlin.test.common
+        implementation deps.kotlin.test.commonAnnotations
+      }
+    }
+    jvmTest {
+      dependencies {
+        implementation deps.kotlin.test.junit
+        implementation deps.stately.collections
+      }
+    }
+    jsTest {
+      dependencies {
+        implementation deps.kotlin.test.js
+      }
+    }
+    nativeMain {
+      dependencies {
+        implementation deps.stately.core
+        implementation deps.stately.collections
+      }
+    }
+  }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

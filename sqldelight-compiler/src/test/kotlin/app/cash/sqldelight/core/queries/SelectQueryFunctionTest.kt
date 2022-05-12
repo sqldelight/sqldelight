@@ -1,9 +1,9 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.kotlinpoet.ParameterSpec
@@ -81,7 +81,7 @@ class SelectQueryFunctionTest {
       |public fun selectByChannelId(
       |  channelId: kotlin.String,
       |  from: com.example.LocalDateTime,
-      |  to: com.example.LocalDateTime
+      |  to: com.example.LocalDateTime,
       |): app.cash.sqldelight.Query<com.example.Data_> = selectByChannelId(channelId, from, to) { channelId_, startTime, endTime ->
       |  com.example.Data_(
       |    channelId_,
@@ -288,7 +288,7 @@ class SelectQueryFunctionTest {
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  public val good: kotlin.collections.Collection<kotlin.Long>,
       |  public val bad: kotlin.collections.Collection<kotlin.Long>,
-      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
       |    driver.addListener(listener, arrayOf("data"))
@@ -298,21 +298,21 @@ class SelectQueryFunctionTest {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor {
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): R {
       |    val goodIndexes = createArguments(count = good.size)
       |    val badIndexes = createArguments(count = bad.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |    |SELECT *
-      |    |FROM data
-      |    |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
-      |    ""${'"'}.trimMargin(), good.size + bad.size) {
-      |      good.forEachIndexed { index, good_ ->
-      |          bindLong(index + 1, good_)
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
+      |        ""${'"'}.trimMargin(), mapper, good.size + bad.size) {
+      |          good.forEachIndexed { index, good_ ->
+      |            bindLong(index + 1, good_)
       |          }
-      |      bad.forEachIndexed { index, bad_ ->
-      |          bindLong(index + good.size + 1, bad_)
+      |          bad.forEachIndexed { index, bad_ ->
+      |            bindLong(index + good.size + 1, bad_)
       |          }
-      |    }
+      |        }
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -376,7 +376,7 @@ class SelectQueryFunctionTest {
       """
       |private inner class EquivalentNamesNamedQuery<out T : kotlin.Any>(
       |  public val name: kotlin.String,
-      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
       |    driver.addListener(listener, arrayOf("person"))
@@ -386,11 +386,11 @@ class SelectQueryFunctionTest {
       |    driver.removeListener(listener, arrayOf("person"))
       |  }
       |
-      |  public override fun execute(): app.cash.sqldelight.db.SqlCursor = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): R = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
-      |  ""${'"'}.trimMargin(), 2) {
+      |  ""${'"'}.trimMargin(), mapper, 2) {
       |    bindString(1, name)
       |    bindString(2, name)
       |  }
@@ -486,8 +486,8 @@ class SelectQueryFunctionTest {
     )
   }
 
-  @Test fun `types are exposed properly in HSQL`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.HSQL)
+  @Test fun `types are exposed properly in HSQL`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.HSQL)
 
     val file = FixtureCompiler.parseSql(
       """
@@ -518,7 +518,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
@@ -546,11 +546,12 @@ class SelectQueryFunctionTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getLong(0)!! == 1L,
       |    cursor.getLong(1)?.let { it == 1L },
@@ -579,8 +580,8 @@ class SelectQueryFunctionTest {
     )
   }
 
-  @Test fun `types are exposed properly in MySQL`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.MYSQL)
+  @Test fun `types are exposed properly in MySQL`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.MYSQL)
 
     val file = FixtureCompiler.parseSql(
       """
@@ -615,7 +616,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
@@ -647,11 +648,12 @@ class SelectQueryFunctionTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
       |    cursor.getLong(0)!! == 1L,
       |    cursor.getLong(1)?.let { it == 1L },
@@ -684,12 +686,13 @@ class SelectQueryFunctionTest {
     )
   }
 
-  @Test fun `types are exposed properly in PostgreSQL`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.POSTGRESQL)
+  @Test fun `types are exposed properly in PostgreSQL`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.POSTGRESQL)
 
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
+      |  intArray SMALLINT[],
       |  smallint0 SMALLINT NOT NULL,
       |  smallint1 SMALLINT,
       |  smallint2 SMALLINT AS kotlin.String NOT NULL,
@@ -701,14 +704,15 @@ class SelectQueryFunctionTest {
       |  bigint0 BIGINT NOT NULL,
       |  bigint1 BIGINT,
       |  bigint2 BIGINT AS kotlin.String NOT NULL,
-      |  bigint3 BIGINT AS kotlin.String
+      |  bigint3 BIGINT AS kotlin.String,
+      |  uuid UUID NOT NULL
       |);
       |
       |selectData:
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder, dialectPreset = dialect
+      tempFolder, dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()
@@ -717,6 +721,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectData(mapper: (
+      |  intArray: kotlin.Array<kotlin.Short>?,
       |  smallint0: kotlin.Short,
       |  smallint1: kotlin.Short?,
       |  smallint2: kotlin.String,
@@ -728,24 +733,28 @@ class SelectQueryFunctionTest {
       |  bigint0: kotlin.Long,
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
-      |  bigint3: kotlin.String?
+      |  bigint3: kotlin.String?,
+      |  uuid: java.util.UUID,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
-      |    cursor.getLong(0)!!.toShort(),
-      |    cursor.getLong(1)?.let { it.toShort() },
-      |    data_Adapter.smallint2Adapter.decode(cursor.getLong(2)!!.toShort()),
-      |    cursor.getLong(3)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
-      |    cursor.getLong(4)!!.toInt(),
-      |    cursor.getLong(5)?.let { it.toInt() },
-      |    data_Adapter.int2Adapter.decode(cursor.getLong(6)!!.toInt()),
-      |    cursor.getLong(7)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
-      |    cursor.getLong(8)!!,
-      |    cursor.getLong(9),
-      |    data_Adapter.bigint2Adapter.decode(cursor.getLong(10)!!),
-      |    cursor.getLong(11)?.let { data_Adapter.bigint3Adapter.decode(it) }
+      |    cursor.getArray(0),
+      |    cursor.getLong(1)!!.toShort(),
+      |    cursor.getLong(2)?.let { it.toShort() },
+      |    data_Adapter.smallint2Adapter.decode(cursor.getLong(3)!!.toShort()),
+      |    cursor.getLong(4)?.let { data_Adapter.smallint3Adapter.decode(it.toShort()) },
+      |    cursor.getLong(5)!!.toInt(),
+      |    cursor.getLong(6)?.let { it.toInt() },
+      |    data_Adapter.int2Adapter.decode(cursor.getLong(7)!!.toInt()),
+      |    cursor.getLong(8)?.let { data_Adapter.int3Adapter.decode(it.toInt()) },
+      |    cursor.getLong(9)!!,
+      |    cursor.getLong(10),
+      |    data_Adapter.bigint2Adapter.decode(cursor.getLong(11)!!),
+      |    cursor.getLong(12)?.let { data_Adapter.bigint3Adapter.decode(it) },
+      |    cursor.getObject(13)!!
       |  )
       |}
       |
@@ -892,7 +901,7 @@ class SelectQueryFunctionTest {
       |  val27: kotlin.Long?,
       |  val28: kotlin.Long?,
       |  val29: kotlin.Long?,
-      |  val30: kotlin.Long?
+      |  val30: kotlin.Long?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-1626977671, arrayOf("bigTable"), driver, "Test.sq", "select", ""${'"'}
       ||SELECT *
       ||FROM bigTable
@@ -990,13 +999,13 @@ class SelectQueryFunctionTest {
       |  packageName: kotlin.String,
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
-      |  link: kotlin.String
+      |  link: kotlin.String,
       |) -> T): app.cash.sqldelight.Query<T> = QueryTermQuery(content) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!,
-      |    itemAdapter.deprecatedAdapter.decode(cursor.getLong(3)!!),
+      |    cursor.getBoolean(3)!!,
       |    cursor.getString(4)!!
       |  )
       |}
@@ -1037,7 +1046,7 @@ class SelectQueryFunctionTest {
       |  id: kotlin.Long,
       |  name: kotlin.String,
       |  shortName: kotlin.String,
-      |  category: kotlin.String
+      |  category: kotlin.String,
       |) -> T): app.cash.sqldelight.Query<T> = SelectPlaceQuery(place_fts) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
@@ -1086,7 +1095,7 @@ class SelectQueryFunctionTest {
       |  id: kotlin.String,
       |  status: Test.Status?,
       |  attr: kotlin.String?,
-      |  ordering: kotlin.Long
+      |  ordering: kotlin.Long,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-602300915, arrayOf("testA"), driver, "Test.sq", "someSelect", ""${'"'}
       ||SELECT *
       ||FROM (
@@ -1157,8 +1166,8 @@ class SelectQueryFunctionTest {
       |    _id__: kotlin.Long,
       |    category_: java.util.List,
       |    type_: java.util.List,
-      |    name_: kotlin.String
-      |  ) -> T
+      |    name_: kotlin.String,
+      |  ) -> T,
       |): app.cash.sqldelight.Query<T> = Exact_matchQuery(parent_id, child_id) { cursor ->
       |  mapper(
       |    cursor.getLong(0)!!,
@@ -1278,7 +1287,7 @@ class SelectQueryFunctionTest {
       |searchDescription:
       |SELECT model_id, model_description FROM models WHERE INSTR(model_description, ?) > 0;
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1287,6 +1296,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> searchDescription(`value`: kotlin.String, mapper: (model_id: kotlin.Int, model_description: kotlin.String) -> T): app.cash.sqldelight.Query<T> = SearchDescriptionQuery(value) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
       |    cursor.getLong(0)!!.toInt(),
       |    cursor.getString(1)!!
@@ -1332,7 +1342,7 @@ class SelectQueryFunctionTest {
       |selectAll:
       |SELECT * FROM category;
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1341,9 +1351,10 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("category"), driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
-      |    cursor.getString(0)?.let { categoryAdapter.accent_colorAdapter.decode(it) },
-      |    cursor.getString(1)?.let { categoryAdapter.other_thingAdapter.decode(it) }
+      |    cursor.getString(0),
+      |    cursor.getString(1)
       |  )
       |}
       |""".trimMargin()
@@ -1370,7 +1381,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM supView;
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1408,7 +1419,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM sup2;
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1441,7 +1452,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM sup;
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1485,7 +1496,7 @@ class SelectQueryFunctionTest {
       |findAll:
       |SELECT * FROM TestView;
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1507,9 +1518,9 @@ class SelectQueryFunctionTest {
     val file = FixtureCompiler.parseSql(
       """
       |selectIf:
-      |SELECT IF(1 == 1, 'yes', 'no');
+      |SELECT IF(1 = 1, 'yes', 'no');
       """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val query = file.namedQueries.first()
@@ -1517,7 +1528,8 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 == 1, 'yes', 'no')") { cursor ->
+      |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 = 1, 'yes', 'no')") { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  cursor.getString(0)!!
       |}
       |""".trimMargin()
@@ -1601,7 +1613,7 @@ class SelectQueryFunctionTest {
       |LIMIT ?
       |OFFSET ?;
     """.trimMargin(),
-      tempFolder, dialectPreset = DialectPreset.MYSQL
+      tempFolder, dialect = TestDialect.MYSQL.dialect
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -1610,7 +1622,7 @@ class SelectQueryFunctionTest {
       |public fun findStoresForUser(
       |  userId: kotlin.String,
       |  value_: kotlin.Long,
-      |  value__: kotlin.Long
+      |  value__: kotlin.Long,
       |): app.cash.sqldelight.Query<com.example.Stores> = findStoresForUser(userId, value_, value__) { id, name ->
       |  com.example.Stores(
       |    id,
@@ -1651,14 +1663,80 @@ class SelectQueryFunctionTest {
         |  mapper: (
         |    id: kotlin.Long,
         |    string: kotlin.String?,
-        |    integer: kotlin.Long?
-        |  ) -> T
+        |    integer: kotlin.Long?,
+        |  ) -> T,
         |): app.cash.sqldelight.Query<T> = QueryQuery(someInteger, someString) { cursor ->
         |  mapper(
         |    cursor.getLong(0)!!,
         |    cursor.getString(1),
         |    cursor.getLong(2)
         |  )
+        |}
+        |""".trimMargin()
+    )
+  }
+
+  @Test fun `type inference on boolean column`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE Users (
+      |  initialized INTEGER AS kotlin.Boolean
+      |);
+      |
+      |test1:
+      |SELECT * FROM Users WHERE :initialized = 1 AND initialized = :initialized;
+      |
+      |test2:
+      |SELECT * FROM Users WHERE initialized = :initialized AND initialized = 1;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query1 = file.namedQueries[0]
+    var generator = SelectQueryGenerator(query1)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun test1(initialized: kotlin.Boolean?): app.cash.sqldelight.Query<com.example.Users> = test1(initialized) { initialized_ ->
+        |  com.example.Users(
+        |    initialized_
+        |  )
+        |}
+        |""".trimMargin()
+    )
+
+    val query2 = file.namedQueries[1]
+    generator = SelectQueryGenerator(query2)
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun test2(initialized: kotlin.Boolean?): app.cash.sqldelight.Query<com.example.Users> = test2(initialized) { initialized_ ->
+        |  com.example.Users(
+        |    initialized_
+        |  )
+        |}
+        |""".trimMargin()
+    )
+  }
+
+  @Test fun `parameter correctly generated for union`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |query:
+      |SELECT 'foo'
+      |UNION
+      |SELECT ?;
+      |""".trimMargin(),
+      tempFolder
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+        |public fun query(expr: kotlin.String): app.cash.sqldelight.Query<kotlin.String> = QueryQuery(expr) { cursor ->
+        |  cursor.getString(0)!!
         |}
         |""".trimMargin()
     )

@@ -18,10 +18,11 @@ package app.cash.sqldelight.intellij
 
 import app.cash.sqldelight.core.SqlDelightDatabaseName
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.SqldelightParserUtil
 import app.cash.sqldelight.core.lang.SqlDelightFile
+import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.intellij.openapi.project.rootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
@@ -36,9 +37,10 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
 
   override fun setUp() {
     super.setUp()
-    DialectPreset.SQLITE_3_18.setup()
+    SqliteDialect().setup()
     SqldelightParserUtil.overrideSqlParser()
     FileIndexMap.defaultIndex = LightFileIndex()
+    SqlDelightProjectService.getInstance(project).dialect = SqliteDialect()
   }
 
   inner class LightFileIndex : SqlDelightFileIndex {

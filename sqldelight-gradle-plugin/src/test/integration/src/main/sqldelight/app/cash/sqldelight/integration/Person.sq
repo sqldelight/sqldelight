@@ -48,3 +48,12 @@ SELECT *
 FROM person
 WHERE first_name IN ?
 OR last_name IN ?;
+
+insertAndReturn {
+  INSERT INTO person (first_name, last_name)
+  VALUES (?, ?);
+
+  SELECT first_name, last_name
+  FROM person
+  WHERE _id = last_insert_rowid();
+}

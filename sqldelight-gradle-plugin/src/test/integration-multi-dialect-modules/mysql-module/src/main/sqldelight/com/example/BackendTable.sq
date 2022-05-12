@@ -1,0 +1,13 @@
+CREATE TABLE BackendTable (
+    guid VARCHAR(8) PRIMARY KEY NOT NULL,
+    someValue VARCHAR(8) NOT NULL
+);
+
+insert:
+REPLACE INTO BackendTable(
+    guid,
+    someValue
+) VALUES ?;
+
+selectAll:
+SELECT * FROM BackendTable;

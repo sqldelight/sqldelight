@@ -8,7 +8,7 @@ apply plugin: 'app.cash.sqldelight'
 sqldelight {
   MyDatabase {
     packageName = "app.cash.sqldelight.postgresql.integration"
-    dialect = "postgresql"
+    dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
   }
 }
 
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-  implementation "org.postgresql:postgresql:42.3.1"
+  implementation deps.postgresJdbc
   implementation "org.testcontainers:postgresql:1.16.2"
   implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation deps.truth

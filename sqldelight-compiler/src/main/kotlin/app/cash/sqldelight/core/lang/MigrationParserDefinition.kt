@@ -21,6 +21,10 @@ class MigrationParserDefinition : SqlParserDefinition() {
   }
 
   companion object {
-    private val FILE = ILightStubFileElementType<PsiFileStub<SqlFileBase>>(MigrationLanguage)
+    var stubVersion = 1
+
+    private val FILE = object : ILightStubFileElementType<PsiFileStub<SqlFileBase>>(MigrationLanguage) {
+      override fun getStubVersion(): Int = this@Companion.stubVersion
+    }
   }
 }

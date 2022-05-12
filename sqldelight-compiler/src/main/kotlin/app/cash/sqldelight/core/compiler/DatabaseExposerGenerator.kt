@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.ASYNC_DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -15,12 +16,13 @@ import kotlin.reflect.KClass
 
 internal class DatabaseExposerGenerator(
   val implementation: TypeSpec,
-  val fileIndex: SqlDelightFileIndex
+  val fileIndex: SqlDelightFileIndex,
+  val generateAsync: Boolean
 ) {
   private val interfaceType = ClassName(fileIndex.packageName, fileIndex.className)
 
   fun exposedSchema(): PropertySpec {
-    return PropertySpec.builder("schema", DATABASE_SCHEMA_TYPE)
+    return PropertySpec.builder("schema", if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
       .addModifiers(KModifier.INTERNAL)
       .receiver(KClass::class.asTypeName().parameterizedBy(interfaceType))
       .getter(

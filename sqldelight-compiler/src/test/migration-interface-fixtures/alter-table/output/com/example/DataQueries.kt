@@ -10,7 +10,7 @@ import kotlin.collections.List
 
 public class DataQueries(
   private val driver: SqlDriver,
-  private val testAdapter: Test.Adapter
+  private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> migrationSelect(mapper: (first: String, second: List<Int>?) -> T): Query<T> =
       Query(-561113227, arrayOf("new_test"), driver, "Data.sq", "migrationSelect", """

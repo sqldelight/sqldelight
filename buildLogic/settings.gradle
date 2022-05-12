@@ -1,0 +1,22 @@
+pluginManagement {
+  repositories {
+    mavenCentral()
+    google()
+    gradlePluginPortal()
+  }
+}
+
+dependencyResolutionManagement {
+  repositories {
+    mavenCentral()
+    google()
+  }
+
+  versionCatalogs {
+    deps {
+      from(files("../gradle/libs.versions.toml"))
+    }
+  }
+}
+
+include(":multiplatform-convention")

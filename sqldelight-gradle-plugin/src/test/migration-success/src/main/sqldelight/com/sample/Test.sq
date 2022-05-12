@@ -1,19 +1,20 @@
-CREATE TABLE test (
+CREATE TABLE test(
   value TEXT NOT NULL,
   value2 TEXT
 );
 
-CREATE INDEX testIndex ON test(value);
+CREATE INDEX testIndex
+  ON test(value);
 
 CREATE TRIGGER testTrigger
-AFTER DELETE ON test
-BEGIN
-INSERT INTO test VALUES ("1", "2");
-END;
+  AFTER DELETE ON test
+  BEGIN
+    INSERT INTO test VALUES ("1", "2");
+  END;
 
 CREATE VIEW testView AS
-SELECT *
-FROM test;
+  SELECT *
+  FROM test;
 
 select:
 SELECT *

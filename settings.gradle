@@ -4,6 +4,8 @@ pluginManagement {
         google()
         gradlePluginPortal()
     }
+
+    includeBuild("buildLogic")
 }
 
 dependencyResolutionManagement {
@@ -13,8 +15,19 @@ dependencyResolutionManagement {
 rootProject.name = 'sqldelight'
 
 include ':adapters:primitive-adapters'
+include ':dialects:hsql'
+include ':dialects:mysql'
+include ':dialects:postgresql'
+include ':dialects:sqlite:json-module'
+include ':dialects:sqlite-3-18'
+include ':dialects:sqlite-3-24'
+include ':dialects:sqlite-3-25'
+include ':dialects:sqlite-3-30'
+include ':dialects:sqlite-3-35'
+include ':dialects:sqlite-3-38'
 include ':drivers:android-driver'
 include ':drivers:jdbc-driver'
+include ':drivers:r2dbc-driver'
 include ':drivers:native-driver'
 include ':drivers:sqlite-driver'
 include ':drivers:sqljs-driver'
@@ -23,8 +36,12 @@ include ':extensions:android-paging3'
 include ':extensions:coroutines-extensions'
 include ':extensions:rxjava2-extensions'
 include ':extensions:rxjava3-extensions'
-include ':runtime'
+include ':runtime:shared'
+include ':runtime:internal'
+include ':runtime:runtime'
+include ':runtime:runtime-async'
 include ':sqldelight-compiler'
+include ':sqldelight-compiler:dialect'
 include ':sqldelight-compiler:integration-tests'
 include ':sqldelight-gradle-plugin'
 include ':sqldelight-idea-plugin'

@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
+import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
@@ -13,10 +14,13 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 
-open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerator(query) {
+open class ExecuteQueryGenerator(
+  private val query: NamedExecute,
+) : QueryGenerator(query) {
   internal open fun tablesUpdated(): List<TableNameElement> {
     if (query.statement is SqlDelightStmtClojureStmtList) {
       return PsiTreeUtil.findChildrenOfAnyType(
@@ -75,6 +79,7 @@ open class ExecuteQueryGenerator(private val query: NamedExecute) : QueryGenerat
 
   fun interfaceFunction(): FunSpec.Builder {
     return FunSpec.builder(query.name)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .also(this::addJavadoc)
       .addParameters(
         query.parameters.map {

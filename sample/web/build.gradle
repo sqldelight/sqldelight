@@ -18,7 +18,7 @@ kotlin {
 dependencies {
   implementation project(':common')
   implementation "app.cash.sqldelight:sqljs-driver"
-  implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.7.3"
+  implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.7.5"
   implementation devNpm("copy-webpack-plugin", "9.1.0")
   implementation npm("sql.js", "1.6.2")
 

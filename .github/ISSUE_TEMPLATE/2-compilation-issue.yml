@@ -24,6 +24,12 @@ body:
       required: true
   - type: input
     attributes:
+      label: Dialect
+      description: The manually set dialect the compiler is using, SQLite otherwise.
+    validations:
+      required: true
+  - type: input
+    attributes:
       label: AGP Version
       description: If using SQLDelight with Android, provide the AGP version.
   - type: textarea

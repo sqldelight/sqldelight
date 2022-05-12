@@ -1,8 +1,13 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.TestDialect
+import app.cash.sqldelight.core.TestDialect.HSQL
+import app.cash.sqldelight.core.TestDialect.MYSQL
+import app.cash.sqldelight.core.TestDialect.POSTGRESQL
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
+import app.cash.sqldelight.core.dialects.blobType
+import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.alecstrong.sql.psi.core.DialectPreset
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.kotlinpoet.DOUBLE
@@ -361,15 +366,15 @@ class ExpressionTest {
     ).inOrder()
   }
 
-  @Test fun `max takes the proper type`() {
+  @Test fun `max takes the proper type`(dialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE test (
       |  integerVal INTEGER NOT NULL,
       |  realVal REAL NOT NULL,
       |  nullableRealVal REAL,
-      |  textVal TEXT,
-      |  blobVal BLOB
+      |  textVal ${dialect.textType},
+      |  blobVal ${dialect.blobType}
       |);
       |
       |someSelect:
@@ -380,8 +385,14 @@ class ExpressionTest {
       |       max(integerVal)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
+      dialect = dialect.dialect,
     )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
@@ -389,7 +400,7 @@ class ExpressionTest {
       ByteArray::class.asClassName().copy(nullable = true),
       String::class.asClassName().copy(nullable = true),
       DOUBLE.copy(nullable = true),
-      LONG.copy(nullable = true)
+      integerKotlinType.copy(nullable = true)
     ).inOrder()
   }
 
@@ -528,8 +539,8 @@ class ExpressionTest {
     assertThat(query.parameters.single().javaType).isEqualTo(String::class.asClassName().copy(nullable = true))
   }
 
-  @Test fun `null keyword makes column nullable`(dialect: DialectPreset) {
-    assumeTrue(dialect == DialectPreset.MYSQL)
+  @Test fun `null keyword makes column nullable`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.MYSQL)
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE test (
@@ -541,7 +552,7 @@ class ExpressionTest {
       |FROM test;
       """.trimMargin(),
       tempFolder,
-      dialectPreset = dialect
+      dialect = dialect.dialect
     )
 
     val query = file.namedQueries.first()

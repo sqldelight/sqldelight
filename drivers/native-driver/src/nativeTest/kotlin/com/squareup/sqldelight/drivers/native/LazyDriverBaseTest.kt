@@ -2,13 +2,14 @@ package com.squareup.sqldelight.drivers.native
 
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import app.cash.sqldelight.driver.native.util.maybeFreeze
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import co.touchlab.sqliter.DatabaseManager
 import co.touchlab.sqliter.createDatabaseManager
-import co.touchlab.stately.freeze
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
@@ -25,7 +26,7 @@ abstract class LazyDriverBaseTest {
   protected val transacter: TransacterImpl
     get() {
       val t = transacterInternal
-      t.freeze()
+      t.maybeFreeze()
       return t
     }
 
@@ -37,8 +38,8 @@ abstract class LazyDriverBaseTest {
     driver.close()
   }
 
-  protected fun defaultSchema(): SqlDriver.Schema {
-    return object : SqlDriver.Schema {
+  protected fun defaultSchema(): SqlSchema {
+    return object : SqlSchema {
       override val version: Int = 1
 
       override fun create(driver: SqlDriver) {
@@ -83,7 +84,7 @@ abstract class LazyDriverBaseTest {
   }
 
   private fun setupDatabase(
-    schema: SqlDriver.Schema,
+    schema: SqlSchema,
     config: DatabaseConfiguration = defaultConfiguration(schema)
   ): NativeSqliteDriver {
     deleteDatabase(config.name!!)
@@ -92,7 +93,7 @@ abstract class LazyDriverBaseTest {
     return NativeSqliteDriver(manager!!)
   }
 
-  protected fun defaultConfiguration(schema: SqlDriver.Schema): DatabaseConfiguration {
+  protected fun defaultConfiguration(schema: SqlSchema): DatabaseConfiguration {
     return DatabaseConfiguration(
       name = "testdb",
       version = 1,

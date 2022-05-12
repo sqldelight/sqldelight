@@ -6,7 +6,6 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
-import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Provider
@@ -38,12 +37,12 @@ import java.io.File
 internal fun SqlDelightDatabase.sources(): List<Source> {
   // Multiplatform project.
   project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let {
-    return it.sources(project)
+    return it.sources()
   }
 
   // Android project.
   project.extensions.findByName("android")?.let {
-    return (it as BaseExtension).sources(project)
+    return (it as BaseExtension).sources()
   }
 
   // Kotlin project.
@@ -58,7 +57,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
   )
 }
 
-private fun KotlinMultiplatformExtension.sources(project: Project): List<Source> {
+private fun KotlinMultiplatformExtension.sources(): List<Source> {
   // For multiplatform we only support SQLDelight in commonMain - to support other source sets
   // we would need to generate expect/actual SQLDelight code which at least right now doesn't
   // seem like there is a use case for. However this code is capable of running on any Target type.
@@ -73,6 +72,10 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
       //  theres a way to accomplish this.
       return@mapNotNull null
     }
+    if (target is KotlinMetadataTarget && compilation.name == "commonMain") {
+      // In Kotlin 1.6.20 the metadata target now has two compilations for unknown reasons.
+      return@mapNotNull null
+    }
     val targetName = if (target is KotlinMetadataTarget) "common" else target.name
     Source(
       type = target.platformType,
@@ -85,7 +88,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
   }
 }
 
-private fun BaseExtension.sources(project: Project): List<Source> {
+private fun BaseExtension.sources(): List<Source> {
   val variants: DomainObjectSet<out BaseVariant> = when (this) {
     is AppExtension -> applicationVariants
     is LibraryExtension -> libraryVariants

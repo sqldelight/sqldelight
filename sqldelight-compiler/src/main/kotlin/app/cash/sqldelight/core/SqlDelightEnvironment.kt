@@ -25,10 +25,11 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.core.lang.util.sqFile
+import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
-import com.alecstrong.sql.psi.core.DialectPreset
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
@@ -59,18 +60,10 @@ import kotlin.system.measureTimeMillis
  * running.
  */
 class SqlDelightEnvironment(
-  /**
-   * The package name to be used for the generated SqlDelightDatabase class.
-   */
   private val properties: SqlDelightDatabaseProperties,
-  /**
-   * The package name to be used for the generated SqlDelightDatabase class.
-   */
   private val compilationUnit: SqlDelightCompilationUnit,
-  /**
-   * If true, fail migrations during compilation when there are errors.
-   */
   private val verifyMigrations: Boolean,
+  override var dialect: SqlDelightDialect,
   moduleName: String,
   private val sourceFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && !it.dependency }
@@ -104,6 +97,10 @@ class SqlDelightEnvironment(
     }
   }
 
+  override var treatNullAsUnknownForEquality: Boolean = properties.treatNullAsUnknownForEquality
+
+  override var generateAsync: Boolean = properties.generateAsync
+
   override fun module(vFile: VirtualFile) = module
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
@@ -111,10 +108,6 @@ class SqlDelightEnvironment(
   override fun resetIndex() = throw UnsupportedOperationException()
 
   override fun clearIndex() = throw UnsupportedOperationException()
-
-  override var dialectPreset: DialectPreset
-    get() = properties.dialectPreset
-    set(_) { throw UnsupportedOperationException() }
 
   override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
     super.forSourceFiles {
@@ -132,13 +125,17 @@ class SqlDelightEnvironment(
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = sortedMapOf<Int, MutableList<String>>()
-    annotate(object : SqlAnnotationHolder {
-      override fun createErrorAnnotation(element: PsiElement, s: String) {
-        val key = element.sqFile().order ?: Integer.MAX_VALUE
-        errors.putIfAbsent(key, ArrayList())
-        errors[key]!!.add(errorMessage(element, s))
-      }
-    })
+    val extraAnnotators = listOf(OptimisticLockValidator())
+    annotate(
+      object : SqlAnnotationHolder {
+        override fun createErrorAnnotation(element: PsiElement, s: String) {
+          val key = element.sqFile().order ?: Integer.MAX_VALUE
+          errors.putIfAbsent(key, ArrayList())
+          errors[key]!!.add(errorMessage(element, s))
+        }
+      },
+      extraAnnotators
+    )
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
     val writer = writer@{ fileName: String ->
@@ -161,7 +158,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, it, writer)
+        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -193,7 +190,7 @@ class SqlDelightEnvironment(
     val migrationFiles: Collection<MigrationFile> = sourceFolders
       .map { localFileSystem.findFileByPath(it.absolutePath)!! }
       .map { psiManager.findDirectory(it)!! }
-      .flatMap { directory: PsiDirectory -> directory.findChildrenOfType<MigrationFile>().asIterable() }
+      .flatMap { directory: PsiDirectory -> directory.migrationFiles() }
     migrationFiles.sortedBy { it.version }
       .forEach {
         val errorElements = ArrayList<PsiErrorElement>()

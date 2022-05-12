@@ -13,12 +13,12 @@ import kotlin.Unit
 
 public class TeamQueries(
   private val driver: SqlDriver,
-  private val teamAdapter: Team.Adapter
+  private val teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver) {
-  public fun <T : Any> teamForCoach(coach: String, mapper: (name: String, captain: Long) -> T):
+  public fun <T : Any> teamForCoach(coach: String, mapper: (name: Team.Name, captain: Long) -> T):
       Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Team.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!
     )
   }
@@ -32,13 +32,13 @@ public class TeamQueries(
   }
 
   public fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
-    name: String,
+    name: Team.Name,
     captain: Long,
     inner_type: Shoots.Type?,
-    coach: String
+    coach: String,
   ) -> T): Query<T> = ForInnerTypeQuery(inner_type) { cursor ->
     mapper(
-      cursor.getString(0)!!,
+      Team.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!,
       cursor.getString(2)?.let { teamAdapter.inner_typeAdapter.decode(it) },
       cursor.getString(3)!!
@@ -72,7 +72,7 @@ public class TeamQueries(
 
   private inner class TeamForCoachQuery<out T : Any>(
     public val coach: String,
-    mapper: (SqlCursor) -> T
+    mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("team"))
@@ -82,11 +82,12 @@ public class TeamQueries(
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    public override fun execute(): SqlCursor = driver.executeQuery(1839882838, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(1839882838,
+        """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?
-    """.trimMargin(), 1) {
+    """.trimMargin(), mapper, 1) {
       bindString(1, coach)
     }
 
@@ -95,7 +96,7 @@ public class TeamQueries(
 
   private inner class ForInnerTypeQuery<out T : Any>(
     public val inner_type: Shoots.Type?,
-    mapper: (SqlCursor) -> T
+    mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     public override fun addListener(listener: Query.Listener): Unit {
       driver.addListener(listener, arrayOf("team"))
@@ -105,11 +106,11 @@ public class TeamQueries(
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    public override fun execute(): SqlCursor = driver.executeQuery(null, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
     |SELECT *
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
-    """.trimMargin(), 1) {
+    """.trimMargin(), mapper, 1) {
       bindString(1, inner_type?.let { teamAdapter.inner_typeAdapter.encode(it) })
     }
 

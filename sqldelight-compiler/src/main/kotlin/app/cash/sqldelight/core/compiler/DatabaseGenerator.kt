@@ -17,21 +17,21 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.compiler.integration.adapterProperty
-import app.cash.sqldelight.core.compiler.integration.needsAdapters
+import app.cash.sqldelight.core.lang.ASYNC_DATABASE_SCHEMA_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_DRIVER_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_IMPL_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
-import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
-import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
-import app.cash.sqldelight.core.lang.util.allowsReferenceCycles
-import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
+import app.cash.sqldelight.core.lang.util.migrationFiles
+import app.cash.sqldelight.core.lang.util.queryFiles
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.module.Module
@@ -42,13 +42,14 @@ import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
 internal class DatabaseGenerator(
   module: Module,
-  sourceFile: SqlDelightFile
+  sourceFile: SqlDelightFile,
 ) {
   private val sourceFolders = SqlDelightFileIndex.getInstance(module).sourceFolders(sourceFile)
   private val moduleFolders = SqlDelightFileIndex.getInstance(module)
@@ -56,10 +57,11 @@ internal class DatabaseGenerator(
   private val fileIndex = SqlDelightFileIndex.getInstance(module)
   private val type = ClassName(fileIndex.packageName, fileIndex.className)
   private val dialect = sourceFile.dialect
+  private val generateAsync = sourceFile.generateAsync
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
-      .addSuperinterface(TRANSACTER_TYPE)
+      .addSuperinterface(if (generateAsync) ASYNC_TRANSACTER_TYPE else TRANSACTER_TYPE)
 
     fileIndex.dependencies.forEach {
       typeSpec.addSuperinterface(ClassName(it.packageName, it.className))
@@ -74,11 +76,11 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
-    moduleFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+    moduleFolders.flatMap { it.queryFiles() }
       .sortedBy { it.name }
       .forEach { file ->
         // queries property added to QueryWrapper type:
@@ -95,7 +97,7 @@ internal class DatabaseGenerator(
       .addType(
         TypeSpec.companionObjectBuilder()
           .addProperty(
-            PropertySpec.builder("Schema", DATABASE_SCHEMA_TYPE)
+            PropertySpec.builder("Schema", if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
               .getter(
                 FunSpec.getterBuilder()
                   .addStatement("return %T::class.schema", type)
@@ -120,50 +122,51 @@ internal class DatabaseGenerator(
   private fun forAdapters(
     block: (PropertySpec) -> Unit
   ) {
-    val queriesFile = sourceFolders
-      .flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+    sourceFolders
+      .flatMap { it.queryFiles() }
+      .flatMap { it.requiredAdapters }
       .sortedBy { it.name }
-      .firstOrNull() ?: return
-    queriesFile.tables(true)
       .toSet()
-      .mapNotNull { if (it.needsAdapters()) it.adapterProperty() else null }
-      .sortedBy { it.name }
       .forEach(block)
   }
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
       .addSuperclassConstructorParameter(DRIVER_NAME)
+
+    val genericDriverType = if (generateAsync) ASYNC_DRIVER_TYPE else DRIVER_TYPE
+    val dialectDriverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val constructor = FunSpec.constructorBuilder()
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialectDriverType).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
     // fun create(driver: SqlDriver)
     val createFunction = FunSpec.builder("create")
       .addModifiers(OVERRIDE)
-      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
+      .addParameter(DRIVER_NAME, genericDriverType)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
       .addModifiers(OVERRIDE)
-      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .apply { if (generateAsync) addModifiers(SUSPEND) }
+      .addParameter(DRIVER_NAME, genericDriverType)
       .addParameter(oldVersion)
       .addParameter(newVersion)
-
     forAdapters {
       constructor.addParameter(it.name, it.type)
     }
 
-    sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+    sourceFolders.flatMap { it.queryFiles() }
       .sortedBy { it.name }
       .forEach { file ->
         var adapters = ""
@@ -185,17 +188,17 @@ internal class DatabaseGenerator(
 
     if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
-      sourceFolders.flatMap { it.findChildrenOfType<SqlDelightQueriesFile>() }
+      sourceFolders.flatMap { it.queryFiles() }
         .sortedBy { it.name }
         .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
         }
     } else {
-      val orderedMigrations = sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+      val orderedMigrations = sourceFolders.flatMap { it.migrationFiles() }
         .sortedBy { it.order }
 
       // Derive the schema from migration files.
-      orderedMigrations.flatMap { it.sqliteStatements() }
+      orderedMigrations.flatMap { it.sqlStatements() }
         .filter { it.isSchema() }
         .forEach {
           createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", it.rawSqlText().toCodeLiteral())
@@ -204,7 +207,7 @@ internal class DatabaseGenerator(
 
     var maxVersion = 1
 
-    sourceFolders.flatMap { it.findChildrenOfType<MigrationFile>() }
+    sourceFolders.flatMap { it.migrationFiles() }
       .sortedBy { it.version }
       .forEach { migrationFile ->
         try {
@@ -216,7 +219,7 @@ internal class DatabaseGenerator(
           "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
           oldVersion, newVersion
         )
-        migrationFile.sqliteStatements().forEach {
+        migrationFile.sqlStatements().forEach {
           migrateFunction.addStatement("$DRIVER_NAME.execute(null, %S, 0)", it.rawSqlText())
         }
         migrateFunction.endControlFlow()
@@ -224,8 +227,8 @@ internal class DatabaseGenerator(
 
     return typeSpec
       .addType(
-        TypeSpec.objectBuilder(DATABASE_SCHEMA_TYPE.simpleName)
-          .addSuperinterface(DATABASE_SCHEMA_TYPE)
+        TypeSpec.objectBuilder("Schema")
+          .addSuperinterface(if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
           .addFunction(createFunction.build())
           .addFunction(migrateFunction.build())
           .addProperty(

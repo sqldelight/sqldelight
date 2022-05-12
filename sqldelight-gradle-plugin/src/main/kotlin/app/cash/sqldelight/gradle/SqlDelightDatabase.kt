@@ -1,11 +1,11 @@
 package app.cash.sqldelight.gradle
 
+import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.kotlin.sources
-import com.alecstrong.sql.psi.core.DialectPreset
-import com.android.builder.model.AndroidProject.FD_GENERATED
+import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -19,14 +19,72 @@ class SqlDelightDatabase(
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
-  var dialect: String? = null,
   var deriveSchemaFromMigrations: Boolean = false,
   var verifyMigrations: Boolean = false,
   var migrationOutputDirectory: File? = null,
-  var migrationOutputFileFormat: String = ".sql"
+  var migrationOutputFileFormat: String = ".sql",
+  var generateAsync: Boolean = false,
 ) {
+  internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
+    isTransitive = false
+  }
+
+  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath").apply {
+    isTransitive = false
+  }
+
+  internal var addedDialect: Boolean = false
+
+  fun module(module: Any) {
+    moduleConfiguration.dependencies.add(project.dependencies.create(module))
+  }
+
+  fun dialect(dialect: Any) {
+    if (addedDialect) throw IllegalStateException("Can only set a single dialect.")
+    configuration.dependencies.add(project.dependencies.create(dialect))
+    addedDialect = true
+  }
+
+  /**
+   * When SqlDelight finds an equality operation with a nullable typed rvalue such as:
+   *
+   * ```
+   * SELECT *
+   * FROM test_table
+   * WHERE foo = ?
+   * ```
+   *
+   * It will generate:
+   *
+   * ```
+   * private val foo: String?
+   *
+   * |SELECT *
+   * |FROM test_table
+   * |WHERE foo ${ if (foo == null) "IS" else "=" } ?1
+   * ```
+   *
+   * The = operator is expected to return `false` if comparing to a value that is `null`.
+   * However, the above code will return true when `foo` is `null`.
+   *
+   * By enabling [treatNullAsUnknownForEquality], the `null`
+   * check will not be generated, resulting in correct SQL behavior:
+   *
+   * ```
+   * private val foo: String?
+   *
+   * |SELECT *
+   * |FROM test_table
+   * |WHERE foo = ?1
+   * ```
+   *
+   * @see <a href="https://github.com/cashapp/sqldelight/issues/1490">sqldelight#1490</a>
+   * @see <a href="https://en.wikipedia.org/wiki/Null_%28SQL%29#Null-specific_and_3VL-specific_comparison_predicates">Wikipedia entry on null specific comparisons in SQL</a>
+   */
+  var treatNullAsUnknownForEquality: Boolean = false
+
   private val generatedSourcesDirectory
-    get() = File(project.buildDir, "$FD_GENERATED/sqldelight/code/$name")
+    get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
   private val sources by lazy { sources() }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
@@ -58,29 +116,17 @@ class SqlDelightDatabase(
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
 
-    val dialectMapping = mapOf(
-      "sqlite:3.18" to DialectPreset.SQLITE_3_18,
-      "sqlite:3.24" to DialectPreset.SQLITE_3_24,
-      "sqlite:3.25" to DialectPreset.SQLITE_3_25,
-      "mysql" to DialectPreset.MYSQL,
-      "postgresql" to DialectPreset.POSTGRESQL,
-      "hsql" to DialectPreset.HSQL
-    )
-
-    if (dialect == null) throw GradleException(
+    if (!addedDialect) throw GradleException(
       """
       A dialect is needed for SQLDelight. For example for sqlite:
 
       sqldelight {
         $name {
-          dialect = "sqlite:3.18"
+          dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
       }
       """.trimIndent()
     )
-
-    val dialect = dialectMapping[dialect]
-      ?: throw GradleException("The dialect $dialect is not supported. Supported dialects: ${dialectMapping.keys.joinToString()}.")
 
     try {
       return SqlDelightDatabasePropertiesImpl(
@@ -95,8 +141,9 @@ class SqlDelightDatabase(
         rootDirectory = project.projectDir,
         className = name,
         dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
-        dialectPresetName = dialect.name,
-        deriveSchemaFromMigrations = deriveSchemaFromMigrations
+        deriveSchemaFromMigrations = deriveSchemaFromMigrations,
+        treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
+        generateAsync = generateAsync,
       )
     } finally {
       recursionGuard = false
@@ -148,6 +195,8 @@ class SqlDelightDatabase(
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
         it.verifyMigrations = verifyMigrations
+        it.classpath.setFrom(configuration.fileCollection { true })
+        it.classpath.from(moduleConfiguration.fileCollection { true })
       }
 
       val outputDirectoryProvider: Provider<File> = task.map { it.outputDirectory!! }
@@ -167,6 +216,10 @@ class SqlDelightDatabase(
         addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
       }
 
+      if (deriveSchemaFromMigrations) {
+        addSquashTask(sourceFiles.files + dependencyFiles.files, source)
+      }
+
       if (migrationOutputDirectory != null) {
         addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source)
       }
@@ -175,7 +228,7 @@ class SqlDelightDatabase(
 
   private fun addMigrationTasks(
     sourceSet: Collection<File>,
-    source: Source
+    source: Source,
   ) {
     val verifyMigrationTask =
       project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
@@ -189,6 +242,8 @@ class SqlDelightDatabase(
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations
+        it.classpath.setFrom(configuration.fileCollection { true })
+        it.classpath.from(moduleConfiguration.fileCollection { true })
       }
 
     if (schemaOutputDirectory != null) {
@@ -203,6 +258,8 @@ class SqlDelightDatabase(
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations
+        it.classpath.setFrom(configuration.fileCollection { true })
+        it.classpath.from(moduleConfiguration.fileCollection { true })
       }
     }
     project.tasks.named("check").configure {
@@ -215,7 +272,7 @@ class SqlDelightDatabase(
 
   private fun addMigrationOutputTasks(
     sourceSet: Collection<File>,
-    source: Source
+    source: Source,
   ) {
     project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
       it.projectName.set(project.name)
@@ -227,6 +284,25 @@ class SqlDelightDatabase(
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
       it.properties = getProperties()
+      it.classpath.setFrom(configuration.fileCollection { true })
+      it.classpath.from(moduleConfiguration.fileCollection { true })
+    }
+  }
+
+  private fun addSquashTask(
+    sourceSet: Collection<File>,
+    source: Source,
+  ) {
+    project.tasks.register("squash${source.name.capitalize()}${name}Migrations", MigrationSquashTask::class.java) {
+      it.projectName.set(project.name)
+      it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+      it.source(sourceSet)
+      it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
+      it.group = SqlDelightPlugin.GROUP
+      it.description = "Generate valid sql migration files for ${source.name} $name."
+      it.properties = getProperties()
+      it.classpath.setFrom(configuration.fileCollection { true })
+      it.classpath.from(moduleConfiguration.fileCollection { true })
     }
   }
 

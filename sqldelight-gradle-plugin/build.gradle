@@ -1,4 +1,4 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
   alias(deps.plugins.kotlin.jvm)
@@ -23,12 +23,13 @@ configurations {
 }
 
 dependencies {
+  api deps.sqlPsi
+
   implementation deps.sqliteJdbc
   implementation deps.objectDiff
   implementation deps.schemaCrawler.tools
   implementation deps.schemaCrawler.sqlite
 
-  shade deps.sqlitePsi
   shade project(':sqlite-migrations')
   shade project(':sqldelight-compiler')
   shade deps.intellij.analysis
@@ -41,25 +42,62 @@ dependencies {
   implementation deps.kotlin.plugin
   compileOnly deps.android.plugin
 
-  testImplementation deps.sqlitePsi
+  testImplementation deps.sqlPsi
   testImplementation project(':sqlite-migrations')
   testImplementation project(':sqldelight-compiler')
   testImplementation deps.junit
   testImplementation deps.truth
+  testImplementation deps.testParameterInjector
 }
 
 test {
   // The integration tests require local installations of artifacts.
   dependsOn(
-          ":runtime:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":drivers:native-driver:publishAllPublicationsToInstallLocallyRepository",
-          ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
-          ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
-          ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:hsql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite:json-module:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-24:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-25:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-30:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-35:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-38:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:runtime:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:runtime:publishJsPublicationToInstallLocallyRepository",
+      ":runtime:runtime-async:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:runtime-async:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:runtime-async:publishJsPublicationToInstallLocallyRepository",
+      ":runtime:internal:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:internal:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:internal:publishJsPublicationToInstallLocallyRepository",
+      ":runtime:shared:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:shared:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:shared:publishJsPublicationToInstallLocallyRepository",
+      ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
   )
+  if (HostManager.hostIsMac) {
+    dependsOn(
+        ":drivers:native-driver:publishIosX64PublicationToInstallLocallyRepository",
+        ":drivers:native-driver:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+        ":drivers:native-driver:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+        ":runtime:runtime:publishIosX64PublicationToInstallLocallyRepository",
+        ":runtime:runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+        ":runtime:runtime-async:publishIosX64PublicationToInstallLocallyRepository",
+        ":runtime:runtime-async:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+        ":runtime:internal:publishIosX64PublicationToInstallLocallyRepository",
+        ":runtime:internal:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+        ":runtime:shared:publishIosX64PublicationToInstallLocallyRepository",
+        ":runtime:shared:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+    )
+  }
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
       includeCategories 'app.cash.sqldelight.Instrumentation'
@@ -69,29 +107,19 @@ test {
   }
 }
 
+validatePlugins {
+  enableStricterValidation = true
+}
+
 if (System.getenv("CI") == "true") {
   apply plugin: 'com.github.johnrengelman.shadow'
 
   configurations.compileOnly.extendsFrom(configurations.shade)
 
-  tasks.register("relocateShadowJar", ConfigureShadowRelocation.class) {
-    target = tasks.shadowJar
-    prefix = "sqldelight"
-  }
-
   tasks.getByName("shadowJar").configure {
-    dependsOn("relocateShadowJar")
     archiveClassifier.set("")
     minimize()
     configurations = [project.configurations.shade]
-
-    doFirst {
-      relocators = relocators.grep {
-        !it.getPattern().startsWith("app.cash.sqldelight") &&
-                !it.getPattern().startsWith("groovy") &&
-                !it.getPattern().startsWith("kotlin")
-      }
-    }
 
     include '*.jar'
     include '**/*.class'

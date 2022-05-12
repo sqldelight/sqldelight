@@ -16,18 +16,16 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.compiler.integration.adapterProperty
+import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Delete
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Insert
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Update
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -35,7 +33,6 @@ import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
-import com.squareup.kotlinpoet.PropertySpec
 
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider
@@ -47,14 +44,20 @@ class SqlDelightQueriesFile(
     }
   }
 
-  internal val namedQueries by lazy {
-    sqliteStatements()
-      .filter { it.statement.compoundSelectStmt != null && it.identifier.name != null }
-      .map { NamedQuery(it.identifier.name!!, it.statement.compoundSelectStmt!!, it.identifier) }
+  val namedQueries by lazy {
+    transactions().filterIsInstance<NamedQuery>() + sqlStatements()
+      .filter { typeResolver.queryWithResults(it.statement) != null && it.identifier.name != null }
+      .map {
+        NamedQuery(
+          name = it.identifier.name!!,
+          queryable = typeResolver.queryWithResults(it.statement)!!,
+          statementIdentifier = it.identifier
+        )
+      }
   }
 
   internal val namedMutators by lazy {
-    sqliteStatements().filter { it.identifier.name != null }
+    sqlStatements().filter { it.identifier.name != null && typeResolver.queryWithResults(it.statement) == null }
       .mapNotNull {
         when {
           it.statement.deleteStmtLimited != null -> Delete(it.statement.deleteStmtLimited!!, it.identifier)
@@ -65,17 +68,29 @@ class SqlDelightQueriesFile(
       }
   }
 
-  internal val namedExecutes by lazy {
+  fun transactions(): Collection<BindableQuery> {
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
-
-    val transactions = sqlStmtList.stmtClojureList.map {
-      NamedExecute(
-        identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
-        statement = it.stmtClojureStmtList!!
-      )
+    return sqlStmtList.stmtClojureList.map {
+      val statements = it.stmtClojureStmtList!!.children.filterIsInstance<SqlStmt>()
+      val lastQuery = typeResolver.queryWithResults(statements.last())
+      if (lastQuery != null) {
+        lastQuery.statement = it.stmtClojureStmtList!!
+        return@map NamedQuery(
+          statementIdentifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+          queryable = lastQuery,
+          name = it.stmtIdentifierClojure.name!!
+        )
+      } else {
+        return@map NamedExecute(
+          identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
+          statement = it.stmtClojureStmtList!!
+        )
+      }
     }
+  }
 
-    val statements = sqliteStatements()
+  internal val namedExecutes by lazy {
+    val statements = sqlStatements()
       .filter {
         it.identifier.name != null &&
           it.statement.deleteStmtLimited == null &&
@@ -85,24 +100,17 @@ class SqlDelightQueriesFile(
       }
       .map { NamedExecute(it.identifier, it.statement) }
 
-    return@lazy transactions + statements
+    return@lazy transactions().filterIsInstance<NamedExecute>() + statements
   }
 
   /**
    * A collection of all the adapters needed for arguments or result columns in this query.
    */
   internal val requiredAdapters by lazy {
-    fun IntermediateType.parentAdapter(): PropertySpec? {
-      if ((column?.columnType as? ColumnTypeMixin)?.adapter() == null) return null
-
-      return PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterProperty()
-    }
-
     val argumentAdapters = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
-      .mapNotNull { it.argumentType().parentAdapter() }
+      .mapNotNull { typeResolver.argumentType(it).parentAdapter() }
 
-    val resultColumnAdapters = namedQueries.flatMap { it.resultColumns }
-      .mapNotNull { it.parentAdapter() }
+    val resultColumnAdapters = namedQueries.flatMap { it.resultColumnRequiredAdapters }
 
     return@lazy (argumentAdapters + resultColumnAdapters).distinct()
   }
@@ -113,7 +121,7 @@ class SqlDelightQueriesFile(
 
   override fun getFileType() = SqlDelightFileType
 
-  internal fun sqliteStatements(): Collection<LabeledStatement> {
+  internal fun sqlStatements(): Collection<LabeledStatement> {
     val sqlStmtList = PsiTreeUtil.getChildOfType(this, SqlDelightStmtList::class.java)!!
     return sqlStmtList.stmtIdentifierList.zip(sqlStmtList.stmtList) { id, stmt ->
       return@zip LabeledStatement(id as StmtIdentifierMixin, stmt)

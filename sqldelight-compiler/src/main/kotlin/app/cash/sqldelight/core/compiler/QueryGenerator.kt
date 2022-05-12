@@ -2,16 +2,23 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
-import app.cash.sqldelight.core.compiler.model.NamedExecute
+import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.lang.ASYNC_PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
-import app.cash.sqldelight.core.lang.IntermediateType
+import app.cash.sqldelight.core.lang.MAPPER_NAME
+import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
+import app.cash.sqldelight.core.lang.encodedJavaType
+import app.cash.sqldelight.core.lang.preparedStatementBinder
 import app.cash.sqldelight.core.lang.util.childOfType
+import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
+import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -19,11 +26,18 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
 
-abstract class QueryGenerator(private val query: BindableQuery) {
+abstract class QueryGenerator(
+  private val query: BindableQuery,
+) {
+  protected val dialect = query.statement.sqFile().dialect
+  protected val treatNullAsUnknownForEquality = query.statement.sqFile().treatNullAsUnknownForEquality
+  protected val generateAsync = query.statement.sqFile().generateAsync
+
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
    * arguments to it. This code block does not make any use of class fields, and only populates a
@@ -36,16 +50,23 @@ abstract class QueryGenerator(private val query: BindableQuery) {
    *     |WHERE number IN $numberIndexes
    *     """.trimMargin(), SqlPreparedStatement.Type.SELECT, 1 + (number.size - 1))
    * number.forEachIndexed { index, number ->
+   *     check(this is SqlCursorSubclass)
    *     statement.bindLong(index + 2, number)
    *     }
    */
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
-    if (query is NamedExecute && query.statement is SqlDelightStmtClojureStmtList) {
+    if (query.statement is SqlDelightStmtClojureStmtList) {
+      if (query is NamedQuery) {
+        result.add("return transactionWithResult {\n").indent()
+      } else {
+        result.add("transaction {\n").indent()
+      }
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))
       }
+      result.unindent().add("}\n")
     } else {
       result.add(executeBlock(query.statement, query.id))
     }
@@ -57,6 +78,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
     statement: PsiElement,
     id: Int
   ): CodeBlock {
+    val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
+
     val result = CodeBlock.builder()
 
     val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
@@ -105,7 +128,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       val encodedJavaType = type.encodedJavaType() ?: continue
       val variableName = argumentNameAllocator.newName(type.name)
       extractedVariables[type] = variableName
-      bindStatements.addStatement("val %N = $encodedJavaType", variableName)
+      bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -136,11 +159,11 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         // }
         val indexCalculator = "index + $offset"
         val elementName = argumentNameAllocator.newName(type.name)
-        bindStatements.addStatement(
+        bindStatements.add(
           """
           |${type.name}.forEachIndexed { index, $elementName ->
-          |%L}
-        """.trimMargin(),
+          |  %L}
+          |""".trimMargin(),
           type.copy(name = elementName).preparedStatementBinder(indexCalculator)
         )
 
@@ -148,7 +171,8 @@ abstract class QueryGenerator(private val query: BindableQuery) {
         argumentCounts.add("${type.name}.size")
       } else {
         nonArrayBindArgsCount += 1
-        if (type.javaType.isNullable) {
+
+        if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
           val parent = bindArg?.parent
           if (parent is SqlBinaryEqualityExpr) {
             needsFreshStatement = true
@@ -166,6 +190,7 @@ abstract class QueryGenerator(private val query: BindableQuery) {
             replacements.add(symbol.range to "\${ $block }")
           }
         }
+
         // Binds each parameter to the statement:
         // statement.bindLong(1, id)
         bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
@@ -179,13 +204,21 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       }
     }
 
+    val optimisticLock = if (query is NamedMutator.Update) {
+      val columnsUpdated =
+        query.update.updateStmtSubsequentSetterList.mapNotNull { it.columnName } +
+          query.update.columnNameList
+      columnsUpdated.singleOrNull {
+        it.columnDefSource()!!.columnType.node.getChildren(null).any { it.text == "LOCK" }
+      }
+    } else {
+      null
+    }
+
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
-    val executeMethod = if (query is NamedQuery) {
-      "return $DRIVER_NAME.executeQuery"
-    } else {
-      "$DRIVER_NAME.execute"
-    }
+    val isNamedQuery = query is NamedQuery &&
+      (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
     if (nonArrayBindArgsCount != 0) {
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
@@ -193,30 +226,61 @@ abstract class QueryGenerator(private val query: BindableQuery) {
       statement.rawSqlText(replacements),
       argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
+
     val binder: String
 
     if (argumentCounts.isEmpty()) {
       binder = ""
     } else {
-      arguments.add(
-        CodeBlock.builder()
-          .addStatement(" {")
-          .indent()
-          .add(bindStatements.build())
-          .unindent()
-          .add("}")
-          .build()
-      )
+      val binderLambda = CodeBlock.builder()
+        .add(" {\n")
+        .indent()
+
+      val defaultStatementType = if (generateAsync) ASYNC_PREPARED_STATEMENT_TYPE else PREPARED_STATEMENT_TYPE
+      if (defaultStatementType != dialectPreparedStatementType) {
+        binderLambda.add("check(this is %T)\n", dialectPreparedStatementType)
+      }
+
+      binderLambda.add(bindStatements.build())
+        .unindent()
+        .add("}")
+      arguments.add(binderLambda.build())
       binder = "%L"
     }
-    result.add(
-      "$executeMethod(" +
-        "${if (needsFreshStatement) "null" else "$id"}," +
-        " %P," +
-        " %L" +
-        ")$binder\n",
-      *arguments.toTypedArray()
-    )
+
+    val statementId = if (needsFreshStatement) "null" else "$id"
+
+    if (isNamedQuery) {
+      val execute = if (query.statement is SqlDelightStmtClojureStmtList) {
+        "$DRIVER_NAME.executeQuery"
+      } else {
+        "return $DRIVER_NAME.executeQuery"
+      }
+      result.addStatement(
+        "$execute($statementId, %P, $MAPPER_NAME, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    } else if (optimisticLock != null) {
+      result.addStatement(
+        "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    } else {
+      result.addStatement(
+        "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        *arguments.toTypedArray()
+      )
+    }
+
+    if (query is NamedMutator.Update && optimisticLock != null) {
+      result.addStatement(
+        """
+        if (result == 0L) throw %T(%S)
+        """.trimIndent(),
+        ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
+        "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
+      )
+    }
 
     return result.build()
   }

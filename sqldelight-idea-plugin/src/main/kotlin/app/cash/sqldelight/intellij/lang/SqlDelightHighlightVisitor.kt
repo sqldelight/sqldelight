@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.lang
 
+import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
@@ -18,15 +19,15 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.psi.util.PsiTreeUtil
 
 class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
 
   private var myHolder: HighlightInfoHolder? = null
 
   override fun suitableForFile(file: PsiFile): Boolean {
-    return file is SqlDelightFile
+    val file = file as? SqlDelightFile ?: return false
+    val module = file.module ?: return false
+    return SqlDelightProjectService.getInstance(file.project).fileIndex(module).isConfigured
   }
 
   override fun visit(element: PsiElement) {
@@ -105,14 +106,10 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
   }
 
   private fun visitImportStmt(o: SqlDelightImportStmt) {
-    PsiTreeUtil.findChildrenOfType(o, LeafPsiElement::class.java).forEach {
-      if (it.textMatches("import")) {
-        val info = HighlightInfo.newHighlightInfo(createSymbolTypeInfo(SQL_TYPE_NAME))
-          .range(it.textRange)
-          .create()
-        myHolder?.add(info)
-      }
-    }
+    val info = HighlightInfo.newHighlightInfo(createSymbolTypeInfo(SQL_TYPE_NAME))
+      .range(o.firstChild.textRange)
+      .create()
+    myHolder?.add(info)
   }
 
   private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {

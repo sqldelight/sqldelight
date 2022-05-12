@@ -2,22 +2,22 @@ package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlDriver.Schema
+import app.cash.sqldelight.db.SqlSchema
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 abstract class TransacterTest {
   protected lateinit var transacter: TransacterImpl
   private lateinit var driver: SqlDriver
 
-  abstract fun setupDatabase(schema: Schema): SqlDriver
+  abstract fun setupDatabase(schema: SqlSchema): SqlDriver
 
   @BeforeTest fun setup() {
-    val driver = setupDatabase(object : Schema {
+    val driver = setupDatabase(object : SqlSchema {
       override val version = 1
       override fun create(driver: SqlDriver) {}
       override fun migrate(
@@ -165,13 +165,10 @@ abstract class TransacterTest {
 
   @Test fun `setting no enclosing fails if there is a currently running transaction`() {
     transacter.transaction(noEnclosing = true) {
-      try {
+      assertFailsWith<IllegalStateException> {
         transacter.transaction(noEnclosing = true) {
           throw AssertionError()
         }
-        throw AssertionError()
-      } catch (e: IllegalStateException) {
-        // Expected error.
       }
     }
   }
@@ -180,18 +177,16 @@ abstract class TransacterTest {
   fun `An exception thrown in postRollback function is combined with the exception in the main body`() {
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
-    try {
+    val t = assertFailsWith<Throwable>() {
       transacter.transaction {
         afterRollback {
           throw ExceptionA()
         }
         throw ExceptionB()
       }
-      fail("Should have thrown!")
-    } catch (e: Throwable) {
-      assertTrue("Exception thrown in body not in message($e)") { e.toString().contains("ExceptionA") }
-      assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
     }
+    assertTrue("Exception thrown in body not in message($t)") { t.toString().contains("ExceptionA") }
+    assertTrue("Exception thrown in rollback not in message($t)") { t.toString().contains("ExceptionB") }
   }
 
   @Test
@@ -207,6 +202,9 @@ abstract class TransacterTest {
   fun `we can rollback with value from a transaction`() {
     val result: String = transacter.transactionWithResult {
       rollback("rollback")
+
+      @Suppress("UNREACHABLE_CODE")
+      return@transactionWithResult "sup"
     }
 
     assertEquals(result, "rollback")

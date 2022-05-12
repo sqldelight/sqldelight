@@ -1,8 +1,8 @@
 package app.cash.sqldelight.core.queries
 
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.INTEGER
-import app.cash.sqldelight.core.dialect.sqlite.SqliteType.TEXT
-import app.cash.sqldelight.core.lang.IntermediateType
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.google.common.truth.Truth.assertThat
@@ -32,7 +32,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
@@ -57,7 +57,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
@@ -82,7 +82,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -111,7 +111,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -140,7 +140,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val update = file.namedMutators.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -181,7 +181,7 @@ class BindableQueryTest {
       tempFolder
     )
 
-    val createTable = file.sqliteStatements().mapNotNull { it.statement.createTableStmt }.first()
+    val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
     val select = file.namedQueries.first()
     val args = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).toTypedArray()
 
@@ -189,11 +189,13 @@ class BindableQueryTest {
       1 to IntermediateType(TEXT, String::class.asClassName().copy(nullable = true), null, "defaultValue", args[0]),
       2 to IntermediateType(
         INTEGER, Long::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "bufferId", args[1]
+        createTable.columnDefList[1], "bufferId", args[1],
+        simplified = true
       ),
       3 to IntermediateType(
         INTEGER, Long::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[2], "accountId", args[2]
+        createTable.columnDefList[2], "accountId", args[2],
+        simplified = true
       )
     )
   }

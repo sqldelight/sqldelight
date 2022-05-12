@@ -1,10 +1,10 @@
 package com.example.sqldelight.hockey.data
 
 import app.cash.sqldelight.EnumColumnAdapter
-import app.cash.sqldelight.adapter.primitive.BooleanColumnAdapter
 import app.cash.sqldelight.adapter.primitive.FloatColumnAdapter
 import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import com.example.sqldelight.hockey.HockeyDb
 import com.example.sqldelight.hockey.data.PlayerVals.Position
 import com.example.sqldelight.hockey.data.PlayerVals.Shoots
@@ -14,7 +14,6 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
     driver = driver,
     teamAdapter = Team.Adapter(
       foundedAdapter = DateAdapter(),
-      won_cupAdapter = BooleanColumnAdapter,
     ),
     playerAdapter = Player.Adapter(
       shootsAdapter = EnumColumnAdapter(),
@@ -27,7 +26,7 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
   )
 }
 
-object Schema : SqlDriver.Schema by HockeyDb.Schema {
+object Schema : SqlSchema by HockeyDb.Schema {
   override fun create(driver: SqlDriver) {
     HockeyDb.Schema.create(driver)
 

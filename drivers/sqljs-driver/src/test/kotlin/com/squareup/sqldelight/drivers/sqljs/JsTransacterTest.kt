@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import app.cash.sqldelight.driver.sqljs.withSchema
 import kotlin.js.Promise
@@ -12,11 +13,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 class JsTransacterTest {
 
-  private val schema = object : SqlDriver.Schema {
+  private val schema = object : SqlSchema {
     override val version = 1
     override fun create(driver: SqlDriver) {}
     override fun migrate(
@@ -191,17 +191,15 @@ class JsTransacterTest {
   @Test fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() = transacterPromise.then { (_, transacter) ->
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
-    try {
+    val t = assertFailsWith<Throwable>() {
       transacter.transaction {
         afterRollback {
           throw ExceptionA()
         }
         throw ExceptionB()
       }
-      fail("Should have thrown!")
-    } catch (e: Throwable) {
-      assertTrue("Exception thrown in body not in message($e)") { e.toString().contains("ExceptionA") }
-      assertTrue("Exception thrown in rollback not in message($e)") { e.toString().contains("ExceptionB") }
     }
+    assertTrue("Exception thrown in body not in message($t)") { t.toString().contains("ExceptionA") }
+    assertTrue("Exception thrown in rollback not in message($t)") { t.toString().contains("ExceptionB") }
   }
 }

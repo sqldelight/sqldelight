@@ -42,6 +42,10 @@ or join the [Jetbrains Platform Slack](https://blog.jetbrains.com/platform/2019/
 If you're interested in creating your own driver, you can do so outside of the SQLDelight repository using the `runtime` artifact. To test the driver
 you can depend on the `driver-test` and extend `DriverTest` and `TransactionTest` to ensure it works as SQLDelight would expect.
 
+#### Asynchronous Drivers
+
+Drivers that make asynchronous calls can be implemented by using the `runtime-async` artifact. 
+
 ### Gradle
 
 If you're encountering a gradle issue, start by creating a test fixture in `sqldelight-gradle-plugin/src/test` similar to the other folders there

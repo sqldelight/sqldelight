@@ -21,6 +21,7 @@ import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import app.cash.sqldelight.core.SqlDelightException
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
@@ -28,6 +29,7 @@ import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
@@ -39,8 +41,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import java.io.File
+import java.util.ServiceLoader
 
-@Suppress("UnstableApiUsage") // Worker API
 @CacheableTask
 abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @Suppress("unused") // Required to invalidate the task on version updates.
@@ -49,10 +51,10 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
 
@@ -69,6 +71,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
   @InputFiles
   @SkipWhenEmpty
+  @IgnoreEmptyDirectories
   @PathSensitive(PathSensitivity.RELATIVE)
   override fun getSource(): FileTree {
     return super.getSource()
@@ -92,6 +95,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         moduleName = parameters.projectName.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->
@@ -100,7 +104,14 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
       when (generationStatus) {
         is Failure -> {
-          logger.log(ERROR, "")
+          logger.log(
+            ERROR,
+            """
+            |
+            |Compiling with dialect ${environment.dialect::class.qualifiedName}
+            |
+          """.trimMargin()
+          )
           generationStatus.errors.forEach { logger.log(ERROR, it) }
           throw SqlDelightException(
             "Generation failed; see the generator error output for details."

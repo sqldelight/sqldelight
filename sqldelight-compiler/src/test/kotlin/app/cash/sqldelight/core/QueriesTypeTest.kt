@@ -18,6 +18,11 @@ class QueriesTypeTest {
       |  value TEXT AS kotlin.collections.List
       |);
       |
+      |CREATE TABLE other (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT AS kotlin.collections.List
+      |);
+      |
       |insertData:
       |INSERT INTO data
       |VALUES (?, ?);
@@ -26,6 +31,11 @@ class QueriesTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
+      |
+      |selectAllValues:
+      |SELECT id, value FROM data
+      |UNION
+      |SELECT id, value FROM other;
     """.trimMargin(),
       temporaryFolder, fileName = "Data.sq"
     )
@@ -42,26 +52,32 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
       |import com.example.Data_
+      |import com.example.Other
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
-      |    TestDatabase = TestDatabaseImpl(driver, data_Adapter)
+      |internal fun KClass<TestDatabase>.newInstance(
+      |  driver: SqlDriver,
+      |  data_Adapter: Data_.Adapter,
+      |  otherAdapter: Other.Adapter,
+      |): TestDatabase = TestDatabaseImpl(driver, data_Adapter, otherAdapter)
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  data_Adapter: Data_.Adapter
+      |  data_Adapter: Data_.Adapter,
+      |  otherAdapter: Other.Adapter,
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
+      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |
@@ -72,12 +88,18 @@ class QueriesTypeTest {
       |          |  value TEXT
       |          |)
       |          ""${'"'}.trimMargin(), 0)
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TABLE other (
+      |          |  id INTEGER PRIMARY KEY,
+      |          |  value TEXT
+      |          |)
+      |          ""${'"'}.trimMargin(), 0)
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -99,11 +121,14 @@ class QueriesTypeTest {
       |import kotlin.Long
       |import kotlin.String
       |import kotlin.Unit
+      |import kotlin.check
       |import kotlin.collections.List
+      |import kotlin.collections.setOf
       |
       |public class DataQueries(
       |  private val driver: SqlDriver,
-      |  private val data_Adapter: Data_.Adapter
+      |  private val data_Adapter: Data_.Adapter,
+      |  private val otherAdapter: Other.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -120,14 +145,36 @@ class QueriesTypeTest {
       |    )
       |  }
       |
+      |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
+      |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) {
+      |        "Adapter types are expected to be identical." }
+      |    return Query(424911250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
+      |    |SELECT id, value FROM data
+      |    |UNION
+      |    |SELECT id, value FROM other
+      |    ""${'"'}.trimMargin()) { cursor ->
+      |      mapper(
+      |        cursor.getLong(0)!!,
+      |        cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
+      |      )
+      |    }
+      |  }
+      |
+      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues { id, value_ ->
+      |    SelectAllValues(
+      |      id,
+      |      value_
+      |    )
+      |  }
+      |
       |  public fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
-      |      bindLong(1, id)
-      |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |    }
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
       |    }
@@ -135,7 +182,7 @@ class QueriesTypeTest {
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
-      |    mapper: (SqlCursor) -> T
+      |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
@@ -145,17 +192,97 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${select.id},
+      |        ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), 1) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      bindLong(1, id)
       |    }
       |
       |    public override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
+      |""".trimMargin()
+    )
+  }
+
+  @Test fun `unused adapters are not passed to the database constructor`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |import kotlin.Int;
+      |
+      |CREATE TABLE data (
+      |  id TEXT PRIMARY KEY,
+      |  value INTEGER AS Int NOT NULL
+      |);
+    """.trimMargin(),
+      temporaryFolder, fileName = "Data.sq"
+    )
+
+    val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    assertThat(result.compilerOutput).containsKey(database)
+    assertThat(result.compilerOutput[database].toString()).isEqualTo(
+      """
+      |package com.example.testmodule
+      |
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
+      |import com.example.DataQueries
+      |import com.example.TestDatabase
+      |import kotlin.Int
+      |import kotlin.Unit
+      |import kotlin.reflect.KClass
+      |
+      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |  get() = TestDatabaseImpl.Schema
+      |
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+      |    TestDatabaseImpl(driver)
+      |
+      |private class TestDatabaseImpl(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver), TestDatabase {
+      |  public override val dataQueries: DataQueries = DataQueries(driver)
+      |
+      |  public object Schema : SqlSchema {
+      |    public override val version: Int
+      |      get() = 1
+      |
+      |    public override fun create(driver: SqlDriver): Unit {
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TABLE data (
+      |          |  id TEXT PRIMARY KEY,
+      |          |  value INTEGER NOT NULL
+      |          |)
+      |          ""${'"'}.trimMargin(), 0)
+      |    }
+      |
+      |    public override fun migrate(
+      |      driver: SqlDriver,
+      |      oldVersion: Int,
+      |      newVersion: Int,
+      |    ): Unit {
+      |    }
+      |  }
+      |}
+      |""".trimMargin()
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |
+      |public class DataQueries(
+      |  private val driver: SqlDriver,
+      |) : TransacterImpl(driver)
       |""".trimMargin()
     )
   }
@@ -192,6 +319,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
@@ -199,7 +327,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
@@ -207,11 +335,11 @@ class QueriesTypeTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |  data_Adapter: Data_.Adapter
+      |  data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |
@@ -227,7 +355,7 @@ class QueriesTypeTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -253,7 +381,7 @@ class QueriesTypeTest {
       |
       |public class DataQueries(
       |  private val driver: SqlDriver,
-      |  private val data_Adapter: Data_.Adapter
+      |  private val data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
       |      SelectForIdQuery(id) { cursor ->
@@ -272,12 +400,12 @@ class QueriesTypeTest {
       |
       |  public fun insertData(id: Long?, value_: List?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO data
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
-      |      bindLong(1, id)
-      |      bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |    }
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
       |    }
@@ -285,7 +413,7 @@ class QueriesTypeTest {
       |
       |  private inner class SelectForIdQuery<out T : Any>(
       |    public val id: Long,
-      |    mapper: (SqlCursor) -> T
+      |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("data"))
@@ -295,11 +423,12 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun execute(): SqlCursor = driver.executeQuery(${select.id}, ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${select.id},
+      |        ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), 1) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      bindLong(1, id)
       |    }
       |
@@ -342,24 +471,25 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
       |import com.example.SearchQueries
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlDriver.Schema
+      |internal val KClass<TestDatabase>.schema: SqlSchema
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
       |    TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
-      |  driver: SqlDriver
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val searchQueries: SearchQueries = SearchQueries(driver)
       |
-      |  public object Schema : SqlDriver.Schema {
+      |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
       |
@@ -375,7 +505,7 @@ class QueriesTypeTest {
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
-      |      newVersion: Int
+      |      newVersion: Int,
       |    ): Unit {
       |    }
       |  }
@@ -399,7 +529,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |
       |public class SearchQueries(
-      |  private val driver: SqlDriver
+      |  private val driver: SqlDriver,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectOffsets(search: String, mapper: (id: Long, offsets: String?) -> T):
       |      Query<T> = SelectOffsetsQuery(search) { cursor ->
@@ -419,12 +549,12 @@ class QueriesTypeTest {
       |
       |  public fun insertData(id: Long?, value_: String?): Unit {
       |    driver.execute(${insert.id}, ""${'"'}
-      |    |INSERT INTO search
-      |    |VALUES (?, ?)
-      |    ""${'"'}.trimMargin(), 2) {
-      |      bindLong(1, id)
-      |      bindString(2, value_)
-      |    }
+      |        |INSERT INTO search
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(1, id)
+      |          bindString(2, value_)
+      |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("search")
       |    }
@@ -432,7 +562,7 @@ class QueriesTypeTest {
       |
       |  private inner class SelectOffsetsQuery<out T : Any>(
       |    public val search: String,
-      |    mapper: (SqlCursor) -> T
+      |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    public override fun addListener(listener: Query.Listener): Unit {
       |      driver.addListener(listener, arrayOf("search"))
@@ -442,11 +572,12 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("search"))
       |    }
       |
-      |    public override fun execute(): SqlCursor = driver.executeQuery(${offsets.id}, ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${offsets.id},
+      |        ""${'"'}
       |    |SELECT id, offsets(search)
       |    |FROM search
       |    |WHERE search MATCH ?
-      |    ""${'"'}.trimMargin(), 1) {
+      |    ""${'"'}.trimMargin(), mapper, 1) {
       |      bindString(1, search)
       |    }
       |

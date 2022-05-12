@@ -7,9 +7,9 @@ import kotlin.collections.List
 
 public data class New_test(
   public val first: String,
-  public val second: List<Int>?
+  public val second: List<Int>?,
 ) {
   public class Adapter(
-    public val secondAdapter: ColumnAdapter<List<Int>, String>
+    public val secondAdapter: ColumnAdapter<List<Int>, String>,
   )
 }

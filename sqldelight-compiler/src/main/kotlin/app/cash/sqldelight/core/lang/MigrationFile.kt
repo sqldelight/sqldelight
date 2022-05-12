@@ -12,7 +12,7 @@ class MigrationFile(
       .filter { it in '0'..'9' }.toIntOrNull() ?: 0
   }
 
-  internal fun sqliteStatements() = sqlStmtList!!.stmtList
+  internal fun sqlStatements() = sqlStmtList!!.stmtList
 
   override val packageName
     get() = module?.let { module -> SqlDelightFileIndex.getInstance(module).packageName(this) }

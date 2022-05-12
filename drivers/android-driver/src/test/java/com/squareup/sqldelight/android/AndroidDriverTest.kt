@@ -2,8 +2,8 @@ package com.squareup.sqldelight.android
 
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlDriver.Schema
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import app.cash.sqldelight.driver.android.AndroidStatement
 import com.squareup.sqldelight.driver.test.DriverTest
@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class AndroidDriverTest : DriverTest() {
-  override fun setupDatabase(schema: Schema): SqlDriver {
+  override fun setupDatabase(schema: SqlSchema): SqlDriver {
     return AndroidSqliteDriver(schema, getApplicationContext())
   }
 
@@ -25,28 +25,30 @@ class AndroidDriverTest : DriverTest() {
   fun `cached statement can be reused`() {
     val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
-    driver.executeQuery(1, "SELECT * FROM test", 0) {
-      bindable = this
-    }
+    driver.executeQuery(1, "SELECT * FROM test", {}, 0, { bindable = this })
 
-    driver.executeQuery(1, "SELECT * FROM test", 0) {
-      assertSame(bindable, this)
-    }
+    driver.executeQuery(
+      1, "SELECT * FROM test", {}, 0,
+      {
+        assertSame(bindable, this)
+      }
+    )
   }
 
   @Test
   fun `cached statement is evicted and closed`() {
     val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
-    driver.executeQuery(1, "SELECT * FROM test", 0) {
-      bindable = this
-    }
+    driver.executeQuery(1, "SELECT * FROM test", {}, 0, { bindable = this })
 
-    driver.executeQuery(2, "SELECT * FROM test", 0)
+    driver.executeQuery(2, "SELECT * FROM test", {}, 0)
 
-    driver.executeQuery(1, "SELECT * FROM test", 0) {
-      assertNotSame(bindable, this)
-    }
+    driver.executeQuery(
+      1, "SELECT * FROM test", {}, 0,
+      {
+        assertNotSame(bindable, this)
+      }
+    )
   }
 
   @Test

@@ -1,0 +1,11 @@
+CREATE TABLE dates(
+  date DATE NOT NULL,
+  time TIME NOT NULL,
+  timestamp TIMESTAMP NOT NULL,
+  timestamp_with_timezone TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+insertDate:
+INSERT INTO dates
+VALUES (?, ?, ?, ?)
+RETURNING *;
