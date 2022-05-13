@@ -15,7 +15,7 @@ import app.cash.sqldelight.dialects.hsql.grammar.psi.HsqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 
-class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
+open class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun definitionType(typeName: SqlTypeName): IntermediateType {
     check(typeName is HsqlTypeName)
     with(typeName) {
