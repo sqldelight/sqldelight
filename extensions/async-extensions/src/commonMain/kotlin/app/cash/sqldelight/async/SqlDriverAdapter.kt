@@ -1,6 +1,7 @@
 package app.cash.sqldelight.async
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.async.db.AsyncSqlCursor
 import app.cash.sqldelight.async.db.AsyncSqlDriver
 import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
@@ -17,6 +18,7 @@ internal class SqlDriverAdapter(
   private val binderAdapter: (SqlPreparedStatement) -> AsyncSqlPreparedStatement
 ) : AsyncSqlDriver {
   private val listeners = mutableMapOf<AsyncQuery.Listener, Query.Listener>()
+  private val transactionIndex = mutableMapOf<Transacter.Transaction, AsyncTransacter.Transaction>()
 
   override suspend fun close() {
     driver.close()
@@ -31,11 +33,15 @@ internal class SqlDriverAdapter(
   }
 
   override suspend fun newTransaction(): AsyncTransacter.Transaction {
-    TODO("Not yet implemented")
+    val syncTransaction = driver.newTransaction()
+    val adapter = TransactionAdapter(syncTransaction)
+
+    transactionIndex[syncTransaction] = adapter
+    return adapter
   }
 
   override fun currentTransaction(): AsyncTransacter.Transaction? {
-    TODO("Not yet implemented")
+    return transactionIndex[driver.currentTransaction()]
   }
 
   override fun addListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
@@ -96,6 +102,15 @@ internal class SqlDriverAdapter(
 
     override fun bindBoolean(index: Int, boolean: Boolean?) {
       statement.bindBoolean(index, boolean)
+    }
+  }
+
+  internal inner class TransactionAdapter(private val transaction: Transacter.Transaction) : AsyncTransacter.Transaction() {
+    override val enclosingTransaction: AsyncTransacter.Transaction?
+      get() = transactionIndex[transaction.enclosingTransaction]
+
+    override suspend fun endTransaction(successful: Boolean) {
+      transaction.endTransaction(successful)
     }
   }
 
