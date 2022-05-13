@@ -55,6 +55,7 @@ repositories {
 }
 ```
 
-[Alpha IDE plugins are also available](https://plugins.jetbrains.com/plugin/8191-sqldelight/versions/alpha) by using the alpha channel in IntelliJ: `https://plugins.jetbrains.com/plugins/alpha/com.squareup.sqldelight`
+[Alpha IDE plugins are also available](https://plugins.jetbrains.com/plugin/8191-sqldelight/versions/alpha) by using the alpha channel in IntelliJ: `https://plugins.jetbrains.com/plugins/alpha/com.squareup.sqldelight`.
+Snapshots are also available in the [EAP](https://plugins.jetbrains.com/plugin/8191-sqldelight/versions/eap) channel: `https://plugins.jetbrains.com/plugins/eap/com.squareup.sqldelight` 
 
 <img width="738" alt="IntelliJ_alpha_channel" src="https://user-images.githubusercontent.com/22521688/168236653-e32deb26-167f-46ce-9277-ea169cbb22d6.png">
