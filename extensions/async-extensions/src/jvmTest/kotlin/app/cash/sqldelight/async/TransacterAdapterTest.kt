@@ -15,9 +15,9 @@ class TransacterAdapterTest {
     override val version = 1
     override suspend fun create(driver: AsyncSqlDriver) {}
     override suspend fun migrate(
-            driver: AsyncSqlDriver,
-            oldVersion: Int,
-            newVersion: Int
+      driver: AsyncSqlDriver,
+      oldVersion: Int,
+      newVersion: Int
     ) {
     }
   }
