@@ -1,0 +1,44 @@
+plugins {
+  alias(deps.plugins.publish)
+  alias(deps.plugins.dokka)
+  id("app.cash.sqldelight.multiplatform")
+}
+
+archivesBaseName = 'sqldelight-async-extensions'
+
+kotlin {
+  js()
+
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation project(':runtime:runtime')
+        implementation project(':runtime:runtime-async')
+        api deps.kotlin.coroutines.core
+      }
+    }
+    jvmTest {
+      dependencies {
+        implementation deps.kotlin.test.junit
+        implementation deps.kotlin.coroutines.test
+        implementation project(':drivers:sqlite-driver')
+      }
+    }
+    nativeMain {
+      dependencies {
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${deps.versions.kotlinCoroutines.get()}-native-mt") {
+          force = true
+        }
+      }
+    }
+  }
+
+  sourceSets.matching { it.name.endsWith("Test") }.all {
+    it.languageSettings {
+      optIn('kotlin.time.ExperimentalTime')
+      optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
+    }
+  }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

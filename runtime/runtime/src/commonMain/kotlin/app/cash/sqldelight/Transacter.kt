@@ -92,7 +92,7 @@ interface Transacter {
     /**
      * The parent transaction, if there is any.
      */
-    protected abstract val enclosingTransaction: Transaction?
+    abstract val enclosingTransaction: Transaction?
 
     internal fun enclosingTransaction() = enclosingTransaction
 
@@ -101,7 +101,7 @@ interface Transacter {
      *
      * @param successful Whether the transaction completed successfully or not.
      */
-    protected abstract fun endTransaction(successful: Boolean)
+    abstract fun endTransaction(successful: Boolean)
 
     internal fun endTransaction() {
       checkThreadConfinement()

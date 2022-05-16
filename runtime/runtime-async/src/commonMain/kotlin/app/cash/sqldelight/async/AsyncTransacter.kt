@@ -53,7 +53,7 @@ interface AsyncTransacter {
     /**
      * The parent transaction, if there is any.
      */
-    protected abstract val enclosingTransaction: Transaction?
+    abstract val enclosingTransaction: Transaction?
 
     internal fun enclosingTransaction() = enclosingTransaction
 
@@ -62,7 +62,7 @@ interface AsyncTransacter {
      *
      * @param successful Whether the transaction completed successfully or not.
      */
-    protected abstract suspend fun endTransaction(successful: Boolean)
+    abstract suspend fun endTransaction(successful: Boolean)
 
     internal suspend fun endTransaction() {
       checkThreadConfinement()
