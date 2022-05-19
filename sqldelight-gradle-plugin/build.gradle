@@ -23,7 +23,9 @@ configurations {
 }
 
 dependencies {
-  api deps.sqlPsi
+  api(deps.sqlPsi) {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+  }
 
   implementation deps.sqliteJdbc
   implementation deps.objectDiff
