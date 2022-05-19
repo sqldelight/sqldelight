@@ -112,7 +112,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
     }
 
-    if (extension.linkSqlite) {
+    if (extension.linkSqlite.getOrElse(true)) {
       project.linkSqlite()
     }
 

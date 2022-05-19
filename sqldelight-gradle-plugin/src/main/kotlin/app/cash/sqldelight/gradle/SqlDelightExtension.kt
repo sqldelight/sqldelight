@@ -2,14 +2,15 @@ package app.cash.sqldelight.gradle
 
 import groovy.lang.Closure
 import org.gradle.api.Project
+import org.gradle.api.provider.Property
 import org.gradle.util.ConfigureUtil
 
-open class SqlDelightExtension {
+abstract class SqlDelightExtension {
   internal val databases = mutableListOf<SqlDelightDatabase>()
   internal var configuringDatabase: SqlDelightDatabase? = null
   internal lateinit var project: Project
 
-  var linkSqlite = true
+  abstract val linkSqlite: Property<Boolean>
 
   fun methodMissing(name: String, args: Any): Any {
     configuringDatabase?.methodMissing(name, args)?.let { return it }
