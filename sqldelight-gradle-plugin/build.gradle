@@ -6,7 +6,18 @@ plugins {
   alias(deps.plugins.publish)
   alias(deps.plugins.dokka)
   id("java-gradle-plugin")
+  id("jvm-test-suite")
 }
+
+testing {
+  suites {
+    dockerTest(JvmTestSuite) {
+      useJUnit()
+    }
+  }
+}
+
+configurations.dockerTestImplementation.extendsFrom(configurations.testImplementation)
 
 gradlePlugin {
   plugins {
@@ -15,6 +26,8 @@ gradlePlugin {
       implementationClass = 'app.cash.sqldelight.gradle.SqlDelightPlugin'
     }
   }
+
+  testSourceSets(sourceSets.test, sourceSets.dockerTest)
 }
 
 configurations {
@@ -105,6 +118,28 @@ test {
       excludeCategories 'app.cash.sqldelight.Instrumentation'
     }
   }
+}
+
+tasks.named('check') {
+  dependsOn(testing.suites.dockerTest)
+}
+
+tasks.dockerTest.configure {
+  dependsOn(
+      ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:runtime:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:internal:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:internal:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:shared:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:shared:publishJvmPublicationToInstallLocallyRepository",
+      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+  )
 }
 
 validatePlugins {

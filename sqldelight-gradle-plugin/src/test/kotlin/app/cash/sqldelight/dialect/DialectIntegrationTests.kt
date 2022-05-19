@@ -9,24 +9,6 @@ import java.io.File
 
 class DialectIntegrationTests {
 
-  @Test fun integrationTestsMySql() {
-    val runner = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/integration-mysql"))
-      .withArguments("clean", "check", "--stacktrace")
-
-    val result = runner.build()
-    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
-  }
-
-  @Test fun integrationTestsMySqlSchemaDefinitions() {
-    val runner = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/integration-mysql-schema"))
-      .withArguments("clean", "check", "--stacktrace")
-
-    val result = runner.build()
-    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
-  }
-
   @Test fun integrationTestsMySqlSchemaOutput() {
     val integrationRoot = File("src/test/schema-output")
 
@@ -39,15 +21,6 @@ class DialectIntegrationTests {
 
     FileSubject.assertThat(File(integrationRoot, "build"))
       .contentsAreEqualTo(File(integrationRoot, "expected-build"))
-  }
-
-  @Test fun integrationTestsPostgreSql() {
-    val runner = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/integration-postgresql"))
-      .withArguments("clean", "check", "--stacktrace")
-
-    val result = runner.build()
-    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
   @Test fun integrationTestsHsql() {
