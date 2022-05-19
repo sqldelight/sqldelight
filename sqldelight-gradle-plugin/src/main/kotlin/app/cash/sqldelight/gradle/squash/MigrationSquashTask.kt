@@ -94,7 +94,7 @@ abstract class MigrationSquashTask : SqlDelightWorkerTask() {
       environment.forMigrationFiles { migrationFile ->
         if (migrationFile.version > topVersion) {
           topVersion = migrationFile.version
-          migrationDirectory = File(migrationFile.virtualFile!!.path.substringBeforeLast(File.separatorChar))
+          migrationDirectory = File(migrationFile.virtualFile!!.parent.path)
         }
 
         val migrations = migrationFile.sqlStmtList?.children
