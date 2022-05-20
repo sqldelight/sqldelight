@@ -43,8 +43,8 @@ internal class FileSubject private constructor(
       assertThat(output.isDirectory).isEqualTo(expected.isDirectory)
       if (!output.isDirectory) {
         assertWithMessage("Expected file ${output.path} to equal file ${expected.path}")
-          .that(output.readLines())
-          .isEqualTo(expected.readLines())
+          .that(output.readText())
+          .isEqualTo(expected.readText())
       } else {
         output.listFiles()!!.forEach { buildOutput.addFirst(it) }
         expected.listFiles()!!.forEach { expectedOutput.addFirst(it) }
