@@ -14,18 +14,19 @@ import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Provider
 import java.io.File
 
-class SqlDelightDatabase(
+open class SqlDelightDatabase(
   val project: Project,
   var name: String,
-  var packageName: String? = null,
-  var schemaOutputDirectory: File? = null,
-  var sourceFolders: Collection<String>? = null,
-  var deriveSchemaFromMigrations: Boolean = false,
-  var verifyMigrations: Boolean = false,
-  var migrationOutputDirectory: File? = null,
-  var migrationOutputFileFormat: String = ".sql",
-  var generateAsync: Boolean = false,
 ) {
+  var packageName: String? = null
+  var schemaOutputDirectory: File? = null
+  var sourceFolders: Collection<String>? = null
+  var deriveSchemaFromMigrations: Boolean = false
+  var verifyMigrations: Boolean = false
+  var migrationOutputDirectory: File? = null
+  var migrationOutputFileFormat: String = ".sql"
+  var generateAsync: Boolean = false
+
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isCanBeConsumed = false
     isVisible = false

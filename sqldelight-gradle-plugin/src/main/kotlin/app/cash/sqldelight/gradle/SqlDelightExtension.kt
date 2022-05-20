@@ -1,12 +1,13 @@
 package app.cash.sqldelight.gradle
 
 import groovy.lang.Closure
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.util.ConfigureUtil
 
 abstract class SqlDelightExtension {
-  internal val databases = mutableListOf<SqlDelightDatabase>()
+  abstract val databases: NamedDomainObjectContainer<SqlDelightDatabase>
   internal var configuringDatabase: SqlDelightDatabase? = null
   internal lateinit var project: Project
 

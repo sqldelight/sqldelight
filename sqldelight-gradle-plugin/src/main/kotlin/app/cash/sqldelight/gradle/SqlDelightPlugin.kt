@@ -123,8 +123,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           SqlDelightDatabase(
             project = project,
             name = "Database",
-            packageName = project.packageName(),
           ).apply {
+            packageName = project.packageName()
             project.sqliteVersion()?.let(::dialect)
           },
         )
