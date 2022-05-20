@@ -13,10 +13,12 @@ repositories {
 }
 
 sqldelight {
-  QueryWrapper {
-    packageName = "app.cash.sqldelight.integration"
-    dialect("app.cash.sqldelight:sqlite-3-18-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    module("app.cash.sqldelight:sqlite-json-module:${app.cash.sqldelight.VersionKt.VERSION}")
+  databases {
+    QueryWrapper {
+      packageName = "app.cash.sqldelight.integration"
+      dialect("app.cash.sqldelight:sqlite-3-18-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      module("app.cash.sqldelight:sqlite-json-module:${app.cash.sqldelight.VersionKt.VERSION}")
+    }
   }
 }
 

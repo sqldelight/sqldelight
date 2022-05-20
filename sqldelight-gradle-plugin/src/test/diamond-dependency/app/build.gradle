@@ -2,9 +2,11 @@ apply plugin: 'kotlin'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  Database {
-    packageName = "com.example.app"
-    dependency project(":middleA")
-    dependency project(":middleB")
+  databases {
+    Database {
+      packageName = "com.example.app"
+      dependency project(":middleA")
+      dependency project(":middleB")
+    }
   }
 }

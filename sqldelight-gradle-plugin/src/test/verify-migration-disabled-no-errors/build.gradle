@@ -13,9 +13,11 @@ repositories {
 }
 
 sqldelight {
-  Database {
-    packageName = "com.example"
-    dialect("app.cash.sqldelight:hsql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    verifyMigrations = false
+  databases {
+    Database {
+      packageName = "com.example"
+      dialect("app.cash.sqldelight:hsql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      verifyMigrations = false
+    }
   }
 }

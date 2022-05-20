@@ -13,8 +13,10 @@ repositories {
 }
 
 sqldelight {
-  Database {
-    packageName = "com.example"
-    deriveSchemaFromMigrations = true
+  databases {
+    Database {
+      packageName = "com.example"
+      deriveSchemaFromMigrations = true
+    }
   }
 }

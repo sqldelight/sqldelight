@@ -6,9 +6,11 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  MyDatabase {
-    packageName = "app.cash.sqldelight.mysql.integration"
-    dialect(libs.sqldelight.mysql)
+  databases {
+    MyDatabase {
+      packageName = "app.cash.sqldelight.mysql.integration"
+      dialect(libs.sqldelight.mysql)
+    }
   }
 }
 

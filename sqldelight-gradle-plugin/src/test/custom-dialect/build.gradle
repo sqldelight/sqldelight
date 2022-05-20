@@ -13,9 +13,11 @@ repositories {
 }
 
 sqldelight {
-  customDialect {
-    packageName = "app.cash.sqldelight.customdialect"
-    dialect(project(":dialect"))
+  databases {
+    customDialect {
+      packageName = "app.cash.sqldelight.customdialect"
+      dialect(project(":dialect"))
+    }
   }
 }
 

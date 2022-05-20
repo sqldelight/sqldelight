@@ -6,8 +6,10 @@ dependencies {
 }
 
 sqldelight {
-  Database {
-    packageName = "com.example.modulea"
-    dependency project(":bottom")
+  databases {
+    Database {
+      packageName = "com.example.modulea"
+      dependency project(":bottom")
+    }
   }
 }

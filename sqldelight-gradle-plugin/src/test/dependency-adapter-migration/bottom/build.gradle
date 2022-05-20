@@ -2,11 +2,13 @@ apply plugin: 'kotlin'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  Database {
-    packageName = "com.example.bottom"
-    dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    deriveSchemaFromMigrations = true
-    verifyMigrations = true
+  databases {
+    Database {
+      packageName = "com.example.bottom"
+      dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      deriveSchemaFromMigrations = true
+      verifyMigrations = true
+    }
   }
 }
 

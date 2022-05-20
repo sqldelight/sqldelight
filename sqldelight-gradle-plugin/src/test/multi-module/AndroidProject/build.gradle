@@ -3,9 +3,11 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  CommonDb {
-    packageName = "com.sample.android"
-    dependency project(":MultiplatformProject")
+  databases {
+    CommonDb {
+      packageName = "com.sample.android"
+      dependency project(":MultiplatformProject")
+    }
   }
 }
 

@@ -29,8 +29,10 @@ class CompilationUnitTests {
         |}
         |
         |sqldelight {
-        |  CommonDb {
-        |    packageName = "com.sample"
+        |  databases {
+        |    CommonDb {
+        |      packageName = "com.sample"
+        |    }
         |  }
         |}
         """.trimMargin(),
@@ -73,14 +75,16 @@ class CompilationUnitTests {
         |}
         |
         |sqldelight {
-        |  CommonDb {
-        |    packageName = "com.sample"
-        |  }
+        |  databases {
+        |    CommonDb {
+        |      packageName = "com.sample"
+        |    }
         |
-        |  OtherDb {
-        |    packageName = "com.sample.otherdb"
-        |    sourceFolders = ["sqldelight", "otherdb"]
-        |    treatNullAsUnknownForEquality = true
+        |    OtherDb {
+        |      packageName = "com.sample.otherdb"
+        |      sourceFolders = ["sqldelight", "otherdb"]
+        |      treatNullAsUnknownForEquality = true
+        |    }
         |  }
         |}
         """.trimMargin(),
@@ -143,8 +147,10 @@ class CompilationUnitTests {
         |}
         |
         |sqldelight {
-        |  CommonDb {
-        |    packageName = "com.sample"
+        |  databases {
+        |    CommonDb {
+        |      packageName = "com.sample"
+        |    }
         |  }
         |}
         |
@@ -197,8 +203,10 @@ class CompilationUnitTests {
         |}
         |
         |sqldelight {
-        |  CommonDb {
-        |    packageName = "com.sample"
+        |  databases {
+        |    CommonDb {
+        |      packageName = "com.sample"
+        |    }
         |  }
         |}
         |
@@ -275,8 +283,10 @@ class CompilationUnitTests {
         |}
         |
         |sqldelight {
-        |  CommonDb {
-        |    packageName = "com.sample"
+        |  databases {
+        |    CommonDb {
+        |      packageName = "com.sample"
+        |    }
         |  }
         |}
         |

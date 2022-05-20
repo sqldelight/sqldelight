@@ -25,8 +25,10 @@ class GradlePluginCombinationTests {
         |}
         |
         |sqldelight {
-        |  CommonDb {
-        |    packageName = "com.sample"
+        |  databases {
+        |    CommonDb {
+        |      packageName = "com.sample"
+        |    }
         |  }
         |}
         |
@@ -68,8 +70,10 @@ class GradlePluginCombinationTests {
     |
     |sqldelight {
     |  linkSqlite = false
-    |  CommonDb {
-    |    packageName = "com.sample"
+    |  databases {
+    |    CommonDb {
+    |      packageName = "com.sample"
+    |    }
     |  }
     |}
     |

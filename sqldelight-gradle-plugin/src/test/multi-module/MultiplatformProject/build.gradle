@@ -3,8 +3,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  CommonDb {
-    packageName = "com.sample"
+  databases {
+    CommonDb {
+      packageName = "com.sample"
+    }
   }
 }
 

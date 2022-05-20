@@ -13,7 +13,9 @@ repositories {
 }
 
 sqldelight {
-  Database {
-    packageName = "com.example"
+  databases {
+    Database {
+      packageName = "com.example"
+    }
   }
 }

@@ -13,9 +13,11 @@ repositories {
 }
 
 sqldelight {
-  NoQueries {
-    packageName = "app.cash.sqldelight.derive.schema.from.migrations.no.queries"
-    deriveSchemaFromMigrations = true
+  databases {
+    NoQueries {
+      packageName = "app.cash.sqldelight.derive.schema.from.migrations.no.queries"
+      deriveSchemaFromMigrations = true
+    }
   }
 }
 

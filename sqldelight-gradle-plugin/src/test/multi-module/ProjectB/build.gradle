@@ -2,8 +2,10 @@ apply plugin: 'kotlin'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  Database {
-    packageName = "com.projectb.example"
-    schemaOutputDirectory = file('src/main/sqldelight/databases')
+  databases {
+    Database {
+      packageName = "com.projectb.example"
+      schemaOutputDirectory = file('src/main/sqldelight/databases')
+    }
   }
 }
