@@ -125,6 +125,7 @@ tasks.named('check') {
 }
 
 tasks.dockerTest.configure {
+  if (project.hasProperty("Instrumentation")) enabled = false
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
