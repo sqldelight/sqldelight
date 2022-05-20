@@ -48,7 +48,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
-    extension.project = project
 
     val androidPluginHandler = { _: Plugin<*> ->
       android.set(true)
