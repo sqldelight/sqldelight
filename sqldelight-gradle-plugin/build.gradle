@@ -98,6 +98,9 @@ test {
         ":runtime:internal:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
         ":runtime:shared:publishIosX64PublicationToInstallLocallyRepository",
         ":runtime:shared:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+        ":runtime:runtime:publishIosArm64PublicationToInstallLocallyRepository",
+        ":runtime:internal:publishIosArm64PublicationToInstallLocallyRepository",
+        ":runtime:shared:publishIosArm64PublicationToInstallLocallyRepository",
     )
   }
   useJUnit {
