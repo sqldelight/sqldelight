@@ -10,22 +10,26 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import java.io.File
+import javax.inject.Inject
 
-open class SqlDelightDatabase(
+abstract class SqlDelightDatabase @Inject constructor(
   val project: Project,
   var name: String,
 ) {
-  var packageName: String? = null
-  var schemaOutputDirectory: File? = null
-  var sourceFolders: Collection<String>? = null
-  var deriveSchemaFromMigrations: Boolean = false
-  var verifyMigrations: Boolean = false
-  var migrationOutputDirectory: File? = null
-  var migrationOutputFileFormat: String = ".sql"
-  var generateAsync: Boolean = false
+  abstract val packageName: Property<String>
+  abstract val schemaOutputDirectory: DirectoryProperty
+  abstract val sourceFolders: ListProperty<String>
+  abstract val deriveSchemaFromMigrations: Property<Boolean>
+  abstract val verifyMigrations: Property<Boolean>
+  abstract val migrationOutputDirectory: DirectoryProperty
+  abstract val migrationOutputFileFormat: Property<String>
+  abstract val generateAsync: Property<Boolean>
 
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isCanBeConsumed = false
@@ -85,7 +89,7 @@ open class SqlDelightDatabase(
    * @see <a href="https://github.com/cashapp/sqldelight/issues/1490">sqldelight#1490</a>
    * @see <a href="https://en.wikipedia.org/wiki/Null_%28SQL%29#Null-specific_and_3VL-specific_comparison_predicates">Wikipedia entry on null specific comparisons in SQL</a>
    */
-  var treatNullAsUnknownForEquality: Boolean = false
+  abstract val treatNullAsUnknownForEquality: Property<Boolean>
 
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
@@ -110,12 +114,12 @@ open class SqlDelightDatabase(
       ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
     val database = dependency.databases.singleOrNull { it.name == name }
       ?: throw IllegalStateException("No database named $name in $dependencyProject")
-    check(database.packageName != packageName) { "Detected a schema that already has the package name $packageName in project $dependencyProject" }
+    check(database.packageName.get() != packageName.get()) { "Detected a schema that already has the package name ${packageName.get()} in project $dependencyProject" }
     dependencies.add(database)
   }
 
   internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
-    val packageName = requireNotNull(packageName) { "property packageName for $name database must be provided" }
+    val packageName = requireNotNull(packageName.getOrNull()) { "property packageName for $name database must be provided" }
 
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
@@ -144,10 +148,10 @@ open class SqlDelightDatabase(
         },
         rootDirectory = project.projectDir,
         className = name,
-        dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName!!, it.name) },
-        deriveSchemaFromMigrations = deriveSchemaFromMigrations,
-        treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
-        generateAsync = generateAsync,
+        dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName.get(), it.name) },
+        deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
+        treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
+        generateAsync = generateAsync.get(),
       )
     } finally {
       recursionGuard = false
@@ -155,7 +159,7 @@ open class SqlDelightDatabase(
   }
 
   private fun sourceFolders(source: Source): List<SqlDelightSourceFolderImpl> {
-    val sourceFolders = sourceFolders ?: listOf("sqldelight")
+    val sourceFolders = sourceFolders.get()
 
     val relativeSourceFolders = sourceFolders.flatMap { folder ->
       source.sourceSets.map {
@@ -197,7 +201,7 @@ open class SqlDelightDatabase(
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
-        it.verifyMigrations = verifyMigrations
+        it.verifyMigrations = verifyMigrations.get()
         it.classpath.setFrom(configuration.fileCollection { true })
         it.classpath.from(moduleConfiguration.fileCollection { true })
       }
@@ -215,15 +219,15 @@ open class SqlDelightDatabase(
         it.dependsOn(task)
       }
 
-      if (!deriveSchemaFromMigrations) {
+      if (!deriveSchemaFromMigrations.get()) {
         addMigrationTasks(sourceFiles.files, source)
       }
 
-      if (deriveSchemaFromMigrations) {
+      if (deriveSchemaFromMigrations.get()) {
         addSquashTask(sourceFiles.files, source)
       }
 
-      if (migrationOutputDirectory != null) {
+      if (migrationOutputDirectory.getOrNull() != null) {
         addMigrationOutputTasks(sourceFiles.files, source)
       }
     }
@@ -244,23 +248,23 @@ open class SqlDelightDatabase(
         it.group = SqlDelightPlugin.GROUP
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         it.properties = getProperties()
-        it.verifyMigrations = verifyMigrations
+        it.verifyMigrations = verifyMigrations.get()
         it.classpath.setFrom(configuration.fileCollection { true })
         it.classpath.from(moduleConfiguration.fileCollection { true })
       }
 
-    if (schemaOutputDirectory != null) {
+    if (schemaOutputDirectory.getOrNull() != null) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
         it.projectName.set(project.name)
         it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
-        it.outputDirectory = schemaOutputDirectory
+        it.outputDirectory = schemaOutputDirectory.get().asFile
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
-        it.verifyMigrations = verifyMigrations
+        it.verifyMigrations = verifyMigrations.get()
         it.classpath.setFrom(configuration.fileCollection { true })
         it.classpath.from(moduleConfiguration.fileCollection { true })
       }
@@ -282,8 +286,8 @@ open class SqlDelightDatabase(
       it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
-      it.migrationOutputExtension = migrationOutputFileFormat
-      it.outputDirectory = migrationOutputDirectory
+      it.migrationOutputExtension = migrationOutputFileFormat.get()
+      it.outputDirectory = migrationOutputDirectory.get().asFile
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
       it.properties = getProperties()

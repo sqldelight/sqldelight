@@ -15,8 +15,8 @@ repositories {
 configure<SqlDelightExtension> {
   databases {
     create("Database") {
-      packageName = "com.example"
-      schemaOutputDirectory = file("src/main/sqldelight/databases")
+      packageName.set("com.example")
+      schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
     }
   }
 }
