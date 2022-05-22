@@ -135,25 +135,35 @@ class NativeSqliteDriver(
   private val listeners = basicMutableMap<String, BasicMutableMap<Query.Listener, Unit>>()
 
   init {
-    // Single connection for transactions
-    transactionPool = Pool(1) {
-      ThreadConnection(databaseManager.createMultiThreadedConnection()) { _ ->
-        borrowedConnectionThread.let {
-          it.get()?.release()
-          it.value = null
+    if (databaseManager.configuration.inMemory) {
+      // Single connection for transactions
+      transactionPool = Pool(1) {
+        ThreadConnection(databaseManager.createMultiThreadedConnection()) { _ ->
+          borrowedConnectionThread.let {
+            it.get()?.release()
+            it.value = null
+          }
         }
       }
-    }
 
-    val maxReaderConnectionsForConfig: Int = when {
-      databaseManager.configuration.inMemory -> 1 // Memory db's are single connection, generally. You can use named connections, but there are other issues that need to be designed for
-      else -> maxReaderConnections
-    }
-    readerPool = Pool(maxReaderConnectionsForConfig) {
-      val connection = databaseManager.createMultiThreadedConnection()
-      connection.withStatement("PRAGMA query_only = 1") { execute() } // Ensure read only
-      ThreadConnection(connection) {
-        throw UnsupportedOperationException("Should never be in a transaction")
+      readerPool = transactionPool
+    } else {
+      // Single connection for transactions
+      transactionPool = Pool(1) {
+        ThreadConnection(databaseManager.createMultiThreadedConnection()) { _ ->
+          borrowedConnectionThread.let {
+            it.get()?.release()
+            it.value = null
+          }
+        }
+      }
+
+      readerPool = Pool(maxReaderConnections) {
+        val connection = databaseManager.createMultiThreadedConnection()
+        connection.withStatement("PRAGMA query_only = 1") { execute() } // Ensure read only
+        ThreadConnection(connection) {
+          throw UnsupportedOperationException("Should never be in a transaction")
+        }
       }
     }
   }
@@ -231,6 +241,24 @@ class NativeSqliteDriver(
     readerPool.close()
   }
 }
+
+/**
+ * Helper function to create an in-memory driver. In-memory drivers have a single connection, so
+ * concurrent access will be block
+ */
+fun inMemoryDriver(schema: SqlSchema): NativeSqliteDriver = NativeSqliteDriver(
+  DatabaseConfiguration(
+    name = null,
+    inMemory = true,
+    version = schema.version,
+    create = { connection ->
+      wrapConnection(connection) { schema.create(it) }
+    },
+    upgrade = { connection, oldVersion, newVersion ->
+      wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+    }
+  )
+)
 
 /**
  * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations,
