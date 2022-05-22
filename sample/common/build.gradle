@@ -7,8 +7,10 @@ plugins {
 archivesBaseName = 'sample-common'
 
 sqldelight {
-  HockeyDb {
-    packageName = "com.example.sqldelight.hockey"
+  databases {
+    HockeyDb {
+      packageName = "com.example.sqldelight.hockey"
+    }
   }
   linkSqlite = true
 }
