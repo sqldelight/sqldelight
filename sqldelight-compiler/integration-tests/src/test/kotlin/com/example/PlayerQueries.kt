@@ -4,15 +4,10 @@ import app.cash.sqldelight.ExecutableQuery
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import com.example.player.SelectStuff
-import java.lang.Void
-import kotlin.Any
-import kotlin.Long
-import kotlin.String
-import kotlin.Unit
-import kotlin.collections.Collection
 
 public class PlayerQueries(
   private val driver: SqlDriver,
@@ -207,7 +202,7 @@ public class PlayerQueries(
     public val shoots: Shoots,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    public override fun <R> execute(mapper: (SqlCursor) -> R): R = transactionWithResult {
+    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = transactionWithResult {
       driver.execute(-452007405, """
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
@@ -239,7 +234,7 @@ public class PlayerQueries(
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = driver.executeQuery(null, """
     |SELECT *
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
@@ -262,7 +257,7 @@ public class PlayerQueries(
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> R): R {
+    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
           |SELECT *

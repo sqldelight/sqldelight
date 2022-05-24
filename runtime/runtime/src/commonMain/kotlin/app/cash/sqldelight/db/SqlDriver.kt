@@ -43,7 +43,7 @@ interface SqlDriver : Closeable {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
-  ): R
+  ): QueryResult<R>
 
   /**
    * Execute a SQL statement.
@@ -65,7 +65,7 @@ interface SqlDriver : Closeable {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null
-  ): Long
+  ): QueryResult<Long>
 
   /**
    * Start a new [Transacter.Transaction] on the database.

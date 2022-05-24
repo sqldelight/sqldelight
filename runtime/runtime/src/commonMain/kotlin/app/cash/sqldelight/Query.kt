@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 
@@ -92,7 +93,7 @@ private class SimpleQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : Query<RowType>(mapper) {
-  override fun <R> execute(mapper: (SqlCursor) -> R): R {
+  override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
     return driver.executeQuery(identifier, query, mapper, 0, null)
   }
 
@@ -115,7 +116,7 @@ private class SimpleExecutableQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType
 ) : ExecutableQuery<RowType>(mapper) {
-  override fun <R> execute(mapper: (SqlCursor) -> R): R {
+  override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
     return driver.executeQuery(identifier, query, mapper, 0, null)
   }
 
@@ -164,7 +165,7 @@ abstract class ExecutableQuery<out RowType : Any>(
    *
    * The cursor is closed automatically after the block returns.
    */
-  abstract fun <R> execute(mapper: (SqlCursor) -> R): R
+  abstract fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R>
 
   /**
    * @return The result set of the underlying SQL statement as a list of [RowType].
@@ -173,7 +174,7 @@ abstract class ExecutableQuery<out RowType : Any>(
     val result = mutableListOf<RowType>()
     while (cursor.next()) result.add(mapper(cursor))
     result
-  }
+  }.value
 
   /**
    * @return The only row of the result set for the underlying SQL statement as a non null
@@ -198,5 +199,5 @@ abstract class ExecutableQuery<out RowType : Any>(
     val value = mapper(cursor)
     check(!cursor.next()) { "ResultSet returned more than 1 row for $this" }
     value
-  }
+  }.value
 }
