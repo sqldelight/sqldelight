@@ -260,8 +260,8 @@ class OffsetQueryPagingSourceTest {
     { cursor -> cursor.getLong(0)!! }
   ) {
     override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", mapper, 2) {
-      bindLong(1, limit)
-      bindLong(2, offset)
+      bindLong(0, limit)
+      bindLong(1, offset)
     }
 
     override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("testTable"))
@@ -279,7 +279,7 @@ class OffsetQueryPagingSourceTest {
 
   private fun insert(value: Long, db: SqlDriver = driver) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
-      bindLong(1, value)
+      bindLong(0, value)
     }
   }
 }

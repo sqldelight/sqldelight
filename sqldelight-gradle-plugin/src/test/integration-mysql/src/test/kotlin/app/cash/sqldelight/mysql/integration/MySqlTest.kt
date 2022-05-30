@@ -114,7 +114,6 @@ class MySqlTest {
         driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
         afterRollback { driver.execute(null, "DROP TABLE throw_test", 0, null) }
         throw ExpectedException()
-        Assert.fail()
       }
       Assert.fail()
     } catch (_: ExpectedException) {

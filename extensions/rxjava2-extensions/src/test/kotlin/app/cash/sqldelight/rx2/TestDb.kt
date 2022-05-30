@@ -63,8 +63,8 @@ class TestDb(
       |""".trimMargin(),
       2
     ) {
-      bindString(1, employee.username)
-      bindString(2, employee.name)
+      bindString(0, employee.username)
+      bindString(1, employee.name)
     }
     notify(TABLE_EMPLOYEE)
     return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0).value
@@ -82,8 +82,8 @@ class TestDb(
       |""".trimMargin(),
       2
     ) {
-      bindLong(1, employeeId)
-      bindLong(2, managerId)
+      bindLong(0, employeeId)
+      bindLong(1, managerId)
     }
     notify(TABLE_MANAGER)
     return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0).value

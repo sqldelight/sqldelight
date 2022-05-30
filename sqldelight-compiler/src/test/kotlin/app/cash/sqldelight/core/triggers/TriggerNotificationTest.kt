@@ -51,8 +51,8 @@ class TriggerNotificationTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id)
-      |        bindString(2, value_)
+      |        bindLong(0, id)
+      |        bindString(1, value_)
       |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
@@ -103,7 +103,7 @@ class TriggerNotificationTest {
       |      |DELETE FROM data
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(1, id)
+      |        bindLong(0, id)
       |      }
       |  notifyQueries(-1854133518) { emit ->
       |    emit("data")
@@ -155,8 +155,8 @@ class TriggerNotificationTest {
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, value_)
-      |        bindLong(2, id)
+      |        bindString(0, value_)
+      |        bindLong(1, id)
       |      }
       |  notifyQueries(-1854133518) { emit ->
       |    emit("data")
@@ -208,8 +208,8 @@ class TriggerNotificationTest {
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, value_)
-      |        bindLong(2, id)
+      |        bindString(0, value_)
+      |        bindLong(1, id)
       |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
@@ -262,8 +262,8 @@ class TriggerNotificationTest {
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, value_)
-      |        bindLong(2, id)
+      |        bindString(0, value_)
+      |        bindLong(1, id)
       |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
@@ -316,8 +316,8 @@ class TriggerNotificationTest {
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, value_)
-      |        bindLong(2, id)
+      |        bindString(0, value_)
+      |        bindLong(1, id)
       |      }
       |  notifyQueries(-1854133518) { emit ->
       |    emit("data")
@@ -368,8 +368,8 @@ class TriggerNotificationTest {
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id)
-      |        bindString(2, value)
+      |        bindLong(0, id)
+      |        bindString(1, value)
       |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
@@ -421,8 +421,8 @@ class TriggerNotificationTest {
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id)
-      |        bindString(2, value)
+      |        bindLong(0, id)
+      |        bindString(1, value)
       |      }
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")

@@ -807,7 +807,7 @@ class InterfaceGeneration {
       |        driver.executeQuery(null,
       |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
       |        1) {
-      |      bindLong(1, album_id)
+      |      bindLong(0, album_id)
       |    }
       |
       |    public override fun toString(): String = "song.sq:selectSongsByAlbumId"
@@ -880,7 +880,7 @@ class InterfaceGeneration {
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          check(this is JdbcPreparedStatement)
-      |          bindLong(1, user_id2.toLong())
+      |          bindLong(0, user_id2.toLong())
       |        }
       |    notifyQueries(${result.compiledFile.namedMutators[0].id}) { emit ->
       |      emit("subscriptionEntity")
@@ -908,7 +908,7 @@ class InterfaceGeneration {
       |    |) SELECT insert_id FROM inserted_ids
       |    ""${'"'}.trimMargin(), mapper, 1) {
       |      check(this is JdbcPreparedStatement)
-      |      bindString(1, slack_user_id)
+      |      bindString(0, slack_user_id)
       |    }
       |
       |    public override fun toString(): String = "Subscription.sq:insertUser"
@@ -1024,7 +1024,7 @@ class InterfaceGeneration {
       |    |SELECT descendants.id, descendants.parent_id
       |    |FROM descendants
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(1, id)
+      |      bindLong(0, id)
       |    }
       |
       |    public override fun toString(): String = "Recursive.sq:recursiveQuery"

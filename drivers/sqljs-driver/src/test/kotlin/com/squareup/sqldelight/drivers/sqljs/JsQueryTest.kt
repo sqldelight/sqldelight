@@ -171,8 +171,8 @@ class JsQueryTest {
 
   private fun SqlDriver.insertTestData(testData: TestData) {
     execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
-      bindLong(1, testData.id)
-      bindString(2, testData.value)
+      bindLong(0, testData.id)
+      bindString(1, testData.value)
     }
   }
 

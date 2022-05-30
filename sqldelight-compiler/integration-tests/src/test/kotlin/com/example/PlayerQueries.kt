@@ -166,10 +166,10 @@ public class PlayerQueries(
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
-          bindString(1, name.name)
-          bindLong(2, number)
-          bindString(3, team?.let { it.name })
-          bindString(4, playerAdapter.shootsAdapter.encode(shoots))
+          bindString(0, name.name)
+          bindLong(1, number)
+          bindString(2, team?.let { it.name })
+          bindString(3, playerAdapter.shootsAdapter.encode(shoots))
         }
     notifyQueries(-1595716666) { emit ->
       emit("player")
@@ -183,9 +183,9 @@ public class PlayerQueries(
         |SET team = ?
         |WHERE number IN $numberIndexes
         """.trimMargin(), 1 + number.size) {
-          bindString(1, team?.let { it.name })
+          bindString(0, team?.let { it.name })
           number.forEachIndexed { index, number_ ->
-            bindLong(index + 2, number_)
+            bindLong(index + 1, number_)
           }
         }
     notifyQueries(-636585613) { emit ->
@@ -214,10 +214,10 @@ public class PlayerQueries(
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
           """.trimMargin(), 4) {
-            bindString(1, name.name)
-            bindLong(2, number)
-            bindString(3, team?.let { it.name })
-            bindString(4, playerAdapter.shootsAdapter.encode(shoots))
+            bindString(0, name.name)
+            bindLong(1, number)
+            bindString(2, team?.let { it.name })
+            bindString(3, playerAdapter.shootsAdapter.encode(shoots))
           }
       driver.executeQuery(-452007404, """
           |SELECT *
@@ -247,7 +247,7 @@ public class PlayerQueries(
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
-      bindString(1, team?.let { it.name })
+      bindString(0, team?.let { it.name })
     }
 
     public override fun toString(): String = "Player.sq:playersForTeam"
@@ -273,7 +273,7 @@ public class PlayerQueries(
           |WHERE number IN $numberIndexes
           """.trimMargin(), mapper, number.size) {
             number.forEachIndexed { index, number_ ->
-              bindLong(index + 1, number_)
+              bindLong(index, number_)
             }
           }
     }

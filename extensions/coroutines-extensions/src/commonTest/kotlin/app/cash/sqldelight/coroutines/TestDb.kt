@@ -65,8 +65,8 @@ class TestDb(
       |""".trimMargin(),
       2
     ) {
-      bindString(1, employee.username)
-      bindString(2, employee.name)
+      bindString(0, employee.username)
+      bindString(1, employee.name)
     }
     notify(TABLE_EMPLOYEE)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
@@ -91,8 +91,8 @@ class TestDb(
       |""".trimMargin(),
       2
     ) {
-      bindLong(1, employeeId)
-      bindLong(2, managerId)
+      bindLong(0, employeeId)
+      bindLong(1, managerId)
     }
     notify(TABLE_MANAGER)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection

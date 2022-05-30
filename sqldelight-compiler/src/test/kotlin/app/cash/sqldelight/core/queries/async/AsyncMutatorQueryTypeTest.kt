@@ -36,8 +36,8 @@ class AsyncMutatorQueryTypeTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }.await()
       |  notifyQueries(1642410240) { emit ->
       |    emit("data")
@@ -78,8 +78,8 @@ class AsyncMutatorQueryTypeTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }.await()
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
@@ -125,8 +125,8 @@ class AsyncMutatorQueryTypeTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(1, id?.let { data_Adapter.idAdapter.encode(it) })
-      |        bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
+      |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }.await()
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")

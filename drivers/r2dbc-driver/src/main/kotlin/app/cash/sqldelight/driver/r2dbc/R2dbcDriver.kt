@@ -86,49 +86,49 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
 open class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
-      statement.bindNull(index - 1, ByteArray::class.java)
+      statement.bindNull(index, ByteArray::class.java)
     } else {
-      statement.bind(index - 1, bytes)
+      statement.bind(index, bytes)
     }
   }
 
   override fun bindLong(index: Int, long: Long?) {
     if (long == null) {
-      statement.bindNull(index - 1, Long::class.java)
+      statement.bindNull(index, Long::class.java)
     } else {
-      statement.bind(index - 1, long)
+      statement.bind(index, long)
     }
   }
 
   override fun bindDouble(index: Int, double: Double?) {
     if (double == null) {
-      statement.bindNull(index - 1, Double::class.java)
+      statement.bindNull(index, Double::class.java)
     } else {
-      statement.bind(index - 1, double)
+      statement.bind(index, double)
     }
   }
 
   override fun bindString(index: Int, string: String?) {
     if (string == null) {
-      statement.bindNull(index - 1, String::class.java)
+      statement.bindNull(index, String::class.java)
     } else {
-      statement.bind(index - 1, string)
+      statement.bind(index, string)
     }
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     if (boolean == null) {
-      statement.bindNull(index - 1, Boolean::class.java)
+      statement.bindNull(index, Boolean::class.java)
     } else {
-      statement.bind(index - 1, boolean)
+      statement.bind(index, boolean)
     }
   }
 
   fun bindObject(index: Int, any: Any?) {
     if (any == null) {
-      statement.bindNull(index - 1, Any::class.java)
+      statement.bindNull(index, Any::class.java)
     } else {
-      statement.bind(index - 1, any)
+      statement.bind(index, any)
     }
   }
 }

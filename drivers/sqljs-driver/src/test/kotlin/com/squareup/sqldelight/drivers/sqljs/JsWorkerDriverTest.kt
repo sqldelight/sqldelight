@@ -79,8 +79,8 @@ class JsWorkerDriverTest {
     }
 
     insert {
-      bindLong(1, 1)
-      bindString(2, "Alec")
+      bindLong(0, 1)
+      bindString(1, "Alec")
     }
 
     query {
@@ -97,8 +97,8 @@ class JsWorkerDriverTest {
     }
 
     insert {
-      bindLong(1, 2)
-      bindString(2, "Jake")
+      bindLong(0, 2)
+      bindString(1, "Jake")
     }
     assertEquals(1, changes { it.next(); it.getLong(0) })
 
@@ -131,13 +131,13 @@ class JsWorkerDriverTest {
     }
 
     insert {
-      bindLong(1, 1)
-      bindString(2, "Alec")
+      bindLong(0, 1)
+      bindString(1, "Alec")
     }
     assertEquals(1, changes { it.next(); it.getLong(0) })
     insert {
-      bindLong(1, 2)
-      bindString(2, "Jake")
+      bindLong(0, 2)
+      bindString(1, "Jake")
     }
     assertEquals(1, changes { it.next(); it.getLong(0) })
 
@@ -146,7 +146,7 @@ class JsWorkerDriverTest {
     }
     query(
       binders = {
-        bindString(1, "Jake")
+        bindString(0, "Jake")
       },
       mapper = {
         assertTrue(it.next())
@@ -158,7 +158,7 @@ class JsWorkerDriverTest {
     // Second time running the query is fine
     query(
       binders = {
-        bindString(1, "Jake")
+        bindString(0, "Jake")
       },
       mapper = {
         assertTrue(it.next())
@@ -179,11 +179,11 @@ class JsWorkerDriverTest {
     }
 
     val inserted = insert {
-      bindLong(1, 1)
-      bindLong(2, null)
-      bindString(3, null)
-      bindBytes(4, null)
-      bindDouble(5, null)
+      bindLong(0, 1)
+      bindLong(1, null)
+      bindString(2, null)
+      bindBytes(3, null)
+      bindDouble(4, null)
     }
 
     val mapper: (SqlCursor) -> Unit = {
@@ -205,11 +205,11 @@ class JsWorkerDriverTest {
     }
 
     insert {
-      bindLong(1, 1)
-      bindLong(2, Long.MAX_VALUE)
-      bindString(3, "Hello")
-      bindBytes(4, ByteArray(5) { it.toByte() })
-      bindDouble(5, Float.MAX_VALUE.toDouble())
+      bindLong(0, 1)
+      bindLong(1, Long.MAX_VALUE)
+      bindString(2, "Hello")
+      bindBytes(3, ByteArray(5) { it.toByte() })
+      bindDouble(4, Float.MAX_VALUE.toDouble())
     }
 
     val mapper: (SqlCursor) -> Unit = {

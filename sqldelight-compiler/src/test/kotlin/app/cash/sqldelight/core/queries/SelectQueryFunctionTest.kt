@@ -307,10 +307,10 @@ class SelectQueryFunctionTest {
       |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |        ""${'"'}.trimMargin(), mapper, good.size + bad.size) {
       |          good.forEachIndexed { index, good_ ->
-      |            bindLong(index + 1, good_)
+      |            bindLong(index, good_)
       |          }
       |          bad.forEachIndexed { index, bad_ ->
-      |            bindLong(index + good.size + 1, bad_)
+      |            bindLong(index + good.size, bad_)
       |          }
       |        }
       |  }
@@ -391,8 +391,8 @@ class SelectQueryFunctionTest {
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
+      |    bindString(0, name)
       |    bindString(1, name)
-      |    bindString(2, name)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"
