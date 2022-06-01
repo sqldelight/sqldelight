@@ -244,7 +244,7 @@ class MigrationTest {
       |    public override val version: Int
       |      get() = 2
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test (
       |          |  value TEXT NOT NULL,
@@ -264,13 +264,14 @@ class MigrationTest {
       |          |INSERT INTO test VALUES ("1", "2");
       |          |END
       |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Value(Unit)
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): Unit {
+      |    ): QueryResult<Unit> {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
       |        driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
@@ -286,6 +287,7 @@ class MigrationTest {
       |            |SELECT *
       |            |FROM test
       |            ""${'"'}.trimMargin(), 0)
+      |        return QueryResult.Value(Unit)
       |      }
       |    }
       |  }

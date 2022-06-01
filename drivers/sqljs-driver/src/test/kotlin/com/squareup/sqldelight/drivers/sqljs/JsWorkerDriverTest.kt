@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.drivers.sqljs
 
+import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitQuery
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
@@ -61,7 +62,7 @@ class JsWorkerDriverTest {
   fun insert_can_run_multiple_times() = runTest { driver ->
 
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.await(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
 
     suspend fun query(mapper: (SqlCursor) -> Unit) {
@@ -121,7 +122,7 @@ class JsWorkerDriverTest {
   fun query_can_run_multiple_times() = runTest { driver ->
 
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.await(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
 
     suspend fun changes(mapper: (SqlCursor) -> Long?): Long? {

@@ -24,12 +24,12 @@ private fun <T> jsObject(block: T.() -> Unit): T {
   return o
 }
 
-fun initAsyncSqlDriver(
+suspend fun initAsyncSqlDriver(
   workerPath: String = "/worker.sql-wasm.js",
   schema: SqlSchema? = null
 ): SqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
 
-fun SqlDriver.withSchema(schema: SqlSchema? = null): SqlDriver = this.also { schema?.create(it) }
+suspend fun SqlDriver.withSchema(schema: SqlSchema? = null): SqlDriver = this.also { schema?.create(it)?.await() }
 
 class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
   private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
