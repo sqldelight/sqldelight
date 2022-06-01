@@ -25,7 +25,7 @@ kotlin {
   }
 
   sourceSets["main"].dependencies {
-    api project(':runtime:runtime')
+    api project(':runtime')
     implementation deps.kotlin.coroutines.core
   }
   sourceSets["test"].dependencies {

@@ -14,7 +14,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime:runtime')
+        api project(':runtime')
         api deps.kotlin.coroutines.core
       }
     }

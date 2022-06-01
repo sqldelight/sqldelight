@@ -12,7 +12,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        implementation project(':runtime:runtime')
+        implementation project(':runtime')
         api deps.kotlin.coroutines.core
       }
     }
