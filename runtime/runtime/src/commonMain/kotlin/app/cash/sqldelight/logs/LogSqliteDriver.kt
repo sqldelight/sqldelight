@@ -17,6 +17,7 @@ package app.cash.sqldelight.logs
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -35,7 +36,7 @@ class LogSqliteDriver(
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): Long {
+  ): QueryResult<Long> {
     logger("EXECUTE\n $sql")
     logParameters(binders)
     return sqlDriver.execute(identifier, sql, parameters, binders)
@@ -47,7 +48,7 @@ class LogSqliteDriver(
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): R {
+  ): QueryResult<R> {
     logger("QUERY\n $sql")
     logParameters(binders)
     return sqlDriver.executeQuery(identifier, sql, mapper, parameters, binders)

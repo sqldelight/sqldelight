@@ -27,12 +27,12 @@ interface SqlSchema {
   /**
    * Use [driver] to create the schema from scratch. Assumes no existing database state.
    */
-  fun create(driver: SqlDriver)
+  fun create(driver: SqlDriver): QueryResult<Unit>
 
   /**
    * Use [driver] to migrate from schema [oldVersion] to [newVersion].
    */
-  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int)
+  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int): QueryResult<Unit>
 }
 
 /**

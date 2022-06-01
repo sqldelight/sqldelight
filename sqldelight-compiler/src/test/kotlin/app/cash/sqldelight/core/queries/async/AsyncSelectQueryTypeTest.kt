@@ -37,7 +37,7 @@ class AsyncSelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.async.AsyncExecutableQuery<T> = app.cash.sqldelight.async.AsyncQuery(${query.id}, driver, "Test.sq", "insertReturning", ""${'"'}
+      |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "insertReturning", ""${'"'}
       ||INSERT INTO data
       ||VALUES ('sup', 'dude')
       ||RETURNING *
@@ -88,7 +88,7 @@ class AsyncSelectQueryTypeTest {
       |    firstname: kotlin.String,
       |    lastname: kotlin.String,
       |  ) -> T,
-      |): app.cash.sqldelight.async.AsyncExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
+      |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.r2dbc.R2dbcCursor)
       |  mapper(
       |    cursor.getLong(0)!!.toInt(),
@@ -123,23 +123,23 @@ class AsyncSelectQueryTypeTest {
       """
       |private inner class SelectForIdQuery<out T : kotlin.Any>(
       |  public val id: kotlin.Long,
-      |  mapper: (app.cash.sqldelight.async.db.AsyncSqlCursor) -> T,
-      |) : app.cash.sqldelight.async.AsyncQuery<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.async.AsyncQuery.Listener): kotlin.Unit {
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
       |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.async.AsyncQuery.Listener): kotlin.Unit {
+      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override suspend fun <R> execute(mapper: (app.cash.sqldelight.async.db.AsyncSqlCursor) -> R): R = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override suspend fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): R = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
       |    bindLong(1, id)
-      |  }
+      |  }.await()
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}

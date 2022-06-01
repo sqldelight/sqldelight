@@ -1,9 +1,10 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import app.cash.sqldelight.async.AsyncTransacter
-import app.cash.sqldelight.async.AsyncTransacterImpl
-import app.cash.sqldelight.async.db.AsyncSqlDriver
-import app.cash.sqldelight.async.db.AsyncSqlSchema
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,20 +13,15 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class JsWorkerTransacterTest {
-  private val schema = object : AsyncSqlSchema {
+  private val schema = object : SqlSchema {
     override val version = 1
-    override suspend fun create(driver: AsyncSqlDriver) {}
-    override suspend fun migrate(
-      driver: AsyncSqlDriver,
-      oldVersion: Int,
-      newVersion: Int
-    ) {
-    }
+    override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.Value(Unit)
+    override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int): QueryResult<Unit> = QueryResult.Value(Unit)
   }
 
-  private fun runTest(block: suspend (AsyncSqlDriver, AsyncTransacter) -> Unit) = kotlinx.coroutines.test.runTest {
+  private fun runTest(block: suspend (SqlDriver, Transacter) -> Unit) = kotlinx.coroutines.test.runTest {
     val driver = initAsyncSqlDriver(schema = schema)
-    val transacter = object : AsyncTransacterImpl(driver) {}
+    val transacter = object : TransacterImpl(driver) {}
     block(driver, transacter)
 
     driver.close()

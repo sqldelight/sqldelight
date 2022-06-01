@@ -2,6 +2,7 @@ package app.cash.sqldelight.rx2
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
@@ -31,7 +32,7 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
         return db.executeQuery(null, query, mapper, 0)
       }
 
@@ -66,7 +67,7 @@ class TestDb(
       bindString(2, employee.name)
     }
     notify(TABLE_EMPLOYEE)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0)
+    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0).value
   }
 
   fun manager(
@@ -85,7 +86,7 @@ class TestDb(
       bindLong(2, managerId)
     }
     notify(TABLE_MANAGER)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0)
+    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0).value
   }
 
   companion object {

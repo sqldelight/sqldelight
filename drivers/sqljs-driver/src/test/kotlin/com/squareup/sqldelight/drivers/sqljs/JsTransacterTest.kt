@@ -2,6 +2,7 @@ package com.squareup.sqldelight.drivers.sqljs
 
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
@@ -18,13 +19,12 @@ class JsTransacterTest {
 
   private val schema = object : SqlSchema {
     override val version = 1
-    override fun create(driver: SqlDriver) {}
+    override fun create(driver: SqlDriver) = QueryResult.Value(Unit)
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) {
-    }
+    ) = QueryResult.Value(Unit)
   }
 
   private lateinit var transacterPromise: Promise<Pair<SqlDriver, Transacter>>

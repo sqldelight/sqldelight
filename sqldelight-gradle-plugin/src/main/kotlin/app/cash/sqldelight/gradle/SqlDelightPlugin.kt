@@ -82,11 +82,10 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
 
-    val needsSyncRuntime = extension.databases.any { !it.generateAsync }
     val needsAsyncRuntime = extension.databases.any { it.generateAsync }
     val runtimeDependencies = mutableListOf<Dependency>().apply {
-      if (needsSyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
-      if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:runtime-async:$VERSION"))
+      add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
+      if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION"))
     }
 
     // Add the runtime dependency.

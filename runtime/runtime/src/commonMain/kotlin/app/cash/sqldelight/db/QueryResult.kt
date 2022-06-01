@@ -1,32 +1,26 @@
 package app.cash.sqldelight.db
 
-import kotlin.coroutines.suspendCoroutine
-
 sealed interface QueryResult<T> {
-  val value: T get() = throw IllegalStateException("""
-      The driver used with SQLDelight is asyncronous, so SQLDelight should be configured for
-      asyncronous usage:
-      
+  val value: T get() = throw IllegalStateException(
+    """
+      The driver used with SQLDelight is asynchronous, so SQLDelight should be configured for
+      asynchronous usage:
+
       sqldelight {
         MyDatabase {
-          asyncronous = true
+          generateAsync = true
         }
       }
-    """.trimIndent())
+    """.trimIndent()
+  )
 
-  suspend fun get(): T
+  suspend fun await(): T
 
-  data class Value<T>(override val value: T): QueryResult<T> {
-    override suspend fun get() = value
+  data class Value<T>(override val value: T) : QueryResult<T> {
+    override suspend fun await() = value
   }
 
-  class AsyncronousValue<T> : QueryResult<T> {
-    fun set(value: T) {
-      TODO()
-    }
-
-    override suspend fun get() = suspendCoroutine<T> { continuation ->
-      TODO()
-    }
+  class AsyncValue<T>(private inline val getter: suspend () -> T) : QueryResult<T> {
+    override suspend fun await() = getter()
   }
 }

@@ -17,16 +17,15 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.lang.ASYNC_DATABASE_SCHEMA_TYPE
-import app.cash.sqldelight.core.lang.ASYNC_DRIVER_TYPE
-import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_IMPL_TYPE
-import app.cash.sqldelight.core.lang.ASYNC_TRANSACTER_TYPE
+import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
+import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
+import app.cash.sqldelight.core.lang.VALUE_RESULT_TYPE
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
@@ -42,10 +41,11 @@ import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.KModifier.SUSPEND
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 
 internal class DatabaseGenerator(
   module: Module,
@@ -61,7 +61,7 @@ internal class DatabaseGenerator(
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
-      .addSuperinterface(if (generateAsync) ASYNC_TRANSACTER_TYPE else TRANSACTER_TYPE)
+      .addSuperinterface(TRANSACTER_TYPE)
 
     fileIndex.dependencies.forEach {
       typeSpec.addSuperinterface(ClassName(it.packageName, it.className))
@@ -97,7 +97,7 @@ internal class DatabaseGenerator(
       .addType(
         TypeSpec.companionObjectBuilder()
           .addProperty(
-            PropertySpec.builder("Schema", if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
+            PropertySpec.builder("Schema", DATABASE_SCHEMA_TYPE)
               .getter(
                 FunSpec.getterBuilder()
                   .addStatement("return %T::class.schema", type)
@@ -132,11 +132,10 @@ internal class DatabaseGenerator(
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
-      .superclass(if (generateAsync) ASYNC_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
+      .superclass(TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
       .addSuperclassConstructorParameter(DRIVER_NAME)
 
-    val genericDriverType = if (generateAsync) ASYNC_DRIVER_TYPE else DRIVER_TYPE
     val dialectDriverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val constructor = FunSpec.constructorBuilder()
@@ -150,16 +149,16 @@ internal class DatabaseGenerator(
     // fun create(driver: SqlDriver)
     val createFunction = FunSpec.builder("create")
       .addModifiers(OVERRIDE)
-      .apply { if (generateAsync) addModifiers(SUSPEND) }
-      .addParameter(DRIVER_NAME, genericDriverType)
+      .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+      .addParameter(DRIVER_NAME, DRIVER_TYPE)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
     val migrateFunction = FunSpec.builder("migrate")
       .addModifiers(OVERRIDE)
-      .apply { if (generateAsync) addModifiers(SUSPEND) }
-      .addParameter(DRIVER_NAME, genericDriverType)
+      .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+      .addParameter(DRIVER_NAME, DRIVER_TYPE)
       .addParameter(oldVersion)
       .addParameter(newVersion)
     forAdapters {
@@ -186,12 +185,18 @@ internal class DatabaseGenerator(
         )
       }
 
+    if (generateAsync) {
+      createFunction.beginControlFlow("return %T", ASYNC_RESULT_TYPE)
+      migrateFunction.beginControlFlow("return %T", ASYNC_RESULT_TYPE)
+    }
+
     if (!fileIndex.deriveSchemaFromMigrations) {
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.queryFiles() }
         .sortedBy { it.name }
         .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
-          createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", sqlText.toCodeLiteral())
+          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+          createFunction.addStatement(statement, sqlText.toCodeLiteral())
         }
     } else {
       val orderedMigrations = sourceFolders.flatMap { it.migrationFiles() }
@@ -201,7 +206,8 @@ internal class DatabaseGenerator(
       orderedMigrations.flatMap { it.sqlStatements() }
         .filter { it.isSchema() }
         .forEach {
-          createFunction.addStatement("$DRIVER_NAME.execute(null, %L, 0)", it.rawSqlText().toCodeLiteral())
+          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+          createFunction.addStatement(statement, it.rawSqlText().toCodeLiteral())
         }
     }
 
@@ -225,10 +231,18 @@ internal class DatabaseGenerator(
         migrateFunction.endControlFlow()
       }
 
+    if (!generateAsync) {
+      createFunction.addStatement("return %T(Unit)", VALUE_RESULT_TYPE)
+      migrateFunction.addStatement("return %T(Unit)", VALUE_RESULT_TYPE)
+    } else {
+      createFunction.endControlFlow()
+      migrateFunction.endControlFlow()
+    }
+
     return typeSpec
       .addType(
         TypeSpec.objectBuilder("Schema")
-          .addSuperinterface(if (generateAsync) ASYNC_DATABASE_SCHEMA_TYPE else DATABASE_SCHEMA_TYPE)
+          .addSuperinterface(DATABASE_SCHEMA_TYPE)
           .addFunction(createFunction.build())
           .addFunction(migrateFunction.build())
           .addProperty(

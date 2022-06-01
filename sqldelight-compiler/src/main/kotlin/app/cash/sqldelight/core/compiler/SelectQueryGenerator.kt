@@ -18,10 +18,6 @@ package app.cash.sqldelight.core.compiler
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
-import app.cash.sqldelight.core.lang.ASYNC_CURSOR_TYPE
-import app.cash.sqldelight.core.lang.ASYNC_EXECUTABLE_QUERY_TYPE
-import app.cash.sqldelight.core.lang.ASYNC_QUERY_LISTENER_TYPE
-import app.cash.sqldelight.core.lang.ASYNC_QUERY_TYPE
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
@@ -206,8 +202,7 @@ class SelectQueryGenerator(
       .addStatement("·{ $CURSOR_NAME ->")
       .indent()
 
-    val defaultCursorType = if (generateAsync) ASYNC_CURSOR_TYPE else CURSOR_TYPE
-    if (defaultCursorType != dialectCursorType) {
+    if (CURSOR_TYPE != dialectCursorType) {
       mapperLambda.addStatement("check(cursor is %T)", dialectCursorType)
     }
 
@@ -232,21 +227,19 @@ class SelectQueryGenerator(
     }
     mapperLambda.unindent().add("}\n")
 
-    val queryType = if (generateAsync) ASYNC_QUERY_TYPE else QUERY_TYPE
-
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       if (query.tablesObserved != null) {
         function.addCode(
           "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
-          queryType, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
+          QUERY_TYPE, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
           query.statement.rawSqlText(), mapperLambda.build()
         )
       } else {
         function.addCode(
           "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
-          queryType, query.statement.containingFile.name, query.name,
+          QUERY_TYPE, query.statement.containingFile.name, query.name,
           query.statement.rawSqlText(), mapperLambda.build()
         )
       }
@@ -273,16 +266,9 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() = when {
-    generateAsync -> {
-      if (tablesObserved == null) ASYNC_EXECUTABLE_QUERY_TYPE
-      else ASYNC_QUERY_TYPE
-    }
-    else -> {
-      if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
-      else QUERY_TYPE
-    }
-  }
+  private fun NamedQuery.supertype() =
+    if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
+    else QUERY_TYPE
 
   /**
    * The private query subtype for this specific query.
@@ -300,9 +286,6 @@ class SelectQueryGenerator(
   fun querySubtype(): TypeSpec {
     val queryType = TypeSpec.classBuilder(query.customQuerySubtype)
       .addModifiers(PRIVATE, INNER)
-    val cursorType = if (generateAsync) ASYNC_CURSOR_TYPE else CURSOR_TYPE
-    val queryListenerType = if (generateAsync) ASYNC_QUERY_LISTENER_TYPE else QUERY_LISTENER_TYPE
-
     val constructor = FunSpec.constructorBuilder()
 
     // The custom return type variable:
@@ -319,7 +302,7 @@ class SelectQueryGenerator(
       .addModifiers(OVERRIDE)
       .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addTypeVariable(genericResultType)
-      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(cursorType), returnType = genericResultType))
+      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(CURSOR_TYPE), returnType = genericResultType))
       .returns(genericResultType)
       .addCode(executeBlock())
 
@@ -339,7 +322,7 @@ class SelectQueryGenerator(
     constructor.addParameter(
       MAPPER_NAME,
       LambdaTypeName.get(
-        parameters = arrayOf(cursorType),
+        parameters = arrayOf(CURSOR_TYPE),
         returnType = returnType
       )
     )
@@ -350,14 +333,14 @@ class SelectQueryGenerator(
         .addFunction(
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
-            .addParameter("listener", queryListenerType)
+            .addParameter("listener", QUERY_LISTENER_TYPE)
             .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
-            .addParameter("listener", queryListenerType)
+            .addParameter("listener", QUERY_LISTENER_TYPE)
             .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
             .build()
         )

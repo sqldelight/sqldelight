@@ -1,11 +1,12 @@
 package app.cash.sqldelight.driver.sqljs.worker
 
-import app.cash.sqldelight.async.AsyncQuery
-import app.cash.sqldelight.async.AsyncTransacter
-import app.cash.sqldelight.async.db.AsyncSqlCursor
-import app.cash.sqldelight.async.db.AsyncSqlDriver
-import app.cash.sqldelight.async.db.AsyncSqlPreparedStatement
-import app.cash.sqldelight.async.db.AsyncSqlSchema
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.QueryResults
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
@@ -23,19 +24,19 @@ private fun <T> jsObject(block: T.() -> Unit): T {
   return o
 }
 
-suspend fun initAsyncSqlDriver(
+fun initAsyncSqlDriver(
   workerPath: String = "/worker.sql-wasm.js",
-  schema: AsyncSqlSchema? = null
-): AsyncSqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
+  schema: SqlSchema? = null
+): SqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
 
-suspend fun AsyncSqlDriver.withSchema(schema: AsyncSqlSchema? = null): AsyncSqlDriver = this.also { schema?.create(it) }
+fun SqlDriver.withSchema(schema: SqlSchema? = null): SqlDriver = this.also { schema?.create(it) }
 
-class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
-  private val listeners = mutableMapOf<String, MutableSet<AsyncQuery.Listener>>()
+class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
+  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
   private var messageCounter = 0
-  private var transaction: AsyncTransacter.Transaction? = null
+  private var transaction: Transacter.Transaction? = null
 
-  override suspend fun <R> executeQuery(identifier: Int?, sql: String, mapper: (AsyncSqlCursor) -> R, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): R {
+  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (SqlCursor) -> R, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<R> {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
@@ -47,18 +48,20 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
       this.params = bound.parameters.toTypedArray()
     }
 
-    val data = worker.sendMessage(messageId, message).unsafeCast<WorkerData>()
+    return QueryResult.AsyncValue {
+      val data = worker.sendMessage(messageId, message).unsafeCast<WorkerData>()
 
-    val table = if (data.results.isNotEmpty()) {
-      data.results[0]
-    } else {
-      jsObject { values = arrayOf() }
+      val table = if (data.results.isNotEmpty()) {
+        data.results[0]
+      } else {
+        jsObject { values = arrayOf() }
+      }
+
+      return@AsyncValue mapper(JsWorkerSqlCursor(table))
     }
-
-    return mapper(JsWorkerSqlCursor(table))
   }
 
-  override suspend fun execute(identifier: Int?, sql: String, parameters: Int, binders: (AsyncSqlPreparedStatement.() -> Unit)?): Long {
+  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<Long> {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
@@ -70,17 +73,19 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
       this.params = bound.parameters.toTypedArray()
     }
 
-    worker.sendMessage(messageId, message)
-    return 0
+    return QueryResult.AsyncValue {
+      worker.sendMessage(messageId, message)
+      return@AsyncValue 0
+    }
   }
 
-  override fun addListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
+  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
       listeners.getOrPut(it) { mutableSetOf() }.add(listener)
     }
   }
 
-  override fun removeListener(listener: AsyncQuery.Listener, queryKeys: Array<String>) {
+  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
       listeners[it]?.remove(listener)
     }
@@ -89,36 +94,22 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) {
     queryKeys.flatMap { listeners[it].orEmpty() }
       .distinct()
-      .forEach(AsyncQuery.Listener::queryResultsChanged)
+      .forEach(Query.Listener::queryResultsChanged)
   }
 
-  override suspend fun close() = worker.terminate()
+  override fun close() = worker.terminate()
 
-  override suspend fun newTransaction(): AsyncTransacter.Transaction {
-    val enclosing = transaction
-    val transaction = Transaction(enclosing)
-    this.transaction = transaction
-    if (enclosing == null) {
-      worker.run("BEGIN TRANSACTION")
-    }
-
-    return transaction
+  override fun newTransaction(): Transacter.Transaction {
+    throw NotImplementedError("Begin a transaction manually using execute()")
   }
 
-  override fun currentTransaction(): AsyncTransacter.Transaction? = transaction
+  override fun currentTransaction(): Transacter.Transaction? = transaction
 
   private inner class Transaction(
-    override val enclosingTransaction: AsyncTransacter.Transaction?
-  ) : AsyncTransacter.Transaction() {
-    override suspend fun endTransaction(successful: Boolean) {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          worker.run("END TRANSACTION")
-        } else {
-          worker.run("ROLLBACK TRANSACTION")
-        }
-      }
-      transaction = enclosingTransaction
+    override val enclosingTransaction: Transacter.Transaction?
+  ) : Transacter.Transaction() {
+    override fun endTransaction(successful: Boolean) {
+      throw NotImplementedError("End a transaction manually using execute()")
     }
   }
 
@@ -167,7 +158,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : AsyncSqlDriver {
   }
 }
 
-class JsWorkerSqlCursor(private val table: QueryResults) : AsyncSqlCursor {
+class JsWorkerSqlCursor(private val table: QueryResults) : SqlCursor {
   private var currentRow = -1
 
   override fun next(): Boolean = ++currentRow < table.values.size
@@ -187,7 +178,7 @@ class JsWorkerSqlCursor(private val table: QueryResults) : AsyncSqlCursor {
   }
 }
 
-internal class JsWorkerSqlPreparedStatement : AsyncSqlPreparedStatement {
+internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
 
   val parameters = mutableListOf<Any?>()
 

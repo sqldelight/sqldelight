@@ -12,6 +12,7 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -140,7 +141,7 @@ class AndroidSqliteDriver private constructor(
     createStatement: () -> AndroidStatement,
     binders: (SqlPreparedStatement.() -> Unit)?,
     result: AndroidStatement.() -> T
-  ): T {
+  ): QueryResult<T> {
     var statement: AndroidStatement? = null
     if (identifier != null) {
       statement = statements.remove(identifier)
@@ -150,7 +151,7 @@ class AndroidSqliteDriver private constructor(
     }
     try {
       if (binders != null) { statement.binders() }
-      return statement.result()
+      return QueryResult.Value(statement.result())
     } finally {
       if (identifier != null) {
         statements.put(identifier, statement)?.close()
@@ -165,7 +166,7 @@ class AndroidSqliteDriver private constructor(
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): Long = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, { execute() })
+  ): QueryResult<Long> = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, { execute() })
 
   override fun <R> executeQuery(
     identifier: Int?,

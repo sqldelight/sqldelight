@@ -3,6 +3,7 @@ package app.cash.sqldelight.driver.jdbc
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -117,14 +118,16 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): Long {
+  ): QueryResult<Long> {
     val (connection, onClose) = connectionAndClose()
     try {
-      return connection.prepareStatement(sql).use { jdbcStatement ->
-        JdbcPreparedStatement(jdbcStatement)
-          .apply { if (binders != null) this.binders() }
-          .execute()
-      }
+      return QueryResult.Value(
+        connection.prepareStatement(sql).use { jdbcStatement ->
+          JdbcPreparedStatement(jdbcStatement)
+            .apply { if (binders != null) this.binders() }
+            .execute()
+        }
+      )
     } finally {
       onClose()
     }
@@ -136,12 +139,14 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): R {
+  ): QueryResult<R> {
     val (connection, onClose) = connectionAndClose()
     try {
-      return JdbcPreparedStatement(connection.prepareStatement(sql))
-        .apply { if (binders != null) this.binders() }
-        .executeQuery(mapper)
+      return QueryResult.Value(
+        JdbcPreparedStatement(connection.prepareStatement(sql))
+          .apply { if (binders != null) this.binders() }
+          .executeQuery(mapper)
+      )
     } finally {
       onClose()
     }

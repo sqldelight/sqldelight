@@ -13,7 +13,6 @@ kotlin {
     commonMain {
       dependencies {
         implementation project(':runtime:runtime')
-        implementation project(':runtime:runtime-async')
         api deps.kotlin.coroutines.core
       }
     }
