@@ -16,6 +16,7 @@
 
 package app.cash.sqldelight.coroutines
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
@@ -24,12 +25,12 @@ import co.touchlab.sqliter.DatabaseFileContext
 private fun defaultSchema(): SqlSchema {
   return object : SqlSchema {
     override val version: Int = 1
-    override fun create(driver: SqlDriver) {}
+    override fun create(driver: SqlDriver) = QueryResult.Unit
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) {}
+    ) = QueryResult.Unit
   }
 }
 
