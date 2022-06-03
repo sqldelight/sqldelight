@@ -3,6 +3,7 @@ package com.squareup.sqldelight.logs
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter.Transaction
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -93,8 +94,8 @@ class FakeSqlDriver : SqlDriver {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): R {
-    return mapper(FakeSqlCursor())
+  ): QueryResult<R> {
+    return QueryResult.Value(mapper(FakeSqlCursor()))
   }
 
   override fun execute(
@@ -102,8 +103,8 @@ class FakeSqlDriver : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): Long {
-    return 0
+  ): QueryResult<Long> {
+    return QueryResult.Value(0)
   }
 
   override fun newTransaction(): Transaction {
