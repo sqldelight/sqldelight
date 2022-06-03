@@ -15,8 +15,8 @@ import kotlin.test.fail
 class JsWorkerTransacterTest {
   private val schema = object : SqlSchema {
     override val version = 1
-    override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.Value(Unit)
-    override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int): QueryResult<Unit> = QueryResult.Value(Unit)
+    override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.Unit
+    override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int): QueryResult<Unit> = QueryResult.Unit
   }
 
   private fun runTest(block: suspend (SqlDriver, Transacter) -> Unit) = kotlinx.coroutines.test.runTest {

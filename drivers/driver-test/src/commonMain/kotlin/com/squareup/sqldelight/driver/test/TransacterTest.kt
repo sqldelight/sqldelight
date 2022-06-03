@@ -20,12 +20,12 @@ abstract class TransacterTest {
   @BeforeTest fun setup() {
     val driver = setupDatabase(object : SqlSchema {
       override val version = 1
-      override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.Value(Unit)
+      override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.Unit
       override fun migrate(
         driver: SqlDriver,
         oldVersion: Int,
         newVersion: Int
-      ): QueryResult<Unit> = QueryResult.Value(Unit)
+      ): QueryResult<Unit> = QueryResult.Unit
     })
     transacter = object : TransacterImpl(driver) {}
     this.driver = driver

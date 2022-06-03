@@ -23,4 +23,16 @@ sealed interface QueryResult<T> {
   class AsyncValue<T>(private inline val getter: suspend () -> T) : QueryResult<T> {
     override suspend fun await() = getter()
   }
+
+  /**
+   * A [QueryResult] representation of a Kotlin [Unit].
+   *
+   * Equivalent to `QueryResult.Value(Unit)`.
+   */
+  object Unit : QueryResult<kotlin.Unit> {
+    override val value: kotlin.Unit = kotlin.Unit
+
+    override suspend fun await() {
+    }
+  }
 }

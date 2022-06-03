@@ -264,7 +264,7 @@ class MigrationTest {
       |          |INSERT INTO test VALUES ("1", "2");
       |          |END
       |          ""${'"'}.trimMargin(), 0)
-      |      return QueryResult.Value(Unit)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
@@ -287,7 +287,7 @@ class MigrationTest {
       |            |SELECT *
       |            |FROM test
       |            ""${'"'}.trimMargin(), 0)
-      |        return QueryResult.Value(Unit)
+      |        return QueryResult.Unit
       |      }
       |    }
       |  }

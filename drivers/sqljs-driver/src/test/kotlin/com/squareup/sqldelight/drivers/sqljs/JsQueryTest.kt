@@ -38,16 +38,16 @@ class JsQueryTest {
         """.trimIndent(),
         0
       )
-      return QueryResult.Value(Unit)
+      return QueryResult.Unit
     }
 
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ): QueryResult.Value<Unit> {
+    ): QueryResult<Unit> {
       // No-op.
-      return QueryResult.Value(Unit)
+      return QueryResult.Unit
     }
   }
 

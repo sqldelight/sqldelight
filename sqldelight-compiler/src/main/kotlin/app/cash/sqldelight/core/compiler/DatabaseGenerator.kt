@@ -25,7 +25,7 @@ import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
-import app.cash.sqldelight.core.lang.VALUE_RESULT_TYPE
+import app.cash.sqldelight.core.lang.UNIT_RESULT_TYPE
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
@@ -232,8 +232,8 @@ internal class DatabaseGenerator(
       }
 
     if (!generateAsync) {
-      createFunction.addStatement("return %T(Unit)", VALUE_RESULT_TYPE)
-      migrateFunction.addStatement("return %T(Unit)", VALUE_RESULT_TYPE)
+      createFunction.addStatement("return %T", UNIT_RESULT_TYPE)
+      migrateFunction.addStatement("return %T", UNIT_RESULT_TYPE)
     } else {
       createFunction.endControlFlow()
       migrateFunction.endControlFlow()

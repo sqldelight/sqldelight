@@ -14,6 +14,7 @@ internal val DATABASE_SCHEMA_TYPE = ClassName("app.cash.sqldelight.db", "SqlSche
 internal val QUERY_RESULT_TYPE = ClassName("app.cash.sqldelight.db", "QueryResult")
 internal val VALUE_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("Value")
 internal val ASYNC_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("AsyncValue")
+internal val UNIT_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("Unit")
 
 internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
 

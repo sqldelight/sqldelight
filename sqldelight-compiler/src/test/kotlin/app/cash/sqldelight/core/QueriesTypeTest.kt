@@ -95,14 +95,14 @@ class QueriesTypeTest {
       |          |  value TEXT
       |          |)
       |          ""${'"'}.trimMargin(), 0)
-      |      return QueryResult.Value(Unit)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -260,14 +260,14 @@ class QueriesTypeTest {
       |          |  value INTEGER NOT NULL
       |          |)
       |          ""${'"'}.trimMargin(), 0)
-      |      return QueryResult.Value(Unit)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -353,14 +353,14 @@ class QueriesTypeTest {
       |          |  value
       |          |)
       |          ""${'"'}.trimMargin(), 0)
-      |      return QueryResult.Value(Unit)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -504,14 +504,14 @@ class QueriesTypeTest {
       |          |  value TEXT
       |          |)
       |          ""${'"'}.trimMargin(), 0)
-      |      return QueryResult.Value(Unit)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()

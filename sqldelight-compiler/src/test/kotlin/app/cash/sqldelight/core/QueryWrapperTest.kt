@@ -70,14 +70,14 @@ class QueryWrapperTest {
       |          |INSERT INTO test_table
       |          |VALUES (1, 'test')
       |          ""${'"'}.trimMargin(), 0)
-      |      return QueryResult.Value(Unit)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -161,14 +161,14 @@ class QueryWrapperTest {
         |          |  value TEXT
         |          |)
         |          ""${'"'}.trimMargin(), 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -237,14 +237,14 @@ class QueryWrapperTest {
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
         |          ""${'"'}.trimMargin(), 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -334,14 +334,14 @@ class QueryWrapperTest {
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
         |          ""${'"'}.trimMargin(), 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -433,14 +433,14 @@ class QueryWrapperTest {
         |          |  parent2_id INTEGER REFERENCES child2(id)
         |          |)
         |          ""${'"'}.trimMargin(), 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -504,14 +504,14 @@ class QueryWrapperTest {
         |          |SELECT *
         |          |FROM A
         |          ""${'"'}.trimMargin(), 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -584,14 +584,14 @@ class QueryWrapperTest {
         |          |END
         |          ""${'"'}.trimMargin(), 0)
         |      driver.execute(null, "CREATE INDEX B ON test(value)", 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -672,7 +672,7 @@ class QueryWrapperTest {
         |          |  value3 REAL
         |          |)
         |          ""${'"'}.trimMargin(), 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
@@ -693,7 +693,7 @@ class QueryWrapperTest {
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
         |      }
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |  }
         |}
@@ -790,14 +790,14 @@ class QueryWrapperTest {
         |          |  ('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')
         |          ""${'"'}.trimMargin())
         |          }, 0)
-        |      return QueryResult.Value(Unit)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.Value(Unit)
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |

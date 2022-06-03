@@ -94,7 +94,7 @@ class SqlDriverMigrationCallbackTest {
 
   private fun fakeSchema() = object : SqlSchema {
     override val version: Int = 1
-    override fun create(driver: SqlDriver) = QueryResult.Value(Unit)
-    override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = QueryResult.Value(Unit)
+    override fun create(driver: SqlDriver) = QueryResult.Unit
+    override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = QueryResult.Unit
   }
 }

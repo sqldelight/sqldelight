@@ -45,7 +45,7 @@ class JsDriverTest {
             """.trimMargin(),
         0
       )
-      return QueryResult.Value(Unit)
+      return QueryResult.Unit
     }
 
     override fun migrate(
@@ -54,7 +54,7 @@ class JsDriverTest {
       newVersion: Int
     ): QueryResult<Unit> {
       // No-op.
-      return QueryResult.Value(Unit)
+      return QueryResult.Unit
     }
   }
 

@@ -67,14 +67,14 @@ abstract class LazyDriverBaseTest {
                 """.trimMargin(),
           0
         )
-        return QueryResult.Value(Unit)
+        return QueryResult.Unit
       }
 
       override fun migrate(
         driver: SqlDriver,
         oldVersion: Int,
         newVersion: Int
-      ) = QueryResult.Value(Unit)
+      ) = QueryResult.Unit
     }
   }
 

@@ -68,13 +68,13 @@ private class TestDatabaseImpl(
           |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
           |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
           """.trimMargin(), 0)
-      return QueryResult.Value(Unit)
+      return QueryResult.Unit
     }
 
     public override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int,
-    ): QueryResult<Unit> = QueryResult.Value(Unit)
+    ): QueryResult<Unit> = QueryResult.Unit
   }
 }

@@ -40,7 +40,7 @@ abstract class QueryTest {
             """.trimIndent(),
             0
           )
-          return QueryResult.Value(Unit)
+          return QueryResult.Unit
         }
 
         override fun migrate(
@@ -49,7 +49,7 @@ abstract class QueryTest {
           newVersion: Int
         ): QueryResult<Unit> {
           // No-op.
-          return QueryResult.Value(Unit)
+          return QueryResult.Unit
         }
       }
     )

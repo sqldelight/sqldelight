@@ -19,12 +19,12 @@ class JsTransacterTest {
 
   private val schema = object : SqlSchema {
     override val version = 1
-    override fun create(driver: SqlDriver) = QueryResult.Value(Unit)
+    override fun create(driver: SqlDriver) = QueryResult.Unit
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) = QueryResult.Value(Unit)
+    ) = QueryResult.Unit
   }
 
   private lateinit var transacterPromise: Promise<Pair<SqlDriver, Transacter>>

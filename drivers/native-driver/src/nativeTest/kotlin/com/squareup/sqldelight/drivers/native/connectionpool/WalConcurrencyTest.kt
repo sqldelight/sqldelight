@@ -2,6 +2,7 @@ package com.squareup.sqldelight.drivers.native.connectionpool
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.util.maybeFreeze
@@ -101,7 +102,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
 
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
         return driver.executeQuery(0, "SELECT * FROM test", mapper, 0, null)
       }
 
