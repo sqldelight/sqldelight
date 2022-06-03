@@ -3,6 +3,7 @@ package app.cash.sqldelight.driver.native
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.db.Closeable
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -52,9 +53,9 @@ sealed class ConnectionWrapper : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): Long = accessStatement(false, identifier, sql, binders) { statement ->
+  ): QueryResult<Long> = QueryResult.Value(accessStatement(false, identifier, sql, binders) { statement ->
     statement.executeUpdateDelete().toLong()
-  }
+  })
 
   final override fun <R> executeQuery(
     identifier: Int?,
@@ -62,9 +63,9 @@ sealed class ConnectionWrapper : SqlDriver {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): R = accessStatement(true, identifier, sql, binders) { statement ->
+  ): QueryResult<R> = QueryResult.Value(accessStatement(true, identifier, sql, binders) { statement ->
     mapper(SqliterSqlCursor(statement.query()))
-  }
+  })
 }
 
 /**
