@@ -53,9 +53,11 @@ sealed class ConnectionWrapper : SqlDriver {
     sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): QueryResult<Long> = QueryResult.Value(accessStatement(false, identifier, sql, binders) { statement ->
-    statement.executeUpdateDelete().toLong()
-  })
+  ): QueryResult<Long> = QueryResult.Value(
+    accessStatement(false, identifier, sql, binders) { statement ->
+      statement.executeUpdateDelete().toLong()
+    }
+  )
 
   final override fun <R> executeQuery(
     identifier: Int?,
@@ -63,9 +65,11 @@ sealed class ConnectionWrapper : SqlDriver {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): QueryResult<R> = QueryResult.Value(accessStatement(true, identifier, sql, binders) { statement ->
-    mapper(SqliterSqlCursor(statement.query()))
-  })
+  ): QueryResult<R> = QueryResult.Value(
+    accessStatement(true, identifier, sql, binders) { statement ->
+      mapper(SqliterSqlCursor(statement.query()))
+    }
+  )
 }
 
 /**
