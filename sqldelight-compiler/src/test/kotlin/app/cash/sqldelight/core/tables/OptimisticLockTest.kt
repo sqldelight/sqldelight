@@ -112,7 +112,7 @@ class OptimisticLockTest {
       |        bindLong(3, id.id.toLong())
       |        bindLong(4, version.version.toLong())
       |      }
-      |  if (result == 0L) throw app.cash.sqldelight.db.OptimisticLockException("UPDATE on test failed because optimistic lock version did not match")
+      |  if (result.value == 0L) throw app.cash.sqldelight.db.OptimisticLockException("UPDATE on test failed because optimistic lock version did not match")
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("test")
       |  }

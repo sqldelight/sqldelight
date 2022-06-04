@@ -277,8 +277,9 @@ abstract class QueryGenerator(
     if (query is NamedMutator.Update && optimisticLock != null) {
       result.addStatement(
         """
-        if (result == 0L) throw %T(%S)
+        if (result%L == 0L) throw %T(%S)
         """.trimIndent(),
+        if (generateAsync) ".await()" else ".value",
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
         "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
       )
