@@ -53,7 +53,7 @@ class DbHelper(
         check(cursor.next())
         return cursor.getLong(0)!!.toInt()
       }
-      return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, 0, null)
+      return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, 0, null).value
     }
     set(value) {
       driver.execute(null, "PRAGMA user_version = $value;", 0, null)
