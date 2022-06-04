@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import app.cash.sqldelight.async.coroutines.await
+import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitQuery
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
@@ -110,7 +111,7 @@ class JsWorkerDriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    driver.execute(5, "DELETE FROM test", 0)
+    driver.await(5, "DELETE FROM test", 0)
     assertEquals(2, changes { it.next(); it.getLong(0) })
 
     query {
@@ -141,7 +142,7 @@ class JsWorkerDriverTest {
     assertEquals(1, changes { it.next(); it.getLong(0) })
 
     suspend fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
-      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
+      driver.awaitQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
     query(
       binders = {
@@ -170,7 +171,7 @@ class JsWorkerDriverTest {
   @Test
   fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = runTest { driver ->
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
 
     suspend fun changes(mapper: (SqlCursor) -> Long?): Long? {
@@ -193,14 +194,14 @@ class JsWorkerDriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
-    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, 0)
     changes { it.next(); it.getLong(0) }
   }
 
   @Test
   fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = runTest { driver ->
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
 
     insert {
@@ -219,7 +220,7 @@ class JsWorkerDriverTest {
       it.getBytes(3)?.forEachIndexed { index, byte -> assertEquals(index.toByte(), byte) }
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
-    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }
 
   @Test
@@ -229,7 +230,7 @@ class JsWorkerDriverTest {
     if (IS_LEGACY) return@runTest
 
     val error = assertFailsWith<JsWorkerException> {
-      schema.create(driver)
+      schema.awaitCreate(driver)
     }
     assertContains(error.toString(), "table test already exists")
   }

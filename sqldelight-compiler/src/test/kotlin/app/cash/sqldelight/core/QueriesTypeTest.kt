@@ -116,6 +116,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -193,8 +194,8 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${select.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
@@ -374,6 +375,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -426,8 +428,8 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${select.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
@@ -525,6 +527,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -576,8 +579,8 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("search"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${offsets.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${offsets.id}, ""${'"'}
       |    |SELECT id, offsets(search)
       |    |FROM search
       |    |WHERE search MATCH ?

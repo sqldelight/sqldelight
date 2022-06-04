@@ -759,6 +759,7 @@ class InterfaceGeneration {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -802,7 +803,8 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("song"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null,
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(null,
       |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
       |        1) {
       |      bindLong(1, album_id)
@@ -853,6 +855,7 @@ class InterfaceGeneration {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.driver.jdbc.JdbcCursor
       |import app.cash.sqldelight.driver.jdbc.JdbcDriver
@@ -896,8 +899,8 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("userEntity"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${result.compiledFile.namedQueries[0].id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${result.compiledFile.namedQueries[0].id}, ""${'"'}
       |    |WITH inserted_ids AS (
       |    |  INSERT INTO userEntity(slack_user_id)
       |    |  VALUES (?)
@@ -967,6 +970,7 @@ class InterfaceGeneration {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -1005,8 +1009,8 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("item"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${query.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${query.id}, ""${'"'}
       |    |WITH RECURSIVE
       |    |descendants AS (
       |    |    SELECT id, parent_id

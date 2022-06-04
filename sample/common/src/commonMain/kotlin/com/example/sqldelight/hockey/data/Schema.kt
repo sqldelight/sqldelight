@@ -3,6 +3,7 @@ package com.example.sqldelight.hockey.data
 import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.adapter.primitive.FloatColumnAdapter
 import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import com.example.sqldelight.hockey.HockeyDb
@@ -27,7 +28,7 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
 }
 
 object Schema : SqlSchema by HockeyDb.Schema {
-  override fun create(driver: SqlDriver) {
+  override fun create(driver: SqlDriver): QueryResult<Unit> {
     HockeyDb.Schema.create(driver)
 
     // Seed data time!
@@ -69,5 +70,6 @@ object Schema : SqlSchema by HockeyDb.Schema {
       )
       teamQueries.setCaptain(8, sharks)
     }
+    return QueryResult.Unit
   }
 }

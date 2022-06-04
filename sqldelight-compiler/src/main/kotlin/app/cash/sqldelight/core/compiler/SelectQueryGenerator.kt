@@ -25,6 +25,7 @@ import app.cash.sqldelight.core.lang.EXECUTABLE_QUERY_TYPE
 import app.cash.sqldelight.core.lang.EXECUTE_METHOD
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.QUERY_LISTENER_TYPE
+import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
 import app.cash.sqldelight.core.lang.QUERY_TYPE
 import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.cursorGetter
@@ -303,7 +304,7 @@ class SelectQueryGenerator(
       .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addTypeVariable(genericResultType)
       .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(CURSOR_TYPE), returnType = genericResultType))
-      .returns(genericResultType)
+      .returns(QUERY_RESULT_TYPE.parameterizedBy(genericResultType))
       .addCode(executeBlock())
 
     // For each bind argument the query has.
