@@ -287,8 +287,8 @@ class MigrationTest {
       |            |SELECT *
       |            |FROM test
       |            ""${'"'}.trimMargin(), 0)
-      |        return QueryResult.Unit
       |      }
+      |      return QueryResult.Unit
       |    }
       |  }
       |}
