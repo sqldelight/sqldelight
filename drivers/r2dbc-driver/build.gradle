@@ -7,7 +7,7 @@ plugins {
 archivesBaseName = 'sqldelight-r2dbc-driver'
 
 dependencies {
-  api project(':runtime:runtime-async')
+  api project(':runtime')
   implementation deps.r2dbc
   implementation deps.kotlin.coroutines.core
   implementation deps.kotlin.coroutines.reactive

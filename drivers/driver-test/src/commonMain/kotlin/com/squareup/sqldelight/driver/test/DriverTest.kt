@@ -2,6 +2,7 @@ package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -22,7 +23,7 @@ abstract class DriverTest {
   protected val schema = object : SqlSchema {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver) {
+    override fun create(driver: SqlDriver): QueryResult<Unit> {
       driver.execute(
         0,
         """
@@ -46,15 +47,14 @@ abstract class DriverTest {
             """.trimMargin(),
         0
       )
+      return QueryResult.Unit
     }
 
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) {
-      // No-op.
-    }
+    ) = QueryResult.Unit
   }
   private var transacter by Atomic<Transacter?>(null)
 
@@ -67,7 +67,7 @@ abstract class DriverTest {
         it.next()
         it.getLong(0)
       }
-      driver.executeQuery(null, "SELECT changes()", mapper, 0)
+      driver.executeQuery(null, "SELECT changes()", mapper, 0).value
     }
   }
 

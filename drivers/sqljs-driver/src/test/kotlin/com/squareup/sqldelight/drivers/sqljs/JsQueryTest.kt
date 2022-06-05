@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -26,7 +27,7 @@ class JsQueryTest {
   private val schema = object : SqlSchema {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver) {
+    override fun create(driver: SqlDriver): QueryResult<Unit> {
       driver.execute(
         null,
         """
@@ -37,14 +38,16 @@ class JsQueryTest {
         """.trimIndent(),
         0
       )
+      return QueryResult.Unit
     }
 
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) {
+    ): QueryResult<Unit> {
       // No-op.
+      return QueryResult.Unit
     }
   }
 
@@ -175,7 +178,7 @@ class JsQueryTest {
 
   private fun SqlDriver.testDataQuery(): Query<TestData> {
     return object : Query<TestData>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
         return executeQuery(0, "SELECT * FROM test", mapper, 0, null)
       }
 

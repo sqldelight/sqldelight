@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
@@ -20,7 +21,7 @@ abstract class BaseConcurrencyTest {
       "SELECT count(*) FROM test",
       { it.next(); it.getLong(0)!! },
       0
-    )
+    ).value
   }
 
   private var _driver: SqlDriver? = null
@@ -112,7 +113,7 @@ abstract class BaseConcurrencyTest {
       schema = object : SqlSchema {
         override val version: Int = 1
 
-        override fun create(driver: SqlDriver) {
+        override fun create(driver: SqlDriver): QueryResult<Unit> {
           driver.execute(
             null,
             """
@@ -123,15 +124,14 @@ abstract class BaseConcurrencyTest {
             """.trimIndent(),
             0
           )
+          return QueryResult.Unit
         }
 
         override fun migrate(
           driver: SqlDriver,
           oldVersion: Int,
           newVersion: Int
-        ) {
-          // No-op.
-        }
+        ) = QueryResult.Unit
       },
       dbType,
       configBase

@@ -1,8 +1,9 @@
 package com.example.testmodule
 
 import app.cash.sqldelight.TransacterImpl
-import app.cash.sqldelight.db.SqlSchema
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import com.example.GroupQueries
 import com.example.Player
 import com.example.PlayerQueries
@@ -33,11 +34,11 @@ private class TestDatabaseImpl(
 
   public override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
 
-  public object Schema : app.cash.sqldelight.db.SqlSchema {
+  public object Schema : SqlSchema {
     public override val version: Int
       get() = 1
 
-    public override fun create(driver: SqlDriver): Unit {
+    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
       driver.execute(null, """
           |CREATE TABLE player (
@@ -67,13 +68,13 @@ private class TestDatabaseImpl(
           |VALUES ('Anaheim Ducks', 15, NULL, 'Randy Carlyle'),
           |       ('Ottawa Senators', 65, 'ONE', 'Guy Boucher')
           """.trimMargin(), 0)
+      return QueryResult.Unit
     }
 
     public override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int,
-    ): Unit {
-    }
+    ): QueryResult<Unit> = QueryResult.Unit
   }
 }

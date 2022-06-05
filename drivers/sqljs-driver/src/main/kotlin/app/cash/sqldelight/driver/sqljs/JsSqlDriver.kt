@@ -3,6 +3,7 @@ package app.cash.sqldelight.driver.sqljs
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -52,25 +53,25 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     mapper: (SqlCursor) -> R,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?
-  ): R {
+  ): QueryResult<R> {
     val cursor = createOrGetStatement(identifier, sql).run {
       bind(binders)
       JsSqlCursor(this)
     }
 
     return try {
-      mapper(cursor)
+      QueryResult.Value(mapper(cursor))
     } finally {
       cursor.close()
     }
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): Long =
+  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<Long> =
     createOrGetStatement(identifier, sql).run {
       bind(binders)
       step()
       freemem()
-      return 0
+      return QueryResult.Value(0)
     }
 
   private fun Statement.bind(binders: (SqlPreparedStatement.() -> Unit)?) = binders?.let {

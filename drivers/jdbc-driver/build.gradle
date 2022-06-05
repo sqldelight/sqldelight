@@ -7,7 +7,7 @@ plugins {
 archivesBaseName = 'sqldelight-jdbc-driver'
 
 dependencies {
-  api project(':runtime:runtime')
+  api project(':runtime')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

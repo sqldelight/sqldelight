@@ -3,6 +3,7 @@ package com.example
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import com.example.team.SelectStuff
@@ -82,8 +83,8 @@ public class TeamQueries(
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(1839882838,
-        """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+        driver.executeQuery(1839882838, """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?
@@ -106,7 +107,8 @@ public class TeamQueries(
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(null, """
+    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+        driver.executeQuery(null, """
     |SELECT *
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?

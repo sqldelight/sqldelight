@@ -4,6 +4,7 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_MANAGER
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.internal.Atomic
@@ -33,7 +34,7 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): R {
+      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
         return db.executeQuery(null, query, mapper, 0, null)
       }
 
@@ -74,7 +75,7 @@ class TestDb(
         it.next()
         it.getLong(0)!!
       }
-      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0)
+      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0).value
     }
   }
 
@@ -100,7 +101,7 @@ class TestDb(
         it.next()
         it.getLong(0)!!
       }
-      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0)
+      db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0).value
     }
   }
 

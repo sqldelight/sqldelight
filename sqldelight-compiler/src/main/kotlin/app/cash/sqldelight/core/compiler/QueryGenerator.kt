@@ -4,7 +4,6 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.lang.ASYNC_PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
@@ -227,7 +226,7 @@ abstract class QueryGenerator(
       argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
     )
 
-    val binder: String
+    var binder: String
 
     if (argumentCounts.isEmpty()) {
       binder = ""
@@ -236,8 +235,7 @@ abstract class QueryGenerator(
         .add(" {\n")
         .indent()
 
-      val defaultStatementType = if (generateAsync) ASYNC_PREPARED_STATEMENT_TYPE else PREPARED_STATEMENT_TYPE
-      if (defaultStatementType != dialectPreparedStatementType) {
+      if (PREPARED_STATEMENT_TYPE != dialectPreparedStatementType) {
         binderLambda.add("check(this is %T)\n", dialectPreparedStatementType)
       }
 
@@ -246,6 +244,10 @@ abstract class QueryGenerator(
         .add("}")
       arguments.add(binderLambda.build())
       binder = "%L"
+    }
+    if (generateAsync) {
+      binder += "%L"
+      arguments.add(".await()")
     }
 
     val statementId = if (needsFreshStatement) "null" else "$id"
@@ -275,8 +277,9 @@ abstract class QueryGenerator(
     if (query is NamedMutator.Update && optimisticLock != null) {
       result.addStatement(
         """
-        if (result == 0L) throw %T(%S)
+        if (result%L == 0L) throw %T(%S)
         """.trimIndent(),
+        if (generateAsync) ".await()" else ".value",
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
         "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
       )

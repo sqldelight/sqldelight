@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-  testImplementation project(':runtime:runtime')
+  testImplementation project(':runtime')
   testImplementation project(':drivers:sqlite-driver')
   testImplementation project(':test-util')
 

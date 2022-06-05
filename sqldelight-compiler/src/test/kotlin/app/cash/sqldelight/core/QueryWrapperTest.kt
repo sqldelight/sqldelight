@@ -35,6 +35,7 @@ class QueryWrapperTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.TestDatabase
@@ -58,7 +59,7 @@ class QueryWrapperTest {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test_table(
       |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -69,14 +70,14 @@ class QueryWrapperTest {
       |          |INSERT INTO test_table
       |          |VALUES (1, 'test')
       |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): Unit {
-      |    }
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -115,6 +116,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
@@ -146,7 +148,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test_table(
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -159,14 +161,14 @@ class QueryWrapperTest {
         |          |  value TEXT
         |          |)
         |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -199,6 +201,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import app.cash.sqldelight.driver.jdbc.JdbcDriver
@@ -223,7 +226,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -234,14 +237,14 @@ class QueryWrapperTest {
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
         |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -294,6 +297,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
@@ -317,7 +321,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY,
@@ -330,14 +334,14 @@ class QueryWrapperTest {
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
         |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -380,6 +384,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import app.cash.sqldelight.driver.jdbc.JdbcDriver
@@ -404,7 +409,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -428,14 +433,14 @@ class QueryWrapperTest {
         |          |  parent2_id INTEGER REFERENCES child2(id)
         |          |)
         |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -465,6 +470,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
@@ -488,7 +494,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW A AS
         |          |SELECT 1
@@ -498,14 +504,14 @@ class QueryWrapperTest {
         |          |SELECT *
         |          |FROM A
         |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -540,6 +546,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
@@ -563,7 +570,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value TEXT
@@ -577,14 +584,14 @@ class QueryWrapperTest {
         |          |END
         |          ""${'"'}.trimMargin(), 0)
         |      driver.execute(null, "CREATE INDEX B ON test(value)", 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -633,6 +640,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
@@ -656,7 +664,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 3
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -664,13 +672,14 @@ class QueryWrapperTest {
         |          |  value3 REAL
         |          |)
         |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
+        |    ): QueryResult<Unit> {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
         |            |CREATE TABLE test (
@@ -684,6 +693,7 @@ class QueryWrapperTest {
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
         |      }
+        |      return QueryResult.Unit
         |    }
         |  }
         |}
@@ -726,6 +736,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
@@ -750,7 +761,7 @@ class QueryWrapperTest {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): Unit {
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE class_ability_test (
         |          |  id TEXT PRIMARY KEY NOT NULL,
@@ -779,14 +790,14 @@ class QueryWrapperTest {
         |          |  ('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')
         |          ""${'"'}.trimMargin())
         |          }, 0)
+        |      return QueryResult.Unit
         |    }
         |
         |    public override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): Unit {
-        |    }
+        |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
         |

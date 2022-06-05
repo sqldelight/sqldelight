@@ -40,7 +40,7 @@ internal class RecordingObserver(val numberOfColumns: Int) : DisposableObserver<
       while (cursor.next())
         data.add((0 until numberOfColumns).map(cursor::getString))
       data
-    }
+    }.value
     events.add(allRows)
   }
 

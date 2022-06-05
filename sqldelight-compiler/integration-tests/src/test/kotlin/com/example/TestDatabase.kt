@@ -1,8 +1,8 @@
 package com.example
 
 import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import com.example.testmodule.newInstance
 import com.example.testmodule.schema
 

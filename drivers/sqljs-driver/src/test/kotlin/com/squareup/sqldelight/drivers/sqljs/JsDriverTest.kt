@@ -1,5 +1,6 @@
 package com.squareup.sqldelight.drivers.sqljs
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -20,7 +21,7 @@ class JsDriverTest {
   private val schema = object : SqlSchema {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver) {
+    override fun create(driver: SqlDriver): QueryResult<Unit> {
       driver.execute(
         0,
         """
@@ -44,14 +45,16 @@ class JsDriverTest {
             """.trimMargin(),
         0
       )
+      return QueryResult.Unit
     }
 
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int
-    ) {
+    ): QueryResult<Unit> {
       // No-op.
+      return QueryResult.Unit
     }
   }
 
@@ -77,7 +80,7 @@ class JsDriverTest {
       driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
     }
     fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0).value
     }
 
     query {
@@ -131,7 +134,7 @@ class JsDriverTest {
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
     fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0).value
     }
 
     insert {
@@ -178,7 +181,7 @@ class JsDriverTest {
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
     fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0)
+      return driver.executeQuery(4, "SELECT changes()", mapper, 0).value
     }
 
     insert {

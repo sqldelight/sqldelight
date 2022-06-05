@@ -51,6 +51,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
@@ -81,7 +82,7 @@ class QueriesTypeTest {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
@@ -94,14 +95,14 @@ class QueriesTypeTest {
       |          |  value TEXT
       |          |)
       |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): Unit {
-      |    }
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -115,6 +116,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -192,8 +194,8 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${select.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
@@ -228,6 +230,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
@@ -251,21 +254,21 @@ class QueriesTypeTest {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id TEXT PRIMARY KEY,
       |          |  value INTEGER NOT NULL
       |          |)
       |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): Unit {
-      |    }
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -318,6 +321,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.DataQueries
@@ -343,21 +347,21 @@ class QueriesTypeTest {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE data USING fts5(
       |          |  id,
       |          |  value
       |          |)
       |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): Unit {
-      |    }
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -371,6 +375,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -423,8 +428,8 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${select.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
@@ -470,6 +475,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.SearchQueries
@@ -493,21 +499,21 @@ class QueriesTypeTest {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): Unit {
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE search USING fts3(
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
       |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Unit
       |    }
       |
       |    public override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): Unit {
-      |    }
+      |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
       |""".trimMargin()
@@ -521,6 +527,7 @@ class QueriesTypeTest {
       |
       |import app.cash.sqldelight.Query
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
       |import app.cash.sqldelight.db.SqlDriver
       |import kotlin.Any
@@ -572,8 +579,8 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("search"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): R = driver.executeQuery(${offsets.id},
-      |        ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |        driver.executeQuery(${offsets.id}, ""${'"'}
       |    |SELECT id, offsets(search)
       |    |FROM search
       |    |WHERE search MATCH ?
