@@ -28,6 +28,6 @@ class SqlDelightParameterInfoHandlerTest : SqlDelightFixtureTestCase() {
     assertThat(element).isNotNull()
     val itemsToShow = context.itemsToShow
     assertThat(itemsToShow).isNotNull()
-    assertThat(itemsToShow[0]).isEqualTo(listOf("name: TEXT", "description: TEXT"))
+    assertThat(itemsToShow!![0]).isEqualTo(listOf("name: TEXT", "description: TEXT"))
   }
 }
