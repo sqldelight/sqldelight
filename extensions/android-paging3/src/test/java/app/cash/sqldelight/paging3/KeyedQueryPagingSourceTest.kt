@@ -178,8 +178,8 @@ class KeyedQueryPagingSourceTest {
 
     return object : Query<Long>({ cursor -> cursor.getLong(0)!! }) {
       override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 3, sql = sql, mapper = mapper, parameters = 2) {
-        bindLong(1, limit)
-        bindLong(2, anchor)
+        bindLong(0, limit)
+        bindLong(1, anchor)
       }
 
       override fun addListener(listener: Listener) = Unit
@@ -198,8 +198,8 @@ class KeyedQueryPagingSourceTest {
       { cursor -> cursor.getLong(0)!! }
     ) {
       override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameters = 2) {
-        bindLong(1, beginInclusive)
-        bindLong(2, endExclusive)
+        bindLong(0, beginInclusive)
+        bindLong(1, endExclusive)
       }
 
       override fun addListener(listener: Listener) = Unit
@@ -209,7 +209,7 @@ class KeyedQueryPagingSourceTest {
 
   private fun insert(value: Long, db: SqlDriver = driver) {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
-      bindLong(1, value)
+      bindLong(0, value)
     }
   }
 }

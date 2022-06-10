@@ -134,9 +134,9 @@ abstract class QueryGenerator(
       val type = argument.type
       // Need to replace the single argument with a group of indexed arguments, calculated at
       // runtime from the list parameter:
-      // val idIndexes = id.mapIndexed { index, _ -> "?${1 + previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
-      val offset = (precedingArrays.map { "$it.size" } + "${nonArrayBindArgsCount + 1}")
-        .joinToString(separator = " + ")
+      // val idIndexes = id.mapIndexed { index, _ -> "?${previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
+      val offset = (precedingArrays.map { "$it.size" } + "$nonArrayBindArgsCount")
+        .joinToString(separator = " + ").replace(" + 0", "")
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
@@ -154,9 +154,9 @@ abstract class QueryGenerator(
 
         // Perform the necessary binds:
         // id.forEachIndex { index, parameter ->
-        //   statement.bindLong(1 + previousArray.size + index, parameter)
+        //   statement.bindLong(previousArray.size + index, parameter)
         // }
-        val indexCalculator = "index + $offset"
+        val indexCalculator = "index + $offset".replace(" + 0", "")
         val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.add(
           """
@@ -191,7 +191,7 @@ abstract class QueryGenerator(
         }
 
         // Binds each parameter to the statement:
-        // statement.bindLong(1, id)
+        // statement.bindLong(0, id)
         bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
 
         // Replace the named argument with a non named/indexed argument.

@@ -235,7 +235,7 @@ class JavadocTest {
       |      |INSERT INTO test(value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${testDialect.binderCheck}bindString(1, value_)
+      |        ${testDialect.binderCheck}bindString(0, value_)
       |      }
       |  notifyQueries(${insert.id}) { emit ->
       |    emit("test")
@@ -273,8 +273,8 @@ class JavadocTest {
       |      |SET value = ?
       |      |WHERE _id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(1, value_)
-      |        bindLong(2, _id)
+      |        bindString(0, value_)
+      |        bindLong(1, _id)
       |      }
       |  notifyQueries(${update.id}) { emit ->
       |    emit("test")

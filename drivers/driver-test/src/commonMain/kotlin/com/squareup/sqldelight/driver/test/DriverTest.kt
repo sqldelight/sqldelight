@@ -94,8 +94,8 @@ abstract class DriverTest {
     }
 
     insert {
-      bindLong(1, 1)
-      bindString(2, "Alec")
+      bindLong(0, 1)
+      bindString(1, "Alec")
     }
 
     query {
@@ -112,8 +112,8 @@ abstract class DriverTest {
     }
 
     insert {
-      bindLong(1, 2)
-      bindString(2, "Jake")
+      bindLong(0, 2)
+      bindString(1, "Jake")
     }
     assertEquals(1, changes())
 
@@ -140,13 +140,13 @@ abstract class DriverTest {
     }
 
     insert {
-      bindLong(1, 1)
-      bindString(2, "Alec")
+      bindLong(0, 1)
+      bindString(1, "Alec")
     }
     assertEquals(1, changes())
     insert {
-      bindLong(1, 2)
-      bindString(2, "Jake")
+      bindLong(0, 2)
+      bindString(1, "Jake")
     }
     assertEquals(1, changes())
 
@@ -156,7 +156,7 @@ abstract class DriverTest {
 
     query(
       binders = {
-        bindString(1, "Jake")
+        bindString(0, "Jake")
       },
       mapper = {
         assertTrue(it.next())
@@ -168,7 +168,7 @@ abstract class DriverTest {
     // Second time running the query is fine
     query(
       binders = {
-        bindString(1, "Jake")
+        bindString(0, "Jake")
       },
       mapper = {
         assertTrue(it.next())
@@ -183,11 +183,11 @@ abstract class DriverTest {
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
     insert {
-      bindLong(1, 1)
-      bindLong(2, null)
-      bindString(3, null)
-      bindBytes(4, null)
-      bindDouble(5, null)
+      bindLong(0, 1)
+      bindLong(1, null)
+      bindString(2, null)
+      bindBytes(3, null)
+      bindDouble(4, null)
     }
     assertEquals(1, changes())
 

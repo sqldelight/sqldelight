@@ -174,8 +174,8 @@ class QueriesTypeTest {
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(1, id)
-      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          bindLong(0, id)
+      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
@@ -200,7 +200,7 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(1, id)
+      |      bindLong(0, id)
       |    }
       |
       |    public override fun toString(): String = "Data.sq:selectForId"
@@ -408,8 +408,8 @@ class QueriesTypeTest {
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(1, id)
-      |          bindString(2, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          bindLong(0, id)
+      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("data")
@@ -434,7 +434,7 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(1, id)
+      |      bindLong(0, id)
       |    }
       |
       |    public override fun toString(): String = "Data.sq:selectForId"
@@ -559,8 +559,8 @@ class QueriesTypeTest {
       |        |INSERT INTO search
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(1, id)
-      |          bindString(2, value_)
+      |          bindLong(0, id)
+      |          bindString(1, value_)
       |        }
       |    notifyQueries(${insert.id}) { emit ->
       |      emit("search")
@@ -585,7 +585,7 @@ class QueriesTypeTest {
       |    |FROM search
       |    |WHERE search MATCH ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindString(1, search)
+      |      bindString(0, search)
       |    }
       |
       |    public override fun toString(): String = "Search.sq:selectOffsets"

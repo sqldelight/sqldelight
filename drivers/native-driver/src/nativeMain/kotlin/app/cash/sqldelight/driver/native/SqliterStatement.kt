@@ -14,24 +14,24 @@ internal class SqliterStatement(
   private val statement: Statement
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    statement.bindBlob(index, bytes)
+    statement.bindBlob(index + 1, bytes)
   }
 
   override fun bindLong(index: Int, long: Long?) {
-    statement.bindLong(index, long)
+    statement.bindLong(index + 1, long)
   }
 
   override fun bindDouble(index: Int, double: Double?) {
-    statement.bindDouble(index, double)
+    statement.bindDouble(index + 1, double)
   }
 
   override fun bindString(index: Int, string: String?) {
-    statement.bindString(index, string)
+    statement.bindString(index + 1, string)
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     statement.bindLong(
-      index,
+      index + 1,
       when (boolean) {
         null -> null
         true -> 1L

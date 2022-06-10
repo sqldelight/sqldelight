@@ -14,8 +14,8 @@ public class DataQueries(
         |VALUES (?, ?)
         """.trimMargin(), 2) {
           check(this is JdbcPreparedStatement)
-          bindString(1, test.third)
-          bindString(2, test.second?.let { testAdapter.secondAdapter.encode(it) })
+          bindString(0, test.third)
+          bindString(1, test.second?.let { testAdapter.secondAdapter.encode(it) })
         }
     notifyQueries(-2118611703) { emit ->
       emit("test")

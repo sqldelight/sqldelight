@@ -177,89 +177,89 @@ open class JdbcPreparedStatement(
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
-      preparedStatement.setNull(index, Types.BLOB)
+      preparedStatement.setNull(index + 1, Types.BLOB)
     } else {
-      preparedStatement.setBytes(index, bytes)
+      preparedStatement.setBytes(index + 1, bytes)
     }
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     if (boolean == null) {
-      preparedStatement.setNull(index, Types.BOOLEAN)
+      preparedStatement.setNull(index + 1, Types.BOOLEAN)
     } else {
-      preparedStatement.setBoolean(index, boolean)
+      preparedStatement.setBoolean(index + 1, boolean)
     }
   }
 
   fun bindByte(index: Int, byte: Byte?) {
     if (byte == null) {
-      preparedStatement.setNull(index, Types.TINYINT)
+      preparedStatement.setNull(index + 1, Types.TINYINT)
     } else {
-      preparedStatement.setByte(index, byte)
+      preparedStatement.setByte(index + 1, byte)
     }
   }
 
   fun bindShort(index: Int, short: Short?) {
     if (short == null) {
-      preparedStatement.setNull(index, Types.SMALLINT)
+      preparedStatement.setNull(index + 1, Types.SMALLINT)
     } else {
-      preparedStatement.setShort(index, short)
+      preparedStatement.setShort(index + 1, short)
     }
   }
 
   fun bindInt(index: Int, int: Int?) {
     if (int == null) {
-      preparedStatement.setNull(index, Types.INTEGER)
+      preparedStatement.setNull(index + 1, Types.INTEGER)
     } else {
-      preparedStatement.setInt(index, int)
+      preparedStatement.setInt(index + 1, int)
     }
   }
 
   override fun bindLong(index: Int, long: Long?) {
     if (long == null) {
-      preparedStatement.setNull(index, Types.BIGINT)
+      preparedStatement.setNull(index + 1, Types.BIGINT)
     } else {
-      preparedStatement.setLong(index, long)
+      preparedStatement.setLong(index + 1, long)
     }
   }
 
   fun bindFloat(index: Int, float: Float?) {
     if (float == null) {
-      preparedStatement.setNull(index, Types.REAL)
+      preparedStatement.setNull(index + 1, Types.REAL)
     } else {
-      preparedStatement.setFloat(index, float)
+      preparedStatement.setFloat(index + 1, float)
     }
   }
 
   override fun bindDouble(index: Int, double: Double?) {
     if (double == null) {
-      preparedStatement.setNull(index, Types.DOUBLE)
+      preparedStatement.setNull(index + 1, Types.DOUBLE)
     } else {
-      preparedStatement.setDouble(index, double)
+      preparedStatement.setDouble(index + 1, double)
     }
   }
 
   fun bindBigDecimal(index: Int, decimal: BigDecimal?) {
     if (decimal == null) {
-      preparedStatement.setNull(index, Types.NUMERIC)
+      preparedStatement.setNull(index + 1, Types.NUMERIC)
     } else {
-      preparedStatement.setBigDecimal(index, decimal)
+      preparedStatement.setBigDecimal(index + 1, decimal)
     }
   }
 
   fun bindObject(index: Int, obj: Any?) {
     if (obj == null) {
-      preparedStatement.setNull(index, Types.OTHER)
+      preparedStatement.setNull(index + 1, Types.OTHER)
     } else {
-      preparedStatement.setObject(index, obj)
+      preparedStatement.setObject(index + 1, obj)
     }
   }
 
   override fun bindString(index: Int, string: String?) {
     if (string == null) {
-      preparedStatement.setNull(index, Types.VARCHAR)
+      preparedStatement.setNull(index + 1, Types.VARCHAR)
     } else {
-      preparedStatement.setString(index, string)
+      preparedStatement.setString(index + 1, string)
     }
   }
 

@@ -55,7 +55,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     binders: (SqlPreparedStatement.() -> Unit)?
   ): QueryResult<R> {
     val cursor = createOrGetStatement(identifier, sql).run {
-      bind(binders)
+      bind(parameters, binders)
       JsSqlCursor(this)
     }
 
@@ -68,16 +68,18 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
 
   override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<Long> =
     createOrGetStatement(identifier, sql).run {
-      bind(binders)
+      bind(parameters, binders)
       step()
       freemem()
       return QueryResult.Value(0)
     }
 
-  private fun Statement.bind(binders: (SqlPreparedStatement.() -> Unit)?) = binders?.let {
-    val bound = JsSqlPreparedStatement()
-    binders(bound)
-    bind(bound.parameters.toTypedArray())
+  private fun Statement.bind(parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?) = binders?.let {
+    if (parameters > 0) {
+      val bound = JsSqlPreparedStatement(parameters)
+      binders(bound)
+      bind(bound.parameters.toTypedArray())
+    }
   }
 
   private fun createOrGetStatement(identifier: Int?, sql: String): Statement = if (identifier == null) {
@@ -127,42 +129,40 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
 
   override fun getBoolean(index: Int): Boolean? {
     val double = (statement.get()[index] as? Double)
-    if (double == null) return null
-    else return double.toLong() == 1L
+    return if (double == null) null
+    else double.toLong() == 1L
   }
 
   fun close() { statement.freemem() }
 }
 
-internal class JsSqlPreparedStatement : SqlPreparedStatement {
+internal class JsSqlPreparedStatement(parameters: Int) : SqlPreparedStatement {
 
-  val parameters = mutableListOf<Any?>()
+  val parameters = MutableList<Any?>(parameters) { null }
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    parameters.add(bytes?.toTypedArray())
+    parameters[index] = bytes?.toTypedArray()
   }
 
   override fun bindLong(index: Int, long: Long?) {
     // We convert Long to Double because Kotlin's Double is mapped to JS number
     // whereas Kotlin's Long is implemented as a JS object
-    parameters.add(long?.toDouble())
+    parameters[index] = long?.toDouble()
   }
 
   override fun bindDouble(index: Int, double: Double?) {
-    parameters.add(double)
+    parameters[index] = double
   }
 
   override fun bindString(index: Int, string: String?) {
-    parameters.add(string)
+    parameters[index] = string
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    parameters.add(
-      when (boolean) {
-        null -> null
-        true -> 1.0
-        false -> 0.0
-      }
-    )
+    parameters[index] = when (boolean) {
+      null -> null
+      true -> 1.0
+      false -> 0.0
+    }
   }
 }

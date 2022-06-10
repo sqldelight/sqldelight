@@ -73,7 +73,7 @@ private class InMemoryConnectionManager(
   properties: Properties
 ) : JdbcSqliteDriverConnectionManager() {
   override var transaction: Transaction? = null
-  private val connection = DriverManager.getConnection(IN_MEMORY, properties)
+  private val connection: Connection = DriverManager.getConnection(IN_MEMORY, properties)
 
   override fun getConnection() = connection
   override fun closeConnection(connection: Connection) = Unit

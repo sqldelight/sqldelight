@@ -144,7 +144,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindLong(1, id)
+      |    bindLong(0, id)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -194,8 +194,8 @@ class SelectQueryTypeTest {
       |  |WHERE id = ?
       |  |AND value = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    bindLong(1, id)
-      |    bindString(2, value_)
+      |    bindLong(0, id)
+      |    bindString(1, value_)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:select"
@@ -243,7 +243,7 @@ class SelectQueryTypeTest {
       |        |WHERE id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, id.size) {
       |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index + 1, id_)
+      |            bindLong(index, id_)
       |          }
       |        }
       |  }
@@ -295,11 +295,11 @@ class SelectQueryTypeTest {
       |        |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, 1 + id.size + id.size) {
       |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index + 1, id_)
+      |            bindLong(index, id_)
       |          }
-      |          bindString(id.size + 1, message)
+      |          bindString(id.size, message)
       |          id.forEachIndexed { index, id__ ->
-      |            bindLong(index + id.size + 2, id__)
+      |            bindLong(index + id.size + 1, id__)
       |          }
       |        }
       |  }
@@ -343,7 +343,7 @@ class SelectQueryTypeTest {
        |  }
        |
        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
-       |    bindString(1, userId)
+       |    bindString(0, userId)
        |  }
        |
        |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
@@ -384,7 +384,7 @@ class SelectQueryTypeTest {
        |  }
        |
        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
-       |    bindString(1, userId)
+       |    bindString(0, userId)
        |  }
        |
        |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
@@ -434,8 +434,8 @@ class SelectQueryTypeTest {
        |  |FROM Friend
        |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), mapper, 2) {
-       |    bindString(1, userId)
-       |    bindString(2, username)
+       |    bindString(0, userId)
+       |    bindString(1, username)
        |  }
        |
        |  public override fun toString(): kotlin.String = "Test.sq:selectData"
@@ -483,8 +483,8 @@ class SelectQueryTypeTest {
        |  |FROM Friend
        |  |WHERE userId=? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), mapper, 2) {
-       |    bindString(1, userId)
-       |    bindString(2, username)
+       |    bindString(0, userId)
+       |    bindString(1, username)
        |  }
        |
        |  public override fun toString(): kotlin.String = "Test.sq:selectData"
@@ -546,12 +546,12 @@ class SelectQueryTypeTest {
       |  |AND val IS ?
       |  |AND val IS NOT ?
       |  ""${'"'}.trimMargin(), mapper, 6) {
-      |    bindString(1, val_)
-      |    bindString(2, val__)
-      |    bindString(3, val___)
-      |    bindString(4, val____)
-      |    bindString(5, val_____)
-      |    bindString(6, val______)
+      |    bindString(0, val_)
+      |    bindString(1, val__)
+      |    bindString(2, val___)
+      |    bindString(3, val____)
+      |    bindString(4, val_____)
+      |    bindString(5, val______)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -612,12 +612,12 @@ class SelectQueryTypeTest {
       |  |AND val IS ?
       |  |AND val IS NOT ?
       |  ""${'"'}.trimMargin(), mapper, 6) {
-      |    bindString(1, val_)
-      |    bindString(2, val__)
-      |    bindString(3, val___)
-      |    bindString(4, val____)
-      |    bindString(5, val_____)
-      |    bindString(6, val______)
+      |    bindString(0, val_)
+      |    bindString(1, val__)
+      |    bindString(2, val___)
+      |    bindString(3, val____)
+      |    bindString(4, val_____)
+      |    bindString(5, val______)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -664,8 +664,8 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE data MATCH ? AND rowid = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    bindString(1, data)
-      |    bindLong(2, rowid)
+      |    bindString(0, data)
+      |    bindLong(1, rowid)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectMatching"
@@ -713,7 +713,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE data MATCH '"one ' || ? || '" * '
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindString(1, value)
+      |    bindString(0, value)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectMatching"
@@ -772,15 +772,15 @@ class SelectQueryTypeTest {
       |        |  AND (token != ? OR (name = ? OR ? = 'foo'))
       |        |  AND token IN ${"$"}token_Indexes
       |        ""${'"'}.trimMargin(), mapper, 4 + id.size + token_.size) {
-      |          bindString(1, token)
+      |          bindString(0, token)
       |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index + 2, id_)
+      |            bindLong(index + 1, id_)
       |          }
-      |          bindString(id.size + 2, token)
+      |          bindString(id.size + 1, token)
+      |          bindString(id.size + 2, name)
       |          bindString(id.size + 3, name)
-      |          bindString(id.size + 4, name)
       |          token_.forEachIndexed { index, token__ ->
-      |            bindString(index + id.size + 5, token__)
+      |            bindString(index + id.size + 4, token__)
       |          }
       |        }
       |  }
@@ -836,10 +836,10 @@ class SelectQueryTypeTest {
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), mapper, 4) {
+      |    bindLong(0, id)
       |    bindLong(1, id)
-      |    bindLong(2, id)
-      |    bindLong(3, limit)
-      |    bindLong(4, offset)
+      |    bindLong(2, limit)
+      |    bindLong(3, offset)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -892,10 +892,10 @@ class SelectQueryTypeTest {
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), mapper, 4) {
+      |    bindLong(0, id)
       |    bindLong(1, id)
-      |    bindLong(2, id)
-      |    bindLong(3, limit)
-      |    bindLong(4, offset)
+      |    bindLong(2, limit)
+      |    bindLong(3, offset)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -945,7 +945,7 @@ class SelectQueryTypeTest {
       |        |WHERE id IN ${'$'}idIndexes
       |        ""${'"'}.trimMargin(), mapper, id.size) {
       |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index + 1, id_?.let { data_Adapter.idAdapter.encode(it) })
+      |            bindLong(index, id_?.let { data_Adapter.idAdapter.encode(it) })
       |          }
       |        }
       |  }
@@ -1007,8 +1007,8 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    ${binderCheck}bindString(1, token)
-      |    bindString(2, token)
+      |    ${binderCheck}bindString(0, token)
+      |    bindString(1, token)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
@@ -1053,8 +1053,8 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token = ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    ${binderCheck}bindString(1, token)
-      |    bindString(2, token)
+      |    ${binderCheck}bindString(0, token)
+      |    bindString(1, token)
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
@@ -1332,13 +1332,13 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value)
+      |          bindLong(0, value)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value)
+      |          bindLong(0, value)
       |        }
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1381,13 +1381,13 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value_)
+      |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value__)
+      |          bindLong(0, value__)
       |        }
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1430,13 +1430,13 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value_)
+      |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value_)
+      |          bindLong(0, value_)
       |        }
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1479,13 +1479,13 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value_)
+      |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value__)
+      |          bindLong(0, value__)
       |        }
       |  }
       |  notifyQueries(-609468782) { emit ->
@@ -1532,13 +1532,13 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value_)
+      |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value__)
+      |          bindLong(0, value__)
       |        }
       |  }
       |  notifyQueries(${query.id}) { emit ->
@@ -1628,10 +1628,10 @@ class SelectQueryTypeTest {
         |        |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
         |        ""${'"'}.trimMargin(), mapper, values.size + values.size) {
         |          values.forEachIndexed { index, values_ ->
-        |            bindString(index + 1, ComboDataAdapter.value_Adapter.encode(values_))
+        |            bindString(index, ComboDataAdapter.value_Adapter.encode(values_))
         |          }
         |          values.forEachIndexed { index, values__ ->
-        |            bindString(index + values.size + 1, ComboDataAdapter.value_Adapter.encode(values__))
+        |            bindString(index + values.size, ComboDataAdapter.value_Adapter.encode(values__))
         |          }
         |        }
         |  }
@@ -1677,7 +1677,7 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(1, value_)
+      |          bindLong(0, value_)
       |        }
       |    driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
       |        |SELECT value

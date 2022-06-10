@@ -138,7 +138,7 @@ class AsyncSelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindLong(1, id)
+      |    bindLong(0, id)
       |  }.await()
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"

@@ -222,24 +222,24 @@ private class AndroidPreparedStatement(
   private val statement: SupportSQLiteStatement
 ) : AndroidStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    if (bytes == null) statement.bindNull(index) else statement.bindBlob(index, bytes)
+    if (bytes == null) statement.bindNull(index + 1) else statement.bindBlob(index + 1, bytes)
   }
 
   override fun bindLong(index: Int, long: Long?) {
-    if (long == null) statement.bindNull(index) else statement.bindLong(index, long)
+    if (long == null) statement.bindNull(index + 1) else statement.bindLong(index + 1, long)
   }
 
   override fun bindDouble(index: Int, double: Double?) {
-    if (double == null) statement.bindNull(index) else statement.bindDouble(index, double)
+    if (double == null) statement.bindNull(index + 1) else statement.bindDouble(index + 1, double)
   }
 
   override fun bindString(index: Int, string: String?) {
-    if (string == null) statement.bindNull(index) else statement.bindString(index, string)
+    if (string == null) statement.bindNull(index + 1) else statement.bindString(index + 1, string)
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    if (boolean == null) statement.bindNull(index)
-    else statement.bindLong(index, if (boolean) 1L else 0L)
+    if (boolean == null) statement.bindNull(index + 1)
+    else statement.bindLong(index + 1, if (boolean) 1L else 0L)
   }
 
   override fun <R> executeQuery(mapper: (SqlCursor) -> R): R = throw UnsupportedOperationException()
@@ -258,28 +258,28 @@ private class AndroidQuery(
   private val database: SupportSQLiteDatabase,
   private val argCount: Int
 ) : SupportSQLiteQuery, AndroidStatement {
-  private val binds: MutableMap<Int, (SupportSQLiteProgram) -> Unit> = LinkedHashMap()
+  private val binds = MutableList<((SupportSQLiteProgram) -> Unit)?>(argCount) { null }
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    binds[index] = { if (bytes == null) it.bindNull(index) else it.bindBlob(index, bytes) }
+    binds[index] = { if (bytes == null) it.bindNull(index + 1) else it.bindBlob(index + 1, bytes) }
   }
 
   override fun bindLong(index: Int, long: Long?) {
-    binds[index] = { if (long == null) it.bindNull(index) else it.bindLong(index, long) }
+    binds[index] = { if (long == null) it.bindNull(index + 1) else it.bindLong(index + 1, long) }
   }
 
   override fun bindDouble(index: Int, double: Double?) {
-    binds[index] = { if (double == null) it.bindNull(index) else it.bindDouble(index, double) }
+    binds[index] = { if (double == null) it.bindNull(index + 1) else it.bindDouble(index + 1, double) }
   }
 
   override fun bindString(index: Int, string: String?) {
-    binds[index] = { if (string == null) it.bindNull(index) else it.bindString(index, string) }
+    binds[index] = { if (string == null) it.bindNull(index + 1) else it.bindString(index + 1, string) }
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     binds[index] = {
-      if (boolean == null) it.bindNull(index)
-      else it.bindLong(index, if (boolean) 1L else 0L)
+      if (boolean == null) it.bindNull(index + 1)
+      else it.bindLong(index + 1, if (boolean) 1L else 0L)
     }
   }
 
@@ -291,8 +291,8 @@ private class AndroidQuery(
   }
 
   override fun bindTo(statement: SupportSQLiteProgram) {
-    for (action in binds.values) {
-      action(statement)
+    for (action in binds) {
+      action!!(statement)
     }
   }
 

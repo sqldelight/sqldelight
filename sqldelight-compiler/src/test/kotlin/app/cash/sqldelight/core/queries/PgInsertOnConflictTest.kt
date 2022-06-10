@@ -40,9 +40,9 @@ class PgInsertOnConflictTest {
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?
             |      ""${'"'}.trimMargin(), 3) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindLong(1, id?.let { it.toLong() })
+            |        bindLong(0, id?.let { it.toLong() })
+            |        bindString(1, c1)
             |        bindString(2, c1)
-            |        bindString(3, c1)
             |      }
             |  notifyQueries(${insert.id}) { emit ->
             |    emit("data")
@@ -89,12 +89,12 @@ class PgInsertOnConflictTest {
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?
             |      ""${'"'}.trimMargin(), 6) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindLong(1, id?.let { it.toLong() })
-            |        bindString(2, c1)
-            |        bindString(3, c2)
-            |        bindString(4, c3)
-            |        bindString(5, c1)
-            |        bindString(6, c2)
+            |        bindLong(0, id?.let { it.toLong() })
+            |        bindString(1, c1)
+            |        bindString(2, c2)
+            |        bindString(3, c3)
+            |        bindString(4, c1)
+            |        bindString(5, c2)
             |      }
             |  notifyQueries(${insert.id}) { emit ->
             |    emit("data")
@@ -141,13 +141,13 @@ class PgInsertOnConflictTest {
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?, col3 = ?
             |      ""${'"'}.trimMargin(), 7) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindLong(1, id?.let { it.toLong() })
-            |        bindString(2, c1)
-            |        bindString(3, c2)
-            |        bindString(4, c3)
-            |        bindString(5, c1)
-            |        bindString(6, c2)
-            |        bindString(7, c3)
+            |        bindLong(0, id?.let { it.toLong() })
+            |        bindString(1, c1)
+            |        bindString(2, c2)
+            |        bindString(3, c3)
+            |        bindString(4, c1)
+            |        bindString(5, c2)
+            |        bindString(6, c3)
             |      }
             |  notifyQueries(${insert.id}) { emit ->
             |    emit("data")
