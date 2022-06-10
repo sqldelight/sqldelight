@@ -20,6 +20,7 @@ import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
+import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Success
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import org.gradle.api.file.DirectoryProperty
@@ -117,6 +118,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
             "Generation failed; see the generator error output for details."
           )
         }
+        is Success -> { }
       }
     }
   }
