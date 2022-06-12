@@ -233,7 +233,6 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
-      |import com.example.DataQueries
       |import com.example.TestDatabase
       |import kotlin.Int
       |import kotlin.Unit
@@ -248,8 +247,6 @@ class QueriesTypeTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val dataQueries: DataQueries = DataQueries(driver)
-      |
       |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
@@ -271,21 +268,6 @@ class QueriesTypeTest {
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
-      |""".trimMargin()
-    )
-
-    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
-    assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
-      """
-      |package com.example
-      |
-      |import app.cash.sqldelight.TransacterImpl
-      |import app.cash.sqldelight.db.SqlDriver
-      |
-      |public class DataQueries(
-      |  private val driver: SqlDriver,
-      |) : TransacterImpl(driver)
       |""".trimMargin()
     )
   }

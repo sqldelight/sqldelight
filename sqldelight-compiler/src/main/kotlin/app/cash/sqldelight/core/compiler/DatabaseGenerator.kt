@@ -81,6 +81,7 @@ internal class DatabaseGenerator(
     invokeReturn.add("%N", dbParameter)
 
     moduleFolders.flatMap { it.queryFiles() }
+      .filterNot { it.isEmpty() }
       .sortedBy { it.name }
       .forEach { file ->
         // queries property added to QueryWrapper type:
@@ -166,6 +167,7 @@ internal class DatabaseGenerator(
     }
 
     sourceFolders.flatMap { it.queryFiles() }
+      .filterNot { it.isEmpty() }
       .sortedBy { it.name }
       .forEach { file ->
         var adapters = ""

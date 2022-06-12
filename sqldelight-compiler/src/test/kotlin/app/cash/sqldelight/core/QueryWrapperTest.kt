@@ -39,7 +39,6 @@ class QueryWrapperTest {
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.TestDatabase
-      |import com.example.TestQueries
       |import kotlin.Int
       |import kotlin.Unit
       |import kotlin.reflect.KClass
@@ -53,8 +52,6 @@ class QueryWrapperTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
-      |  public override val testQueries: TestQueries = TestQueries(driver)
-      |
       |  public object Schema : SqlSchema {
       |    public override val version: Int
       |      get() = 1
@@ -206,7 +203,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlSchema
         |import app.cash.sqldelight.driver.jdbc.JdbcDriver
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -220,8 +216,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: JdbcDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 1
@@ -301,7 +295,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -315,8 +308,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 1
@@ -389,7 +380,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlSchema
         |import app.cash.sqldelight.driver.jdbc.JdbcDriver
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -403,8 +393,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: JdbcDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 1
@@ -474,7 +462,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -488,8 +475,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 1
@@ -550,7 +535,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -564,8 +548,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 1
@@ -644,7 +626,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -658,8 +639,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 3
@@ -740,7 +719,6 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import com.example.TestQueries
         |import kotlin.Int
         |import kotlin.Unit
         |import kotlin.reflect.KClass
@@ -755,8 +733,6 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver)
-        |
         |  public object Schema : SqlSchema {
         |    public override val version: Int
         |      get() = 1
