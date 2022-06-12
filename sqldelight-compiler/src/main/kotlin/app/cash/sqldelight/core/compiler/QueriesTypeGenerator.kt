@@ -19,6 +19,7 @@ class QueriesTypeGenerator(
   private val dialect: SqlDelightDialect,
 ) {
   private val generateAsync = file.generateAsync
+
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
    * mutator queries.
@@ -29,7 +30,11 @@ class QueriesTypeGenerator(
    *       transactions: ThreadLocal<Transacter.Transaction>
    *     ) : TransacterImpl(driver, transactions)
    */
-  fun generateType(packageName: String): TypeSpec {
+  fun generateType(packageName: String): TypeSpec? {
+    if (file.isEmpty()) {
+      return null
+    }
+
     val driverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val type = TypeSpec.classBuilder(file.queriesType.simpleName)
@@ -94,3 +99,5 @@ class QueriesTypeGenerator(
     }
   }
 }
+
+internal fun SqlDelightQueriesFile.isEmpty() = namedQueries.isEmpty() && namedMutators.isEmpty() && namedExecutes.isEmpty()
