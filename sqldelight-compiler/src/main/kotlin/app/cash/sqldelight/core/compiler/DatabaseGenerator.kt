@@ -78,7 +78,7 @@ internal class DatabaseGenerator(
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
@@ -139,13 +139,11 @@ internal class DatabaseGenerator(
       .addModifiers(PRIVATE)
       .addSuperclassConstructorParameter(DRIVER_NAME)
 
-    val dialectDriverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
-
     val constructor = FunSpec.constructorBuilder()
 
     // Database constructor parameter:
     // driver: SqlDriver
-    val dbParameter = ParameterSpec.builder(DRIVER_NAME, dialectDriverType).build()
+    val dbParameter = ParameterSpec.builder(DRIVER_NAME, DRIVER_TYPE).build()
     constructor.addParameter(dbParameter)
 
     // Static on create function:
