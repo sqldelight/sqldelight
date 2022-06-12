@@ -89,7 +89,6 @@ class SelectQueryGenerator(
       .build()
 
     return function
-      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addStatement(
         "return %L",
         CodeBlock
@@ -301,7 +300,6 @@ class SelectQueryGenerator(
     val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
       .addModifiers(OVERRIDE)
-      .apply { if (generateAsync) addModifiers(SUSPEND) }
       .addTypeVariable(genericResultType)
       .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(CURSOR_TYPE), returnType = genericResultType))
       .returns(QUERY_RESULT_TYPE.parameterizedBy(genericResultType))
@@ -359,4 +357,6 @@ class SelectQueryGenerator(
       )
       .build()
   }
+
+  override fun awaiting(): Pair<String, String>? = null
 }
