@@ -9,3 +9,6 @@ insertDate:
 INSERT INTO dates
 VALUES (?, ?, ?, ?)
 RETURNING *;
+
+selectDateTrunc:
+SELECT date_trunc('hour', timestamp), date_trunc('hour', timestamp_with_timezone) FROM dates;
