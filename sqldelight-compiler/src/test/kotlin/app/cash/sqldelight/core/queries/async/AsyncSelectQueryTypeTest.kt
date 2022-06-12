@@ -133,13 +133,13 @@ class AsyncSelectQueryTypeTest {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override suspend fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id}, ""${'"'}
       |  |SELECT *
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
       |    bindLong(0, id)
-      |  }.await()
+      |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}

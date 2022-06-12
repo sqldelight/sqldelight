@@ -246,8 +246,10 @@ abstract class QueryGenerator(
       binder = "%L"
     }
     if (generateAsync) {
-      binder += "%L"
-      arguments.add(".await()")
+      awaiting()?.let { (bind, arg) ->
+        binder += bind
+        arguments.add(arg)
+      }
     }
 
     val statementId = if (needsFreshStatement) "null" else "$id"
@@ -299,4 +301,6 @@ abstract class QueryGenerator(
   protected fun addJavadoc(builder: FunSpec.Builder) {
     if (query.javadoc != null) javadocText(query.javadoc)?.let { builder.addKdoc(it) }
   }
+
+  protected open fun awaiting(): Pair<String, String>? = "%L" to ".await()"
 }
