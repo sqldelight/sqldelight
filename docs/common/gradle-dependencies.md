@@ -22,3 +22,4 @@ sqldelight {
   }
 }
 ```
+If you use `deriveSchemaFromMigrations = true`, every module must also enable this feature.
