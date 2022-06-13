@@ -1,0 +1,6 @@
+CREATE TABLE foo(
+foo TEXT AS foo.M
+);
+
+insert:
+INSERT INTO foo VALUES ?;

@@ -7,6 +7,7 @@ import kotlin.Unit
 
 public class DataQueries(
   private val driver: JdbcDriver,
+  private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun insertWhole(test: Test): Unit {
     driver.execute(-2118611703, """

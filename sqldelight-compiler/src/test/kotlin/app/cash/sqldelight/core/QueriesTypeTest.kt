@@ -210,6 +210,110 @@ class QueriesTypeTest {
     )
   }
 
+  @Test fun `queries file is generated properly with adapter`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |import foo.S;
+      |
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT AS S.Bar
+      |);
+      |
+      |
+      |insertData:
+      |INSERT INTO data
+      |VALUES ?;
+      """.trimMargin(),
+      temporaryFolder, fileName = "Data.sq"
+    )
+    val insert = result.compiledFile.namedMutators.first()
+    assertThat(result.errors).isEmpty()
+
+    val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    assertThat(result.compilerOutput).containsKey(database)
+    assertThat(result.compilerOutput[database].toString()).isEqualTo(
+      """
+      |package com.example.testmodule
+      |
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
+      |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.db.SqlSchema
+      |import com.example.DataQueries
+      |import com.example.Data_
+      |import com.example.TestDatabase
+      |import kotlin.Int
+      |import kotlin.Unit
+      |import kotlin.reflect.KClass
+      |
+      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |  get() = TestDatabaseImpl.Schema
+      |
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
+      |    TestDatabase = TestDatabaseImpl(driver, data_Adapter)
+      |
+      |private class TestDatabaseImpl(
+      |  driver: SqlDriver,
+      |  data_Adapter: Data_.Adapter,
+      |) : TransacterImpl(driver), TestDatabase {
+      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
+      |
+      |  public object Schema : SqlSchema {
+      |    public override val version: Int
+      |      get() = 1
+      |
+      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |      driver.execute(null, ""${'"'}
+      |          |CREATE TABLE data (
+      |          |  id INTEGER PRIMARY KEY,
+      |          |  value TEXT
+      |          |)
+      |          ""${'"'}.trimMargin(), 0)
+      |      return QueryResult.Unit
+      |    }
+      |
+      |    public override fun migrate(
+      |      driver: SqlDriver,
+      |      oldVersion: Int,
+      |      newVersion: Int,
+      |    ): QueryResult<Unit> = QueryResult.Unit
+      |  }
+      |}
+      |""".trimMargin()
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Unit
+      |
+      |public class DataQueries(
+      |  private val driver: SqlDriver,
+      |  private val data_Adapter: Data_.Adapter,
+      |) : TransacterImpl(driver) {
+      |  public fun insertData(data_: Data_): Unit {
+      |    driver.execute(${insert.id}, ""${'"'}
+      |        |INSERT INTO data
+      |        |VALUES (?, ?)
+      |        ""${'"'}.trimMargin(), 2) {
+      |          bindLong(0, data_.id)
+      |          bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        }
+      |    notifyQueries(${insert.id}) { emit ->
+      |      emit("data")
+      |    }
+      |  }
+      |}
+      |""".trimMargin()
+    )
+  }
+
   @Test fun `unused adapters are not passed to the database constructor`() {
     val result = FixtureCompiler.compileSql(
       """
