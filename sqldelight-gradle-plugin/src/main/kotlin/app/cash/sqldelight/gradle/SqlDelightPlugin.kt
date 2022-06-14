@@ -27,6 +27,7 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.util.concurrent.atomic.AtomicBoolean
@@ -65,6 +66,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
     project.plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
     project.plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
+    project.plugins.withId("org.jetbrains.kotlin.js", kotlinPluginHandler)
     project.plugins.withId("kotlin2js", kotlinPluginHandler)
 
     project.afterEvaluate {
@@ -81,6 +83,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+    val isJsOnly = if (isMultiplatform) false else project.plugins.hasPlugin("org.jetbrains.kotlin.js")
 
     val needsAsyncRuntime = extension.databases.any { it.generateAsync }
     val runtimeDependencies = mutableListOf<Dependency>().apply {
@@ -94,6 +97,13 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         val sourceSets =
           project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
         val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
+        project.configurations.getByName(sourceSet.apiConfigurationName)
+          .dependencies.addAll(runtimeDependencies)
+      }
+      isJsOnly -> {
+        val sourceSets =
+          project.extensions.getByType(KotlinJsProjectExtension::class.java).sourceSets
+        val sourceSet = (sourceSets.getByName("main") as DefaultKotlinSourceSet)
         project.configurations.getByName(sourceSet.apiConfigurationName)
           .dependencies.addAll(runtimeDependencies)
       }
