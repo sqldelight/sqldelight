@@ -41,6 +41,23 @@ class PluginTest {
   }
 
   @Test
+  fun `Applying the plugin works fine for js projects`() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/kotlin-js"))
+
+    val result = runner
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+
+    // Assert the plugin added the common dependency
+    val dependenciesResult = runner
+      .withArguments("dependencies", "--stacktrace")
+      .build()
+    assertThat(dependenciesResult.output).contains("app.cash.sqldelight:runtime")
+  }
+
+  @Test
   fun `Applying the plugin works fine for multiplatform projects`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/kotlin-mpp"))
