@@ -107,8 +107,8 @@ class FakeSqlDriver : SqlDriver {
     return QueryResult.Value(0)
   }
 
-  override fun newTransaction(): Transaction {
-    return FakeTransaction()
+  override fun newTransaction(): QueryResult<Transaction> {
+    return QueryResult.Value(FakeTransaction())
   }
 
   override fun currentTransaction(): Transaction? {
@@ -157,6 +157,5 @@ class FakeSqlCursor : SqlCursor {
 class FakeTransaction : Transaction() {
   override val enclosingTransaction: Transaction? = null
 
-  override fun endTransaction(successful: Boolean) {
-  }
+  override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.Unit
 }

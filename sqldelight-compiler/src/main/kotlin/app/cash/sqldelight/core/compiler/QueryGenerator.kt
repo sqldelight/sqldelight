@@ -58,9 +58,11 @@ abstract class QueryGenerator(
 
     if (query.statement is SqlDelightStmtClojureStmtList) {
       if (query is NamedQuery) {
-        result.add("return transactionWithResult {\n").indent()
+        val transaction = if (generateAsync) "suspendingTransactionWithResult" else "transactionWithResult"
+        result.add("return $transaction {\n").indent()
       } else {
-        result.add("transaction {\n").indent()
+        val transaction = if (generateAsync) "suspendingTransaction" else "transaction"
+        result.add("$transaction {\n").indent()
       }
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))
@@ -246,9 +248,16 @@ abstract class QueryGenerator(
       binder = "%L"
     }
     if (generateAsync) {
-      awaiting()?.let { (bind, arg) ->
-        binder += bind
-        arguments.add(arg)
+      val awaiter = awaiting()
+
+      if (isNamedQuery) {
+        awaiter?.let { (bind, arg) ->
+          binder += bind
+          arguments.add(arg)
+        }
+      } else {
+        binder += "%L"
+        arguments.add(".await()")
       }
     }
 

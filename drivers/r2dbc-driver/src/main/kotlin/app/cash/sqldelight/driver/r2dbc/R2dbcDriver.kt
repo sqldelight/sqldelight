@@ -51,15 +51,23 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     }
   }
 
-  private val transactions = ThreadLocal<Transaction>()
-  private var transaction: Transaction?
+  private val transactions = ThreadLocal<Transacter.Transaction>()
+  private var transaction: Transacter.Transaction?
     get() = transactions.get()
     set(value) {
       transactions.set(value)
     }
 
-  override fun newTransaction(): Transacter.Transaction {
-    throw NotImplementedError("Begin transaction manually using execute()")
+  override fun newTransaction(): QueryResult<Transacter.Transaction> = QueryResult.AsyncValue {
+    val enclosing = transaction
+    val transaction = Transaction(enclosing, connection)
+    this.transaction = transaction
+
+    if (enclosing == null) {
+      connection.beginTransaction().awaitSingle()
+    }
+
+    return@AsyncValue transaction
   }
 
   override fun currentTransaction(): Transacter.Transaction? = transaction
@@ -73,12 +81,19 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     connection.close()
   }
 
-  private class Transaction(
+  private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?,
     private val connection: Connection
   ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
-      throw NotImplementedError("End transaction manually using execute()")
+    override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
+      if (enclosingTransaction == null) {
+        if (successful) {
+          connection.commitTransaction().awaitSingle()
+        } else {
+          connection.rollbackTransaction().awaitSingle()
+        }
+      }
+      transaction = enclosingTransaction
     }
   }
 }

@@ -16,6 +16,7 @@
 package app.cash.sqldelight
 
 import app.cash.sqldelight.Transacter.Transaction
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.internal.currentThreadId
 
@@ -31,6 +32,18 @@ interface TransactionWithReturn<R> : TransactionCallbacks {
   fun <R> transaction(body: TransactionWithReturn<R>.() -> R): R
 }
 
+interface SuspendingTransactionWithReturn<R> : TransactionCallbacks {
+  /**
+   * Rolls back this transaction.
+   */
+  fun rollback(returnValue: R): Nothing
+
+  /**
+   * Begin an inner transaction.
+   */
+  suspend fun <R> transaction(body: suspend SuspendingTransactionWithReturn<R>.() -> R): R
+}
+
 interface TransactionWithoutReturn : TransactionCallbacks {
   /**
    * Rolls back this transaction.
@@ -41,6 +54,18 @@ interface TransactionWithoutReturn : TransactionCallbacks {
    * Begin an inner transaction.
    */
   fun transaction(body: TransactionWithoutReturn.() -> Unit)
+}
+
+interface SuspendingTransactionWithoutReturn : TransactionCallbacks {
+  /**
+   * Rolls back this transaction.
+   */
+  fun rollback(): Nothing
+
+  /**
+   * Begin an inner transaction.
+   */
+  suspend fun transactionWithResult(body: suspend SuspendingTransactionWithoutReturn.() -> Unit)
 }
 
 /**
@@ -67,6 +92,16 @@ interface Transacter {
   fun transaction(
     noEnclosing: Boolean = false,
     body: TransactionWithoutReturn.() -> Unit
+  )
+
+  suspend fun <R> suspendingTransactionWithResult(
+    noEnclosing: Boolean = false,
+    bodyWithResult: suspend SuspendingTransactionWithReturn<R>.() -> R
+  ): R
+
+  suspend fun suspendingTransaction(
+    noEnclosing: Boolean = false,
+    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
   )
 
   /**
@@ -101,11 +136,11 @@ interface Transacter {
      *
      * @param successful Whether the transaction completed successfully or not.
      */
-    abstract fun endTransaction(successful: Boolean)
+    abstract fun endTransaction(successful: Boolean): QueryResult<Unit>
 
-    internal fun endTransaction() {
+    internal fun endTransaction(): QueryResult<Unit> {
       checkThreadConfinement()
-      endTransaction(successful && childrenSuccessful)
+      return endTransaction(successful && childrenSuccessful)
     }
 
     /**
@@ -170,6 +205,41 @@ private class TransactionWrapper<R>(
   }
 }
 
+private class SuspendingTransactionWrapper<R>(
+  val transaction: Transaction
+) : SuspendingTransactionWithoutReturn, SuspendingTransactionWithReturn<R> {
+  override fun rollback(): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException()
+  }
+  override fun rollback(returnValue: R): Nothing {
+    transaction.checkThreadConfinement()
+    throw RollbackException(returnValue)
+  }
+
+  /**
+   * Queues [function] to be run after this transaction successfully commits.
+   */
+  override fun afterCommit(function: () -> Unit) {
+    transaction.afterCommit(function)
+  }
+
+  /**
+   * Queues [function] to be run after this transaction rolls back.
+   */
+  override fun afterRollback(function: () -> Unit) {
+    transaction.afterRollback(function)
+  }
+
+  override suspend fun transactionWithResult(body: suspend SuspendingTransactionWithoutReturn.() -> Unit) {
+    transaction.transacter!!.suspendingTransaction(false, body)
+  }
+
+  override suspend fun <R> transaction(body: suspend SuspendingTransactionWithReturn<R>.() -> R): R {
+    return transaction.transacter!!.suspendingTransactionWithResult(false, body)
+  }
+}
+
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
@@ -220,8 +290,67 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     return transactionWithWrapper(noEnclosing, bodyWithReturn)
   }
 
+  override suspend fun <R> suspendingTransactionWithResult(
+    noEnclosing: Boolean,
+    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R
+  ): R {
+    return suspendingTransactionWithWrapper(noEnclosing, bodyWithReturn)
+  }
+
+  override suspend fun suspendingTransaction(
+    noEnclosing: Boolean,
+    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
+  ) {
+    return suspendingTransactionWithWrapper(noEnclosing, body)
+  }
+
+  private fun <R> postTransactionCleanup(transaction: Transaction, enclosing: Transaction?, thrownException: Throwable?, returnValue: R?): R {
+    if (enclosing == null) {
+      if (!transaction.successful || !transaction.childrenSuccessful) {
+        // TODO: If this throws, and we threw in [body] then create a composite exception.
+        try {
+          transaction.postRollbackHooks.forEach { it.invoke() }
+        } catch (rollbackException: Throwable) {
+          thrownException?.let {
+            throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
+          }
+          throw rollbackException
+        }
+        transaction.postRollbackHooks.clear()
+      } else {
+        if (transaction.pendingTables.isNotEmpty()) {
+          driver.notifyListeners(transaction.pendingTables.toTypedArray())
+        }
+        transaction.pendingTables.clear()
+        transaction.registeredQueries.clear()
+        transaction.postCommitHooks.forEach { it.invoke() }
+        transaction.postCommitHooks.clear()
+      }
+    } else {
+      enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
+      enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
+      enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
+      enclosing.registeredQueries.addAll(transaction.registeredQueries)
+      enclosing.pendingTables.addAll(transaction.pendingTables)
+    }
+
+    if (enclosing == null && thrownException is RollbackException) {
+      // We can safely cast to R here because the rollback exception is always created with the
+      // correct type.
+      @Suppress("UNCHECKED_CAST")
+      return thrownException.value as R
+    } else if (thrownException != null) {
+      throw thrownException
+    } else {
+      // We can safely cast to R here because any code path that led here will have set the
+      // returnValue to the result of the block
+      @Suppress("UNCHECKED_CAST")
+      return returnValue as R
+    }
+  }
+
   private fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: TransactionWrapper<R>.() -> R): R {
-    val transaction = driver.newTransaction()
+    val transaction = driver.newTransaction().value
     val enclosing = transaction.enclosingTransaction()
 
     check(enclosing == null || !noEnclosing) { "Already in a transaction" }
@@ -237,48 +366,28 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
       thrownException = e
     } finally {
       transaction.endTransaction()
-      if (enclosing == null) {
-        if (!transaction.successful || !transaction.childrenSuccessful) {
-          // TODO: If this throws, and we threw in [body] then create a composite exception.
-          try {
-            transaction.postRollbackHooks.forEach { it.invoke() }
-          } catch (rollbackException: Throwable) {
-            thrownException?.let {
-              throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
-            }
-            throw rollbackException
-          }
-          transaction.postRollbackHooks.clear()
-        } else {
-          if (transaction.pendingTables.isNotEmpty()) {
-            driver.notifyListeners(transaction.pendingTables.toTypedArray())
-          }
-          transaction.pendingTables.clear()
-          transaction.registeredQueries.clear()
-          transaction.postCommitHooks.forEach { it.invoke() }
-          transaction.postCommitHooks.clear()
-        }
-      } else {
-        enclosing.childrenSuccessful = transaction.successful && transaction.childrenSuccessful
-        enclosing.postCommitHooks.addAll(transaction.postCommitHooks)
-        enclosing.postRollbackHooks.addAll(transaction.postRollbackHooks)
-        enclosing.registeredQueries.addAll(transaction.registeredQueries)
-        enclosing.pendingTables.addAll(transaction.pendingTables)
-      }
+      return postTransactionCleanup(transaction, enclosing, thrownException, returnValue)
+    }
+  }
 
-      if (enclosing == null && thrownException is RollbackException) {
-        // We can safely cast to R here because the rollback exception is always created with the
-        // correct type.
-        @Suppress("UNCHECKED_CAST")
-        return thrownException.value as R
-      } else if (thrownException != null) {
-        throw thrownException
-      } else {
-        // We can safely cast to R here because any code path that led here will have set the
-        // returnValue to the result of the block
-        @Suppress("UNCHECKED_CAST")
-        return returnValue as R
-      }
+  private suspend fun <R> suspendingTransactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend SuspendingTransactionWrapper<R>.() -> R): R {
+    val transaction = driver.newTransaction().await()
+    val enclosing = transaction.enclosingTransaction()
+
+    check(enclosing == null || !noEnclosing) { "Already in a transaction" }
+
+    var thrownException: Throwable? = null
+    var returnValue: R? = null
+
+    try {
+      transaction.transacter = this
+      returnValue = SuspendingTransactionWrapper<R>(transaction).wrapperBody()
+      transaction.successful = true
+    } catch (e: Throwable) {
+      thrownException = e
+    } finally {
+      transaction.endTransaction().await()
+      return postTransactionCleanup(transaction, enclosing, thrownException, returnValue)
     }
   }
 }

@@ -72,7 +72,7 @@ interface SqlDriver : Closeable {
    *
    * It's up to the implementor how this method behaves for different connection/threading patterns.
    */
-  fun newTransaction(): Transacter.Transaction
+  fun newTransaction(): QueryResult<Transacter.Transaction>
 
   /**
    * The currently open [Transacter.Transaction] on the database.

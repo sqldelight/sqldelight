@@ -17,6 +17,8 @@ sealed interface QueryResult<T> {
   suspend fun await(): T
 
   data class Value<T>(override val value: T) : QueryResult<T> {
+    constructor(block: () -> T) : this(block())
+
     override suspend fun await() = value
   }
 
