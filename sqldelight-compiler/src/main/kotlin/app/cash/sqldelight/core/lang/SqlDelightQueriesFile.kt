@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
@@ -128,7 +129,9 @@ class SqlDelightQueriesFile(
       val parent = binder.parent
       if (parent is SqlDelightInsertStmtValues && parent.valuesExpressionList.isEmpty()) {
         val table = parent.tablesAvailable(binder).first()
-        return listOf(table.adapterProperty())
+        return if (table.needsAdapters()) {
+          listOf(table.adapterProperty())
+        } else null
       }
     }
     return null
