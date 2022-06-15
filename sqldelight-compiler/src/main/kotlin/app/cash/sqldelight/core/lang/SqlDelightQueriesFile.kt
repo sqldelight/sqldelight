@@ -16,8 +16,8 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
+import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Delete
