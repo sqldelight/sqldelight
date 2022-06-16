@@ -294,7 +294,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |
       |public class DataQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |  private val data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun insertData(data_: Data_): Unit {
