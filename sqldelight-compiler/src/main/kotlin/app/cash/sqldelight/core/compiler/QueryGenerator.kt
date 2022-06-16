@@ -58,11 +58,9 @@ abstract class QueryGenerator(
 
     if (query.statement is SqlDelightStmtClojureStmtList) {
       if (query is NamedQuery) {
-        val transaction = if (generateAsync) "suspendingTransactionWithResult" else "transactionWithResult"
-        result.add("return $transaction {\n").indent()
+        result.add("return transactionWithResult {\n").indent()
       } else {
-        val transaction = if (generateAsync) "suspendingTransaction" else "transaction"
-        result.add("$transaction {\n").indent()
+        result.add("transaction {\n").indent()
       }
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))

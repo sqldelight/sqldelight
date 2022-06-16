@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.compiler
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.lang.DRIVER_NAME
+import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.queriesType
@@ -38,7 +39,7 @@ class QueriesTypeGenerator(
     val driverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
 
     val type = TypeSpec.classBuilder(file.queriesType.simpleName)
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) SUSPENDING_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
 
     val constructor = FunSpec.constructorBuilder()
 

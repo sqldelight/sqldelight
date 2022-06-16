@@ -45,3 +45,5 @@ internal val SqlDelightFile.queriesType
 
 internal val TRANSACTER_TYPE = ClassName("app.cash.sqldelight", "Transacter")
 internal val TRANSACTER_IMPL_TYPE = ClassName("app.cash.sqldelight", "TransacterImpl")
+internal val SUSPENDING_TRANSACTER_TYPE = ClassName("app.cash.sqldelight", "SuspendingTransacter")
+internal val SUSPENDING_TRANSACTER_IMPL_TYPE = ClassName("app.cash.sqldelight", "SuspendingTransacterImpl")

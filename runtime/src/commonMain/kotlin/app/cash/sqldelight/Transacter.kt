@@ -68,10 +68,12 @@ interface SuspendingTransactionWithoutReturn : TransactionCallbacks {
   suspend fun transactionWithResult(body: suspend SuspendingTransactionWithoutReturn.() -> Unit)
 }
 
+sealed interface TransacterBase
+
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
-interface Transacter {
+interface Transacter : TransacterBase {
   /**
    * Starts a [Transaction] and runs [body] in that transaction.
    *
@@ -94,16 +96,6 @@ interface Transacter {
     body: TransactionWithoutReturn.() -> Unit
   )
 
-  suspend fun <R> suspendingTransactionWithResult(
-    noEnclosing: Boolean = false,
-    bodyWithResult: suspend SuspendingTransactionWithReturn<R>.() -> R
-  ): R
-
-  suspend fun suspendingTransaction(
-    noEnclosing: Boolean = false,
-    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
-  )
-
   /**
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
    * through an implementation of [Transacter] by calling [Transacter.transaction].
@@ -122,12 +114,12 @@ interface Transacter {
     internal var successful: Boolean = false
 
     internal var childrenSuccessful: Boolean = true
-    internal var transacter: Transacter? = null
+    internal var transacter: TransacterBase? = null
 
     /**
      * The parent transaction, if there is any.
      */
-    abstract val enclosingTransaction: Transaction?
+    protected abstract val enclosingTransaction: Transaction?
 
     internal fun enclosingTransaction() = enclosingTransaction
 
@@ -136,7 +128,7 @@ interface Transacter {
      *
      * @param successful Whether the transaction completed successfully or not.
      */
-    abstract fun endTransaction(successful: Boolean): QueryResult<Unit>
+    protected abstract fun endTransaction(successful: Boolean): QueryResult<Unit>
 
     internal fun endTransaction(): QueryResult<Unit> {
       checkThreadConfinement()
@@ -168,6 +160,33 @@ interface Transacter {
   }
 }
 
+/**
+ * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
+ */
+interface SuspendingTransacter : TransacterBase {
+  /**
+   * Starts a [Transaction] and runs [body] in that transaction.
+   *
+   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
+   *   [Transaction] on this thread.
+   */
+  suspend fun <R> transactionWithResult(
+    noEnclosing: Boolean = false,
+    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R
+  ): R
+
+  /**
+   * Starts a [Transaction] and runs [body] in that transaction.
+   *
+   * @throws IllegalStateException if [noEnclosing] is true and there is already an active
+   *   [Transaction] on this thread.
+   */
+  suspend fun transaction(
+    noEnclosing: Boolean = false,
+    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
+  )
+}
+
 private class RollbackException(val value: Any? = null) : Throwable()
 
 private class TransactionWrapper<R>(
@@ -197,11 +216,11 @@ private class TransactionWrapper<R>(
   }
 
   override fun transaction(body: TransactionWithoutReturn.() -> Unit) {
-    transaction.transacter!!.transaction(false, body)
+    (transaction.transacter as Transacter).transaction(false, body)
   }
 
   override fun <R> transaction(body: TransactionWithReturn<R>.() -> R): R {
-    return transaction.transacter!!.transactionWithResult(false, body)
+    return (transaction.transacter as Transacter).transactionWithResult(false, body)
   }
 }
 
@@ -232,79 +251,16 @@ private class SuspendingTransactionWrapper<R>(
   }
 
   override suspend fun transactionWithResult(body: suspend SuspendingTransactionWithoutReturn.() -> Unit) {
-    transaction.transacter!!.suspendingTransaction(false, body)
+    (transaction.transacter as SuspendingTransacter).transaction(false, body)
   }
 
   override suspend fun <R> transaction(body: suspend SuspendingTransactionWithReturn<R>.() -> R): R {
-    return transaction.transacter!!.suspendingTransactionWithResult(false, body)
+    return (transaction.transacter as SuspendingTransacter).transactionWithResult(false, body)
   }
 }
 
-/**
- * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
- */
-abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
-  /**
-   * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has
-   * changed.
-   */
-  protected fun notifyQueries(identifier: Int, tableProvider: ((String) -> Unit) -> Unit) {
-    val transaction = driver.currentTransaction()
-    if (transaction != null) {
-      if (transaction.registeredQueries.add(identifier)) {
-        tableProvider { transaction.pendingTables.add(it) }
-      }
-    } else {
-      val tableKeys = mutableSetOf<String>()
-      tableProvider { tableKeys.add(it) }
-      driver.notifyListeners(tableKeys.toTypedArray())
-    }
-  }
-
-  /**
-   * For internal use, creates a string in the format (?, ?, ?) where there are [count] offset.
-   */
-  protected fun createArguments(count: Int): String {
-    if (count == 0) return "()"
-
-    return buildString(count + 2) {
-      append("(?")
-      repeat(count - 1) {
-        append(",?")
-      }
-      append(')')
-    }
-  }
-
-  override fun transaction(
-    noEnclosing: Boolean,
-    body: TransactionWithoutReturn.() -> Unit
-  ) {
-    transactionWithWrapper<Unit?>(noEnclosing, body)
-  }
-
-  override fun <R> transactionWithResult(
-    noEnclosing: Boolean,
-    bodyWithReturn: TransactionWithReturn<R>.() -> R
-  ): R {
-    return transactionWithWrapper(noEnclosing, bodyWithReturn)
-  }
-
-  override suspend fun <R> suspendingTransactionWithResult(
-    noEnclosing: Boolean,
-    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R
-  ): R {
-    return suspendingTransactionWithWrapper(noEnclosing, bodyWithReturn)
-  }
-
-  override suspend fun suspendingTransaction(
-    noEnclosing: Boolean,
-    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
-  ) {
-    return suspendingTransactionWithWrapper(noEnclosing, body)
-  }
-
-  private fun <R> postTransactionCleanup(transaction: Transaction, enclosing: Transaction?, thrownException: Throwable?, returnValue: R?): R {
+abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
+  protected fun <R> postTransactionCleanup(transaction: Transaction, enclosing: Transaction?, thrownException: Throwable?, returnValue: R?): R {
     if (enclosing == null) {
       if (!transaction.successful || !transaction.childrenSuccessful) {
         // TODO: If this throws, and we threw in [body] then create a composite exception.
@@ -349,6 +305,57 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
     }
   }
 
+  /**
+   * For internal use, notifies the listeners provided by [listenerProvider] that their underlying result set has
+   * changed.
+   */
+  protected fun notifyQueries(identifier: Int, tableProvider: ((String) -> Unit) -> Unit) {
+    val transaction = driver.currentTransaction()
+    if (transaction != null) {
+      if (transaction.registeredQueries.add(identifier)) {
+        tableProvider { transaction.pendingTables.add(it) }
+      }
+    } else {
+      val tableKeys = mutableSetOf<String>()
+      tableProvider { tableKeys.add(it) }
+      driver.notifyListeners(tableKeys.toTypedArray())
+    }
+  }
+
+  /**
+   * For internal use, creates a string in the format (?, ?, ?) where there are [count] offset.
+   */
+  protected fun createArguments(count: Int): String {
+    if (count == 0) return "()"
+
+    return buildString(count + 2) {
+      append("(?")
+      repeat(count - 1) {
+        append(",?")
+      }
+      append(')')
+    }
+  }
+}
+
+/**
+ * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
+ */
+abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), Transacter {
+  override fun transaction(
+    noEnclosing: Boolean,
+    body: TransactionWithoutReturn.() -> Unit
+  ) {
+    transactionWithWrapper<Unit?>(noEnclosing, body)
+  }
+
+  override fun <R> transactionWithResult(
+    noEnclosing: Boolean,
+    bodyWithReturn: TransactionWithReturn<R>.() -> R
+  ): R {
+    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+  }
+
   private fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: TransactionWrapper<R>.() -> R): R {
     val transaction = driver.newTransaction().value
     val enclosing = transaction.enclosingTransaction()
@@ -369,8 +376,24 @@ abstract class TransacterImpl(private val driver: SqlDriver) : Transacter {
       return postTransactionCleanup(transaction, enclosing, thrownException, returnValue)
     }
   }
+}
 
-  private suspend fun <R> suspendingTransactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend SuspendingTransactionWrapper<R>.() -> R): R {
+abstract class SuspendingTransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), SuspendingTransacter {
+  override suspend fun <R> transactionWithResult(
+    noEnclosing: Boolean,
+    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R
+  ): R {
+    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+  }
+
+  override suspend fun transaction(
+    noEnclosing: Boolean,
+    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
+  ) {
+    return transactionWithWrapper(noEnclosing, body)
+  }
+
+  private suspend fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend SuspendingTransactionWrapper<R>.() -> R): R {
     val transaction = driver.newTransaction().await()
     val enclosing = transaction.enclosingTransaction()
 

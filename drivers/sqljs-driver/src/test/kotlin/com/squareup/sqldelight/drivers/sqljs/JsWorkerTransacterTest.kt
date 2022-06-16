@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
-import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.SuspendingTransacter
+import app.cash.sqldelight.SuspendingTransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -23,9 +23,9 @@ class JsWorkerTransacterTest {
     ): QueryResult<Unit> = QueryResult.Unit
   }
 
-  private fun runTest(block: suspend (SqlDriver, Transacter) -> Unit) = kotlinx.coroutines.test.runTest {
+  private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) = kotlinx.coroutines.test.runTest {
     val driver = initAsyncSqlDriver(schema = schema)
-    val transacter = object : TransacterImpl(driver) {}
+    val transacter = object : SuspendingTransacterImpl(driver) {}
     block(driver, transacter)
 
     driver.close()
@@ -33,7 +33,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterCommit_runs_after_transaction_commits() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
       assertEquals(0, counter)
     }
@@ -43,7 +43,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterCommit_does_not_run_after_transaction_rollbacks() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
       assertEquals(0, counter)
       rollback()
@@ -54,7 +54,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterCommit_runs_after_enclosing_transaction_commits() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
       assertEquals(0, counter)
 
@@ -71,7 +71,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterCommit_does_not_run_in_nested_transaction_when_enclosing_rolls_back() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
       assertEquals(0, counter)
 
@@ -87,7 +87,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterCommit_does_not_run_in_nested_transaction_when_nested_rolls_back() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
       assertEquals(0, counter)
 
@@ -104,7 +104,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterRollback_no_ops_if_the_transaction_never_rolls_back() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterRollback { counter++ }
     }
 
@@ -113,7 +113,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterRollback_runs_after_a_rollback_occurs() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterRollback { counter++ }
       rollback()
     }
@@ -123,7 +123,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterRollback_runs_after_an_inner_transaction_rolls_back() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterRollback { counter++ }
       transactionWithResult {
         rollback()
@@ -136,7 +136,7 @@ class JsWorkerTransacterTest {
 
   @Test fun afterRollback_runs_in_an_inner_transaction_when_the_outer_transaction_rolls_back() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       transactionWithResult {
         afterRollback { counter++ }
       }
@@ -148,11 +148,11 @@ class JsWorkerTransacterTest {
 
   @Test fun transactions_close_themselves_out_properly() = runTest { _, transacter ->
     var counter = 0
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
     }
 
-    transacter.suspendingTransaction {
+    transacter.transaction {
       afterCommit { counter++ }
     }
 
@@ -160,9 +160,9 @@ class JsWorkerTransacterTest {
   }
 
   @Test fun setting_no_enclosing_fails_if_there_is_a_currently_running_transaction() = runTest { _, transacter ->
-    transacter.suspendingTransaction(noEnclosing = true) {
+    transacter.transaction(noEnclosing = true) {
       assertFailsWith<IllegalStateException> {
-        transacter.suspendingTransaction(noEnclosing = true) {
+        transacter.transaction(noEnclosing = true) {
           throw AssertionError()
         }
       }
@@ -173,7 +173,7 @@ class JsWorkerTransacterTest {
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
     try {
-      transacter.suspendingTransaction {
+      transacter.transaction {
         afterRollback {
           throw ExceptionA()
         }

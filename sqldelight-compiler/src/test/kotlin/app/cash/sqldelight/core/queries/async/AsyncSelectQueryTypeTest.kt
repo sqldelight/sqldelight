@@ -176,7 +176,7 @@ class AsyncSelectQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public suspend fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
-      |  suspendingTransaction {
+      |  transaction {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
@@ -229,7 +229,7 @@ class AsyncSelectQueryTypeTest {
       |  public val value_: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = suspendingTransactionWithResult {
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = transactionWithResult {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
