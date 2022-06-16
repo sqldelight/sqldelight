@@ -17,6 +17,7 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
+import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator.Delete
@@ -114,7 +115,7 @@ class SqlDelightQueriesFile(
     val binders = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
     val argumentAdapters = binders.flatMap {
       it.parentOfTypeOrNull<SqlInsertStmt>()?.let {
-        if (it.acceptsTableInterface()) return@flatMap listOf(it.table.adapterProperty())
+        if (it.acceptsTableInterface() && it.table.needsAdapters()) return@flatMap listOf(it.table.adapterProperty())
       }
       listOf(typeResolver.argumentType(it).parentAdapter())
     }.filterNotNull()
