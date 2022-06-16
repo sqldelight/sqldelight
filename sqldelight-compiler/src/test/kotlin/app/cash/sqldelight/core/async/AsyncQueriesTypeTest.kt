@@ -131,7 +131,7 @@ class AsyncQueriesTypeTest {
       |import kotlin.collections.setOf
       |
       |public class DataQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |  private val data_Adapter: Data_.Adapter,
       |  private val otherAdapter: Other.Adapter,
       |) : SuspendingTransacterImpl(driver) {

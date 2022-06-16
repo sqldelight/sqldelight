@@ -10,8 +10,6 @@ import app.cash.sqldelight.core.lang.queriesType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
 class QueriesTypeGenerator(
@@ -43,13 +41,7 @@ class QueriesTypeGenerator(
 
     val constructor = FunSpec.constructorBuilder()
 
-    // Add the driver as a constructor property and superclass parameter:
-    // private val driver: SqlDriver
-    type.addProperty(
-      PropertySpec.builder(DRIVER_NAME, driverType, PRIVATE)
-        .initializer(DRIVER_NAME)
-        .build()
-    )
+    // Add the driver as a constructor parameter:
     constructor.addParameter(DRIVER_NAME, driverType)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 

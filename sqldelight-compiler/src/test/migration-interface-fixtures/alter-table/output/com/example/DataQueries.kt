@@ -9,7 +9,7 @@ import kotlin.String
 import kotlin.collections.List
 
 public class DataQueries(
-  private val driver: SqlDriver,
+  driver: SqlDriver,
   private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> migrationSelect(mapper: (first: String, second: List<Int>?) -> T): Query<T> =

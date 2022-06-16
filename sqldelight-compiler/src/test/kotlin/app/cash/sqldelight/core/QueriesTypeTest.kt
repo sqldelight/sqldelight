@@ -128,7 +128,7 @@ class QueriesTypeTest {
       |import kotlin.collections.setOf
       |
       |public class DataQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |  private val data_Adapter: Data_.Adapter,
       |  private val otherAdapter: Other.Adapter,
       |) : TransacterImpl(driver) {
@@ -471,7 +471,7 @@ class QueriesTypeTest {
       |import kotlin.collections.List
       |
       |public class DataQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |  private val data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
@@ -622,7 +622,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |
       |public class SearchQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectOffsets(search: String, mapper: (id: Long, offsets: String?) -> T):
       |      Query<T> = SelectOffsetsQuery(search) { cursor ->

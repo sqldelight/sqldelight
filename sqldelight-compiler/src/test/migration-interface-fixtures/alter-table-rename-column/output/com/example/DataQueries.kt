@@ -6,7 +6,7 @@ import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
 import kotlin.Unit
 
 public class DataQueries(
-  private val driver: JdbcDriver,
+  driver: JdbcDriver,
   private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun insertWhole(test: Test): Unit {
