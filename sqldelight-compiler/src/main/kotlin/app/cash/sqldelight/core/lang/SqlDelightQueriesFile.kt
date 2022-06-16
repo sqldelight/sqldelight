@@ -113,12 +113,12 @@ class SqlDelightQueriesFile(
    */
   internal val requiredAdapters by lazy {
     val binders = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
-    val argumentAdapters = binders.flatMap {
+    val argumentAdapters = binders.mapNotNull {
       it.parentOfTypeOrNull<SqlInsertStmt>()?.let {
-        if (it.acceptsTableInterface() && it.table.needsAdapters()) return@flatMap listOf(it.table.adapterProperty())
+        if (it.acceptsTableInterface() && it.table.needsAdapters()) return@mapNotNull it.table.adapterProperty()
       }
-      listOf(typeResolver.argumentType(it).parentAdapter())
-    }.filterNotNull()
+      typeResolver.argumentType(it).parentAdapter()
+    }
 
     val resultColumnAdapters = namedQueries.flatMap {
       it.resultColumnRequiredAdapters
