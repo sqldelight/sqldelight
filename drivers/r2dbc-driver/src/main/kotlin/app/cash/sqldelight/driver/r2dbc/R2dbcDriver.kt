@@ -98,7 +98,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
   }
 }
 
-open class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
+class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       statement.bindNull(index, ByteArray::class.java)
@@ -151,7 +151,7 @@ open class R2dbcPreparedStatement(private val statement: Statement) : SqlPrepare
 /**
  * TODO: Write a better async cursor API
  */
-open class R2dbcCursor(val rowSet: List<Map<Int, Any?>>) : SqlCursor {
+class R2dbcCursor(val rowSet: List<Map<Int, Any?>>) : SqlCursor {
   var row = -1
     private set
 
