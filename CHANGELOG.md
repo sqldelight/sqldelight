@@ -1,5 +1,71 @@
 # Change Log
 
+## [2.0.0-alpha02] - 2022-06-17
+
+### Breaking Changes
+
+- Dialects are now references like actual gradle dependencies.
+```groovy
+sqldelight {
+  MyDatabase {
+    dialect("app.cash.sqldelight:postgres-dialect:2.0.0-alpha03")
+  }
+}
+```
+- The `AfterVersionWithDriver` type was removed in favour of `AfterVersion` which now always has the driver.
+- The `Schema` type is no longer a subtype of `SqlDriver`
+- `PreparedStatement` APIs are now called with zero-based indexes.
+
+### Added
+- [IDE Plugin] Added support for running SQLite, MySQL, and PostgreSQL commands against a running database (#2718 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add support for the android studio DB inspector (#3107 by [Alexander Perfilyev][aperfilyev])
+- [Runtime] Add support for async drivers (#3168 by [Derek Ellis][dellisd])
+- [Native Driver] Support new kotlin native memory model (#3177 by [Kevin Galligan][kpgalligan])
+- [JS Driver] Add a driver for SqlJs workers (#3203 by [Derek Ellis][dellisd])
+- [Gradle Plugin] Expose the classpath for SQLDelight tasks
+- [Gradle Plugin] Add a gradle task for squashing migrations
+- [Gradle Plugin] Add a flag to ignore schema definitions during migration checks
+- [MySQL Dialect] Support FOR SHARE and FOR UPDATE in MySQL (#3098)
+- [MySQL Dialect] Support MySQL index hints (#3099)
+- [PostgreSQL Dialect] Add date_trunc (#3295 by [Philip Wedemann][hfhbd])
+- [JSON Extensions] Support JSON table functions (#3090)
+
+### Changed
+- [Runtime] Remove the AfterVersion type without the driver (#3091)
+- [Runtime] Move Schema type to top-level
+- [Runtime] Open dialect and resolver to support 3rd party implementations (#3232 by [Philip Wedemann][hfhbd])
+- [Compiler] Include the dialect used to compile in failure reports (#3086)
+- [Compiler] Skip unused adapters (#3162 by [Eliezer Graber][eygraber])
+- [Compiler] Use zero based index in PrepareStatement (#3269 by [Philip Wedemann][hfhbd])
+- [Gradle Plugin] Also make the dialect a proper gradle dependency instead of a string (#3085)
+- [Gradle Plugin] Gradle Verify Task: Throw when missing database file. (#3126 by [Niklas Baudy][vanniktech])
+
+### Fixed
+- [Gradle Plugin] Minor cleanups and tweaks to the Gradle plugin (#3171 by [Matthew Haughton][3flex])
+- [Gradle Plugin] Dont use an AGP string for the generated directory
+- [Gradle Plugin] Use AGP namespace attribute (#3220)
+- [Gradle Plugin] Do not add kotlin-stdlib as a runtime dependency of the Gradle plugin (#3245 by [Martin Bonnin][mbonnin])
+- [Gradle Plugin] Simplify the multiplatform configuration (#3246 by [Martin Bonnin][mbonnin])
+- [Gradle Plugin] Support js only projects (#3310 by [Philip Wedemann][hfhbd])
+- [IDE Plugin] Use java home for gradle tooling API (#3078)
+- [IDE Plugin] Load the JDBC driver on the correct classLoader inside the IDE plugin (#3080)
+- [IDE Plugin] Mark the file element as null before invalidating to avoid errors during already existing PSI changes (#3082)
+- [IDE Plugin] Dont crash finding usages of the new table name in an ALTER TABLE statement (#3106)
+- [IDE Plugin] Optimize the inspectors and enable them to fail silently for expected exception types (#3121)
+- [IDE Plugin] Delete files that should be generated directories (#3198)
+- [IDE Plugin] Fix a not-safe operator call
+- [Compiler] Ensure updates and deletes with RETURNING statements execute queries. (#3084)
+- [Compiler] Correctly infer argument types in compound selects (#3096)
+- [Compiler] Common tables do not generate data classes so dont return them (#3097)
+- [Compiler] Find the top migration file faster (#3108)
+- [Compiler] Properly inherit nullability on the pipe operator
+- [Compiler] Support the iif ANSI SQL function
+- [Compiler] Don't generate empty query files (#3300 by [Philip Wedemann][hfhbd])
+- [Compiler] Fix adapter with question mark only (#3314 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] Postgres primary key columns are always non-null (#3092)
+- [PostgreSQL Dialect] Fix copy with same name in multiple tables (#3297 by [Philip Wedemann][hfhbd])
+- [SQLite 3.35 Dialect] Only show an error when dropping an indexed column from the altered table (#3158 by [Eliezer Graber][eygraber])
+
 ## [2.0.0-alpha02] - 2022-04-13
 
 ### Breaking Changes
@@ -726,3 +792,4 @@ Initial release.
   [PhilipDukhov]: https://github.com/PhilipDukhov
   [julioromano]: https://github.com/julioromano
   [PaulWoitaschek]: https://github.com/PaulWoitaschek
+  [kpgalligan]: https://github.com/kpgalligan
