@@ -1,9 +1,13 @@
 package foo
 
-import app.cash.sqldelight.dialect.api.*
+import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
+import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.dialect.api.TypeResolver
+import app.cash.sqldelight.dialect.api.encapsulatingType
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTypeResolver
-import com.alecstrong.sql.psi.core.psi.*
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 
 class FooDialect : SqlDelightDialect by SqliteDialect() {
   override fun typeResolver(parentResolver: TypeResolver) = CustomResolver(parentResolver)
