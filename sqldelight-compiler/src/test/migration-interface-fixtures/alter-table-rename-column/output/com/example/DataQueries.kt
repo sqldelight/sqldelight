@@ -1,12 +1,12 @@
 package com.example
 
 import app.cash.sqldelight.TransacterImpl
-import app.cash.sqldelight.driver.jdbc.JdbcDriver
+import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
 import kotlin.Unit
 
 public class DataQueries(
-  driver: JdbcDriver,
+  driver: SqlDriver,
   private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun insertWhole(test: Test): Unit {

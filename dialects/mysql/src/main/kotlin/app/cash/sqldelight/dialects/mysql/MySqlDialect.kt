@@ -17,15 +17,13 @@ import com.squareup.kotlinpoet.ClassName
 /**
  * Base dialect for JDBC implementations.
  */
-open class MySqlDialect : SqlDelightDialect {
+class MySqlDialect : SqlDelightDialect {
   override val runtimeTypes: RuntimeTypes = RuntimeTypes(
-    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver"),
     ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor"),
     ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   )
 
   override val asyncRuntimeTypes: RuntimeTypes = RuntimeTypes(
-    ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcDriver"),
     ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcCursor"),
     ClassName("app.cash.sqldelight.driver.r2dbc", "R2dbcPreparedStatement"),
   )

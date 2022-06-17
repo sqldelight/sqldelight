@@ -182,7 +182,7 @@ class AndroidSqliteDriver private constructor(
     return openHelper?.close() ?: database.close()
   }
 
-  open class Callback(
+  class Callback(
     private val schema: SqlSchema,
     vararg callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {

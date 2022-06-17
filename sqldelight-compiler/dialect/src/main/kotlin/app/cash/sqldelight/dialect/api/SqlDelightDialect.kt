@@ -9,7 +9,6 @@ interface SqlDelightDialect {
    */
   val runtimeTypes: RuntimeTypes
     get() = RuntimeTypes(
-      ClassName("app.cash.sqldelight.db", "SqlDriver"),
       ClassName("app.cash.sqldelight.db", "SqlCursor"),
       ClassName("app.cash.sqldelight.db", "SqlPreparedStatement"),
     )
@@ -19,7 +18,6 @@ interface SqlDelightDialect {
    */
   val asyncRuntimeTypes: RuntimeTypes
     get() = RuntimeTypes(
-      ClassName("app.cash.sqldelight.db", "SqlDriver"),
       ClassName("app.cash.sqldelight.db", "SqlCursor"),
       ClassName("app.cash.sqldelight.db", "SqlPreparedStatement"),
     )
