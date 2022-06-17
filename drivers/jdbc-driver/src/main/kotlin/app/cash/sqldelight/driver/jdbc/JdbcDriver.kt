@@ -58,12 +58,13 @@ interface ConnectionManager {
     private val connectionManager: ConnectionManager,
     val connection: Connection
   ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
+    override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {
         if (successful) connectionManager.apply { connection.endTransaction() }
         else connectionManager.apply { connection.rollbackTransaction() }
       }
       connectionManager.transaction = enclosingTransaction
+      return QueryResult.Unit
     }
   }
 }
@@ -152,7 +153,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     }
   }
 
-  override fun newTransaction(): Transacter.Transaction {
+  override fun newTransaction(): QueryResult<Transacter.Transaction> {
     val enclosing = transaction
     val connection = enclosing?.connection ?: getConnection()
     val transaction = Transaction(enclosing, this, connection)
@@ -162,7 +163,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
       connection.beginTransaction()
     }
 
-    return transaction
+    return QueryResult.Value(transaction)
   }
 
   override fun currentTransaction(): Transacter.Transaction? = transaction

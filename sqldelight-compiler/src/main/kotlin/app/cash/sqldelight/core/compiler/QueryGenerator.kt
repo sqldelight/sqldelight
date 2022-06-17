@@ -246,9 +246,16 @@ abstract class QueryGenerator(
       binder = "%L"
     }
     if (generateAsync) {
-      awaiting()?.let { (bind, arg) ->
-        binder += bind
-        arguments.add(arg)
+      val awaiter = awaiting()
+
+      if (isNamedQuery) {
+        awaiter?.let { (bind, arg) ->
+          binder += bind
+          arguments.add(arg)
+        }
+      } else {
+        binder += "%L"
+        arguments.add(".await()")
       }
     }
 

@@ -22,6 +22,8 @@ import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
 import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
+import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_IMPL_TYPE
+import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
@@ -61,7 +63,7 @@ internal class DatabaseGenerator(
 
   fun interfaceType(): TypeSpec {
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
-      .addSuperinterface(TRANSACTER_TYPE)
+      .addSuperinterface(if (generateAsync) SUSPENDING_TRANSACTER_TYPE else TRANSACTER_TYPE)
 
     fileIndex.dependencies.forEach {
       typeSpec.addSuperinterface(ClassName(it.packageName, it.className))
@@ -133,7 +135,7 @@ internal class DatabaseGenerator(
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) SUSPENDING_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
       .addModifiers(PRIVATE)
       .addSuperclassConstructorParameter(DRIVER_NAME)
 
