@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.0.0-alpha02] - 2022-06-17
+## [2.0.0-alpha03] - 2022-06-17
 
 ### Breaking Changes
 
