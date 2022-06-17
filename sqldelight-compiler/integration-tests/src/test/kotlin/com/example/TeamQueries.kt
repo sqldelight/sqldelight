@@ -13,7 +13,7 @@ import kotlin.String
 import kotlin.Unit
 
 public class TeamQueries(
-  private val driver: SqlDriver,
+  driver: SqlDriver,
   private val teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> teamForCoach(coach: String, mapper: (name: Team.Name, captain: Long) -> T):
