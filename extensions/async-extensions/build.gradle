@@ -23,13 +23,6 @@ kotlin {
         implementation project(':drivers:sqlite-driver')
       }
     }
-    nativeMain {
-      dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${deps.versions.kotlinCoroutines.get()}-native-mt") {
-          force = true
-        }
-      }
-    }
   }
 
   sourceSets.matching { it.name.endsWith("Test") }.all {
