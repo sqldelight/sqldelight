@@ -89,6 +89,25 @@ class PostgreSqlTest {
       )
   }
 
+  @Test fun testDateTrunc() {
+    database.datesQueries.insertDate(
+      date = LocalDate.of(2020, 1, 1),
+      time = LocalTime.of(21, 30, 59, 10000),
+      timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
+      timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0))
+    ).executeAsOne()
+
+    assertThat(
+      database.datesQueries.selectDateTrunc().executeAsOne()
+    )
+      .isEqualTo(
+        SelectDateTrunc(
+          date_trunc = LocalDateTime.of(2020, 1, 1, 21, 0, 0, 0),
+          date_trunc_ = OffsetDateTime.of(1980, 4, 9, 20, 0, 0, 0, ZoneOffset.ofHours(0))
+        )
+      )
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {

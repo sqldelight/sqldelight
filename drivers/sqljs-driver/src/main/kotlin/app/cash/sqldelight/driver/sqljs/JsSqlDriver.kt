@@ -88,14 +88,14 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     statements.getOrPut(identifier, { db.prepare(sql) }).apply { reset() }
   }
 
-  override fun newTransaction(): Transacter.Transaction {
+  override fun newTransaction(): QueryResult<Transacter.Transaction> {
     val enclosing = transaction
     val transaction = Transaction(enclosing)
     this.transaction = transaction
     if (enclosing == null) {
       db.run("BEGIN TRANSACTION")
     }
-    return transaction
+    return QueryResult.Value(transaction)
   }
 
   override fun currentTransaction() = transaction
@@ -105,7 +105,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
+    override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {
         if (successful) {
           db.run("END TRANSACTION")
@@ -114,6 +114,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
         }
       }
       transaction = enclosingTransaction
+      return QueryResult.Unit
     }
   }
 }

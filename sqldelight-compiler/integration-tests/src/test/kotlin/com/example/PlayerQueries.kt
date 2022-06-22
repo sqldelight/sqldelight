@@ -16,7 +16,7 @@ import kotlin.Unit
 import kotlin.collections.Collection
 
 public class PlayerQueries(
-  private val driver: SqlDriver,
+  driver: SqlDriver,
   private val playerAdapter: Player.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> insertAndReturn(

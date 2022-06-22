@@ -12,6 +12,7 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import java.io.File
@@ -37,6 +38,11 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
     return it.sources()
   }
 
+  // kotlin.js only projects
+  project.extensions.findByType(KotlinJsProjectExtension::class.java)?.let {
+    return it.sources()
+  }
+
   // Android project.
   project.extensions.findByName("android")?.let {
     return (it as BaseExtension).sources()
@@ -50,6 +56,17 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
+    )
+  )
+}
+
+private fun KotlinJsProjectExtension.sources(): List<Source> {
+  return listOf(
+    Source(
+      type = KotlinPlatformType.js,
+      name = "main",
+      sourceDirectorySet = sourceSets.getByName("main").kotlin,
+      sourceSets = listOf("main"),
     )
   )
 }

@@ -67,7 +67,7 @@ internal val SqlExpr.name: String get() = when (this) {
   else -> "expr"
 }
 
-internal class AnsiSqlTypeResolver : TypeResolver {
+internal object AnsiSqlTypeResolver : TypeResolver {
   override fun resolvedType(expr: SqlExpr): IntermediateType {
     return expr.ansiType()
   }

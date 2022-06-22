@@ -18,6 +18,9 @@ interface TypeResolver {
    */
   fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType
 
+  /**
+   * Resolves the type of dialect specific functions
+   */
   fun functionType(functionExpr: SqlFunctionExpr): IntermediateType?
 
   /**

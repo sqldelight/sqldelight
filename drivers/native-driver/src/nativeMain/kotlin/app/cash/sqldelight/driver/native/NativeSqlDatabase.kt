@@ -195,9 +195,9 @@ class NativeSqliteDriver(
     return borrowedConnectionThread.get()?.value?.transaction?.value
   }
 
-  override fun newTransaction(): Transacter.Transaction {
+  override fun newTransaction(): QueryResult<Transacter.Transaction> {
     val alreadyBorrowed = borrowedConnectionThread.get()
-    return if (alreadyBorrowed == null) {
+    val transaction = if (alreadyBorrowed == null) {
       val borrowed = transactionPool.borrowEntry()
 
       try {
@@ -213,6 +213,8 @@ class NativeSqliteDriver(
     } else {
       alreadyBorrowed.value.newTransaction()
     }
+
+    return QueryResult.Value(transaction)
   }
 
   /**
@@ -295,7 +297,7 @@ internal class SqliterWrappedConnection(
   SqlDriver {
   override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
 
-  override fun newTransaction(): Transacter.Transaction = threadConnection.newTransaction()
+  override fun newTransaction(): QueryResult<Transacter.Transaction> = QueryResult.Value(threadConnection.newTransaction())
 
   override fun <R> accessConnection(
     readOnly: Boolean,
@@ -388,7 +390,7 @@ internal class ThreadConnection(
       ensureNeverFrozen()
     }
 
-    override fun endTransaction(successful: Boolean) {
+    override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       transaction.value = enclosingTransaction
 
       if (enclosingTransaction == null) {
@@ -403,6 +405,7 @@ internal class ThreadConnection(
           onEndTransaction(this@ThreadConnection)
         }
       }
+      return QueryResult.Unit
     }
   }
 }

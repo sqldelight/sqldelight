@@ -52,6 +52,44 @@ class MutatorQueryTypeTest {
     )
   }
 
+  @Test fun `type is generated properly with adapter and questionMark`() {
+    val file = FixtureCompiler.parseSql(
+      """
+    |import foo.S;
+    |
+    |CREATE TABLE data (
+    |  id INTEGER AS kotlin.Int PRIMARY KEY,
+    |  value TEXT AS S
+    |);
+    |
+    |insertData:
+    |INSERT INTO data
+    |VALUES ?;
+    """.trimMargin(),
+      tempFolder
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+    |public fun insertData(data_: com.example.Data_): kotlin.Unit {
+    |  driver.execute(${mutator.id}, ""${'"'}
+    |      |INSERT INTO data
+    |      |VALUES (?, ?)
+    |      ""${'"'}.trimMargin(), 2) {
+    |        bindLong(0, data_Adapter.idAdapter.encode(data_.id))
+    |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+    |      }
+    |  notifyQueries(1642410240) { emit ->
+    |    emit("data")
+    |  }
+    |}
+    |""".trimMargin()
+    )
+  }
+
   @Test fun `bind argument order is consistent with sql`() {
     val file = FixtureCompiler.parseSql(
       """
