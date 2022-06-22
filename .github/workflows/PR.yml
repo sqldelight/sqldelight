@@ -75,10 +75,6 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
 
-      - name: Run ios tests with strict memory model
-        if: matrix.os == 'macOS-latest' && matrix.job == 'test'
-        run: ./gradlew iosX64Test -Pkotlin.native.binary.memoryModel=strict --stacktrace
-
       # Build the sample
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
