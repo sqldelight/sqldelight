@@ -38,19 +38,9 @@ kotlin {
         implementation project(':drivers:sqljs-driver')
       }
     }
-    nativeMain {
-      dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${deps.versions.kotlinCoroutines.get()}-native-mt") {
-          force = true
-        }
-      }
-    }
     nativeTest {
       dependencies {
         implementation project(':drivers:native-driver')
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${deps.versions.kotlinCoroutines.get()}-native-mt") {
-          force = true
-        }
       }
     }
   }
