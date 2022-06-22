@@ -99,8 +99,15 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
 
   override fun close() = worker.terminate()
 
-  override fun newTransaction(): Transacter.Transaction {
-    throw NotImplementedError("Begin a transaction manually using execute()")
+  override fun newTransaction(): QueryResult<Transacter.Transaction> = QueryResult.AsyncValue {
+    val enclosing = transaction
+    val transaction = Transaction(enclosing)
+    this.transaction = transaction
+    if (enclosing == null) {
+      worker.run("BEGIN TRANSACTION")
+    }
+
+    return@AsyncValue transaction
   }
 
   override fun currentTransaction(): Transacter.Transaction? = transaction
@@ -108,8 +115,15 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?
   ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
-      throw NotImplementedError("End a transaction manually using execute()")
+    override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
+      if (enclosingTransaction == null) {
+        if (successful) {
+          worker.run("END TRANSACTION")
+        } else {
+          worker.run("ROLLBACK TRANSACTION")
+        }
+      }
+      transaction = enclosingTransaction
     }
   }
 

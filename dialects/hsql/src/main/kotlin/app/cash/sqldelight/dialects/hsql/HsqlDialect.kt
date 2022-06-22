@@ -13,9 +13,8 @@ import com.squareup.kotlinpoet.ClassName
 /**
  * Base dialect for JDBC implementations.
  */
-open class HsqlDialect : SqlDelightDialect {
+class HsqlDialect : SqlDelightDialect {
   override val runtimeTypes: RuntimeTypes = RuntimeTypes(
-    ClassName("app.cash.sqldelight.driver.jdbc", "JdbcDriver"),
     ClassName("app.cash.sqldelight.driver.jdbc", "JdbcCursor"),
     ClassName("app.cash.sqldelight.driver.jdbc", "JdbcPreparedStatement")
   )

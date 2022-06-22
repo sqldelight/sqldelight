@@ -1,0 +1,6 @@
+CREATE TABLE foo(
+id INTEGER
+);
+
+selectFooWithId:
+SELECT foo(id) FROM foo;

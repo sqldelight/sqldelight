@@ -20,7 +20,7 @@ import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
-open class MySqlTypeResolver(
+class MySqlTypeResolver(
   private val parentResolver: TypeResolver
 ) : TypeResolver by parentResolver {
   override fun resolvedType(expr: SqlExpr): IntermediateType {

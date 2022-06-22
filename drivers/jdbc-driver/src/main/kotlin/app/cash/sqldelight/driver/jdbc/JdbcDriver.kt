@@ -58,12 +58,13 @@ interface ConnectionManager {
     private val connectionManager: ConnectionManager,
     val connection: Connection
   ) : Transacter.Transaction() {
-    override fun endTransaction(successful: Boolean) {
+    override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {
         if (successful) connectionManager.apply { connection.endTransaction() }
         else connectionManager.apply { connection.rollbackTransaction() }
       }
       connectionManager.transaction = enclosingTransaction
+      return QueryResult.Unit
     }
   }
 }
@@ -152,7 +153,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     }
   }
 
-  override fun newTransaction(): Transacter.Transaction {
+  override fun newTransaction(): QueryResult<Transacter.Transaction> {
     val enclosing = transaction
     val connection = enclosing?.connection ?: getConnection()
     val transaction = Transaction(enclosing, this, connection)
@@ -162,7 +163,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
       connection.beginTransaction()
     }
 
-    return transaction
+    return QueryResult.Value(transaction)
   }
 
   override fun currentTransaction(): Transacter.Transaction? = transaction
@@ -172,7 +173,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
  * Binds the parameter to [preparedStatement] by calling [bindString], [bindLong] or similar.
  * After binding, [execute] executes the query without a result, while [executeQuery] returns [JdbcCursor].
  */
-open class JdbcPreparedStatement(
+class JdbcPreparedStatement(
   private val preparedStatement: PreparedStatement
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
@@ -286,7 +287,7 @@ open class JdbcPreparedStatement(
  * Iterate each row in [resultSet] and map the columns to Kotlin classes by calling [getString], [getLong] etc.
  * Use [next] to retrieve the next row and [close] to close the connection.
  */
-open class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
+class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   override fun getString(index: Int): String? = resultSet.getString(index + 1)
   override fun getBytes(index: Int): ByteArray? = resultSet.getBytes(index + 1)
   override fun getBoolean(index: Int): Boolean? = getAtIndex(index, resultSet::getBoolean)

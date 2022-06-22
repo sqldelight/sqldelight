@@ -3,14 +3,14 @@ package app.cash.sqldelight.core.compiler
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.lang.DRIVER_NAME
+import app.cash.sqldelight.core.lang.DRIVER_TYPE
+import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.queriesType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
 class QueriesTypeGenerator(
@@ -19,6 +19,7 @@ class QueriesTypeGenerator(
   private val dialect: SqlDelightDialect,
 ) {
   private val generateAsync = file.generateAsync
+
   /**
    * Generate the full queries object - done once per file, containing all labeled select and
    * mutator queries.
@@ -29,22 +30,18 @@ class QueriesTypeGenerator(
    *       transactions: ThreadLocal<Transacter.Transaction>
    *     ) : TransacterImpl(driver, transactions)
    */
-  fun generateType(packageName: String): TypeSpec {
-    val driverType = if (generateAsync) dialect.asyncRuntimeTypes.driverType else dialect.runtimeTypes.driverType
+  fun generateType(packageName: String): TypeSpec? {
+    if (file.isEmpty()) {
+      return null
+    }
 
     val type = TypeSpec.classBuilder(file.queriesType.simpleName)
-      .superclass(TRANSACTER_IMPL_TYPE)
+      .superclass(if (generateAsync) SUSPENDING_TRANSACTER_IMPL_TYPE else TRANSACTER_IMPL_TYPE)
 
     val constructor = FunSpec.constructorBuilder()
 
-    // Add the driver as a constructor property and superclass parameter:
-    // private val driver: SqlDriver
-    type.addProperty(
-      PropertySpec.builder(DRIVER_NAME, driverType, PRIVATE)
-        .initializer(DRIVER_NAME)
-        .build()
-    )
-    constructor.addParameter(DRIVER_NAME, driverType)
+    // Add the driver as a constructor parameter:
+    constructor.addParameter(DRIVER_NAME, DRIVER_TYPE)
     type.addSuperclassConstructorParameter(DRIVER_NAME)
 
     // Add any required adapters.
@@ -94,3 +91,5 @@ class QueriesTypeGenerator(
     }
   }
 }
+
+internal fun SqlDelightQueriesFile.isEmpty() = namedQueries.isEmpty() && namedMutators.isEmpty() && namedExecutes.isEmpty()

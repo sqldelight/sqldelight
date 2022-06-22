@@ -262,4 +262,13 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun adapterQuestionmarkTests() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/adapter-questionmark"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }

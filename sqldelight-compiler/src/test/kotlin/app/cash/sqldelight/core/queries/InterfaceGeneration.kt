@@ -768,7 +768,7 @@ class InterfaceGeneration {
       |import kotlin.Unit
       |
       |public class SongQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> selectSongsByAlbumId(album_id: Long?, mapper: (
       |    title: String?,
@@ -857,8 +857,8 @@ class InterfaceGeneration {
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.driver.jdbc.JdbcCursor
-      |import app.cash.sqldelight.driver.jdbc.JdbcDriver
       |import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
       |import kotlin.Any
       |import kotlin.Int
@@ -866,7 +866,7 @@ class InterfaceGeneration {
       |import kotlin.Unit
       |
       |public class SubscriptionQueries(
-      |  private val driver: JdbcDriver,
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
       |  public fun insertUser(slack_user_id: String): Query<Int> = InsertUserQuery(slack_user_id) {
       |      cursor ->
@@ -979,7 +979,7 @@ class InterfaceGeneration {
       |import kotlin.Unit
       |
       |public class RecursiveQueries(
-      |  private val driver: SqlDriver,
+      |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
       |  public fun <T : Any> recursiveQuery(id: Long, mapper: (id: Long, parent_id: Long?) -> T): Query<T>
       |      = RecursiveQueryQuery(id) { cursor ->
