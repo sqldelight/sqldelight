@@ -16,6 +16,7 @@ kotlin {
       dependencies {
         api project(':runtime')
         api deps.kotlin.coroutines.core
+        implementation project(":extensions:async-extensions")
       }
     }
     commonTest {
