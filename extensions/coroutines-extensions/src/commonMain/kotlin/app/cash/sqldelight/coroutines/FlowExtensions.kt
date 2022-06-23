@@ -19,6 +19,9 @@
 package app.cash.sqldelight.coroutines
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
@@ -58,7 +61,7 @@ fun <T : Any> Flow<Query<T>>.mapToOne(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = map {
   withContext(context) {
-    it.executeAsOne()
+    it.awaitAsOne()
   }
 }
 
@@ -68,7 +71,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = map {
   withContext(context) {
-    it.executeAsOneOrNull() ?: defaultValue
+    it.awaitAsOneOrNull() ?: defaultValue
   }
 }
 
@@ -77,7 +80,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T?> = map {
   withContext(context) {
-    it.executeAsOneOrNull()
+    it.awaitAsOneOrNull()
   }
 }
 
@@ -86,7 +89,7 @@ fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<T> = mapNotNull {
   withContext(context) {
-    it.executeAsOneOrNull()
+    it.awaitAsOneOrNull()
   }
 }
 
@@ -95,6 +98,6 @@ fun <T : Any> Flow<Query<T>>.mapToList(
   context: CoroutineContext = Dispatchers.Default
 ): Flow<List<T>> = map {
   withContext(context) {
-    it.executeAsList()
+    it.awaitAsList()
   }
 }
