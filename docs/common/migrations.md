@@ -1,6 +1,18 @@
 # Migrations
 
-The `.sq` file always describes how to create the latest schema in an empty database. If your database is currently on an earlier version, migration files bring those databases up-to-date. 
+An `.sq` file always describes how to create the latest schema in an empty database. If your database is currently on an earlier version, migration files bring those databases up-to-date. Migration files are stored in the same `sqldelight` folder as your `.sq` files:
+
+```
+src
+└─ main
+   └─ sqdelight
+      ├─ com/example/hockey
+      |  ├─ Team.sq
+      |  └─ Player.sq
+      └─ migrations
+         ├─ 1.sqm
+         └─ 2.sqm
+```
 
 If the driver supports it, migrations are run in a transaction. You should not surround your migrations in `BEGIN/END TRANSACTION`, as this can cause a crash with some drivers.
 
