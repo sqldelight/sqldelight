@@ -234,7 +234,7 @@ internal abstract class ColumnTypeMixin(
 
     override fun encode(value: CodeBlock): CodeBlock {
       val columnName = (parent as SqlColumnDef).columnName
-      return wrappedType.encode(CodeBlock.of("$value.${columnName.text}"))
+      return wrappedType.encode(CodeBlock.of("%L.${columnName.text}", value))
     }
 
     override fun decode(value: CodeBlock) = CodeBlock.of("%T(%L)", javaType, wrappedType.decode(value))
