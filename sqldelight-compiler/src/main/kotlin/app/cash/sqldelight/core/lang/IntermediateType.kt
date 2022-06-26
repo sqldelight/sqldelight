@@ -89,7 +89,7 @@ internal fun IntermediateType.cursorGetter(columnIndex: Int): CodeBlock {
   var cursorGetter = dialectType.cursorGetter(columnIndex, CURSOR_NAME)
 
   if (!javaType.isNullable) {
-    cursorGetter = CodeBlock.of("$cursorGetter!!")
+    cursorGetter = CodeBlock.of("%L!!", cursorGetter)
   }
 
   return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
