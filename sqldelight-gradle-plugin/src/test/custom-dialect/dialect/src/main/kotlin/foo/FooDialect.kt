@@ -20,7 +20,7 @@ class FooDialect : SqlDelightDialect by SqliteDialect() {
   class CustomResolver(private val parentResolver: TypeResolver) : TypeResolver by SqliteTypeResolver(parentResolver) {
     override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
       return when (functionExpr.functionName.text.lowercase()) {
-        "foo" -> encapsulatingType(functionExpr.exprList, ExtensionType)
+        "foo" -> encapsulatingType(functionExpr.exprList, ExtensionType).asNonNullable()
         else -> parentResolver.functionType(functionExpr)
       }
     }
