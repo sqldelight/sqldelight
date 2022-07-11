@@ -26,7 +26,11 @@ internal class GenerateSelectAllQueryAction : BaseGenerateAction(SelectAllHandle
       val stmtList = file.findChildOfType<SqlDelightStmtList>() ?: return
       insertNewLineAndCleanup(editor, stmtList)
       TemplateManager.getInstance(project).startTemplate(
-        editor, selectAllTemplate, false, mapOf("table" to tableName), null
+        editor,
+        selectAllTemplate,
+        false,
+        mapOf("table" to tableName),
+        null,
       )
     }
   }

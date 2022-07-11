@@ -8,7 +8,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
 import com.intellij.lang.ASTNode
 
 internal abstract class AlterTableDropColumnMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   MySqlAlterTableDropColumn,
   AlterTableApplier {
@@ -21,7 +21,7 @@ internal abstract class AlterTableDropColumnMixin(
       query = {
         val columns = lazyQuery.query.columns.filter { it.element.text != columnName.name }
         lazyQuery.query.copy(columns = columns)
-      }
+      },
     )
   }
 }

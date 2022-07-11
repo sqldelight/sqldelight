@@ -18,7 +18,7 @@ internal class NoOp : SqlGeneratorStrategy {
     tableName: String,
     oldName: String,
     newName: String,
-    columnDefList: List<String>
+    columnDefList: List<String>,
   ): String {
     return ""
   }

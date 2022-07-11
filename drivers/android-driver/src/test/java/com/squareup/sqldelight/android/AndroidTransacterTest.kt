@@ -24,48 +24,48 @@ class AndroidTransacterTest : TransacterTest() {
   @Test fun `detect the afterRollback call has escaped the original transaction thread in transaction()`() {
     assertChecksThreadConfinement<TransactionWithoutReturn>(
       scope = { transaction(false, it) },
-      block = { afterRollback {} }
+      block = { afterRollback {} },
     )
   }
 
   @Test fun `detect the afterCommit call has escaped the original transaction thread in transaction()`() {
     assertChecksThreadConfinement<TransactionWithoutReturn>(
       scope = { transaction(false, it) },
-      block = { afterCommit {} }
+      block = { afterCommit {} },
     )
   }
 
   @Test fun `detect the rollback call has escaped the original transaction thread in transaction()`() {
     assertChecksThreadConfinement<TransactionWithoutReturn>(
       scope = { transaction(false, it) },
-      block = { rollback() }
+      block = { rollback() },
     )
   }
 
   @Test fun `detect the afterRollback call has escaped the original transaction thread in transactionWithReturn()`() {
     assertChecksThreadConfinement<TransactionWithReturn<Unit>>(
       scope = { transactionWithResult(false, it) },
-      block = { afterRollback {} }
+      block = { afterRollback {} },
     )
   }
 
   @Test fun `detect the afterCommit call has escaped the original transaction thread in transactionWithReturn()`() {
     assertChecksThreadConfinement<TransactionWithReturn<Unit>>(
       scope = { transactionWithResult(false, it) },
-      block = { afterCommit {} }
+      block = { afterCommit {} },
     )
   }
 
   @Test fun `detect the rollback call has escaped the original transaction thread in transactionWithReturn()`() {
     assertChecksThreadConfinement<TransactionWithReturn<Unit>>(
       scope = { transactionWithResult<Unit>(false, it) },
-      block = { rollback(Unit) }
+      block = { rollback(Unit) },
     )
   }
 
   private inline fun <T> assertChecksThreadConfinement(
     crossinline scope: Transacter.(T.() -> Unit) -> Unit,
-    crossinline block: T.() -> Unit
+    crossinline block: T.() -> Unit,
   ) {
     lateinit var thread: Thread
     var result: Result<Unit>? = null

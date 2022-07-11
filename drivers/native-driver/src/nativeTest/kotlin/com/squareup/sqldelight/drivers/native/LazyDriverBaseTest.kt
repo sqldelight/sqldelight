@@ -51,8 +51,8 @@ abstract class LazyDriverBaseTest {
                   |  id INTEGER PRIMARY KEY,
                   |  value TEXT
                   |);
-                """.trimMargin(),
-          0
+          """.trimMargin(),
+          0,
         )
         driver.execute(
           30,
@@ -64,8 +64,8 @@ abstract class LazyDriverBaseTest {
                   |  blob_value BLOB,
                   |  real_value REAL
                   |);
-                """.trimMargin(),
-          0
+          """.trimMargin(),
+          0,
         )
         return QueryResult.Unit
       }
@@ -73,7 +73,7 @@ abstract class LazyDriverBaseTest {
       override fun migrate(
         driver: SqlDriver,
         oldVersion: Int,
-        newVersion: Int
+        newVersion: Int,
       ) = QueryResult.Unit
     }
   }
@@ -85,7 +85,7 @@ abstract class LazyDriverBaseTest {
 
   private fun setupDatabase(
     schema: SqlSchema,
-    config: DatabaseConfiguration = defaultConfiguration(schema)
+    config: DatabaseConfiguration = defaultConfiguration(schema),
   ): NativeSqliteDriver {
     deleteDatabase(config.name!!)
     // This isn't pretty, but just for test
@@ -103,7 +103,7 @@ abstract class LazyDriverBaseTest {
         }
       },
       extendedConfig = DatabaseConfiguration.Extended(busyTimeout = 20_000),
-      inMemory = true
+      inMemory = true,
     )
   }
 }

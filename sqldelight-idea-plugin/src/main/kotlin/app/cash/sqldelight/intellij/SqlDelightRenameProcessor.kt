@@ -35,7 +35,7 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
     element: PsiElement,
     newName: String,
     usages: Array<out UsageInfo>,
-    listener: RefactoringElementListener?
+    listener: RefactoringElementListener?,
   ) {
     val newTypeName = newName.capitalize()
     val currentTypeName = when (element) {
@@ -58,7 +58,7 @@ class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
   override fun findReferences(
     element: PsiElement,
     searchScope: SearchScope,
-    searchInCommentsAndStrings: Boolean
+    searchInCommentsAndStrings: Boolean,
   ): Collection<PsiReference> {
     if (element !is StmtIdentifierMixin) return super.findReferences(element, searchScope, searchInCommentsAndStrings)
     return element.generatedMethods().flatMap { element.references(it) }

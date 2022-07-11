@@ -39,8 +39,8 @@ class InterfaceGeneration {
       |leftJoin:
       |SELECT *
       |FROM A LEFT OUTER JOIN B;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -50,7 +50,8 @@ class InterfaceGeneration {
       |  public val val1: kotlin.String,
       |  public val val2: kotlin.String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -68,8 +69,8 @@ class InterfaceGeneration {
       |leftJoin:
       |SELECT *
       |FROM A JOIN B;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -79,7 +80,8 @@ class InterfaceGeneration {
       |  public val value_: kotlin.String,
       |  public val value__: kotlin.String,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -100,8 +102,8 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, value
       |FROM B;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -111,7 +113,8 @@ class InterfaceGeneration {
       |  public val value_: kotlin.String?,
       |  public val value__: kotlin.String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -128,8 +131,8 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, nullif(value, 1 == 1)
       |FROM A;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -139,7 +142,8 @@ class InterfaceGeneration {
       |  public val value_: kotlin.collections.List,
       |  public val value__: kotlin.collections.List?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -160,8 +164,8 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, nullif(value, 1 == 1)
       |FROM B;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -171,7 +175,8 @@ class InterfaceGeneration {
       |  public val value_: kotlin.collections.List,
       |  public val value__: kotlin.collections.List?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -188,8 +193,8 @@ class InterfaceGeneration {
       |UNION
       |SELECT NULL, value
       |FROM A;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -199,7 +204,8 @@ class InterfaceGeneration {
       |  public val value_: kotlin.collections.List?,
       |  public val expr: kotlin.collections.List?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -216,8 +222,8 @@ class InterfaceGeneration {
       |UNION
       |SELECT value, value
       |FROM A;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -227,7 +233,8 @@ class InterfaceGeneration {
       |  public val value_: kotlin.collections.List,
       |  public val expr: kotlin.collections.List,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -256,8 +263,8 @@ class InterfaceGeneration {
       |SELECT *
       |FROM TestAModel
       |JOIN TestBModel ON TestAModel.address = TestBModel.address;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -272,7 +279,8 @@ class InterfaceGeneration {
       |  public val name_: kotlin.String,
       |  public val address_: kotlin.String,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -300,8 +308,8 @@ class InterfaceGeneration {
       |selectFromView:
       |SELECT name, nameB
       |FROM joined;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -311,7 +319,8 @@ class InterfaceGeneration {
       |  public val name: kotlin.String?,
       |  public val nameB: kotlin.String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -320,13 +329,14 @@ class InterfaceGeneration {
       """
       |someSelect:
       |SELECT '1' AS is_cool, '2' AS get_cheese, '3' AS stuff;
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -340,7 +350,8 @@ class InterfaceGeneration {
       |  public val get_cheese: String,
       |  public val stuff: String,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -368,13 +379,14 @@ class InterfaceGeneration {
       |         FROM testA
       |  WHERE testA.attr IS NULL
       |);
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -390,7 +402,8 @@ class InterfaceGeneration {
       |  public val attr: String?,
       |  public val ordering: Long,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -405,13 +418,14 @@ class InterfaceGeneration {
       |someSelect:
       |SELECT text_content, 1
       |FROM entity_fts;
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -425,7 +439,8 @@ class InterfaceGeneration {
       |  public val text_content: String?,
       |  public val expr: Long,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -441,13 +456,14 @@ class InterfaceGeneration {
       |someSelect:
       |SELECT text_content, 1
       |FROM entity_fts;
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SomeSelect.kt")
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -461,7 +477,8 @@ class InterfaceGeneration {
       |  public val text_content: String?,
       |  public val expr: Long,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -490,12 +507,12 @@ class InterfaceGeneration {
       |JOIN testB AS childJoined ON child_id = childJoined._id
       |WHERE parent_id = ? AND child_id = ?;
       """.trimMargin(),
-      temporaryFolder
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/Exact_match.kt")
+      File(result.outputDirectory, "com/example/Exact_match.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -519,7 +536,8 @@ class InterfaceGeneration {
       |  public val type_: List,
       |  public val name_: String,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -538,13 +556,14 @@ class InterfaceGeneration {
       |  avg(real_value) AS avg_real_value,
       |  avg(nullable_real_value) AS avg_nullable_real_value
       |FROM test;
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/Average.kt")
+      File(result.outputDirectory, "com/example/Average.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -558,7 +577,8 @@ class InterfaceGeneration {
       |  public val avg_real_value: Double?,
       |  public val avg_nullable_real_value: Double?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -593,13 +613,13 @@ class InterfaceGeneration {
       |  GROUP BY 1
       |  ORDER BY target.name COLLATE NOCASE ASC
       |;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/TargetWithEmojis.kt")
+      File(result.outputDirectory, "com/example/TargetWithEmojis.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -614,7 +634,8 @@ class InterfaceGeneration {
       |  public val name: String,
       |  public val emojis: String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -649,13 +670,13 @@ class InterfaceGeneration {
       |  GROUP BY 1
       |  ORDER BY target.name COLLATE NOCASE ASC
       |;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/TargetWithEmojis.kt")
+      File(result.outputDirectory, "com/example/TargetWithEmojis.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -670,7 +691,8 @@ class InterfaceGeneration {
       |  public val name: String,
       |  public val emojis: String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -686,8 +708,8 @@ class InterfaceGeneration {
       |  foo,
       |  CAST(foo AS BLOB) AS bar
       |FROM example;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val query = file.namedQueries.first()
@@ -697,7 +719,8 @@ class InterfaceGeneration {
       |  public val foo: kotlin.String?,
       |  public val bar: kotlin.ByteArray?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -712,7 +735,8 @@ class InterfaceGeneration {
       |  other_thing TEXT AS @Deprecated String NOT NULL
       |);
       """.trimMargin(),
-      temporaryFolder, dialect = TestDialect.MYSQL.dialect
+      temporaryFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.tables(false).single()
@@ -726,7 +750,8 @@ class InterfaceGeneration {
       |  @java.lang.Deprecated
       |  public val other_thing: kotlin.String,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -744,13 +769,14 @@ class InterfaceGeneration {
       |
       |selectSongsByAlbumId:
       |SELECT * FROM song WHERE album_id = ?;
-    """.trimMargin(),
-      temporaryFolder, fileName = "song.sq"
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "song.sq",
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SongQueries.kt")
+      File(result.outputDirectory, "com/example/SongQueries.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -813,7 +839,8 @@ class InterfaceGeneration {
       |    public override fun toString(): String = "song.sq:selectSongsByAlbumId"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -840,13 +867,15 @@ class InterfaceGeneration {
       |  VALUES (?)
       |  RETURNING user_id AS insert_id
       |) SELECT insert_id FROM inserted_ids;
-    """.trimMargin(),
-      temporaryFolder, fileName = "Subscription.sq", overrideDialect = PostgreSqlDialect()
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Subscription.sq",
+      overrideDialect = PostgreSqlDialect(),
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SubscriptionQueries.kt")
+      File(result.outputDirectory, "com/example/SubscriptionQueries.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -914,7 +943,8 @@ class InterfaceGeneration {
       |    public override fun toString(): String = "Subscription.sq:insertUser"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -940,8 +970,10 @@ class InterfaceGeneration {
       |)
       |SELECT descendants.id, descendants.parent_id
       |FROM descendants;
-      |""".trimMargin(),
-      temporaryFolder, fileName = "Recursive.sq"
+      |
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Recursive.sq",
     )
 
     val query = result.compiledFile.namedQueries[0]
@@ -959,7 +991,8 @@ class InterfaceGeneration {
       |  public val id: Long,
       |  public val parent_id: Long?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val generatedQueries = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQueries.kt"))
@@ -1030,7 +1063,8 @@ class InterfaceGeneration {
       |    public override fun toString(): String = "Recursive.sq:recursiveQuery"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1040,7 +1074,7 @@ class InterfaceGeneration {
       compilationMethod = { _, _, file, output ->
         SqlDelightCompiler.writeQueryInterfaces(file, output)
       },
-      generateDb = false
+      generateDb = false,
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()

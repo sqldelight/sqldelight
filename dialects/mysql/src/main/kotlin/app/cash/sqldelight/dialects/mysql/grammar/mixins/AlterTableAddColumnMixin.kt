@@ -8,7 +8,7 @@ import com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableAddColumnImpl
 import com.intellij.lang.ASTNode
 
 internal abstract class AlterTableAddColumnMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlAlterTableAddColumnImpl(node),
   MySqlAlterTableAddColumn,
   AlterTableApplier {
@@ -18,10 +18,10 @@ internal abstract class AlterTableAddColumnMixin(
       query = {
         val columns = placementClause.placeInQuery(
           columns = lazyQuery.query.columns,
-          column = QueryElement.QueryColumn(columnDef.columnName)
+          column = QueryElement.QueryColumn(columnDef.columnName),
         )
         lazyQuery.query.copy(columns = columns)
-      }
+      },
     )
   }
 }

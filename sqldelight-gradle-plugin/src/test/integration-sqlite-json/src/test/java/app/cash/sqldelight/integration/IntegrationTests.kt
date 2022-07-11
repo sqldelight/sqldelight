@@ -28,7 +28,7 @@ class IntegrationTests {
       insertUser("user1", jsonPhones("704-555-5555", "705-555-5555"))
       insertUser("user2", jsonPhones("604-555-5555", "605-555-5555"))
       assertThat(byAreaCode(areaCode = "704").executeAsList()).containsExactly(
-        "user1"
+        "user1",
       )
     }
   }
@@ -40,7 +40,7 @@ class IntegrationTests {
       insertUser("user3", "704-666-6666")
       assertThat(byAreaCode2(areaCode = "704").executeAsList()).containsExactly(
         "user1",
-        "user3"
+        "user3",
       )
     }
   }

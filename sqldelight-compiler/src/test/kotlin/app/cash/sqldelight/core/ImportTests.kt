@@ -19,12 +19,12 @@ class ImportTests {
       |  _id INTEGER NOT NULL PRIMARY KEY
       |);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     assertThat(result.errors).containsExactly(
       "Test.sq: (1, 0): Multiple imports for type Thing",
-      "Test.sq: (2, 0): Multiple imports for type Thing"
+      "Test.sq: (2, 0): Multiple imports for type Thing",
     )
   }
 }

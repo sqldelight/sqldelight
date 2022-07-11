@@ -23,9 +23,11 @@ class MySqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fi
   companion object {
     private val fixtures = arrayOf("src/test/fixtures_mysql")
 
-    @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
+    @Suppress("unused")
+    // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
-    @JvmStatic fun parameters() = fixtures.flatMap { fixtureFolder ->
+    @JvmStatic
+    fun parameters() = fixtures.flatMap { fixtureFolder ->
       File(fixtureFolder).listFiles()!!
         .filter { it.isDirectory }
         .map { arrayOf(it.name, it) }

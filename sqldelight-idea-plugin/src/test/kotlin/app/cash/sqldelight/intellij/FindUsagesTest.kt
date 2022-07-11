@@ -20,40 +20,40 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
   // With the kotlin 1.3.30 plugin the test breaks. Find usages still works. Investigate later.
   fun ignoretestFindsBothKotlinAndJavaUsages() {
     myFixture.openFileInEditor(
-      tempRoot.findFileByRelativePath("src/main/java/com/example/SampleClass.java")!!
+      tempRoot.findFileByRelativePath("src/main/java/com/example/SampleClass.java")!!,
     )
     val javaCallsite = searchForElement<PsiReferenceExpression>("someQuery").single()
 
     myFixture.openFileInEditor(
-      tempRoot.findFileByRelativePath("src/main/kotlin/com/example/KotlinClass.kt")!!
+      tempRoot.findFileByRelativePath("src/main/kotlin/com/example/KotlinClass.kt")!!,
     )
     val kotlinCallsite = searchForElement<KtReferenceExpression>("someQuery").single()
 
     myFixture.openFileInEditor(
-      tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!
+      tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!,
     )
     val identifier = searchForElement<StmtIdentifierMixin>("someQuery").single()
     assertThat(myFixture.findUsages(identifier)).containsExactly(
       KotlinReferenceUsageInfo(javaCallsite),
-      KotlinReferenceUsageInfo(kotlinCallsite.references.firstIsInstance())
+      KotlinReferenceUsageInfo(kotlinCallsite.references.firstIsInstance()),
     )
   }
 
   // With the kotlin 1.3.30 plugin the test breaks. Find usages still works. Investigate later.
   fun ignoretestFindsUsagesOfAllGeneratedMethods() {
     myFixture.openFileInEditor(
-      tempRoot.findFileByRelativePath("src/main/kotlin/com/example/KotlinClass.kt")!!
+      tempRoot.findFileByRelativePath("src/main/kotlin/com/example/KotlinClass.kt")!!,
     )
     val callsites = searchForElement<KtReferenceExpression>("multiQuery")
 
     myFixture.openFileInEditor(
-      tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!
+      tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!,
     )
     val identifier = searchForElement<StmtIdentifierMixin>("multiQuery").single()
     assertThat(myFixture.findUsages(identifier)).containsExactly(
       *callsites.map {
         KotlinReferenceUsageInfo(it.references.firstIsInstance())
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -71,7 +71,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |someSelect:
       |SELECT *
       |FROM test;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val tableName = searchForElement<SqlTableName>("test")
     assertThat(tableName).hasSize(3)
@@ -79,7 +79,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(tableName.first())).containsExactly(
       *tableName.map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -102,7 +102,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT value
       |FROM test
       |WHERE test.value = ?;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val tableName = searchForElement<SqlColumnName>("value")
     assertThat(tableName).hasSize(5)
@@ -110,7 +110,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(tableName.first())).containsExactly(
       *tableName.map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -124,7 +124,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |someSelect:
       |SELECT *
       |FROM test;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val viewName = searchForElement<SqlViewName>("test") +
       searchForElement<SqlTableName>("test")
@@ -133,7 +133,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(viewName.first())).containsExactly(
       *viewName.map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -152,7 +152,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |someSelect:
       |SELECT stuff_alias
       |FROM test_view;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val columnAlias = searchForElement<SqlColumnAlias>("stuff_alias") +
       searchForElement<SqlColumnName>("stuff_alias")
@@ -161,7 +161,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(columnAlias.first())).containsExactly(
       *columnAlias.drop(1).map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -177,7 +177,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT test_alias.*
       |FROM test test_alias
       |WHERE test_alias.stuff = ?;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val tableAlias = searchForElement<SqlTableAlias>("test_alias") +
       searchForElement<SqlTableName>("test_alias")
@@ -186,7 +186,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(tableAlias.first())).containsExactly(
       *tableAlias.drop(1).map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -206,7 +206,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT test_alias.*
       |FROM test_alias
       |WHERE test_alias.stuff = ?;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val tableName = searchForElement<SqlTableName>("test_alias")
     assertThat(tableName).hasSize(4)
@@ -214,7 +214,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(tableName.first())).containsExactly(
       *tableName.map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -234,7 +234,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |SELECT stuff_alias
       |FROM test_alias
       |WHERE test_alias.stuff_alias = ?;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val columnAlias = searchForElement<SqlColumnAlias>("stuff_alias") +
       searchForElement<SqlColumnName>("stuff_alias")
@@ -243,7 +243,7 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
     assertThat(myFixture.findUsages(columnAlias.first())).containsExactly(
       *columnAlias.drop(1).map {
         UsageInfo(it)
-      }.toTypedArray()
+      }.toTypedArray(),
     )
   }
 
@@ -257,12 +257,12 @@ class FindUsagesTest : SqlDelightProjectTestCase() {
       |
       |ALTER TABLE test RENAME TO test2;
       |ALTER TABLE test2 RENAME TO test3;
-    """.trimMargin()
+      """.trimMargin(),
     )
     val newName = searchForElement<SqlNewTableName>("test2").single()
 
     assertThat(myFixture.findUsages(newName)).containsExactly(
-      *(searchForElement<SqlTableName>("test2") + newName).map(::UsageInfo).toTypedArray()
+      *(searchForElement<SqlTableName>("test2") + newName).map(::UsageInfo).toTypedArray(),
     )
   }
 }

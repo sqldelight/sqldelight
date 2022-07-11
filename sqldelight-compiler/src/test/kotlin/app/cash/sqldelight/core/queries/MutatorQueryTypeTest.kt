@@ -28,7 +28,7 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -48,7 +48,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -65,8 +66,8 @@ class MutatorQueryTypeTest {
     |insertData:
     |INSERT INTO data
     |VALUES ?;
-    """.trimMargin(),
-      tempFolder
+      """.trimMargin(),
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -86,7 +87,8 @@ class MutatorQueryTypeTest {
     |    emit("data")
     |  }
     |}
-    |""".trimMargin()
+    |
+      """.trimMargin(),
     )
   }
 
@@ -111,7 +113,7 @@ class MutatorQueryTypeTest {
       |  AND className = ?2
       |;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -141,7 +143,8 @@ class MutatorQueryTypeTest {
       |    emit("item")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -162,7 +165,8 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -182,7 +186,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -194,7 +199,8 @@ class MutatorQueryTypeTest {
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder, fileName = "OtherData.sq"
+      tempFolder,
+      fileName = "OtherData.sq",
     )
 
     val file = FixtureCompiler.parseSql(
@@ -208,7 +214,8 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -228,7 +235,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -244,7 +252,8 @@ class MutatorQueryTypeTest {
       |FROM other_data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder, fileName = "OtherData.sq"
+      tempFolder,
+      fileName = "OtherData.sq",
     )
 
     val file = FixtureCompiler.parseSql(
@@ -263,7 +272,8 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -283,7 +293,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -299,7 +310,8 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -319,7 +331,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -346,7 +359,8 @@ class MutatorQueryTypeTest {
       |  ON data.id = data2.id
       |);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -369,7 +383,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -385,7 +400,8 @@ class MutatorQueryTypeTest {
       |INSERT INTO data (value)
       |VALUES (?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -404,7 +420,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -420,7 +437,8 @@ class MutatorQueryTypeTest {
       |INSERT INTO data (value)
       |VALUES (?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -439,7 +457,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -475,7 +494,9 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect.dialect
+      tempFolder,
+      fileName = "Data.sq",
+      dialect.dialect,
     )
 
     val mutator = file.namedMutators.first()
@@ -535,7 +556,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -571,7 +593,9 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect.dialect
+      tempFolder,
+      fileName = "Data.sq",
+      dialect.dialect,
     )
 
     val mutator = file.namedMutators.first()
@@ -631,7 +655,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -659,7 +684,9 @@ class MutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect.dialect
+      tempFolder,
+      fileName = "Data.sq",
+      dialect.dialect,
     )
 
     val mutator = file.namedMutators.first()
@@ -703,7 +730,8 @@ class MutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -732,8 +760,10 @@ class MutatorQueryTypeTest {
       |JOIN item ON (docid = item.id)
       |WHERE content LIKE '%' || ? || '%' ESCAPE '\'
       |;
-      |""".trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      |
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -757,7 +787,8 @@ class MutatorQueryTypeTest {
       |    emit("item")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -785,8 +816,10 @@ class MutatorQueryTypeTest {
     |JOIN item ON (docid = item.id)
     |WHERE content MATCH '"one ' || ? || '" * ';
     |
-    |""".trimMargin(),
-      tempFolder, fileName = "Data.sq"
+    |
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -802,7 +835,8 @@ class MutatorQueryTypeTest {
     |    emit("item_index")
     |  }
     |}
-    |""".trimMargin()
+    |
+      """.trimMargin(),
     )
   }
 
@@ -836,8 +870,10 @@ class MutatorQueryTypeTest {
     |
     |updateFoobarSelected:
     |UPDATE OR IGNORE foobar SET selected = ? WHERE id = ?;
-    |""".trimMargin(),
-      tempFolder, fileName = "Data.sq"
+    |
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -855,7 +891,8 @@ class MutatorQueryTypeTest {
     |    emit("foo")
     |  }
     |}
-    |""".trimMargin()
+    |
+      """.trimMargin(),
     )
   }
 }

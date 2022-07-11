@@ -22,8 +22,9 @@ class InsertStmtErrors {
       |insert:
       |INSERT INTO test (value1, value2)
       |VALUES ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).hasSize(1)
@@ -43,8 +44,9 @@ class InsertStmtErrors {
       |insert:
       |INSERT INTO test (value1, value2)
       |VALUES ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).hasSize(1)

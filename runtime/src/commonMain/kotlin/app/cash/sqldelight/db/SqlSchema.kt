@@ -41,7 +41,7 @@ interface SqlSchema {
  */
 class AfterVersion(
   internal val afterVersion: Int,
-  internal val block: (SqlDriver) -> Unit
+  internal val block: (SqlDriver) -> Unit,
 )
 
 /**
@@ -52,7 +52,7 @@ fun SqlSchema.migrateWithCallbacks(
   driver: SqlDriver,
   oldVersion: Int,
   newVersion: Int,
-  vararg callbacks: AfterVersion
+  vararg callbacks: AfterVersion,
 ) {
   var lastVersion = oldVersion
 

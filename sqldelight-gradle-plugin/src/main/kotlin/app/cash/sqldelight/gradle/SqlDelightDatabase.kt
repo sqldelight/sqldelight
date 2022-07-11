@@ -125,7 +125,7 @@ class SqlDelightDatabase(
           dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
       }
-      """.trimIndent()
+      """.trimIndent(),
     )
 
     try {
@@ -157,7 +157,7 @@ class SqlDelightDatabase(
       source.sourceSets.map {
         SqlDelightSourceFolderImpl(
           folder = File(project.projectDir, "src/$it/$folder"),
-          dependency = false
+          dependency = false,
         )
       }
     }
@@ -171,7 +171,7 @@ class SqlDelightDatabase(
       return@flatMap compilationUnit.sourceFolders.map {
         SqlDelightSourceFolderImpl(
           folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
-          dependency = true
+          dependency = true,
         )
       }
     }.distinct()

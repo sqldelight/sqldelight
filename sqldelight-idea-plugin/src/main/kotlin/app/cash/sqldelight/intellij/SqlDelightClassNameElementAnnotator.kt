@@ -78,7 +78,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
 
   private fun missingNestedClass(
     classes: List<ImportableType>,
-    javaTypeMixin: JavaTypeMixin
+    javaTypeMixin: JavaTypeMixin,
   ): PsiElement {
     val elementText = javaTypeMixin.text
     val className = classes.map { clazz -> findMissingNestedClassName(clazz, elementText) }

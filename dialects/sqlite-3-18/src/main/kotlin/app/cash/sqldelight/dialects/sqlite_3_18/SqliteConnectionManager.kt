@@ -10,7 +10,7 @@ import java.sql.SQLException
 class SqliteConnectionManager : ConnectionManager {
   override fun createNewConnectionProperties(
     project: Project,
-    prefilledProperties: ConnectionProperties?
+    prefilledProperties: ConnectionProperties?,
   ): ConnectionProperties? {
     val dialog = SelectConnectionTypeDialog(project)
     if (!dialog.showAndGet()) return null

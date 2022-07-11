@@ -42,7 +42,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
 
     val identifier = PsiTreeUtil.getPrevSiblingOfType(
       PsiTreeUtil.getParentOfType(table.tableName, SqlStmt::class.java),
-      SqlDelightStmtIdentifier::class.java
+      SqlDelightStmtIdentifier::class.java,
     )
     identifier?.childOfType(SqlTypes.JAVADOC)?.let { javadoc ->
       javadocText(javadoc)?.let { typeSpec.addKdoc(it) }
@@ -60,7 +60,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
         PropertySpec.builder(columnName, typeWithoutAnnotations)
           .initializer(columnName)
           .addAnnotations(javaType.annotations)
-          .build()
+          .build(),
       )
       val param = ParameterSpec.builder(columnName, typeWithoutAnnotations)
       columnDef.javadoc?.let(::javadocText)?.let { param.addKdoc(it) }
@@ -79,18 +79,18 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
               .addParameters(
                 adapters.map {
                   ParameterSpec.builder(it.name, it.type, *it.modifiers.toTypedArray()).build()
-                }
+                },
               )
-              .build()
+              .build(),
           )
           .addProperties(
             adapters.map {
               PropertySpec.builder(it.name, it.type, *it.modifiers.toTypedArray())
                 .initializer(it.name)
                 .build()
-            }
+            },
           )
-          .build()
+          .build(),
       )
     }
 

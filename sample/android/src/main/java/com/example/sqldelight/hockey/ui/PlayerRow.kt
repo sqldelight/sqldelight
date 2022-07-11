@@ -9,7 +9,7 @@ import com.example.sqldelight.hockey.data.ForTeam
 
 class PlayerRow(
   context: Context,
-  attrs: AttributeSet
+  attrs: AttributeSet,
 ) : LinearLayout(context, attrs) {
   fun populate(row: ForTeam) {
     findViewById<TextView>(R.id.player_name).text = "${row.first_name} ${row.last_name}"

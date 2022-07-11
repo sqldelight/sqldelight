@@ -56,18 +56,20 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         booleanDataType != null -> PrimitiveType.BOOLEAN
         blobDataType != null -> BLOB
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
-      }
+      },
     )
     if (node.getChildren(null).map { it.text }.takeLast(2) == listOf("[", "]")) {
-      return IntermediateType(object : DialectType {
-        override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
+      return IntermediateType(
+        object : DialectType {
+          override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
 
-        override fun prepareStatementBinder(columnIndex: String, value: CodeBlock) =
-          CodeBlock.of("bindObject($columnIndex, %L)\n", value)
+          override fun prepareStatementBinder(columnIndex: String, value: CodeBlock) =
+            CodeBlock.of("bindObject($columnIndex, %L)\n", value)
 
-        override fun cursorGetter(columnIndex: Int, cursorName: String) =
-          CodeBlock.of("$cursorName.getArray($columnIndex)")
-      })
+          override fun cursorGetter(columnIndex: Int, cursorName: String) =
+            CodeBlock.of("$cursorName.getArray($columnIndex)")
+        },
+      )
     }
     return type
   }

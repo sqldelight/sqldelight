@@ -52,8 +52,8 @@ class MySqlTest {
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = true
-        )
+          is_good = true,
+        ),
       )
   }
 
@@ -66,20 +66,20 @@ class MySqlTest {
     assertThat(
       dogQueries.selectDogsByBreedAndNames(
         breed = "Pomeranian",
-        name = listOf("Tilda", "Buddy")
-      ).executeAsList()
+        name = listOf("Tilda", "Buddy"),
+      ).executeAsList(),
     )
       .containsExactly(
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = true
+          is_good = true,
         ),
         Dog(
           name = "Buddy",
           breed = "Pomeranian",
-          is_good = true
-        )
+          is_good = true,
+        ),
       )
   }
 
@@ -91,8 +91,8 @@ class MySqlTest {
         time = LocalTime.of(21, 30, 59),
         datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
         timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-        year = "2022"
-      ).executeAsOne()
+        year = "2022",
+      ).executeAsOne(),
     )
       .isEqualTo(
         Dates(
@@ -100,8 +100,8 @@ class MySqlTest {
           time = LocalTime.of(21, 30, 59),
           datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
           timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-          year = "2022-01-01"
-        )
+          year = "2022-01-01",
+        ),
       )
   }
 

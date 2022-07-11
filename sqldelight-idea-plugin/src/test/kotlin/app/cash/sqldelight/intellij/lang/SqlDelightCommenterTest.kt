@@ -53,7 +53,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
       |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  title TEXT NOT NULL
       |);</selection>
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val commentAction = CommentByLineCommentAction()
@@ -64,7 +64,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
       |--   _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |--   title TEXT NOT NULL
       |-- );
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     commentAction.actionPerformedImpl(project, myFixture.editor)
@@ -74,7 +74,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
       |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  title TEXT NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -91,7 +91,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT *
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.type("/**")
@@ -110,7 +110,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT *
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

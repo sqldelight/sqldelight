@@ -24,7 +24,7 @@ import app.cash.sqldelight.db.SqlPreparedStatement
 
 class LogSqliteDriver(
   private val sqlDriver: SqlDriver,
-  private val logger: (String) -> Unit
+  private val logger: (String) -> Unit,
 ) : SqlDriver {
 
   override fun currentTransaction(): Transacter.Transaction? {
@@ -35,7 +35,7 @@ class LogSqliteDriver(
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
     logger("EXECUTE\n $sql")
     logParameters(binders)
@@ -47,7 +47,7 @@ class LogSqliteDriver(
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     logger("QUERY\n $sql")
     logParameters(binders)
@@ -97,35 +97,35 @@ class StatementParameterInterceptor : SqlPreparedStatement {
 
   override fun bindBytes(
     index: Int,
-    bytes: ByteArray?
+    bytes: ByteArray?,
   ) {
     values.add(bytes)
   }
 
   override fun bindDouble(
     index: Int,
-    double: Double?
+    double: Double?,
   ) {
     values.add(double)
   }
 
   override fun bindLong(
     index: Int,
-    long: Long?
+    long: Long?,
   ) {
     values.add(long)
   }
 
   override fun bindString(
     index: Int,
-    string: String?
+    string: String?,
   ) {
     values.add(string)
   }
 
   override fun bindBoolean(
     index: Int,
-    boolean: Boolean?
+    boolean: Boolean?,
   ) {
     values.add(boolean)
   }

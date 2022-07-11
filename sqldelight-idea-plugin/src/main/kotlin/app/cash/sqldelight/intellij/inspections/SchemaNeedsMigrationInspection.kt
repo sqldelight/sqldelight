@@ -25,7 +25,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
 
   override fun buildVisitor(
     holder: ProblemsHolder,
-    isOnTheFly: Boolean
+    isOnTheFly: Boolean,
   ) = ensureReady(holder.file) {
     object : SqlVisitor() {
       override fun visitCreateTableStmt(createTable: SqlCreateTableStmt) = ignoreInvalidElements {
@@ -58,8 +58,10 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
         }*/
 
           holder.registerProblem(
-            createTable.tableName, "Table needs to be added in a migration", GENERIC_ERROR,
-            CreateTableMigrationQuickFix(createTable, topMigrationFile)
+            createTable.tableName,
+            "Table needs to be added in a migration",
+            GENERIC_ERROR,
+            CreateTableMigrationQuickFix(createTable, topMigrationFile),
           )
           return
         }
@@ -73,8 +75,10 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
 
         if (oldSignature != signature) {
           holder.registerProblem(
-            createTable.tableName, "Table needs to be altered in a migration", GENERIC_ERROR,
-            AlterTableMigrationQuickFix(createTable, oldSignature, signature)
+            createTable.tableName,
+            "Table needs to be altered in a migration",
+            GENERIC_ERROR,
+            AlterTableMigrationQuickFix(createTable, oldSignature, signature),
           )
         }
       }
@@ -98,26 +102,26 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
       project: Project,
       file: PsiFile,
       startElement: PsiElement,
-      endElement: PsiElement
+      endElement: PsiElement,
     ) {
       val strategy = SqlDelightProjectService.getInstance(file.project).dialect.migrationStrategy
       val changeName = strategy.tableNameChanged(
         oldName = oldName,
-        newName = createTableRef.element?.tableName?.name ?: return
+        newName = createTableRef.element?.tableName?.name ?: return,
       )
       refactoringExecutor.performChangeSignature(
         SuggestedMigrationData(
           declarationPointer = createTableRef,
           newestMigrationFile = newestMigrationFile,
-          preparedMigration = changeName
-        )
+          preparedMigration = changeName,
+        ),
       )
     }
   }
 
   inner class CreateTableMigrationQuickFix(
     createTableStmt: SqlCreateTableStmt,
-    private val newestMigrationFile: MigrationFile?
+    private val newestMigrationFile: MigrationFile?,
   ) : LocalQuickFixOnPsiElement(createTableStmt) {
     private val createTableRef = SmartPointerManager.getInstance(createTableStmt.project)
       .createSmartPsiElementPointer(createTableStmt, createTableStmt.containingFile)
@@ -131,14 +135,14 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
       project: Project,
       file: PsiFile,
       startElement: PsiElement,
-      endElement: PsiElement
+      endElement: PsiElement,
     ) {
       refactoringExecutor.performChangeSignature(
         SuggestedMigrationData(
           declarationPointer = createTableRef,
           newestMigrationFile = newestMigrationFile,
-          preparedMigration = "${createTableRef.element?.text.orEmpty()};"
-        )
+          preparedMigration = "${createTableRef.element?.text.orEmpty()};",
+        ),
       )
     }
   }
@@ -160,7 +164,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
       project: Project,
       file: PsiFile,
       startElement: PsiElement,
-      endElement: PsiElement
+      endElement: PsiElement,
     ) {
       val migrationData = refactoringExecutor.prepareChangeSignature(
         declaration = createTableRef,

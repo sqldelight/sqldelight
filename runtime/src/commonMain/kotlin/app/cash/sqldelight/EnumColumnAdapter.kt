@@ -17,7 +17,7 @@ package app.cash.sqldelight
 
 /** A [ColumnAdapter] which maps the enum class `T` to a string in the database. */
 class EnumColumnAdapter<T : Enum<T>> @PublishedApi internal constructor(
-  private val enumValues: Array<out T>
+  private val enumValues: Array<out T>,
 ) : ColumnAdapter<T, String> {
   override fun decode(databaseValue: String): T = enumValues.first { it.name == databaseValue }
 

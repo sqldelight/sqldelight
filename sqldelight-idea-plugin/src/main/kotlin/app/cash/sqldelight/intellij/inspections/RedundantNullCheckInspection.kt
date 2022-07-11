@@ -19,7 +19,7 @@ internal class RedundantNullCheckInspection : LocalInspectionTool() {
   override fun buildVisitor(
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
-    session: LocalInspectionToolSession
+    session: LocalInspectionToolSession,
   ) = ensureReady(session.file) {
     object : SqlVisitor() {
 

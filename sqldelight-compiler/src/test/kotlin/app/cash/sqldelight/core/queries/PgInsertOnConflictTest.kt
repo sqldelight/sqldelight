@@ -24,8 +24,9 @@ class PgInsertOnConflictTest {
             |INSERT INTO data
             |VALUES (:id, :c1)
             |ON CONFLICT (id) DO UPDATE SET col1 = :c1;
-            """.trimMargin(),
-      tempFolder, dialect = PostgreSqlDialect()
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
     )
 
     val insert = file.namedMutators.first()
@@ -49,7 +50,7 @@ class PgInsertOnConflictTest {
             |  }
             |}
             |
-            """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -68,8 +69,9 @@ class PgInsertOnConflictTest {
             |INSERT INTO data
             |VALUES (:id, :c1, :c2, :c3)
             |ON CONFLICT (id) DO UPDATE SET col1 = :c1, col2 = :c2;
-            """.trimMargin(),
-      tempFolder, dialect = PostgreSqlDialect()
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
     )
 
     val insert = file.namedMutators.first()
@@ -101,7 +103,7 @@ class PgInsertOnConflictTest {
             |  }
             |}
             |
-            """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -120,8 +122,9 @@ class PgInsertOnConflictTest {
             |INSERT INTO data
             |VALUES (:id, :c1, :c2, :c3)
             |ON CONFLICT (id) DO UPDATE SET col1 = :c1, col2 = :c2, col3 = :c3;
-            """.trimMargin(),
-      tempFolder, dialect = PostgreSqlDialect()
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
     )
 
     val insert = file.namedMutators.first()
@@ -154,7 +157,7 @@ class PgInsertOnConflictTest {
             |  }
             |}
             |
-            """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

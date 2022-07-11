@@ -17,7 +17,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     val prepared = connection.createStatement(sql).also { statement ->
       R2dbcPreparedStatement(statement).apply { if (binders != null) this.binders() }
@@ -39,7 +39,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
     val prepared = connection.createStatement(sql).also { statement ->
       R2dbcPreparedStatement(statement).apply { if (binders != null) this.binders() }
@@ -83,7 +83,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
 
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?,
-    private val connection: Connection
+    private val connection: Connection,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {

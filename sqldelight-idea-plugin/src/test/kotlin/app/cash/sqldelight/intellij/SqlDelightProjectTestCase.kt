@@ -48,29 +48,29 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
         SqlDelightCompilationUnitImpl(
           name = "internalDebug",
           outputDirectoryFile = File(tempRoot.path, "build"),
-          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalDebug/sqldelight"), false))
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalDebug/sqldelight"), false)),
         ),
         SqlDelightCompilationUnitImpl(
           name = "internalRelease",
           outputDirectoryFile = File(tempRoot.path, "build"),
-          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalRelease/sqldelight"), false))
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalRelease/sqldelight"), false)),
         ),
         SqlDelightCompilationUnitImpl(
           name = "productionDebug",
           outputDirectoryFile = File(tempRoot.path, "build"),
-          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionDebug/sqldelight"), false))
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionDebug/sqldelight"), false)),
         ),
         SqlDelightCompilationUnitImpl(
           name = "productionRelease",
           outputDirectoryFile = File(tempRoot.path, "build"),
-          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionRelease/sqldelight"), false))
-        )
+          sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionRelease/sqldelight"), false)),
+        ),
       ),
       dependencies = emptyList(),
       rootDirectory = File(tempRoot.path).absoluteFile,
       deriveSchemaFromMigrations = false,
       treatNullAsUnknownForEquality = false,
-      generateAsync = false
+      generateAsync = false,
     )
   }
 
@@ -87,7 +87,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
 
   private data class SqlDelightSourceFolderImpl(
     override val folder: File,
-    override val dependency: Boolean
+    override val dependency: Boolean,
   ) : SqlDelightSourceFolder
 
   private data class SqlDelightCompilationUnitImpl(

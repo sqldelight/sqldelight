@@ -30,7 +30,7 @@ class BindArgsTest {
       |FROM data
       |WHERE data.id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -57,7 +57,7 @@ class BindArgsTest {
       |FROM data_aliased
       |WHERE data_id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -79,7 +79,7 @@ class BindArgsTest {
       |INSERT INTO data (id)
       |VALUES (?), (?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -102,7 +102,7 @@ class BindArgsTest {
       |INSERT INTO data
       |VALUES (?), (?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -127,7 +127,7 @@ class BindArgsTest {
       |UNION
       |VALUES (?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -152,7 +152,7 @@ class BindArgsTest {
       |UNION
       |VALUES (((?)));
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.forEach {
@@ -175,7 +175,7 @@ class BindArgsTest {
       |SET id = ?
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -208,7 +208,8 @@ class BindArgsTest {
       |DO UPDATE SET
       |  list = :list;
       """.trimMargin(),
-      tempFolder, dialect = SqliteDialect()
+      tempFolder,
+      dialect = SqliteDialect(),
     )
 
     val (idColumn, listColumn) = file.findChildrenOfType<SqlColumnDef>().toList()
@@ -246,7 +247,7 @@ class BindArgsTest {
       |)
       |WHERE some_alias = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -270,7 +271,7 @@ class BindArgsTest {
       |FROM data
       |WHERE id IN ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val column = file.findChildrenOfType<SqlColumnDef>().first()
@@ -299,7 +300,7 @@ class BindArgsTest {
       |   AND first_name LIKE ?
       |   AND last_name LIKE ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val columns = file.findChildrenOfType<SqlColumnDef>().toTypedArray()

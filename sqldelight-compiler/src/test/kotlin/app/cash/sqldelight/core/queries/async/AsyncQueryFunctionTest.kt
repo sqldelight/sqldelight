@@ -29,7 +29,7 @@ class AsyncQueryFunctionTest {
       |WHERE id = ?;
       """.trimMargin(),
       tempFolder,
-      generateAsync = true
+      generateAsync = true,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -41,7 +41,8 @@ class AsyncQueryFunctionTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

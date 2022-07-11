@@ -25,12 +25,14 @@ class VariantTest {
       8    SELECT _id, some_column1
                        ^^^^^^^^^^^^
       9    FROM some_table
-      """.trimIndent()
+      """.trimIndent(),
     )
 
     runner.withArguments(
-      "clean", "generateReleaseDatabaseInterface",
-      "--stacktrace", "-Dsqldelight.skip.runtime=true"
+      "clean",
+      "generateReleaseDatabaseInterface",
+      "--stacktrace",
+      "-Dsqldelight.skip.runtime=true",
     )
       .build()
   }
@@ -51,7 +53,7 @@ class VariantTest {
       7    SELECT *
       8    FROM full_table
                 ^^^^^^^^^^
-      """.trimIndent()
+      """.trimIndent(),
     )
   }
 
@@ -72,14 +74,14 @@ class VariantTest {
     with(properties.compilationUnits[0]) {
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false)
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
       )
     }
 
     with(properties.compilationUnits[1]) {
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
-        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false)
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
       )
     }
   }

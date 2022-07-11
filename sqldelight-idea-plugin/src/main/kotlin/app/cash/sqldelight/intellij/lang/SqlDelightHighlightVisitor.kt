@@ -46,7 +46,7 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
     file: PsiFile,
     updateWholeFile: Boolean,
     holder: HighlightInfoHolder,
-    action: Runnable
+    action: Runnable,
   ): Boolean {
     myHolder = holder
     try {
@@ -114,34 +114,36 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
 
   private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {
     return HighlightInfoType.HighlightInfoTypeImpl(
-      HighlightInfoType.SYMBOL_TYPE_SEVERITY, attributesKey, false
+      HighlightInfoType.SYMBOL_TYPE_SEVERITY,
+      attributesKey,
+      false,
     )
   }
 
   companion object {
     val SQL_ALIAS = TextAttributesKey.createTextAttributesKey(
       "SQL.ALIAS",
-      DefaultLanguageHighlighterColors.LOCAL_VARIABLE
+      DefaultLanguageHighlighterColors.LOCAL_VARIABLE,
     )
     val SQL_COLUMN_NAME = TextAttributesKey.createTextAttributesKey(
       "SQL.COLUMN_NAME",
-      DefaultLanguageHighlighterColors.INSTANCE_FIELD
+      DefaultLanguageHighlighterColors.INSTANCE_FIELD,
     )
     val SQL_FUNCTION_NAME = TextAttributesKey.createTextAttributesKey(
       "SQL.FUNCTION_NAME",
-      DefaultLanguageHighlighterColors.STATIC_METHOD
+      DefaultLanguageHighlighterColors.STATIC_METHOD,
     )
     val SQL_STMT_IDENTIFIER_NAME = TextAttributesKey.createTextAttributesKey(
       "SQL.STMT_IDENTIFIER_NAME",
-      DefaultLanguageHighlighterColors.INSTANCE_METHOD
+      DefaultLanguageHighlighterColors.INSTANCE_METHOD,
     )
     val SQL_TABLE_NAME = TextAttributesKey.createTextAttributesKey(
       "SQL.TABLE_NAME",
-      DefaultLanguageHighlighterColors.CLASS_NAME
+      DefaultLanguageHighlighterColors.CLASS_NAME,
     )
     val SQL_TYPE_NAME = TextAttributesKey.createTextAttributesKey(
       "SQL.TYPE_NAME",
-      DefaultLanguageHighlighterColors.KEYWORD
+      DefaultLanguageHighlighterColors.KEYWORD,
     )
   }
 }

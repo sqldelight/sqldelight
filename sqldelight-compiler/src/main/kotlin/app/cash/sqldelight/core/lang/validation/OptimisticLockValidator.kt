@@ -35,7 +35,7 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
   fun annotate(
     element: PsiElement,
     holder: AnnotationHolder?,
-    sqlAnnotationHolder: SqlAnnotationHolder?
+    sqlAnnotationHolder: SqlAnnotationHolder?,
   ) {
     val tableName = when (element) {
       is SqlUpdateStmt -> element.qualifiedTableName.tableName
@@ -70,10 +70,13 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
 
     if (column == null || setter == null) {
       displayError(
-        element, lock, holder, sqlAnnotationHolder,
+        element,
+        lock,
+        holder,
+        sqlAnnotationHolder,
         """
         This statement is missing the optimistic lock in its SET clause.
-        """.trimIndent()
+        """.trimIndent(),
       )
       return
     }
@@ -87,10 +90,13 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
       )
     ) {
       displayError(
-        element, lock, holder, sqlAnnotationHolder,
+        element,
+        lock,
+        holder,
+        sqlAnnotationHolder,
         """
         The optimistic lock must be set exactly like "${lock.columnName.name} = :${lock.columnName.name} + 1".
-        """.trimIndent()
+        """.trimIndent(),
       )
       return
     }
@@ -103,10 +109,13 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
 
     if (whereExpression == null || whereExpression.node.treePrev.treePrev.text != "WHERE") {
       displayError(
-        element, lock, holder, sqlAnnotationHolder,
+        element,
+        lock,
+        holder,
+        sqlAnnotationHolder,
         """
         This statement is missing a WHERE clause to check the optimistic lock.
-        """.trimIndent()
+        """.trimIndent(),
       )
       return
     }
@@ -119,10 +128,13 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
     }
     ) {
       displayError(
-        element, lock, holder, sqlAnnotationHolder,
+        element,
+        lock,
+        holder,
+        sqlAnnotationHolder,
         """
         The optimistic lock must be queried exactly like "${lock.columnName.name} == :${lock.columnName.name}".
-        """.trimIndent()
+        """.trimIndent(),
       )
       return
     }

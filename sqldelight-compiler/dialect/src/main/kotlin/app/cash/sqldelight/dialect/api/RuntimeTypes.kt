@@ -7,5 +7,5 @@ import com.squareup.kotlinpoet.ClassName
  */
 data class RuntimeTypes(
   val cursorType: ClassName,
-  val preparedStatementType: ClassName
+  val preparedStatementType: ClassName,
 )

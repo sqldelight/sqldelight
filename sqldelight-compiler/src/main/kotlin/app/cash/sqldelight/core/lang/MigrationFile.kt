@@ -5,7 +5,7 @@ import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.psi.FileViewProvider
 
 class MigrationFile(
-  viewProvider: FileViewProvider
+  viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
   val version: Int by lazy {
     name.substringBeforeLast(".${MigrationFileType.EXTENSION}")

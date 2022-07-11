@@ -19,7 +19,7 @@ import com.intellij.psi.impl.GeneratedMarkerVisitor
 import com.intellij.psi.impl.source.tree.TreeElement
 
 abstract class StmtIdentifierMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : ASTWrapperPsiElement(node),
   SqlDelightStmtIdentifier,
   SqlDelightStmtIdentifierClojure,
@@ -29,10 +29,17 @@ abstract class StmtIdentifierMixin(
   override fun setName(name: String): PsiElement {
     val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language) as SqlParserDefinition
     var builder = PsiBuilderFactory.getInstance().createBuilder(
-      project, node, parserDefinition.createLexer(project), language, name
+      project,
+      node,
+      parserDefinition.createLexer(project),
+      language,
+      name,
     )
     builder = GeneratedParserUtilBase.adapt_builder_(
-      SqlTypes.IDENTIFIER, builder, SqlParser(), SqlParser.EXTENDS_SETS_
+      SqlTypes.IDENTIFIER,
+      builder,
+      SqlParser(),
+      SqlParser.EXTENDS_SETS_,
     )
     GeneratedParserUtilBase.ErrorState.get(builder).currentFrame = GeneratedParserUtilBase.Frame()
 

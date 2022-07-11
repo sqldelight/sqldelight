@@ -96,7 +96,8 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
 
   private val mapper = { cursor: SqlCursor ->
     TestData(
-      cursor.getLong(0)!!, cursor.getString(1)!!
+      cursor.getLong(0)!!,
+      cursor.getString(1)!!,
     )
   }
 

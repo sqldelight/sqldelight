@@ -29,8 +29,8 @@ class JsDriverTest {
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(),
-        0
+        """.trimMargin(),
+        0,
       )
       driver.execute(
         1,
@@ -42,8 +42,8 @@ class JsDriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(),
-        0
+        """.trimMargin(),
+        0,
       )
       return QueryResult.Unit
     }
@@ -51,7 +51,7 @@ class JsDriverTest {
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ): QueryResult<Unit> {
       // No-op.
       return QueryResult.Unit
@@ -159,7 +159,7 @@ class JsDriverTest {
         assertTrue(it.next())
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
-      }
+      },
     )
 
     // Second time running the query is fine
@@ -171,7 +171,7 @@ class JsDriverTest {
         assertTrue(it.next())
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
-      }
+      },
     )
   }
 

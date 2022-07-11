@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 import java.awt.Color
 
 class FileIndexingNotification(
-  private val project: Project
+  private val project: Project,
 ) : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
   internal var unconfiguredReason: UnconfiguredReason = GradleSyncing
     set(value) {

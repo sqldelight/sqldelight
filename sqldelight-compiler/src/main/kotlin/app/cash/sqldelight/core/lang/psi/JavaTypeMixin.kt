@@ -11,7 +11,7 @@ import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference
 
 abstract class JavaTypeMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlNamedElementImpl(node) {
   override val parseRule: (PsiBuilder, Int) -> Boolean = SqldelightParser::java_type_real
 

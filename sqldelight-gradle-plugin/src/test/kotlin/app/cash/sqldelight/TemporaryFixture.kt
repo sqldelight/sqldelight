@@ -66,7 +66,7 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
             sourceFolders = it.sourceFolders.map {
               SqlDelightSourceFolderImpl(
                 folder = it.folder,
-                dependency = it.dependency
+                dependency = it.dependency,
               )
             },
             outputDirectoryFile = it.outputDirectoryFile,
@@ -76,14 +76,14 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
         dependencies = it.dependencies.map {
           SqlDelightDatabaseNameImpl(
             packageName = it.packageName,
-            className = it.className
+            className = it.className,
           )
         },
         deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
         treatNullAsUnknownForEquality = it.treatNullAsUnknownForEquality,
-        rootDirectory = it.rootDirectory
+        rootDirectory = it.rootDirectory,
       )
-    }
+    },
   )
 }
 

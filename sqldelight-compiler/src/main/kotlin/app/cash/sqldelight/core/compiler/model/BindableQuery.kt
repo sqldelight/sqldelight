@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
   internal val identifier: StmtIdentifierMixin?,
-  internal val statement: SqlAnnotatedElement
+  internal val statement: SqlAnnotatedElement,
 ) {
   protected val typeResolver = statement.typeResolver
 
@@ -61,8 +61,8 @@ abstract class BindableQuery(
         IntermediateType(
           ARGUMENT,
           javaType = ClassName(table.sqFile().packageName!!, allocateName(statement.tableName).capitalize()),
-          name = allocateName(statement.tableName)
-        )
+          name = allocateName(statement.tableName),
+        ),
       )
     }
     return@lazy arguments.sortedBy { it.index }.map { it.type }
@@ -78,9 +78,9 @@ abstract class BindableQuery(
           index + 1,
           column.type().let {
             it.copy(
-              name = "${allocateName(statement.tableName)}.${it.name}"
+              name = "${allocateName(statement.tableName)}.${it.name}",
             )
-          }
+          },
         )
       }
     }
@@ -144,7 +144,7 @@ abstract class BindableQuery(
   private fun MutableList<Argument>.findAndReplace(
     bindArg: SqlBindExpr,
     index: Int? = null,
-    condition: (Argument) -> Boolean
+    condition: (Argument) -> Boolean,
   ) {
     val current = first(condition)
     current.bindArgs.add(bindArg)
@@ -174,10 +174,10 @@ abstract class BindableQuery(
           type = newArgumentType.run {
             copy(
               javaType = javaType.copy(nullable = current.type.javaType.isNullable || newType.javaType.isNullable),
-              name = bindArg.bindParameter.identifier?.text ?: name
+              name = bindArg.bindParameter.identifier?.text ?: name,
             )
-          }
-        )
+          },
+        ),
       )
     }
   }
@@ -187,7 +187,7 @@ abstract class BindableQuery(
     return getUniqueQueryIdentifier(
       statement.sqFile().let {
         "${it.packageName}:${it.name}:${identifier?.name ?: ""}$postFix"
-      }
+      },
     )
   }
 
@@ -197,7 +197,7 @@ abstract class BindableQuery(
   data class Argument(
     val index: Int,
     val type: IntermediateType,
-    val bindArgs: MutableList<SqlBindExpr> = mutableListOf()
+    val bindArgs: MutableList<SqlBindExpr> = mutableListOf(),
   )
 
   companion object {
@@ -222,7 +222,7 @@ abstract class BindableQuery(
             // to give a different query than adding logic to generate deterministic identifier
             throw RuntimeException(
               "HashCode collision happened when generating unique identifier for $qualifiedQueryName." +
-                "Please give a different name"
+                "Please give a different name",
             )
           }
           queryIdMap[qualifiedQueryName] = queryId

@@ -14,13 +14,13 @@ import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 
 class AnsiSqlMigrationSquasher(
-  private val createNewSqlFile: (String) -> SqlFileBase
+  private val createNewSqlFile: (String) -> SqlFileBase,
 ) : MigrationSquasher {
   internal lateinit var squasher: MigrationSquasher
 
   override fun squish(
     statement: SqlStmt,
-    currentFile: SqlFileBase
+    currentFile: SqlFileBase,
   ): String {
     return when {
       statement.alterTableStmt != null -> {
@@ -67,7 +67,7 @@ class AnsiSqlMigrationSquasher(
 
   override fun squish(
     alterTableRules: SqlAlterTableRules,
-    into: SqlFileBase
+    into: SqlFileBase,
   ): String {
     return when {
       alterTableRules.alterTableRenameTable != null -> {
@@ -83,7 +83,7 @@ class AnsiSqlMigrationSquasher(
         into.text.replaceRange(
           createTable.columnDefList.first().startOffset until createTable.columnDefList.last().endOffset,
           (createTable.columnDefList + alterTableRules.alterTableAddColumn!!.columnDef)
-            .joinToString(separator = ",\n  ") { it.text }
+            .joinToString(separator = ",\n  ") { it.text },
         )
       }
       else -> throw IllegalStateException("Cannot squish ${alterTableRules.text}")

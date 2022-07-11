@@ -95,20 +95,23 @@ class IntegrationTests {
     assertThat(current).isEqualTo(13)
   }
 
-  @Test @Throws(InterruptedException::class)
+  @Test
+  @Throws(InterruptedException::class)
   fun compiledStatementAcrossThread() {
     keywordsQueries.insertStmt(11, 21)
 
     val latch = CountDownLatch(1)
-    Thread(object : Runnable {
-      override fun run() {
-        try {
-          keywordsQueries.insertStmt(12, 22)
-        } finally {
-          latch.countDown()
+    Thread(
+      object : Runnable {
+        override fun run() {
+          try {
+            keywordsQueries.insertStmt(12, 22)
+          } finally {
+            latch.countDown()
+          }
         }
-      }
-    }).start()
+      },
+    ).start()
 
     assertTrue(latch.await(10, SECONDS))
 
@@ -140,7 +143,7 @@ class IntegrationTests {
   @Test fun bigTable() {
     val bigTable = BigTable(
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
     )
 
     bigTableQueries.insert(bigTable)
@@ -155,7 +158,7 @@ class IntegrationTests {
 
     assertThat(varargsQueries.select(setOf(1, 2), 10).executeAsList()).containsExactly(
       MyTable(1, 1, 10),
-      MyTable(2, 2, 10)
+      MyTable(2, 2, 10),
     )
   }
 
@@ -166,18 +169,18 @@ class IntegrationTests {
 
     assertThat(groupedStatementQueries.selectAll().executeAsList()).containsExactly(
       Bug("2", "2", 1, 20),
-      Bug("1", "1", 0, 11)
+      Bug("1", "1", 0, 11),
     )
   }
 
   @Test fun groupedStatementWithReturn() {
     assertThat(
-      personQueries.insertAndReturn(first_name = "Bob", last_name = "Ross").executeAsOne()
+      personQueries.insertAndReturn(first_name = "Bob", last_name = "Ross").executeAsOne(),
     ).isEqualTo(
       InsertAndReturn(
         first_name = "Bob",
-        last_name = "Ross"
-      )
+        last_name = "Ross",
+      ),
     )
   }
 }

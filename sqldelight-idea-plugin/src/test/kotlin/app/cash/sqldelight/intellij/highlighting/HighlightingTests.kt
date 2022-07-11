@@ -60,7 +60,7 @@ class HighlightingTests : SqlDelightFixtureTestCase() {
       |  className ASC
       |LIMIT 50
       |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()

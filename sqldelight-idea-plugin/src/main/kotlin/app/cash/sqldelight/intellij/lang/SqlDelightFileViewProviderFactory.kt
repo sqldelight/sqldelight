@@ -55,7 +55,7 @@ class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
     file: VirtualFile,
     language: Language,
     manager: PsiManager,
-    eventSystemEnabled: Boolean
+    eventSystemEnabled: Boolean,
   ): FileViewProvider {
     val module = SqlDelightProjectService.getInstance(manager.project).module(file)
       ?: return SingleRootFileViewProvider(manager, file, eventSystemEnabled)
@@ -68,7 +68,7 @@ private class SqlDelightFileViewProvider(
   virtualFile: VirtualFile,
   eventSystemEnabled: Boolean,
   private val language: Language,
-  private val module: Module
+  private val module: Module,
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, language) {
   private val threadPool = Executors.newScheduledThreadPool(1)
 
@@ -120,12 +120,13 @@ private class SqlDelightFileViewProvider(
               e.printStackTrace()
               null
             }
-          }
+          },
         ).expireWhen(thisCondition)
           .finishOnUiThread(ModalityState.NON_MODAL, ::writeFiles)
           .submit(NonUrgentExecutor.getInstance())
       },
-      1, TimeUnit.SECONDS
+      1,
+      TimeUnit.SECONDS,
     )
 
     if (!updateTransitive) return
@@ -145,7 +146,9 @@ private class SqlDelightFileViewProvider(
           }
         }.expireWhen(thisCondition)
           .submit(NonUrgentExecutor.getInstance())
-      }, 1, TimeUnit.SECONDS
+      },
+      1,
+      TimeUnit.SECONDS,
     )
   }
 
@@ -222,6 +225,6 @@ private class SqlDelightFileViewProvider(
 
   private data class GeneratedFile(
     val path: String,
-    val transitive: Boolean = false
+    val transitive: Boolean = false,
   )
 }

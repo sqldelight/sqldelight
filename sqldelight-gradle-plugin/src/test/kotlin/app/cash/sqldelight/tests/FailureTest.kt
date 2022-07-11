@@ -22,7 +22,8 @@ class FailureTest {
       |1    CREATE TABLE test (
       |2      value TEXT
       |3    );
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

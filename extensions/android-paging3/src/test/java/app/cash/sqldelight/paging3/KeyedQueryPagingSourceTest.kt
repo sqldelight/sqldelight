@@ -111,9 +111,9 @@ class KeyedQueryPagingSourceTest {
           emptyList(),
           null,
           PagingConfig(3),
-          0
-        )
-      )
+          0,
+        ),
+      ),
     )
   }
 
@@ -131,8 +131,8 @@ class KeyedQueryPagingSourceTest {
         listOf(results as LoadResult.Page),
         null,
         PagingConfig(3),
-        0
-      )
+        0,
+      ),
     )
 
     assertEquals(0L, refreshKey)
@@ -152,8 +152,8 @@ class KeyedQueryPagingSourceTest {
         listOf(results as LoadResult.Page),
         null,
         PagingConfig(3),
-        0
-      )
+        0,
+      ),
     )
 
     assertEquals(6L, refreshKey)
@@ -195,7 +195,7 @@ class KeyedQueryPagingSourceTest {
     """.trimMargin()
 
     return object : Query<Long>(
-      { cursor -> cursor.getLong(0)!! }
+      { cursor -> cursor.getLong(0)!! },
     ) {
       override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameters = 2) {
         bindLong(0, beginInclusive)

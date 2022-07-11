@@ -23,7 +23,7 @@ class JsTransacterTest {
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ) = QueryResult.Unit
   }
 

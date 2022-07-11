@@ -47,21 +47,21 @@ class ColumnOrderingTest {
       |  MODIFY COLUMN id5 BIGINT FIRST,
       |  MODIFY COLUMN id6 BIGINT AFTER id9,
       |  MODIFY COLUMN id7 VARCHAR(8);
-    """.trimMargin(),
-      "1.s"
+      """.trimMargin(),
+      "1.s",
     )
     val file = compileFile(
       """
       |SELECT *
       |FROM test1;
-    """.trimMargin(),
-      "test.s"
+      """.trimMargin(),
+      "test.s",
     )
 
     assertThat(
       file.sqlStmtList!!.stmtList.first().compoundSelectStmt!!.queryExposed()
         .flatMap { it.columns }
-        .map { it.element.text }
+        .map { it.element.text },
     ).containsExactly(
       "id5",
       "new14",
@@ -75,7 +75,7 @@ class ColumnOrderingTest {
       "id9",
       "id6",
       "id10",
-      "new13"
+      "new13",
     ).inOrder()
   }
 }

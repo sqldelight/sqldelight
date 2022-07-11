@@ -47,7 +47,7 @@ import com.squareup.kotlinpoet.PropertySpec
 data class NamedQuery(
   val name: String,
   val queryable: QueryWithResults,
-  private val statementIdentifier: StmtIdentifierMixin? = null
+  private val statementIdentifier: StmtIdentifierMixin? = null,
 ) : BindableQuery(statementIdentifier, queryable.statement) {
   internal val select get() = queryable.statement
   internal val pureTable get() = queryable.pureTable
@@ -141,7 +141,7 @@ data class NamedQuery(
         val exposedTypes = values.exprList.map { it.type() }
         if (results.isEmpty()) return@fold exposedTypes
         return@fold results.zip(exposedTypes, this::superType)
-      }
+      },
     )
   }
 
@@ -193,7 +193,7 @@ data class NamedQuery(
   }
 
   private fun QueryElement.typesExposed(
-    namesUsed: LinkedHashSet<String>
+    namesUsed: LinkedHashSet<String>,
   ): List<IntermediateType> {
     return queryExposed().flatMap {
       val table = it.table?.name

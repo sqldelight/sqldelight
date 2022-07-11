@@ -42,8 +42,8 @@ class PostgreSqlTest {
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = 1
-        )
+          is_good = 1,
+        ),
       )
   }
 
@@ -54,8 +54,8 @@ class PostgreSqlTest {
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = 1
-        )
+          is_good = 1,
+        ),
       )
   }
 
@@ -65,8 +65,8 @@ class PostgreSqlTest {
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = 1
-        )
+          is_good = 1,
+        ),
       )
   }
 
@@ -76,8 +76,8 @@ class PostgreSqlTest {
         date = LocalDate.of(2020, 1, 1),
         time = LocalTime.of(21, 30, 59, 10000),
         timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
-        timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0))
-      ).executeAsOne()
+        timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+      ).executeAsOne(),
     )
       .isEqualTo(
         Dates(
@@ -85,7 +85,7 @@ class PostgreSqlTest {
           time = LocalTime.of(21, 30, 59, 10000),
           timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
           timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-        )
+        ),
       )
   }
 
@@ -94,17 +94,17 @@ class PostgreSqlTest {
       date = LocalDate.of(2020, 1, 1),
       time = LocalTime.of(21, 30, 59, 10000),
       timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
-      timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0))
+      timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
     ).executeAsOne()
 
     assertThat(
-      database.datesQueries.selectDateTrunc().executeAsOne()
+      database.datesQueries.selectDateTrunc().executeAsOne(),
     )
       .isEqualTo(
         SelectDateTrunc(
           date_trunc = LocalDateTime.of(2020, 1, 1, 21, 0, 0, 0),
-          date_trunc_ = OffsetDateTime.of(1980, 4, 9, 20, 0, 0, 0, ZoneOffset.ofHours(0))
-        )
+          date_trunc_ = OffsetDateTime.of(1980, 4, 9, 20, 0, 0, 0, ZoneOffset.ofHours(0)),
+        ),
       )
   }
 
@@ -133,7 +133,7 @@ class PostgreSqlTest {
       updateText(
         id = row.id,
         version = row.version,
-        text = "sup2"
+        text = "sup2",
       )
 
       assertThat(selectForId(row.id).executeAsOne().text).isEqualTo("sup2")
@@ -147,14 +147,14 @@ class PostgreSqlTest {
       updateText(
         id = row.id,
         version = row.version,
-        text = "sup2"
+        text = "sup2",
       )
 
       try {
         updateText(
           id = row.id,
           version = row.version,
-          text = "sup3"
+          text = "sup3",
         )
         Assert.fail()
       } catch (e: OptimisticLockException) { }

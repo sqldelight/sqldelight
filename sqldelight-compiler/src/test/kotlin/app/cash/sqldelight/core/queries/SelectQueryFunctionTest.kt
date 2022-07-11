@@ -31,7 +31,7 @@ class SelectQueryFunctionTest {
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -43,7 +43,8 @@ class SelectQueryFunctionTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -71,8 +72,9 @@ class SelectQueryFunctionTest {
       |  OR
       |  :to BETWEEN startTime AND endTime
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -89,7 +91,8 @@ class SelectQueryFunctionTest {
       |    endTime
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -107,7 +110,7 @@ class SelectQueryFunctionTest {
       |WHERE id = ?2
       |AND value = ?1;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -119,7 +122,8 @@ class SelectQueryFunctionTest {
       |    value__
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -136,7 +140,7 @@ class SelectQueryFunctionTest {
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -149,7 +153,7 @@ class SelectQueryFunctionTest {
     |  )
     |}
     |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -168,7 +172,7 @@ class SelectQueryFunctionTest {
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -181,7 +185,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -191,14 +195,14 @@ class SelectQueryFunctionTest {
       |selectValues:
       |VALUES (1), ('sup');
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).contains(
       """
       |public fun selectValues(): app.cash.sqldelight.Query<kotlin.String>
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -216,7 +220,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -233,7 +237,8 @@ class SelectQueryFunctionTest {
       |    data_Adapter.value_Adapter.decode(cursor.getString(1)!!)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -248,7 +253,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -263,7 +268,7 @@ class SelectQueryFunctionTest {
       |  cursor.getLong(0)!!
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -279,7 +284,7 @@ class SelectQueryFunctionTest {
       |FROM data
       |WHERE id IN :good AND id NOT IN :bad;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -318,7 +323,7 @@ class SelectQueryFunctionTest {
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -336,7 +341,7 @@ class SelectQueryFunctionTest {
       |WHERE EXISTS (SELECT * FROM data LIMIT :minimum OFFSET :offset)
       |LIMIT :minimum;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -348,7 +353,8 @@ class SelectQueryFunctionTest {
       |    some_column2
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -366,7 +372,7 @@ class SelectQueryFunctionTest {
       |FROM person
       |WHERE first_name = :name AND last_name = :name;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -398,7 +404,7 @@ class SelectQueryFunctionTest {
       |  public override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -413,7 +419,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -428,7 +434,7 @@ class SelectQueryFunctionTest {
       |  cursor.getDouble(0)!!
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -443,7 +449,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -458,7 +464,7 @@ class SelectQueryFunctionTest {
       |  cursor.getBytes(0)!!
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -468,7 +474,7 @@ class SelectQueryFunctionTest {
       |selectData:
       |SELECT NULL;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -482,7 +488,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -518,7 +524,8 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -576,7 +583,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -616,7 +623,8 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -682,7 +690,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -712,7 +720,8 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM data;
       """.trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -758,7 +767,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -774,7 +783,7 @@ class SelectQueryFunctionTest {
       |SELECT coalesce(value, value2), value, value2
       |FROM data;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -787,7 +796,8 @@ class SelectQueryFunctionTest {
       |    value2
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -809,7 +819,7 @@ class SelectQueryFunctionTest {
       |      ELSE name
       |    END;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -819,7 +829,7 @@ class SelectQueryFunctionTest {
       |  cursor.getString(0)!!
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -863,7 +873,7 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM bigTable;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -939,7 +949,8 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(29)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -988,7 +999,7 @@ class SelectQueryFunctionTest {
       |LIMIT 50
       |;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -1010,7 +1021,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -1036,7 +1047,7 @@ class SelectQueryFunctionTest {
       |WHERE place_fts MATCH ?1
       |ORDER BY rank(matchinfo(place_fts)), place.name;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -1056,7 +1067,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -1083,7 +1094,7 @@ class SelectQueryFunctionTest {
       |  WHERE testA.attr IS NULL
       |);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1117,7 +1128,8 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(3)!!
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1146,7 +1158,7 @@ class SelectQueryFunctionTest {
       |JOIN testB AS childJoined ON child_id = childJoined._id
       |WHERE parent_id = ? AND child_id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -1184,7 +1196,7 @@ class SelectQueryFunctionTest {
       |  )
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -1199,8 +1211,9 @@ class SelectQueryFunctionTest {
       |SELECT stuff
       |FROM test
       |WHERE stuff IS NOT NULL;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1214,7 +1227,8 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |  cursor.getLong(0)!!
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1228,8 +1242,9 @@ class SelectQueryFunctionTest {
       |someSelect:
       |SELECT SUM(stuff) / 3.0
       |FROM test;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1244,7 +1259,8 @@ class SelectQueryFunctionTest {
       |    cursor.getDouble(0)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1261,7 +1277,7 @@ class SelectQueryFunctionTest {
       |queryTwo:
       |SELECT * FROM exit WHERE :wingsuit = 1 AND wingsuit = :wingsuit;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val queryOne = file.namedQueries.first()
@@ -1287,7 +1303,8 @@ class SelectQueryFunctionTest {
       |searchDescription:
       |SELECT model_id, model_description FROM models WHERE INSTR(model_description, ?) > 0;
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1302,7 +1319,8 @@ class SelectQueryFunctionTest {
       |    cursor.getString(1)!!
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1313,7 +1331,7 @@ class SelectQueryFunctionTest {
       |SELECT 1, 2
       |WHERE IFNULL(:param, 1) > 0;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1322,7 +1340,7 @@ class SelectQueryFunctionTest {
     val param = ParameterSpec.builder(
       "param_",
       Long::class.asTypeName()
-        .copy(nullable = true)
+        .copy(nullable = true),
     )
       .build()
     assertThat(generator.defaultResultTypeFunction().parameters).containsExactly(param)
@@ -1342,7 +1360,8 @@ class SelectQueryFunctionTest {
       |selectAll:
       |SELECT * FROM category;
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1357,7 +1376,8 @@ class SelectQueryFunctionTest {
       |    cursor.getString(1)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1381,7 +1401,8 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM supView;
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1395,7 +1416,8 @@ class SelectQueryFunctionTest {
       |    value2
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1419,7 +1441,8 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM sup2;
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1432,7 +1455,8 @@ class SelectQueryFunctionTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1452,7 +1476,8 @@ class SelectQueryFunctionTest {
       |SELECT *
       |FROM sup;
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1465,7 +1490,8 @@ class SelectQueryFunctionTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1496,7 +1522,8 @@ class SelectQueryFunctionTest {
       |findAll:
       |SELECT * FROM TestView;
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1510,7 +1537,8 @@ class SelectQueryFunctionTest {
       |    name
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1520,7 +1548,8 @@ class SelectQueryFunctionTest {
       |selectIf:
       |SELECT IF(1 = 1, 'yes', 'no');
       """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1532,7 +1561,8 @@ class SelectQueryFunctionTest {
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  cursor.getString(0)!!
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1550,7 +1580,7 @@ class SelectQueryFunctionTest {
       |FROM Player
       |WHERE username LIKE ('%' || ?1 || '%') OR email LIKE ('%' || ?1 || '%');
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -1563,7 +1593,8 @@ class SelectQueryFunctionTest {
       |    email
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1612,8 +1643,9 @@ class SelectQueryFunctionTest {
       |ORDER BY store.name ASC
       |LIMIT ?
       |OFFSET ?;
-    """.trimMargin(),
-      tempFolder, dialect = TestDialect.MYSQL.dialect
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.MYSQL.dialect,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -1629,7 +1661,8 @@ class SelectQueryFunctionTest {
       |    name
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1648,8 +1681,9 @@ class SelectQueryFunctionTest {
       |    (:someInteger IS NULL) OR (
       |        (string = :someString) AND (integer >= :someInteger)
       |    );
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1672,7 +1706,8 @@ class SelectQueryFunctionTest {
         |    cursor.getLong(2)
         |  )
         |}
-        |""".trimMargin()
+        |
+      """.trimMargin(),
     )
   }
 
@@ -1688,8 +1723,9 @@ class SelectQueryFunctionTest {
       |
       |test2:
       |SELECT * FROM Users WHERE initialized = :initialized AND initialized = 1;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query1 = file.namedQueries[0]
@@ -1702,7 +1738,8 @@ class SelectQueryFunctionTest {
         |    initialized_
         |  )
         |}
-        |""".trimMargin()
+        |
+      """.trimMargin(),
     )
 
     val query2 = file.namedQueries[1]
@@ -1715,7 +1752,8 @@ class SelectQueryFunctionTest {
         |    initialized_
         |  )
         |}
-        |""".trimMargin()
+        |
+      """.trimMargin(),
     )
   }
 
@@ -1726,8 +1764,9 @@ class SelectQueryFunctionTest {
       |SELECT 'foo'
       |UNION
       |SELECT ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1738,7 +1777,8 @@ class SelectQueryFunctionTest {
         |public fun query(expr: kotlin.String): app.cash.sqldelight.Query<kotlin.String> = QueryQuery(expr) { cursor ->
         |  cursor.getString(0)!!
         |}
-        |""".trimMargin()
+        |
+      """.trimMargin(),
     )
   }
 }

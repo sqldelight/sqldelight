@@ -40,7 +40,7 @@ internal fun IntermediateType.argumentType() = if (bindArg?.isArrayParameter() =
  */
 internal fun IntermediateType.preparedStatementBinder(
   columnIndex: String,
-  extractedVariable: String? = null
+  extractedVariable: String? = null,
 ): CodeBlock {
   val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaType()
   if (codeBlock != null) {
@@ -57,7 +57,7 @@ internal fun IntermediateType.preparedStatementBinder(
       decodedType == encodedType -> CodeBlock.of(this.name)
       javaType.isNullable -> encodedType.wrapInLet(this)
       else -> encodedType
-    }
+    },
   )
 }
 
@@ -67,7 +67,7 @@ internal fun IntermediateType.encodedJavaType(): CodeBlock? {
     val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
     val adapterName = parent!!.tableExposed().adapterName
     val value = dialectType.encode(
-      CodeBlock.of("$adapterName.%N.encode($name)", adapter)
+      CodeBlock.of("$adapterName.%N.encode($name)", adapter),
     )
     if (javaType.isNullable) {
       value.wrapInLet(this)
@@ -97,8 +97,10 @@ internal fun IntermediateType.cursorGetter(columnIndex: Int): CodeBlock {
       PsiTreeUtil.getParentOfType(column, Queryable::class.java)!!.tableExposed().adapterName
     if (javaType.isNullable) {
       CodeBlock.of(
-        "%L?.let { $adapterName.%N.decode(%L) }", cursorGetter, adapter,
-        dialectType.decode(CodeBlock.of("it"))
+        "%L?.let { $adapterName.%N.decode(%L) }",
+        cursorGetter,
+        adapter,
+        dialectType.decode(CodeBlock.of("it")),
       )
     } else {
       CodeBlock.of("$adapterName.%N.decode(%L)", adapter, dialectType.decode(cursorGetter))

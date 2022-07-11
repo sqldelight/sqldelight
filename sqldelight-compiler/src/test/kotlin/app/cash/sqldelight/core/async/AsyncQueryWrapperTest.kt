@@ -17,20 +17,23 @@ class AsyncQueryWrapperTest {
       |CREATE TABLE test (
       |  value1 TEXT
       |);
-    """.trimMargin(),
-      tempFolder, "0.sqm"
+      """.trimMargin(),
+      tempFolder,
+      "0.sqm",
     )
     FixtureCompiler.writeSql(
       """
       |ALTER TABLE test ADD COLUMN value2 TEXT;
-    """.trimMargin(),
-      tempFolder, "1.sqm"
+      """.trimMargin(),
+      tempFolder,
+      "1.sqm",
     )
     FixtureCompiler.writeSql(
       """
       |ALTER TABLE test ADD COLUMN value3 REAL;
-    """.trimMargin(),
-      tempFolder, "2.sqm"
+      """.trimMargin(),
+      tempFolder,
+      "2.sqm",
     )
     val result = FixtureCompiler.compileSql(
       """
@@ -41,7 +44,7 @@ class AsyncQueryWrapperTest {
       |);
       """.trimMargin(),
       tempFolder,
-      generateAsync = true
+      generateAsync = true,
     )
 
     Truth.assertThat(result.errors).isEmpty()
@@ -106,7 +109,7 @@ class AsyncQueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

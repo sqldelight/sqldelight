@@ -10,7 +10,7 @@ import com.example.sqldelight.hockey.platform.defaultFormatter
 
 class TeamRow(
   context: Context,
-  attrs: AttributeSet
+  attrs: AttributeSet,
 ) : LinearLayout(context, attrs) {
   fun populate(team: Team) {
     findViewById<TextView>(R.id.team_name).text = team.name

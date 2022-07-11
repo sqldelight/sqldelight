@@ -29,12 +29,15 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
-  @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input val pluginVersion = VERSION
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
 
   @Input val projectName: Property<String> = project.objects.property(String::class.java)
 
   @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+
   @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
 
   @TaskAction

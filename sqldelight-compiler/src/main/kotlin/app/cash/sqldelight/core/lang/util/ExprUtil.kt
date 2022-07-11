@@ -81,7 +81,7 @@ internal object AnsiSqlTypeResolver : TypeResolver {
 
   override fun argumentType(
     parent: PsiElement,
-    argument: SqlExpr
+    argument: SqlExpr,
   ): IntermediateType {
     return when (parent) {
       is SqlExpr -> parent.argumentType(argument)
@@ -223,8 +223,8 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
         TokenSet.create(
             SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
             SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
-            SqlTypes.LT, SqlTypes.LTE
-          )
+            SqlTypes.LT, SqlTypes.LTE,
+          ),
       ) != null
     ) {
       IntermediateType(PrimitiveType.BOOLEAN)
@@ -235,7 +235,10 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
           this is SqlBinaryAddExpr || this is SqlBinaryMultExpr ||
             this is SqlBinaryPipeExpr
           ),
-        INTEGER, REAL, TEXT, BLOB
+        INTEGER,
+        REAL,
+        TEXT,
+        BLOB,
       )
     }
   }
@@ -258,8 +261,9 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
       literalValue.childOfType(
         TokenSet.create(
           SqlTypes.CURRENT_TIMESTAMP,
-          SqlTypes.CURRENT_TIME, SqlTypes.CURRENT_DATE
-        )
+          SqlTypes.CURRENT_TIME,
+          SqlTypes.CURRENT_DATE,
+        ),
       ) != null
       ) -> IntermediateType(TEXT)
     (literalValue.childOfType(SqlTypes.NULL) != null) -> IntermediateType(NULL)

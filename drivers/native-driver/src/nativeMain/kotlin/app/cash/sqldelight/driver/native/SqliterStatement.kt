@@ -11,7 +11,7 @@ import co.touchlab.sqliter.bindString
  * @param [recycle] A function which recycles any resources this statement is backed by.
  */
 internal class SqliterStatement(
-  private val statement: Statement
+  private val statement: Statement,
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     statement.bindBlob(index + 1, bytes)
@@ -36,7 +36,7 @@ internal class SqliterStatement(
         null -> null
         true -> 1L
         false -> 0L
-      }
+      },
     )
   }
 }

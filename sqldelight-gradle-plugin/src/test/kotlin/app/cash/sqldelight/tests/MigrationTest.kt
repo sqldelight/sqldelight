@@ -14,7 +14,7 @@ class MigrationTest {
       .buildAndFail()
 
     assertThat(output.output).contains(
-      "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+      "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task.",
     )
   }
 
@@ -66,7 +66,8 @@ class MigrationTest {
       |    , value2 TEXT)
       |/tables[test]/indexes[test.testIndex] - ADDED
       |/tables[test]/triggers[test.testTrigger] - ADDED
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -106,7 +107,8 @@ class MigrationTest {
       |    CREATE VIEW testView AS
       |    SELECT *
       |    FROM test
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -120,7 +122,7 @@ class MigrationTest {
       """
       |1.sqm: (1, 5): TABLE expected, got 'TABE'
       |1    ALTER TABE test ADD COLUMN value2 TEXT
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -136,7 +138,7 @@ class MigrationTest {
       |5    INSERT INTO test (id, new_column)
       |                           ^^^^^^^^^^
       |6    VALUES ("hello", "world")
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -292,7 +294,8 @@ class MigrationTest {
       |    }
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

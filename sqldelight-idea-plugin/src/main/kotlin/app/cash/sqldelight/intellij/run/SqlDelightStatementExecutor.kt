@@ -22,7 +22,7 @@ import javax.swing.JPanel
 
 internal class SqlDelightStatementExecutor(
   private val project: Project,
-  private val connectionManager: ConnectionManager
+  private val connectionManager: ConnectionManager,
 ) {
   fun execute(sqlStmt: String, identifier: StmtIdentifier?) {
     val consoleView = getConsoleView(project, identifier) ?: return
@@ -63,7 +63,7 @@ internal class SqlDelightStatementExecutor(
       project,
       connectionManager,
       consoleView.component,
-      name = identifier?.name ?: "SQL"
+      name = identifier?.name ?: "SQL",
     )
     contentManager.addContent(newExecution)
 

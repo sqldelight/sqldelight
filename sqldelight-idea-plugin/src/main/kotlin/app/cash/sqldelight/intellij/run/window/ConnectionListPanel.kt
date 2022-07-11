@@ -33,7 +33,9 @@ internal class ConnectionListPanel(
   }
 
   private val clearSelectedConnection: AnActionButton = object : AnActionButton(
-    "Stop", "Stop using connection", AllIcons.RunConfigurations.ShowIgnored
+    "Stop",
+    "Stop using connection",
+    AllIcons.RunConfigurations.ShowIgnored,
   ) {
     init {
       isEnabled = false
@@ -69,7 +71,7 @@ internal class ConnectionListPanel(
         weightx = 1.0
         gridx = 0
         gridy = 0
-      }
+      },
     )
 
     list.addListSelectionListener {
@@ -84,17 +86,19 @@ internal class ConnectionListPanel(
       PsiDocumentManager.getInstance(project).reparseFiles(emptyList(), true)
     }
 
-    list.addMouseListener(object : MouseAdapter() {
-      override fun mouseClicked(e: MouseEvent) {
-        if (e.clickCount == 2 && e.button == MouseEvent.BUTTON1) {
-          val currentProperties = connectionOptions.currentOption()
-          val properties = connectionManager.createNewConnectionProperties(project, currentProperties)
-            ?: return
-          connectionOptions.replaceOption(properties)
-          updateModel()
+    list.addMouseListener(
+      object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent) {
+          if (e.clickCount == 2 && e.button == MouseEvent.BUTTON1) {
+            val currentProperties = connectionOptions.currentOption()
+            val properties = connectionManager.createNewConnectionProperties(project, currentProperties)
+              ?: return
+            connectionOptions.replaceOption(properties)
+            updateModel()
+          }
         }
-      }
-    })
+      },
+    )
 
     updateModel()
   }

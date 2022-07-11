@@ -30,7 +30,7 @@ class TeamsActivity : Activity() {
 
   private inner class Adapter(
     private val data: List<Team>,
-    private val clickListener: (Team) -> Unit
+    private val clickListener: (Team) -> Unit,
   ) : RecyclerView.Adapter<ViewHolder>() {
     override fun getItemCount() = data.size
 

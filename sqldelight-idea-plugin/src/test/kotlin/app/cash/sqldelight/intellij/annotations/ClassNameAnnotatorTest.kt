@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.idea.KotlinFileType
 class ClassNameAnnotatorTest : SqlDelightProjectTestCase() {
   fun testResolveOnSamePackageImport() {
     myFixture.openFileInEditor(
-      tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!
+      tempRoot.findFileByRelativePath("src/main/sqldelight/com/example/Main.sq")!!,
     )
 
     myFixture.checkHighlighting()
@@ -20,7 +20,7 @@ class ClassNameAnnotatorTest : SqlDelightProjectTestCase() {
       |CREATE TABLE test (
       |  value TEXT AS <error descr="Unresolved reference: KoolKidz">KoolKidz</error>
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -35,7 +35,7 @@ class ClassNameAnnotatorTest : SqlDelightProjectTestCase() {
       |CREATE TABLE test (
       |  value TEXT AS KotlinClass.InnerClass
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -50,7 +50,7 @@ class ClassNameAnnotatorTest : SqlDelightProjectTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS <error descr="Unresolved reference: SomeClass">SomeClass</error> NOT NULL
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -65,7 +65,7 @@ class ClassNameAnnotatorTest : SqlDelightProjectTestCase() {
         |class SomeClass {
         |  class FirstLevel
         |}
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.configureByText(
@@ -76,7 +76,7 @@ class ClassNameAnnotatorTest : SqlDelightProjectTestCase() {
         |CREATE TABLE new_table (
         |  col TEXT AS SomeClass.FirstLevel.<error descr="Unresolved reference: SecondLevel">SecondLevel</error> NOT NULL
         |);
-        """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()

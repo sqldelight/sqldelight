@@ -18,8 +18,8 @@ class TreeUtilTest {
       |  other_value TEXT AS Int,
       |  a_third_value INTEGER AS Boolean DEFAULT 0
       |);
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val createTable = file.sqlStatements().first().statement.createTableStmt!!
@@ -31,7 +31,7 @@ class TreeUtilTest {
       |  other_value TEXT,
       |  a_third_value INTEGER DEFAULT 0
       |)
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -49,8 +49,8 @@ class TreeUtilTest {
       |
       |INSERT INTO test
       |VALUES ?;
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val insert1 = file.sqlStatements().elementAt(1).statement.insertStmt!!
@@ -59,7 +59,7 @@ class TreeUtilTest {
       """
       |INSERT INTO test (value, other_value)
       |VALUES (?, ?)
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val insert2 = file.sqlStatements().elementAt(2).statement.insertStmt!!
@@ -68,7 +68,7 @@ class TreeUtilTest {
       """
       |INSERT INTO test
       |VALUES (?, ?, ?)
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -79,8 +79,8 @@ class TreeUtilTest {
       |  value TEXT,
       |  prefix='2 3 4 5 6'
       |);
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
@@ -91,7 +91,7 @@ class TreeUtilTest {
       |  value,
       |  prefix='2 3 4 5 6'
       |)
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -102,8 +102,8 @@ class TreeUtilTest {
       |  value TEXT NOT NULL,
       |  prefix='2 3 4 5 6'
       |);
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
@@ -114,7 +114,7 @@ class TreeUtilTest {
       |  value,
       |  prefix='2 3 4 5 6'
       |)
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -125,8 +125,8 @@ class TreeUtilTest {
       |  value TEXT NOT NULL UNINDEXED,
       |  prefix='2 3 4 5 6'
       |);
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
@@ -137,7 +137,7 @@ class TreeUtilTest {
       |  value UNINDEXED,
       |  prefix='2 3 4 5 6'
       |)
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -148,8 +148,8 @@ class TreeUtilTest {
       |  value TEXT NOT NULL,
       |  prefix='2 3 4 5 6'
       |);
-    """.trimMargin(),
-      temporaryFolder
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
@@ -160,7 +160,7 @@ class TreeUtilTest {
       |  value,
       |  prefix='2 3 4 5 6'
       |)
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

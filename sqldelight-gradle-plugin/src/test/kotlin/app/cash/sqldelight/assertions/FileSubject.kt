@@ -11,7 +11,7 @@ import java.util.ArrayDeque
 
 internal class FileSubject private constructor(
   metadata: FailureMetadata,
-  private val actual: File
+  private val actual: File,
 ) : Subject(metadata, actual) {
   fun exists() {
     assertWithMessage("File $actual exists").that(actual.exists()).isTrue()

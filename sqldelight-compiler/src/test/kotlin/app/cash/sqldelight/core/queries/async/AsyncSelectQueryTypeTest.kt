@@ -27,10 +27,11 @@ class AsyncSelectQueryTypeTest {
       |INSERT INTO data
       |VALUES ('sup', 'dude')
       |RETURNING *;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
       dialect = PostgreSqlDialect(),
-      generateAsync = true
+      generateAsync = true,
     )
 
     val query = file.namedQueries.first()
@@ -49,7 +50,8 @@ class AsyncSelectQueryTypeTest {
       |    cursor.getString(1)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -69,10 +71,11 @@ class AsyncSelectQueryTypeTest {
       |    lastname = :lastname
       |WHERE id = :id
       |RETURNING id, firstname, lastname;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
       dialect = PostgreSqlDialect(),
-      generateAsync = true
+      generateAsync = true,
     )
 
     val query = file.namedQueries.first()
@@ -97,7 +100,8 @@ class AsyncSelectQueryTypeTest {
       |    cursor.getString(2)!!
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -112,9 +116,10 @@ class AsyncSelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      generateAsync = true
+      generateAsync = true,
     )
 
     val query = file.namedQueries.first()
@@ -144,7 +149,8 @@ class AsyncSelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -165,9 +171,10 @@ class AsyncSelectQueryTypeTest {
       |  VALUES (:value)
       |  ;
       |}
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      generateAsync = true
+      generateAsync = true,
     )
 
     val query = file.namedExecutes.first()
@@ -194,7 +201,8 @@ class AsyncSelectQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -215,9 +223,10 @@ class AsyncSelectQueryTypeTest {
       |  FROM data
       |  WHERE id = last_insert_rowid();
       |}
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      generateAsync = true
+      generateAsync = true,
     )
 
     val query = file.namedQueries.first()
@@ -245,7 +254,8 @@ class AsyncSelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

@@ -52,7 +52,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     val cursor = createOrGetStatement(identifier, sql).run {
       bind(parameters, binders)
@@ -103,7 +103,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
   override fun close() = db.close()
 
   private inner class Transaction(
-    override val enclosingTransaction: Transacter.Transaction?
+    override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {

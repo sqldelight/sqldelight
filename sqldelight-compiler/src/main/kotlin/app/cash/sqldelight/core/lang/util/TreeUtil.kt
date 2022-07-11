@@ -75,7 +75,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
           null -> IntermediateType(PrimitiveType.NULL)
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
-          is SqlCreateVirtualTableStmt -> synthesizedColumnType(this.name)
+          is SqlCreateVirtualTableStmt, -> synthesizedColumnType(this.name)
           else -> {
             val columnSelected = queryAvailable(this).flatMap { it.columns }
               .firstOrNull { it.element == resolvedReference }
@@ -157,16 +157,16 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
           (javaTypeName!!.node.startOffset + javaTypeName!!.node.textLength),
-        second = ""
-      )
+        second = "",
+      ),
     )
   } else if (this is ColumnTypeMixin && node.getChildren(null).any { it.text == "VALUE" || it.text == "LOCK" }) {
     listOf(
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
           (node.getChildren(null).single { it.text == "VALUE" || it.text == "LOCK" }.let { it.startOffset + it.textLength }),
-        second = ""
-      )
+        second = "",
+      ),
     )
   } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text?.toLowerCase() == "fts5") {
     val columnDef = moduleArgumentDef!!.columnDef!!
@@ -176,15 +176,15 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       Pair(
         first = (columnDef.columnName.node.startOffset + columnDef.columnName.node.textLength) until
           (columnDef.columnName.node.startOffset + columnDef.node.textLength - lengthModifier),
-        second = ""
-      )
+        second = "",
+      ),
     )
   } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
     listOf(
       Pair(
         first = childOfType(SqlTypes.BIND_EXPR)!!.range,
-        second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" }
-      )
+        second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" },
+      ),
     )
   } else {
     children.flatMap { it.rangesToReplace() }
@@ -199,7 +199,7 @@ private val IntRange.length: Int
   get() = endInclusive - start + 1
 
 fun PsiElement.rawSqlText(
-  replacements: List<Pair<IntRange, String>> = emptyList()
+  replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
   return (replacements + rangesToReplace())
     .sortedBy { it.first.first }
@@ -208,7 +208,7 @@ fun PsiElement.rawSqlText(
       0 to text,
       { (totalRemoved, sqlText), (range, replacement) ->
         (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      }
+      },
     ).second
 }
 
@@ -217,7 +217,7 @@ val PsiElement.range: IntRange
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   allowReferenceCycles: Boolean,
-  body: (sqlText: String) -> Unit
+  body: (sqlText: String) -> Unit,
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
   val tables = ArrayList<SqlCreateTableStmt>()

@@ -24,7 +24,7 @@ class NamedQueryTests {
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -46,7 +46,7 @@ class NamedQueryTests {
       |FROM data AS data2
       |WHERE data2.id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -71,7 +71,7 @@ class NamedQueryTests {
       |SELECT *
       |FROM some_view;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -96,7 +96,7 @@ class NamedQueryTests {
       |SELECT *
       |FROM common_table;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -118,7 +118,7 @@ class NamedQueryTests {
       |  cnt(x) AS (SELECT id FROM data UNION ALL SELECT x+1 FROM cnt WHERE x<1000000)
       |SELECT x FROM cnt;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -131,7 +131,7 @@ class NamedQueryTests {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/migration-interface-fixtures/alter-table",
       generateDb = false,
-      deriveSchemaFromMigrations = true
+      deriveSchemaFromMigrations = true,
     )
 
     val query = result.compiledFile.namedQueries.first()

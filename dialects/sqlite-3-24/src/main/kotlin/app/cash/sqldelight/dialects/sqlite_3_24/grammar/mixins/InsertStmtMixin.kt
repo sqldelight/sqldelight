@@ -7,13 +7,13 @@ import com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl
 import com.intellij.lang.ASTNode
 
 internal abstract class InsertStmtMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlInsertStmtImpl(node),
   SqliteInsertStmt {
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     super.annotate(annotationHolder)
     val insertDefaultValues = insertStmtValues?.node?.findChildByType(
-      SqlTypes.DEFAULT
+      SqlTypes.DEFAULT,
     ) != null
 
     upsertClause?.let { upsert ->
@@ -23,10 +23,10 @@ internal abstract class InsertStmtMixin(
       }
 
       val insertOr = node.findChildByType(
-        SqlTypes.INSERT
+        SqlTypes.INSERT,
       )?.treeNext
       val replace = node.findChildByType(
-        SqlTypes.REPLACE
+        SqlTypes.REPLACE,
       )
       val conflictResolution = when {
         replace != null -> SqlTypes.REPLACE
@@ -34,7 +34,7 @@ internal abstract class InsertStmtMixin(
           val type = insertOr.treeNext.elementType
           check(
             type == SqlTypes.ROLLBACK || type == SqlTypes.ABORT ||
-              type == SqlTypes.FAIL || type == SqlTypes.IGNORE
+              type == SqlTypes.FAIL || type == SqlTypes.IGNORE,
           )
           type
         }
@@ -45,7 +45,7 @@ internal abstract class InsertStmtMixin(
         annotationHolder.createErrorAnnotation(
           upsertDoUpdate,
           "Cannot use DO UPDATE while " +
-            "also specifying a conflict resolution algorithm ($conflictResolution)"
+            "also specifying a conflict resolution algorithm ($conflictResolution)",
         )
       }
     }

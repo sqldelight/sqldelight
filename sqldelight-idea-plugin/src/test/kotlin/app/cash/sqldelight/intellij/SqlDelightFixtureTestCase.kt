@@ -57,14 +57,14 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
 
     override fun sourceFolders(
       file: SqlDelightFile,
-      includeDependencies: Boolean
+      includeDependencies: Boolean,
     ): List<PsiDirectory> {
       return listOf(myFixture.file.parent!!)
     }
 
     override fun sourceFolders(
       file: VirtualFile,
-      includeDependencies: Boolean
+      includeDependencies: Boolean,
     ): Collection<VirtualFile> {
       return listOf(module.rootManager.contentRoots.first())
     }

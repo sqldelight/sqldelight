@@ -17,7 +17,7 @@ class JdbcSqliteDriver constructor(
    * (creating an in-memory database) or a path to a file.
    */
   url: String,
-  properties: Properties = Properties()
+  properties: Properties = Properties(),
 ) : JdbcDriver(), ConnectionManager by connectionManager(url, properties) {
   private val listeners = linkedMapOf<String, MutableSet<Query.Listener>>()
 
@@ -70,7 +70,7 @@ private abstract class JdbcSqliteDriverConnectionManager : ConnectionManager {
 }
 
 private class InMemoryConnectionManager(
-  properties: Properties
+  properties: Properties,
 ) : JdbcSqliteDriverConnectionManager() {
   override var transaction: Transaction? = null
   private val connection: Connection = DriverManager.getConnection(IN_MEMORY, properties)

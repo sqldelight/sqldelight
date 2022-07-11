@@ -6,13 +6,13 @@ import java.sql.Connection
 interface ConnectionManager {
   fun createNewConnectionProperties(
     project: Project,
-    prefilledProperties: ConnectionProperties? = null
+    prefilledProperties: ConnectionProperties? = null,
   ): ConnectionProperties?
 
   fun getConnection(connectionProperties: ConnectionProperties): Connection
 
   data class ConnectionProperties(
     val key: String,
-    val serializedProperties: String
+    val serializedProperties: String,
   )
 }

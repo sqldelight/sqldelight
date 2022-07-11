@@ -17,7 +17,7 @@ class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {
       |  player_number INTEGER NOT NULL PRIMARY KEY,
       |  full_name TEXT NOT NULL
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val file = myFixture.file
@@ -33,7 +33,7 @@ class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE hockeyPlayer(
       |  full_name TEXT NOT NULL
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -45,7 +45,7 @@ class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {
       |  player_number INTEGER NOT NULL PRIMARY KEY,
       |  full_name TEXT NOT NULL
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val file = myFixture.file
@@ -61,7 +61,7 @@ class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE hockeyPlayer(
       |  player_number INTEGER NOT NULL PRIMARY KEY
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -72,7 +72,7 @@ class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE hockeyPlayer(
       |  player_number INTEGER NOT NULL PRIMARY KEY
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val file = myFixture.file
@@ -86,7 +86,7 @@ class SafeDeleteColumnQuickFixTest : SqlDelightFixtureTestCase() {
     myFixture.checkResult(
       """
       |CREATE TABLE hockeyPlayer();
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

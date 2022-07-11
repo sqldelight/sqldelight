@@ -30,7 +30,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
           BLOB -> "bindBytes"
           BOOLEAN -> "bindBoolean"
           else -> throw IllegalArgumentException("Cannot bind unknown types or null")
-        }
+        },
       )
       .add("($columnIndex, %L)\n", value)
       .build()
@@ -46,7 +46,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
         BLOB -> "$cursorName.getBytes($columnIndex)"
         BOOLEAN -> "$cursorName.getBoolean($columnIndex)"
         ARGUMENT -> throw IllegalArgumentException("Cannot retrieve argument from cursor")
-      }
+      },
     )
   }
 }

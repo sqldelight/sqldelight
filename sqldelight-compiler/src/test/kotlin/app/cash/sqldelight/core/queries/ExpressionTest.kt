@@ -39,7 +39,7 @@ class ExpressionTest {
       |FROM test
       |WHERE SecondId = ? AND TestText LIKE ? ESCAPE '\' COLLATE NOCASE;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -52,7 +52,8 @@ class ExpressionTest {
       |    SecondId_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -68,7 +69,7 @@ class ExpressionTest {
       |SELECT CASE id WHEN 0 THEN some_text ELSE some_text + id END AS indexed_text
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -86,12 +87,13 @@ class ExpressionTest {
       |SELECT id, CAST (id AS TEXT)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      LONG, String::class.asClassName()
+      LONG,
+      String::class.asClassName(),
     ).inOrder()
   }
 
@@ -117,13 +119,15 @@ class ExpressionTest {
       |)
       |ORDER BY department;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.arguments.map { it.type.javaType }).containsExactly(
-      String::class.asClassName(), String::class.asClassName(), String::class.asClassName(),
-      String::class.asClassName()
+      String::class.asClassName(),
+      String::class.asClassName(),
+      String::class.asClassName(),
+      String::class.asClassName(),
     ).inOrder()
   }
 
@@ -133,12 +137,13 @@ class ExpressionTest {
       |someSelect:
       |SELECT round(1.123123), round(1.12312, 3);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      LONG, DOUBLE
+      LONG,
+      DOUBLE,
     ).inOrder()
   }
 
@@ -153,7 +158,7 @@ class ExpressionTest {
       |SELECT sum(value)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -171,7 +176,7 @@ class ExpressionTest {
       |SELECT sum(value)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -190,12 +195,13 @@ class ExpressionTest {
       |SELECT lower(value1), lower(value2)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      String::class.asClassName().copy(nullable = true), String::class.asClassName()
+      String::class.asClassName().copy(nullable = true),
+      String::class.asClassName(),
     ).inOrder()
   }
 
@@ -205,7 +211,7 @@ class ExpressionTest {
       |someSelect:
       |SELECT date('now');
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -223,7 +229,7 @@ class ExpressionTest {
       |SELECT count(*)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -242,12 +248,14 @@ class ExpressionTest {
       |SELECT instr(value1, value2), instr(value2, value1), instr(value2, value2)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      LONG.copy(nullable = true), LONG.copy(nullable = true), LONG
+      LONG.copy(nullable = true),
+      LONG.copy(nullable = true),
+      LONG,
     ).inOrder()
   }
 
@@ -257,12 +265,13 @@ class ExpressionTest {
       |someSelect:
       |SELECT randomblob(), zeroblob(10);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      ByteArray::class.asClassName(), ByteArray::class.asClassName()
+      ByteArray::class.asClassName(),
+      ByteArray::class.asClassName(),
     ).inOrder()
   }
 
@@ -277,12 +286,12 @@ class ExpressionTest {
       |SELECT total(value)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      DOUBLE
+      DOUBLE,
     ).inOrder()
   }
 
@@ -303,13 +312,13 @@ class ExpressionTest {
     |someSelect:
     |SELECT avg(value)
     |FROM test;
-    """.trimMargin(),
-      tempFolder
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      DOUBLE.copy(nullable = true)
+      DOUBLE.copy(nullable = true),
     ).inOrder()
   }
 
@@ -325,12 +334,13 @@ class ExpressionTest {
       |SELECT abs(value), abs(value2)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
-      LONG.copy(nullable = true), DOUBLE
+      LONG.copy(nullable = true),
+      DOUBLE,
     ).inOrder()
   }
 
@@ -353,7 +363,7 @@ class ExpressionTest {
       |       coalesce(integerVal)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -362,7 +372,7 @@ class ExpressionTest {
       ByteArray::class.asClassName(),
       String::class.asClassName(),
       DOUBLE.copy(nullable = true),
-      LONG
+      LONG,
     ).inOrder()
   }
 
@@ -400,7 +410,7 @@ class ExpressionTest {
       ByteArray::class.asClassName().copy(nullable = true),
       String::class.asClassName().copy(nullable = true),
       DOUBLE.copy(nullable = true),
-      integerKotlinType.copy(nullable = true)
+      integerKotlinType.copy(nullable = true),
     ).inOrder()
   }
 
@@ -420,7 +430,7 @@ class ExpressionTest {
       |  END
       |;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -449,7 +459,7 @@ class ExpressionTest {
       |       min(blobVal)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -458,7 +468,7 @@ class ExpressionTest {
       DOUBLE.copy(nullable = true),
       DOUBLE.copy(nullable = true),
       String::class.asClassName().copy(nullable = true),
-      ByteArray::class.asClassName().copy(nullable = true)
+      ByteArray::class.asClassName().copy(nullable = true),
     ).inOrder()
   }
 
@@ -473,7 +483,7 @@ class ExpressionTest {
       |selectTimestamp:
       |SELECT MIN(timestamp) - 1 FROM Test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -492,7 +502,7 @@ class ExpressionTest {
       |SELECT nullif(value1, value2)
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -512,7 +522,7 @@ class ExpressionTest {
       |SELECT ?, value2
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedMutators.first()
@@ -532,7 +542,7 @@ class ExpressionTest {
       |SELECT (SELECT ?), value2
       |FROM test;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedMutators.first()
@@ -552,7 +562,7 @@ class ExpressionTest {
       |FROM test;
       """.trimMargin(),
       tempFolder,
-      dialect = dialect.dialect
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()

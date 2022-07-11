@@ -48,14 +48,14 @@ class MySqlTest {
           name = "Hazel",
           breed = "French Bulldog",
           owner = 2,
-          is_good = true
+          is_good = true,
         ),
         Dog(
           name = "Olive",
           breed = "French Bulldog",
           owner = 2,
-          is_good = true
-        )
+          is_good = true,
+        ),
       )
   }
 
@@ -71,12 +71,12 @@ class MySqlTest {
       .containsExactly(
         Bad_name_dogs(
           name = "Cat",
-          breed = "Cat"
+          breed = "Cat",
         ),
         Bad_name_dogs(
           name = "Dog",
-          breed = "Dog"
-        )
+          breed = "Dog",
+        ),
       )
   }
 }

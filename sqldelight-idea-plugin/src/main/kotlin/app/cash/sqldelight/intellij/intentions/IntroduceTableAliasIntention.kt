@@ -48,7 +48,7 @@ internal class IntroduceTableAliasIntention : BaseElementAtCaretIntentionAction(
       tableName.first().toString(),
       tableName.split(regex)
         .filter(String::isNotBlank)
-        .joinToString("") { it.first().toLowerCase().toString() }
+        .joinToString("") { it.first().toLowerCase().toString() },
     )
       .distinct()
 
@@ -64,7 +64,9 @@ internal class IntroduceTableAliasIntention : BaseElementAtCaretIntentionAction(
     val callback = { alias: String ->
       WriteCommandAction.runWriteCommandAction(project) {
         document.replaceString(
-          tableNameRangeMarker.startOffset, tableNameRangeMarker.endOffset, "$tableName $alias"
+          tableNameRangeMarker.startOffset,
+          tableNameRangeMarker.endOffset,
+          "$tableName $alias",
         )
         tableReferenceMarkers.forEach { rangeMarker ->
           document.replaceString(rangeMarker.startOffset, rangeMarker.endOffset, alias)

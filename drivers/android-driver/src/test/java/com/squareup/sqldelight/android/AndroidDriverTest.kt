@@ -28,10 +28,13 @@ class AndroidDriverTest : DriverTest() {
     driver.executeQuery(1, "SELECT * FROM test", {}, 0, { bindable = this })
 
     driver.executeQuery(
-      1, "SELECT * FROM test", {}, 0,
+      1,
+      "SELECT * FROM test",
+      {},
+      0,
       {
         assertSame(bindable, this)
-      }
+      },
     )
   }
 
@@ -44,10 +47,13 @@ class AndroidDriverTest : DriverTest() {
     driver.executeQuery(2, "SELECT * FROM test", {}, 0)
 
     driver.executeQuery(
-      1, "SELECT * FROM test", {}, 0,
+      1,
+      "SELECT * FROM test",
+      {},
+      0,
       {
         assertNotSame(bindable, this)
-      }
+      },
     )
   }
 
@@ -74,7 +80,7 @@ class AndroidDriverTest : DriverTest() {
       context = getApplicationContext(),
       factory = factory,
       name = "name",
-      useNoBackupDirectory = true
+      useNoBackupDirectory = true,
     )
 
     assertTrue(factory.lastConfiguration.useNoBackupDirectory)
@@ -88,7 +94,7 @@ class AndroidDriverTest : DriverTest() {
       schema = schema,
       context = getApplicationContext(),
       factory = factory,
-      useNoBackupDirectory = false
+      useNoBackupDirectory = false,
     )
 
     assertFalse(factory.lastConfiguration.useNoBackupDirectory)

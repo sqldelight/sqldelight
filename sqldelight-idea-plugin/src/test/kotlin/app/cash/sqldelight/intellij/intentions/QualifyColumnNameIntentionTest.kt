@@ -12,7 +12,7 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       CREATE_TABLE + """
         |SELECT id, nam<caret>e
         |FROM team;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = QualifyColumnNameIntention()
@@ -20,8 +20,8 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       intention.isAvailable(
         myFixture.project,
         myFixture.editor,
-        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
-      )
+        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
+      ),
     )
       .isTrue()
   }
@@ -32,7 +32,7 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       CREATE_TABLE + """
         |SELECT id, team.nam<caret>e
         |FROM team;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = QualifyColumnNameIntention()
@@ -40,8 +40,8 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       intention.isAvailable(
         myFixture.project,
         myFixture.editor,
-        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
-      )
+        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
+      ),
     )
       .isFalse()
   }
@@ -52,21 +52,21 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       CREATE_TABLE + """
         |SELECT id, nam<caret>e
         |FROM team;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = QualifyColumnNameIntention()
     intention.invoke(
       myFixture.project,
       myFixture.editor,
-      myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
+      myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
     )
 
     myFixture.checkResult(
       CREATE_TABLE + """
         |SELECT id, team.name
         |FROM team;
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -76,21 +76,21 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       CREATE_TABLE + """
         |SELECT id, nam<caret>e
         |FROM team t;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = QualifyColumnNameIntention()
     intention.invoke(
       myFixture.project,
       myFixture.editor,
-      myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
+      myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
     )
 
     myFixture.checkResult(
       CREATE_TABLE + """
         |SELECT id, t.name
         |FROM team t;
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -100,6 +100,7 @@ class QualifyColumnNameIntentionTest : SqlDelightFixtureTestCase() {
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  name TEXT NOT NULL UNIQUE
       |);
-      |""".trimMargin()
+      |
+    """.trimMargin()
   }
 }

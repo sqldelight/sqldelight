@@ -26,7 +26,7 @@ class MigrationQueryTest {
       overrideDialect = dialect,
       fixtureRoot = "src/test/migration-interface-fixtures/$fixtureRoot",
       generateDb = false,
-      deriveSchemaFromMigrations = true
+      deriveSchemaFromMigrations = true,
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()

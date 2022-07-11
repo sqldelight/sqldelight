@@ -26,7 +26,7 @@ class SqlDelightParameterInfoHandler : ParameterInfoHandlerWithTabActionSupport<
 
   override fun getParametersForLookup(
     item: LookupElement,
-    context: ParameterInfoContext
+    context: ParameterInfoContext,
   ): Array<Any> {
     return emptyArray()
   }
@@ -63,14 +63,14 @@ class SqlDelightParameterInfoHandler : ParameterInfoHandlerWithTabActionSupport<
 
   override fun showParameterInfo(
     element: SqlValuesExpression,
-    context: CreateParameterInfoContext
+    context: CreateParameterInfoContext,
   ) {
     context.showHint(element, element.textRange.startOffset, this)
   }
 
   override fun updateParameterInfo(
     parameterOwner: SqlValuesExpression,
-    context: UpdateParameterInfoContext
+    context: UpdateParameterInfoContext,
   ) {
     val offset = context.offset
     val index = ParameterInfoUtils.getCurrentParameterIndex(parameterOwner.node, offset, SqlTypes.COMMA)
@@ -94,7 +94,7 @@ class SqlDelightParameterInfoHandler : ParameterInfoHandlerWithTabActionSupport<
       !context.isUIComponentEnabled,
       false,
       false,
-      context.defaultParameterColor
+      context.defaultParameterColor,
     )
   }
 

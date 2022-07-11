@@ -27,8 +27,10 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -43,7 +45,8 @@ class JavadocTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -63,8 +66,10 @@ class JavadocTest {
       |selectAll2:
       |SELECT *
       |FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -79,7 +84,8 @@ class JavadocTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -95,8 +101,10 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -114,7 +122,8 @@ class JavadocTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -130,8 +139,10 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -149,7 +160,8 @@ class JavadocTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -160,8 +172,10 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -176,7 +190,8 @@ class JavadocTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -189,8 +204,10 @@ class JavadocTest {
       |selectAll:
       |SELECT *
       |FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
@@ -205,7 +222,8 @@ class JavadocTest {
       |    value_
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -218,8 +236,10 @@ class JavadocTest {
       |insertValue:
       |INSERT INTO test(value)
       |VALUES (?);
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val insert = file.namedMutators.first()
@@ -241,7 +261,8 @@ class JavadocTest {
       |    emit("test")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -255,8 +276,9 @@ class JavadocTest {
       |UPDATE test
       |SET value = ?
       |WHERE _id = ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val update = file.namedMutators.first()
@@ -280,7 +302,8 @@ class JavadocTest {
       |    emit("test")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -292,8 +315,10 @@ class JavadocTest {
       | */
       |deleteAll:
       |DELETE FROM test;
-      |""".trimMargin(),
-      tempFolder, dialect = testDialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = testDialect.dialect,
     )
 
     val delete = file.namedMutators.first()
@@ -310,7 +335,8 @@ class JavadocTest {
       |    emit("test")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -320,6 +346,7 @@ class JavadocTest {
       |  _id INTEGER NOT NULL PRIMARY KEY DEFAULT 0,
       |  value ${testDialect.textType} NOT NULL
       |);
-      |""".trimMargin()
+      |
+    """.trimMargin()
   }
 }

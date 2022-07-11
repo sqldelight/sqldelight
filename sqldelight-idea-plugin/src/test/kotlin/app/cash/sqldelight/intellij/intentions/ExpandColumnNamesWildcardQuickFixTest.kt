@@ -13,7 +13,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>*
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
@@ -28,7 +28,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>_id
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
@@ -43,7 +43,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>*
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
@@ -54,7 +54,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>_id, title
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -65,7 +65,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>*, 1
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
@@ -80,7 +80,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT COUNT(<caret>*)
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
@@ -95,7 +95,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>*, 1, COUNT(*), title
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = ExpandColumnNamesWildcardQuickFix()
@@ -106,7 +106,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |select_all:
       |SELECT <caret>_id, title, 1, COUNT(*)
       |FROM test;
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -116,6 +116,7 @@ class ExpandColumnNamesWildcardQuickFixTest : SqlDelightFixtureTestCase() {
       |  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  title TEXT NOT NULL
       |);
-      |""".trimMargin()
+      |
+    """.trimMargin()
   }
 }

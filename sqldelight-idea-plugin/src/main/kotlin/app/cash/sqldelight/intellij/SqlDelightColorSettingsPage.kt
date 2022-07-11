@@ -95,6 +95,7 @@ class SqlDelightColorSettingsPage : ColorSettingsPage {
       |<stmt_id>selectById</stmt_id>:
       |SELECT <column>id</column> AS <alias>ProductID</alias>, <column>title</column> AS <alias>ProductName</alias>
       |  FROM crm.<table>product</table> WHERE <column>id</column> = ?;
-      |""".trimMargin()
+      |
+    """.trimMargin()
   }
 }

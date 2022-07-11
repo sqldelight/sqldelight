@@ -51,7 +51,7 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
           TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "bindLong"
           DATE, TIME, DATETIME, TIMESTAMP -> "bindObject"
           NUMERIC -> "bindBigDecimal"
-        }
+        },
       )
       .add("($columnIndex, %L)\n", value)
       .build()
@@ -63,7 +63,7 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
         TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$cursorName.getLong($columnIndex)"
         DATE, TIME, DATETIME, TIMESTAMP -> "$cursorName.getObject($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-      }
+      },
     )
   }
 }

@@ -12,7 +12,7 @@ import com.alecstrong.sql.psi.core.psi.alterStmt
 import com.intellij.lang.ASTNode
 
 internal abstract class AlterTableModifyColumnMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   MySqlAlterTableModifyColumn,
   AlterTableApplier {
@@ -26,10 +26,10 @@ internal abstract class AlterTableModifyColumnMixin(
         val columns = placementClause.placeInQuery(
           columns = lazyQuery.query.columns,
           column = QueryElement.QueryColumn(columnDef.columnName),
-          replace = lazyQuery.query.columns.singleOrNull { (it.element as SqlColumnName).textMatches(columnDef.columnName) }
+          replace = lazyQuery.query.columns.singleOrNull { (it.element as SqlColumnName).textMatches(columnDef.columnName) },
         )
         lazyQuery.query.copy(columns = columns)
-      }
+      },
     )
   }
 
@@ -43,7 +43,7 @@ internal abstract class AlterTableModifyColumnMixin(
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnDef.columnName,
-        s = "No column found to modify with name ${columnDef.columnName.text}"
+        s = "No column found to modify with name ${columnDef.columnName.text}",
       )
     }
   }

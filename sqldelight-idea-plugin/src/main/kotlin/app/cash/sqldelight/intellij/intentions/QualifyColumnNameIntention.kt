@@ -52,7 +52,9 @@ class QualifyColumnNameIntention : BaseElementAtCaretIntentionAction() {
     val callback = { qualifier: String ->
       WriteCommandAction.runWriteCommandAction(project) {
         document.replaceString(
-          columnRange.startOffset, columnRange.endOffset, "$qualifier.$columnText"
+          columnRange.startOffset,
+          columnRange.endOffset,
+          "$qualifier.$columnText",
         )
       }
     }

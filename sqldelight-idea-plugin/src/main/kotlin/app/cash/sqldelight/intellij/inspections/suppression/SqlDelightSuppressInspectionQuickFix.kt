@@ -68,9 +68,9 @@ internal class SqlDelightSuppressInspectionQuickFix(toolId: String) :
       classes = arrayOf(
         SqlStmt::class,
         SqlDelightImportStmt::class,
-        SqlDelightStmtIdentifier::class
+        SqlDelightStmtIdentifier::class,
       ),
-      withSelf = true
+      withSelf = true,
     )
   }
 }

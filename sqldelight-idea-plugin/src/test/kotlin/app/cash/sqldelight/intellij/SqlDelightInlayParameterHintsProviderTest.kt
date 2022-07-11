@@ -19,7 +19,7 @@ class SqlDelightInlayParameterHintsProviderTest : SqlDelightFixtureTestCase() {
       |
       |INSERT INTO hockeyPlayer (column1, column2, column3, column4, column5, column6)
       |VALUES (<hint text="column1:"/>?, <hint text="column2:"/>?, <hint text="column3:"/>?, <hint text="column4:"/>?, <hint text="column5:"/>?, <hint text="column6:"/>?);
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.testInlays()
   }
@@ -37,7 +37,7 @@ class SqlDelightInlayParameterHintsProviderTest : SqlDelightFixtureTestCase() {
         |insert:
         |INSERT INTO example (name, description)
         |VALUES (<hint text="name:"/>?, <hint text="description:"/>?);
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.testInlays()
   }

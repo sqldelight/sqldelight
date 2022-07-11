@@ -17,7 +17,7 @@ class ErrorTest {
     val expectedFailure = File("src/test/errors/$fixtureRoot", "failure.txt")
     if (expectedFailure.exists()) {
       assertWithMessage(result.sourceFiles).that(result.errors).containsExactlyElementsIn(
-        expectedFailure.readText().splitLines().filter { it.isNotEmpty() }
+        expectedFailure.readText().splitLines().filter { it.isNotEmpty() },
       )
     } else {
       assertWithMessage(result.sourceFiles).that(result.errors).isEmpty()

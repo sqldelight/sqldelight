@@ -70,8 +70,9 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
   }
 
   fun close() {
-    if (!poolLock.close())
+    if (!poolLock.close()) {
       return
+    }
 
     val entries = entriesRef.value
     val done = entriesRef.compareAndSet(entries, null)

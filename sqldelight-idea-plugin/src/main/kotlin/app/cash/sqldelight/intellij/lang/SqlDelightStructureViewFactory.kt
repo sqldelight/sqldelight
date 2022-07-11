@@ -48,7 +48,7 @@ class SqlDelightStructureViewFactory : PsiStructureViewFactory {
 }
 
 internal class SqlDelightStructureViewModel(
-  psiFile: PsiFile
+  psiFile: PsiFile,
 ) : StructureViewModelBase(psiFile, SqlDelightStructureViewElement(psiFile)),
   StructureViewModel.ElementInfoProvider {
   override fun isAlwaysLeaf(element: StructureViewTreeElement) = false
@@ -56,7 +56,7 @@ internal class SqlDelightStructureViewModel(
 }
 
 internal class SqlDelightStructureViewElement(
-  private val element: PsiElement
+  private val element: PsiElement,
 ) : StructureViewTreeElement,
   ItemPresentation,
   NavigationItem {
@@ -76,7 +76,7 @@ internal class SqlDelightStructureViewElement(
       is SqlCreateTableStmt -> "CREATE TABLE ${element.name}"
       is SqlCreateVirtualTableStmt -> "CREATE VIRTUAL TABLE ${element.name}"
       else -> throw IllegalStateException(
-        "Unhandled table name element for parent ${element.parent}"
+        "Unhandled table name element for parent ${element.parent}",
       )
     }
     is SqlIndexName -> "CREATE INDEX ${element.text}"

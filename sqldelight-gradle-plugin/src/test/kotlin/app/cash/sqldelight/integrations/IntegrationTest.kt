@@ -143,7 +143,9 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
-  @Test @Category(Instrumentation::class) fun integrationTestsAndroid() {
+  @Test
+  @Category(Instrumentation::class)
+  fun integrationTestsAndroid() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-android"))
       .withArguments("clean", "connectedCheck", "--stacktrace")
@@ -178,8 +180,8 @@ class IntegrationTest {
         testDebugResult.task(":generateDebugQueryWrapperInterface"),
         {
           "Could not find task in ${testDebugResult.tasks}"
-        }
-      ).outcome
+        },
+      ).outcome,
     ).isEqualTo(TaskOutcome.UP_TO_DATE)
 
     val testReleaseResult = runner
@@ -191,8 +193,8 @@ class IntegrationTest {
         testReleaseResult.task(":generateReleaseQueryWrapperInterface"),
         {
           "Could not find task in ${testDebugResult.tasks}"
-        }
-      ).outcome
+        },
+      ).outcome,
     ).isEqualTo(TaskOutcome.UP_TO_DATE)
   }
 

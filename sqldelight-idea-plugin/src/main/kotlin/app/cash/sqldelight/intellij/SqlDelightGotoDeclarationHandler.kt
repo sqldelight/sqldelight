@@ -55,7 +55,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   override fun getGotoDeclarationTargets(
     sourceElement: PsiElement?,
     offset: Int,
-    editor: Editor
+    editor: Editor,
   ): Array<PsiElement> {
     if (sourceElement == null) {
       return emptyArray()
@@ -63,7 +63,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
 
     val targetData = ProgressManager.getInstance().runProcess(
       Computable { targetData(sourceElement) },
-      EmptyProgressIndicator().also { it.start() }
+      EmptyProgressIndicator().also { it.start() },
     ) ?: return emptyArray()
     val function = targetData.function
     val elementFile = targetData.containingFile
@@ -131,13 +131,13 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
         TargetData(
           parameter = resolved,
           function = element.getParentOfType(true)!!,
-          containingFile = element.containingFile.virtualFile
+          containingFile = element.containingFile.virtualFile,
         )
       }
       is KtNamedFunction, is PsiMethod -> TargetData(
         parameter = null,
         function = resolved as PsiNamedElement,
-        containingFile = resolved.containingFile?.virtualFile
+        containingFile = resolved.containingFile?.virtualFile,
       )
       else -> null
     }
@@ -148,6 +148,6 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   data class TargetData(
     val parameter: PsiNamedElement?,
     val function: PsiNamedElement,
-    val containingFile: VirtualFile?
+    val containingFile: VirtualFile?,
   )
 }

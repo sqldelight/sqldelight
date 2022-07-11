@@ -17,7 +17,7 @@ class DatabaseFileViewProviderFactory : FileViewProviderFactory {
     vFile: VirtualFile,
     language: Language?,
     psiManager: PsiManager,
-    eventSystemEnabled: Boolean
+    eventSystemEnabled: Boolean,
   ): FileViewProvider {
     fun default() = SingleRootFileViewProvider(psiManager, vFile, eventSystemEnabled)
 
@@ -54,7 +54,7 @@ class DatabaseFileViewProviderFactory : FileViewProviderFactory {
 internal class DatabaseFileViewProvider(
   manager: PsiManager,
   virtualFile: VirtualFile,
-  eventSystemEnabled: Boolean
+  eventSystemEnabled: Boolean,
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, DatabaseFileType) {
   private var schemaFile: VirtualFile? = null
 
@@ -80,7 +80,7 @@ internal class DatabaseFileViewProvider(
       return LightVirtualFile(
         "${virtualFile.version!! - 1}.db",
         MigrationFileType,
-        statements.joinToString(separator = "\n")
+        statements.joinToString(separator = "\n"),
       ).also { schemaFile = it }
     } catch (e: Exception) {
       return null

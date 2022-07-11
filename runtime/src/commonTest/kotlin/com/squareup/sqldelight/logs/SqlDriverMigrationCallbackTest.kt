@@ -20,7 +20,7 @@ class SqlDriverMigrationCallbackTest {
       driver = FakeSqlDriver(),
       oldVersion = 1,
       newVersion = 2,
-      AfterVersion(1) { callbackInvoked = true }
+      AfterVersion(1) { callbackInvoked = true },
     )
 
     assertTrue(callbackInvoked)

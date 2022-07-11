@@ -26,8 +26,10 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
-  @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input val pluginVersion = VERSION
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
 
   @get:OutputDirectory
   var outputDirectory: File? = null
@@ -35,7 +37,9 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+
   @get:Input abstract var migrationOutputExtension: String
 
   @TaskAction
@@ -92,11 +96,11 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
       environment.forMigrationFiles { migrationFile ->
         val output = File(
           outputDirectory,
-          "${migrationFile.virtualFile!!.nameWithoutExtension}$migrationExtension"
+          "${migrationFile.virtualFile!!.nameWithoutExtension}$migrationExtension",
         )
         output.writeText(
           migrationFile.sqlStmtList?.stmtList.orEmpty()
-            .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText()};" }
+            .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText()};" },
         )
       }
     }

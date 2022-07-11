@@ -26,7 +26,7 @@ private fun <T> jsObject(block: T.() -> Unit): T {
 
 suspend fun initAsyncSqlDriver(
   workerPath: String = "/worker.sql-wasm.js",
-  schema: SqlSchema? = null
+  schema: SqlSchema? = null,
 ): SqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
 
 suspend fun SqlDriver.withSchema(schema: SqlSchema? = null): SqlDriver = this.also { schema?.create(it)?.await() }
@@ -113,7 +113,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
   override fun currentTransaction(): Transacter.Transaction? = transaction
 
   private inner class Transaction(
-    override val enclosingTransaction: Transacter.Transaction?
+    override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {
@@ -220,7 +220,7 @@ internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
         null -> null
         true -> 1.0
         false -> 0.0
-      }
+      },
     )
   }
 }

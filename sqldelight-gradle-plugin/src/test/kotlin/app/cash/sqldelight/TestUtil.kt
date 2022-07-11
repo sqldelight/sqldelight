@@ -11,19 +11,19 @@ internal fun String.withInvariantPathSeparators() = replace("\\", "/")
 
 internal fun SqlDelightPropertiesFileImpl.withInvariantPathSeparators(): SqlDelightPropertiesFile {
   return copy(
-    databases = databases.map { it.withInvariantPathSeparators() }
+    databases = databases.map { it.withInvariantPathSeparators() },
   )
 }
 
 internal fun SqlDelightDatabasePropertiesImpl.withInvariantPathSeparators(): SqlDelightDatabasePropertiesImpl {
   return copy(
-    compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() }
+    compilationUnits = compilationUnits.map { it.withInvariantPathSeparators() },
   )
 }
 
 internal fun SqlDelightDatabasePropertiesImpl.withSortedCompilationUnits(): SqlDelightDatabasePropertiesImpl {
   return copy(
-    compilationUnits = compilationUnits.map { it.withSortedSourceFolders() }
+    compilationUnits = compilationUnits.map { it.withSortedSourceFolders() },
   )
 }
 

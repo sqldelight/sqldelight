@@ -29,7 +29,7 @@ class BindableQueryTest {
       |FROM data
       |WHERE _id = ?1 AND _id = ?1;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
@@ -37,7 +37,7 @@ class BindableQueryTest {
     val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
-      1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "_id", arg)
+      1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "_id", arg),
     )
   }
 
@@ -54,7 +54,7 @@ class BindableQueryTest {
       |FROM data
       |WHERE _id = ? AND _id = ?1;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
@@ -62,7 +62,7 @@ class BindableQueryTest {
     val arg = PsiTreeUtil.findChildrenOfType(file, SqlBindExpr::class.java).first()
 
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
-      1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "_id", arg)
+      1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "_id", arg),
     )
   }
 
@@ -79,7 +79,7 @@ class BindableQueryTest {
       |FROM data
       |WHERE _id = ?20 AND value = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
@@ -89,9 +89,12 @@ class BindableQueryTest {
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
       20 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "_id", args[0]),
       21 to IntermediateType(
-        TEXT, List::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "value_", args[1]
-      )
+        TEXT,
+        List::class.asClassName().copy(nullable = true),
+        createTable.columnDefList[1],
+        "value_",
+        args[1],
+      ),
     )
   }
 
@@ -108,7 +111,7 @@ class BindableQueryTest {
       |FROM data
       |WHERE _id = :value AND value = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
@@ -118,9 +121,12 @@ class BindableQueryTest {
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
       1 to IntermediateType(INTEGER, LONG, createTable.columnDefList[0], "value", args[0]),
       2 to IntermediateType(
-        TEXT, List::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "value_", args[1]
-      )
+        TEXT,
+        List::class.asClassName().copy(nullable = true),
+        createTable.columnDefList[1],
+        "value_",
+        args[1],
+      ),
     )
   }
 
@@ -137,7 +143,7 @@ class BindableQueryTest {
       |SET value = ?
       |WHERE value = :value;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
@@ -146,13 +152,19 @@ class BindableQueryTest {
 
     assertThat(update.arguments.map { it.index to it.type }).containsExactly(
       1 to IntermediateType(
-        TEXT, List::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "value_", args[0]
+        TEXT,
+        List::class.asClassName().copy(nullable = true),
+        createTable.columnDefList[1],
+        "value_",
+        args[0],
       ),
       2 to IntermediateType(
-        TEXT, List::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "value", args[1]
-      )
+        TEXT,
+        List::class.asClassName().copy(nullable = true),
+        createTable.columnDefList[1],
+        "value",
+        args[1],
+      ),
     )
   }
 
@@ -178,7 +190,7 @@ class BindableQueryTest {
       |    DESC LIMIT 1
       |) t;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val createTable = file.sqlStatements().mapNotNull { it.statement.createTableStmt }.first()
@@ -188,15 +200,21 @@ class BindableQueryTest {
     assertThat(select.arguments.map { it.index to it.type }).containsExactly(
       1 to IntermediateType(TEXT, String::class.asClassName().copy(nullable = true), null, "defaultValue", args[0]),
       2 to IntermediateType(
-        INTEGER, Long::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[1], "bufferId", args[1],
-        simplified = true
+        INTEGER,
+        Long::class.asClassName().copy(nullable = true),
+        createTable.columnDefList[1],
+        "bufferId",
+        args[1],
+        simplified = true,
       ),
       3 to IntermediateType(
-        INTEGER, Long::class.asClassName().copy(nullable = true),
-        createTable.columnDefList[2], "accountId", args[2],
-        simplified = true
-      )
+        INTEGER,
+        Long::class.asClassName().copy(nullable = true),
+        createTable.columnDefList[2],
+        "accountId",
+        args[2],
+        simplified = true,
+      ),
     )
   }
 }

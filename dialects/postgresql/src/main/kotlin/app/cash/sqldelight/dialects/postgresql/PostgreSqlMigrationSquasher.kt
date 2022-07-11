@@ -11,11 +11,11 @@ import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 
 internal class PostgreSqlMigrationSquasher(
-  private val parentSquasher: MigrationSquasher
+  private val parentSquasher: MigrationSquasher,
 ) : MigrationSquasher by parentSquasher {
   override fun squish(
     alterTableRules: SqlAlterTableRules,
-    into: SqlFileBase
+    into: SqlFileBase,
   ): String {
     if (alterTableRules !is PostgreSqlAlterTableRules) return parentSquasher.squish(alterTableRules, into)
     return when {
@@ -30,7 +30,7 @@ internal class PostgreSqlMigrationSquasher(
         into.text.replaceRange(
           createTable.columnDefList.first().startOffset until createTable.columnDefList.last().endOffset,
           createTable.columnDefList.filterNot { it.columnName.textMatches(columnName.text) }
-            .joinToString(separator = ",\n  ") { it.text }
+            .joinToString(separator = ",\n  ") { it.text },
         )
       }
       else -> parentSquasher.squish(alterTableRules, into)

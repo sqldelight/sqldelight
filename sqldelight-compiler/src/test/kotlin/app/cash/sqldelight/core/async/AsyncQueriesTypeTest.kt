@@ -37,7 +37,7 @@ class AsyncQueriesTypeTest {
       |SELECT id, value FROM data
       |UNION
       |SELECT id, value FROM other;
-    """.trimMargin(),
+      """.trimMargin(),
       temporaryFolder,
       fileName = "Data.sq",
       generateAsync = true,
@@ -108,7 +108,8 @@ class AsyncQueriesTypeTest {
       |    }
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
@@ -209,7 +210,8 @@ class AsyncQueriesTypeTest {
       |    public override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

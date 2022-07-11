@@ -13,7 +13,7 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
         |SELECT first_name, last_name, number, team, name
         |FROM hockey<caret>Player
         |JOIN team ON hockeyPlayer.team = team.id;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = IntroduceTableAliasIntention()
@@ -21,8 +21,8 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
       intention.isAvailable(
         myFixture.project,
         myFixture.editor,
-        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
-      )
+        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
+      ),
     )
       .isTrue()
   }
@@ -34,7 +34,7 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
         |SELECT first_name, last_name, number, team, name
         |FROM hockey<caret>Player hp
         |JOIN team ON hp.team = team.id;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = IntroduceTableAliasIntention()
@@ -42,8 +42,8 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
       intention.isAvailable(
         myFixture.project,
         myFixture.editor,
-        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
-      )
+        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
+      ),
     )
       .isFalse()
   }
@@ -54,7 +54,7 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
       CREATE_TABLE + """
         |SELECT id, tea<caret>m.name
         |FROM team;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = IntroduceTableAliasIntention()
@@ -62,8 +62,8 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
       intention.isAvailable(
         myFixture.project,
         myFixture.editor,
-        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
-      )
+        myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
+      ),
     )
       .isFalse()
   }
@@ -75,14 +75,14 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
         |SELECT first_name, last_name, number, team, name
         |FROM hockeyPlayer
         |JOIN tea<caret>m ON hockeyPlayer.team = team.id;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val intention = IntroduceTableAliasIntention()
     intention.invoke(
       myFixture.project,
       myFixture.editor,
-      myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!
+      myFixture.file.findElementAt(myFixture.editor.caretModel.offset)!!,
     )
 
     myFixture.checkResult(
@@ -90,7 +90,7 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
         |SELECT first_name, last_name, number, team, name
         |FROM hockeyPlayer
         |JOIN team t ON hockeyPlayer.team = t.id;
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -109,6 +109,7 @@ class TableAliasIntentionTest : SqlDelightFixtureTestCase() {
       |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       |  name TEXT NOT NULL UNIQUE
       |);
-      |""".trimMargin()
+      |
+    """.trimMargin()
   }
 }

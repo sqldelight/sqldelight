@@ -8,7 +8,7 @@ import schemacrawler.schema.JdbcDriverInfo
 class ObjectDifferDatabaseDiff(
   private val diff: DiffNode,
   private val db1: CatalogDatabase,
-  private val db2: CatalogDatabase
+  private val db2: CatalogDatabase,
 ) : DatabaseDiff {
 
   override fun printTo(out: Appendable) = with(out) {
@@ -28,7 +28,8 @@ class ObjectDifferDatabaseDiff(
             |${node.canonicalGet(db1.catalog).toString().prependIndent("    ")}
             |  AFTER:
             |${node.canonicalGet(db2.catalog).toString().prependIndent("    ")}
-            |""".trimMargin()
+            |
+            """.trimMargin(),
           )
         }
       } else if (node.state == DiffNode.State.ADDED || node.state == DiffNode.State.REMOVED) {

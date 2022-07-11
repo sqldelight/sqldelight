@@ -26,7 +26,7 @@ internal class SqlDelightRunVisitor(
 
   private data class RunSqliteStatementGutterIconRenderer(
     private val stmt: SqlStmt,
-    private val connectionManager: ConnectionManager
+    private val connectionManager: ConnectionManager,
   ) : GutterIconRenderer() {
     override fun isNavigateAction() = true
     override fun getIcon(): Icon = AllIcons.RunConfigurations.TestState.Run

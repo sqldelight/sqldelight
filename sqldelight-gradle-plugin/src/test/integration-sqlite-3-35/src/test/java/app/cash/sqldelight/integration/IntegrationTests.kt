@@ -21,7 +21,7 @@ class IntegrationTests {
   @Test fun returningInsert() {
     assertThat(database.personQueries.insertAndReturn(1, "Alec", "Strong").executeAsOne())
       .isEqualTo(
-        Person(1, "Alec", "Strong")
+        Person(1, "Alec", "Strong"),
       )
   }
 }

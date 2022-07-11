@@ -23,7 +23,7 @@ import kotlin.native.concurrent.ensureNeverFrozen
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
     readOnly: Boolean,
-    block: ThreadConnection.() -> R
+    block: ThreadConnection.() -> R,
   ): R
 
   private fun <R> accessStatement(
@@ -31,7 +31,7 @@ sealed class ConnectionWrapper : SqlDriver {
     identifier: Int?,
     sql: String,
     binders: (SqlPreparedStatement.() -> Unit)?,
-    block: (Statement) -> R
+    block: (Statement) -> R,
   ): R {
     return accessConnection(readOnly) {
       val statement = useStatement(identifier, sql)
@@ -52,11 +52,11 @@ sealed class ConnectionWrapper : SqlDriver {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> = QueryResult.Value(
     accessStatement(false, identifier, sql, binders) { statement ->
       statement.executeUpdateDelete().toLong()
-    }
+    },
   )
 
   final override fun <R> executeQuery(
@@ -64,11 +64,11 @@ sealed class ConnectionWrapper : SqlDriver {
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> = QueryResult.Value(
     accessStatement(true, identifier, sql, binders) { statement ->
       mapper(SqliterSqlCursor(statement.query()))
-    }
+    },
   )
 }
 
@@ -106,16 +106,16 @@ class NativeSqliteDriver(
 ) : ConnectionWrapper(), SqlDriver {
   constructor(
     configuration: DatabaseConfiguration,
-    maxReaderConnections: Int = 1
+    maxReaderConnections: Int = 1,
   ) : this(
     databaseManager = createDatabaseManager(configuration),
-    maxReaderConnections = maxReaderConnections
+    maxReaderConnections = maxReaderConnections,
   )
 
   constructor(
     schema: SqlSchema,
     name: String,
-    maxReaderConnections: Int = 1
+    maxReaderConnections: Int = 1,
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
@@ -125,9 +125,9 @@ class NativeSqliteDriver(
       },
       upgrade = { connection, oldVersion, newVersion ->
         wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
-      }
+      },
     ),
-    maxReaderConnections = maxReaderConnections
+    maxReaderConnections = maxReaderConnections,
   )
 
   // A pool of reader connections used by all operations not in a transaction
@@ -222,7 +222,7 @@ class NativeSqliteDriver(
    */
   override fun <R> accessConnection(
     readOnly: Boolean,
-    block: ThreadConnection.() -> R
+    block: ThreadConnection.() -> R,
   ): R {
     val mine = borrowedConnectionThread.get()
 
@@ -263,8 +263,8 @@ fun inMemoryDriver(schema: SqlSchema): NativeSqliteDriver = NativeSqliteDriver(
     },
     upgrade = { connection, oldVersion, newVersion ->
       wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
-    }
-  )
+    },
+  ),
 )
 
 /**
@@ -277,7 +277,7 @@ fun inMemoryDriver(schema: SqlSchema): NativeSqliteDriver = NativeSqliteDriver(
  */
 fun wrapConnection(
   connection: DatabaseConnection,
-  block: (SqlDriver) -> Unit
+  block: (SqlDriver) -> Unit,
 ) {
   val conn = SqliterWrappedConnection(ThreadConnection(connection) {})
   try {
@@ -292,7 +292,7 @@ fun wrapConnection(
  * don't want the polling.
  */
 internal class SqliterWrappedConnection(
-  private val threadConnection: ThreadConnection
+  private val threadConnection: ThreadConnection,
 ) : ConnectionWrapper(),
   SqlDriver {
   override fun currentTransaction(): Transacter.Transaction? = threadConnection.transaction.value
@@ -301,7 +301,7 @@ internal class SqliterWrappedConnection(
 
   override fun <R> accessConnection(
     readOnly: Boolean,
-    block: ThreadConnection.() -> R
+    block: ThreadConnection.() -> R,
   ): R = threadConnection.block()
 
   override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
@@ -330,7 +330,7 @@ internal class SqliterWrappedConnection(
  */
 internal class ThreadConnection(
   private val connection: DatabaseConnection,
-  private val onEndTransaction: (ThreadConnection) -> Unit
+  private val onEndTransaction: (ThreadConnection) -> Unit,
 ) : Closeable {
   internal val transaction = ThreadLocalRef<Transacter.Transaction?>()
   internal val closed: Boolean
@@ -384,7 +384,7 @@ internal class ThreadConnection(
   }
 
   private inner class Transaction(
-    override val enclosingTransaction: Transacter.Transaction?
+    override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
     init {
       ensureNeverFrozen()

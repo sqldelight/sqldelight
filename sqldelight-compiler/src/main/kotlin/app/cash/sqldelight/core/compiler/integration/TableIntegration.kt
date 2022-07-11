@@ -22,7 +22,7 @@ internal fun LazyQuery.adapterProperty(): PropertySpec {
   val adapterType = ClassName(
     (tableName.containingFile as SqlDelightFile).packageName!!,
     SqlDelightCompiler.allocateName(tableName).capitalize(),
-    ADAPTER_NAME
+    ADAPTER_NAME,
   )
   return PropertySpec.builder(adapterName, adapterType, KModifier.PRIVATE)
     .initializer(adapterName)

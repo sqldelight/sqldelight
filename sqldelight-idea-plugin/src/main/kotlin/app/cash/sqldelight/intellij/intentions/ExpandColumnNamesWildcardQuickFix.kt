@@ -23,13 +23,13 @@ class ExpandColumnNamesWildcardQuickFix : BaseIntentionAction() {
     val caret = editor.caretModel.offset
     return selectStatementAtCaretWithColumnNamesWildcard(
       file = file as? SqlDelightFile ?: return false,
-      caret = caret
+      caret = caret,
     ) != null
   }
 
   private fun selectStatementAtCaretWithColumnNamesWildcard(
     file: SqlDelightFile,
-    caret: Int
+    caret: Int,
   ): SqlSelectStmt? {
     val selectStatement = file.findElementOfTypeAtOffset<SqlSelectStmt>(caret) ?: return null
     val resultColumns = selectStatement.resultColumnList

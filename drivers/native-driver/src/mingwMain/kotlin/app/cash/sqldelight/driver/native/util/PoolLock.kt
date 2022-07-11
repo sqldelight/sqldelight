@@ -26,8 +26,9 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
   private val attr = nativeHeap.alloc<pthread_mutexattr_tVar>()
     .apply {
       pthread_mutexattr_init(ptr)
-      if (reentrant)
+      if (reentrant) {
         pthread_mutexattr_settype(ptr, PTHREAD_MUTEX_RECURSIVE.toInt())
+      }
     }
   private val mutex = nativeHeap.alloc<pthread_mutex_tVar>()
     .apply { pthread_mutex_init(ptr, attr.ptr) }
@@ -35,7 +36,7 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
     .apply { pthread_cond_init(ptr, null) }
 
   actual fun <R> withLock(
-    action: CriticalSection.() -> R
+    action: CriticalSection.() -> R,
   ): R {
     check(isActive.value)
     pthread_mutex_lock(mutex.ptr)

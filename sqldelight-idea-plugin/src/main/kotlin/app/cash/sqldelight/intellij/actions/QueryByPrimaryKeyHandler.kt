@@ -35,7 +35,11 @@ class QueryByPrimaryKeyHandler(private val templateName: String) : CodeInsightAc
     val stmtList = file.findChildOfType<SqlDelightStmtList>() ?: return
     insertNewLineAndCleanup(editor, stmtList)
     TemplateManager.getInstance(project).startTemplate(
-      editor, template, false, args, null
+      editor,
+      template,
+      false,
+      args,
+      null,
     )
   }
 }

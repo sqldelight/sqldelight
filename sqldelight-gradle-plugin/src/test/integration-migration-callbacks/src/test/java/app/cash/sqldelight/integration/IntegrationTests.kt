@@ -33,7 +33,7 @@ class IntegrationTests {
     QueryWrapper.Schema.migrate(
       driver = database,
       oldVersion = 0,
-      newVersion = 2
+      newVersion = 2,
     )
     QueryWrapper.Schema.migrateWithCallbacks(
       driver = database,

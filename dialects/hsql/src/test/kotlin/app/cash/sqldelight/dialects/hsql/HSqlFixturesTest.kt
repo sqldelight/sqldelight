@@ -12,7 +12,7 @@ class HSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fix
     "TEXT" to "VARCHAR(8)",
     "AUTOINCREMENT" to "AUTO_INCREMENT",
     "?1" to ":one",
-    "?2" to ":two"
+    "?2" to ":two",
   )
 
   override fun setupDialect() {
@@ -22,9 +22,11 @@ class HSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fix
   companion object {
     private val fixtures = arrayOf("src/test/fixtures_hsql")
 
-    @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
+    @Suppress("unused")
+    // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
-    @JvmStatic fun parameters() = fixtures.flatMap { fixtureFolder ->
+    @JvmStatic
+    fun parameters() = fixtures.flatMap { fixtureFolder ->
       File(fixtureFolder).listFiles()!!
         .filter { it.isDirectory }
         .map { arrayOf(it.name, it) }

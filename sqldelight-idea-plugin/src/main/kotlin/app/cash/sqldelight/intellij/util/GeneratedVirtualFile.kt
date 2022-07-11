@@ -29,7 +29,7 @@ class GeneratedVirtualFile(private val path: String, module: Module) {
 
   operator fun getValue(
     thisRef: Nothing?,
-    property: KProperty<*>
+    property: KProperty<*>,
   ): VirtualFile {
     applicationManager.assertWriteAccessAllowed()
     synchronized(this) {

@@ -36,8 +36,9 @@ class QueriesTypeTest {
       |SELECT id, value FROM data
       |UNION
       |SELECT id, value FROM other;
-    """.trimMargin(),
-      temporaryFolder, fileName = "Data.sq"
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Data.sq",
     )
 
     val select = result.compiledFile.namedQueries.first()
@@ -105,7 +106,8 @@ class QueriesTypeTest {
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
@@ -206,7 +208,8 @@ class QueriesTypeTest {
       |    public override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -225,7 +228,8 @@ class QueriesTypeTest {
       |INSERT INTO data
       |VALUES ?;
       """.trimMargin(),
-      temporaryFolder, fileName = "Data.sq"
+      temporaryFolder,
+      fileName = "Data.sq",
     )
     val insert = result.compiledFile.namedMutators.first()
     assertThat(result.errors).isEmpty()
@@ -280,7 +284,8 @@ class QueriesTypeTest {
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
@@ -310,7 +315,8 @@ class QueriesTypeTest {
       |    }
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -323,8 +329,9 @@ class QueriesTypeTest {
       |  id TEXT PRIMARY KEY,
       |  value INTEGER AS Int NOT NULL
       |);
-    """.trimMargin(),
-      temporaryFolder, fileName = "Data.sq"
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Data.sq",
     )
 
     val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
@@ -372,7 +379,8 @@ class QueriesTypeTest {
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -392,8 +400,9 @@ class QueriesTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-    """.trimMargin(),
-      temporaryFolder, fileName = "Data.sq"
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Data.sq",
     )
 
     val select = result.compiledFile.namedQueries.first()
@@ -450,7 +459,8 @@ class QueriesTypeTest {
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
@@ -526,7 +536,8 @@ class QueriesTypeTest {
       |    public override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -546,8 +557,9 @@ class QueriesTypeTest {
       |SELECT id, offsets(search)
       |FROM search
       |WHERE search MATCH ?;
-    """.trimMargin(),
-      temporaryFolder, fileName = "Search.sq"
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Search.sq",
     )
 
     val offsets = result.compiledFile.namedQueries.first()
@@ -602,7 +614,8 @@ class QueriesTypeTest {
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val dataQueries = File(result.outputDirectory, "com/example/SearchQueries.kt")
@@ -677,7 +690,8 @@ class QueriesTypeTest {
       |    public override fun toString(): String = "Search.sq:selectOffsets"
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

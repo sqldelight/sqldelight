@@ -41,7 +41,7 @@ open class StatementValidatorMixin(node: ASTNode) : SqlStmtImpl(node) {
       "ELSE", "ESCAPE", "EXCEPT", "EXISTS", "FOREIGN", "FROM", "GROUP", "HAVING", "IN", "INDEX",
       "INSERT", "INTERSECT", "INTO", "IS", "ISNULL", "JOIN", "LIMIT", "NOT", "NOTNULL", "NULL",
       "OR", "ORDER", "PRIMARY", "REFERENCES", "SELECT", "SET", "TABLE", "THEN", "TO",
-      "TRANSACTION", "UNION", "UNIQUE", "UPDATE", "USING", "VALUES", "WHEN", "WHERE"
+      "TRANSACTION", "UNION", "UNIQUE", "UPDATE", "USING", "VALUES", "WHEN", "WHERE",
     )
   }
 }

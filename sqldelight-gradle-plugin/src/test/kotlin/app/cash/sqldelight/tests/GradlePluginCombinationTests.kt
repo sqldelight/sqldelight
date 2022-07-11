@@ -41,7 +41,7 @@ class GradlePluginCombinationTests {
         |kotlin {
         |  android()
         |}
-      """.trimMargin()
+        """.trimMargin(),
       )
 
       configure()
@@ -90,7 +90,7 @@ class GradlePluginCombinationTests {
     |  }
     |}
     |
-    """.trimMargin()
+        """.trimMargin(),
       )
       configure("checkForSqlite")
     }

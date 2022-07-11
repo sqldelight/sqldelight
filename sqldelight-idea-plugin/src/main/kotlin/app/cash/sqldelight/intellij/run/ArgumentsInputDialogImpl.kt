@@ -17,7 +17,7 @@ internal interface ArgumentsInputDialog {
 
 internal class ArgumentsInputDialogImpl(
   project: Project,
-  private val parameters: List<SqlParameter>
+  private val parameters: List<SqlParameter>,
 ) : DialogWrapper(project), ArgumentsInputDialog {
 
   init {
@@ -33,7 +33,7 @@ internal class ArgumentsInputDialogImpl(
         row("${parameter.name}:") {
           textField(parameter::value, {
             _result.add(parameter.copy(value = it))
-          })
+          },)
         }
       }
     }

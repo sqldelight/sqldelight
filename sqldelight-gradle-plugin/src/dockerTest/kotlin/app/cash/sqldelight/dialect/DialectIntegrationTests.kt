@@ -40,7 +40,7 @@ private fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunne
     """
       |org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
       |
-    """.trimMargin()
+    """.trimMargin(),
   )
   return withProjectDir(projectRoot)
 }

@@ -26,7 +26,12 @@ spotless {
   kotlin {
     target "**/*.kt"
     targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*"
-    ktlint(deps.versions.ktlint.get()).userData(["indent_size": "2"])
+    ktlint(deps.versions.ktlint.get()).editorConfigOverride([
+      "indent_size": "2",
+       "disabled_rules": "package-name",
+       "ij_kotlin_allow_trailing_comma": "true",
+       "ij_kotlin_allow_trailing_comma_on_call_site": "true",
+    ])
     trimTrailingWhitespace()
     endWithNewline()
   }

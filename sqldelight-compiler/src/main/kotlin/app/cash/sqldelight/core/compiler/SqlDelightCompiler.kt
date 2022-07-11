@@ -56,7 +56,7 @@ object SqlDelightCompiler {
   fun writeInterfaces(
     file: MigrationFile,
     output: FileAppender,
-    includeAll: Boolean = false
+    includeAll: Boolean = false,
   ) {
     writeTableInterfaces(file, output, includeAll)
   }
@@ -123,7 +123,7 @@ object SqlDelightCompiler {
   internal fun writeTableInterfaces(
     file: SqlDelightFile,
     output: FileAppender,
-    includeAll: Boolean = false
+    includeAll: Boolean = false,
   ) {
     val packageName = file.packageName ?: return
     file.tables(includeAll).forEach { query ->
@@ -152,7 +152,7 @@ object SqlDelightCompiler {
 
   internal fun writeQueryInterfaces(
     file: SqlDelightQueriesFile,
-    output: FileAppender
+    output: FileAppender,
   ) {
     file.namedQueries.writeQueryInterfaces(file, output)
   }
@@ -217,7 +217,7 @@ object SqlDelightCompiler {
 
 internal fun <T> tryWithElement(
   element: PsiElement,
-  block: () -> T
+  block: () -> T,
 ): T? {
   try {
     return block()

@@ -54,7 +54,7 @@ class SqlDelightStructureViewFactoryTest : SqlDelightFixtureTestCase() {
       |ON test (_id);
       |
       |CREATE VIRTUAL TABLE virtual_table USING custom_module;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.testStructureView { consumer ->
@@ -68,8 +68,8 @@ class SqlDelightStructureViewFactoryTest : SqlDelightFixtureTestCase() {
             "CREATE VIEW select_all_view",
             "CREATE TRIGGER trigger_1",
             "CREATE INDEX some_index",
-            "CREATE VIRTUAL TABLE virtual_table"
-          )
+            "CREATE VIRTUAL TABLE virtual_table",
+          ),
         )
       }
     }

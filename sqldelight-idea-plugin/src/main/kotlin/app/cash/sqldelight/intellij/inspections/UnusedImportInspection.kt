@@ -22,7 +22,7 @@ internal class UnusedImportInspection : LocalInspectionTool() {
   override fun checkFile(
     file: PsiFile,
     manager: InspectionManager,
-    isOnTheFly: Boolean
+    isOnTheFly: Boolean,
   ) = ensureFileReady(file) {
     val javaTypes = file.columnJavaTypes()
 
@@ -32,8 +32,11 @@ internal class UnusedImportInspection : LocalInspectionTool() {
       }
       .map { importStmtMixin ->
         manager.createProblemDescriptor(
-          importStmtMixin, "Unused import", isOnTheFly,
-          arrayOf(RemoveUnusedImportQuickFix(file)), ProblemHighlightType.LIKE_UNUSED_SYMBOL
+          importStmtMixin,
+          "Unused import",
+          isOnTheFly,
+          arrayOf(RemoveUnusedImportQuickFix(file)),
+          ProblemHighlightType.LIKE_UNUSED_SYMBOL,
         )
       }
       .toTypedArray()
@@ -49,7 +52,7 @@ internal class UnusedImportInspection : LocalInspectionTool() {
       project: Project,
       file: PsiFile,
       startElement: PsiElement,
-      endElement: PsiElement
+      endElement: PsiElement,
     ) {
       OptimizeImportsProcessor(project, file).run()
     }
