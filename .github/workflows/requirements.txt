@@ -16,4 +16,4 @@ PyYAML==6.0
 repackage==0.7.3
 six==1.16.0
 termcolor==1.1.0
-tornado==6.1
+tornado==6.2
