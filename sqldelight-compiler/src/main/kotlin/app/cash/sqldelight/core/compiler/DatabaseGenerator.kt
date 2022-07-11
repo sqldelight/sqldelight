@@ -228,7 +228,10 @@ internal class DatabaseGenerator(
           oldVersion, newVersion
         )
         migrationFile.sqlStatements().forEach {
-          migrateFunction.addStatement("$DRIVER_NAME.execute(null, %S, 0)", it.rawSqlText())
+          migrateFunction.addStatement(
+            if (generateAsync) "$DRIVER_NAME.execute(null, %S, 0).await()" else "$DRIVER_NAME.execute(null, %S, 0)",
+            it.rawSqlText()
+          )
         }
         migrateFunction.endControlFlow()
       }
