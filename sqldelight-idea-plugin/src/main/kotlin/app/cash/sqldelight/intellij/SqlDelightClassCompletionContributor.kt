@@ -44,7 +44,7 @@ class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor(
 
   override fun fillCompletionVariants(
     parameters: CompletionParameters,
-    resultSet: CompletionResultSet
+    resultSet: CompletionResultSet,
   ) {
     if (parameters.position.getNonStrictParentOfType<JavaTypeMixin>() == null) return
 
@@ -82,7 +82,7 @@ class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor(
   private fun getKotlinClasses(
     project: Project,
     prefixMatcher: PrefixMatcher,
-    scope: GlobalSearchScope
+    scope: GlobalSearchScope,
   ): List<KtClassOrObject> {
     val index = KotlinFullClassNameIndex.getInstance()
     return index.getAllKeys(project)
@@ -126,7 +126,7 @@ private class AutoImportInsertionHandler : InsertHandler<LookupElement> {
 
   private fun InsertionContext.insertAndOrganizeImports(
     imports: Collection<SqlDelightImportStmt>,
-    newImport: String
+    newImport: String,
   ) {
     val newImports = arrayListOf(newImport)
     var endOffset = 0

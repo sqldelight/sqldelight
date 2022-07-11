@@ -36,7 +36,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
           SMALL_INT, INTEGER, BIG_INT -> "bindLong"
           DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "bindObject"
           NUMERIC -> "bindBigDecimal"
-        }
+        },
       )
       .add("($columnIndex, %L)\n", value)
       .build()
@@ -48,7 +48,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         SMALL_INT, INTEGER, BIG_INT -> "$cursorName.getLong($columnIndex)"
         DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-      }
+      },
     )
   }
 }

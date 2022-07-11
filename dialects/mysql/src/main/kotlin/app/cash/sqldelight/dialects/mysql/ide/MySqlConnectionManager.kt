@@ -11,7 +11,7 @@ import java.sql.DriverManager
 internal class MySqlConnectionManager : ConnectionManager {
   override fun createNewConnectionProperties(
     project: Project,
-    prefilledProperties: ConnectionProperties?
+    prefilledProperties: ConnectionProperties?,
   ): ConnectionProperties? {
     val dialog =
       if (prefilledProperties == null) MySqlConnectionDialog(project)
@@ -37,8 +37,8 @@ internal class MySqlConnectionManager : ConnectionManager {
           databaseName = dialog.databaseName.ifEmpty { null },
           username = dialog.username.ifEmpty { null },
           password = dialog.password.ifEmpty { null },
-        )
-      )
+        ),
+      ),
     )
   }
 
@@ -71,7 +71,7 @@ internal class MySqlConnectionManager : ConnectionManager {
     val port: String,
     val databaseName: String?,
     val username: String?,
-    val password: String?
+    val password: String?,
   )
 
   companion object {

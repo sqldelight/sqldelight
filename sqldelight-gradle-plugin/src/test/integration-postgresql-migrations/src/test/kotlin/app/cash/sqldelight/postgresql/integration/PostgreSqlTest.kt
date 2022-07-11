@@ -34,8 +34,10 @@ class PostgreSqlTest {
       productsQueries.insert(Products(1, "sku", true))
       assertThat(productsQueries.selectAll().executeAsList()).containsExactly(
         Products(
-          1, "sku", true
-        )
+          1,
+          "sku",
+          true,
+        ),
       )
     }
   }

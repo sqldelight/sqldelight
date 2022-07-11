@@ -54,7 +54,7 @@ import com.squareup.kotlinpoet.joinToCode
 import com.squareup.kotlinpoet.jvm.jvmInline
 
 internal abstract class ColumnTypeMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlColumnTypeImpl(node),
   TypedColumn,
   SqlDelightColumnType {
@@ -75,7 +75,7 @@ internal abstract class ColumnTypeMixin(
           ?.type()?.dialectType?.castSafelyTo<ValueTypeDialectType>() ?: return@let // SqlDelight type
         type = type.copy(
           dialectType = dialectType,
-          javaType = dialectType.javaType
+          javaType = dialectType.javaType,
         )
       }
 
@@ -83,7 +83,7 @@ internal abstract class ColumnTypeMixin(
       val newDialectType = ValueTypeDialectType(valueType.name!!, type.dialectType)
       type = type.copy(
         dialectType = newDialectType,
-        javaType = newDialectType.javaType
+        javaType = newDialectType.javaType,
       )
     }
     if (columnConstraintList.none {
@@ -96,7 +96,7 @@ internal abstract class ColumnTypeMixin(
     if (annotationList.isNotEmpty()) {
       type = type.copy(
         javaType = type.javaType
-          .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() })
+          .copy(annotations = type.javaType.annotations + annotationList.map { it.spec() }),
       )
     }
     return typeResolver.simplifyType(type)
@@ -115,7 +115,7 @@ internal abstract class ColumnTypeMixin(
       return PropertySpec
         .builder(
           name = "${allocateName(columnName)}Adapter",
-          type = columnAdapterType.parameterizedBy(customType, typeResolver.definitionType(typeName).dialectType.javaType)
+          type = columnAdapterType.parameterizedBy(customType, typeResolver.definitionType(typeName).dialectType.javaType),
         )
         .build()
     }
@@ -131,12 +131,12 @@ internal abstract class ColumnTypeMixin(
       .primaryConstructor(
         FunSpec.constructorBuilder()
           .addParameter(columnName, type)
-          .build()
+          .build(),
       )
       .addProperty(
         PropertySpec.builder(columnName, type)
           .initializer(columnName)
-          .build()
+          .build(),
       )
       .addModifiers(KModifier.VALUE)
       .jvmInline()
@@ -190,9 +190,9 @@ internal abstract class ColumnTypeMixin(
           CodeBlock.builder()
             .add("${identifier.text} = ")
             .add(annotation_value.value())
-            .build()
+            .build(),
         )
-      }
+      },
     )
     return annotation.build()
   }
@@ -225,7 +225,7 @@ internal abstract class ColumnTypeMixin(
 
   internal inner class ValueTypeDialectType(
     name: String,
-    val wrappedType: DialectType
+    val wrappedType: DialectType,
   ) : DialectType by wrappedType {
     override val javaType: TypeName by lazy {
       val tableName = PsiTreeUtil.getParentOfType(this@ColumnTypeMixin, Queryable::class.java)!!.tableExposed().tableName

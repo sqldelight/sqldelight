@@ -21,7 +21,7 @@ internal class RunSqlAction(
     project,
     connectionManager,
   ),
-  private val dialogFactory: ArgumentsInputDialog.Factory = ArgumentsInputDialogFactoryImpl()
+  private val dialogFactory: ArgumentsInputDialog.Factory = ArgumentsInputDialogFactoryImpl(),
 ) : AnAction() {
   override fun actionPerformed(e: AnActionEvent) {
     val parameters = findParameters(stmt)
@@ -38,7 +38,7 @@ internal class RunSqlAction(
   }
 
   private fun findParameters(
-    sqlStmt: SqlStmt
+    sqlStmt: SqlStmt,
   ): List<SqlParameter> {
     val bindableQuery = object : BindableQuery(null, sqlStmt) {
       override val id = 0
@@ -50,7 +50,7 @@ internal class RunSqlAction(
     return argumentList.zip(parameters) { range, name ->
       SqlParameter(
         name = name,
-        range = range
+        range = range,
       )
     }
   }

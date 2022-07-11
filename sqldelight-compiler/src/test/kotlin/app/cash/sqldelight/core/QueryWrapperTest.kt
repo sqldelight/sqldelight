@@ -23,7 +23,7 @@ class QueryWrapperTest {
       |INSERT INTO test_table
       |VALUES (1, 'test');
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -78,7 +78,7 @@ class QueryWrapperTest {
       |  }
       |}
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -101,7 +101,7 @@ class QueryWrapperTest {
       |UNION ALL
       |SELECT value FROM test_table2;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -169,7 +169,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -241,7 +241,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -277,7 +277,7 @@ class QueryWrapperTest {
         |  id INTEGER PRIMARY KEY,
         |  parent_id INTEGER REFERENCES parent(id)
         |);
-        """.trimMargin(),
+      """.trimMargin(),
       temporaryFolder = tempFolder,
     )
 
@@ -335,7 +335,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -360,7 +360,7 @@ class QueryWrapperTest {
         |  id INTEGER PRIMARY KEY,
         |  parent_id INTEGER REFERENCES parent(id)
         |);
-        """.trimMargin(),
+      """.trimMargin(),
       overrideDialect = PostgreSqlDialect(),
       temporaryFolder = tempFolder,
     )
@@ -430,7 +430,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -444,7 +444,7 @@ class QueryWrapperTest {
       |CREATE VIEW A AS
       |SELECT 1;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -498,7 +498,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -517,7 +517,7 @@ class QueryWrapperTest {
       |  value TEXT
       |);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -575,7 +575,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -585,20 +585,23 @@ class QueryWrapperTest {
       |CREATE TABLE test (
       |  value1 TEXT
       |);
-    """.trimMargin(),
-      tempFolder, "0.sqm"
+      """.trimMargin(),
+      tempFolder,
+      "0.sqm",
     )
     FixtureCompiler.writeSql(
       """
       |ALTER TABLE test ADD COLUMN value2 TEXT;
-    """.trimMargin(),
-      tempFolder, "1.sqm"
+      """.trimMargin(),
+      tempFolder,
+      "1.sqm",
     )
     FixtureCompiler.writeSql(
       """
       |ALTER TABLE test ADD COLUMN value3 REAL;
-    """.trimMargin(),
-      tempFolder, "2.sqm"
+      """.trimMargin(),
+      tempFolder,
+      "2.sqm",
     )
     val result = FixtureCompiler.compileSql(
       """
@@ -608,7 +611,7 @@ class QueryWrapperTest {
       |  value3 REAL
       |);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -675,7 +678,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+      """.trimMargin(),
     )
   }
 
@@ -694,7 +697,7 @@ class QueryWrapperTest {
         |
         |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
         |VALUES
-        """.trimMargin()
+        """.trimMargin(),
       )
       repeat(500) {
         if (it > 0) append(',')
@@ -751,13 +754,13 @@ class QueryWrapperTest {
         |          |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
         |          |VALUES
         |          |  ('class_01_ability_0', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_0.png')
-        """.trimMargin()
+        """.trimMargin(),
       )
       contains(
         """
         |          ""${'"'}.trimMargin())
         |          append(""${'"'}
-      """.trimMargin()
+        """.trimMargin(),
       )
       endsWith(
         """
@@ -775,7 +778,7 @@ class QueryWrapperTest {
         |  }
         |}
         |
-        """.trimMargin()
+        """.trimMargin(),
       )
     }
   }

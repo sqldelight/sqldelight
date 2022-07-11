@@ -11,7 +11,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 
 class CatalogDatabase private constructor(
-  internal val catalog: Catalog
+  internal val catalog: Catalog,
 ) : Database() {
 
   companion object {
@@ -20,12 +20,12 @@ class CatalogDatabase private constructor(
       .withLimitOptions(
         LimitOptionsBuilder.builder()
           .routineTypes(emptyList())
-          .toOptions()
+          .toOptions(),
       )
       .withLoadOptions(
         LoadOptionsBuilder.builder()
           .withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum())
-          .toOptions()
+          .toOptions(),
       )
 
     fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {

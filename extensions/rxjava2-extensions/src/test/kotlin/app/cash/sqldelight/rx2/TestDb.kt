@@ -12,7 +12,7 @@ import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_MANAGER
 
 class TestDb(
-  val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY)
+  val db: SqlDriver = JdbcSqliteDriver(IN_MEMORY),
 ) : TransacterImpl(db) {
   var aliceId: Long = 0
   var bobId: Long = 0
@@ -60,8 +60,9 @@ class TestDb(
       """
       |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${app.cash.sqldelight.rx2.Employee.USERNAME}, ${app.cash.sqldelight.rx2.Employee.NAME})
       |VALUES (?, ?)
-      |""".trimMargin(),
-      2
+      |
+      """.trimMargin(),
+      2,
     ) {
       bindString(0, employee.username)
       bindString(1, employee.name)
@@ -72,15 +73,16 @@ class TestDb(
 
   fun manager(
     employeeId: Long,
-    managerId: Long
+    managerId: Long,
   ): Long {
     db.execute(
       1,
       """
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin(),
-      2
+      |
+      """.trimMargin(),
+      2,
     ) {
       bindLong(0, employeeId)
       bindLong(1, managerId)
@@ -123,7 +125,8 @@ object Manager {
     |ON manager.$EMPLOYEE_ID = e.${Companion.ID}
     |JOIN $TABLE_EMPLOYEE AS m
     |ON manager.$MANAGER_ID = m.${Companion.ID}
-    |""".trimMargin()
+    |
+  """.trimMargin()
 }
 
 data class Employee(val username: String, val name: String) {

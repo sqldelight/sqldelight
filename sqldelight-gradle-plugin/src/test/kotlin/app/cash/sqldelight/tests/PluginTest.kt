@@ -15,7 +15,7 @@ class PluginTest {
       .buildAndFail()
     assertThat(result.output)
       .contains(
-        "SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found"
+        "SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found",
       )
   }
 
@@ -27,7 +27,7 @@ class PluginTest {
       .buildAndFail()
     assertThat(result.output)
       .contains(
-        "SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found"
+        "SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found",
       )
   }
 

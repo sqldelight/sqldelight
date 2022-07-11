@@ -11,7 +11,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 
 internal abstract class UpsertClauseMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   SqliteUpsertClause {
 
@@ -27,10 +27,11 @@ internal abstract class UpsertClauseMixin(
     if (child is SqliteUpsertDoUpdate) {
       val excludedTable = QueryElement.QueryResult(
         SingleRow(
-          tableName, "excluded"
+          tableName,
+          "excluded",
         ),
         table.columns,
-        synthesizedColumns = table.synthesizedColumns
+        synthesizedColumns = table.synthesizedColumns,
       )
 
       val available = arrayListOf(excludedTable)

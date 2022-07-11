@@ -26,13 +26,13 @@ internal class SqlDelightSuggestedRefactoringExecution {
   class SuggestedMigrationData(
     val declarationPointer: SmartPsiElementPointer<out PsiElement>,
     val newestMigrationFile: MigrationFile?,
-    val preparedMigration: String
+    val preparedMigration: String,
   )
 
   fun prepareChangeSignature(
     declaration: SmartPsiElementPointer<out PsiElement>,
     oldSignature: Signature,
-    newSignature: Signature
+    newSignature: Signature,
   ): SuggestedMigrationData? {
     val file = declaration.containingFile as SqlDelightFile? ?: return null
 
@@ -73,7 +73,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
     return SuggestedMigrationData(
       declarationPointer = declaration,
       newestMigrationFile = migrationFile,
-      preparedMigration = migration.joinToString("\n").trim()
+      preparedMigration = migration.joinToString("\n").trim(),
     )
   }
 
@@ -90,21 +90,21 @@ internal class SqlDelightSuggestedRefactoringExecution {
 
   private fun newColumns(
     oldList: List<Parameter>,
-    newList: List<Parameter>
+    newList: List<Parameter>,
   ): List<Parameter> {
     return newList.intersectBy(oldList, Parameter::id)
   }
 
   private fun removedColumns(
     oldList: List<Parameter>,
-    newList: List<Parameter>
+    newList: List<Parameter>,
   ): List<Parameter> {
     return oldList.intersectBy(newList, Parameter::id)
   }
 
   private inline fun <T, R : Any> List<T>.intersectBy(
     other: List<T>,
-    f: (T) -> R
+    f: (T) -> R,
   ): List<T> {
     val set = other.mapTo(mutableSetOf(), f)
     return filter { f(it) !in set }
@@ -113,7 +113,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   @Suppress("NAME_SHADOWING")
   private fun columnNameChanges(
     oldList: List<Parameter>,
-    newList: List<Parameter>
+    newList: List<Parameter>,
   ): List<Pair<String, String>> {
     val old = oldList.mapTo(mutableSetOf(), Parameter::name)
     val new = newList.mapTo(mutableSetOf(), Parameter::name)
@@ -130,7 +130,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   }
 
   fun performChangeSignature(
-    migrationData: SuggestedMigrationData
+    migrationData: SuggestedMigrationData,
   ) {
     val declarationPointer = migrationData.declarationPointer
     val project = declarationPointer.project
@@ -171,7 +171,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   private fun writeToFile(
     declaration: SmartPsiElementPointer<out PsiElement>,
     migrationFile: MigrationFile,
-    migration: String
+    migration: String,
   ) {
     val project = declaration.project
     val element = declaration.element ?: return

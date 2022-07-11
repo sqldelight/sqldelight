@@ -27,7 +27,7 @@ open class ExecuteQueryGenerator(
         query.statement,
         SqlUpdateStmtLimited::class.java,
         SqlDeleteStmtLimited::class.java,
-        SqlInsertStmt::class.java
+        SqlInsertStmt::class.java,
       ).flatMap {
         MutatorQueryGenerator(
           when (it) {
@@ -35,7 +35,7 @@ open class ExecuteQueryGenerator(
             is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
             is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
             else -> throw IllegalArgumentException("Unexpected statement $it")
-          }
+          },
         ).tablesUpdated()
       }.distinctBy { it.name }
     }
@@ -61,7 +61,7 @@ open class ExecuteQueryGenerator(
           }
         }
         .endControlFlow()
-        .build()
+        .build(),
     )
 
     return this
@@ -84,7 +84,7 @@ open class ExecuteQueryGenerator(
       .addParameters(
         query.parameters.map {
           ParameterSpec.builder(it.name, it.argumentType()).build()
-        }
+        },
       )
   }
 

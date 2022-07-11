@@ -14,7 +14,7 @@ import app.cash.sqldelight.internal.setValue
 expect suspend fun testDriver(): SqlDriver
 
 class TestDb(
-  val db: SqlDriver
+  val db: SqlDriver,
 ) : TransacterImpl(db) {
   var aliceId: Long by Atomic<Long>(0)
   var bobId: Long by Atomic<Long>(0)
@@ -62,8 +62,9 @@ class TestDb(
       """
       |INSERT OR FAIL INTO $TABLE_EMPLOYEE (${Employee.USERNAME}, ${Employee.NAME})
       |VALUES (?, ?)
-      |""".trimMargin(),
-      2
+      |
+      """.trimMargin(),
+      2,
     ) {
       bindString(0, employee.username)
       bindString(1, employee.name)
@@ -81,15 +82,16 @@ class TestDb(
 
   fun manager(
     employeeId: Long,
-    managerId: Long
+    managerId: Long,
   ): Long {
     db.execute(
       1,
       """
       |INSERT OR FAIL INTO $TABLE_MANAGER (${Manager.EMPLOYEE_ID}, ${Manager.MANAGER_ID})
       |VALUES (?, ?)
-      |""".trimMargin(),
-      2
+      |
+      """.trimMargin(),
+      2,
     ) {
       bindLong(0, employeeId)
       bindLong(1, managerId)
@@ -139,7 +141,8 @@ object Manager {
     |ON manager.$EMPLOYEE_ID = e.${Employee.ID}
     |JOIN $TABLE_EMPLOYEE AS m
     |ON manager.$MANAGER_ID = m.${Employee.ID}
-    |""".trimMargin()
+    |
+  """.trimMargin()
 }
 
 data class Employee(val username: String, val name: String) {

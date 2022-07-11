@@ -52,7 +52,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
@@ -66,7 +66,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
@@ -80,7 +80,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(8, 2, false)) }
@@ -94,7 +94,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     runBlocking {
@@ -113,7 +113,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(9, 2, false)) }
@@ -127,7 +127,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(1L, 2, false)) }
@@ -141,7 +141,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
@@ -155,7 +155,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(4, 2, false)) }
@@ -169,7 +169,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(8, 2, false)) }
@@ -183,7 +183,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(9, 2, false)) }
@@ -197,7 +197,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     val results = runBlocking { source.load(Refresh(1, 2, false)) }
@@ -211,7 +211,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     runBlocking {
@@ -230,7 +230,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     runBlocking {
@@ -246,7 +246,7 @@ class OffsetQueryPagingSourceTest {
       { _, _ -> query },
       countQuery(),
       transacter,
-      TestCoroutineDispatcher()
+      TestCoroutineDispatcher(),
     )
 
     runBlocking { source.load(Refresh(null, 0, false)) }
@@ -257,7 +257,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   private fun query(limit: Long, offset: Long) = object : Query<Long>(
-    { cursor -> cursor.getLong(0)!! }
+    { cursor -> cursor.getLong(0)!! },
   ) {
     override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", mapper, 2) {
       bindLong(0, limit)
@@ -273,8 +273,9 @@ class OffsetQueryPagingSourceTest {
     arrayOf("testTable"),
     driver,
     "Test.sq",
-    "count", "SELECT count(*) FROM testTable",
-    { it.getLong(0)!! }
+    "count",
+    "SELECT count(*) FROM testTable",
+    { it.getLong(0)!! },
   )
 
   private fun insert(value: Long, db: SqlDriver = driver) {

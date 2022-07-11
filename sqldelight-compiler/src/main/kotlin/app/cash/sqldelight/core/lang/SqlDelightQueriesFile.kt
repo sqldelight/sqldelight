@@ -40,7 +40,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 
 class SqlDelightQueriesFile(
-  viewProvider: FileViewProvider
+  viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, SqlDelightLanguage),
   SqlAnnotatedElement {
   override val packageName by lazy {
@@ -56,7 +56,7 @@ class SqlDelightQueriesFile(
         NamedQuery(
           name = it.identifier.name!!,
           queryable = typeResolver.queryWithResults(it.statement)!!,
-          statementIdentifier = it.identifier
+          statementIdentifier = it.identifier,
         )
       }
   }
@@ -83,12 +83,12 @@ class SqlDelightQueriesFile(
         return@map NamedQuery(
           statementIdentifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
           queryable = lastQuery,
-          name = it.stmtIdentifierClojure.name!!
+          name = it.stmtIdentifierClojure.name!!,
         )
       } else {
         return@map NamedExecute(
           identifier = it.stmtIdentifierClojure as StmtIdentifierMixin,
-          statement = it.stmtClojureStmtList!!
+          statement = it.stmtClojureStmtList!!,
         )
       }
     }

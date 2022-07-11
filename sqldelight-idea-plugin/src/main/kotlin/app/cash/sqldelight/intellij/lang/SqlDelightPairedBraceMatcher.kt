@@ -30,7 +30,7 @@ class SqlDelightPairedBraceMatcher : PairedBraceMatcher {
 
   override fun isPairedBracesAllowedBeforeType(
     lbraceType: IElementType,
-    contextType: IElementType?
+    contextType: IElementType?,
   ) = true
 
   override fun getCodeConstructStart(file: PsiFile?, openingBraceOffset: Int) = openingBraceOffset

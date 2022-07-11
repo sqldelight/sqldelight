@@ -34,13 +34,14 @@ class InterfaceGeneration {
       |UNION
       |SELECT 0, 0
       |FROM test;
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SomeView.kt")
+      File(result.outputDirectory, "com/example/SomeView.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -53,7 +54,8 @@ class InterfaceGeneration {
       |  public val val_: Boolean,
       |  public val val__: Boolean,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -74,13 +76,14 @@ class InterfaceGeneration {
       |UNION
       |SELECT val, val
       |FROM another_test;
-      |""".trimMargin(),
-      temporaryFolder
+      |
+      """.trimMargin(),
+      temporaryFolder,
     )
 
     assertThat(result.errors).isEmpty()
     val generatedInterface = result.compilerOutput.get(
-      File(result.outputDirectory, "com/example/SomeView.kt")
+      File(result.outputDirectory, "com/example/SomeView.kt"),
     )
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
@@ -93,7 +96,8 @@ class InterfaceGeneration {
       |  public val val_: Boolean,
       |  public val val__: Boolean,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -103,7 +107,7 @@ class InterfaceGeneration {
       compilationMethod = { _, _, sqlDelightQueriesFile, writer ->
         SqlDelightCompiler.writeTableInterfaces(sqlDelightQueriesFile, writer)
       },
-      generateDb = false
+      generateDb = false,
     )
     assertThat(result.errors).isEmpty()
     for ((expectedFile, actualOutput) in result.compilerOutput) {

@@ -35,9 +35,10 @@ class SelectQueryTypeTest {
       |INSERT INTO data
       |VALUES ('sup', 'dude')
       |RETURNING *;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      dialect = PostgreSqlDialect()
+      dialect = PostgreSqlDialect(),
     )
 
     val query = file.namedQueries.first()
@@ -56,7 +57,8 @@ class SelectQueryTypeTest {
       |    cursor.getString(1)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -76,9 +78,10 @@ class SelectQueryTypeTest {
       |    lastname = :lastname
       |WHERE id = :id
       |RETURNING id, firstname, lastname;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      dialect = PostgreSqlDialect()
+      dialect = PostgreSqlDialect(),
     )
 
     val query = file.namedQueries.first()
@@ -103,7 +106,8 @@ class SelectQueryTypeTest {
       |    cursor.getString(2)!!
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -118,8 +122,9 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE id = ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -149,7 +154,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -167,7 +173,7 @@ class SelectQueryTypeTest {
       |WHERE id = ?2
       |AND value = ?1;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -200,7 +206,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:select"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -215,8 +222,9 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE id IN ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -250,7 +258,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -266,8 +275,9 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE id IN ?1 AND message != ?2 AND id IN ?1;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -306,7 +316,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -321,8 +332,9 @@ class SelectQueryTypeTest {
        |
        |select_news_list:
        |SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC;
-       |""".trimMargin(),
-      tempFolder
+       |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -348,7 +360,8 @@ class SelectQueryTypeTest {
        |
        |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
        |}
-       |""".trimMargin()
+       |
+      """.trimMargin(),
     )
 
     val treatNullAsUnknownFile = FixtureCompiler.parseSql(
@@ -361,9 +374,10 @@ class SelectQueryTypeTest {
        |
        |select_news_list:
        |SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC;
-       |""".trimMargin(),
+       |
+      """.trimMargin(),
       tempFolder,
-      treatNullAsUnknownForEquality = true
+      treatNullAsUnknownForEquality = true,
     )
 
     val treatNullAsUnknownQuery = treatNullAsUnknownFile.namedQueries.first()
@@ -389,7 +403,8 @@ class SelectQueryTypeTest {
        |
        |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
        |}
-       |""".trimMargin()
+       |
+      """.trimMargin(),
     )
   }
 
@@ -406,8 +421,9 @@ class SelectQueryTypeTest {
        |SELECT _id, username
        |FROM Friend
        |WHERE userId=? OR username=? LIMIT 2;
-       |""".trimMargin(),
-      tempFolder
+       |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -440,7 +456,8 @@ class SelectQueryTypeTest {
        |
        |  public override fun toString(): kotlin.String = "Test.sq:selectData"
        |}
-       |""".trimMargin()
+       |
+      """.trimMargin(),
     )
 
     val nullAsUnknownFile = FixtureCompiler.parseSql(
@@ -455,9 +472,10 @@ class SelectQueryTypeTest {
        |SELECT _id, username
        |FROM Friend
        |WHERE userId=? OR username=? LIMIT 2;
-       |""".trimMargin(),
+       |
+      """.trimMargin(),
       tempFolder,
-      treatNullAsUnknownForEquality = true
+      treatNullAsUnknownForEquality = true,
     )
 
     val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
@@ -489,7 +507,8 @@ class SelectQueryTypeTest {
        |
        |  public override fun toString(): kotlin.String = "Test.sq:selectData"
        |}
-       |""".trimMargin()
+       |
+      """.trimMargin(),
     )
   }
 
@@ -510,8 +529,9 @@ class SelectQueryTypeTest {
       |AND val != ?
       |AND val IS ?
       |AND val IS NOT ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -556,7 +576,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val nullAsUnknownFile = FixtureCompiler.parseSql(
@@ -575,9 +596,10 @@ class SelectQueryTypeTest {
       |AND val != ?
       |AND val IS ?
       |AND val IS NOT ?;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      treatNullAsUnknownForEquality = true
+      treatNullAsUnknownForEquality = true,
     )
 
     val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
@@ -622,7 +644,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -637,8 +660,9 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE data MATCH ? AND rowid = ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -670,7 +694,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectMatching"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -687,8 +712,9 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE data MATCH '"one ' || ? || '" * ';
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -718,7 +744,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectMatching"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -738,8 +765,9 @@ class SelectQueryTypeTest {
       |  AND id IN ?
       |  AND (token != :token OR (name = :name OR :name = 'foo'))
       |  AND token IN ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -787,7 +815,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -805,8 +834,9 @@ class SelectQueryTypeTest {
       |WHERE id = ?1 OR id IN child_ids
       |LIMIT :limit
       |OFFSET :offset;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -844,7 +874,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val nullAsUnknownFile = FixtureCompiler.parseSql(
@@ -860,9 +891,10 @@ class SelectQueryTypeTest {
       |WHERE id = ?1 OR id IN child_ids
       |LIMIT :limit
       |OFFSET :offset;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      treatNullAsUnknownForEquality = true
+      treatNullAsUnknownForEquality = true,
     )
 
     val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
@@ -900,7 +932,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -917,8 +950,9 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE id IN ?;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
@@ -952,7 +986,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectForIds"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -968,8 +1003,10 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE token = :token OR :token IS NULL;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1013,7 +1050,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val nullAsUnknownFile = FixtureCompiler.parseSql(
@@ -1026,9 +1064,11 @@ class SelectQueryTypeTest {
       |SELECT *
       |FROM data
       |WHERE token = :token OR :token IS NULL;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect,
-      treatNullAsUnknownForEquality = true
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+      treatNullAsUnknownForEquality = true,
     )
 
     val nullAsUnknownQuery = nullAsUnknownFile.namedQueries.first()
@@ -1059,7 +1099,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1076,8 +1117,10 @@ class SelectQueryTypeTest {
       |selectGreatest:
       |SELECT greatest(token, value)
       |FROM data;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1092,7 +1135,8 @@ class SelectQueryTypeTest {
       |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  cursor.getString(0)!!
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1109,8 +1153,10 @@ class SelectQueryTypeTest {
       |selectFullNames:
       |SELECT CONCAT(first_name, last_name)
       |FROM people;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1125,7 +1171,8 @@ class SelectQueryTypeTest {
       |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  cursor.getString(0)!!
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1157,8 +1204,10 @@ class SelectQueryTypeTest {
       |UNION
       |SELECT birthday, age
       |FROM adults;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1184,7 +1233,8 @@ class SelectQueryTypeTest {
       |    )
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1216,9 +1266,10 @@ class SelectQueryTypeTest {
       |UNION
       |SELECT birthday, age
       |FROM adults;
-      |""".trimMargin(),
+      |
+      """.trimMargin(),
       tempFolder,
-      overrideDialect = dialect.dialect
+      overrideDialect = dialect.dialect,
     )
 
     val requiredAdapters = file.compiledFile.requiredAdapters.joinToString { it.type.toString() }
@@ -1237,8 +1288,10 @@ class SelectQueryTypeTest {
       |selectBirthMonthAndYear:
       |SELECT MONTH(born_at) AS birthMonth, YEAR(born_at) AS birthYear
       |FROM people;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1256,7 +1309,8 @@ class SelectQueryTypeTest {
       |    cursor.getLong(1)!!
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1272,8 +1326,10 @@ class SelectQueryTypeTest {
       |selectSomeTrigValues:
       |SELECT SIN(angle) AS sin, COS(angle) AS cos, TAN(angle) AS tan
       |FROM math;
-      |""".trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -1296,7 +1352,8 @@ class SelectQueryTypeTest {
       |    cursor.getDouble(2)!!
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1317,8 +1374,9 @@ class SelectQueryTypeTest {
       |  VALUES (:value)
       |  ;
       |}
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedExecutes.first()
@@ -1345,7 +1403,8 @@ class SelectQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1366,8 +1425,9 @@ class SelectQueryTypeTest {
       |  VALUES (?)
       |  ;
       |}
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedExecutes.first()
@@ -1394,7 +1454,8 @@ class SelectQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1415,8 +1476,9 @@ class SelectQueryTypeTest {
       |  VALUES (?1)
       |  ;
       |}
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedExecutes.first()
@@ -1443,7 +1505,8 @@ class SelectQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1464,8 +1527,9 @@ class SelectQueryTypeTest {
       |  VALUES (?2)
       |  ;
       |}
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedExecutes.first()
@@ -1492,7 +1556,8 @@ class SelectQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1517,8 +1582,9 @@ class SelectQueryTypeTest {
       |  VALUES (?2)
       |  ;
       |}
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedExecutes.first()
@@ -1545,7 +1611,8 @@ class SelectQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1563,8 +1630,9 @@ class SelectQueryTypeTest {
       |SELECT CASE :param1 WHEN 'test' THEN r1 WHEN 'test1' THEN r2 ELSE r3 END,
       |       CASE WHEN :param2='test' THEN r1 WHEN :param2='test1' THEN r2 ELSE r3 END
       |FROM data;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1582,7 +1650,8 @@ class SelectQueryTypeTest {
       |    cursor.getString(1)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1600,8 +1669,10 @@ class SelectQueryTypeTest {
       |countRecords:
       |SELECT (SELECT count(*) FROM ComboData WHERE value IN :values) +
       |(SELECT count(*) FROM ComboData2 WHERE value IN :values);
-      |""".trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      |
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val query = file.namedQueries.first()
@@ -1638,7 +1709,8 @@ class SelectQueryTypeTest {
         |
         |  public override fun toString(): kotlin.String = "Data.sq:countRecords"
         |}
-        |""".trimMargin()
+        |
+      """.trimMargin(),
     )
   }
 
@@ -1659,8 +1731,9 @@ class SelectQueryTypeTest {
       |  FROM data
       |  WHERE id = last_insert_rowid();
       |}
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1688,7 +1761,8 @@ class SelectQueryTypeTest {
       |
       |  public override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1698,8 +1772,9 @@ class SelectQueryTypeTest {
       """
       |getVersion:
       |PRAGMA user_version;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1710,7 +1785,8 @@ class SelectQueryTypeTest {
       |public fun getVersion(): app.cash.sqldelight.ExecutableQuery<kotlin.String> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "getVersion", "PRAGMA user_version") { cursor ->
       |  cursor.getString(0)!!
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -1744,8 +1820,9 @@ class SelectQueryTypeTest {
       |    ON tag.id = placeTag.tag
       |  WHERE place.id = ?
       |;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val query = file.namedQueries.first()
@@ -1759,7 +1836,8 @@ class SelectQueryTypeTest {
       |    cursor.getString(1)
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

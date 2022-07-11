@@ -9,7 +9,7 @@ internal fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunn
       |org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
       |android.useAndroidX=true
       |
-    """.trimMargin()
+    """.trimMargin(),
   )
   File(projectRoot, "local.properties").apply {
     if (!exists()) writeText("sdk.dir=${androidHome()}\n")

@@ -28,7 +28,7 @@ class PropertiesFileTest {
     with(properties.compilationUnits[0]) {
       assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
       assertThat(sourceFolders).containsExactly(
-        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)
+        SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
       )
     }
   }
@@ -88,7 +88,7 @@ class PropertiesFileTest {
         |
         |  targetFromPreset(presets.android, 'androidLib')
         |}
-      """.trimMargin()
+        """.trimMargin(),
       )
 
       val database = properties().databases.single()
@@ -96,10 +96,10 @@ class PropertiesFileTest {
         SqlDelightCompilationUnitImpl(
           name = "commonMain",
           sourceFolders = listOf(
-            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false)
+            SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false),
           ),
           outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
-        )
+        ),
       )
     }
   }

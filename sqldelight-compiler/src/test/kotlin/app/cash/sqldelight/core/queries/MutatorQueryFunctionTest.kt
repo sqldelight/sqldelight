@@ -29,7 +29,8 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data
       |VALUES (:customTextValue);
       """.trimMargin(),
-      tempFolder, dialect = dialect.dialect
+      tempFolder,
+      dialect = dialect.dialect,
     )
 
     val insert = file.namedMutators.first()
@@ -48,7 +49,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -64,7 +66,7 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -84,7 +86,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -99,7 +102,8 @@ class MutatorQueryFunctionTest {
       |deleteData:
       |DELETE FROM data;
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -113,7 +117,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -129,7 +134,7 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data
       |VALUES ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -149,7 +154,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -166,7 +172,7 @@ class MutatorQueryFunctionTest {
       |SET value = :newValue
       |WHERE value = :oldValue;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val update = file.namedMutators.first()
@@ -187,7 +193,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     val nullAsUnknownFile = FixtureCompiler.parseSql(
@@ -203,7 +210,7 @@ class MutatorQueryFunctionTest {
       |WHERE value = :oldValue;
       """.trimMargin(),
       tempFolder,
-      treatNullAsUnknownForEquality = true
+      treatNullAsUnknownForEquality = true,
     )
 
     val nullAsUnknownUpdate = nullAsUnknownFile.namedMutators.first()
@@ -224,7 +231,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -240,7 +248,7 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data
       |VALUES ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -260,7 +268,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -276,7 +285,7 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data (id)
       |VALUES ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -295,7 +304,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -311,7 +321,7 @@ class MutatorQueryFunctionTest {
       |INSERT INTO data (id)
       |VALUES (?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -330,7 +340,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -347,7 +358,7 @@ class MutatorQueryFunctionTest {
       |SET value = ?
       |WHERE id IN ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val update = file.namedMutators.first()
@@ -371,7 +382,8 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -389,7 +401,7 @@ class MutatorQueryFunctionTest {
       |  FROM some_table
       |);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val update = file.namedMutators.first()
@@ -412,7 +424,8 @@ class MutatorQueryFunctionTest {
       |    emit("some_table")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -436,7 +449,7 @@ class MutatorQueryFunctionTest {
       |    c = ?,
       |    d = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -465,7 +478,8 @@ class MutatorQueryFunctionTest {
       |    emit("paymentHistoryConfig")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -486,7 +500,7 @@ class MutatorQueryFunctionTest {
       |UPDATE paymentHistoryConfig
       |SET (a, b, c, d) = (?, ?, ?, ?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -512,7 +526,8 @@ class MutatorQueryFunctionTest {
       |    emit("paymentHistoryConfig")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -528,7 +543,7 @@ class MutatorQueryFunctionTest {
       |INSERT INTO nullableTypes
       |VALUES ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val insert = file.namedMutators.first()
@@ -548,7 +563,8 @@ class MutatorQueryFunctionTest {
       |    emit("nullableTypes")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -566,7 +582,7 @@ class MutatorQueryFunctionTest {
       |INTO category (rowid, id, name, description)
       |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?1), NULL), ?1, ?2, ?3);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val insert = file.namedMutators.first()
@@ -593,7 +609,8 @@ class MutatorQueryFunctionTest {
       |    emit("category")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -609,8 +626,10 @@ class MutatorQueryFunctionTest {
       |
       |upsert:
       |INSERT INTO example(id, data) VALUES(:id, :data) ON CONFLICT(id) DO UPDATE SET data = :data;
-    """.trimMargin(),
-      tempFolder, fileName = "Data.sq", dialect = SqliteDialect()
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
+      dialect = SqliteDialect(),
     )
 
     val mutator = file.namedMutators.first()
@@ -629,7 +648,8 @@ class MutatorQueryFunctionTest {
     |    emit("example")
     |  }
     |}
-    |""".trimMargin()
+    |
+      """.trimMargin(),
     )
   }
 
@@ -644,8 +664,9 @@ class MutatorQueryFunctionTest {
       |insertAnnotation:
       |INSERT INTO annotation
       |VALUES ?;
-    """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     val mutator = file.namedMutators.first()
@@ -665,7 +686,8 @@ class MutatorQueryFunctionTest {
       |    emit("annotation")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -685,12 +707,13 @@ class MutatorQueryFunctionTest {
       |  WHERE id = :id;
       |  INSERT OR IGNORE INTO myTable VALUES ?;
       |}
-    """.trimMargin(),
-      tempFolder, fileName = "Data.sq"
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
     )
 
     assertThat(result.errors).containsExactly(
-      "Data.sq: (12, 32): Table parameters are not usable in a grouped statement."
+      "Data.sq: (12, 32): Table parameters are not usable in a grouped statement.",
     )
   }
 
@@ -707,7 +730,7 @@ class MutatorQueryFunctionTest {
       |update2:
       |UPDATE BasketRowEntity SET subtotal = IIF(TRUE, :subtotal, :subtotal);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     file.namedMutators.forEach {

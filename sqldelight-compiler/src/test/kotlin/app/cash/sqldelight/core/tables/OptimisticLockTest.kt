@@ -25,12 +25,13 @@ class OptimisticLockTest {
       |UPDATE test
       |SET text = :text
       |WHERE id = :id;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).containsExactly(
-      "Test.sq: (8, 0): This statement is missing the optimistic lock in its SET clause."
+      "Test.sq: (8, 0): This statement is missing the optimistic lock in its SET clause.",
     )
   }
 
@@ -40,8 +41,9 @@ class OptimisticLockTest {
       |CREATE TABLE test (
       |  id INTEGER AS LOCK NOT NULL
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -62,7 +64,8 @@ class OptimisticLockTest {
       |    public val id: Long,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -84,8 +87,10 @@ class OptimisticLockTest {
       |  id = :id AND
       |  version = :version
       |;
-      |""".trimMargin(),
-      tempFolder, dialect = PostgreSqlDialect()
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
     )
 
     val mutator = file.namedMutators.first()
@@ -117,7 +122,8 @@ class OptimisticLockTest {
       |    emit("test")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

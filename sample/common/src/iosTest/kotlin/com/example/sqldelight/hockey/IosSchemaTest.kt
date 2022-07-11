@@ -11,7 +11,7 @@ class IosSchemaTest : BaseTest() {
     assertTrue(
       teams.any {
         it.name == "Anaheim Ducks"
-      }
+      },
     )
   }
 
@@ -21,7 +21,7 @@ class IosSchemaTest : BaseTest() {
     assertTrue(
       players.any {
         it.last_name == "Karlsson"
-      }
+      },
     )
   }
 }

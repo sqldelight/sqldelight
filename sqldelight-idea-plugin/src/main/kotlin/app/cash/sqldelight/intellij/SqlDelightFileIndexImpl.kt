@@ -23,10 +23,10 @@ internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {
   override fun packageName(file: SqlDelightFile) = ""
   override fun sourceFolders(
     file: VirtualFile,
-    includeDependencies: Boolean
+    includeDependencies: Boolean,
   ) = listOf(file.parent)
   override fun sourceFolders(
     file: SqlDelightFile,
-    includeDependencies: Boolean
+    includeDependencies: Boolean,
   ) = listOfNotNull(file.parent)
 }

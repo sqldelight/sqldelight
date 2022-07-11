@@ -39,7 +39,7 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
     override fun addCompletions(
       parameters: CompletionParameters,
       context: ProcessingContext,
-      result: CompletionResultSet
+      result: CompletionResultSet,
     ) {
       val originalFile = parameters.originalFile
       val project = originalFile.project
@@ -86,7 +86,7 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
       private val ignoredKeywords = setOf(
         ";", "=", "(", ")", ".", ",", "+", "-", "~", ">>", "<<", "<", ">", "<=", ">=", "==", "!=",
         "<>", "*", "/", "%", "&", "|", "||", "TRUE", "FALSE", "E", "ROWID", "id", "digit", "javadoc",
-        "string", "0x"
+        "string", "0x",
       )
 
       override fun convertItem(o: Any?): String? {

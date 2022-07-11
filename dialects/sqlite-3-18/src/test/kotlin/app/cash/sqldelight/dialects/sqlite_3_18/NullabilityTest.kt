@@ -41,7 +41,7 @@ class NullabilityTest {
       |      FROM owner
       |      LEFT OUTER JOIN car ON owner.carId = car.id)
       |WHERE carBrand = ?;
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val select = file.sqlStmtList!!.stmtList.mapNotNull { it.compoundSelectStmt }.single()
@@ -83,7 +83,7 @@ class NullabilityTest {
       |  GROUP BY 1
       |  ORDER BY target.name COLLATE NOCASE ASC
       |;
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val select = file.sqlStmtList!!.stmtList.mapNotNull { it.compoundSelectStmt }.single()
@@ -106,7 +106,7 @@ class NullabilityTest {
       |SELECT name, name AS poop, thing AS poop2
       |FROM target
       |WHERE name IS NOT NULL AND thing IS NOT NULL;
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val select = file.sqlStmtList!!.stmtList.mapNotNull { it.compoundSelectStmt }.single()

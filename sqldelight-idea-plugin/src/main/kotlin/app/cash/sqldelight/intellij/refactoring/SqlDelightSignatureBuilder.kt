@@ -13,7 +13,7 @@ internal class SqlDelightSignatureBuilder {
       name = tableName,
       type = null,
       parameters = columns,
-      additionalData = null // TODO: support table constraints
+      additionalData = null, // TODO: support table constraints
     )
   }
 }

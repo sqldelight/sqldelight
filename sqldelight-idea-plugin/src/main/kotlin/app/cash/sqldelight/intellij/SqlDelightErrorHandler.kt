@@ -54,7 +54,7 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
     events: Array<out IdeaLoggingEvent>,
     additionalInfo: String?,
     parentComponent: Component,
-    consumer: Consumer<in SubmittedReportInfo>
+    consumer: Consumer<in SubmittedReportInfo>,
   ): Boolean {
     for (event in events) {
       if (BUGSNAG_KEY.isNotBlank()) {

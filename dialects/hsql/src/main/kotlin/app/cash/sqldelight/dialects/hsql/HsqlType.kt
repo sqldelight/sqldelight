@@ -37,7 +37,7 @@ internal enum class HsqlType(override val javaType: TypeName) : DialectType {
       .add(
         when (this) {
           TINY_INT, SMALL_INT, INTEGER, BIG_INT, BOOL -> "bindLong"
-        }
+        },
       )
       .add("($columnIndex, %L)\n", value)
       .build()
@@ -47,7 +47,7 @@ internal enum class HsqlType(override val javaType: TypeName) : DialectType {
     return CodeBlock.of(
       when (this) {
         TINY_INT, SMALL_INT, INTEGER, BIG_INT, BOOL -> "$cursorName.getLong($columnIndex)"
-      }
+      },
     )
   }
 }

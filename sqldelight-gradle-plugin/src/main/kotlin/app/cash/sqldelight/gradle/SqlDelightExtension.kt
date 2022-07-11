@@ -25,7 +25,7 @@ open class SqlDelightExtension {
         |    sourceSet = files("src/main/sqldelight")
         |  }
         |}
-      """.trimMargin()
+        """.trimMargin(),
       )
 
     val database = SqlDelightDatabase(project, name = name)

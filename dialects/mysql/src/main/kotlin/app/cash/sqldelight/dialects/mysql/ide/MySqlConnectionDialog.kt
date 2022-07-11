@@ -31,7 +31,7 @@ internal class MySqlConnectionDialog(
       row("Connection Name") {
         textField(
           getter = { connectionKey },
-          setter = { connectionName = it }
+          setter = { connectionName = it },
         ).withValidationOnApply(validateNonEmpty(connectionNameNonEmpty))
           .growPolicy(MEDIUM_TEXT)
           .applyToComponent {
@@ -41,35 +41,35 @@ internal class MySqlConnectionDialog(
       row("Host") {
         textField(
           getter = { host },
-          setter = { host = it }
+          setter = { host = it },
         ).withValidationOnApply(validateNonEmpty(hostNonEmpty))
           .growPolicy(MEDIUM_TEXT)
       }
       row("Port") {
         textField(
           getter = { port },
-          setter = { port = it }
+          setter = { port = it },
         ).withValidationOnApply(validateNonEmpty(portNonEmpty))
           .growPolicy(MEDIUM_TEXT)
       }
       row("Database Name") {
         textField(
           getter = { databaseName },
-          setter = { databaseName = it }
+          setter = { databaseName = it },
         )
           .growPolicy(MEDIUM_TEXT)
       }
       row("Username") {
         textField(
           getter = { username },
-          setter = { username = it }
+          setter = { username = it },
         )
           .growPolicy(MEDIUM_TEXT)
       }
       row("Password") {
         textField(
           getter = { password },
-          setter = { password = it }
+          setter = { password = it },
         )
           .growPolicy(MEDIUM_TEXT)
       }

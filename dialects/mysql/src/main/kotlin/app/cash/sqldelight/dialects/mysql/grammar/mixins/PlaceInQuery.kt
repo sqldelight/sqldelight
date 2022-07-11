@@ -9,7 +9,7 @@ import com.intellij.psi.util.PsiTreeUtil
 internal fun MySqlPlacementClause?.placeInQuery(
   columns: List<QueryColumn>,
   column: QueryColumn,
-  replace: QueryColumn? = null
+  replace: QueryColumn? = null,
 ): List<QueryColumn> {
   if (this == null) {
     return if (replace == null) columns + column
@@ -24,7 +24,7 @@ internal fun MySqlPlacementClause?.placeInQuery(
       val index = indexOfFirst { (it.element as SqlColumnName).textMatches(columnName!!) }
       if (index == -1) throw AnnotationException(
         msg = "Unable to replace $replace with $column after $columnName in $columns",
-        element = this@placeInQuery
+        element = this@placeInQuery,
       )
       add(index + 1, column)
     }

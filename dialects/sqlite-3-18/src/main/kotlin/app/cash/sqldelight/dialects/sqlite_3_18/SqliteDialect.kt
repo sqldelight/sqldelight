@@ -54,7 +54,7 @@ open class SqliteDialect : SqlDelightDialect {
               holderClass = SqliteTypes::class.java.name
             },
             PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!,
-            this
+            this,
           )
           Timber.i("Registered Stub extension point")
         }

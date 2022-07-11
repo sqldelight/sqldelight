@@ -13,7 +13,7 @@ import java.io.File
 @RunWith(TestParameterInjector::class)
 class MigrationSquashTest {
   @Test fun `squash migrations`(
-    @TestParameter("mysql", "postgres", "sqlite") dialect: String
+    @TestParameter("mysql", "postgres", "sqlite") dialect: String,
   ) {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-squash"))
@@ -28,7 +28,7 @@ class MigrationSquashTest {
       assertWithMessage("Expected ${expected.name} to be generated").that(actual.exists()).isTrue()
       try {
         assertWithMessage(
-          "The squashed migration ${expected.name} looks different when generated fresh:"
+          "The squashed migration ${expected.name} looks different when generated fresh:",
         ).that(actual.readText()).isEqualTo(expected.readText())
       } finally {
         actual.delete()

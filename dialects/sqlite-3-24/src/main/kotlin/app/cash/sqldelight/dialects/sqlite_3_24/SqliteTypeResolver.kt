@@ -11,7 +11,7 @@ import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTypeResolver as Sqlite318T
 open class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite318TypeResolver(parentResolver) {
   override fun argumentType(
     parent: PsiElement,
-    argument: SqlExpr
+    argument: SqlExpr,
   ): IntermediateType {
     when (parent) {
       is SqlSetterExpression -> when (parent.parent!!) {

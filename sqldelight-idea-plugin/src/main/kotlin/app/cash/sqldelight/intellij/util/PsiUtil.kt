@@ -24,7 +24,7 @@ internal inline fun <reified T : PsiElement> PsiElement.prevSiblingOfType(): T? 
   PsiTreeUtil.getPrevSiblingOfType(this, T::class.java)
 
 internal inline fun <reified T : PsiElement> PsiFile.findElementOfTypeAtOffset(
-  offset: Int
+  offset: Int,
 ): T? {
   return PsiTreeUtil.findElementOfClassAtOffset(this, offset, T::class.java, false)
 }

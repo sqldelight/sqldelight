@@ -75,7 +75,7 @@ abstract class QueryGenerator(
 
   private fun executeBlock(
     statement: PsiElement,
-    id: Int
+    id: Int,
   ): CodeBlock {
     val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
 
@@ -144,7 +144,7 @@ abstract class QueryGenerator(
           result.addStatement(
             """
             |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
-          """.trimMargin()
+            """.trimMargin(),
           )
         }
 
@@ -162,8 +162,9 @@ abstract class QueryGenerator(
           """
           |${type.name}.forEachIndexed { index, $elementName ->
           |  %L}
-          |""".trimMargin(),
-          type.copy(name = elementName).preparedStatementBinder(indexCalculator)
+          |
+          """.trimMargin(),
+          type.copy(name = elementName).preparedStatementBinder(indexCalculator),
         )
 
         precedingArrays.add(type.name)
@@ -223,7 +224,7 @@ abstract class QueryGenerator(
     }
     val arguments = mutableListOf<Any>(
       statement.rawSqlText(replacements),
-      argumentCounts.ifEmpty { listOf(0) }.joinToString(" + ")
+      argumentCounts.ifEmpty { listOf(0) }.joinToString(" + "),
     )
 
     var binder: String
@@ -269,17 +270,17 @@ abstract class QueryGenerator(
       }
       result.addStatement(
         "$execute($statementId, %P, $MAPPER_NAME, %L)$binder",
-        *arguments.toTypedArray()
+        *arguments.toTypedArray(),
       )
     } else if (optimisticLock != null) {
       result.addStatement(
         "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
-        *arguments.toTypedArray()
+        *arguments.toTypedArray(),
       )
     } else {
       result.addStatement(
         "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
-        *arguments.toTypedArray()
+        *arguments.toTypedArray(),
       )
     }
 
@@ -290,7 +291,7 @@ abstract class QueryGenerator(
         """.trimIndent(),
         if (generateAsync) ".await()" else ".value",
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
-        "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match"
+        "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match",
       )
     }
 

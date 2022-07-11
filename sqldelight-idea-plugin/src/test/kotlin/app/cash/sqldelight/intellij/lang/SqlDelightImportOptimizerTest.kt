@@ -20,7 +20,7 @@ class SqlDelightImportOptimizerTest : SqlDelightFixtureTestCase() {
       |  last_name TEXT AS @Nullable String NOT NULL,
       |  list TEXT AS List<Int>
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     project.executeWriteCommand("") {
@@ -38,7 +38,7 @@ class SqlDelightImportOptimizerTest : SqlDelightFixtureTestCase() {
       |  last_name TEXT AS @Nullable String NOT NULL,
       |  list TEXT AS List<Int>
       |);
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

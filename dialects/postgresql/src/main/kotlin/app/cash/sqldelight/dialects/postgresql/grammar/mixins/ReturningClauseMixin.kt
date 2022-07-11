@@ -23,8 +23,8 @@ internal abstract class ReturningClauseMixin(node: ASTNode) :
       QueryResult(
         null,
         PsiTreeUtil.findChildrenOfType(this, SqlResultColumn::class.java)
-          .flatMap { it.queryExposed().flatMap(QueryResult::columns) }
-      )
+          .flatMap { it.queryExposed().flatMap(QueryResult::columns) },
+      ),
     )
   }
 

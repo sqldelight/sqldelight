@@ -22,11 +22,13 @@ class IntegrationTests {
     var timesNotified = 0
     val selectData = database.otherQueries.selectData()
 
-    selectData.addListener(object : Query.Listener {
-      override fun queryResultsChanged() {
-        timesNotified++
-      }
-    })
+    selectData.addListener(
+      object : Query.Listener {
+        override fun queryResultsChanged() {
+          timesNotified++
+        }
+      },
+    )
 
     assertThat(selectData.executeAsList()).containsExactly("first_value")
 

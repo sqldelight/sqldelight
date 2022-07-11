@@ -33,8 +33,9 @@ class DuplicateSqlIdentifiers {
       |
       |some_select:
       |SELECT 1;
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).contains("Test.sq: (1, 0): Duplicate SQL identifier")

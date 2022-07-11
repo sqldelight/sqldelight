@@ -11,7 +11,7 @@ sealed interface QueryResult<T> {
           generateAsync = true
         }
       }
-    """.trimIndent()
+    """.trimIndent(),
   )
 
   suspend fun await(): T

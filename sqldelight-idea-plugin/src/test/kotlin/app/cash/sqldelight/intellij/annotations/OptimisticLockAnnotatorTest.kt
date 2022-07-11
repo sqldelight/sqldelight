@@ -23,7 +23,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id AND
         |  version = :version
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -46,7 +46,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |WHERE
         |  id = :id</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -70,7 +70,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id AND
         |  version = :version</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -94,7 +94,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |WHERE
         |  id = :id</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -119,7 +119,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id AND
         |  version = :version</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -144,7 +144,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id AND
         |  version = :version</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -169,7 +169,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id AND
         |  version <> :version</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -195,7 +195,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  version = :version
         |LIMIT 10
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -219,7 +219,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id
         |LIMIT 10</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -244,7 +244,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  version = :version
         |LIMIT 10</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -269,7 +269,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  id = :id
         |LIMIT 10</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -295,7 +295,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  version = :version
         |LIMIT 10</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -321,7 +321,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  version = :version
         |LIMIT 10</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()
@@ -347,7 +347,7 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
         |  version <> :version
         |LIMIT 10</error>
         |;
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.checkHighlighting()

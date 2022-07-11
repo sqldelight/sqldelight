@@ -34,7 +34,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     file: PsiFile,
     editor: Editor,
     startOffsets: IntArray,
-    endOffsets: IntArray
+    endOffsets: IntArray,
   ): List<ReferenceTransferableData> {
     if (file !is SqlDelightFile) {
       return emptyList()
@@ -59,7 +59,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
 
   private fun referenceData(
     element: PsiElement,
-    refOffset: Int
+    refOffset: Int,
   ): ReferenceData? {
     if (element !is JavaTypeMixin) {
       return null
@@ -72,7 +72,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
       range.startOffset - refOffset,
       range.endOffset - refOffset,
       qualifiedName,
-      null
+      null,
     )
   }
 
@@ -93,7 +93,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     bounds: RangeMarker,
     caretOffset: Int,
     indented: Ref<in Boolean>,
-    values: MutableList<out ReferenceTransferableData>
+    values: MutableList<out ReferenceTransferableData>,
   ) {
     if (DumbService.getInstance(project).isDumb) {
       return

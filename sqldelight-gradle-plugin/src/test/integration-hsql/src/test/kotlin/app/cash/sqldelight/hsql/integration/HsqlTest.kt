@@ -35,8 +35,8 @@ class HsqlTest {
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = true
-        )
+          is_good = true,
+        ),
       )
   }
 }

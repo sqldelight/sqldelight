@@ -5,7 +5,7 @@ import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 
 open class NamedExecute(
   identifier: StmtIdentifierMixin,
-  statement: SqlAnnotatedElement
+  statement: SqlAnnotatedElement,
 ) : BindableQuery(identifier, statement) {
   val name = identifier.name!!
 

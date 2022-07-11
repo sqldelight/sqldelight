@@ -29,7 +29,7 @@ private fun defaultSchema(): SqlSchema {
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ) = QueryResult.Unit
   }
 }

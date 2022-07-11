@@ -35,7 +35,7 @@ class QueryInterfaceGenerator(val query: NamedQuery) {
         PropertySpec.builder(it.name, typeWithoutAnnotations)
           .initializer(it.name)
           .addAnnotations(javaType.annotations)
-          .build()
+          .build(),
       )
       constructor.addParameter(it.name, typeWithoutAnnotations)
     }

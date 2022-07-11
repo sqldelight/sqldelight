@@ -4,7 +4,7 @@ import com.intellij.openapi.diagnostic.Logger
 import timber.log.Timber
 
 internal class LoggerTree(
-  private val logger: Logger
+  private val logger: Logger,
 ) : Timber.Tree() {
   override fun v(message: String?, vararg args: Any?) {
     logger.info(String.format(message!!, args))

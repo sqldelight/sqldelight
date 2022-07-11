@@ -82,7 +82,7 @@ interface Transacter : TransacterBase {
    */
   fun <R> transactionWithResult(
     noEnclosing: Boolean = false,
-    bodyWithReturn: TransactionWithReturn<R>.() -> R
+    bodyWithReturn: TransactionWithReturn<R>.() -> R,
   ): R
 
   /**
@@ -93,7 +93,7 @@ interface Transacter : TransacterBase {
    */
   fun transaction(
     noEnclosing: Boolean = false,
-    body: TransactionWithoutReturn.() -> Unit
+    body: TransactionWithoutReturn.() -> Unit,
   )
 
   /**
@@ -172,7 +172,7 @@ interface SuspendingTransacter : TransacterBase {
    */
   suspend fun <R> transactionWithResult(
     noEnclosing: Boolean = false,
-    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R
+    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,
   ): R
 
   /**
@@ -183,14 +183,14 @@ interface SuspendingTransacter : TransacterBase {
    */
   suspend fun transaction(
     noEnclosing: Boolean = false,
-    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
+    body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   )
 }
 
 private class RollbackException(val value: Any? = null) : Throwable()
 
 private class TransactionWrapper<R>(
-  val transaction: Transaction
+  val transaction: Transaction,
 ) : TransactionWithoutReturn, TransactionWithReturn<R> {
   override fun rollback(): Nothing {
     transaction.checkThreadConfinement()
@@ -225,7 +225,7 @@ private class TransactionWrapper<R>(
 }
 
 private class SuspendingTransactionWrapper<R>(
-  val transaction: Transaction
+  val transaction: Transaction,
 ) : SuspendingTransactionWithoutReturn, SuspendingTransactionWithReturn<R> {
   override fun rollback(): Nothing {
     transaction.checkThreadConfinement()
@@ -344,14 +344,14 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
 abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), Transacter {
   override fun transaction(
     noEnclosing: Boolean,
-    body: TransactionWithoutReturn.() -> Unit
+    body: TransactionWithoutReturn.() -> Unit,
   ) {
     transactionWithWrapper<Unit?>(noEnclosing, body)
   }
 
   override fun <R> transactionWithResult(
     noEnclosing: Boolean,
-    bodyWithReturn: TransactionWithReturn<R>.() -> R
+    bodyWithReturn: TransactionWithReturn<R>.() -> R,
   ): R {
     return transactionWithWrapper(noEnclosing, bodyWithReturn)
   }
@@ -381,14 +381,14 @@ abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), T
 abstract class SuspendingTransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), SuspendingTransacter {
   override suspend fun <R> transactionWithResult(
     noEnclosing: Boolean,
-    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R
+    bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,
   ): R {
     return transactionWithWrapper(noEnclosing, bodyWithReturn)
   }
 
   override suspend fun transaction(
     noEnclosing: Boolean,
-    body: suspend SuspendingTransactionWithoutReturn.() -> Unit
+    body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   ) {
     return transactionWithWrapper(noEnclosing, body)
   }

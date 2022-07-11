@@ -86,7 +86,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
                 }
               }
             }
-          }
+          },
         )
     }
   }
@@ -148,7 +148,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
               contentFactory = SqlDelightToolWindowFactory(connectionManager),
               canCloseContent = true,
               icon = dialect.icon,
-            )
+            ),
           ).apply {
             show()
             hide()

@@ -25,9 +25,9 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode?) : SqlTableOrSubquer
           table = jsonFunctionName!!,
           columns = emptyList(),
           synthesizedColumns = listOf(
-            SynthesizedColumn(jsonFunctionName!!, acceptableValues = listOf("key", "value", "type", "atom", "id", "parent", "fullkey", "path", "json", "root"))
-          )
-        )
+            SynthesizedColumn(jsonFunctionName!!, acceptableValues = listOf("key", "value", "type", "atom", "id", "parent", "fullkey", "path", "json", "root")),
+          ),
+        ),
       )
     }
     super.queryExposed()

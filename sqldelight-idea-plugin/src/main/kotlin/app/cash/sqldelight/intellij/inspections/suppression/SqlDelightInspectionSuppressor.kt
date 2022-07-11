@@ -44,9 +44,9 @@ internal class SqlDelightInspectionSuppressor : InspectionSuppressor {
       classes = arrayOf(
         SqlStmt::class,
         SqlDelightImportStmt::class,
-        SqlDelightStmtIdentifier::class
+        SqlDelightStmtIdentifier::class,
       ),
-      withSelf = true
+      withSelf = true,
     ) ?: return false
 
     val comment = stmt.comment ?: run {
@@ -60,7 +60,7 @@ internal class SqlDelightInspectionSuppressor : InspectionSuppressor {
     val matcher = commentPattern.matcher(comment.text)
     return matcher.matches() && SuppressionUtil.isInspectionToolIdMentioned(
       matcher.group(1),
-      toolId
+      toolId,
     )
   }
 

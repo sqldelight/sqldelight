@@ -18,7 +18,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE foreignTable (
       |  value INTEGER NOT NULL PRIMARY KEY
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val foreignTable = file.findChildrenOfType<SqlTableName>().single()
@@ -30,7 +30,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |  value INTEGER NOT NULL PRIMARY KEY,
       |  foreign_value INTEGER NOT NULL REFERENCES foreignTable(value)
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val element = file.findChildrenOfType<SqlForeignTable>().single()
 
@@ -44,7 +44,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE foreignTable (
       |  value INTEGER NOT NULL PRIMARY KEY
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val foreignColumn = file.findChildrenOfType<SqlColumnName>().single()
@@ -55,7 +55,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE localTable (
       |  foreign_value INTEGER NOT NULL REFERENCES foreignTable(value)
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val element = file.findChildrenOfType<SqlColumnName>().single { it.name == "value" }
 
@@ -63,7 +63,6 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
   }
 
   fun testJoinClauseResolves() {
-
     myFixture.configureByText(
       "ForeignTable.sq",
       """
@@ -78,7 +77,7 @@ class GoToDeclarationTest : SqlDelightFixtureTestCase() {
       |SELECT *
       |FROM table
       |JOIN other ON other.other_value = value
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val table = file.findChildrenOfType<SqlCreateTableStmt>()

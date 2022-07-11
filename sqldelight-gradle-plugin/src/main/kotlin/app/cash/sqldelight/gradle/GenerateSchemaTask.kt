@@ -30,8 +30,10 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
-  @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input val pluginVersion = VERSION
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
 
   @get:OutputDirectory
   var outputDirectory: File? = null
@@ -39,6 +41,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
@@ -101,7 +104,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
           if (file is SqlDelightQueriesFile) sourceFiles.add(file)
         }
         sourceFiles.forInitializationStatements(
-          environment.dialect.allowsReferenceCycles
+          environment.dialect.allowsReferenceCycles,
         ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }

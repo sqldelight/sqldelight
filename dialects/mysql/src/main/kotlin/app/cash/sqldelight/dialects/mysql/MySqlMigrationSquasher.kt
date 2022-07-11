@@ -15,11 +15,11 @@ import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 
 internal class MySqlMigrationSquasher(
-  private val parentSquasher: MigrationSquasher
+  private val parentSquasher: MigrationSquasher,
 ) : MigrationSquasher by parentSquasher {
   override fun squish(
     alterTableRule: SqlAlterTableRules,
-    into: SqlFileBase
+    into: SqlFileBase,
   ): String {
     if (alterTableRule !is MySqlAlterTableRules) return parentSquasher.squish(alterTableRule, into)
     return when {
@@ -76,7 +76,7 @@ internal class MySqlMigrationSquasher(
     createTableStmt: SqlCreateTableStmt,
     placementClause: MySqlPlacementClause?,
     columnDef: SqlColumnDef?,
-    replace: SqlColumnName? = null
+    replace: SqlColumnName? = null,
   ): String {
     val columnDefs = createTableStmt.columnDefList.toMutableList()
 
@@ -93,14 +93,14 @@ internal class MySqlMigrationSquasher(
         val columnName = PsiTreeUtil.getChildOfType(placementClause, SqlColumnName::class.java)!!
         columnDefs.add(
           columnDefs.indexOfFirst { it.columnName.textMatches(columnName.text) } + 1,
-          columnDef
+          columnDef,
         )
       }
     }
 
     return this.replaceRange(
       createTableStmt.columnDefList.first().startOffset until createTableStmt.columnDefList.last().endOffset,
-      columnDefs.joinToString(separator = ",\n  ") { it.text }
+      columnDefs.joinToString(separator = ",\n  ") { it.text },
     )
   }
 }

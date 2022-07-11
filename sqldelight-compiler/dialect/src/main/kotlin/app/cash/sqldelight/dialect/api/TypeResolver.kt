@@ -43,7 +43,7 @@ interface TypeResolver {
  */
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
-  vararg typeOrder: DialectType
+  vararg typeOrder: DialectType,
 ) = encapsulatingType(exprList = exprList, nullableIfAny = false, typeOrder = typeOrder)
 
 /**
@@ -52,7 +52,7 @@ fun TypeResolver.encapsulatingType(
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
   nullableIfAny: Boolean,
-  vararg typeOrder: DialectType
+  vararg typeOrder: DialectType,
 ): IntermediateType {
   val types = exprList.map { resolvedType(it) }
   val sqlTypes = types.map { it.dialectType }

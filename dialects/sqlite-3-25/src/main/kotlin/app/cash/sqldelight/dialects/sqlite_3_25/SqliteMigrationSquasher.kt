@@ -12,11 +12,11 @@ import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 
 internal class SqliteMigrationSquasher(
-  private val parentSquasher: MigrationSquasher
+  private val parentSquasher: MigrationSquasher,
 ) : MigrationSquasher by parentSquasher {
   override fun squish(
     alterTableRules: SqlAlterTableRules,
-    into: SqlFileBase
+    into: SqlFileBase,
   ): String {
     if (alterTableRules !is SqliteAlterTableRules) return parentSquasher.squish(alterTableRules, into)
     return when {

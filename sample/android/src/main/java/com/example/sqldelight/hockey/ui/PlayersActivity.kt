@@ -23,7 +23,7 @@ class PlayersActivity : Activity() {
   }
 
   private inner class PlayersAdapter(
-    private val data: List<ForTeam>
+    private val data: List<ForTeam>,
   ) : RecyclerView.Adapter<ViewHolder>() {
     override fun getItemCount() = data.size
 

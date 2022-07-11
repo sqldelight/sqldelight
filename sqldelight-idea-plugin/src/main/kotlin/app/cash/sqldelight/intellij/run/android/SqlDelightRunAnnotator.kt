@@ -26,7 +26,7 @@ import javax.swing.Icon
 class SqlDelightRunAnnotator : Annotator {
   override fun annotate(
     element: PsiElement,
-    holder: AnnotationHolder
+    holder: AnnotationHolder,
   ) {
     if (element.parent !is SqlStmtList || element !is SqlStmt) return
 
@@ -42,7 +42,7 @@ class SqlDelightRunAnnotator : Annotator {
    * Shows an icon in the gutter when a SQLite statement is recognized. eg. Room @Query annotations.
    */
   private data class RunSqliteStatementGutterIconRenderer(
-    private val element: SmartPsiElementPointer<SqlStmt>
+    private val element: SmartPsiElementPointer<SqlStmt>,
   ) : GutterIconRenderer() {
     private val sqliteExplorerProjectService =
       DatabaseInspectorProjectService.getInstance(element.project)
@@ -61,7 +61,7 @@ class SqlDelightRunAnnotator : Annotator {
   }
 
   private class SqlDelightRunStatementAction(
-    private val originalElement: SmartPsiElementPointer<SqlStmt>
+    private val originalElement: SmartPsiElementPointer<SqlStmt>,
   ) : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
       val element = originalElement.element ?: return
@@ -77,7 +77,7 @@ class SqlDelightRunAnnotator : Annotator {
       |        db.execSQL("$text");
       |    }
       |}
-    """.trimMargin()
+      """.trimMargin()
 
       val psiFile = PsiFileFactory.getInstance(element.project)
         .createFileFromText("Util.java", JavaLanguage.INSTANCE, s)
@@ -86,7 +86,9 @@ class SqlDelightRunAnnotator : Annotator {
         PsiTreeUtil.findChildOfType(psiFile, PsiLanguageInjectionHost::class.java) ?: return
 
       RunSqliteStatementGutterIconAction(
-        host.project, host, DatabaseInspectorViewsFactoryImpl.getInstance()
+        host.project,
+        host,
+        DatabaseInspectorViewsFactoryImpl.getInstance(),
       ).actionPerformed(e)
     }
   }

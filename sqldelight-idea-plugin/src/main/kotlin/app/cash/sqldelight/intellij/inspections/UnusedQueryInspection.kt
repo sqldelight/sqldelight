@@ -30,11 +30,13 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
   override fun buildVisitor(
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
-    session: LocalInspectionToolSession
+    session: LocalInspectionToolSession,
   ) = ensureReady(session.file) {
     val fileName = "${sqlDelightFile.virtualFile?.queriesName}.kt"
     val generatedFile = FilenameIndex.getFilesByName(
-      sqlDelightFile.project, fileName, GlobalSearchScope.moduleScope(module)
+      sqlDelightFile.project,
+      fileName,
+      GlobalSearchScope.moduleScope(module),
     ).firstOrNull() as KtFile? ?: return PsiElementVisitor.EMPTY_VISITOR
     val allMethods = generatedFile.classes[0].methods
     return object : SqlDelightVisitor() {
@@ -52,7 +54,10 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
           }
         }
         holder.registerProblem(
-          o, "Unused symbol", ProblemHighlightType.LIKE_UNUSED_SYMBOL, SafeDeleteQuickFix(o)
+          o,
+          "Unused symbol",
+          ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+          SafeDeleteQuickFix(o),
         )
       }
     }
@@ -70,7 +75,7 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
       project: Project,
       file: PsiFile,
       startElement: PsiElement,
-      endElement: PsiElement
+      endElement: PsiElement,
     ) {
       WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {
         val element = ref.element ?: return@run

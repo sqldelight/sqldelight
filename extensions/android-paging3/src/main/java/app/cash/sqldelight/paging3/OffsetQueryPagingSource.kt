@@ -31,7 +31,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
   override val jumpingSupported get() = true
 
   override suspend fun load(
-    params: LoadParams<Long>
+    params: LoadParams<Long>,
   ): LoadResult<Long, RowType> = withContext(dispatcher) {
     try {
       val key = params.key ?: 0L
@@ -52,7 +52,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
           prevKey = if (key <= 0L) null else key - params.loadSize,
           nextKey = if (key + params.loadSize >= count) null else key + params.loadSize,
           itemsBefore = maxOf(0L, key).toInt(),
-          itemsAfter = maxOf(0, (count - (key + params.loadSize))).toInt()
+          itemsAfter = maxOf(0, (count - (key + params.loadSize))).toInt(),
         )
       }
     } catch (e: Exception) {

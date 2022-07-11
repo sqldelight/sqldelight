@@ -37,7 +37,7 @@ internal class SelectConnectionTypeDialog(
       row("Connection Name") {
         textField(
           getter = { connectionName },
-          setter = { connectionName = it }
+          setter = { connectionName = it },
         ).withValidationOnApply(validateKey())
           .withValidationOnInput(validateKey())
       }
@@ -53,7 +53,7 @@ internal class SelectConnectionTypeDialog(
               filePath = path
               recentsManager.registerRecentEntry(RECENT_DB_PATH, path)
             }
-          }
+          },
         )
           .withValidationOnInput(validateFilePath())
           .withValidationOnApply(validateFilePath())

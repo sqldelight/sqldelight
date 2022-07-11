@@ -18,7 +18,7 @@ class PragmaWithResults(private val pragmaStmt: SqlPragmaStmt) : QueryWithResult
 internal class SqlDelightPragmaName(node: ASTNode?) : SqlPragmaNameImpl(node), QueryElement {
   override fun queryExposed() = listOf(
     QueryResult(
-      column = this
-    )
+      column = this,
+    ),
   )
 }

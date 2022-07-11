@@ -16,7 +16,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.util.PsiTreeUtil
 
 internal abstract class ReturningClauseMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   SqliteReturningClause,
   FromQuery {
@@ -25,8 +25,8 @@ internal abstract class ReturningClauseMixin(
       QueryElement.QueryResult(
         null,
         PsiTreeUtil.findChildrenOfType(this, SqlResultColumn::class.java)
-          .flatMap { it.queryExposed().flatMap(QueryElement.QueryResult::columns) }
-      )
+          .flatMap { it.queryExposed().flatMap(QueryElement.QueryResult::columns) },
+      ),
     )
   }
 

@@ -46,8 +46,10 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class SqlDelightTask : SqlDelightWorkerTask() {
-  @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input val pluginVersion = VERSION
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
 
   @get:OutputDirectory
   var outputDirectory: File? = null
@@ -55,6 +57,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
@@ -111,11 +114,11 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
             |
             |Compiling with dialect ${environment.dialect::class.qualifiedName}
             |
-          """.trimMargin()
+            """.trimMargin(),
           )
           generationStatus.errors.forEach { logger.log(ERROR, it) }
           throw SqlDelightException(
-            "Generation failed; see the generator error output for details."
+            "Generation failed; see the generator error output for details.",
           )
         }
         is Success -> { }

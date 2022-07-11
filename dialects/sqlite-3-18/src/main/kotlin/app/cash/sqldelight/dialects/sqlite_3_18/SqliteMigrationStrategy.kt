@@ -15,7 +15,7 @@ class SqliteMigrationStrategy : SqlGeneratorStrategy {
   override fun columnRemoved(
     tableName: String,
     columnName: String,
-    columnDefList: List<String>
+    columnDefList: List<String>,
   ): String {
     val columnNames = columnDefList.filter { !it.startsWith(columnName) }
       .joinToString(", ") { columnDef -> columnDef.takeWhile { !Character.isWhitespace(it) } }
@@ -34,7 +34,7 @@ class SqliteMigrationStrategy : SqlGeneratorStrategy {
     tableName: String,
     oldName: String,
     newName: String,
-    columnDefList: List<String>
+    columnDefList: List<String>,
   ): String {
     val newColumnDefList = columnDefList.toMutableList()
     val index = newColumnDefList.indexOfFirst { it.startsWith(oldName) }

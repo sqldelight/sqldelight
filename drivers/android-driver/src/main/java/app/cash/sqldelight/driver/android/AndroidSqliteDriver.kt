@@ -24,7 +24,7 @@ private val DEFAULT_CACHE_SIZE = 20
 class AndroidSqliteDriver private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
   database: SupportSQLiteDatabase? = null,
-  private val cacheSize: Int
+  private val cacheSize: Int,
 ) : SqlDriver {
   init {
     require((openHelper != null) xor (database != null))
@@ -36,7 +36,7 @@ class AndroidSqliteDriver private constructor(
   }
 
   constructor(
-    openHelper: SupportSQLiteOpenHelper
+    openHelper: SupportSQLiteOpenHelper,
   ) : this(openHelper = openHelper, database = null, cacheSize = DEFAULT_CACHE_SIZE)
 
   /**
@@ -51,7 +51,7 @@ class AndroidSqliteDriver private constructor(
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
     callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(schema),
     cacheSize: Int = DEFAULT_CACHE_SIZE,
-    useNoBackupDirectory: Boolean = false
+    useNoBackupDirectory: Boolean = false,
   ) : this(
     database = null,
     openHelper = factory.create(
@@ -59,14 +59,14 @@ class AndroidSqliteDriver private constructor(
         .callback(callback)
         .name(name)
         .noBackupDirectory(useNoBackupDirectory)
-        .build()
+        .build(),
     ),
-    cacheSize = cacheSize
+    cacheSize = cacheSize,
   )
 
   @JvmOverloads constructor(
     database: SupportSQLiteDatabase,
-    cacheSize: Int = DEFAULT_CACHE_SIZE
+    cacheSize: Int = DEFAULT_CACHE_SIZE,
   ) : this(openHelper = null, database = database, cacheSize = cacheSize)
 
   private val statements = object : LruCache<Int, AndroidStatement>(cacheSize) {
@@ -74,7 +74,7 @@ class AndroidSqliteDriver private constructor(
       evicted: Boolean,
       key: Int,
       oldValue: AndroidStatement,
-      newValue: AndroidStatement?
+      newValue: AndroidStatement?,
     ) {
       if (evicted) oldValue.close()
     }
@@ -121,7 +121,7 @@ class AndroidSqliteDriver private constructor(
   override fun currentTransaction() = transactions.get()
 
   inner class Transaction(
-    override val enclosingTransaction: Transacter.Transaction?
+    override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {
@@ -141,7 +141,7 @@ class AndroidSqliteDriver private constructor(
     identifier: Int?,
     createStatement: () -> AndroidStatement,
     binders: (SqlPreparedStatement.() -> Unit)?,
-    result: AndroidStatement.() -> T
+    result: AndroidStatement.() -> T,
   ): QueryResult<T> {
     var statement: AndroidStatement? = null
     if (identifier != null) {
@@ -166,7 +166,7 @@ class AndroidSqliteDriver private constructor(
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, { execute() })
 
   override fun <R> executeQuery(
@@ -174,7 +174,7 @@ class AndroidSqliteDriver private constructor(
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
 
   override fun close() {
@@ -189,7 +189,7 @@ class AndroidSqliteDriver private constructor(
     private val callbacks = callbacks
 
     constructor(
-      schema: SqlSchema
+      schema: SqlSchema,
     ) : this(schema, *emptyArray<AfterVersion>())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
@@ -199,14 +199,15 @@ class AndroidSqliteDriver private constructor(
     override fun onUpgrade(
       db: SupportSQLiteDatabase,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ) {
       if (callbacks.isNotEmpty()) {
         schema.migrateWithCallbacks(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion, *callbacks)
       } else {
         schema.migrate(
           AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
-          oldVersion, newVersion
+          oldVersion,
+          newVersion,
         )
       }
     }
@@ -220,7 +221,7 @@ internal interface AndroidStatement : SqlPreparedStatement {
 }
 
 private class AndroidPreparedStatement(
-  private val statement: SupportSQLiteStatement
+  private val statement: SupportSQLiteStatement,
 ) : AndroidStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) statement.bindNull(index + 1) else statement.bindBlob(index + 1, bytes)
@@ -257,7 +258,7 @@ private class AndroidPreparedStatement(
 private class AndroidQuery(
   private val sql: String,
   private val database: SupportSQLiteDatabase,
-  private val argCount: Int
+  private val argCount: Int,
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds = MutableList<((SupportSQLiteProgram) -> Unit)?>(argCount) { null }
 
@@ -307,7 +308,7 @@ private class AndroidQuery(
 }
 
 private class AndroidCursor(
-  private val cursor: Cursor
+  private val cursor: Cursor,
 ) : SqlCursor {
   override fun next() = cursor.moveToNext()
   override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)

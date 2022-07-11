@@ -30,7 +30,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
   override fun buildVisitor(
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
-    session: LocalInspectionToolSession
+    session: LocalInspectionToolSession,
   ) = ensureReady(session.file) {
     object : SqlVisitor() {
       override fun visitCreateTableStmt(o: SqlCreateTableStmt) = ignoreInvalidElements {
@@ -59,8 +59,10 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
 
         candidates.forEach { columnDef ->
           holder.registerProblem(
-            columnDef.columnName, "Unused symbol", ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-            SafeDeleteQuickFix(o, columnDef)
+            columnDef.columnName,
+            "Unused symbol",
+            ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+            SafeDeleteQuickFix(o, columnDef),
           )
         }
       }
@@ -84,7 +86,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
       project: Project,
       file: PsiFile,
       startElement: PsiElement,
-      endElement: PsiElement
+      endElement: PsiElement,
     ) {
       WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {
         val createTable = createTableRef.element ?: return@run
@@ -109,7 +111,8 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
         """.trimMargin()
         val dummyFile = factory.createFileFromText(
           "_Dummy_.${SqlDelightFileType.EXTENSION}",
-          SqlDelightFileType, createTableStmt
+          SqlDelightFileType,
+          createTableStmt,
         )
 
         val newCreateTable = dummyFile.findChildOfType<SqlCreateTableStmt>() ?: return@run

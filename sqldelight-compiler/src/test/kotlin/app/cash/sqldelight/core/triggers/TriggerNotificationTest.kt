@@ -38,7 +38,7 @@ class TriggerNotificationTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -59,7 +59,8 @@ class TriggerNotificationTest {
       |    emit("data2")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -90,7 +91,7 @@ class TriggerNotificationTest {
       |DELETE FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -109,7 +110,8 @@ class TriggerNotificationTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -141,7 +143,7 @@ class TriggerNotificationTest {
       |SET value = ?
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -162,7 +164,8 @@ class TriggerNotificationTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -194,7 +197,7 @@ class TriggerNotificationTest {
       |SET value = ?
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -216,7 +219,8 @@ class TriggerNotificationTest {
       |    emit("data2")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -248,7 +252,7 @@ class TriggerNotificationTest {
       |SET value = ?
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -270,7 +274,8 @@ class TriggerNotificationTest {
       |    emit("data2")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -302,7 +307,7 @@ class TriggerNotificationTest {
       |SET value = ?
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val mutator = file.namedMutators.first()
@@ -323,7 +328,8 @@ class TriggerNotificationTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -355,7 +361,7 @@ class TriggerNotificationTest {
       |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
       """.trimMargin(),
       tempFolder,
-      dialect = TestDialect.SQLITE_3_24.dialect
+      dialect = TestDialect.SQLITE_3_24.dialect,
     )
 
     val mutator = file.namedMutators.first()
@@ -376,7 +382,8 @@ class TriggerNotificationTest {
       |    emit("data2")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -408,7 +415,7 @@ class TriggerNotificationTest {
       |ON CONFLICT (id) DO UPDATE SET value = excluded.value;
       """.trimMargin(),
       tempFolder,
-      dialect = TestDialect.SQLITE_3_24.dialect
+      dialect = TestDialect.SQLITE_3_24.dialect,
     )
 
     val mutator = file.namedMutators.first()
@@ -429,7 +436,8 @@ class TriggerNotificationTest {
       |    emit("data2")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -465,7 +473,7 @@ class TriggerNotificationTest {
       |DELETE FROM foo;
       """.trimMargin(),
       tempFolder,
-      dialect = TestDialect.SQLITE_3_24.dialect
+      dialect = TestDialect.SQLITE_3_24.dialect,
     )
 
     val mutator = file.namedMutators.first()
@@ -480,7 +488,8 @@ class TriggerNotificationTest {
       |    emit("foo")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

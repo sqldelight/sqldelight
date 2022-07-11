@@ -32,7 +32,7 @@ internal fun SqlCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqlTabl
   .distinctBy { it.name }
 
 internal fun PsiElement.referencedTables(
-  compoundSelectStmt: SqlCompoundSelectStmt? = null
+  compoundSelectStmt: SqlCompoundSelectStmt? = null,
 ): List<TableNameElement> = when (this) {
   is SqlCompoundSelectStmt -> tablesObserved()
   is SqlTableAlias -> source().referencedTables()

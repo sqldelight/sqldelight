@@ -12,7 +12,7 @@ import com.alecstrong.sql.psi.core.psi.alterStmt
 import com.intellij.lang.ASTNode
 
 internal abstract class AlterTableRenameColumnMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   PostgreSqlAlterTableRenameColumn,
   AlterTableApplier {
@@ -32,9 +32,9 @@ internal abstract class AlterTableRenameColumnMixin(
           (it.element as SqlColumnName).textMatches(columnName)
         }
         lazyQuery.query.copy(
-          columns = lazyQuery.query.columns.map { if (it == replace) column else it }
+          columns = lazyQuery.query.columns.map { if (it == replace) column else it },
         )
-      }
+      },
     )
   }
 
@@ -48,7 +48,7 @@ internal abstract class AlterTableRenameColumnMixin(
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnName,
-        s = "No column found to modify with name ${columnName.text}"
+        s = "No column found to modify with name ${columnName.text}",
       )
     }
   }

@@ -49,11 +49,12 @@ internal class AddImportIntention(
     if (classes.size == 1) {
       PsiDocumentManager.getInstance(project).commitAllDocuments()
       WriteCommandAction.runWriteCommandAction(
-        project, QuickFixBundle.message("add.import"),
+        project,
+        QuickFixBundle.message("add.import"),
         null,
         {
           document.addImport(file, "import ${classes.first().qualifiedName};")
-        }
+        },
       )
     } else {
       showImportPopup(project, editor, file, classes)
@@ -64,11 +65,12 @@ internal class AddImportIntention(
     project: Project,
     editor: Editor,
     psiFile: PsiFile,
-    classes: List<ImportableType>
+    classes: List<ImportableType>,
   ) {
     val document = editor.document
     val step = object : BaseListPopupStep<ImportableType>(
-      QuickFixBundle.message("class.to.import.chooser.title"), classes
+      QuickFixBundle.message("class.to.import.chooser.title"),
+      classes,
     ) {
       override fun isAutoSelectionEnabled(): Boolean {
         return false
@@ -90,11 +92,12 @@ internal class AddImportIntention(
           return doFinalStep {
             PsiDocumentManager.getInstance(project).commitAllDocuments()
             WriteCommandAction.runWriteCommandAction(
-              project, QuickFixBundle.message("add.import"),
+              project,
+              QuickFixBundle.message("add.import"),
               null,
               {
                 document.addImport(psiFile, "import ${selectedValue.qualifiedName};")
-              }
+              },
             )
           }
         }
@@ -143,7 +146,7 @@ internal class AddImportIntention(
       hintText,
       element.textOffset,
       element.textRange.endOffset,
-      this
+      this,
     )
     return true
   }

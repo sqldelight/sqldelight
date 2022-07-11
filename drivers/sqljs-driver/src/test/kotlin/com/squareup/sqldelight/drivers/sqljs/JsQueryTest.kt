@@ -20,7 +20,8 @@ class JsQueryTest {
 
   private val mapper = { cursor: SqlCursor ->
     TestData(
-      cursor.getLong(0)!!, cursor.getString(1)!!
+      cursor.getLong(0)!!,
+      cursor.getString(1)!!,
     )
   }
 
@@ -36,7 +37,7 @@ class JsQueryTest {
                 value TEXT NOT NULL
                );
         """.trimIndent(),
-        0
+        0,
       )
       return QueryResult.Unit
     }
@@ -44,7 +45,7 @@ class JsQueryTest {
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ): QueryResult<Unit> {
       // No-op.
       return QueryResult.Unit

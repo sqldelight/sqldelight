@@ -10,14 +10,14 @@ suspend fun <R> SqlDriver.awaitQuery(
   sql: String,
   mapper: (SqlCursor) -> R,
   parameters: Int,
-  binders: (SqlPreparedStatement.() -> Unit)? = null
+  binders: (SqlPreparedStatement.() -> Unit)? = null,
 ): R = executeQuery<R>(identifier, sql, mapper, parameters, binders).await()
 
 suspend fun SqlDriver.await(
   identifier: Int?,
   sql: String,
   parameters: Int,
-  binders: (SqlPreparedStatement.() -> Unit)? = null
+  binders: (SqlPreparedStatement.() -> Unit)? = null,
 ): Long = execute(identifier, sql, parameters, binders).await()
 
 suspend fun SqlSchema.awaitCreate(driver: SqlDriver) = create(driver).await()

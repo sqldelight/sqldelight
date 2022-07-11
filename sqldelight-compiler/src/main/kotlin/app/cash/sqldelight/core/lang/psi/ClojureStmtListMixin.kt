@@ -8,7 +8,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 
 abstract class ClojureStmtListMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   SqlDelightStmtClojureStmtList {
   override fun tablesAvailable(child: PsiElement): Collection<LazyQuery> {

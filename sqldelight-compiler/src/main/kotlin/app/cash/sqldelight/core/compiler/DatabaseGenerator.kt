@@ -104,26 +104,26 @@ internal class DatabaseGenerator(
               .getter(
                 FunSpec.getterBuilder()
                   .addStatement("return %T::class.schema", type)
-                  .build()
+                  .build(),
               )
-              .build()
+              .build(),
           )
           .addFunction(
             invoke
               .addCode(
                 invokeReturn
                   .add(")")
-                  .build()
+                  .build(),
               )
-              .build()
+              .build(),
           )
-          .build()
+          .build(),
       )
       .build()
   }
 
   private fun forAdapters(
-    block: (PropertySpec) -> Unit
+    block: (PropertySpec) -> Unit,
   ) {
     sourceFolders
       .flatMap { it.queryFiles() }
@@ -174,7 +174,7 @@ internal class DatabaseGenerator(
         if (file.requiredAdapters.isNotEmpty()) {
           adapters = file.requiredAdapters.joinToString(
             prefix = ", ",
-            transform = { it.name }
+            transform = { it.name },
           )
         }
         // queries property added to QueryWrapper type:
@@ -183,7 +183,7 @@ internal class DatabaseGenerator(
           PropertySpec.builder(file.queriesName, file.queriesType)
             .addModifiers(OVERRIDE)
             .initializer("%T($DRIVER_NAME$adapters)", file.queriesType)
-            .build()
+            .build(),
         )
       }
 
@@ -225,12 +225,13 @@ internal class DatabaseGenerator(
         }
         migrateFunction.beginControlFlow(
           "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
-          oldVersion, newVersion
+          oldVersion,
+          newVersion,
         )
         migrationFile.sqlStatements().forEach {
           migrateFunction.addStatement(
             if (generateAsync) "$DRIVER_NAME.execute(null, %S, 0).await()" else "$DRIVER_NAME.execute(null, %S, 0)",
-            it.rawSqlText()
+            it.rawSqlText(),
           )
         }
         migrateFunction.endControlFlow()
@@ -253,9 +254,9 @@ internal class DatabaseGenerator(
           .addProperty(
             PropertySpec.builder("version", INT, OVERRIDE)
               .getter(FunSpec.getterBuilder().addStatement("return $maxVersion").build())
-              .build()
+              .build(),
           )
-          .build()
+          .build(),
       )
       .addSuperinterface(ClassName(fileIndex.packageName, fileIndex.className))
       .primaryConstructor(constructor.build())

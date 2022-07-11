@@ -23,7 +23,7 @@ class AsyncMutatorQueryTypeTest {
       |VALUES (?, ?);
       """.trimMargin(),
       tempFolder,
-      generateAsync = true
+      generateAsync = true,
     )
 
     val mutator = file.namedMutators.first()
@@ -43,7 +43,8 @@ class AsyncMutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -64,8 +65,9 @@ class AsyncMutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq",
-      generateAsync = true
+      tempFolder,
+      fileName = "Data.sq",
+      generateAsync = true,
     )
 
     val mutator = file.namedMutators.first()
@@ -85,7 +87,8 @@ class AsyncMutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -97,7 +100,8 @@ class AsyncMutatorQueryTypeTest {
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
-      tempFolder, fileName = "OtherData.sq",
+      tempFolder,
+      fileName = "OtherData.sq",
     )
 
     val file = FixtureCompiler.parseSql(
@@ -111,8 +115,9 @@ class AsyncMutatorQueryTypeTest {
       |INSERT INTO data
       |VALUES (?, ?);
       """.trimMargin(),
-      tempFolder, fileName = "Data.sq",
-      generateAsync = true
+      tempFolder,
+      fileName = "Data.sq",
+      generateAsync = true,
     )
 
     val mutator = file.namedMutators.first()
@@ -132,7 +137,8 @@ class AsyncMutatorQueryTypeTest {
       |    emit("data")
       |  }
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

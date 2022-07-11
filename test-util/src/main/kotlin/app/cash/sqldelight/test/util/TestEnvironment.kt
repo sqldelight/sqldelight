@@ -23,7 +23,7 @@ internal class TestEnvironment(
 ) {
   fun build(
     root: String,
-    annotationHolder: SqlAnnotationHolder
+    annotationHolder: SqlAnnotationHolder,
   ): SqlDelightEnvironment {
     val compilationUnit = object : SqlDelightCompilationUnit {
       override val name = "test"

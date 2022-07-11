@@ -31,7 +31,7 @@ import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 sealed class NamedMutator(
   statement: SqlAnnotatedElement,
   identifier: StmtIdentifierMixin,
-  tableName: SqlTableName
+  tableName: SqlTableName,
 ) : NamedExecute(identifier, statement) {
   val containingFile = statement.sqFile() as SqlDelightQueriesFile
 
@@ -41,18 +41,18 @@ sealed class NamedMutator(
 
   class Insert(
     insert: SqlInsertStmt,
-    identifier: StmtIdentifierMixin
+    identifier: StmtIdentifierMixin,
   ) : NamedMutator(insert, identifier, insert.tableName) {
     val hasUpsertClause get() = statement.node.findChildRecursive(SqlTypes.UPDATE) != null
   }
 
   class Delete(
     delete: SqlDeleteStmtLimited,
-    identifier: StmtIdentifierMixin
+    identifier: StmtIdentifierMixin,
   ) : NamedMutator(delete, identifier, delete.qualifiedTableName!!.tableName)
 
   class Update(
     internal val update: SqlUpdateStmtLimited,
-    identifier: StmtIdentifierMixin
+    identifier: StmtIdentifierMixin,
   ) : NamedMutator(update, identifier, update.qualifiedTableName.tableName)
 }

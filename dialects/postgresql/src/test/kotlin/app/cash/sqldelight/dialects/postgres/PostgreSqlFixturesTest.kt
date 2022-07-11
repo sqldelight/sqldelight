@@ -24,9 +24,11 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
   companion object {
     private val fixtures = arrayOf("src/test/fixtures_postgresql")
 
-    @Suppress("unused") // Used by Parameterized JUnit runner reflectively.
+    @Suppress("unused")
+    // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
-    @JvmStatic fun parameters() = fixtures.flatMap { fixtureFolder ->
+    @JvmStatic
+    fun parameters() = fixtures.flatMap { fixtureFolder ->
       File(fixtureFolder).listFiles()!!
         .filter { it.isDirectory }
         .map { arrayOf(it.name, it) }

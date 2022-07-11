@@ -11,7 +11,7 @@ class JvmSchemaTest : BaseTest() {
     assertTrue(
       teams.any {
         it.name == "Anaheim Ducks"
-      }
+      },
     )
   }
 
@@ -21,7 +21,7 @@ class JvmSchemaTest : BaseTest() {
     assertTrue(
       players.any {
         it.last_name == "Karlsson"
-      }
+      },
     )
   }
 }

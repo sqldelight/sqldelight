@@ -27,7 +27,7 @@ fun <T : Any> Query<T>.asObservable(scheduler: Scheduler = Schedulers.io()): Obs
 }
 
 private class QueryOnSubscribe<T : Any>(
-  private val query: Query<T>
+  private val query: Query<T>,
 ) : ObservableOnSubscribe<Query<T>> {
   override fun subscribe(emitter: ObservableEmitter<Query<T>>) {
     val listenerAndDisposable = QueryListenerAndDisposable(emitter, query)
@@ -39,7 +39,7 @@ private class QueryOnSubscribe<T : Any>(
 
 private class QueryListenerAndDisposable<T : Any>(
   private val emitter: ObservableEmitter<Query<T>>,
-  private val query: Query<T>
+  private val query: Query<T>,
 ) : AtomicBoolean(), Query.Listener, Disposable {
   override fun queryResultsChanged() {
     emitter.onNext(query)

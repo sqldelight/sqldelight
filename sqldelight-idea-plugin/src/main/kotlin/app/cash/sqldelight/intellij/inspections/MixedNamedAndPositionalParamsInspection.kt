@@ -40,7 +40,7 @@ internal class MixedNamedAndPositionalParamsInspection : LocalInspectionTool() {
           holder.registerProblem(
             o,
             "Mixed usage of named and positional parameters is not recommended",
-            ProblemHighlightType.WARNING
+            ProblemHighlightType.WARNING,
           )
         }
       }

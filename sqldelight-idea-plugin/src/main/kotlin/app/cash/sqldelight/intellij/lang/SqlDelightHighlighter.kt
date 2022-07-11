@@ -30,34 +30,44 @@ class SqlDelightHighlighter : SyntaxHighlighterBase() {
 
   companion object {
     val SQLITE_KEYWORD = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.KEYWORD", DefaultLanguageHighlighterColors.KEYWORD
+      "SQLITE.KEYWORD",
+      DefaultLanguageHighlighterColors.KEYWORD,
     )
     val SQLITE_NUMBER = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.NUMBER", DefaultLanguageHighlighterColors.NUMBER
+      "SQLITE.NUMBER",
+      DefaultLanguageHighlighterColors.NUMBER,
     )
     val SQLITE_STRING = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.STRING", DefaultLanguageHighlighterColors.STRING
+      "SQLITE.STRING",
+      DefaultLanguageHighlighterColors.STRING,
     )
     val SQLITE_OPERATOR = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN
+      "SQLITE.OPERATOR",
+      DefaultLanguageHighlighterColors.OPERATION_SIGN,
     )
     val SQLITE_PAREN = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.PAREN", DefaultLanguageHighlighterColors.PARENTHESES
+      "SQLITE.PAREN",
+      DefaultLanguageHighlighterColors.PARENTHESES,
     )
     val SQLITE_DOT = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.DOT", DefaultLanguageHighlighterColors.DOT
+      "SQLITE.DOT",
+      DefaultLanguageHighlighterColors.DOT,
     )
     val SQLITE_SEMICOLON = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON
+      "SQLITE.SEMICOLON",
+      DefaultLanguageHighlighterColors.SEMICOLON,
     )
     val SQLITE_COMMA = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.COMMA", DefaultLanguageHighlighterColors.COMMA
+      "SQLITE.COMMA",
+      DefaultLanguageHighlighterColors.COMMA,
     )
     val SQLITE_LINE_COMMENT = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT
+      "SQLITE.LINE_COMMENT",
+      DefaultLanguageHighlighterColors.LINE_COMMENT,
     )
     val SQLITE_DOC = TextAttributesKey.createTextAttributesKey(
-      "SQLITE.DOC", DefaultLanguageHighlighterColors.DOC_COMMENT
+      "SQLITE.DOC",
+      DefaultLanguageHighlighterColors.DOC_COMMENT,
     )
 
     private val TEXT_ATTRIBUTES_MAP = mapOf(
@@ -224,7 +234,7 @@ class SqlDelightHighlighter : SyntaxHighlighterBase() {
       // Comments
 
       SqlTypes.COMMENT.index to SQLITE_LINE_COMMENT,
-      SqlTypes.JAVADOC.index to SQLITE_DOC
+      SqlTypes.JAVADOC.index to SQLITE_DOC,
     )
   }
 }

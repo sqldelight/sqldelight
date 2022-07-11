@@ -15,7 +15,7 @@ data class SqlDelightPropertiesFileImpl(
   override val dialectJar: File,
   override val minimumSupportedVersion: String,
   override val currentVersion: String,
-  override val moduleJars: Collection<File> = emptySet()
+  override val moduleJars: Collection<File> = emptySet(),
 ) : SqlDelightPropertiesFile
 
 data class SqlDelightDatabasePropertiesImpl(
@@ -27,12 +27,12 @@ data class SqlDelightDatabasePropertiesImpl(
   @Input override val treatNullAsUnknownForEquality: Boolean = false,
   @Input override val generateAsync: Boolean = false,
   // Only used by intellij plugin to help with resolution.
-  @Internal override val rootDirectory: File
+  @Internal override val rootDirectory: File,
 ) : SqlDelightDatabaseProperties
 
 data class SqlDelightDatabaseNameImpl(
   @Input override val packageName: String,
-  @Input override val className: String
+  @Input override val className: String,
 ) : SqlDelightDatabaseName
 
 data class SqlDelightCompilationUnitImpl(
@@ -45,5 +45,5 @@ data class SqlDelightCompilationUnitImpl(
 data class SqlDelightSourceFolderImpl(
   // Sources are already cached [SqlDelightTask.getSources]
   @Internal override val folder: File,
-  @Input override val dependency: Boolean = false
+  @Input override val dependency: Boolean = false,
 ) : SqlDelightSourceFolder

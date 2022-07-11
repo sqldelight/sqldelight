@@ -67,7 +67,7 @@ fun <RowType : Any> QueryPagingSource(
   queryProvider,
   countQuery,
   transacter,
-  dispatcher
+  dispatcher,
 )
 
 /**

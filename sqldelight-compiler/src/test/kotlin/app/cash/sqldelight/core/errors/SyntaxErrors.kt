@@ -15,8 +15,9 @@ class SyntaxErrors {
       |CREATE TABLE my_table (
       |    col INTEGER AS long
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).containsExactly("Test.sq: (2, 19): Unknown type long")
@@ -27,8 +28,9 @@ class SyntaxErrors {
       """
       |selectScoob:
       |SELECT scoobyDoo();
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).containsExactly("Test.sq: (2, 7): Unknown function scoobyDoo")
@@ -40,8 +42,9 @@ class SyntaxErrors {
       |CREATE TABLE my_table (
       |    col INTEGER AS team
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).containsExactly("Test.sq: (2, 19): Unknown type team")
@@ -53,13 +56,14 @@ class SyntaxErrors {
       |CREATE TABLE my_table (
       |    col INTEGER as Boolean
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).containsExactly(
       "Test.sq: (2, 8): Reserved keyword in sqlite",
-      "Test.sq: (2, 16): Expected 'AS', got 'as'"
+      "Test.sq: (2, 16): Expected 'AS', got 'as'",
     )
   }
 }

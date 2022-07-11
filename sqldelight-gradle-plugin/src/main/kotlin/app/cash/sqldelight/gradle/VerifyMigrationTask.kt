@@ -33,8 +33,10 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
-  @Suppress("unused") // Required to invalidate the task on version updates.
-  @Input val pluginVersion = VERSION
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
 
   @get:Input abstract val projectName: Property<String>
 
@@ -42,6 +44,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @get:Internal abstract var workingDirectory: File
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @Input var verifyMigrations: Boolean = false
@@ -135,7 +138,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
-        environment.dialect.allowsReferenceCycles
+        environment.dialect.allowsReferenceCycles,
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
@@ -148,7 +151,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         ignoreDefinitions = !parameters.verifyDefinitions.get(),
         circularReferenceExceptionLogger = {
           logger.debug(it)
-        }
+        },
       )
       val diffReport = databaseComparator.compare(currentDb, actualCatalog).let { diff ->
         buildString(diff::printTo)
@@ -173,8 +176,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
           initStatements.add(
             CatalogDatabase.InitStatement(
               it.rawSqlText(),
-              "Error compiling ${file.name}"
-            )
+              "Error compiling ${file.name}",
+            ),
           )
         }
       }

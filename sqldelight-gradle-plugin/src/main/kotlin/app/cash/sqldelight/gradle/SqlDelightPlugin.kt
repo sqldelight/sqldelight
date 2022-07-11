@@ -126,7 +126,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
             packageName = project.packageName(),
           ).apply {
             project.sqliteVersion()?.let(::dialect)
-          }
+          },
         )
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
@@ -160,7 +160,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   }
 
   class PropertiesModelBuilder(
-    private val databases: Iterable<SqlDelightDatabase>
+    private val databases: Iterable<SqlDelightDatabase>,
   ) : ToolingModelBuilder {
     override fun canBuild(modelName: String): Boolean {
       return modelName == SqlDelightPropertiesFile::class.java.name

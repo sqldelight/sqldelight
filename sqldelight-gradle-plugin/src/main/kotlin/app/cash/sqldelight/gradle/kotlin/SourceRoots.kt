@@ -56,7 +56,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
-    )
+    ),
   )
 }
 
@@ -67,7 +67,7 @@ private fun KotlinJsProjectExtension.sources(): List<Source> {
       name = "main",
       sourceDirectorySet = sourceSets.getByName("main").kotlin,
       sourceSets = listOf("main"),
-    )
+    ),
   )
 }
 
@@ -83,7 +83,7 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
       variantName = "commonMain",
       sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
       sourceSets = listOf("commonMain"),
-    )
+    ),
   )
 }
 
@@ -114,7 +114,7 @@ private fun BaseExtension.sources(): List<Source> {
 }
 
 private fun TaskContainer.namedOrNull(
-  taskName: String
+  taskName: String,
 ): TaskProvider<Task>? {
   return try {
     named(taskName)

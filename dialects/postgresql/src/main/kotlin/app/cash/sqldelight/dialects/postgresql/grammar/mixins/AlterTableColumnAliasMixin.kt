@@ -10,7 +10,7 @@ import com.intellij.lang.PsiBuilder
 import com.intellij.psi.util.PsiTreeUtil
 
 internal abstract class AlterTableColumnAliasMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlColumnAliasImpl(node),
   SqlColumnAlias {
   override val parseRule: (PsiBuilder, Int) -> Boolean = PostgreSqlParser::alter_table_column_alias_real

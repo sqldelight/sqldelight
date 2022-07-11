@@ -22,7 +22,7 @@ internal fun Project.packageName(): String {
     |    packageName = "com.example.mypackage"
     |  }
     |}
-  """.trimMargin()
+    """.trimMargin(),
   )
 }
 

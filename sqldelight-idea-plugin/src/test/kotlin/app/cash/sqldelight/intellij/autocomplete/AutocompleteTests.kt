@@ -38,7 +38,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someUpdate:
       |UPDATE <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val lookupElements: List<String> = myFixture.complete(BASIC, 1)
@@ -62,7 +62,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someUpdate:
       |UPDATE test
       |SET <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.complete(BASIC, 1).let {
@@ -86,7 +86,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someUpdate:
       |UPDATE test
       |SET value = <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val lookupElements = myFixture.complete(BASIC, 1)
@@ -109,7 +109,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someInsert:
       |INSERT INTO <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.complete(BASIC, 1).let {
@@ -133,7 +133,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someInsert:
       |INSERT INTO test (<caret>)
-    """.trimMargin()
+      """.trimMargin(),
     ) as SqlDelightFile
 
     fun PsiElement.printTree(printer: (String) -> Unit) {
@@ -165,7 +165,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |
       |someDelete:
       |DELETE FROM <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.complete(BASIC, 1).let {
@@ -190,7 +190,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT *
       |FROM <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.complete(BASIC, 1).let {
@@ -215,7 +215,7 @@ class AutocompleteTests : SqlDelightFixtureTestCase() {
       |someSelect:
       |SELECT *
       |FROM <caret>
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     myFixture.complete(BASIC, 1).let {

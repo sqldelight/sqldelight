@@ -31,8 +31,8 @@ abstract class DriverTest {
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(),
-        0
+        """.trimMargin(),
+        0,
       )
       driver.execute(
         1,
@@ -44,8 +44,8 @@ abstract class DriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(),
-        0
+        """.trimMargin(),
+        0,
       )
       return QueryResult.Unit
     }
@@ -53,7 +53,7 @@ abstract class DriverTest {
     override fun migrate(
       driver: SqlDriver,
       oldVersion: Int,
-      newVersion: Int
+      newVersion: Int,
     ) = QueryResult.Unit
   }
   private var transacter by Atomic<Transacter?>(null)
@@ -162,7 +162,7 @@ abstract class DriverTest {
         assertTrue(it.next())
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
-      }
+      },
     )
 
     // Second time running the query is fine
@@ -174,7 +174,7 @@ abstract class DriverTest {
         assertTrue(it.next())
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
-      }
+      },
     )
   }
 

@@ -19,7 +19,7 @@ class SqlDelightParameterInfoHandlerTest : SqlDelightFixtureTestCase() {
         |insert:
         |INSERT INTO example (name, description)
         |VALUES (<caret>?, ?);
-      """.trimMargin()
+      """.trimMargin(),
     )
 
     val parameterInfoHandler = SqlDelightParameterInfoHandler()

@@ -79,12 +79,14 @@ class SqlDelightEnvironment(
 
   init {
     (project.picoContainer as MutablePicoContainer).registerComponentInstance(
-      SqlDelightProjectService::class.java.name, this
+      SqlDelightProjectService::class.java.name,
+      this,
     )
 
     CoreApplicationEnvironment.registerExtensionPoint(
       module.extensionArea,
-      ModuleExtension.EP_NAME, ModuleExtension::class.java
+      ModuleExtension.EP_NAME,
+      ModuleExtension::class.java,
     )
 
     initializeApplication {
@@ -134,7 +136,7 @@ class SqlDelightEnvironment(
           errors[key]!!.add(errorMessage(element, s))
         }
       },
-      extraAnnotators
+      extraAnnotators,
     )
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
@@ -170,7 +172,7 @@ class SqlDelightEnvironment(
         SqlDelightCompiler.writeInterfaces(
           file = migrationFile,
           output = writer,
-          includeAll = true
+          includeAll = true,
         )
       }
       logger("----- END ${migrationFile.name} in $timeTaken ms ------")
@@ -178,8 +180,9 @@ class SqlDelightEnvironment(
 
     sourceFile?.let {
       SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
-      if (it is SqlDelightQueriesFile)
+      if (it is SqlDelightQueriesFile) {
         SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+      }
     }
 
     return CompilationStatus.Success()
@@ -205,7 +208,7 @@ class SqlDelightEnvironment(
         if (errorElements.isNotEmpty()) {
           throw SqlDelightException(
             "Error Reading ${it.name}:\n\n" +
-              errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) }
+              errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) },
           )
         }
         body(it)
@@ -322,14 +325,14 @@ class SqlDelightEnvironment(
         val path = file.parent!!.relativePathUnder(sourceFolder)
         if (path != null) return path.joinToString(separator = ".") {
           SqlDelightFileIndex.sanitizeDirectoryName(
-            it
+            it,
           )
         }
       }
 
       throw IllegalStateException(
         "Tried to find package name of file ${file.virtualFile!!.path} when" +
-          " it is not under any of the source folders $sourceFolders"
+          " it is not under any of the source folders $sourceFolders",
       )
     }
 

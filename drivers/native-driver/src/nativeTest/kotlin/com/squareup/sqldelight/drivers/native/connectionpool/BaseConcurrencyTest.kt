@@ -20,7 +20,7 @@ abstract class BaseConcurrencyTest {
       0,
       "SELECT count(*) FROM test",
       { it.next(); it.getLong(0)!! },
-      0
+      0,
     ).value
   }
 
@@ -55,7 +55,7 @@ abstract class BaseConcurrencyTest {
     schema: SqlSchema,
     dbType: DbType,
     configBase: DatabaseConfiguration,
-    maxReaderConnections: Int = 4
+    maxReaderConnections: Int = 4,
   ): SqlDriver {
     // Some failing tests can leave the db in a weird state, so on each run we have a different db per test
     val name = "testdb_${globalDbCount.addAndGet(1)}"
@@ -68,34 +68,34 @@ abstract class BaseConcurrencyTest {
         wrapConnection(conn) { driver ->
           schema.create(driver)
         }
-      }
+      },
     )
     return when (dbType) {
       DbType.RegularWal -> {
         NativeSqliteDriver(
           configCommon,
-          maxReaderConnections = maxReaderConnections
+          maxReaderConnections = maxReaderConnections,
         )
       }
       DbType.RegularDelete -> {
         val config = configCommon.copy(journalMode = JournalMode.DELETE)
         NativeSqliteDriver(
           config,
-          maxReaderConnections = maxReaderConnections
+          maxReaderConnections = maxReaderConnections,
         )
       }
       DbType.InMemoryShared -> {
         val config = configCommon.copy(inMemory = true)
         NativeSqliteDriver(
           config,
-          maxReaderConnections = maxReaderConnections
+          maxReaderConnections = maxReaderConnections,
         )
       }
       DbType.InMemorySingle -> {
         val config = configCommon.copy(name = null, inMemory = true)
         NativeSqliteDriver(
           config,
-          maxReaderConnections = maxReaderConnections
+          maxReaderConnections = maxReaderConnections,
         )
       }
     }
@@ -122,7 +122,7 @@ abstract class BaseConcurrencyTest {
                 value TEXT NOT NULL
                );
             """.trimIndent(),
-            0
+            0,
           )
           return QueryResult.Unit
         }
@@ -130,11 +130,11 @@ abstract class BaseConcurrencyTest {
         override fun migrate(
           driver: SqlDriver,
           oldVersion: Int,
-          newVersion: Int
+          newVersion: Int,
         ) = QueryResult.Unit
       },
       dbType,
-      configBase
+      configBase,
     )
   }
 
@@ -147,8 +147,9 @@ abstract class BaseConcurrencyTest {
       wasTimeout = (currentTimeMillis() - start) > timeout
     }
 
-    if (wasTimeout)
+    if (wasTimeout) {
       throw IllegalStateException("Timeout $timeout exceeded")
+    }
   }
 
   fun initDriver(dbType: DbType) {

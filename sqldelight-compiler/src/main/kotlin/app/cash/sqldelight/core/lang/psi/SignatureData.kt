@@ -14,7 +14,7 @@ fun QueryColumn.parameterValue(): SuggestedRefactoringSupport.Parameter? = eleme
     type = column.columnType.typeName.text,
     additionalData = column.columnConstraintList.takeIf { it.isNotEmpty() }?.let { list ->
       ColumnConstraints((list.filter { it.text.isNotBlank() }.joinToString(" ") { it.text.trim() }))
-    }
+    },
   )
 }
 
@@ -24,7 +24,7 @@ fun SqlColumnDef.asParameter() = SuggestedRefactoringSupport.Parameter(
   type = columnType.typeName.text,
   additionalData = columnConstraintList.takeIf { it.isNotEmpty() }?.let { list ->
     ColumnConstraints((list.filter { it.text.isNotBlank() }.joinToString(" ") { it.text.trim() }))
-  }
+  },
 )
 
 data class ColumnConstraints(val constraints: String) : ParameterAdditionalData {

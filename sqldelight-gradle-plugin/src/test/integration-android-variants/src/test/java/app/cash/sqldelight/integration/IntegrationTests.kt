@@ -79,15 +79,19 @@ class IntegrationTests {
     assertThat(current).isEqualTo(13)
   }
 
-  @Test @kotlin.Throws(InterruptedException::class) fun compiledStatementAcrossThread() {
+  @Test
+  @kotlin.Throws(InterruptedException::class)
+  fun compiledStatementAcrossThread() {
     keywordsQueries.insertStmt(11, 21)
     val latch = CountDownLatch(1)
-    Thread(object : Runnable {
-      override fun run() {
-        keywordsQueries.insertStmt(12, 22)
-        latch.countDown()
-      }
-    }).start()
+    Thread(
+      object : Runnable {
+        override fun run() {
+          keywordsQueries.insertStmt(12, 22)
+          latch.countDown()
+        }
+      },
+    ).start()
     assertTrue(latch.await(10, SECONDS))
     var current: Long = 10
     for (group in keywordsQueries.selectAll().executeAsList()) {

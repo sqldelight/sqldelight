@@ -147,9 +147,9 @@ class MappingTest : DbTest {
           listOf(
             Employee("alice", "Alice Allison"), //
             Employee("bob", "Bob Bobberson"), //
-            Employee("eve", "Eve Evenson")
+            Employee("eve", "Eve Evenson"),
           ),
-          awaitItem()
+          awaitItem(),
         )
         cancel()
       }

@@ -89,7 +89,7 @@ private class BasicMutableMapStrict<K : Any, V : Any> : BasicMutableMap<K, V> {
       Pair(key, value),
       *mapReference.value.map { entry ->
         Pair(entry.key, entry.value)
-      }.toTypedArray()
+      }.toTypedArray(),
     ).freeze()
   }
 
@@ -101,8 +101,9 @@ private class BasicMutableMapStrict<K : Any, V : Any> : BasicMutableMap<K, V> {
       val resultMap = mutableMapOf<K, V>()
       sourceMap.keys.subtract(listOf(key)).forEach { key ->
         val value = sourceMap[key]
-        if (value != null)
+        if (value != null) {
           resultMap[key] = value
+        }
       }
       mapReference.value = resultMap.freeze()
     }

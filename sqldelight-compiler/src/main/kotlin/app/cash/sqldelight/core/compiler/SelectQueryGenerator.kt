@@ -97,10 +97,10 @@ class SelectQueryGenerator(
               CodeBlock.of(query.name)
             } else {
               params.joinToCode(", ", "${query.name}(", ")")
-            }
+            },
           )
           .add(trailingLambda)
-          .build()
+          .build(),
       )
       .build()
   }
@@ -143,9 +143,9 @@ class SelectQueryGenerator(
               ParameterSpec.builder(it.name, it.javaType.copy(annotations = emptyList()))
                 .build()
             },
-            returnType = typeVariable
-          )
-        ).build()
+            returnType = typeVariable,
+          ),
+        ).build(),
       )
 
       // Specify the return type for the mapper:
@@ -184,7 +184,7 @@ class SelectQueryGenerator(
             """%M(%M(%L).size == 1) { "Adapter·types·are·expected·to·be·identical." }""",
             MemberName("kotlin", "check"),
             MemberName("kotlin.collections", "setOf"),
-            adapterNames.joinToString()
+            adapterNames.joinToString(),
           )
         }
     }
@@ -232,24 +232,32 @@ class SelectQueryGenerator(
       if (query.tablesObserved != null) {
         function.addCode(
           "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
-          QUERY_TYPE, queryKeys(query.tablesObserved!!), query.statement.containingFile.name, query.name,
-          query.statement.rawSqlText(), mapperLambda.build()
+          QUERY_TYPE,
+          queryKeys(query.tablesObserved!!),
+          query.statement.containingFile.name,
+          query.name,
+          query.statement.rawSqlText(),
+          mapperLambda.build(),
         )
       } else {
         function.addCode(
           "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
-          QUERY_TYPE, query.statement.containingFile.name, query.name,
-          query.statement.rawSqlText(), mapperLambda.build()
+          QUERY_TYPE,
+          query.statement.containingFile.name,
+          query.name,
+          query.statement.rawSqlText(),
+          mapperLambda.build(),
         )
       }
     } else {
       // Custom type is needed to handle dirtying events, return an instance of custom type:
       // return SelectForId(id) { resultSet -> ... }
       function.addCode(
-        "return %N(%L)%L", query.customQuerySubtype,
+        "return %N(%L)%L",
+        query.customQuerySubtype,
         query.arguments.sortedBy { it.index }
           .joinToString { (_, parameter) -> parameter.name },
-        mapperLambda.build()
+        mapperLambda.build(),
       )
     }
 
@@ -311,7 +319,7 @@ class SelectQueryGenerator(
       queryType.addProperty(
         PropertySpec.builder(parameter.name, parameter.argumentType())
           .initializer(parameter.name)
-          .build()
+          .build(),
       )
       constructor.addParameter(parameter.name, parameter.argumentType())
     }
@@ -321,8 +329,8 @@ class SelectQueryGenerator(
       MAPPER_NAME,
       LambdaTypeName.get(
         parameters = arrayOf(CURSOR_TYPE),
-        returnType = returnType
-      )
+        returnType = returnType,
+      ),
     )
     queryType.addSuperclassConstructorParameter(MAPPER_NAME)
 
@@ -333,14 +341,14 @@ class SelectQueryGenerator(
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
             .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
-            .build()
+            .build(),
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
             .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
-            .build()
+            .build(),
         )
     }
 
@@ -352,7 +360,7 @@ class SelectQueryGenerator(
           .addModifiers(OVERRIDE)
           .returns(String::class)
           .addStatement("return %S", "${query.statement.containingFile.name}:${query.name}")
-          .build()
+          .build(),
       )
       .build()
   }

@@ -14,7 +14,7 @@ import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 
 internal abstract class AlterTableDropColumnMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   SqliteAlterTableDropColumn,
   AlterTableApplier {
@@ -26,9 +26,9 @@ internal abstract class AlterTableDropColumnMixin(
       tableName = lazyQuery.tableName,
       query = {
         lazyQuery.query.copy(
-          columns = lazyQuery.query.columns.filterNot { (it.element as SqlColumnName).textMatches(columnName) }
+          columns = lazyQuery.query.columns.filterNot { (it.element as SqlColumnName).textMatches(columnName) },
         )
-      }
+      },
     )
   }
 
@@ -44,7 +44,7 @@ internal abstract class AlterTableDropColumnMixin(
     if (columns.size == 1) {
       annotationHolder.createErrorAnnotation(
         element = columnName,
-        s = "Cannot drop column \"${columnName.text}\": no other columns exist"
+        s = "Cannot drop column \"${columnName.text}\": no other columns exist",
       )
     } else {
       val constraints = columnsToDrop
@@ -54,12 +54,12 @@ internal abstract class AlterTableDropColumnMixin(
       if (constraints.any { it.hasPrimaryKey() }) {
         annotationHolder.createErrorAnnotation(
           element = columnName,
-          s = "Cannot drop PRIMARY KEY column \"${columnName.text}\""
+          s = "Cannot drop PRIMARY KEY column \"${columnName.text}\"",
         )
       } else if (constraints.any { it.isUnique() }) {
         annotationHolder.createErrorAnnotation(
           element = columnName,
-          s = "Cannot drop UNIQUE column \"${columnName.text}\""
+          s = "Cannot drop UNIQUE column \"${columnName.text}\"",
         )
       } else {
         containingFile
@@ -73,7 +73,7 @@ internal abstract class AlterTableDropColumnMixin(
           ?.let { indexForColumnToDrop ->
             annotationHolder.createErrorAnnotation(
               element = columnName,
-              s = "Cannot drop indexed column \"${columnName.text}\" (\"${indexForColumnToDrop.indexName.text}\")"
+              s = "Cannot drop indexed column \"${columnName.text}\" (\"${indexForColumnToDrop.indexName.text}\")",
             )
           }
       }

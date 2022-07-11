@@ -21,13 +21,16 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
 class MySqlTypeResolver(
-  private val parentResolver: TypeResolver
+  private val parentResolver: TypeResolver,
 ) : TypeResolver by parentResolver {
   override fun resolvedType(expr: SqlExpr): IntermediateType {
     return when (expr) {
       is MySqlExtensionExpr -> encapsulatingType(
         PsiTreeUtil.findChildrenOfType(expr.ifExpr, SqlExpr::class.java).drop(1),
-        INTEGER, REAL, TEXT, BLOB
+        INTEGER,
+        REAL,
+        TEXT,
+        BLOB,
       )
       else -> parentResolver.resolvedType(expr)
     }
@@ -53,7 +56,7 @@ class MySqlTypeResolver(
     "last_insert_id" -> IntermediateType(INTEGER)
     "row_count" -> IntermediateType(INTEGER)
     "microsecond", "second", "minute", "hour", "day", "week", "month", "year" -> IntermediateType(
-      INTEGER
+      INTEGER,
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
     "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
@@ -97,7 +100,7 @@ class MySqlTypeResolver(
         characterType != null -> TEXT
         bitDataType != null -> MySqlType.BIT
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
-      }
+      },
     )
   }
 }

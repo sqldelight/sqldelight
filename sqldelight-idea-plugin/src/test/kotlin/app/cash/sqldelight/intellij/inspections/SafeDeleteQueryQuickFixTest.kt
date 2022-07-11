@@ -21,7 +21,7 @@ class SafeDeleteQueryQuickFixTest : SqlDelightFixtureTestCase() {
       |
       |selectNumber:
       |SELECT player_number FROM hockeyPlayer;
-    """.trimMargin()
+      """.trimMargin(),
     )
 
     val file = myFixture.file
@@ -40,7 +40,7 @@ class SafeDeleteQueryQuickFixTest : SqlDelightFixtureTestCase() {
       |
       |selectNumber:
       |SELECT player_number FROM hockeyPlayer;
-    """.trimMargin()
+      """.trimMargin(),
     )
   }
 }

@@ -6,9 +6,10 @@ import com.alecstrong.sql.psi.core.psi.mixins.AlterTableElementType
 import com.alecstrong.sql.psi.core.psi.mixins.AlterTableStmtStub
 
 internal class AlterTableElementType(
-  name: String
+  name: String,
 ) : AlterTableElementType("sqlite_3_18.$name") {
   override fun createPsi(stub: SchemaContributorStub) = SqliteAlterTableStmtImpl(
-    stub as AlterTableStmtStub, this
+    stub as AlterTableStmtStub,
+    this,
   )
 }

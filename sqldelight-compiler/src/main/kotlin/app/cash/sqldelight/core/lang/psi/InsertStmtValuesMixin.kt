@@ -11,7 +11,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.util.parentOfType
 
 open class InsertStmtValuesMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlInsertStmtValuesImpl(node),
   SqlDelightInsertStmtValues {
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
@@ -20,7 +20,7 @@ open class InsertStmtValuesMixin(
       if (parentOfType<SqlDelightStmtClojure>(withSelf = false) != null) {
         annotationHolder.createErrorAnnotation(
           this,
-          "Table parameters are not usable in a grouped statement."
+          "Table parameters are not usable in a grouped statement.",
         )
       }
 
@@ -44,13 +44,13 @@ open class InsertStmtValuesMixin(
         annotationHolder.createErrorAnnotation(
           parent,
           "Cannot populate default value for column " +
-            "${needsDefaultValue.first().name}, it must be specified in insert statement."
+            "${needsDefaultValue.first().name}, it must be specified in insert statement.",
         )
       } else if (needsDefaultValue.size > 1) {
         annotationHolder.createErrorAnnotation(
           parent,
           "Cannot populate default values for columns " +
-            "(${needsDefaultValue.joinToString { it.name }}), they must be specified in insert statement."
+            "(${needsDefaultValue.joinToString { it.name }}), they must be specified in insert statement.",
         )
       }
 

@@ -8,7 +8,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
 import com.intellij.lang.ASTNode
 
 abstract class ImportStmtMixin(
-  node: ASTNode
+  node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   SqlDelightImportStmt,
   SqlAnnotatedElement {

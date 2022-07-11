@@ -17,7 +17,7 @@ internal class MismatchJoinColumnInspection : LocalInspectionTool() {
   override fun checkFile(
     file: PsiFile,
     manager: InspectionManager,
-    isOnTheFly: Boolean
+    isOnTheFly: Boolean,
   ) = ensureFileReady(file) {
     val joinConstraints = file.findChildrenOfType<SqlJoinConstraint>()
       .mapNotNull { it.expr?.binaryEqualityExpr() }
@@ -33,15 +33,21 @@ internal class MismatchJoinColumnInspection : LocalInspectionTool() {
 
       if (column1.isColumnSameAs(column2)) {
         return@mapNotNull manager.createProblemDescriptor(
-          joinEquality, "Join condition always evaluates to true", isOnTheFly,
-          emptyArray(), ProblemHighlightType.WARNING
+          joinEquality,
+          "Join condition always evaluates to true",
+          isOnTheFly,
+          emptyArray(),
+          ProblemHighlightType.WARNING,
         )
       }
 
       if (!column1.isTypeSameAs(column2)) {
         return@mapNotNull manager.createProblemDescriptor(
-          joinEquality, "Join compares two columns of different types", isOnTheFly,
-          emptyArray(), ProblemHighlightType.WARNING
+          joinEquality,
+          "Join compares two columns of different types",
+          isOnTheFly,
+          emptyArray(),
+          ProblemHighlightType.WARNING,
         )
       }
       return@mapNotNull null

@@ -30,7 +30,7 @@ import java.io.File
 class FileIndex(
   private val properties: SqlDelightDatabaseProperties,
   override val contentRoot: VirtualFile =
-    LocalFileSystem.getInstance().findFileByPath(properties.rootDirectory.absolutePath)!!
+    LocalFileSystem.getInstance().findFileByPath(properties.rootDirectory.absolutePath)!!,
 ) : SqlDelightFileIndex {
   override val isConfigured = true
   override val packageName = properties.packageName
@@ -74,7 +74,7 @@ class FileIndex(
 
   override fun sourceFolders(
     file: VirtualFile,
-    includeDependencies: Boolean
+    includeDependencies: Boolean,
   ): Collection<VirtualFile> {
     return properties.compilationUnits.map {
       it.sourceFolders
@@ -96,7 +96,7 @@ class FileIndex(
 
   override fun sourceFolders(
     file: SqlDelightFile,
-    includeDependencies: Boolean
+    includeDependencies: Boolean,
   ): Collection<PsiDirectory> {
     return sourceFolders(file.virtualFile!!, includeDependencies)
       .map { PsiManager.getInstance(file.project).findDirectory(it)!! }
@@ -104,7 +104,7 @@ class FileIndex(
 
   private fun File.localVirtualFile() = contentRoot.findFileByRelativePath(
     this.relativeTo(
-      File(contentRoot.path)
-    ).path.replace(File.separatorChar, '/').trimEnd('/')
+      File(contentRoot.path),
+    ).path.replace(File.separatorChar, '/').trimEnd('/'),
   )
 }

@@ -37,8 +37,9 @@ class InterfaceGeneration {
       |      otherAnnotation = SomeOtherAnnotation("value")
       |  ) Int
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -68,7 +69,8 @@ class InterfaceGeneration {
       |    public val annotatedAdapter: ColumnAdapter<Int, Long>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -81,8 +83,9 @@ class InterfaceGeneration {
       |  isle TEXT,
       |  stuff TEXT
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -100,7 +103,8 @@ class InterfaceGeneration {
       |  public val isle: String?,
       |  public val stuff: String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -110,8 +114,9 @@ class InterfaceGeneration {
       |CREATE TABLE test (
       |  mapValue INTEGER AS kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -124,7 +129,8 @@ class InterfaceGeneration {
       |    public val mapValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Map<kotlin.collections.List<kotlin.collections.List<String>>, kotlin.collections.List<kotlin.collections.List<String>>>, kotlin.Long>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -140,8 +146,9 @@ class InterfaceGeneration {
       |    enabledDays TEXT AS Set<DayOfWeek>,
       |    enabledWeeks TEXT AS Set<Week>
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -157,7 +164,8 @@ class InterfaceGeneration {
       |    public val enabledWeeksAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.collections.Set<com.gabrielittner.timetable.core.db.Week>, kotlin.String>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -170,8 +178,9 @@ class InterfaceGeneration {
       |  "index3" TEXT,
       |  [index4] TEXT
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -183,7 +192,8 @@ class InterfaceGeneration {
       |  public val index3: kotlin.String?,
       |  public val index4: kotlin.String?,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -199,8 +209,10 @@ class InterfaceGeneration {
       |  bigIntValue BIGINT AS kotlin.Any NOT NULL,
       |  bitValue BIT AS kotlin.Any NOT NULL
       |);
-      |""".trimMargin(),
-      tempFolder, dialect = MySqlDialect()
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = MySqlDialect(),
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -225,7 +237,8 @@ class InterfaceGeneration {
       |    public val bitValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -240,8 +253,10 @@ class InterfaceGeneration {
       |  serialValue SERIAL AS kotlin.Any NOT NULL,
       |  bigSerialValue BIGSERIAL AS kotlin.Any NOT NULL
       |);
-      |""".trimMargin(),
-      tempFolder, dialect = PostgreSqlDialect()
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -264,7 +279,8 @@ class InterfaceGeneration {
       |    public val bigSerialValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Long>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -278,8 +294,10 @@ class InterfaceGeneration {
       |  bigIntValue BIGINT AS kotlin.Any NOT NULL,
       |  booleanValue BOOLEAN AS kotlin.Any NOT NULL
       |);
-      |""".trimMargin(),
-      tempFolder, dialect = HsqlDialect()
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = HsqlDialect(),
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -300,7 +318,8 @@ class InterfaceGeneration {
       |    public val booleanValueAdapter: app.cash.sqldelight.ColumnAdapter<kotlin.Any, kotlin.Boolean>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -315,7 +334,7 @@ class InterfaceGeneration {
       |  endDate INTEGER AS @Deprecated Date NOT NULL
       |);
       """.trimMargin(),
-      tempFolder
+      tempFolder,
     )
 
     val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
@@ -332,7 +351,8 @@ class InterfaceGeneration {
       |    public val endDateAdapter: app.cash.sqldelight.ColumnAdapter<java.util.Date, kotlin.Long>,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -342,8 +362,9 @@ class InterfaceGeneration {
       |CREATE TABLE test (
       |  id INTEGER AS VALUE NOT NULL
       |);
-      |""".trimMargin(),
-      tempFolder
+      |
+      """.trimMargin(),
+      tempFolder,
     )
 
     assertThat(result.errors).isEmpty()
@@ -364,7 +385,8 @@ class InterfaceGeneration {
       |    public val id: Long,
       |  )
       |}
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -377,8 +399,10 @@ class InterfaceGeneration {
       |  score INTEGER NOT NULL,
       |  PRIMARY KEY(bioguide_id, score_year)
       |);
-      |""".trimMargin(),
-      tempFolder, overrideDialect = PostgreSqlDialect()
+      |
+      """.trimMargin(),
+      tempFolder,
+      overrideDialect = PostgreSqlDialect(),
     )
 
     assertThat(result.errors).isEmpty()
@@ -396,7 +420,8 @@ class InterfaceGeneration {
       |  public val score_year: Int,
       |  public val score: Int,
       |)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 
@@ -406,7 +431,7 @@ class InterfaceGeneration {
       compilationMethod = { _, _, sqlDelightQueriesFile, writer ->
         SqlDelightCompiler.writeTableInterfaces(sqlDelightQueriesFile, writer)
       },
-      generateDb = false
+      generateDb = false,
     )
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()

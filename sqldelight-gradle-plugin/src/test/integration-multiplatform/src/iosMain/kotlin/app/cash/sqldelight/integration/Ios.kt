@@ -20,7 +20,7 @@ actual class MPWorker actual constructor() {
     return MPFuture(
       worker.execute(TransferMode.SAFE, { backJob.freeze() }) {
         it()
-      }
+      },
     )
   }
 

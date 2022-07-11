@@ -28,7 +28,7 @@ class IntegrationTests {
         Person(2, "Matt", "Precious"),
         Person(3, "Jake", "Wharton"),
         Person(4, "Bob", "Bob"),
-        Person(5, "Bo", "Jangles")
+        Person(5, "Bo", "Jangles"),
       )
   }
 
@@ -41,7 +41,7 @@ class IntegrationTests {
         Person(1, "Alec", "Strong"),
         Person(2, "Matt", "Precious"),
         Person(3, "James", "Mosley"),
-        Person(4, "Bob", "Bob")
+        Person(4, "Bob", "Bob"),
       )
   }
 }

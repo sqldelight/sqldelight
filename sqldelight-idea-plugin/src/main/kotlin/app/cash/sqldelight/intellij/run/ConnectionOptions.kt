@@ -68,6 +68,6 @@ internal class ConnectionOptions(val project: Project) {
   internal class DialectConnections(
     var selectedOption: String? = null,
     var orderedOptions: MutableList<String> = ArrayList(),
-    val serializedProperties: MutableMap<String, String> = mutableMapOf()
+    val serializedProperties: MutableMap<String, String> = mutableMapOf(),
   )
 }

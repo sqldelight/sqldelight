@@ -15,11 +15,11 @@ import javax.swing.GroupLayout
 import javax.swing.JPanel
 
 internal class SqlDelightToolWindowFactory(
-  private val connectionManager: ConnectionManager
+  private val connectionManager: ConnectionManager,
 ) : ToolWindowFactory {
   override fun createToolWindowContent(
     project: Project,
-    toolWindow: ToolWindow
+    toolWindow: ToolWindow,
   ) {
     val runSqlText = JPanel(BorderLayout()).apply {
       add(
@@ -27,7 +27,7 @@ internal class SqlDelightToolWindowFactory(
           margin = Insets(8, 8, 8, 8)
           isEditable = false
         },
-        BorderLayout.CENTER
+        BorderLayout.CENTER,
       )
     }
 
@@ -43,7 +43,7 @@ internal fun ContentManager.createWithConnectionSidePanel(
   project: Project,
   connectionManager: ConnectionManager,
   component: Component,
-  name: String? = null
+  name: String? = null,
 ): Content {
   val panel = JPanel()
 
@@ -55,13 +55,13 @@ internal fun ContentManager.createWithConnectionSidePanel(
   layout.setHorizontalGroup(
     layout.createSequentialGroup()
       .addComponent(connectionList, 50, 200, 300)
-      .addComponent(component)
+      .addComponent(component),
   )
 
   layout.setVerticalGroup(
     layout.createParallelGroup()
       .addComponent(connectionList)
-      .addComponent(component)
+      .addComponent(component),
   )
 
   return factory.createContent(panel, name, false)

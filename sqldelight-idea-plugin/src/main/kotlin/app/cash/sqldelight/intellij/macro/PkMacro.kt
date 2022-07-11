@@ -15,7 +15,7 @@ class PkMacro : MacroBase("pk", "pk(tableName)") {
   override fun calculateResult(
     params: Array<out Expression>,
     context: ExpressionContext,
-    quick: Boolean
+    quick: Boolean,
   ): Result? {
     if (params.isEmpty()) {
       return null

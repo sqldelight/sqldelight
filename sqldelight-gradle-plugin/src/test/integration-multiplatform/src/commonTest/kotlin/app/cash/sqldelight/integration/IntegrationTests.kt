@@ -134,7 +134,7 @@ class IntegrationTests {
   @Test fun bigTable() {
     val bigTable = BigTable(
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
     )
 
     bigTableQueries.insert(bigTable)
@@ -146,34 +146,42 @@ class IntegrationTests {
     // Single query subscribed to twice.
     var equivalentNames1Notified = AtomicInt(0)
     val equivalentNames1 = personQueries.equivalentNames("Bob")
-    equivalentNames1.addListener(object : Query.Listener {
-      override fun queryResultsChanged() {
-        equivalentNames1Notified.incrementAndGet()
-      }
-    })
-    equivalentNames1.addListener(object : Query.Listener {
-      override fun queryResultsChanged() {
-        equivalentNames1Notified.incrementAndGet()
-      }
-    })
+    equivalentNames1.addListener(
+      object : Query.Listener {
+        override fun queryResultsChanged() {
+          equivalentNames1Notified.incrementAndGet()
+        }
+      },
+    )
+    equivalentNames1.addListener(
+      object : Query.Listener {
+        override fun queryResultsChanged() {
+          equivalentNames1Notified.incrementAndGet()
+        }
+      },
+    )
 
     // New instance of existing query subscribed to.
     var equivalentNames2Notified = AtomicInt(0)
     val equivalentNames2 = personQueries.equivalentNames("Bob")
-    equivalentNames2.addListener(object : Query.Listener {
-      override fun queryResultsChanged() {
-        equivalentNames2Notified.incrementAndGet()
-      }
-    })
+    equivalentNames2.addListener(
+      object : Query.Listener {
+        override fun queryResultsChanged() {
+          equivalentNames2Notified.incrementAndGet()
+        }
+      },
+    )
 
     // Separate query on the same table.
     var peopleNotified = AtomicInt(0)
     val people = personQueries.nameIn(listOf("Alec", "Matt", "Jake"))
-    people.addListener(object : Query.Listener {
-      override fun queryResultsChanged() {
-        peopleNotified.incrementAndGet()
-      }
-    })
+    people.addListener(
+      object : Query.Listener {
+        override fun queryResultsChanged() {
+          peopleNotified.incrementAndGet()
+        }
+      },
+    )
 
     // Mutation which affects all of the above.
     personQueries.deleteAll()

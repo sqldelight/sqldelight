@@ -36,12 +36,12 @@ class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
 
   override fun createFindUsagesHandler(
     element: PsiElement,
-    forHighlightUsages: Boolean
+    forHighlightUsages: Boolean,
   ): FindUsagesHandler = SqlDelightIdentifierHandler(element)
 }
 
 private class SqlDelightIdentifierHandler(
-  private val element: PsiElement
+  private val element: PsiElement,
 ) : FindUsagesHandler(element) {
   private val factory = KotlinFindUsagesHandlerFactory(element.project)
   private val kotlinHandlers = when (element) {
@@ -62,7 +62,7 @@ private class SqlDelightIdentifierHandler(
   override fun processElementUsages(
     sourceElement: PsiElement,
     processor: Processor<in UsageInfo>,
-    options: FindUsagesOptions
+    options: FindUsagesOptions,
   ): Boolean {
     val generatedFiles = element.generatedVirtualFiles()
     val ignoringFileProcessor = Processor<UsageInfo> { t ->
@@ -78,9 +78,9 @@ private class SqlDelightIdentifierHandler(
           it.processElementUsages(
             it.primaryElements.single(),
             ignoringFileProcessor,
-            kotlinFindUsagesOptions
+            kotlinFindUsagesOptions,
           )
-        }
+        },
       )
     }
   }

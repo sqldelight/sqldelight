@@ -3,7 +3,7 @@ package app.cash.sqldelight.driver.native.util
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect class PoolLock(reentrant: Boolean = false) {
   fun <R> withLock(
-    action: CriticalSection.() -> R
+    action: CriticalSection.() -> R,
   ): R
 
   /**

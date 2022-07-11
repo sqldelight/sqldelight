@@ -40,7 +40,7 @@ object FixtureCompiler {
     compilationMethod: CompilationMethod = SqlDelightCompiler::writeInterfaces,
     fileName: String = "Test.sq",
     treatNullAsUnknownForEquality: Boolean = false,
-    generateAsync: Boolean = false
+    generateAsync: Boolean = false,
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
@@ -48,14 +48,14 @@ object FixtureCompiler {
       compilationMethod,
       overrideDialect = overrideDialect,
       treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
-      generateAsync = generateAsync
+      generateAsync = generateAsync,
     )
   }
 
   fun writeSql(
     sql: String,
     temporaryFolder: TemporaryFolder,
-    fileName: String
+    fileName: String,
   ) {
     val srcRootDir = temporaryFolder.fixtureRoot().apply { mkdirs() }
     val fixtureSrcDir = File(srcRootDir, "com/example").apply { mkdirs() }
@@ -78,7 +78,7 @@ object FixtureCompiler {
     val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality, generateAsync = generateAsync)
     val environment = parser.build(
       temporaryFolder.fixtureRoot().path,
-      createAnnotationHolder(errors)
+      createAnnotationHolder(errors),
     )
 
     if (errors.isNotEmpty()) {
@@ -138,7 +138,7 @@ object FixtureCompiler {
       SqlDelightCompiler.writeInterfaces(
         file = topMigration!!,
         output = fileWriter,
-        includeAll = true
+        includeAll = true,
       )
     }
 
@@ -156,7 +156,7 @@ object FixtureCompiler {
   }
 
   private fun createAnnotationHolder(
-    errors: MutableList<String>
+    errors: MutableList<String>,
   ) = object : SqlAnnotationHolder {
     override fun createErrorAnnotation(element: PsiElement, s: String) {
       val documentManager = PsiDocumentManager.getInstance(element.project)
@@ -188,7 +188,7 @@ object FixtureCompiler {
     val compilerOutput: Map<File, StringBuilder>,
     val errors: List<String>,
     val sourceFiles: String,
-    val compiledFile: SqlDelightQueriesFile
+    val compiledFile: SqlDelightQueriesFile,
   )
 }
 

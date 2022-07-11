@@ -23,7 +23,7 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
       numberAdapter = IntColumnAdapter,
       ageAdapter = IntColumnAdapter,
       weightAdapter = FloatColumnAdapter,
-    )
+    ),
   )
 }
 
@@ -33,7 +33,6 @@ object Schema : SqlSchema by HockeyDb.Schema {
 
     // Seed data time!
     createQueryWrapper(driver).apply {
-
       val ducks = "Anaheim Ducks"
       val pens = "Pittsburgh Penguins"
       val sharks = "San Jose Sharks"
@@ -45,28 +44,28 @@ object Schema : SqlSchema by HockeyDb.Schema {
 
       playerQueries.insertPlayer(
         "Corey", "Perry", 10, ducks, 30, 210F, Date(1985, 5, 16),
-        Shoots.RIGHT, Position.RIGHT_WING
+        Shoots.RIGHT, Position.RIGHT_WING,
       )
       playerQueries.insertPlayer(
         "Ryan", "Getzlaf", 15, ducks, 30, 221F, Date(1985, 5, 10),
-        Shoots.RIGHT, Position.CENTER
+        Shoots.RIGHT, Position.CENTER,
       )
       teamQueries.setCaptain(15, ducks)
 
       playerQueries.insertPlayer(
         "Sidney", "Crosby", 87, pens, 28, 200F, Date(1987, 8, 7),
-        Shoots.LEFT, Position.CENTER
+        Shoots.LEFT, Position.CENTER,
       )
       teamQueries.setCaptain(87, pens)
 
       playerQueries.insertPlayer(
         "Erik", "Karlsson", 65, sharks, 28, 190F, Date(1990, 5, 31),
-        Shoots.RIGHT, Position.DEFENSE
+        Shoots.RIGHT, Position.DEFENSE,
       )
 
       playerQueries.insertPlayer(
         "Joe", "Pavelski", 8, sharks, 31, 194F, Date(1984, 7, 18),
-        Shoots.RIGHT, Position.CENTER
+        Shoots.RIGHT, Position.CENTER,
       )
       teamQueries.setCaptain(8, sharks)
     }

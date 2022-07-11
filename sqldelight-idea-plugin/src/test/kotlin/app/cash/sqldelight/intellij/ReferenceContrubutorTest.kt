@@ -16,7 +16,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |
         |public class SomeClass {
         |}
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -26,7 +26,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS SomeClass NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = myFixture.findClass("com.somepackage.SomeClass")
@@ -41,7 +41,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |
         |public class SomeClass {
         |}
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -51,7 +51,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Some<caret>Class NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = myFixture.findClass("com.somepackage.SomeClass")
@@ -65,7 +65,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |package com.somepackage
       |
       |class SomeClass
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -75,7 +75,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS SomeClass NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = myFixture.findClass("com.somepackage.SomeClass")
@@ -89,7 +89,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |package com.somepackage
       |
       |class SomeClass
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -99,7 +99,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Some<caret>Class NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = myFixture.findClass("com.somepackage.SomeClass")
@@ -113,7 +113,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |package com.somepackage
       |
       |expect class SomeExpectClass
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -123,7 +123,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS SomeExpectClass NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = psiFile.childrenOfType<KtClassOrObject>().single()
@@ -137,7 +137,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |package com.somepackage
       |
       |expect class SomeExpectClass
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -147,7 +147,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS SomeExpect<caret>Class NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = file.childrenOfType<KtClassOrObject>().single()
@@ -161,7 +161,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |package kotlin
         |
         |class Int
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -171,7 +171,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Int NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = file.childrenOfType<KtClassOrObject>().single()
@@ -185,7 +185,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |package kotlin
         |
         |class Int
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -195,7 +195,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS I<caret>nt NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = file.childrenOfType<KtClassOrObject>().single()
@@ -209,7 +209,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |package com.example
         |
         |class SomeClass
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -217,7 +217,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Some<caret>Class NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     val psiClass = file.childrenOfType<KtClassOrObject>().single()
@@ -231,7 +231,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |package com.somepackage
         |
         |class SomeClass
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -239,7 +239,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Some<caret>Class NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
     assertThat(reference.resolve()).isNull()
@@ -254,7 +254,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
         |class SomeClass {
         |  class NestedClass
         |}
-      """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -264,7 +264,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS SomeClass.Nes<caret>tedClass NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val psiClass = myFixture.findClass("com.somepackage.SomeClass.NestedClass")
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -278,7 +278,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |package com.somepackage
       |
       |typealias SomeType = Int
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -288,7 +288,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Some<caret>Type NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val typeAlias = file.childrenOfType<KtTypeAlias>().single().psiOrParent
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -302,7 +302,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |package com.somepackage
       |
       |enum class SomeEnum
-    """.trimMargin()
+      """.trimMargin(),
     )
     myFixture.configureByText(
       SqlDelightFileType,
@@ -312,7 +312,7 @@ class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
       |CREATE TABLE new_table (
       |  col TEXT AS Some<caret>Enum NOT NULL
       |);
-      """.trimMargin()
+      """.trimMargin(),
     )
     val psiClass = myFixture.findClass("com.somepackage.SomeEnum")
     val reference = myFixture.getReferenceAtCaretPositionWithAssertion()

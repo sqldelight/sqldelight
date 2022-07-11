@@ -24,8 +24,8 @@ class MySqlTest {
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
-          is_good = true
-        )
+          is_good = true,
+        ),
       )
   }
 
@@ -39,20 +39,20 @@ class MySqlTest {
       assertThat(
         dogQueries.selectDogsByBreedAndNames(
           breed = "Pomeranian",
-          name = listOf("Tilda", "Buddy")
-        ).executeAsList()
+          name = listOf("Tilda", "Buddy"),
+        ).executeAsList(),
       )
         .containsExactly(
           Dog(
             name = "Tilda",
             breed = "Pomeranian",
-            is_good = true
+            is_good = true,
           ),
           Dog(
             name = "Buddy",
             breed = "Pomeranian",
-            is_good = true
-          )
+            is_good = true,
+          ),
         )
     }
   }

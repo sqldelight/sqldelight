@@ -26,7 +26,8 @@ class SqlDelightPairedBraceMatcherTest : SqlDelightFixtureTestCase() {
       SqlDelightFileType,
       """
       |CREATE TABLE test <caret>
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
 
     myFixture.type('(')
@@ -34,7 +35,8 @@ class SqlDelightPairedBraceMatcherTest : SqlDelightFixtureTestCase() {
     myFixture.checkResult(
       """
       |CREATE TABLE test (<caret>)
-      |""".trimMargin()
+      |
+      """.trimMargin(),
     )
   }
 }

@@ -87,7 +87,7 @@ class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
   }
 
   private fun PsiElement.toCreateTriggerDescriptor(
-    createTriggerStmt: PsiElement?
+    createTriggerStmt: PsiElement?,
   ): FoldingDescriptor? {
     val triggerNameElement =
       (createTriggerStmt as? SqlCreateTriggerStmt)?.triggerName ?: return null

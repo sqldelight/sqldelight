@@ -42,7 +42,7 @@ interface SqlDriver : Closeable {
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)? = null
+    binders: (SqlPreparedStatement.() -> Unit)? = null,
   ): QueryResult<R>
 
   /**
@@ -64,7 +64,7 @@ interface SqlDriver : Closeable {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)? = null
+    binders: (SqlPreparedStatement.() -> Unit)? = null,
   ): QueryResult<Long>
 
   /**

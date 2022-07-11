@@ -1,4 +1,5 @@
 @file:JvmName("JdbcDrivers")
+
 package app.cash.sqldelight.driver.jdbc
 
 import app.cash.sqldelight.Query
@@ -56,7 +57,7 @@ interface ConnectionManager {
   class Transaction(
     override val enclosingTransaction: Transaction?,
     private val connectionManager: ConnectionManager,
-    val connection: Connection
+    val connection: Connection,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {
@@ -118,7 +119,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
     val (connection, onClose) = connectionAndClose()
     try {
@@ -127,7 +128,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
           JdbcPreparedStatement(jdbcStatement)
             .apply { if (binders != null) this.binders() }
             .execute()
-        }
+        },
       )
     } finally {
       onClose()
@@ -139,14 +140,14 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     sql: String,
     mapper: (SqlCursor) -> R,
     parameters: Int,
-    binders: (SqlPreparedStatement.() -> Unit)?
+    binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     val (connection, onClose) = connectionAndClose()
     try {
       return QueryResult.Value(
         JdbcPreparedStatement(connection.prepareStatement(sql))
           .apply { if (binders != null) this.binders() }
-          .executeQuery(mapper)
+          .executeQuery(mapper),
       )
     } finally {
       onClose()
@@ -174,7 +175,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
  * After binding, [execute] executes the query without a result, while [executeQuery] returns [JdbcCursor].
  */
 class JdbcPreparedStatement(
-  private val preparedStatement: PreparedStatement
+  private val preparedStatement: PreparedStatement,
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
@@ -299,6 +300,7 @@ class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
   fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
   inline fun <reified T : Any> getObject(index: Int): T? = resultSet.getObject(index + 1, T::class.java)
+
   @Suppress("UNCHECKED_CAST")
   fun <T> getArray(index: Int) = getAtIndex(index, resultSet::getArray)?.array as Array<T>?
 

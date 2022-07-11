@@ -53,11 +53,11 @@ internal class FileIndexMap {
       synchronized(this) {
         if (!initialized) {
           initialized = true
-          if (!module.isDisposed && !module.project.isDisposed)
+          if (!module.isDisposed && !module.project.isDisposed) {
             try {
               ProgressManager.getInstance().runProcessWithProgressAsynchronously(
                 FetchModuleModels(module, projectPath),
-                EmptyProgressIndicator().apply { start() }
+                EmptyProgressIndicator().apply { start() },
               )
             } catch (e: Throwable) {
               // IntelliJ can fail to start the fetch command, reinitialize later in this case.
@@ -65,6 +65,7 @@ internal class FileIndexMap {
                 initialized = false
               }
             }
+          }
         }
       }
     }
@@ -73,10 +74,10 @@ internal class FileIndexMap {
 
   private inner class FetchModuleModels(
     private val module: Module,
-    private val projectPath: String
+    private val projectPath: String,
   ) : Task.Backgroundable(
     /* project = */ module.project,
-    /* title = */ "Importing ${module.name} SQLDelight"
+    /* title = */ "Importing ${module.name} SQLDelight",
   ) {
     override fun run(indicator: ProgressIndicator) {
       FileIndexingNotification.getInstance(module.project).unconfiguredReason = Syncing
@@ -85,7 +86,7 @@ internal class FileIndexMap {
         /* gradleHome = */ null,
         /* serviceDirectory = */ null,
         /* distributionType = */ DistributionType.DEFAULT_WRAPPED,
-        /* isOfflineWork = */ false
+        /* isOfflineWork = */ false,
       )
       try {
         fileIndices.putAll(
@@ -115,7 +116,7 @@ internal class FileIndexMap {
               val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
               val shouldInvalidate = pluginDescriptor.addDialect(
                 listOf(value!!.dialectJar.toURI()) +
-                  value.moduleJars.map { it.toURI() }
+                  value.moduleJars.map { it.toURI() },
               )
 
               val database = value.databases.first()
@@ -127,7 +128,7 @@ internal class FileIndexMap {
 
               return@mapValues FileIndex(database)
             }
-          }
+          },
         )
         Timber.i("Initialized file index")
         EditorNotifications.getInstance(module.project).updateAllNotifications()
@@ -138,7 +139,7 @@ internal class FileIndexMap {
           FileIndexingNotification.UnconfiguredReason.Incompatible(
             """
             Connecting with the SQLDelight plugin failed: try building from the command line.
-            """.trimIndent()
+            """.trimIndent(),
           )
       } finally {
         fetchThread = null

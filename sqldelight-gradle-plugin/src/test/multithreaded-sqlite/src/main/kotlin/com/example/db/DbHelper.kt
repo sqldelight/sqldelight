@@ -16,7 +16,7 @@ import java.util.Properties
  */
 class DbHelper(
   journalMode: String = "",
-  foreignKeys: Boolean = false
+  foreignKeys: Boolean = false,
 ) {
   val database: Database by lazy {
     if (journalMode.isNotEmpty()) {

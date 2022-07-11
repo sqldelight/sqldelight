@@ -37,7 +37,7 @@ class FooDialect : SqlDelightDialect by SqliteDialect() {
         .add(
           "$cursorName.getLong($columnIndex)?.%M(%M)",
           MemberName("kotlin.time", "toDuration", isExtension = true),
-          MemberName("kotlin.time.DurationUnit", "SECONDS")
+          MemberName("kotlin.time.DurationUnit", "SECONDS"),
         )
         .build()
     }

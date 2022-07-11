@@ -32,8 +32,8 @@ class JsWorkerDriverTest {
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin(),
-        0
+        """.trimMargin(),
+        0,
       ).await()
       driver.execute(
         1,
@@ -45,8 +45,8 @@ class JsWorkerDriverTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin(),
-        0
+        """.trimMargin(),
+        0,
       ).await()
     }
 
@@ -152,7 +152,7 @@ class JsWorkerDriverTest {
         assertTrue(it.next())
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
-      }
+      },
     )
 
     // Second time running the query is fine
@@ -164,7 +164,7 @@ class JsWorkerDriverTest {
         assertTrue(it.next())
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
-      }
+      },
     )
   }
 

@@ -37,14 +37,14 @@ class SqlDelightCreateFileAction :
   CreateFileFromTemplateAction(
     CAPTION,
     "Creates new SqlDelight file or table",
-    SqlDelightFileType.icon
+    SqlDelightFileType.icon,
   ),
   DumbAware {
 
   override fun postProcess(
     createdElement: PsiFile,
     templateName: String,
-    customProperties: MutableMap<String, String>?
+    customProperties: MutableMap<String, String>?,
   ) {
     super.postProcess(createdElement, templateName, customProperties)
 
@@ -157,9 +157,11 @@ class SqlDelightCreateFileAction :
 
       val element = try {
         CreateFromTemplateDialog(
-          project, dir, template,
+          project,
+          dir,
+          template,
           AttributesDefaults(className).withFixedName(true),
-          properties
+          properties,
         ).create()
       } catch (e: IncorrectOperationException) {
         throw e

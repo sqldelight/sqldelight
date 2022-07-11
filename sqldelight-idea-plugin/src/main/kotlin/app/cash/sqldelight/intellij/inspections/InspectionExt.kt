@@ -31,7 +31,7 @@ internal inline fun PsiElementVisitor.ignoreInvalidElements(block: () -> Unit) {
 private inline fun <T> ensureReady(
   file: PsiFile,
   defaultValue: () -> T,
-  block: InspectionProperties.() -> T
+  block: InspectionProperties.() -> T,
 ): T {
   val sqlDelightFile = file as? SqlDelightFile ?: return defaultValue()
   val module = file.module ?: return defaultValue()

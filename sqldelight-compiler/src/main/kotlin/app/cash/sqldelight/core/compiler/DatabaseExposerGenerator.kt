@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 internal class DatabaseExposerGenerator(
   val implementation: TypeSpec,
   val fileIndex: SqlDelightFileIndex,
-  val generateAsync: Boolean
+  val generateAsync: Boolean,
 ) {
   private val interfaceType = ClassName(fileIndex.packageName, fileIndex.className)
 
@@ -27,7 +27,7 @@ internal class DatabaseExposerGenerator(
       .getter(
         FunSpec.getterBuilder()
           .addStatement("return %N.Schema", implementation)
-          .build()
+          .build(),
       )
       .build()
   }

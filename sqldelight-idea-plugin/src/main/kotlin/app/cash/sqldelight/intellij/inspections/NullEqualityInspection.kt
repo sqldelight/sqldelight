@@ -14,7 +14,7 @@ internal class NullEqualityInspection : LocalInspectionTool() {
   override fun buildVisitor(
     holder: ProblemsHolder,
     isOnTheFly: Boolean,
-    session: LocalInspectionToolSession
+    session: LocalInspectionToolSession,
   ) = ensureReady(session.file) {
     return object : SqlVisitor() {
 

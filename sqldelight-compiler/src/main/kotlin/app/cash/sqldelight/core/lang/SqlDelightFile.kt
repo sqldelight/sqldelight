@@ -18,7 +18,7 @@ import java.util.ServiceLoader
 
 abstract class SqlDelightFile(
   viewProvider: FileViewProvider,
-  language: Language
+  language: Language,
 ) : SqlFileBase(viewProvider, language) {
   val module: Module?
     get() = virtualFile?.let { SqlDelightProjectService.getInstance(project).module(it) }
@@ -82,7 +82,8 @@ abstract class SqlDelightFile(
     val folders = SqlDelightFileIndex.getInstance(module).sourceFolders(virtualFile ?: return null)
     folders.forEach { dir ->
       VfsUtilCore.iterateChildrenRecursively(
-        dir, { it.isDirectory || it.fileType == DatabaseFileType },
+        dir,
+        { it.isDirectory || it.fileType == DatabaseFileType },
         { file ->
           if (file.isDirectory) return@iterateChildrenRecursively true
 
@@ -97,7 +98,7 @@ abstract class SqlDelightFile(
           }
 
           return@iterateChildrenRecursively true
-        }
+        },
       )
     }
     return result

@@ -24,7 +24,7 @@ class SqlJsTest {
               |  id INTEGER PRIMARY KEY,
               |  value TEXT
               |);
-            """.trimMargin()
+        """.trimMargin(),
       )
       db.run(
         """
@@ -35,7 +35,7 @@ class SqlJsTest {
               |  blob_value BLOB,
               |  real_value REAL
               |);
-            """.trimMargin()
+        """.trimMargin(),
       )
     }
   }
@@ -133,7 +133,7 @@ class SqlJsTest {
 
     val params = listOf(
       dynamicArrayOf(1, "Alec"),
-      dynamicArrayOf(2, "Jake")
+      dynamicArrayOf(2, "Jake"),
     )
 
     params.forEach { param ->
