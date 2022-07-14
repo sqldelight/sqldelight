@@ -1,12 +1,14 @@
 CREATE TABLE dog (
   name VARCHAR(8) NOT NULL,
   breed VARCHAR(40) NOT NULL,
-  is_good BOOLEAN DEFAULT TRUE NOT NULL
+  is_good BOOLEAN DEFAULT TRUE NOT NULL,
+  id INTEGER NOT NULL,
+  id_bigger_than_ten BOOLEAN AS kotlin.Boolean GENERATED ALWAYS AS (id > 10) NOT NULL
 );
 
 insertDog:
 INSERT INTO dog
-VALUES (?, ?, ?);
+VALUES (?, ?, ?, ?);
 
 selectDogs:
 SELECT *
