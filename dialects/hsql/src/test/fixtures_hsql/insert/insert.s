@@ -3,6 +3,6 @@ CREATE TABLE InsertTbl (
   name VARCHAR(255) NOT NULL
 );
 
-INSERT INTO InsertTbl VALUES (1, 'john');
+INSERT INTO InsertTbl VALUES (DEFAULT, 'john');
 
 INSERT INTO InsertTbl(name) VALUES ('john');
