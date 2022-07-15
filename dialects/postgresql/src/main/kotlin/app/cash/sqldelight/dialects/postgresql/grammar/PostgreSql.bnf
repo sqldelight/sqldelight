@@ -9,6 +9,7 @@
 
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
@@ -16,10 +17,13 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
@@ -97,7 +101,7 @@ type_name ::= (
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
   override = true
 }
-bind_parameter ::= ( '?' | ':' {identifier} ) {
+bind_parameter ::= ( DEFAULT | '?' | ':' {identifier} ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
@@ -105,7 +109,7 @@ bind_parameter ::= ( '?' | ':' {identifier} ) {
 
 identity_clause ::= 'IDENTITY'
 
-generated_clause ::= 'GENERATED' ( ('ALWAYS' 'AS' <<expr '-1'>> 'STORED') | ( ('ALWAYS' | 'BY' 'DEFAULT') 'AS' identity_clause ) ) {
+generated_clause ::= GENERATED ( (ALWAYS AS <<expr '-1'>> 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true
@@ -126,7 +130,7 @@ string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CH
 
 uuid_data_type ::= 'UUID'
 
-date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [('WITH' | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
+date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [(WITH | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
 
 boolean_data_type ::= 'BOOLEAN' | 'BOOL'
 
@@ -218,12 +222,12 @@ alter_table_column_alias ::= id | string {
   ]
 }
 
-alter_table_drop_column ::= 'DROP' [ COLUMN ] {column_name} {
+alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableDropColumnMixin"
   pin = 1
 }
 
-compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ 'ORDER' 'BY' {ordering_term} ( ',' {ordering_term} ) * ] [ 'LIMIT' {limiting_term} ] [ ( 'OFFSET' | ',' ) {limiting_term} ] [ 'FOR' 'UPDATE' [ 'SKIP' 'LOCKED' ] ] {
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | ',' ) {limiting_term} ] [ 'FOR' UPDATE [ 'SKIP' 'LOCKED' ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true
@@ -250,7 +254,7 @@ extension_stmt ::= copy_stdin {
   override = true
 }
 
-copy_stdin ::= 'COPY' [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] FROM 'STDIN' [ [ 'WITH' ] '(' copy_option ( ',' copy_option) * ')' ] [ WHERE <<expr '-1'>> ] {
+copy_stdin ::= 'COPY' [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] FROM 'STDIN' [ [ WITH ] '(' copy_option ( ',' copy_option) * ')' ] [ WHERE <<expr '-1'>> ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
 }
 
