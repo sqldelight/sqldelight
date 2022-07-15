@@ -6,7 +6,7 @@
   implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
   extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
   psiClassPrefix = "Hsql"
-  
+
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
@@ -61,7 +61,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   implements = "com.alecstrong.sql.psi.core.psi.SqlColumnConstraint"
   override = true
 }
-bind_parameter ::= ( '?' | ':' {identifier} ) {
+bind_parameter ::= ( 'DEFAULT' | '?' | ':' {identifier} ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
