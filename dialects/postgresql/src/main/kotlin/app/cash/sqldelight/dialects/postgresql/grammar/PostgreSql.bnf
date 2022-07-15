@@ -97,7 +97,7 @@ type_name ::= (
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
   override = true
 }
-bind_parameter ::= ( '?' | ':' {identifier} ) {
+bind_parameter ::= ( 'DEFAULT' | '?' | ':' {identifier} ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true

@@ -19,5 +19,5 @@ CREATE TABLE test2(
     words TEXT NOT NULL
 );
 
-INSERT INTO test2(words)
-VALUES ('foo');
+INSERT INTO test2(id, words)
+VALUES (DEFAULT, 'foo');
