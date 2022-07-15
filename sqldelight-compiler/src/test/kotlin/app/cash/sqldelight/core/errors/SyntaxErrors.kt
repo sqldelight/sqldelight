@@ -62,8 +62,7 @@ class SyntaxErrors {
     )
 
     assertThat(result.errors).containsExactly(
-      "Test.sq: (2, 8): Reserved keyword in sqlite",
-      "Test.sq: (2, 16): Expected 'AS', got 'as'",
+      "Test.sq: (2, 16): ')', ',', <column constraint real> or AS expected, got 'as'",
     )
   }
 }

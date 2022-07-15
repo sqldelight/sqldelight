@@ -29,13 +29,15 @@ class HsqlTest {
   }
 
   @Test fun simpleSelect() {
-    database.dogQueries.insertDog("Tilda", "Pomeranian", true)
+    database.dogQueries.insertDog("Tilda", "Pomeranian", true, 1)
     assertThat(database.dogQueries.selectDogs().executeAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
           is_good = true,
+          id = 1,
+          id_bigger_than_ten = false,
         ),
       )
   }
