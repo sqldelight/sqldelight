@@ -36,7 +36,7 @@ class PostgreSqlTest {
   }
 
   @Test fun simpleSelect() {
-    database.dogQueries.insertDog("Tilda", "Pomeranian", 1)
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
     assertThat(database.dogQueries.selectDogs().executeAsOne())
       .isEqualTo(
         Dog(
@@ -48,7 +48,7 @@ class PostgreSqlTest {
   }
 
   @Test fun booleanSelect() {
-    database.dogQueries.insertDog("Tilda", "Pomeranian", 1)
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
     assertThat(database.dogQueries.selectGoodDogs(true).executeAsOne())
       .isEqualTo(
         Dog(
@@ -60,7 +60,7 @@ class PostgreSqlTest {
   }
 
   @Test fun returningInsert() {
-    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian", 1).executeAsOne())
+    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian").executeAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",

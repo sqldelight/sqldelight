@@ -27,6 +27,7 @@ int_data_type ::= 'INTEGER'
 real_data_type ::= 'REAL'
 
 bind_parameter ::= ( '?' [digit] | ':' {identifier} ) {
+  mixin = "app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true

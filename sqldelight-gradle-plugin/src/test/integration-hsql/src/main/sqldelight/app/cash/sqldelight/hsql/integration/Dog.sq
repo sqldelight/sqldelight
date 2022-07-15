@@ -8,7 +8,7 @@ CREATE TABLE dog (
 
 insertDog:
 INSERT INTO dog (name, breed, is_good, id)
-VALUES (?, ?, ?, ?);
+VALUES (?, ?, DEFAULT, ?);
 
 selectDogs:
 SELECT *

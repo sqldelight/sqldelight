@@ -111,6 +111,7 @@ type_name ::= (
   override = true
 }
 bind_parameter ::= ( DEFAULT | '?' | ':' {identifier} ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
@@ -118,7 +119,7 @@ bind_parameter ::= ( DEFAULT | '?' | ':' {identifier} ) {
 
 identity_clause ::= 'IDENTITY'
 
-generated_clause ::= GENERATED ( (ALWAYS AS <<expr '-1'>> 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
+generated_clause ::= GENERATED ( (ALWAYS AS '(' <<expr '-1'>> ')' 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true

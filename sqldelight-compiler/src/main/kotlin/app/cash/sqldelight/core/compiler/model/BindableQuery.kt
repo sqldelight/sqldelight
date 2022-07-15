@@ -31,6 +31,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
+import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindParameter
@@ -91,29 +92,32 @@ abstract class BindableQuery(
     val namesSeen = mutableSetOf<String>()
     var maxIndexSeen = 0
     statement.findChildrenOfType<SqlBindExpr>().forEach { bindArg ->
-      bindArg.bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
-        if (!indexesSeen.add(index)) {
-          result.findAndReplace(bindArg, index) { it.index == index }
+      val bindParameter = bindArg.bindParameter
+      if (bindParameter is BindParameterMixin && !bindParameter.isDefault) {
+        bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
+          if (!indexesSeen.add(index)) {
+            result.findAndReplace(bindArg, index) { it.index == index }
+            return@forEach
+          }
+          maxIndexSeen = maxOf(maxIndexSeen, index)
+          result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
           return@forEach
         }
-        maxIndexSeen = maxOf(maxIndexSeen, index)
-        result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
-        return@forEach
-      }
-      bindArg.bindParameter.identifier?.let {
-        if (!namesSeen.add(it.text)) {
-          result.findAndReplace(bindArg) { (_, type, _) -> type.name == it.text }
+        bindParameter.identifier?.let {
+          if (!namesSeen.add(it.text)) {
+            result.findAndReplace(bindArg) { (_, type, _) -> type.name == it.text }
+            return@forEach
+          }
+          val index = ++maxIndexSeen
+          indexesSeen.add(index)
+          manuallyNamedIndexes.add(index)
+          result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = it.text), mutableListOf(bindArg)))
           return@forEach
         }
         val index = ++maxIndexSeen
         indexesSeen.add(index)
-        manuallyNamedIndexes.add(index)
-        result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = it.text), mutableListOf(bindArg)))
-        return@forEach
+        result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
       }
-      val index = ++maxIndexSeen
-      indexesSeen.add(index)
-      result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
     }
 
     // If there are still naming conflicts (edge case where the name we generate is the same as
