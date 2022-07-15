@@ -19,6 +19,7 @@ import app.cash.sqldelight.core.lang.util.rawSqlText
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -174,36 +175,39 @@ abstract class QueryGenerator(
         precedingArrays.add(type.name)
         argumentCounts.add("${type.name}.size")
       } else {
-        nonArrayBindArgsCount += 1
+        val bindParameter = bindArg?.bindParameter as? BindParameterMixin
+        if (bindParameter == null || !bindParameter.isDefault) {
+          nonArrayBindArgsCount += 1
 
-        if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
-          val parent = bindArg?.parent
-          if (parent is SqlBinaryEqualityExpr) {
-            needsFreshStatement = true
+          if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
+            val parent = bindArg?.parent
+            if (parent is SqlBinaryEqualityExpr) {
+              needsFreshStatement = true
 
-            var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
-            val nullableEquality: String
-            if (symbol != null) {
-              nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
-            } else {
-              symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
-              nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+              var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
+              val nullableEquality: String
+              if (symbol != null) {
+                nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
+              } else {
+                symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
+                nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+              }
+
+              val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
+              replacements.add(symbol.range to "\${ $block }")
             }
-
-            val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
-            replacements.add(symbol.range to "\${ $block }")
           }
-        }
 
-        // Binds each parameter to the statement:
-        // statement.bindLong(0, id)
-        bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
+          // Binds each parameter to the statement:
+          // statement.bindLong(0, id)
+          bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
 
-        // Replace the named argument with a non named/indexed argument.
-        // This allows us to use the same algorithm for non Sqlite dialects
-        // :name becomes ?
-        if (bindArg != null) {
-          replacements.add(bindArg.range to "?")
+          // Replace the named argument with a non named/indexed argument.
+          // This allows us to use the same algorithm for non Sqlite dialects
+          // :name becomes ?
+          if (bindParameter != null) {
+            replacements.add(bindArg.range to bindParameter.replaceWith)
+          }
         }
       }
     }
