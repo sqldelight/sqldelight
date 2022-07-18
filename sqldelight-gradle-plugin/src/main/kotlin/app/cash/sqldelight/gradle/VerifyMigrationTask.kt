@@ -113,6 +113,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     }
 
     override fun execute() {
+      if (!environment.dialect.isSqlite) return
       parameters.workingDirectory.get().asFile.deleteRecursively()
 
       val catalog = createCurrentDb()
