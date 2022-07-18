@@ -27,6 +27,15 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun `verification disabled succeeds with hsql dialect`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/verify-migration-disabled-no-errors"))
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun `failing migration errors properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-failure"))
