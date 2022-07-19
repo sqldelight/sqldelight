@@ -18,21 +18,21 @@ package app.cash.sqldelight.paging3
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 internal class OffsetQueryPagingSource<RowType : Any>(
   private val queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
   private val countQuery: Query<Long>,
   private val transacter: Transacter,
-  private val dispatcher: CoroutineDispatcher,
+  private val context: CoroutineContext,
 ) : QueryPagingSource<Long, RowType>() {
 
   override val jumpingSupported get() = true
 
   override suspend fun load(
     params: LoadParams<Long>,
-  ): LoadResult<Long, RowType> = withContext(dispatcher) {
+  ): LoadResult<Long, RowType> = withContext(context) {
     try {
       val key = params.key ?: 0L
       transacter.transactionWithResult {

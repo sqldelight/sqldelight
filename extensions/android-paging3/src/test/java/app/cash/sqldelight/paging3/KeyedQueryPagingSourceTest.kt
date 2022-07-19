@@ -12,9 +12,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Before
 import org.junit.Test
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -36,7 +36,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     runBlocking {
@@ -55,7 +55,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     runBlocking {
@@ -74,7 +74,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(key = 5L, loadSize = 2, false)) }
@@ -87,7 +87,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(key = 9L, loadSize = 3, false)) }
@@ -102,7 +102,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     assertNull(
@@ -122,7 +122,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(key = null, loadSize = 3, false)) }
@@ -143,7 +143,7 @@ class KeyedQueryPagingSourceTest {
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
-      dispatcher = TestCoroutineDispatcher(),
+      context = EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(key = 6L, loadSize = 3, false)) }

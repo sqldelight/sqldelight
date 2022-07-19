@@ -19,8 +19,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
@@ -55,19 +55,19 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
  * OFFSET 100;
  * ```
  *
- * Queries will be executed on [dispatcher].
+ * Queries will be executed on [context].
  */
 @Suppress("FunctionName")
 fun <RowType : Any> QueryPagingSource(
   countQuery: Query<Long>,
   transacter: Transacter,
-  dispatcher: CoroutineDispatcher = Dispatchers.IO,
+  context: CoroutineContext = Dispatchers.IO,
   queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
 ): PagingSource<Long, RowType> = OffsetQueryPagingSource(
   queryProvider,
   countQuery,
   transacter,
-  dispatcher,
+  context,
 )
 
 /**
@@ -125,7 +125,7 @@ fun <RowType : Any> QueryPagingSource(
  * ORDER BY value ASC;
  * ```
  *
- * Queries will be executed on [dispatcher].
+ * Queries will be executed on [context].
  *
  * This [PagingSource] _does not_ support jumping. If your use case requires jumping, use the
  * offset based [QueryPagingSource] function.
@@ -133,12 +133,12 @@ fun <RowType : Any> QueryPagingSource(
 @Suppress("FunctionName")
 fun <Key : Any, RowType : Any> QueryPagingSource(
   transacter: Transacter,
-  dispatcher: CoroutineDispatcher,
+  context: CoroutineContext,
   pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key>,
   queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType>,
 ): PagingSource<Key, RowType> = KeyedQueryPagingSource(
   queryProvider,
   pageBoundariesProvider,
   transacter,
-  dispatcher,
+  context,
 )

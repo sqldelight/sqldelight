@@ -3,14 +3,14 @@ package app.cash.sqldelight.paging3
 import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
   private val queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType>,
   private val pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key>,
   private val transacter: Transacter,
-  private val dispatcher: CoroutineDispatcher,
+  private val context: CoroutineContext,
 ) : QueryPagingSource<Key, RowType>() {
 
   private var pageBoundaries: List<Key>? = null
@@ -27,7 +27,7 @@ internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
   }
 
   override suspend fun load(params: LoadParams<Key>): LoadResult<Key, RowType> {
-    return withContext(dispatcher) {
+    return withContext(context) {
       try {
         transacter.transactionWithResult {
           val boundaries = pageBoundaries
