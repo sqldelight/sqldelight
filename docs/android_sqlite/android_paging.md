@@ -32,12 +32,12 @@ import com.squareup.sqldelight.android.paging3.QueryPagingSource
 val pagingSource: PagingSource = QueryPagingSource(
   countQuery = playerQueries.countPlayers(),
   transacter = playerQueries,
-  dispatcher = Dispatchers.IO,
+  context = Dispatchers.IO,
   queryProvider = playerQueries::players,
 )
 ```
 
-By default, queries are performed on `Dispatchers.IO` if no dispatcher is specified. Consumers expecting to use RxJava's `Scheduler` to perform queries should use the [`Scheduler.asCoroutineDispatcher`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html) extension function.
+By default, queries are performed on `Dispatchers.IO` if no context is specified. Consumers expecting to use RxJava's `Scheduler` to perform queries should use the [`Scheduler.asCoroutineDispatcher`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html) extension function.
 
 ### Keyset Paging
 
@@ -86,10 +86,10 @@ import com.squareup.sqldelight.android.paging3.QueryPagingSource
 
 val keyedSource = QueryPagingSource(
   transacter = playerQueries,
-  dispatcher = Dispatchers.IO,
+  context = Dispatchers.IO,
   pageBoundariesProvider = playerQueries::pageBoundaries,
   queryProvider = playerQueries::keyedQuery,
 )
 ```
 
-By default, queries are performed on `Dispatchers.IO` if no dispatcher is specified. Consumers expecting to use RxJava's `Scheduler` to perform queries should use the [`Scheduler.asCoroutineDispatcher`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html) extension function.
+By default, queries are performed on `Dispatchers.IO` if no context is specified. Consumers expecting to use RxJava's `Scheduler` to perform queries should use the [`Scheduler.asCoroutineDispatcher`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html) extension function.

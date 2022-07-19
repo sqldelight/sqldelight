@@ -25,12 +25,12 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.assertFailsWith
 
 @ExperimentalCoroutinesApi
@@ -52,7 +52,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
@@ -66,7 +66,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
@@ -80,7 +80,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(8, 2, false)) }
@@ -94,7 +94,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     runBlocking {
@@ -113,7 +113,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(9, 2, false)) }
@@ -127,7 +127,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(1L, 2, false)) }
@@ -141,7 +141,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
@@ -155,7 +155,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(4, 2, false)) }
@@ -169,7 +169,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(8, 2, false)) }
@@ -183,7 +183,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(9, 2, false)) }
@@ -197,7 +197,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     val results = runBlocking { source.load(Refresh(1, 2, false)) }
@@ -211,7 +211,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     runBlocking {
@@ -230,7 +230,7 @@ class OffsetQueryPagingSourceTest {
       this::query,
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     runBlocking {
@@ -246,7 +246,7 @@ class OffsetQueryPagingSourceTest {
       { _, _ -> query },
       countQuery(),
       transacter,
-      TestCoroutineDispatcher(),
+      EmptyCoroutineContext,
     )
 
     runBlocking { source.load(Refresh(null, 0, false)) }
