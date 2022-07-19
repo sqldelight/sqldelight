@@ -22,26 +22,26 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 internal class OffsetQueryPagingSource<RowType : Any>(
-  private val queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-  private val countQuery: Query<Long>,
+  private val queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
+  private val countQuery: Query<Int>,
   private val transacter: Transacter,
   private val context: CoroutineContext,
-) : QueryPagingSource<Long, RowType>() {
+) : QueryPagingSource<Int, RowType>() {
 
   override val jumpingSupported get() = true
 
   override suspend fun load(
-    params: LoadParams<Long>,
-  ): LoadResult<Long, RowType> = withContext(context) {
+    params: LoadParams<Int>,
+  ): LoadResult<Int, RowType> = withContext(context) {
     try {
-      val key = params.key ?: 0L
+      val key = params.key ?: 0
       transacter.transactionWithResult {
         val count = countQuery.executeAsOne()
-        if (count != 0L && key >= count) throw IndexOutOfBoundsException()
+        if (count != 0 && key >= count) throw IndexOutOfBoundsException()
 
         val loadSize = if (key < 0) params.loadSize + key else params.loadSize
 
-        val data = queryProvider(loadSize.toLong(), maxOf(0, key))
+        val data = queryProvider(loadSize, maxOf(0, key))
           .also { currentQuery = it }
           .executeAsList()
 
@@ -51,8 +51,8 @@ internal class OffsetQueryPagingSource<RowType : Any>(
           // misaligned prepend queries to avoid duplicates.
           prevKey = if (key <= 0L) null else key - params.loadSize,
           nextKey = if (key + params.loadSize >= count) null else key + params.loadSize,
-          itemsBefore = maxOf(0L, key).toInt(),
-          itemsAfter = maxOf(0, (count - (key + params.loadSize))).toInt(),
+          itemsBefore = maxOf(0, key),
+          itemsAfter = maxOf(0, (count - (key + params.loadSize))),
         )
       }
     } catch (e: Exception) {
@@ -61,5 +61,5 @@ internal class OffsetQueryPagingSource<RowType : Any>(
     }
   }
 
-  override fun getRefreshKey(state: PagingState<Long, RowType>) = state.anchorPosition?.toLong()
+  override fun getRefreshKey(state: PagingState<Int, RowType>) = state.anchorPosition
 }

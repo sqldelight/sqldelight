@@ -59,11 +59,11 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
  */
 @Suppress("FunctionName")
 fun <RowType : Any> QueryPagingSource(
-  countQuery: Query<Long>,
+  countQuery: Query<Int>,
   transacter: Transacter,
   context: CoroutineContext = Dispatchers.IO,
-  queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-): PagingSource<Long, RowType> = OffsetQueryPagingSource(
+  queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
+): PagingSource<Int, RowType> = OffsetQueryPagingSource(
   queryProvider,
   countQuery,
   transacter,
