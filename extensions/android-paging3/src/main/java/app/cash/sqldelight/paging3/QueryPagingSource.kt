@@ -133,7 +133,7 @@ fun <RowType : Any> QueryPagingSource(
 @Suppress("FunctionName")
 fun <Key : Any, RowType : Any> QueryPagingSource(
   transacter: Transacter,
-  context: CoroutineContext,
+  context: CoroutineContext = Dispatchers.IO,
   pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key>,
   queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType>,
 ): PagingSource<Key, RowType> = KeyedQueryPagingSource(
