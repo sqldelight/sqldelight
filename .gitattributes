@@ -9,9 +9,11 @@
 
 *.jar           binary
 *.png           binary
+*.gif           binary
 *.otf           binary
 *.eot           binary
 *.ttf           binary
 *.woff          binary
 *.woff2         binary
 *.ico           binary
+*.a             binary
