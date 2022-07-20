@@ -72,7 +72,7 @@ class OffsetQueryPagingSourceTest {
     val results = runBlocking { source.load(Refresh(null, 2, false)) }
 
     assertNull((results as LoadResult.Page).prevKey)
-    assertEquals(2L, results.nextKey)
+    assertEquals(2, results.nextKey)
   }
 
   @Test fun `aligned last page gives correct prevKey and nextKey`() {
@@ -85,7 +85,7 @@ class OffsetQueryPagingSourceTest {
 
     val results = runBlocking { source.load(Refresh(8, 2, false)) }
 
-    assertEquals(6L, (results as LoadResult.Page).prevKey)
+    assertEquals(6, (results as LoadResult.Page).prevKey)
     assertNull(results.nextKey)
   }
 
@@ -98,12 +98,13 @@ class OffsetQueryPagingSourceTest {
     )
 
     runBlocking {
-      val expected = (0L until 10L).chunked(2).iterator()
-      var nextKey: Long? = null
+      val expected = (0 until 10).chunked(2).iterator()
+      var nextKey: Int? = null
       do {
         val results = source.load(Refresh(nextKey, 2, false))
         assertEquals(expected.next(), (results as LoadResult.Page).data)
         nextKey = results.nextKey
+        1L.toInt()
       } while (nextKey != null)
     }
   }
@@ -118,7 +119,7 @@ class OffsetQueryPagingSourceTest {
 
     val results = runBlocking { source.load(Refresh(9, 2, false)) }
 
-    assertEquals(7L, (results as LoadResult.Page).prevKey)
+    assertEquals(7, (results as LoadResult.Page).prevKey)
     assertNull(results.nextKey)
   }
 
@@ -130,10 +131,10 @@ class OffsetQueryPagingSourceTest {
       EmptyCoroutineContext,
     )
 
-    val results = runBlocking { source.load(Refresh(1L, 2, false)) }
+    val results = runBlocking { source.load(Refresh(1, 2, false)) }
 
-    assertEquals(-1L, (results as LoadResult.Page).prevKey)
-    assertEquals(3L, results.nextKey)
+    assertEquals(-1, (results as LoadResult.Page).prevKey)
+    assertEquals(3, results.nextKey)
   }
 
   @Test fun `initial page has correct itemsBefore and itemsAfter`() {
@@ -215,8 +216,8 @@ class OffsetQueryPagingSourceTest {
     )
 
     runBlocking {
-      val expected = listOf(listOf(1L, 2L), listOf(0L)).iterator()
-      var prevKey: Long? = 1L
+      val expected = listOf(listOf(1, 2), listOf(0)).iterator()
+      var prevKey: Int? = 1
       do {
         val results = source.load(Refresh(prevKey, 2, false))
         assertEquals(expected.next(), (results as LoadResult.Page).data)
@@ -256,12 +257,12 @@ class OffsetQueryPagingSourceTest {
     assertTrue(source.invalid)
   }
 
-  private fun query(limit: Long, offset: Long) = object : Query<Long>(
-    { cursor -> cursor.getLong(0)!! },
+  private fun query(limit: Int, offset: Int) = object : Query<Int>(
+    { cursor -> cursor.getLong(0)!!.toInt() },
   ) {
     override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT value FROM testTable LIMIT ? OFFSET ?", mapper, 2) {
-      bindLong(0, limit)
-      bindLong(1, offset)
+      bindLong(0, limit.toLong())
+      bindLong(1, offset.toLong())
     }
 
     override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("testTable"))
@@ -275,7 +276,7 @@ class OffsetQueryPagingSourceTest {
     "Test.sq",
     "count",
     "SELECT count(*) FROM testTable",
-    { it.getLong(0)!! },
+    { it.getLong(0)!!.toInt() },
   )
 
   private fun insert(value: Long, db: SqlDriver = driver) {

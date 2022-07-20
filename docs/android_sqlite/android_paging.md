@@ -54,7 +54,7 @@ ORDER BY id ASC;
 
 Queries used in keyset paging must have a unique ordering like shown above. 
 
-Both `beginInclusive` and `endExclusive` are _pre-calculated_ keys that act as page boundaries. Page sizes are established when pre-calculating page boundaries. The `pageBoundariesProvider` callback takes an `anchor: Key?` parameter as well as a `limit: Long?` parameter. An example query that pre-calculates page boundaries is shown below. 
+Both `beginInclusive` and `endExclusive` are _pre-calculated_ keys that act as page boundaries. Page sizes are established when pre-calculating page boundaries. The `pageBoundariesProvider` callback takes an `anchor: Key?` parameter as well as a `limit: Int?` parameter. An example query that pre-calculates page boundaries is shown below. 
 
 ```sql
 pageBoundaries:
