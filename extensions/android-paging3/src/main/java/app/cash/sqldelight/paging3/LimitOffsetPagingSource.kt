@@ -7,7 +7,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.room.RoomDatabase
 import androidx.room.RoomSQLiteQuery
-import androidx.room.getQueryDispatcher
 import app.cash.sqldelight.paging3.util.INITIAL_ITEM_COUNT
 import app.cash.sqldelight.paging3.util.INVALID
 import app.cash.sqldelight.paging3.util.ThreadSafeInvalidationObserver
@@ -17,6 +16,7 @@ import app.cash.sqldelight.paging3.util.queryItemCount
 import androidx.room.withTransaction
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.coroutines.CoroutineContext
 
 /**
  * An implementation of [PagingSource] to perform a LIMIT OFFSET query
@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * itself when data changes.
  */
 abstract class LimitOffsetPagingSource<Value : Any>(
+  private val context: CoroutineContext,
   private val sourceQuery: RoomSQLiteQuery,
   private val db: RoomDatabase,
   vararg tables: String,
@@ -39,7 +40,7 @@ abstract class LimitOffsetPagingSource<Value : Any>(
   )
 
   override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Value> {
-    return withContext(db.getQueryDispatcher()) {
+    return withContext(context) {
       observer.registerIfNecessary(db)
       val tempCount = itemCount.get()
       // if itemCount is < 0, then it is initial load
