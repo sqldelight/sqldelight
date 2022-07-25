@@ -1,12 +1,9 @@
 // Copyright Square, Inc.
 package app.cash.sqldelight.paging3
 
-import android.database.Cursor
-import androidx.annotation.NonNull
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.room.RoomDatabase
-import androidx.room.RoomSQLiteQuery
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.paging3.util.INITIAL_ITEM_COUNT
 import app.cash.sqldelight.paging3.util.INVALID
@@ -26,10 +23,10 @@ import kotlin.coroutines.CoroutineContext
  * itself when data changes.
  */
 abstract class LimitOffsetPagingSource<RowType : Any>(
+  private val queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
   private val countQuery: Query<Int>,
   private val transacter: Transacter,
   private val context: CoroutineContext,
-  private val sourceQuery: RoomSQLiteQuery,
   private val db: RoomDatabase,
   vararg tables: String,
 ) : PagingSource<Int, RowType>() {
@@ -69,11 +66,9 @@ abstract class LimitOffsetPagingSource<RowType : Any>(
       val tempCount = countQuery.executeAsOne()
       itemCount.set(tempCount)
       queryDatabase(
+        queryProvider = queryProvider,
         params = params,
-        sourceQuery = sourceQuery,
-        db = db,
         itemCount = tempCount,
-        convertRows = ::convertRows
       )
     }
   }
@@ -83,11 +78,9 @@ abstract class LimitOffsetPagingSource<RowType : Any>(
     tempCount: Int,
   ): LoadResult<Int, RowType> {
     val loadResult = queryDatabase(
+      queryProvider = queryProvider,
       params = params,
-      sourceQuery = sourceQuery,
-      db = db,
       itemCount = tempCount,
-      convertRows = ::convertRows
     )
     // manually check if database has been updated. If so, the observer's
     // invalidation callback will invalidate this paging source
@@ -95,9 +88,6 @@ abstract class LimitOffsetPagingSource<RowType : Any>(
     @Suppress("UNCHECKED_CAST")
     return if (invalid) INVALID as LoadResult.Invalid<Int, RowType> else loadResult
   }
-
-  @NonNull
-  protected abstract fun convertRows(cursor: Cursor): List<RowType>
 
   override fun getRefreshKey(state: PagingState<Int, RowType>): Int? {
     return state.getClippedRefreshKey()

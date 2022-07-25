@@ -1,7 +1,6 @@
 // Copyright Square, Inc.
 package app.cash.sqldelight.paging3.util
 
-import android.database.Cursor
 import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadParams
 import androidx.paging.PagingSource.LoadParams.Prepend
@@ -9,8 +8,7 @@ import androidx.paging.PagingSource.LoadParams.Append
 import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult
 import androidx.paging.PagingState
-import androidx.room.RoomDatabase
-import androidx.room.RoomSQLiteQuery
+import app.cash.sqldelight.Query
 
 /**
  * A [LoadResult] that can be returned to trigger a new generation of PagingSource
@@ -90,40 +88,19 @@ fun getOffset(params: LoadParams<Int>, key: Int, itemCount: Int): Int {
  *
  * @param params load params to calculate query limit and offset
  *
- * @param sourceQuery user provided [RoomSQLiteQuery] for database query
- *
- * @param db the [RoomDatabase] to query from
- *
  * @param itemCount the db row count, triggers a new PagingSource generation if itemCount changes,
  * i.e. items are added / removed
- *
- * @param convertRows the function to iterate data with provided [Cursor] to return List<RowType>
  */
 fun <RowType : Any> queryDatabase(
+  queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
   params: LoadParams<Int>,
-  sourceQuery: RoomSQLiteQuery,
-  db: RoomDatabase,
   itemCount: Int,
-  convertRows: (Cursor) -> List<RowType>,
 ): LoadResult<Int, RowType> {
   val key = params.key ?: 0
   val limit: Int = getLimit(params, key)
   val offset: Int = getOffset(params, key, itemCount)
-  val limitOffsetQuery =
-    "SELECT * FROM ( ${sourceQuery.sql} ) LIMIT $limit OFFSET $offset"
-  val sqLiteQuery: RoomSQLiteQuery = RoomSQLiteQuery.acquire(
-    limitOffsetQuery,
-    sourceQuery.argCount
-  )
-  sqLiteQuery.copyArgumentsFrom(sourceQuery)
-  val cursor = db.query(sqLiteQuery, null)
-  val data: List<RowType>
-  try {
-    data = convertRows(cursor)
-  } finally {
-    cursor.close()
-    sqLiteQuery.release()
-  }
+  val data = queryProvider(limit, offset)
+    .executeAsList()
   val nextPosToLoad = offset + data.size
   val nextKey =
     if (data.isEmpty() || data.size < limit || nextPosToLoad >= itemCount) {
