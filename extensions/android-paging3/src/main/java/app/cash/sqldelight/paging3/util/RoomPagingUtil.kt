@@ -81,44 +81,6 @@ fun getOffset(params: LoadParams<Int>, key: Int, itemCount: Int): Int {
 }
 
 /**
- * calls RoomDatabase.query() to return a cursor and then calls convertRows() to extract and
- * return list of data
- *
- * throws [IllegalArgumentException] from CursorUtil if column does not exist
- *
- * @param params load params to calculate query limit and offset
- *
- * @param itemCount the db row count, triggers a new PagingSource generation if itemCount changes,
- * i.e. items are added / removed
- */
-fun <RowType : Any> queryDatabase(
-  queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
-  params: LoadParams<Int>,
-  itemCount: Int,
-): LoadResult<Int, RowType> {
-  val key = params.key ?: 0
-  val limit: Int = getLimit(params, key)
-  val offset: Int = getOffset(params, key, itemCount)
-  val data = queryProvider(limit, offset)
-    .executeAsList()
-  val nextPosToLoad = offset + data.size
-  val nextKey =
-    if (data.isEmpty() || data.size < limit || nextPosToLoad >= itemCount) {
-      null
-    } else {
-      nextPosToLoad
-    }
-  val prevKey = if (offset <= 0 || data.isEmpty()) null else offset
-  return LoadResult.Page(
-    data = data,
-    prevKey = prevKey,
-    nextKey = nextKey,
-    itemsBefore = offset,
-    itemsAfter = maxOf(0, itemCount - nextPosToLoad)
-  )
-}
-
-/**
  * Returns the key for [PagingSource] for a non-initial REFRESH load.
  *
  * To prevent a negative key, key is clipped to 0 when the number of items available before

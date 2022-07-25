@@ -9,8 +9,9 @@ import app.cash.sqldelight.paging3.util.INITIAL_ITEM_COUNT
 import app.cash.sqldelight.paging3.util.INVALID
 import app.cash.sqldelight.paging3.util.ThreadSafeInvalidationObserver
 import app.cash.sqldelight.paging3.util.getClippedRefreshKey
-import app.cash.sqldelight.paging3.util.queryDatabase
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.paging3.util.getLimit
+import app.cash.sqldelight.paging3.util.getOffset
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
@@ -66,7 +67,6 @@ abstract class LimitOffsetPagingSource<RowType : Any>(
       val tempCount = countQuery.executeAsOne()
       itemCount.set(tempCount)
       queryDatabase(
-        queryProvider = queryProvider,
         params = params,
         itemCount = tempCount,
       )
@@ -78,7 +78,6 @@ abstract class LimitOffsetPagingSource<RowType : Any>(
     tempCount: Int,
   ): LoadResult<Int, RowType> {
     val loadResult = queryDatabase(
-      queryProvider = queryProvider,
       params = params,
       itemCount = tempCount,
     )
@@ -95,4 +94,41 @@ abstract class LimitOffsetPagingSource<RowType : Any>(
 
   override val jumpingSupported: Boolean
     get() = true
+
+  /**
+   * calls RoomDatabase.query() to return a cursor and then calls convertRows() to extract and
+   * return list of data
+   *
+   * throws [IllegalArgumentException] from CursorUtil if column does not exist
+   *
+   * @param params load params to calculate query limit and offset
+   *
+   * @param itemCount the db row count, triggers a new PagingSource generation if itemCount changes,
+   * i.e. items are added / removed
+   */
+  private fun queryDatabase(
+    params: LoadParams<Int>,
+    itemCount: Int,
+  ): LoadResult<Int, RowType> {
+    val key = params.key ?: 0
+    val limit: Int = getLimit(params, key)
+    val offset: Int = getOffset(params, key, itemCount)
+    val data = queryProvider(limit, offset)
+      .executeAsList()
+    val nextPosToLoad = offset + data.size
+    val nextKey =
+      if (data.isEmpty() || data.size < limit || nextPosToLoad >= itemCount) {
+        null
+      } else {
+        nextPosToLoad
+      }
+    val prevKey = if (offset <= 0 || data.isEmpty()) null else offset
+    return LoadResult.Page(
+      data = data,
+      prevKey = prevKey,
+      nextKey = nextKey,
+      itemsBefore = offset,
+      itemsAfter = maxOf(0, itemCount - nextPosToLoad)
+    )
+  }
 }
