@@ -15,7 +15,6 @@ import app.cash.sqldelight.paging3.util.getClippedRefreshKey
 import app.cash.sqldelight.paging3.util.queryDatabase
 import app.cash.sqldelight.paging3.util.queryItemCount
 import androidx.room.withTransaction
-import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -31,16 +30,6 @@ abstract class LimitOffsetPagingSource<Value : Any>(
   private val db: RoomDatabase,
   vararg tables: String,
 ) : PagingSource<Int, Value>() {
-
-  constructor(
-    supportSQLiteQuery: SupportSQLiteQuery,
-    db: RoomDatabase,
-    vararg tables: String,
-  ) : this(
-    sourceQuery = RoomSQLiteQuery.copyFrom(supportSQLiteQuery),
-    db = db,
-    tables = tables,
-  )
 
   internal val itemCount: AtomicInteger = AtomicInteger(INITIAL_ITEM_COUNT)
 
