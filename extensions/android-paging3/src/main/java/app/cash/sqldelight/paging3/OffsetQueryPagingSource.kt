@@ -33,31 +33,29 @@ internal class OffsetQueryPagingSource<RowType : Any>(
   override suspend fun load(
     params: LoadParams<Int>,
   ): LoadResult<Int, RowType> = withContext(context) {
-    try {
-      val key = params.key ?: 0
-      transacter.transactionWithResult {
-        val count = countQuery.executeAsOne()
-        if (count != 0 && key >= count) throw IndexOutOfBoundsException()
-
-        val loadSize = if (key < 0) params.loadSize + key else params.loadSize
-
-        val data = queryProvider(loadSize, maxOf(0, key))
-          .also { currentQuery = it }
-          .executeAsList()
-
-        LoadResult.Page(
-          data = data,
-          // allow one, and only one negative prevKey in a paging set. This is done for
-          // misaligned prepend queries to avoid duplicates.
-          prevKey = if (key <= 0L) null else key - params.loadSize,
-          nextKey = if (key + params.loadSize >= count) null else key + params.loadSize,
-          itemsBefore = maxOf(0, key),
-          itemsAfter = maxOf(0, (count - (key + params.loadSize))),
-        )
+    val key = params.key ?: 0
+    val limit = when (params) {
+      is LoadParams.Prepend -> minOf(key, params.loadSize)
+      else -> params.loadSize
+    }
+    transacter.transactionWithResult {
+      val count = countQuery.executeAsOne()
+      val offset = when (params) {
+        is LoadParams.Prepend -> maxOf(0, key - params.loadSize)
+        is LoadParams.Append -> key
+        is LoadParams.Refresh -> if (key >= count) maxOf(0, count - params.loadSize) else key
       }
-    } catch (e: Exception) {
-      if (e is IndexOutOfBoundsException) throw e
-      LoadResult.Error(e)
+      val data = queryProvider(limit, offset)
+        .also { currentQuery = it }
+        .executeAsList()
+      val nextPosToLoad = offset + data.size
+      LoadResult.Page(
+        data = data,
+        prevKey = offset.takeIf { it > 0 && data.isNotEmpty() },
+        nextKey = nextPosToLoad.takeIf { data.isNotEmpty() && data.size >= limit && it < count },
+        itemsBefore = offset,
+        itemsAfter = maxOf(0, count - nextPosToLoad),
+      )
     }
   }
 
