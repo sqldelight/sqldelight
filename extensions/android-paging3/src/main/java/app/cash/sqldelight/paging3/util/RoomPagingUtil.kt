@@ -2,7 +2,6 @@
 package app.cash.sqldelight.paging3.util
 
 import android.database.Cursor
-import android.os.CancellationSignal
 import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadParams
 import androidx.paging.PagingSource.LoadParams.Prepend
@@ -98,8 +97,6 @@ fun getOffset(params: LoadParams<Int>, key: Int, itemCount: Int): Int {
  * @param itemCount the db row count, triggers a new PagingSource generation if itemCount changes,
  * i.e. items are added / removed
  *
- * @param cancellationSignal the signal to cancel the query if the query hasn't yet completed
- *
  * @param convertRows the function to iterate data with provided [Cursor] to return List<Value>
  */
 fun <Value : Any> queryDatabase(
@@ -107,7 +104,6 @@ fun <Value : Any> queryDatabase(
   sourceQuery: RoomSQLiteQuery,
   db: RoomDatabase,
   itemCount: Int,
-  cancellationSignal: CancellationSignal? = null,
   convertRows: (Cursor) -> List<Value>,
 ): LoadResult<Int, Value> {
   val key = params.key ?: 0
@@ -120,7 +116,7 @@ fun <Value : Any> queryDatabase(
     sourceQuery.argCount
   )
   sqLiteQuery.copyArgumentsFrom(sourceQuery)
-  val cursor = db.query(sqLiteQuery, cancellationSignal)
+  val cursor = db.query(sqLiteQuery, null)
   val data: List<Value>
   try {
     data = convertRows(cursor)
