@@ -142,35 +142,6 @@ fun <Value : Any> queryDatabase(
 }
 
 /**
- * returns count of requested items to calculate itemsAfter and itemsBefore for use in creating
- * LoadResult.Page<>
- *
- * throws error when the column value is null, the column type is not an integral type,
- * or the integer value is outside the range [Integer.MIN_VALUE, Integer.MAX_VALUE]
- */
-fun queryItemCount(
-  sourceQuery: RoomSQLiteQuery,
-  db: RoomDatabase
-): Int {
-  val countQuery = "SELECT COUNT(*) FROM ( ${sourceQuery.sql} )"
-  val sqLiteQuery: RoomSQLiteQuery = RoomSQLiteQuery.acquire(
-    countQuery,
-    sourceQuery.argCount
-  )
-  sqLiteQuery.copyArgumentsFrom(sourceQuery)
-  val cursor: Cursor = db.query(sqLiteQuery)
-  try {
-    if (cursor.moveToFirst()) {
-      return cursor.getInt(0)
-    }
-    return 0
-  } finally {
-    cursor.close()
-    sqLiteQuery.release()
-  }
-}
-
-/**
  * Returns the key for [PagingSource] for a non-initial REFRESH load.
  *
  * To prevent a negative key, key is clipped to 0 when the number of items available before
