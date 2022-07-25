@@ -13,7 +13,7 @@ import app.cash.sqldelight.paging3.util.ThreadSafeInvalidationObserver
 import app.cash.sqldelight.paging3.util.getClippedRefreshKey
 import app.cash.sqldelight.paging3.util.queryDatabase
 import app.cash.sqldelight.paging3.util.queryItemCount
-import androidx.room.withTransaction
+import app.cash.sqldelight.Transacter
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
@@ -26,6 +26,7 @@ import kotlin.coroutines.CoroutineContext
  * itself when data changes.
  */
 abstract class LimitOffsetPagingSource<Value : Any>(
+  private val transacter: Transacter,
   private val context: CoroutineContext,
   private val sourceQuery: RoomSQLiteQuery,
   private val db: RoomDatabase,
@@ -63,7 +64,7 @@ abstract class LimitOffsetPagingSource<Value : Any>(
    *  initial load.
    */
   private suspend fun initialLoad(params: LoadParams<Int>): LoadResult<Int, Value> {
-    return db.withTransaction {
+    return transacter.transactionWithResult {
       val tempCount = queryItemCount(sourceQuery, db)
       itemCount.set(tempCount)
       queryDatabase(
