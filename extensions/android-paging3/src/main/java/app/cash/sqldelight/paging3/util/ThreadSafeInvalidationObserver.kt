@@ -1,13 +1,11 @@
 // Copyright Square, Inc.
 package app.cash.sqldelight.paging3.util
 
-import androidx.annotation.RestrictTo
 import androidx.room.InvalidationTracker
 import androidx.room.RoomDatabase
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("UNCHECKED_CAST")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ThreadSafeInvalidationObserver(
   tables: Array<out String>,
   val onInvalidated: () -> Unit,

@@ -3,7 +3,6 @@ package app.cash.sqldelight.paging3
 
 import android.database.Cursor
 import androidx.annotation.NonNull
-import androidx.annotation.RestrictTo
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.room.RoomDatabase
@@ -27,7 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * for Pager's consumption. Registers observers on tables lazily and automatically invalidates
  * itself when data changes.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class LimitOffsetPagingSource<Value : Any>(
   private val sourceQuery: RoomSQLiteQuery,
   private val db: RoomDatabase,
