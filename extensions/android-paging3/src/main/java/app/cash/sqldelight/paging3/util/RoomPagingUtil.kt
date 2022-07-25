@@ -97,15 +97,15 @@ fun getOffset(params: LoadParams<Int>, key: Int, itemCount: Int): Int {
  * @param itemCount the db row count, triggers a new PagingSource generation if itemCount changes,
  * i.e. items are added / removed
  *
- * @param convertRows the function to iterate data with provided [Cursor] to return List<Value>
+ * @param convertRows the function to iterate data with provided [Cursor] to return List<RowType>
  */
-fun <Value : Any> queryDatabase(
+fun <RowType : Any> queryDatabase(
   params: LoadParams<Int>,
   sourceQuery: RoomSQLiteQuery,
   db: RoomDatabase,
   itemCount: Int,
-  convertRows: (Cursor) -> List<Value>,
-): LoadResult<Int, Value> {
+  convertRows: (Cursor) -> List<RowType>,
+): LoadResult<Int, RowType> {
   val key = params.key ?: 0
   val limit: Int = getLimit(params, key)
   val offset: Int = getOffset(params, key, itemCount)
@@ -117,7 +117,7 @@ fun <Value : Any> queryDatabase(
   )
   sqLiteQuery.copyArgumentsFrom(sourceQuery)
   val cursor = db.query(sqLiteQuery, null)
-  val data: List<Value>
+  val data: List<RowType>
   try {
     data = convertRows(cursor)
   } finally {
@@ -147,7 +147,7 @@ fun <Value : Any> queryDatabase(
  * To prevent a negative key, key is clipped to 0 when the number of items available before
  * anchorPosition is less than the requested amount of initialLoadSize / 2.
  */
-fun <Value : Any> PagingState<Int, Value>.getClippedRefreshKey(): Int? {
+fun <RowType : Any> PagingState<Int, RowType>.getClippedRefreshKey(): Int? {
   return when (val anchorPosition = anchorPosition) {
     null -> null
     /**

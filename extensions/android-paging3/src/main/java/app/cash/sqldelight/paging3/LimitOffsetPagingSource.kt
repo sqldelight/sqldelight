@@ -25,14 +25,14 @@ import kotlin.coroutines.CoroutineContext
  * for Pager's consumption. Registers observers on tables lazily and automatically invalidates
  * itself when data changes.
  */
-abstract class LimitOffsetPagingSource<Value : Any>(
+abstract class LimitOffsetPagingSource<RowType : Any>(
   private val countQuery: Query<Int>,
   private val transacter: Transacter,
   private val context: CoroutineContext,
   private val sourceQuery: RoomSQLiteQuery,
   private val db: RoomDatabase,
   vararg tables: String,
-) : PagingSource<Int, Value>() {
+) : PagingSource<Int, RowType>() {
 
   internal val itemCount: AtomicInteger = AtomicInteger(INITIAL_ITEM_COUNT)
 
@@ -41,7 +41,7 @@ abstract class LimitOffsetPagingSource<Value : Any>(
     onInvalidated = ::invalidate
   )
 
-  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Value> {
+  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RowType> {
     return withContext(context) {
       observer.registerIfNecessary(db)
       val tempCount = itemCount.get()
@@ -64,7 +64,7 @@ abstract class LimitOffsetPagingSource<Value : Any>(
    *  data based on the original database that the count was performed on to ensure a valid
    *  initial load.
    */
-  private suspend fun initialLoad(params: LoadParams<Int>): LoadResult<Int, Value> {
+  private suspend fun initialLoad(params: LoadParams<Int>): LoadResult<Int, RowType> {
     return transacter.transactionWithResult {
       val tempCount = countQuery.executeAsOne()
       itemCount.set(tempCount)
@@ -81,7 +81,7 @@ abstract class LimitOffsetPagingSource<Value : Any>(
   private suspend fun nonInitialLoad(
     params: LoadParams<Int>,
     tempCount: Int,
-  ): LoadResult<Int, Value> {
+  ): LoadResult<Int, RowType> {
     val loadResult = queryDatabase(
       params = params,
       sourceQuery = sourceQuery,
@@ -93,13 +93,13 @@ abstract class LimitOffsetPagingSource<Value : Any>(
     // invalidation callback will invalidate this paging source
     db.invalidationTracker.refreshVersionsSync()
     @Suppress("UNCHECKED_CAST")
-    return if (invalid) INVALID as LoadResult.Invalid<Int, Value> else loadResult
+    return if (invalid) INVALID as LoadResult.Invalid<Int, RowType> else loadResult
   }
 
   @NonNull
-  protected abstract fun convertRows(cursor: Cursor): List<Value>
+  protected abstract fun convertRows(cursor: Cursor): List<RowType>
 
-  override fun getRefreshKey(state: PagingState<Int, Value>): Int? {
+  override fun getRefreshKey(state: PagingState<Int, RowType>): Int? {
     return state.getClippedRefreshKey()
   }
 
