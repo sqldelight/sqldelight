@@ -28,8 +28,8 @@ import kotlinx.coroutines.test.advanceUntilIdle
 private object NoopListCallback : ListUpdateCallback {
   override fun onChanged(position: Int, count: Int, payload: Any?) = Unit
   override fun onMoved(fromPosition: Int, toPosition: Int) = Unit
-  override fun onInserted(position: Int, count: Int) {}
-  override fun onRemoved(position: Int, count: Int) {}
+  override fun onInserted(position: Int, count: Int) = Unit
+  override fun onRemoved(position: Int, count: Int) = Unit
 }
 
 @ExperimentalCoroutinesApi
