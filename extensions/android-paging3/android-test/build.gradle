@@ -1,0 +1,26 @@
+plugins {
+  alias(deps.plugins.android.library)
+  alias(deps.plugins.kotlin.android)
+}
+
+android {
+  namespace 'app.cash.sqldelight.paging3'
+  compileSdk deps.versions.compileSdk.get() as int
+}
+
+dependencies {
+  testImplementation project(':drivers:sqlite-driver')
+  testImplementation project(':extensions:android-paging3')
+  testImplementation deps.androidx.paging3.runtime
+  testImplementation deps.androidx.recyclerView
+  testImplementation deps.truth
+  testImplementation deps.kotlin.test.junit
+  testImplementation deps.kotlin.coroutines.test
+}
+
+// workaround for https://youtrack.jetbrains.com/issue/KT-27059
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") with project(':runtime')
+  }
+}
