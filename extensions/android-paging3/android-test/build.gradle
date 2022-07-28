@@ -1,17 +1,18 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(deps.plugins.android.library)
+  alias(deps.plugins.kotlin.android)
 }
 
-archivesBaseName = 'sqldelight-androidx-paging3'
+android {
+  namespace 'app.cash.sqldelight.paging3'
+  compileSdk deps.versions.compileSdk.get() as int
+}
 
 dependencies {
-  // workaround for https://youtrack.jetbrains.com/issue/KT-27059
-  api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
-  api deps.androidx.paging3.common
-
   testImplementation project(':drivers:sqlite-driver')
+  testImplementation project(':extensions:android-paging3')
+  testImplementation deps.androidx.paging3.runtime
+  testImplementation deps.androidx.recyclerView
   testImplementation deps.truth
   testImplementation deps.kotlin.test.junit
   testImplementation deps.kotlin.coroutines.test
@@ -23,5 +24,3 @@ configurations.all {
     substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") with project(':runtime')
   }
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
