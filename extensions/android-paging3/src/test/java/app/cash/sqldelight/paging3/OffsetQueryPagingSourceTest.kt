@@ -433,8 +433,8 @@ class OffsetQueryPagingSourceTest {
         pages = listOf(result),
         anchorPosition = 14,
         config = CONFIG,
-        leadingPlaceholderCount = 0
-      )
+        leadingPlaceholderCount = 0,
+      ),
     )
     // should load around anchor position
     // Initial load size = 15, refresh key should be (15/2 = 7) items
@@ -451,8 +451,8 @@ class OffsetQueryPagingSourceTest {
         // 20 items loaded, assume anchorPosition = 19 as the last item loaded
         anchorPosition = 19,
         config = CONFIG,
-        leadingPlaceholderCount = 0
-      )
+        leadingPlaceholderCount = 0,
+      ),
     )
     // initial load size 15. Refresh key should be (15/2 = 7) items before anchorPosition
     // (19 - 7 = 12)
@@ -680,7 +680,7 @@ class OffsetQueryPagingSourceTest {
 private val CONFIG = PagingConfig(
   pageSize = 5,
   enablePlaceholders = true,
-  initialLoadSize = 15
+  initialLoadSize = 15,
 )
 
 private val ITEMS_LIST = List(100) { TestItem(id = it.toLong()) }
@@ -696,19 +696,19 @@ private fun createLoadParam(loadType: LoadType, key: Int?): PagingSource.LoadPar
   LoadType.REFRESH -> PagingSource.LoadParams.Refresh(
     key = key,
     loadSize = CONFIG.initialLoadSize,
-    placeholdersEnabled = CONFIG.enablePlaceholders
+    placeholdersEnabled = CONFIG.enablePlaceholders,
   )
 
   LoadType.APPEND -> PagingSource.LoadParams.Append(
     key = key ?: -1,
     loadSize = CONFIG.pageSize,
-    placeholdersEnabled = CONFIG.enablePlaceholders
+    placeholdersEnabled = CONFIG.enablePlaceholders,
   )
 
   LoadType.PREPEND -> PagingSource.LoadParams.Prepend(
     key = key ?: -1,
     loadSize = CONFIG.pageSize,
-    placeholdersEnabled = CONFIG.enablePlaceholders
+    placeholdersEnabled = CONFIG.enablePlaceholders,
   )
 }
 
