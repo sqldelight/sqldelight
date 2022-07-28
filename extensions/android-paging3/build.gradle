@@ -1,7 +1,13 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
+  alias(deps.plugins.android.library)
+  alias(deps.plugins.kotlin.android)
   alias(deps.plugins.publish)
   alias(deps.plugins.dokka)
+}
+
+android {
+  namespace 'app.cash.sqldelight.paging3'
+  compileSdkVersion 23
 }
 
 archivesBaseName = 'sqldelight-androidx-paging3'
@@ -12,6 +18,8 @@ dependencies {
   api deps.androidx.paging3.common
 
   testImplementation project(':drivers:sqlite-driver')
+  testImplementation deps.androidx.paging3.runtime
+  testImplementation deps.androidx.recyclerView
   testImplementation deps.truth
   testImplementation deps.kotlin.test.junit
   testImplementation deps.kotlin.coroutines.test

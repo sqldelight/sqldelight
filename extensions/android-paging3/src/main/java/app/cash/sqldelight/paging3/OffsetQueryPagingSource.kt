@@ -38,7 +38,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
       is LoadParams.Prepend -> minOf(key, params.loadSize)
       else -> params.loadSize
     }
-    transacter.transactionWithResult {
+    val loadResult = transacter.transactionWithResult {
       val count = countQuery.executeAsOne()
       val offset = when (params) {
         is LoadParams.Prepend -> maxOf(0, key - params.loadSize)
@@ -57,7 +57,9 @@ internal class OffsetQueryPagingSource<RowType : Any>(
         itemsAfter = maxOf(0, count - nextPosToLoad),
       )
     }
+    if (invalid) LoadResult.Invalid() else loadResult
   }
 
-  override fun getRefreshKey(state: PagingState<Int, RowType>) = state.anchorPosition
+  override fun getRefreshKey(state: PagingState<Int, RowType>) =
+    state.anchorPosition?.let { maxOf(0, it - (state.config.initialLoadSize / 2)) }
 }

@@ -32,6 +32,7 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "test" }
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 androidx-paging3-common = { module = "androidx.paging:paging-common", version.ref = "paging3" }
+androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging3" }
 androidx-paging3-rx3 = { module = "androidx.paging:paging-rxjava3", version.ref = "paging3" }
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.2.1" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
