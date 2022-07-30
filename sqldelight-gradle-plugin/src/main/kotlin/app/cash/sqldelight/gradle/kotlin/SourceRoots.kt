@@ -32,7 +32,7 @@ import java.io.File
  *
  *    Multiplatform environment with android target (oh boy)
  */
-internal fun SqlDelightDatabase.sources(): List<Source> {
+internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
   // Multiplatform project.
   project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let {
     return it.sources()
@@ -55,7 +55,7 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
       type = KotlinPlatformType.jvm,
       name = "main",
       sourceSets = listOf("main"),
-      sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
+      sourceDirectorySet = sourceSets.getByName("main").kotlin ?: project.objects.sourceDirectorySet("empty", "Empty kotlin source set"),
     ),
   )
 }
@@ -104,7 +104,7 @@ private fun BaseExtension.sources(): List<Source> {
       name = variant.name,
       variantName = variant.name,
       sourceDirectorySet = sourceSets[variant.name]
-        ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
+        ?: project.objects.sourceDirectorySet(variant.name, "Empty kotlin source set"),
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
         variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())

@@ -86,7 +86,7 @@ class SqlDelightDatabase(
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
-  private val sources by lazy { sources() }
+  private val sources by lazy { sources(project) }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
 
   private var recursionGuard = false
