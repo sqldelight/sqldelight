@@ -6,6 +6,7 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
+import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Provider
@@ -45,7 +46,7 @@ internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
 
   // Android project.
   project.extensions.findByName("android")?.let {
-    return (it as BaseExtension).sources()
+    return (it as BaseExtension).sources(project)
   }
 
   // Kotlin project.
@@ -87,7 +88,7 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   )
 }
 
-private fun BaseExtension.sources(): List<Source> {
+private fun BaseExtension.sources(project: Project): List<Source> {
   val variants: DomainObjectSet<out BaseVariant> = when (this) {
     is AppExtension -> applicationVariants
     is LibraryExtension -> libraryVariants
