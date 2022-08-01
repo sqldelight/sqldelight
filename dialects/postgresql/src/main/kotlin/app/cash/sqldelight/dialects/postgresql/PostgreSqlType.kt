@@ -46,7 +46,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
     return CodeBlock.of(
       when (this) {
         SMALL_INT, INTEGER, BIG_INT -> "$cursorName.getLong($columnIndex)"
-        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject($columnIndex)"
+        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject<$javaType>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
       },
     )
