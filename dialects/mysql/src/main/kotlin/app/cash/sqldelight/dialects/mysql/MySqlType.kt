@@ -61,9 +61,10 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
     return CodeBlock.of(
       when (this) {
         TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "$cursorName.getLong($columnIndex)"
-        DATE, TIME, DATETIME, TIMESTAMP -> "$cursorName.getObject<$javaType>($columnIndex)"
+        DATE, TIME, DATETIME, TIMESTAMP -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
       },
+      javaType,
     )
   }
 }
