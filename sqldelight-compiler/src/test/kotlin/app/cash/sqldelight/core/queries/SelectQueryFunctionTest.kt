@@ -592,6 +592,8 @@ class SelectQueryFunctionTest {
 
     val file = FixtureCompiler.parseSql(
       """
+      |import kotlinx.datetime.Instant;
+      |
       |CREATE TABLE data (
       |  boolean0 BOOLEAN NOT NULL,
       |  boolean1 BOOLEAN,
@@ -616,7 +618,9 @@ class SelectQueryFunctionTest {
       |  bigint0 BIGINT NOT NULL,
       |  bigint1 BIGINT,
       |  bigint2 BIGINT AS kotlin.String NOT NULL,
-      |  bigint3 BIGINT AS kotlin.String
+      |  bigint3 BIGINT AS kotlin.String,
+      |  timestamp0 TIMESTAMP AS Instant NOT NULL,
+      |  timestamp1 TIMESTAMP AS Instant
       |);
       |
       |selectData:
@@ -657,6 +661,8 @@ class SelectQueryFunctionTest {
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
+      |  timestamp0: kotlinx.datetime.Instant,
+      |  timestamp1: kotlinx.datetime.Instant?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -686,7 +692,9 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(20)!!,
       |    cursor.getLong(21),
       |    data_Adapter.bigint2Adapter.decode(cursor.getLong(22)!!),
-      |    cursor.getLong(23)?.let { data_Adapter.bigint3Adapter.decode(it) }
+      |    cursor.getLong(23)?.let { data_Adapter.bigint3Adapter.decode(it) },
+      |    data_Adapter.timestamp0Adapter.decode(cursor.getObject<java.time.OffsetDateTime>(24)!!),
+      |    cursor.getObject<java.time.OffsetDateTime>(25)?.let { data_Adapter.timestamp1Adapter.decode(it) }
       |  )
       |}
       |
@@ -699,6 +707,8 @@ class SelectQueryFunctionTest {
 
     val file = FixtureCompiler.parseSql(
       """
+      |import kotlinx.datetime.Instant;
+      |
       |CREATE TABLE data (
       |  intArray SMALLINT[],
       |  smallint0 SMALLINT NOT NULL,
@@ -713,7 +723,9 @@ class SelectQueryFunctionTest {
       |  bigint1 BIGINT,
       |  bigint2 BIGINT AS kotlin.String NOT NULL,
       |  bigint3 BIGINT AS kotlin.String,
-      |  uuid UUID NOT NULL
+      |  uuid UUID NOT NULL,
+      |  timestamp0 TIMESTAMP AS Instant NOT NULL,
+      |  timestamp1 TIMESTAMP AS Instant
       |);
       |
       |selectData:
@@ -744,6 +756,8 @@ class SelectQueryFunctionTest {
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
       |  uuid: java.util.UUID,
+      |  timestamp0: kotlinx.datetime.Instant,
+      |  timestamp1: kotlinx.datetime.Instant?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
       ||SELECT *
       ||FROM data
@@ -763,7 +777,9 @@ class SelectQueryFunctionTest {
       |    cursor.getLong(10),
       |    data_Adapter.bigint2Adapter.decode(cursor.getLong(11)!!),
       |    cursor.getLong(12)?.let { data_Adapter.bigint3Adapter.decode(it) },
-      |    cursor.getObject(13)!!
+      |    cursor.getObject<java.util.UUID>(13)!!,
+      |    data_Adapter.timestamp0Adapter.decode(cursor.getObject<java.time.LocalDateTime>(14)!!),
+      |    cursor.getObject<java.time.LocalDateTime>(15)?.let { data_Adapter.timestamp1Adapter.decode(it) }
       |  )
       |}
       |
