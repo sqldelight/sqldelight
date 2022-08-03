@@ -126,6 +126,12 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun now() {
+    val now = database.datesQueries.selectNow().executeAsOne()
+    assertThat(now).isNotNull()
+    assertThat(now).isGreaterThan(OffsetDateTime.MIN)
+  }
+
   @Test fun successfulOptimisticLock() {
     with(database.withLockQueries) {
       val row = insertText("sup").executeAsOne()
