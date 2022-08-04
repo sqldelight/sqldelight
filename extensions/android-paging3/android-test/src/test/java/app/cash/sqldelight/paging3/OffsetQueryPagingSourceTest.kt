@@ -629,14 +629,40 @@ class OffsetQueryPagingSourceTest {
     assertTrue(pagingSource.jumpingSupported)
   }
 
-  private fun query(limit: Int, offset: Int) = object : Query<TestItem>(
+  @Test
+  fun load_initialEmptyLoad_QueryPagingSourceLong() = runTest {
+    val pagingSource = QueryPagingSourceLong(
+      countQueryLong(),
+      transacter,
+      EmptyCoroutineContext,
+      ::queryLong,
+    )
+    val result = pagingSource.refresh() as LoadResult.Page
+
+    assertTrue(result.data.isEmpty())
+
+    // now add items
+    insertItems(ITEMS_LIST)
+
+    // invalidate pagingSource to imitate invalidation from running refreshVersionSync
+    pagingSource.invalidate()
+    assertTrue(pagingSource.invalid)
+
+    // this refresh should check pagingSource's invalid status, realize it is invalid, and
+    // return a LoadResult.Invalid
+    assertThat(pagingSource.refresh()).isInstanceOf(LoadResult.Invalid::class.java)
+  }
+
+  private fun query(limit: Int, offset: Int) = queryLong(limit.toLong(), offset.toLong())
+
+  private fun queryLong(limit: Long, offset: Long) = object : Query<TestItem>(
     { cursor ->
       TestItem(cursor.getLong(0)!!)
     },
   ) {
     override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
-      bindLong(0, limit.toLong())
-      bindLong(1, offset.toLong())
+      bindLong(0, limit)
+      bindLong(1, offset)
     }
 
     override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("TestItem"))
@@ -651,6 +677,16 @@ class OffsetQueryPagingSourceTest {
     "count",
     "SELECT count(*) FROM TestItem",
     { it.getLong(0)!!.toInt() },
+  )
+
+  private fun countQueryLong() = Query(
+    2,
+    arrayOf("TestItem"),
+    driver,
+    "Test.sq",
+    "count",
+    "SELECT count(*) FROM TestItem",
+    { it.getLong(0)!! },
   )
 
   private fun insertItems(items: List<TestItem>) {
