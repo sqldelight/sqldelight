@@ -59,6 +59,7 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
  * Queries will be executed on [context].
  */
 @Suppress("FunctionName")
+@JvmName("QueryPagingSourceInt")
 fun <RowType : Any> QueryPagingSource(
   countQuery: Query<Int>,
   transacter: Transacter,
@@ -81,7 +82,8 @@ fun <RowType : Any> QueryPagingSource(
  * @see toInt
  */
 @Suppress("FunctionName")
-fun <RowType : Any> QueryPagingSourceLong(
+@JvmName("QueryPagingSourceLong")
+fun <RowType : Any> QueryPagingSource(
   countQuery: Query<Long>,
   transacter: Transacter,
   context: CoroutineContext = Dispatchers.IO,

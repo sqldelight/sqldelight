@@ -631,7 +631,7 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_initialEmptyLoad_QueryPagingSourceLong() = runTest {
-    val pagingSource = QueryPagingSourceLong(
+    val pagingSource = QueryPagingSource(
       countQueryLong(),
       transacter,
       EmptyCoroutineContext,
