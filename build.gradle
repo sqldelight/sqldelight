@@ -37,6 +37,10 @@ spotless {
   }
 }
 
+rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin) {
+  rootProject.extensions.getByType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension).version = "1.22.19"
+}
+
 allprojects {
   repositories {
     mavenCentral()
