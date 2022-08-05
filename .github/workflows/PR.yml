@@ -81,9 +81,10 @@ jobs:
           arguments: build --stacktrace
           build-root-directory: sample
       - name: Upload
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
-          path: build/js/yarn-error.log
+          path: sample/build/js/yarn-error.log
 
       - name: Bundle the build report
         if: failure()
