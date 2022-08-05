@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.compiler.model.BindableQuery
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
@@ -58,14 +59,17 @@ abstract class QueryGenerator(
 
     if (query.statement is SqlDelightStmtClojureStmtList) {
       if (query is NamedQuery) {
-        result.add("return transactionWithResult {\n").indent()
+        result
+          .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
+          .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
       } else {
-        result.add("transaction {\n").indent()
+        result.beginControlFlow("transaction")
       }
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         result.add(executeBlock(statement, query.idForIndex(index)))
       }
-      result.unindent().add("}\n")
+      result.endControlFlow()
+      if (generateAsync && query is NamedQuery) { result.endControlFlow() }
     } else {
       result.add(executeBlock(query.statement, query.id))
     }
