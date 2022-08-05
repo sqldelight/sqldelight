@@ -74,6 +74,9 @@ jobs:
         run: ./gradlew iosX64Test --stacktrace
 
       # Build the sample
+      - name: Clear sample cache
+        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        run: rm -rf /Users/runner/Library/Caches/Yarn
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
         uses: gradle/gradle-build-action@v2
