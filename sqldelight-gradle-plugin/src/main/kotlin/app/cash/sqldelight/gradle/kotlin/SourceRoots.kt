@@ -10,11 +10,11 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Provider
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import java.io.File
 
@@ -50,13 +50,13 @@ internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
   }
 
   // Kotlin project.
-  val sourceSets = project.extensions.getByName("sourceSets") as SourceSetContainer
+  val sourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
   return listOf(
     Source(
       type = KotlinPlatformType.jvm,
       name = "main",
       sourceSets = listOf("main"),
-      sourceDirectorySet = sourceSets.getByName("main").kotlin ?: project.objects.sourceDirectorySet("empty", "Empty kotlin source set"),
+      sourceDirectorySet = sourceSets.getByName("main").kotlin,
     ),
   )
 }
@@ -94,9 +94,10 @@ private fun BaseExtension.sources(project: Project): List<Source> {
     is LibraryExtension -> libraryVariants
     else -> throw IllegalStateException("Unknown Android plugin $this")
   }
+  val kotlinSourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
   val sourceSets = sourceSets
     .associate { sourceSet ->
-      sourceSet.name to sourceSet.kotlinSourceDirectorySet
+      sourceSet.name to kotlinSourceSets.getByName(sourceSet.name).kotlin
     }
 
   return variants.map { variant ->
@@ -104,8 +105,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
       variantName = variant.name,
-      sourceDirectorySet = sourceSets[variant.name]
-        ?: project.objects.sourceDirectorySet(variant.name, "Empty kotlin source set"),
+      sourceDirectorySet = sourceSets[variant.name]!!,
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
         variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
