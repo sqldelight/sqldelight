@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class MySqlTest {
   lateinit var connection: Connection
@@ -85,7 +86,7 @@ class MySqlTest {
 
   @Test
   fun testDates() {
-    assertThat(
+    with(
       datesQueries.insertDate(
         date = LocalDate.of(2020, 1, 1),
         time = LocalTime.of(21, 30, 59),
@@ -93,16 +94,15 @@ class MySqlTest {
         timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
         year = "2022",
       ).executeAsOne(),
-    )
-      .isEqualTo(
-        Dates(
-          date = LocalDate.of(2020, 1, 1),
-          time = LocalTime.of(21, 30, 59),
-          datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
-          timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-          year = "2022-01-01",
-        ),
-      )
+    ) {
+      assertThat(date).isEqualTo(LocalDate.of(2020, 1, 1))
+      assertThat(time).isEqualTo(LocalTime.of(21, 30, 59))
+      assertThat(datetime).isEqualTo(LocalDateTime.of(2020, 1, 1, 21, 30, 59))
+
+      assertThat(timestamp.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        .isEqualTo(OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)).format(DateTimeFormatter.ISO_LOCAL_DATE))
+      assertThat(year).isEqualTo("2022-01-01")
+    }
   }
 
   @Test
