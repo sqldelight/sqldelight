@@ -57,7 +57,11 @@ fun TypeResolver.encapsulatingType(
   val types = exprList.map { resolvedType(it) }
   val sqlTypes = types.map { it.dialectType }
 
-  val type = typeOrder.last { it in sqlTypes }
+  val type = typeOrder.lastOrNull { it in sqlTypes }
+    ?: if (PrimitiveType.ARGUMENT in sqlTypes && typeOrder.size == 1) {
+      return IntermediateType(typeOrder.single())
+    } else error("The Kotlin type of the argument cannot be inferred, use CAST instead.")
+
   if (!nullableIfAny && types.all { it.javaType.isNullable } ||
     nullableIfAny && types.any { it.javaType.isNullable }
   ) {

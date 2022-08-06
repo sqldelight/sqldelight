@@ -14,6 +14,7 @@ import com.squareup.kotlinpoet.asClassName
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import kotlin.test.assertFailsWith
 
 class BindArgsTest {
   @get:Rule val tempFolder = TemporaryFolder()
@@ -282,6 +283,28 @@ class BindArgsTest {
       assertThat(it.column).isSameInstanceAs(column)
       assertThat(it.bindArg!!.isArrayParameter()).isTrue()
     }
+  }
+
+  @Test fun `bind arg kotlin type cannot be inferred with ambiguous sql parameter types`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE dummy(
+      |  foo INTEGER
+      |);
+      |
+      |maxSupportsManySqlTypes:
+      |SELECT 1
+      |FROM dummy
+      |WHERE MAX(:input) > 1;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val errorMessage = assertFailsWith<IllegalStateException> {
+      file.findChildrenOfType<SqlBindExpr>().single().argumentType()
+    }
+    assertThat(errorMessage.message)
+      .isEqualTo("The Kotlin type of the argument cannot be inferred, use CAST instead.")
   }
 
   @Test fun `bind args use proper binary operator precedence`() {

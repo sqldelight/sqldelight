@@ -4,3 +4,6 @@ id INTEGER
 
 selectFooWithId:
 SELECT foo(id) FROM foo;
+
+inferredType:
+SELECT 1 FROM foo WHERE foo(:inferred) NOT NULL;
