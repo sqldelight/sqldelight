@@ -64,7 +64,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       val scope = module.getModuleWithDependenciesAndLibrariesScope(false)
       val classNameIndex = KotlinFullClassNameIndex.getInstance()
       val ktClass = { classNameIndex[qName, project, scope].firstOrNull() }
-      val typeAliasFqNameIndex = KotlinTopLevelTypeAliasFqNameIndex.getInstance()
+      val typeAliasFqNameIndex = getKotlinTopLevelTypeAliasFqNameIndex()
       val typeAlias = { typeAliasFqNameIndex[qName, project, scope].firstOrNull() }
       val javaPsiFacade = JavaPsiFacade.getInstance(project)
       val javaClass = { javaPsiFacade.findClass(qName, scope) }
@@ -73,4 +73,18 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
 
     private fun typeForThisPackage(file: SqlDelightFile) = "${file.packageName}.${element.text}"
   }
+}
+
+private fun getKotlinTopLevelTypeAliasFqNameIndex(): KotlinTopLevelTypeAliasFqNameIndex {
+  // read the INSTANCE variable reflectively first (newer Kotlin plugins)
+  try {
+    val instanceField = KotlinTopLevelTypeAliasFqNameIndex::class.java.getField("INSTANCE")
+    val instance = instanceField.get(null)
+    if (instance is KotlinTopLevelTypeAliasFqNameIndex) {
+      return instance
+    }
+  } catch (e: Exception) {
+    /* intentionally empty, fall back to getInstance() call in case of errors */
+  }
+  return KotlinTopLevelTypeAliasFqNameIndex.getInstance()
 }
