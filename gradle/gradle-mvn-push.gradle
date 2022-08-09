@@ -11,4 +11,21 @@ publishing {
             url = "${rootProject.buildDir}/localMaven"
         }
     }
+
+    /**
+     * Want to push to an internal repository for testing?
+     * Set the following properties in ~/.gradle/gradle.properties.
+     *
+     * internalUrl=YOUR_INTERNAL_URL
+     * internalUsername=YOUR_USERNAME
+     * internalPassword=YOUR_PASSWORD
+     */
+    def internalUrl = providers.gradleProperty("internalUrl")
+    if (internalUrl.isPresent()) {
+        maven {
+            name = "internal"
+            url = uri(internalUrl)
+            credentials(PasswordCredentials)
+        }
+    }
 }
