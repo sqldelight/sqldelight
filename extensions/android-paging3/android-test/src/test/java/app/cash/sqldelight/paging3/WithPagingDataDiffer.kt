@@ -19,10 +19,10 @@ import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 
 private object NoopListCallback : ListUpdateCallback {
@@ -38,10 +38,12 @@ fun <T : Any> PagingData<T>.withPagingDataDiffer(
   diffCallback: DiffUtil.ItemCallback<T>,
   block: AsyncPagingDataDiffer<T>.() -> Unit,
 ) {
+  val testDispatcher = UnconfinedTestDispatcher(testScope.testScheduler)
   val pagingDataDiffer = AsyncPagingDataDiffer(
     diffCallback,
     NoopListCallback,
-    workerDispatcher = Dispatchers.Main,
+    mainDispatcher = testDispatcher,
+    workerDispatcher = testDispatcher,
   )
   val job = testScope.launch {
     pagingDataDiffer.submitData(this@withPagingDataDiffer)

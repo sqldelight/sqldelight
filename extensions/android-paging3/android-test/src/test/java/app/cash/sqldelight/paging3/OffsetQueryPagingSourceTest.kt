@@ -29,14 +29,9 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.coroutines.EmptyCoroutineContext
@@ -51,15 +46,9 @@ class OffsetQueryPagingSourceTest {
 
   @Before
   fun init() {
-    Dispatchers.setMain(StandardTestDispatcher())
     driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
     transacter = object : TransacterImpl(driver) {}
-  }
-
-  @After
-  fun tearDown() {
-    Dispatchers.resetMain()
   }
 
   @Test
