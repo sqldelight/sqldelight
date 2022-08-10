@@ -38,7 +38,12 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
       fileName,
       GlobalSearchScope.moduleScope(module),
     ).firstOrNull() as KtFile? ?: return PsiElementVisitor.EMPTY_VISITOR
-    val allMethods = generatedFile.classes[0].methods
+    val allMethods = generatedFile.classes.getOrNull(0)?.methods
+
+    if (allMethods == null) {
+      return PsiElementVisitor.EMPTY_VISITOR
+    }
+
     return object : SqlDelightVisitor() {
       override fun visitStmtIdentifier(o: SqlDelightStmtIdentifier) = ignoreInvalidElements {
         if (o !is StmtIdentifierMixin || o.identifier() == null) {
