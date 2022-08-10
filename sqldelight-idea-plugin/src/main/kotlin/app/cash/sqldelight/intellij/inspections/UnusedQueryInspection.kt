@@ -38,7 +38,7 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
       fileName,
       GlobalSearchScope.moduleScope(module),
     ).firstOrNull() as KtFile? ?: return PsiElementVisitor.EMPTY_VISITOR
-    val allMethods = generatedFile.classes.getOrNull(0)?.methods
+    val allMethods = generatedFile.classes.firstOrNull()?.methods
 
     if (allMethods == null) {
       return PsiElementVisitor.EMPTY_VISITOR
