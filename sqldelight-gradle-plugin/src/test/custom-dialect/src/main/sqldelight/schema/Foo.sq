@@ -7,3 +7,6 @@ SELECT foo(id) FROM foo;
 
 inferredType:
 SELECT 1 FROM foo WHERE foo(:inferred) NOT NULL;
+
+inferredTypeFromMax:
+SELECT 1 FROM foo WHERE max(1, :inferred);

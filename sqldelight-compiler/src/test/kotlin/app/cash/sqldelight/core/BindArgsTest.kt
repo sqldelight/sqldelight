@@ -307,6 +307,49 @@ class BindArgsTest {
       .isEqualTo("The Kotlin type of the argument cannot be inferred, use CAST instead.")
   }
 
+  @Test fun `bind arg kotlin type can be inferred with other types`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE dummy(
+      |  foo INTEGER
+      |);
+      |
+      |inferredNullableLong:
+      |SELECT 1
+      |FROM dummy
+      |WHERE MAX(1, :input) > 1;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    file.findChildrenOfType<SqlBindExpr>().map { it.argumentType() }.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[0].javaType).isEqualTo(Long::class.asClassName().copy(nullable = true))
+    }
+  }
+
+  @Test fun `bind arg kotlin type cannot be inferred with other different types`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE dummy(
+      |  foo INTEGER
+      |);
+      |
+      |differentSqlTypes:
+      |SELECT 1
+      |FROM dummy
+      |WHERE MAX(1, 'FOO', :input) > 1;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val errorMessage = assertFailsWith<IllegalStateException> {
+      file.findChildrenOfType<SqlBindExpr>().single().argumentType()
+    }
+    assertThat(errorMessage.message)
+      .isEqualTo("The Kotlin type of the argument cannot be inferred, use CAST instead.")
+  }
+
   @Test fun `bind args use proper binary operator precedence`() {
     val file = FixtureCompiler.parseSql(
       """
