@@ -10,6 +10,14 @@ pluginManagement {
 
 dependencyResolutionManagement {
     defaultLibrariesExtensionName.set('deps')
+    versionCatalogs {
+        deps {
+            def sqlPsiOverride = settings.sqlPsiVersion
+            if (sqlPsiOverride != null) {
+                version('sqlPsi', sqlPsiOverride)
+            }
+        }
+    }
 }
 
 rootProject.name = 'sqldelight'
