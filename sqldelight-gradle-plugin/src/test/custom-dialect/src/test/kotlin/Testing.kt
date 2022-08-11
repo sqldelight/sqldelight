@@ -7,25 +7,23 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class Testing {
-  @Test fun inferredCompiles() {
-    val fakeDriver = object : JdbcDriver() {
-      override fun getConnection() = TODO()
-      override fun closeConnection(connection: Connection) = Unit
-      override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-      override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-      override fun notifyListeners(queryKeys: Array<String>) = Unit
-    }
-    FooQueries(fakeDriver).inferredType(1.seconds)
+  val fakeDriver = object : JdbcDriver() {
+    override fun getConnection() = TODO()
+    override fun closeConnection(connection: Connection) = Unit
+    override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
+    override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
+    override fun notifyListeners(queryKeys: Array<String>) = Unit
   }
 
   @Test fun customFunctionReturnsDuration() {
-    val fakeDriver = object : JdbcDriver() {
-      override fun getConnection() = TODO()
-      override fun closeConnection(connection: Connection) = Unit
-      override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-      override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-      override fun notifyListeners(queryKeys: Array<String>) = Unit
-    }
     val unused: Duration = FooQueries(fakeDriver).selectFooWithId().executeAsOne()
+  }
+
+  @Test fun inferredCompiles() {
+    FooQueries(fakeDriver).inferredType(1.seconds)
+  }
+
+  @Test fun inferredTypeFromMaxIsLong() {
+    FooQueries(fakeDriver).inferredTypeFromMax(1L).executeAsOne()
   }
 }
