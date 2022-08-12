@@ -31,6 +31,13 @@ nav:
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
     - 'Gradle': android_sqlite/gradle.md
     - 'Upgrading Pre-1.0': android_sqlite/upgrading.md
+    - '2.x API':
+        - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
+        - 'rxjava2-extensions': 2.x/extensions/rxjava2-extensions/index.html
+        - 'rxjava3-extensions': 2.x/extensions/rxjava3-extensions/index.html
+        - 'android-paging3': 2.x/extensions/android-paging3/index.html
+        - 'android-driver': 2.x/drivers/android-driver/index.html
+        - 'runtime': 2.x/runtime/index.html
     - '1.x API':
         - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
         - 'rxjava2-extensions': 1.x/rxjava2-extensions/index.md
@@ -55,6 +62,9 @@ nav:
       - 'IntelliJ Plugin': multiplatform_sqlite/intellij_plugin.md
       - 'Gradle': multiplatform_sqlite/gradle.md
       - 'Resources': multiplatform_sqlite/resources.md
+      - '2.x API':
+          - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
+          - 'runtime': 2.x/runtime/index.html
       - '1.x API':
           - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
           - 'runtime': 1.x/runtime/index.md
@@ -70,6 +80,9 @@ nav:
       - 'Migrations': jvm_mysql/migrations.md
       - 'IntelliJ Plugin': jvm_mysql/intellij_plugin.md
       - 'Gradle': jvm_mysql/gradle.md
+      - '2.x API':
+          - 'jdbc-driver': 2.x/drivers/jdbc-driver/index.html
+          - 'runtime': 2.x/runtime/index.html
       - '1.x API':
           - 'jdbc-driver': 1.x/jdbc-driver/index.md
           - 'runtime': 1.x/runtime/index.md
@@ -85,6 +98,9 @@ nav:
       - 'Migrations': jvm_postgresql/migrations.md
       - 'IntelliJ Plugin': jvm_postgresql/intellij_plugin.md
       - 'Gradle': jvm_postgresql/gradle.md
+      - '2.x API':
+          - 'jdbc-driver': 2.x/drivers/jdbc-driver/index.html
+          - 'runtime': 2.x/runtime/index.html
       - '1.x API':
           - 'jdbc-driver': 1.x/jdbc-driver/index.md
           - 'runtime': 1.x/runtime/index.md
@@ -100,6 +116,9 @@ nav:
       - 'Migrations': jvm_h2/migrations.md
       - 'IntelliJ Plugin': jvm_h2/intellij_plugin.md
       - 'Gradle': jvm_h2/gradle.md
+      - '2.x API':
+          - 'jdbc-driver': 2.x/drivers/jdbc-driver/index.html
+          - 'runtime': 2.x/runtime/index.html
       - '1.x API':
           - 'jdbc-driver': 1.x/jdbc-driver/index.md
           - 'runtime': 1.x/runtime/index.md
@@ -117,6 +136,10 @@ nav:
     - 'Migrations': native_sqlite/migrations.md
     - 'IntelliJ Plugin': native_sqlite/intellij_plugin.md
     - 'Gradle': native_sqlite/gradle.md
+    - '2.x API':
+        - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
+        - 'native-driver': 2.x/drivers/native-driver/index.html
+        - 'runtime': 2.x/runtime/index.html
     - '1.x API':
       - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
       - 'native-driver': 1.x/native-driver/index.md
@@ -136,6 +159,12 @@ nav:
     - 'Migrations': jvm_sqlite/migrations.md
     - 'IntelliJ Plugin': jvm_sqlite/intellij_plugin.md
     - 'Gradle': jvm_sqlite/gradle.md
+    - '2.x API':
+        - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
+        - 'rxjava2-extensions': 2.x/extensions/rxjava2-extensions/index.html
+        - 'rxjava3-extensions': 2.x/extensions/rxjava3-extensions/index.html
+        - 'sqlite-driver': 2.x/drivers/sqlite-driver/index.html
+        - 'runtime': 2.x/runtime/index.html
     - '1.x API':
         - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
         - 'rxjava2-extensions': 1.x/rxjava2-extensions/index.md
@@ -158,10 +187,16 @@ nav:
       - 'Migrations': js_sqlite/migrations.md
       - 'IntelliJ Plugin': js_sqlite/intellij_plugin.md
       - 'Gradle': js_sqlite/gradle.md
+      - '2.x API':
+          - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
+          - 'sqljs-driver': 2.x/drivers/sqljs-driver/index.html
+          - 'runtime': 2.x/runtime/index.html
       - '1.x API':
           - 'coroutines-extensions': 1.x/coroutines-extensions/index.md
           - 'sqljs-driver': 1.x/sqljs-driver/index.md
           - 'runtime': 1.x/runtime/index.md
+
+  - '2.x API': 2.x/index.html
 
   - '1.x API':
       - 'android-driver': 1.x/android-driver/index.md
@@ -193,6 +228,9 @@ extra_css:
   - 'css/app.css'
 
 markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.superfences
   - codehilite:
       guess_lang: false
 
