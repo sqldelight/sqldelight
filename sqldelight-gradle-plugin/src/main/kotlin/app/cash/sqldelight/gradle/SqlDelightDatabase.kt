@@ -41,7 +41,7 @@ class SqlDelightDatabase(
 
   fun dialect(dialect: Any) {
     if (addedDialect) throw IllegalStateException("Can only set a single dialect.")
-    configuration.dependencies.add(project.dependencies.create(dialect))
+    project.dependencies.add(configuration.name, dialect)
     addedDialect = true
   }
 
