@@ -8,7 +8,7 @@ apply plugin: 'app.cash.sqldelight'
 sqldelight {
   MyDatabase {
     packageName = "app.cash.sqldelight.mysql.integration"
-    dialect(deps.sqldelight.mysql)
+    dialect(libs.sqldelight.mysql)
   }
 }
 
