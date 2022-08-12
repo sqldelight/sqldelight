@@ -43,6 +43,9 @@ allprojects {
     google()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    maven {
+      url "file://${getRootDir().absolutePath}/build/localMaven"
+    }
   }
 
   tasks.withType(Test).configureEach {
