@@ -9,29 +9,21 @@
 set -ex
 
 # Generate the API docs
-./gradlew dokkaGfm
+./gradlew dokkaHtmlMultiModule
 
-# Dokka filenames like `-http-url/index.md` don't work well with MkDocs <title> tags.
-# Assign metadata to the file's first Markdown heading.
-# https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data
-title_markdown_file() {
-  TITLE_PATTERN="s/^[#]+ *(.*)/title: \1 - SQLDelight/"
-  echo "---"                                                     > "$1.fixed"
-  cat $1 | sed -E "$TITLE_PATTERN" | grep "title: " | head -n 1 >> "$1.fixed"
-  echo "---"                                                    >> "$1.fixed"
-  echo                                                          >> "$1.fixed"
-  cat $1                                                        >> "$1.fixed"
-  mv "$1.fixed" "$1"
-}
-
+# Fix up some styling/functionality on the generated dokka HTML pages
 set +x
-for MARKDOWN_FILE in $(find docs/1.x/ -name '*.md'); do
-  echo $MARKDOWN_FILE
-  title_markdown_file $MARKDOWN_FILE
+for HTML_FILE in $(find docs/2.x/ -name '*.html'); do
+  echo $HTML_FILE
+
+  # Change header link to direct back to the main docs site
+  sed -i '' 's/<a href="\(.*\)">SQLDelight<\/a>/<a href="\/sqldelight\/">SQLDelight<\/a>/g' $HTML_FILE
+  sed -i '' 's/<a href="\(.*\)"><span>SQLDelight<\/span><\/a>/<a href="\/sqldelight\/"><span>SQLDelight<\/span><\/a>/g' $HTML_FILE
+  # Add a link to the favicon
+  sed -i '' 's/<\/head>/<link rel="icon" href="\/sqldelight\/images\/icon-cashapp.png"><\/head>/g' $HTML_FILE
 done
 set -x
 
 # Copy in special files that GitHub wants in the project root.
-cp UPGRADING.md docs/upgrading.md
 cp CHANGELOG.md docs/changelog.md
 cp CONTRIBUTING.md docs/contributing.md

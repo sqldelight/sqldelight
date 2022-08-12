@@ -1,9 +1,3 @@
-plugins.withId("org.jetbrains.dokka") {
-    tasks.named("dokkaGfm").configure {
-        outputDirectory = file("$rootDir/docs/1.x")
-    }
-}
-
 publishing {
     repositories {
         maven {

@@ -22,6 +22,7 @@ iosApp.xcworkspace
 # Mkdocs
 site/
 docs/1.x
+docs/2.x
 docs/changelog.md
 docs/upgrading.md
 docs/contributing.md
