@@ -9,7 +9,6 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.artifacts.ExternalModuleDependencyBundle
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Provider
 import java.io.File
@@ -42,17 +41,7 @@ class SqlDelightDatabase(
 
   fun dialect(dialect: Any) {
     if (addedDialect) throw IllegalStateException("Can only set a single dialect.")
-
-    val dep = if (dialect is Provider<*>) {
-      when (val dependency = dialect.get()) {
-        is ExternalModuleDependencyBundle -> throw IllegalArgumentException("Dialect can not be a dependency bundle.")
-        else -> dependency
-      }
-    } else {
-      dialect
-    }
-
-    configuration.dependencies.add(project.dependencies.create(dep))
+    project.dependencies.add(configuration.name, dialect)
     addedDialect = true
   }
 
