@@ -299,7 +299,7 @@ class SqlDelightDatabase(
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
       it.group = SqlDelightPlugin.GROUP
-      it.description = "Generate valid sql migration files for ${source.name} $name."
+      it.description = "Squash migrations into a single file for ${source.name} $name."
       it.properties = getProperties()
       it.classpath.setFrom(configuration.fileCollection { true })
       it.classpath.from(moduleConfiguration.fileCollection { true })
