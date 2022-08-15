@@ -13,6 +13,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -166,9 +167,9 @@ table_option ::= 'ENGINE' ['='] {identifier} |
 
 row_format_clause ::= 'ROW_FORMAT' [ '=' ] ( DEFAULT | 'DYNAMIC' | 'FIXED' | 'COMPRESSED' | 'REDUNDANT' | 'COMPACT' )
 
-table_or_subquery ::= ( [ {database_name} '.' ] {table_name} [ [ 'AS' ] {table_alias} ] [ index_hint_list ]
+table_or_subquery ::= ( [ {database_name} '.' ] {table_name} [ [ AS ] {table_alias} ] [ index_hint_list ]
                       | '(' ( {table_or_subquery} ( ',' {table_or_subquery} ) * | {join_clause} ) ')'
-                      | '(' {compound_select_stmt} ')' [ [ 'AS' ] {table_alias} ] ) {
+                      | '(' {compound_select_stmt} ')' [ [ AS ] {table_alias} ] ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOrSubqueryImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery"
   override = true
