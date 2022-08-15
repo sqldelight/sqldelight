@@ -223,6 +223,7 @@ theme:
     accent: 'pink'
   features:
     - navigation.tabs
+    - content.tabs.link
 
 extra_css:
   - 'css/app.css'
@@ -233,6 +234,8 @@ markdown_extensions:
   - pymdownx.superfences
   - codehilite:
       guess_lang: false
+  - pymdownx.tabbed:
+      alternate_style: true
 
 plugins:
   - search
@@ -240,4 +243,4 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '1.5.3'
+    sqldelight: '2.0.0-alpha03'

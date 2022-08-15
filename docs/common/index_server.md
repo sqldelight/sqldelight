@@ -13,15 +13,26 @@ In the same `.sq` files you can start placing your sql statements to be executed
 
 First, configure gradle to use migrations to assemble the schema:
 
-```groovy
-sqldelight {
-  Database {
-    ...
-    sourceFolders = ["sqldelight"]
-    deriveSchemaFromMigrations = true
-  }
-}
-```
+=== "Kotlin"
+    ```kotlin
+    sqldelight {
+      database("Database") {
+        ...
+        sourceFolders = listOf("sqldelight")
+        deriveSchemaFromMigrations = true
+      }
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    sqldelight {
+      Database {
+        ...
+        sourceFolders = ["sqldelight"]
+        deriveSchemaFromMigrations = true
+      }
+    }
+    ```
 
 Migration files have the extension `.sqm`, and must have a number in their file name indicating what
 order the migration file runs in. For example, given this hierarchy:
@@ -45,11 +56,18 @@ Before you're able to execute SQL statements at runtime, you need to create a `S
 to your database. The easiest way is off of a `DataSource` that you would get from hikari or other
 connection managers.
 
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:jdbc-driver:{{ versions.sqldelight }}"
-}
-```
+=== "Kotlin"
+    ```kotlin
+    dependencies {
+      implementation("app.cash.sqldelight:jdbc-driver:{{ versions.sqldelight }}")
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    dependencies {
+      implementation "app.cash.sqldelight:jdbc-driver:{{ versions.sqldelight }}"
+    }
+    ```
 ```kotlin
 val driver: SqlDriver = dataSource.asJdbcDriver()
 ```

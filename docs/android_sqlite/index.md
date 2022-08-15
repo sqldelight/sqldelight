@@ -1,31 +1,21 @@
 # Getting Started on Android
 
-First apply the gradle plugin in your project's top-level `build.gradle`.
-
-```groovy
-buildscript {
-  repositories {
-    google()
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.squareup.sqldelight:gradle-plugin:{{ versions.sqldelight }}'
-  }
-}
-```
-Then apply the gradle plugin in your app or module's `build.gradle`.
-
-```groovy
-apply plugin: 'com.squareup.sqldelight'
-```
+{% include 'common/index_gradle_database.md' %}
 
 {% include 'common/index_schema.md' %}
 
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:android-driver:{{ versions.sqldelight }}"
-}
-```
+=== "Kotlin"
+    ```kotlin
+    dependencies {
+      implementation("app.cash.sqldelight:android-driver:{{ versions.sqldelight }}")
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    dependencies {
+      implementation "app.cash.sqldelight:android-driver:{{ versions.sqldelight }}"
+    }
+    ```
 ```kotlin
 val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "test.db")
 ```

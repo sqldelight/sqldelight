@@ -9,20 +9,20 @@ kotlin {
   // The drivers needed will change depending on what platforms you target:
 
   sourceSets.androidMain.dependencies {
-    implementation "com.squareup.sqldelight:android-driver:{{ versions.sqldelight }}"
+    implementation "app.cash.sqldelight:android-driver:{{ versions.sqldelight }}"
   }
 
   // or sourceSets.iosMain, sourceSets.windowsMain, etc.
   sourceSets.nativeMain.dependencies {
-    implementation "com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}"
+    implementation "app.cash.sqldelight:native-driver:{{ versions.sqldelight }}"
   }
 
   sourceSets.jvmMain.dependencies {
-    implementation "com.squareup.sqldelight:sqlite-driver:{{ versions.sqldelight }}"
+    implementation "app.cash.sqldelight:sqlite-driver:{{ versions.sqldelight }}"
   }
 
   sourceSets.jsMain.dependencies {
-    implementation "com.squareup.sqldelight:sqljs-driver:{{ versions.sqldelight }}"
+    implementation "app.cash.sqldelight:sqljs-driver:{{ versions.sqldelight }}"
     implementation npm("sql.js", "1.6.2")
     implementation devNpm("copy-webpack-plugin", "9.1.0")
   }

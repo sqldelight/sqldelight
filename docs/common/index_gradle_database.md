@@ -1,23 +1,38 @@
-{% include 'common/index_gradle_database_pre_dialect.md' %}
-{% include 'common/index_gradle_database_post_dialect.md' %}
+First apply the gradle plugin in your project.
 
-If you're using Kotlin for your Gradle files:
-
-```kotlin
-plugins {
-    id("com.squareup.sqldelight") version "{{ versions.sqldelight }}"
-}
-
-apply(plugin = "com.squareup.sqldelight")
-
-repositories {
-    google()
-    mavenCentral()
-}
-
-sqldelight {
-    database("Database") {
-        packageName = "com.example"
+=== "Kotlin"
+    ```kotlin
+    plugins {
+      id("app.cash.sqldelight") version "{{ versions.sqldelight }}"
     }
-}
-```
+     
+    repositories {
+      google()
+      mavenCentral()
+    }
+    
+    sqldelight {
+      database("Database") {
+        packageName = "com.example"{% if dialect %}
+        dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+      }
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    plugins {
+      id "app.cash.sqldelight" version "{{ versions.sqldelight }}"
+    }
+
+    repositories {
+      google()
+      mavenCentral()
+    }
+
+    sqldelight {
+      Database { // This will be the name of the generated database class.
+        packageName = "com.example"{% if dialect %}
+        dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+      }
+    }
+    ```

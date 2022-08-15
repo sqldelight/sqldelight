@@ -2,11 +2,18 @@
 
 To observe a query, depend on the RxJava extensions artifact and use the extension method it provides:
 
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:rxjava3-extensions:{{ versions.sqldelight }}"
-}
-```
+=== "Kotlin"
+    ```kotlin
+    dependencies {
+      implementation("app.cash.sqldelight:rxjava3-extensions:{{ versions.sqldelight }}")
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    dependencies {
+      implementation "app.cash.sqldelight:rxjava3-extensions:{{ versions.sqldelight }}"
+    }
+    ```
 
 ```kotlin
 val players: Observable<List<HockeyPlayer>> = 

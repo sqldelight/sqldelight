@@ -4,11 +4,18 @@
 
 To use SQLDelight with [Android's Paging 3 Library](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) add a dependency on the paging extension artifact.
 
-```groovy
-dependencies {
-  implementation "com.squareup.sqldelight:android-paging3-extensions:{{ versions.sqldelight }}"
-}
-```
+=== "Kotlin"
+    ```kotlin
+    dependencies {
+      implementation("app.cash.sqldelight:android-paging3-extensions:{{ versions.sqldelight }}")
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    dependencies {
+      implementation "app.cash.sqldelight:android-paging3-extensions:{{ versions.sqldelight }}"
+    }
+    ```
 
 SQLDelight offers two methods for paging data -- offset based paging and keyset paging.
 
@@ -27,7 +34,7 @@ LIMIT :limit OFFSET :offset;
 ```
 
 ```kotlin
-import com.squareup.sqldelight.android.paging3.QueryPagingSource
+import app.cash.sqldelight.android.paging3.QueryPagingSource
 
 val pagingSource: PagingSource = QueryPagingSource(
   countQuery = playerQueries.countPlayers(),
@@ -82,7 +89,7 @@ This paging source _does not_ support jumping.
 To create this paging source, use the `QueryPagingSource` factory function. 
 
 ```kotlin
-import com.squareup.sqldelight.android.paging3.QueryPagingSource
+import app.cash.sqldelight.android.paging3.QueryPagingSource
 
 val keyedSource = QueryPagingSource(
   transacter = playerQueries,

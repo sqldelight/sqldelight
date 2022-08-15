@@ -4,24 +4,25 @@
 
 {% include 'common/index_schema.md' %}
 
-```groovy
-//Groovy
-kotlin {
-  // or sourceSets.iosMain, sourceSets.windowsMain, etc.
-  sourceSets.nativeMain.dependencies {
-    implementation "com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}"
-  }
-}
-```
-```kotlin
-//Kotlin
-kotlin {
-  // or sourceSets.iosMain, sourceSets.windowsMain, etc.
-  sourceSets.nativeMain.dependencies {
-    implementation ("com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}")
-  }
-}
-```
+=== "Kotlin"
+    ```kotlin
+    kotlin {
+      // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+      sourceSets.nativeMain.dependencies {
+        implementation("app.cash.sqldelight:native-driver:{{ versions.sqldelight }}")
+      }
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    kotlin {
+      // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+      sourceSets.nativeMain.dependencies {
+        implementation "app.cash.sqldelight:native-driver:{{ versions.sqldelight }}"
+      }
+    }
+    ```
+
 ```kotlin
 val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 ```
