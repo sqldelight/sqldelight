@@ -19,6 +19,7 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -129,7 +130,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     val columnDef = intermediateType.column ?: return intermediateType
     val tableDef = columnDef.parent as? SqlCreateTableStmt ?: return intermediateType
     tableDef.tableConstraintList.forEach {
-      if (columnDef.columnName.name in it.indexedColumnList.mapNotNull { it.columnName?.name }) {
+      if (columnDef.columnName.name in it.indexedColumnList.mapNotNull {
+        val expr = it.expr
+        if (expr is SqlColumnExpr) expr.columnName.name else null
+      }
+      ) {
         return intermediateType.asNonNullable()
       }
     }

@@ -39,6 +39,9 @@ spotless {
 
 allprojects {
   repositories {
+    maven {
+      url "file://${rootDir.absolutePath}/build/localMaven"
+    }
     mavenCentral()
     google()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }

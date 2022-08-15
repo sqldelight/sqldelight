@@ -10,6 +10,7 @@ import java.io.File
 class Sqlite325FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
   override val replaceRules = arrayOf(
     "ORDER or WHERE expected" to "ORDER, WHERE or WINDOW expected",
+    "SELECT _id, _id INTO ?, ? FROM test;" to "SELECT _id, _id INTO ?1, ?2 FROM test;",
   )
 
   override fun setupDialect() {

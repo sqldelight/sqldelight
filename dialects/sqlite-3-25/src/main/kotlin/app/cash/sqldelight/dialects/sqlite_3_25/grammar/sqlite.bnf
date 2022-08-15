@@ -21,6 +21,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
@@ -54,7 +55,7 @@ result_column ::= ( MULTIPLY
   implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
   override = true
 }
-select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [INTO {bind_expr} ( COMMA {bind_expr} ) * ] [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
