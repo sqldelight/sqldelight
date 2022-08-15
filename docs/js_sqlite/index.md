@@ -4,15 +4,26 @@
 
 {% include 'common/index_schema.md' %}
 
-```groovy
-kotlin {
-  sourceSets.jsMain.dependencies {
-    implementation "com.squareup.sqldelight:sqljs-driver:{{ versions.sqldelight }}"
-    implementation npm("sql.js", "1.6.2")  
-    implementation devNpm("copy-webpack-plugin", "9.1.0")
-  }
-}
-```
+=== "Kotlin"
+    ```kotlin
+    kotlin {
+      sourceSets.jsMain.dependencies {
+        implementation("app.cash.sqldelight:sqljs-driver:{{ versions.sqldelight }}")
+        implementation(npm("sql.js", "1.6.2"))
+        implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+      }
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    kotlin {
+      sourceSets.jsMain.dependencies {
+        implementation "app.cash.sqldelight:sqljs-driver:{{ versions.sqldelight }}"
+        implementation npm("sql.js", "1.6.2")  
+        implementation devNpm("copy-webpack-plugin", "9.1.0")
+      }
+    }
+    ```
 Unlike on other platforms, the SqlJs driver can not be instantiated directly.
 The driver must be loaded asynchronously by calling the `initSqlDriver` function which returns a `Promise<SqlDriver>`.
 ```kotlin

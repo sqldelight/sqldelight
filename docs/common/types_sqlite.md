@@ -16,11 +16,18 @@ CREATE TABLE some_types (
 
 A sibling module that adapts primitives for your convenience.
 
-```groovy
-dependencies {
-  implementation "app.cash.sqldelight:primitive-adapters:{{ versions.sqldelight }}"
-}
-```
+=== "Kotlin"
+    ```kotlin
+    dependencies {
+      implementation("app.cash.sqldelight:primitive-adapters:{{ versions.sqldelight }}")
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    dependencies {
+      implementation "app.cash.sqldelight:primitive-adapters:{{ versions.sqldelight }}"
+    }
+    ```
 
 The following adapters exist:
 

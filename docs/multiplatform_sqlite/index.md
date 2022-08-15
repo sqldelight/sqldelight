@@ -20,24 +20,44 @@ VALUES (15, 'Ryan Getzlaf');
 
 From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
 
-```groovy
-kotlin {
-  // The drivers needed will change depending on what platforms you target:
-
-  sourceSets.androidMain.dependencies {
-    implementation "com.squareup.sqldelight:android-driver:{{ versions.sqldelight }}"
-  }
-
-  // or sourceSets.iosMain, sourceSets.windowsMain, etc.
-  sourceSets.nativeMain.dependencies {
-    implementation "com.squareup.sqldelight:native-driver:{{ versions.sqldelight }}"
-  }
-
-  sourceSets.jvmMain.dependencies {
-    implementation "com.squareup.sqldelight:sqlite-driver:{{ versions.sqldelight }}"
-  }
-}
-```
+=== "Kotlin"
+    ```kotlin
+    kotlin {
+      // The drivers needed will change depending on what platforms you target:
+    
+      sourceSets.androidMain.dependencies {
+        implementation("app.cash.sqldelight:android-driver:{{ versions.sqldelight }}")
+      }
+    
+      // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+      sourceSets.nativeMain.dependencies {
+        implementation("app.cash.sqldelight:native-driver:{{ versions.sqldelight }}")
+      }
+    
+      sourceSets.jvmMain.dependencies {
+        implementation("app.cash.sqldelight:sqlite-driver:{{ versions.sqldelight }}")
+      }
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    kotlin {
+      // The drivers needed will change depending on what platforms you target:
+    
+      sourceSets.androidMain.dependencies {
+        implementation "app.cash.sqldelight:android-driver:{{ versions.sqldelight }}"
+      }
+    
+      // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+      sourceSets.nativeMain.dependencies {
+        implementation "app.cash.sqldelight:native-driver:{{ versions.sqldelight }}"
+      }
+    
+      sourceSets.jvmMain.dependencies {
+        implementation "app.cash.sqldelight:sqlite-driver:{{ versions.sqldelight }}"
+      }
+    }
+    ```
 
 ```kotlin
 // in src/commonMain/kotlin

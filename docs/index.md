@@ -36,24 +36,44 @@ SQLite
 
 Snapshots of the development version (including the IDE plugin zip) are available in
 [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
-```kotlin
-// settings.gradle.kts
-pluginManagement {
+=== "Kotlin"
+    ```kotlin
+    // settings.gradle.kts
+    pluginManagement {
+        repositories {
+            gradlePluginPortal()
+            maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        }
+    }
+    
+    // build.gradle.kts
+    plugins {
+        id("app.cash.sqldelight") version "SNAPSHOT-VERSION"
+    }
+    
     repositories {
-        gradlePluginPortal()
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
-}
-
-// build.gradle.kts
-plugins {
-    id("app.cash.sqldelight") version "SNAPSHOT-VERSION"
-}
-
-repositories {
-    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-}
-```
+    ```
+=== "Groovy"
+    ```groovy
+    // settings.gradle
+    pluginManagement {
+        repositories {
+            gradlePluginPortal()
+            maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        }
+    }
+    
+    // build.gradle
+    plugins {
+        id "app.cash.sqldelight" version "SNAPSHOT-VERSION"
+    }
+    
+    repositories {
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+    ```
 
 [Alpha IDE plugins are also available](https://plugins.jetbrains.com/plugin/8191-sqldelight/versions/alpha) by using the alpha channel in IntelliJ: `https://plugins.jetbrains.com/plugins/alpha/com.squareup.sqldelight`.
 Snapshots are also available in the [EAP](https://plugins.jetbrains.com/plugin/8191-sqldelight/versions/eap) channel: `https://plugins.jetbrains.com/plugins/eap/com.squareup.sqldelight` 

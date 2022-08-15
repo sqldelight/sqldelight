@@ -1,1 +1,1 @@
-{% include 'common/gradle_server.md' %}
+{% include 'common/gradle.md' %}

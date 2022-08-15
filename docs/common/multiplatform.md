@@ -4,7 +4,7 @@ To use SQLDelight in Kotlin multiplatform configure the Gradle plugin with a pac
 
 ```groovy
 apply plugin: "org.jetbrains.kotlin.multiplatform"
-apply plugin: "com.squareup.sqldelight"
+apply plugin: "app.cash.sqldelight"
 
 sqldelight {
   MyDatabase {
