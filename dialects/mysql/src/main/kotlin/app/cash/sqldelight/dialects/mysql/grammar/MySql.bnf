@@ -37,6 +37,24 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.USE"
   ]
 }
 overrides ::= type_name
@@ -68,7 +86,7 @@ type_name ::= (
   date_data_type |
   binary_data_type |
   json_data_type
-) [ '(' {signed_number} ')' [ 'unsigned' ] | '(' {signed_number} ',' {signed_number} ')' ] |
+) [ LP {signed_number} RP [ 'unsigned' ] | LP {signed_number} COMMA {signed_number} RP ] |
 character_type |
 enum_set_type
 {
@@ -87,7 +105,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   {foreign_key_clause} |
   comment_type |
   {generated_clause} |
-  'VIRTUAL' |
+  VIRTUAL |
   'STORED'
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlColumnConstraintImpl"
@@ -100,20 +118,20 @@ bind_parameter ::= ( '?' | ':' {identifier} ) {
   override = true
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] '(' {indexed_column} [ '(' {signed_number} ')' ] ( ',' {indexed_column} [ '(' {signed_number} ')' ] ) * ')' {conflict_clause} [comment_type] |
-  CHECK '(' expr ')' |
-  FOREIGN KEY '(' {column_name} ( ',' {column_name} ) * ')' {foreign_key_clause}
+  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  CHECK LP expr RP |
+  FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableConstraintImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableConstraint"
   override = true
 }
-current_timestamp_with_optional_number ::= ( CURRENT_TIMESTAMP | 'NOW' ) [ '(' [ {signed_number} ] ')' ]
+current_timestamp_with_optional_number ::= ( CURRENT_TIMESTAMP | 'NOW' ) [ LP [ {signed_number} ] RP ]
 default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
   current_timestamp_with_optional_number [ ON UPDATE current_timestamp_with_optional_number ] |
   {signed_number} |
   {literal_value} |
-  '(' <<expr '-1'>> ')'
+  LP <<expr '-1'>> RP
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDefaultConstraint"
@@ -141,11 +159,11 @@ approximate_numeric_data_type ::= 'FLOAT' | 'REAL' | ( 'DOUBLE' 'PRECISION' ) | 
 date_data_type ::= 'DATE' | 'TIME' | 'DATETIME' | 'TIMESTAMP' | 'YEAR'
 
 character_type ::= ( 'CHAR' | 'VARCHAR' | 'TINYTEXT' | 'TEXT' | 'MEDIUMTEXT' | 'LONGTEXT' )
-  [ '(' {signed_number} ')' ]
-  [ 'CHARACTER' 'SET' {identifier} ]
+  [ LP {signed_number} RP ]
+  [ 'CHARACTER' SET {identifier} ]
 
-enum_set_type ::= ( 'ENUM' | 'SET' )
-  [ '(' {string_literal} ( ',' {string_literal} ) * ')' ]
+enum_set_type ::= ( 'ENUM' | SET )
+  [ LP {string_literal} ( COMMA {string_literal} ) * RP ]
   [ 'CHARACTER' 'SET' {identifier} ]
 
 binary_data_type ::= 'VARBINARY' | 'BLOB' | 'BINARY' | 'BIT' | 'LONGBLOB' | 'MEDIUMBLOB'
@@ -154,28 +172,28 @@ json_data_type ::= 'JSON'
 
 comment_type ::= 'COMMENT' {string_literal}
 
-table_option ::= 'ENGINE' ['='] {identifier} |
-  'AUTO_INCREMENT' [ '=' ] {signed_number} |
-  [ 'DEFAULT' ] ( 'CHARACTER' 'SET' | 'CHARSET' ) [ '=' ] {identifier} |
+table_option ::= 'ENGINE' [ EQ ] {identifier} |
+  'AUTO_INCREMENT' [ EQ ] {signed_number} |
+  [ DEFAULT ] ( 'CHARACTER' SET | 'CHARSET' ) [ EQ ] {identifier} |
   row_format_clause |
-  'COLLATE' [ '=' ] {identifier}
+  'COLLATE' [ EQ ] {identifier}
 {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOptionImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableOption"
   override = true
 }
 
-row_format_clause ::= 'ROW_FORMAT' [ '=' ] ( DEFAULT | 'DYNAMIC' | 'FIXED' | 'COMPRESSED' | 'REDUNDANT' | 'COMPACT' )
+row_format_clause ::= 'ROW_FORMAT' [ EQ ] ( DEFAULT | 'DYNAMIC' | 'FIXED' | 'COMPRESSED' | 'REDUNDANT' | 'COMPACT' )
 
-table_or_subquery ::= ( [ {database_name} '.' ] {table_name} [ [ AS ] {table_alias} ] [ index_hint_list ]
-                      | '(' ( {table_or_subquery} ( ',' {table_or_subquery} ) * | {join_clause} ) ')'
-                      | '(' {compound_select_stmt} ')' [ [ AS ] {table_alias} ] ) {
+table_or_subquery ::= ( [ {database_name} DOT ] {table_name} [ [ AS ] {table_alias} ] [ index_hint_list ]
+                      | LP ( {table_or_subquery} ( COMMA {table_or_subquery} ) * | {join_clause} ) RP
+                      | LP {compound_select_stmt} RP [ [ AS ] {table_alias} ] ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOrSubqueryImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery"
   override = true
 }
 
-qualified_table_name ::= [ {database_name} '.' ] {table_name} [ index_hint_list ] {
+qualified_table_name ::= [ {database_name} DOT ] {table_name} [ index_hint_list ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlQualifiedTableNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlQualifiedTableName"
   override = true
@@ -184,13 +202,13 @@ qualified_table_name ::= [ {database_name} '.' ] {table_name} [ index_hint_list 
 index_hint_list ::= index_hint ( index_hint ) *
 
 index_hint ::=
-  ( 'USE' ( 'INDEX' | 'KEY' ) [ 'FOR' ( 'JOIN' | 'ORDER' 'BY' | 'GROUP' 'BY' )] [index_list] )
+  ( USE ( 'INDEX' | 'KEY' ) [ FOR ( JOIN | ORDER BY | GROUP BY )] [index_list] )
   |
-  ( ('IGNORE' | 'FORCE' ) ( 'INDEX' | 'KEY' ) [ 'FOR' ( 'JOIN' | 'ORDER' 'BY' | 'GROUP' 'BY' )] index_list ) {
+  ( (IGNORE | 'FORCE' ) ( INDEX | 'KEY' ) [ FOR ( JOIN | ORDER BY | GROUP BY )] index_list ) {
   pin = 1
 }
 
-index_list ::= '(' {index_name} ( ',' {index_name} ) * ')'
+index_list ::= LP {index_name} ( COMMA {index_name} ) * RP
 
 alter_table_rules ::= (
   alter_table_add_column
@@ -215,7 +233,7 @@ alter_table_add_column ::= ADD [ COLUMN ] {column_def} [ placement_clause ] {
   override = true
 }
 
-alter_table_drop_column ::= 'DROP' [ COLUMN ] {column_name} {
+alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.AlterTableDropColumnMixin"
   pin = 1
 }
@@ -232,7 +250,7 @@ alter_table_modify_column ::= 'MODIFY' [ COLUMN ] {column_def} [ placement_claus
 
 alter_table_add_constraint ::= ADD table_constraint
 
-alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] '(' {indexed_column} ( ',' {indexed_column} ) * ')'
+alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
 
 alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
 
@@ -252,9 +270,9 @@ extension_stmt ::= truncate_stmt {
   override = true
 }
 
-truncate_stmt ::= 'TRUNCATE' [ 'TABLE' ] {table_name}
+truncate_stmt ::= 'TRUNCATE' [ TABLE ] {table_name}
 
-if_expr ::= 'IF' '(' <<expr '-1'>> ',' <<expr '-1'>> ',' <<expr '-1'>> ')'
+if_expr ::= IF LP <<expr '-1'>> COMMA <<expr '-1'>> COMMA <<expr '-1'>> RP
 
 json_expression ::= {column_name} json_binary_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.JsonExpressionMixin"
@@ -273,27 +291,27 @@ interval_unit ::= (
   | 'YEAR_MONTH'
 )
 
-drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} '.' ] {table_name} ( ',' [ {database_name} '.' ] {table_name} ) * {
+drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} DOT ] {table_name} ( COMMA [ {database_name} DOT ] {table_name} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDropTableStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDropTableStmt"
   override = true
   pin = 2
 }
 
-insert_stmt ::= [ {with_clause} ] ( INSERT | 'REPLACE' ) [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
+insert_stmt ::= [ {with_clause} ] ( INSERT | REPLACE ) [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
   override = true
   pin = 7
 }
 
-assignment_value ::= VALUES '(' {column_name} ')' | { <<expr '-1'>> | DEFAULT}
+assignment_value ::= VALUES LP {column_name} RP | { <<expr '-1'>> | DEFAULT}
 
-assignment ::= {column_name} '=' assignment_value
+assignment ::= {column_name} EQ assignment_value
 
-assignment_list ::= assignment ( ',' assignment ) *
+assignment_list ::= assignment ( COMMA assignment ) *
 
-compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ 'ORDER' 'BY' {ordering_term} ( ',' {ordering_term} ) * ] [ 'LIMIT' {limiting_term} [ ( 'OFFSET' | ',' ) {limiting_term} ] ] [ 'FOR' ( 'UPDATE' | 'SHARE') ] {
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} [ ( OFFSET | COMMA ) {limiting_term} ] ] [ FOR ( UPDATE | 'SHARE') ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true
