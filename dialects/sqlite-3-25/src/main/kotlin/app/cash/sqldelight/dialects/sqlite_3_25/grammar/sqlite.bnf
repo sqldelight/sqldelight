@@ -8,26 +8,32 @@
   psiClassPrefix = "Sqlite"
 
   parserImports=[
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WINDOW"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WINDOW"
   ]
 }
 overrides ::= alter_table_rules | result_column | select_stmt
@@ -41,14 +47,14 @@ alter_table_rules ::= (
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
   override = true
 }
-result_column ::= ( '*'
-                  | {table_name} '.' '*'
+result_column ::= ( MULTIPLY
+                  | {table_name} DOT MULTIPLY
                   | (window_function_invocation | <<expr '-1'>>) [ [ AS ] {column_alias} ] ) {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.ResultColumnMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
   override = true
 }
-select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( ',' {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( ',' <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( ',' window_name AS window_defn ) * ] | VALUES {values_expression} ( ',' {values_expression} ) * {
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
@@ -61,15 +67,15 @@ alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} 
 }
 
 window_function_invocation ::=
-  window_func '(' [ '*' | ( <<expr '-1'>> ( ',' <<expr '-1'>> ) * ) ] ')' [ 'FILTER' '(' WHERE <<expr '-1'>> ')'] 'OVER' ( window_defn | window_name ) {
+  window_func LP [ MULTIPLY | ( <<expr '-1'>> ( COMMA <<expr '-1'>> ) * ) ] RP [ 'FILTER' LP WHERE <<expr '-1'>> RP] 'OVER' ( window_defn | window_name ) {
   pin = 6
 }
 
-window_defn ::= '(' [ base_window_name ]
-  [ PARTITION BY <<expr '-1'>> ( ',' <<expr '-1'>> ) * ]
-  [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
+window_defn ::= LP [ base_window_name ]
+  [ PARTITION BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * ]
+  [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
   [ frame_spec ]
-')' {
+RP {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.SqliteWindowDefinitionMixin"
 }
 
@@ -77,19 +83,19 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
   (
     BETWEEN (
       'UNBOUNDED' 'PRECEDING' |
-      'CURRENT' 'ROW' |
+      'CURRENT' ROW |
       <<expr '-1'>> 'PRECEDING' |
       <<expr '-1'>> 'FOLLOWING'
     ) AND (
       'UNBOUNDED' 'FOLLOWING' |
-      'CURRENT' 'ROW' |
+      'CURRENT' ROW |
       <<expr '-1'>> 'PRECEDING' |
       <<expr '-1'>> 'FOLLOWING'
     ) |
     'UNBOUNDED' 'PRECEDING' |
-    'CURRENT' 'ROW' |
+    'CURRENT' ROW |
     <<expr '-1'>> 'PRECEDING'
-  ) [ 'EXCLUDE' NO 'OTHERS' | 'EXCLUDE' 'CURRENT' 'ROW' | 'EXCLUDE' 'GROUP' | 'EXCLUDE' 'TIES' ] {
+  ) [ 'EXCLUDE' NO 'OTHERS' | 'EXCLUDE' 'CURRENT' ROW | 'EXCLUDE' GROUP | 'EXCLUDE' 'TIES' ] {
   pin = 1
 }
 

@@ -8,32 +8,37 @@
   psiClassPrefix = "Sqlite"
 
   parserImports=[
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
   ]
 }
 overrides ::= alter_table_rules
@@ -67,8 +72,8 @@ alter_table_drop_column ::= DROP COLUMN {column_name} {
 
 insert_stmt ::= [ {with_clause} ]
   ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT )
-  INTO [ {database_name} '.' ] {table_name} [ AS {table_alias} ]
-  [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values} [ upsert_clause ] [ returning_clause ] {
+  INTO [ {database_name} DOT ] {table_name} [ AS {table_alias} ]
+  [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ upsert_clause ] [ returning_clause ] {
   extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteInsertStmtImpl"
   implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteInsertStmt"
   pin = 5
@@ -80,12 +85,12 @@ upsert_clause ::= ON CONFLICT ( upsert_conflict_target DO UPDATE upsert_do_updat
   implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertClause"
 }
 
-upsert_conflict_target ::= '(' {indexed_column} ( ',' {indexed_column} ) * ')' [ WHERE <<expr '-1'>> ] {
+upsert_conflict_target ::= LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
   extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertConflictTargetImpl"
   implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertConflictTarget"
 }
 
-upsert_do_update ::= SET {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ]  {
+upsert_do_update ::= SET {column_name} EQ {setter_expression} {update_stmt_subsequent_setter} * [ WHERE <<expr '-1'>> ]  {
   extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertDoUpdateImpl"
   implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertDoUpdate"
 }
@@ -94,25 +99,25 @@ update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR R
   update_set_clause
   [ WHERE <<expr '-1'>> ]
   [ returning_clause ]
-  [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
-  LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] {
+  [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
+  LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
   pin = 4
   override = true
 }
-private update_set_clause ::= SET (( {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * ) | ( '(' {column_name} ( ',' {column_name} ) * ')' ) '=' ( '(' {setter_expression} ( ',' {setter_expression} ) * ')' )) {
+private update_set_clause ::= SET (( {column_name} EQ {setter_expression} {update_stmt_subsequent_setter} * ) | ( LP {column_name} ( COMMA {column_name} ) * RP ) EQ ( LP {setter_expression} ( COMMA {setter_expression} ) * RP )) {
   pin(".*") = 1
 }
 
-delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ returning_clause ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] {
+delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ returning_clause ] [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDeleteStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited"
   pin = 2
   override = true
 }
 
-returning_clause ::= 'RETURNING' {result_column} ( ',' {result_column} ) * {
+returning_clause ::= 'RETURNING' {result_column} ( COMMA {result_column} ) * {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_35.grammar.mixins.ReturningClauseMixin"
   implements = "com.alecstrong.sql.psi.core.psi.QueryElement"
 }

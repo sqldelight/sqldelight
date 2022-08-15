@@ -6,13 +6,24 @@
   implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
   extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
   psiClassPrefix = "SqliteJson"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEXED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+  ]
 }
 overrides ::= table_or_subquery
 
-table_or_subquery ::= ( json_function_name '(' <<expr '-1'>> ( ',' <<expr '-1'>> ) * ')'
-                      | [ {database_name} '.' ] {table_name} [ [ 'AS' ] {table_alias} ] [ 'INDEXED' 'BY' {index_name} | 'NOT' 'INDEXED' ]
-                      | '(' ( {table_or_subquery} ( ',' {table_or_subquery} ) * | {join_clause} ) ')'
-                      | '(' {compound_select_stmt} ')' [ [ 'AS' ] {table_alias} ] ) {
+table_or_subquery ::= ( json_function_name LP <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP
+                      | [ {database_name} DOT ] {table_name} [ [ AS ] {table_alias} ] [ INDEXED BY {index_name} | NOT INDEXED ]
+                      | LP ( {table_or_subquery} ( COMMA {table_or_subquery} ) * | {join_clause} ) RP
+                      | LP {compound_select_stmt} RP [ [ AS ] {table_alias} ] ) {
   mixin = "app.cash.sqldelight.dialects.sqlite.json.module.grammar.mixins.TableOrSubqueryMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery"
   override = true
