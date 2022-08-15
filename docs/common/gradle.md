@@ -40,6 +40,10 @@ For greater customization, you can declare databases explicitly using the Gradle
         // Defaults to false.
         treatNullAsUnknownForEquality = true
       }
+
+      // For native targets, whether sqlite should be automatically linked.
+      // Defaults to true.
+      linkSqlite = false
     }
     ```
 === "Groovy"
@@ -80,6 +84,10 @@ For greater customization, you can declare databases explicitly using the Gradle
         // Defaults to false.
         treatNullAsUnknownForEquality = true
       }
+
+      // For native targets, whether sqlite should be automatically linked.
+      // Defaults to true.
+      linkSqlite = false
     }
     ```
 

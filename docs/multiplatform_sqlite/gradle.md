@@ -1,1 +1,1 @@
-{% include 'common/gradle-multiplatform.md' %}
+{% include 'common/gradle.md' %}
