@@ -10,40 +10,57 @@
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CHECK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMENT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.E"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GTE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LTE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MOD"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
@@ -51,6 +68,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
   ]
@@ -162,19 +180,19 @@ character_type ::= ( 'CHAR' | 'VARCHAR' | 'TINYTEXT' | 'TEXT' | 'MEDIUMTEXT' | '
 
 enum_set_type ::= ( 'ENUM' | SET )
   [ LP {string_literal} ( COMMA {string_literal} ) * RP ]
-  [ 'CHARACTER' 'SET' {identifier} ]
+  [ 'CHARACTER' SET {identifier} ]
 
 binary_data_type ::= 'VARBINARY' | 'BLOB' | 'BINARY' | 'BIT' | 'LONGBLOB' | 'MEDIUMBLOB'
 
 json_data_type ::= 'JSON'
 
-comment_type ::= 'COMMENT' {string_literal}
+comment_type ::= COMMENT {string_literal}
 
 table_option ::= 'ENGINE' [ EQ ] {identifier} |
   'AUTO_INCREMENT' [ EQ ] {signed_number} |
   [ DEFAULT ] ( 'CHARACTER' SET | 'CHARSET' ) [ EQ ] {identifier} |
   row_format_clause |
-  'COLLATE' [ EQ ] {identifier}
+  COLLATE [ EQ ] {identifier}
 {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOptionImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableOption"
@@ -200,9 +218,9 @@ qualified_table_name ::= [ {database_name} DOT ] {table_name} [ index_hint_list 
 index_hint_list ::= index_hint ( index_hint ) *
 
 index_hint ::=
-  ( USE ( 'INDEX' | 'KEY' ) [ FOR ( JOIN | ORDER BY | GROUP BY )] [index_list] )
+  ( USE ( INDEX | KEY ) [ FOR ( JOIN | ORDER BY | GROUP BY )] [index_list] )
   |
-  ( (IGNORE | 'FORCE' ) ( INDEX | 'KEY' ) [ FOR ( JOIN | ORDER BY | GROUP BY )] index_list ) {
+  ( (IGNORE | 'FORCE' ) ( INDEX | KEY ) [ FOR ( JOIN | ORDER BY | GROUP BY )] index_list ) {
   pin = 1
 }
 
@@ -296,7 +314,7 @@ drop_table_stmt ::= DROP TABLE [ IF EXISTS ] [ {database_name} DOT ] {table_name
   pin = 2
 }
 
-insert_stmt ::= [ {with_clause} ] ( INSERT | REPLACE ) [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ 'IGNORE' ] [ INTO ] [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
+insert_stmt ::= [ {with_clause} ] ( INSERT | REPLACE ) [ 'LOW_PRIORITY' | 'DELAYED' | 'HIGH_PRIORITY' ] [ IGNORE ] [ INTO ] [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ ON 'DUPLICATE' KEY UPDATE assignment_list ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
   override = true
