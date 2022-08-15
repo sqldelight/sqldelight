@@ -9,8 +9,6 @@
 
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
@@ -20,30 +18,23 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ESCAPE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FALSE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
@@ -55,21 +46,15 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RECURSIVE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.USE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
@@ -285,10 +270,10 @@ copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter 
 copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
 copy_option_freeze ::= 'FREEZE' [ (boolean_literal) ]
 copy_option_delimiter ::= 'DELIMITER' string_literal
-copy_option_null ::= 'NULL' string_literal
+copy_option_null ::= NULL string_literal
 copy_option_header ::= 'HEADER' [ (boolean_literal) ]
 copy_option_quote ::= 'QUOTE' string_literal
-copy_option_escape ::= 'ESCAPE' string_literal
+copy_option_escape ::= ESCAPE string_literal
 copy_option_force_not_null ::= 'FORCE_NOT_NULL' LP {column_name} ( COMMA {column_name}) * RP
 copy_option_force_null ::= 'FORCE_NULL' LP {column_name} ( COMMA {column_name}) * RP
 copy_option_encoding ::= 'ENCODING' string_literal
