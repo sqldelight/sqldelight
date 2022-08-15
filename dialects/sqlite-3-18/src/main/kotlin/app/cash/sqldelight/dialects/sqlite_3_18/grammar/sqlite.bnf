@@ -8,8 +8,9 @@
   psiClassPrefix = "Sqlite"
 
   parserImports=[
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
   ]
 }
@@ -30,7 +31,7 @@ bind_parameter ::= ( '?' [digit] | ':' {identifier} ) {
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
 }
-alter_table_stmt ::= ALTER TABLE [ {database_name} '.' ] {table_name} {alter_table_rules} {
+alter_table_stmt ::= ALTER TABLE [ {database_name} DOT ] {table_name} {alter_table_rules} {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableStmt"
   elementTypeClass = "app.cash.sqldelight.dialects.sqlite_3_18.grammar.mixins.AlterTableElementType"
