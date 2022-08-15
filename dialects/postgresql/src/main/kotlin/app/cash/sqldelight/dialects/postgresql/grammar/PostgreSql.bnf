@@ -32,7 +32,6 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"

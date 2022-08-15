@@ -27,7 +27,6 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
   ]

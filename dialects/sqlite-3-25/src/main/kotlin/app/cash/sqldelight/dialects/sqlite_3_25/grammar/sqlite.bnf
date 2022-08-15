@@ -30,7 +30,6 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WINDOW"
