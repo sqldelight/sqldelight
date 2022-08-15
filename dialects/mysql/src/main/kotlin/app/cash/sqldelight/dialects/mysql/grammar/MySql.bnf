@@ -17,7 +17,6 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMENT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
@@ -170,7 +169,7 @@ binary_data_type ::= 'VARBINARY' | 'BLOB' | 'BINARY' | 'BIT' | 'LONGBLOB' | 'MED
 
 json_data_type ::= 'JSON'
 
-comment_type ::= COMMENT {string_literal}
+comment_type ::= 'COMMENT' {string_literal}
 
 table_option ::= 'ENGINE' [ EQ ] {identifier} |
   'AUTO_INCREMENT' [ EQ ] {signed_number} |
