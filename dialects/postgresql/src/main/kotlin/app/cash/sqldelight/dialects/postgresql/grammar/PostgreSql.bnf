@@ -9,28 +9,44 @@
 
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FALSE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -40,16 +56,23 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RECURSIVE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.USE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
-    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
   ]
 }
 overrides ::= type_name
@@ -118,19 +141,19 @@ generated_clause ::= GENERATED ( (ALWAYS AS <<expr '-1'>> 'STORED') | ( (ALWAYS 
 small_int_data_type ::= 'SMALLINT' | 'INT2'
 int_data_type ::= 'INTEGER' | 'INT' | 'INT4'
 big_int_data_type ::= 'BIGINT' | 'INT8'
-numeric_data_type ::= ('NUMERIC' | 'DECIMAL') [ '(' {signed_number} ')' | '(' {signed_number} ',' {signed_number} ')' ]
+numeric_data_type ::= ('NUMERIC' | 'DECIMAL') [ LP {signed_number} RP | LP {signed_number} COMMA {signed_number} RP ]
 
-approximate_numeric_data_type ::= ('REAL' | 'FLOAT4' | ( 'DOUBLE' 'PRECISION' ) | 'FLOAT8') | ('FLOAT' [ '(' {signed_number} ')' ])
+approximate_numeric_data_type ::= ('REAL' | 'FLOAT4' | ( 'DOUBLE' 'PRECISION' ) | 'FLOAT8') | ('FLOAT' [ LP {signed_number} RP ])
 
 small_serial_data_type ::= 'SMALLSERIAL' | 'SERIAL2'
 serial_data_type ::= 'SERIAL' | 'SERIAL4'
 big_serial_data_type ::= 'BIGSERIAL' | 'SERIAL8'
 
-string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ '(' {signed_number} ')' ]) | 'TEXT' | 'CITEXT'
+string_data_type ::= ((( 'CHARACTER' 'VARYING' ) | 'VARCHAR' | 'CHARACTER' | 'CHAR') [ LP {signed_number} RP ]) | 'TEXT' | 'CITEXT'
 
 uuid_data_type ::= 'UUID'
 
-date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ '(' {signed_number} ')' ] [(WITH | 'WITHOUT') 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
+date_data_type ::= 'DATE' | (('TIME' | 'TIMESTAMP') [ LP {signed_number} RP ] [(WITH | WITHOUT) 'TIME' 'ZONE']) | 'TIMESTAMPTZ' | 'INTERVAL'
 
 boolean_data_type ::= 'BOOLEAN' | 'BOOL'
 
@@ -144,7 +167,7 @@ with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | in
   override = true
 }
 
-delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ] [ returning_clause ] {
+delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] [ returning_clause ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDeleteStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited"
   pin = 2
@@ -158,8 +181,8 @@ string_literal ::= string {
 }
 
 insert_stmt ::= [ {with_clause} ]
-    INSERT INTO [ {database_name} '.' ] {table_name} [ AS {table_alias} ]
-    [ '(' {column_name} ( ',' {column_name} ) * ')' ] {insert_stmt_values}
+    INSERT INTO [ {database_name} DOT ] {table_name} [ AS {table_alias} ]
+    [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values}
     [ ON CONFLICT ( [conflict_target] DO NOTHING | conflict_target conflict_update ) ]
     [ returning_clause ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
@@ -169,30 +192,30 @@ insert_stmt ::= [ {with_clause} ]
 }
 
 
-conflict_target ::= '(' {column_name} ( ',' {column_name} ) * ')'
+conflict_target ::= LP {column_name} ( COMMA {column_name} ) * RP
 
-conflict_update ::= DO UPDATE SET conflict_assign ( ',' conflict_assign ) *
+conflict_update ::= DO UPDATE SET conflict_assign ( COMMA conflict_assign ) *
 
-conflict_assign ::= {column_name} '=' conflict_value
+conflict_assign ::= {column_name} EQ conflict_value
 
 conflict_value ::= <<expr '-1'>> | DEFAULT
 
 update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
   update_set_clause
   [ WHERE <<expr '-1'>> ]
-  [ [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ]
-  LIMIT <<expr '-1'>> [ ( OFFSET | ',' ) <<expr '-1'>> ] ]
+  [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
+  LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ]
   [ returning_clause ]{
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
   override = true
   pin = 4
 }
-private update_set_clause ::= SET (( {column_name} '=' {setter_expression} {update_stmt_subsequent_setter} * ) | ( '(' {column_name} ( ',' {column_name} ) * ')' ) '=' ( '(' {setter_expression} ( ',' {setter_expression} ) * ')' )) {
+private update_set_clause ::= SET (( {column_name} EQ {setter_expression} {update_stmt_subsequent_setter} * ) | ( LP {column_name} ( COMMA {column_name} ) * RP ) EQ ( LP {setter_expression} ( COMMA {setter_expression} ) * RP )) {
   pin(".*") = 1
 }
 
-returning_clause ::= 'RETURNING' {result_column} ( ',' {result_column} ) * {
+returning_clause ::= 'RETURNING' {result_column} ( COMMA {result_column} ) * {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ReturningClauseMixin"
   implements = "com.alecstrong.sql.psi.core.psi.QueryElement"
 }
@@ -227,7 +250,7 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   pin = 1
 }
 
-compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( ',' {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | ',' ) {limiting_term} ] [ 'FOR' UPDATE [ 'SKIP' 'LOCKED' ] ] {
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | COMMA ) {limiting_term} ] [ FOR UPDATE [ 'SKIP' 'LOCKED' ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true
@@ -239,7 +262,7 @@ extension_expr ::= json_expression | boolean_literal {
   override = true
 }
 
-boolean_literal ::= 'TRUE' | 'FALSE'
+boolean_literal ::= TRUE | FALSE
 
 json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
@@ -254,7 +277,7 @@ extension_stmt ::= copy_stdin {
   override = true
 }
 
-copy_stdin ::= 'COPY' [ {database_name} '.' ] {table_name} [ AS {table_alias} ] [ '(' {column_name} ( ',' {column_name} ) * ')' ] FROM 'STDIN' [ [ WITH ] '(' copy_option ( ',' copy_option) * ')' ] [ WHERE <<expr '-1'>> ] {
+copy_stdin ::= 'COPY' [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] FROM 'STDIN' [ [ WITH ] LP copy_option ( COMMA copy_option) * RP ] [ WHERE <<expr '-1'>> ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
 }
 
@@ -266,6 +289,6 @@ copy_option_null ::= 'NULL' string_literal
 copy_option_header ::= 'HEADER' [ (boolean_literal) ]
 copy_option_quote ::= 'QUOTE' string_literal
 copy_option_escape ::= 'ESCAPE' string_literal
-copy_option_force_not_null ::= 'FORCE_NOT_NULL' '(' {column_name} ( ',' {column_name}) * ')'
-copy_option_force_null ::= 'FORCE_NULL' '(' {column_name} ( ',' {column_name}) * ')'
+copy_option_force_not_null ::= 'FORCE_NOT_NULL' LP {column_name} ( COMMA {column_name}) * RP
+copy_option_force_null ::= 'FORCE_NULL' LP {column_name} ( COMMA {column_name}) * RP
 copy_option_encoding ::= 'ENCODING' string_literal
