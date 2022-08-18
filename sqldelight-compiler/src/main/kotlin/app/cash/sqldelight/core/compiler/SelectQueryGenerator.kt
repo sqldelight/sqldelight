@@ -17,6 +17,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.model.NamedQuery
+import app.cash.sqldelight.core.compiler.model.SetQueryWithResults
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.CURSOR_NAME
 import app.cash.sqldelight.core.lang.CURSOR_TYPE
@@ -273,9 +274,11 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved == null) EXECUTABLE_QUERY_TYPE
-    else QUERY_TYPE
+  private fun NamedQuery.supertype() = when {
+    queryable is SetQueryWithResults -> QUERY_TYPE
+    tablesObserved == null -> EXECUTABLE_QUERY_TYPE
+    else -> QUERY_TYPE
+  }
 
   /**
    * The private query subtype for this specific query.

@@ -36,6 +36,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
+import com.alecstrong.sql.psi.core.psi.SqlSetStmt
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -199,6 +200,13 @@ private val IntRange.length: Int
   get() = endInclusive - start + 1
 
 fun PsiElement.rawSqlText(
+  replacements: List<Pair<IntRange, String>> = emptyList(),
+): String = if (this is SqlSetStmt && setSetterClause != null) {
+  val sql = setSetterClause!!.getRawSqlText(replacements)
+  "SELECT $sql"
+} else getRawSqlText(replacements)
+
+private fun PsiElement.getRawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
   return (replacements + rangesToReplace())

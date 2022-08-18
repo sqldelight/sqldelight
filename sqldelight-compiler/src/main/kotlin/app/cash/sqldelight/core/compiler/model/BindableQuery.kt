@@ -37,6 +37,8 @@ import com.alecstrong.sql.psi.core.psi.SqlBindParameter
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.SqlSelectIntoClause
+import com.alecstrong.sql.psi.core.psi.SqlSetStmt
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
 import java.util.concurrent.ConcurrentHashMap
@@ -91,6 +93,11 @@ abstract class BindableQuery(
     val namesSeen = mutableSetOf<String>()
     var maxIndexSeen = 0
     statement.findChildrenOfType<SqlBindExpr>().forEach { bindArg ->
+      if (bindArg.parent is SqlSelectIntoClause || bindArg.parent is SqlSetStmt) {
+        // No special support for embedded sql `SELECT * INTO ?` or `SET ? = `:
+        // mapping the bind parameters to host variables must be implemented by the caller/precompiler
+        return@forEach
+      }
       bindArg.bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
         if (!indexesSeen.add(index)) {
           result.findAndReplace(bindArg, index) { it.index == index }
