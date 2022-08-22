@@ -1,0 +1,12 @@
+CREATE TABLE foo(
+id INTEGER
+);
+
+selectWithBinding:
+SELECT avg(id, ?), id INTO ?, ? FROM foo WHERE id = ?;
+
+set:
+SET ?, ? = avg(42, ?), 42;
+
+setSelect:
+SET ?, ? = SELECT avg(id, ?), id FROM foo WHERE id = ?;
