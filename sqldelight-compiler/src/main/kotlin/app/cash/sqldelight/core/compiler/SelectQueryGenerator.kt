@@ -275,7 +275,8 @@ class SelectQueryGenerator(
   }
 
   private fun NamedQuery.supertype() = when {
-    queryable is SetQueryWithResults -> QUERY_TYPE
+    queryable is SetQueryWithResults ->
+      if (queryable.select.compoundSelectStmt != null) QUERY_TYPE else EXECUTABLE_QUERY_TYPE
     tablesObserved == null -> EXECUTABLE_QUERY_TYPE
     else -> QUERY_TYPE
   }

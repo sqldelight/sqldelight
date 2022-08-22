@@ -2,9 +2,10 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import org.junit.Test
 import schema.FooQueries
+import schema.SelectWithBinding
+import schema.Set
+import schema.SetSelect
 import java.sql.Connection
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 class Testing {
   private val fakeDriver = object : JdbcDriver() {
@@ -15,15 +16,29 @@ class Testing {
     override fun notifyListeners(queryKeys: Array<String>) = Unit
   }
 
-  @Test fun customFunctionReturnsDuration() {
-    val unused: Duration = FooQueries(fakeDriver).selectFooWithId().executeAsOne()
+  @Test fun selectWithBinding() {
+    FooQueries(fakeDriver).selectWithBinding(42.0, id = 4) { avg: Double?, id: Long? ->
+    }
+
+    val result: SelectWithBinding = FooQueries(fakeDriver).selectWithBinding(42.0, id = 4).executeAsOne()
+    val avg: Double? = result.avg
+    val id: Long? = result.id
   }
 
-  @Test fun inferredCompiles() {
-    FooQueries(fakeDriver).inferredType(1.seconds)
+  @Test fun set() {
+    val result: Set = FooQueries(fakeDriver).set(42.0).executeAsOne()
+    val avg: Double? = result.avg
+    val id: Long = result.expr
+
+    FooQueries(fakeDriver).set(42.0) { avg: Double?, expr: Long ->
+    }
   }
 
-  @Test fun inferredTypeFromMaxIsLong() {
-    FooQueries(fakeDriver).inferredTypeFromMax(1L).executeAsOne()
+  @Test fun setSelect() {
+    FooQueries(fakeDriver).setSelect(42.0, 4) { avg: Double?, id: Long? ->
+    }
+    val result: SetSelect = FooQueries(fakeDriver).setSelect(42.0, 4).executeAsOne()
+    val avg: Double? = result.avg
+    val id: Long? = result.id
   }
 }
