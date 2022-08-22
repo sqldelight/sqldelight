@@ -101,7 +101,8 @@ class SqlDelightQueriesFile(
           it.statement.deleteStmtLimited == null &&
           it.statement.insertStmt == null &&
           it.statement.updateStmtLimited == null &&
-          it.statement.compoundSelectStmt == null
+          it.statement.compoundSelectStmt == null &&
+          it.statement.setStmt == null
       }
       .map { NamedExecute(it.identifier, it.statement) }
 
