@@ -77,8 +77,32 @@ class SelectIntoQueryTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun abs(): app.cash.sqldelight.Query<kotlin.Long> = app.cash.sqldelight.Query(-1951556587, driver, "Test.sq", "abs", "SELECT abs(42)") { cursor ->
+      |public fun abs(): app.cash.sqldelight.ExecutableQuery<kotlin.Long> = app.cash.sqldelight.Query(-1951556587, driver, "Test.sq", "abs", "SELECT abs(42)") { cursor ->
       |  cursor.getLong(0)!!
+      |}
+      |
+      """.trimMargin(),
+    )
+
+    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun abs(): app.cash.sqldelight.ExecutableQuery<com.example.Abs> = abs { abs ->
+      |  com.example.Abs(
+      |    abs
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class AbsQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-1951556587, ""${'"'}SELECT abs(42)""${'"'}, mapper, 0)
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:abs"
       |}
       |
       """.trimMargin(),
