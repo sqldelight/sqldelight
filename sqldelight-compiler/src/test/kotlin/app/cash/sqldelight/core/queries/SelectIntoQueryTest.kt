@@ -82,8 +82,8 @@ class SelectIntoQueryTest {
       |}
       |
       """.trimMargin(),
-        )
-    }
+    )
+  }
 
   @Test fun `embeddedSQL works with set select`() {
     val file = FixtureCompiler.parseSql(
@@ -102,7 +102,7 @@ class SelectIntoQueryTest {
       |  cursor.getLong(0)!!
       |}
       |
-    """.trimMargin(),
+      """.trimMargin(),
     )
   }
 }

@@ -6,8 +6,8 @@ import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlSetStmt
 
-class SetQueryWithResults(setStmt: SqlSetStmt): QueryWithResults {
-    override var statement: SqlAnnotatedElement = setStmt
-    override val select: QueryElement = setStmt
-    override val pureTable: NamedElement? = null
+class SetQueryWithResults(setStmt: SqlSetStmt) : QueryWithResults {
+  override var statement: SqlAnnotatedElement = setStmt
+  override val select: QueryElement = setStmt
+  override val pureTable: NamedElement? = null
 }
