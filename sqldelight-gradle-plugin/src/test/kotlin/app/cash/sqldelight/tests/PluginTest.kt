@@ -207,4 +207,16 @@ class PluginTest {
     assertThat(result.output)
       .contains("SQLDelight Gradle plugin was applied but there are no databases set up.")
   }
+
+  @Test
+  fun `Get all configured dbs`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/configured-dbs"))
+      .withArguments("build", "--stacktrace")
+      .build()
+    assertThat(result.output)
+      .contains("BUILD SUCCESSFUL")
+    assertThat(result.output)
+      .contains("packageName is com.example")
+  }
 }

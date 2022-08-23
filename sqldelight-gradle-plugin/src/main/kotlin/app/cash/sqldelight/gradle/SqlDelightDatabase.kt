@@ -8,14 +8,15 @@ import app.cash.sqldelight.gradle.kotlin.sources
 import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
+import org.gradle.api.Named
 import org.gradle.api.Project
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Provider
 import java.io.File
 
-class SqlDelightDatabase(
-  val project: Project,
-  var name: String,
+open class SqlDelightDatabase(
+  private val project: Project,
+  private val name: String,
   var packageName: String? = null,
   var schemaOutputDirectory: File? = null,
   var sourceFolders: Collection<String>? = null,
@@ -24,7 +25,8 @@ class SqlDelightDatabase(
   var migrationOutputDirectory: File? = null,
   var migrationOutputFileFormat: String = ".sql",
   var generateAsync: Boolean = false,
-) {
+): Named {
+  override fun getName() = name
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isTransitive = false
   }

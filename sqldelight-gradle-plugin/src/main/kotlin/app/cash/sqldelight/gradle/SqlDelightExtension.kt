@@ -1,11 +1,14 @@
 package app.cash.sqldelight.gradle
 
 import groovy.lang.Closure
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.model.ObjectFactory
 import org.gradle.util.ConfigureUtil
+import javax.inject.Inject
 
-open class SqlDelightExtension {
-  internal val databases = mutableListOf<SqlDelightDatabase>()
+open class SqlDelightExtension @Inject constructor(objects: ObjectFactory) {
+  val databases: NamedDomainObjectContainer<SqlDelightDatabase> = objects.domainObjectContainer(SqlDelightDatabase::class.java)
   internal var configuringDatabase: SqlDelightDatabase? = null
   internal lateinit var project: Project
 
@@ -56,14 +59,4 @@ open class SqlDelightExtension {
 
     databases.add(database)
   }
-
-  fun databases() = databases.map {
-    Database(
-      name = it.name,
-      packageName = it.packageName!!,
-      async = it.generateAsync,
-    )
-  }
-
-  class Database(val name: String, val packageName: String, val async: Boolean)
 }
