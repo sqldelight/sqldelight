@@ -56,4 +56,14 @@ open class SqlDelightExtension {
 
     databases.add(database)
   }
+
+  fun databases() = databases.map {
+    Database(
+      name = it.name,
+      packageName = it.packageName!!,
+      async = it.generateAsync,
+    )
+  }
+
+  class Database(val name: String, val packageName: String, val async: Boolean)
 }
