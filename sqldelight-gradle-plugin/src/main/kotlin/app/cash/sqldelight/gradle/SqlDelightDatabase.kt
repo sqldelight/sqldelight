@@ -25,7 +25,7 @@ open class SqlDelightDatabase(
   var migrationOutputDirectory: File? = null,
   var migrationOutputFileFormat: String = ".sql",
   var generateAsync: Boolean = false,
-): Named {
+) : Named {
   override fun getName() = name
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isTransitive = false
