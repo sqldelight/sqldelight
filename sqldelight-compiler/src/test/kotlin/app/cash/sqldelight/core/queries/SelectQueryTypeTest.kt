@@ -159,6 +159,33 @@ class SelectQueryTypeTest {
     )
   }
 
+  @Test fun `query type generates properly without from`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectWithoutFrom:
+      |SELECT 42;
+      |
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectWithoutFromQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id}, ""${'"'}SELECT 42""${'"'}, mapper, 0)
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:selectWithoutFrom"
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `bind arguments are ordered in generated type`() {
     val file = FixtureCompiler.parseSql(
       """
