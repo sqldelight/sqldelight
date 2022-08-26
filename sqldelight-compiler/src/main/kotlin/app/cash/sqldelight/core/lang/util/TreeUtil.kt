@@ -29,6 +29,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
@@ -204,6 +205,11 @@ fun PsiElement.rawSqlText(
 ): String = if (this is SqlSetStmt && setSetterClause != null) {
   val sql = setSetterClause!!.getRawSqlText(replacements)
   "SELECT $sql"
+} else if (this is SqlCompoundSelectStmt) {
+  val removeInto = selectStmtList.mapNotNull {
+    it.selectIntoClause?.range?.let { it to "" }
+  }
+  getRawSqlText(replacements + removeInto)
 } else getRawSqlText(replacements)
 
 private fun PsiElement.getRawSqlText(
@@ -217,7 +223,7 @@ private fun PsiElement.getRawSqlText(
       { (totalRemoved, sqlText), (range, replacement) ->
         (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
       },
-    ).second
+    ).second.trim()
 }
 
 val PsiElement.range: IntRange

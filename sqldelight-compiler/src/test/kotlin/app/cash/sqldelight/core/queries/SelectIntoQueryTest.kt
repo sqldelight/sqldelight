@@ -56,7 +56,7 @@ class SelectIntoQueryTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun select(): app.cash.sqldelight.Query<kotlin.Long> = app.cash.sqldelight.Query(-1626977671, emptyArray(), driver, "Test.sq", "select", "SELECT abs(42) INTO ?") { cursor ->
+      |public fun select(): app.cash.sqldelight.Query<kotlin.Long> = app.cash.sqldelight.Query(-1626977671, emptyArray(), driver, "Test.sq", "select", "SELECT abs(42)") { cursor ->
       |  cursor.getLong(0)!!
       |}
       |
