@@ -126,7 +126,7 @@ data class NamedQuery(
 
   internal val tablesObserved: List<TableNameElement>? by lazy {
     if (queryable is SelectQueryable && queryable.select == queryable.statement) {
-      queryable.select.tablesObserved().takeUnless { it.isEmpty() }
+      queryable.select.tablesObserved()
     } else {
       null
     }
