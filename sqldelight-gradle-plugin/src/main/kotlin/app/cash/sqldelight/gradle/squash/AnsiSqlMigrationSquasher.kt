@@ -29,14 +29,20 @@ class AnsiSqlMigrationSquasher(
         }.text
       }
       statement.dropIndexStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.single {
+        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.singleOrNull {
           it.indexName.textMatches(statement.dropIndexStmt!!.indexName!!.text)
+        }
+        if (create == null) {
+          throw Exception("Create statement not found for drop statement ${statement.dropIndexStmt}")
         }
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
       statement.dropTableStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.single {
+        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.singleOrNull {
           it.tableName.textMatches(statement.dropTableStmt!!.tableName!!.text)
+        }
+        if (create == null) {
+          throw Exception("Create statement not found for drop statement ${statement.dropTableStmt}")
         }
         val drops = currentFile.findChildrenOfType<SqlNamedElementImpl>()
           .filter { it.reference?.resolve() == create.tableName }
@@ -48,14 +54,20 @@ class AnsiSqlMigrationSquasher(
         }
       }
       statement.dropTriggerStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.single {
+        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.singleOrNull {
           it.triggerName.textMatches(statement.dropTriggerStmt!!.triggerName!!.text)
+        }
+        if (create == null) {
+          throw Exception("Create statement not found for drop statement ${statement.dropTriggerStmt}")
         }
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
       statement.dropViewStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.single {
+        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.singleOrNull {
           it.viewName.textMatches(statement.dropViewStmt!!.viewName!!.text)
+        }
+        if (create == null) {
+          throw Exception("Create statement not found for drop statement ${statement.dropViewStmt}")
         }
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
