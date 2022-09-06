@@ -135,6 +135,19 @@ class MigrationTest {
     )
   }
 
+  @Test fun `squashing migration that drops column not created in another migration errors properly`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-squash-drop-failure"))
+      .withArguments("clean", "squashMainProductDatabaseMigrations", "--stacktrace")
+      .buildAndFail()
+
+    assertThat(output.output).contains(
+      """
+      |Create statement not found for drop statement
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `deriving schema from migration introduces failures in migration files`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-schema-failure"))
