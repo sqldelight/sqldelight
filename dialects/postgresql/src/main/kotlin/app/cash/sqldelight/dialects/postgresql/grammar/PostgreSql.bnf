@@ -182,9 +182,9 @@ conflict_target ::= LP {column_name} ( COMMA {column_name} ) * RP
 
 conflict_update ::= DO UPDATE SET conflict_assign ( COMMA conflict_assign ) *
 
-conflict_assign ::= {column_name} EQ conflict_value
-
-conflict_value ::= <<expr '-1'>> | DEFAULT
+conflict_assign ::= {column_name} EQ <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlInsertExcludedTableMixin"
+}
 
 update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
   update_set_clause
