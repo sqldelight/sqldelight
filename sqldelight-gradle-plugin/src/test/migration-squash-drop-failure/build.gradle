@@ -15,7 +15,7 @@ repositories {
 sqldelight {
   Database {
     packageName = "com.example"
-    dialect = "postgresql"
+    dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
     deriveSchemaFromMigrations = true
   }
 }
