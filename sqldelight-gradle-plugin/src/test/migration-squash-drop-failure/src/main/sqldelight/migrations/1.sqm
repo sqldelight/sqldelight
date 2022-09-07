@@ -1,1 +1,4 @@
-ALTER TABLE test DROP COLUMN col_not_added_in_migrations;
+CREATE TABLE test (
+  value2 TEXT NOT NULL,
+  value TEXT NOT NULL
+);
