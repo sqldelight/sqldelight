@@ -1,5 +1,6 @@
 package com.example
 
+import app.cash.sqldelight.ExecutableQuery
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.core.integration.Shoots
@@ -56,15 +57,15 @@ public class TeamQueries(
     )
   }
 
-  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
-      Query(397134288, emptyArray(), driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> =
+      Query(397134288, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
     )
   }
 
-  public fun selectStuff(): Query<SelectStuff> = selectStuff { expr, expr_ ->
+  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff { expr, expr_ ->
     SelectStuff(
       expr,
       expr_

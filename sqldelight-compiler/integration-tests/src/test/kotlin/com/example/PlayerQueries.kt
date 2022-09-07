@@ -128,28 +128,28 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): Query<T> = Query(106890351,
-      emptyArray(), driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
+  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> = Query(106890351,
+      driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )
   }
 
-  public fun selectNull(): Query<SelectNull> = selectNull { expr ->
+  public fun selectNull(): ExecutableQuery<SelectNull> = selectNull { expr ->
     SelectNull(
       expr
     )
   }
 
-  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): Query<T> =
-      Query(-976770036, emptyArray(), driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> =
+      Query(-976770036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
     )
   }
 
-  public fun selectStuff(): Query<SelectStuff> = selectStuff { expr, expr_ ->
+  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff { expr, expr_ ->
     SelectStuff(
       expr,
       expr_
