@@ -59,7 +59,7 @@ sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version
 robolectric = { module = "org.robolectric:robolectric", version = "4.8.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.5" }
-sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.39.2.0" }
+sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.39.2.1" }
 postgresJdbc = { module = "org.postgresql:postgresql", version = "42.4.2" }
 mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.30" }
 
