@@ -6,6 +6,7 @@ import app.cash.sqldelight.coroutines.Employee.Companion.USERNAME
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.turbine.test
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import kotlin.test.Test
@@ -103,7 +104,7 @@ class QueryAsFlowTest : DbTest {
   @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
       .asFlow()
-      .mapToOneNotNull()
+      .mapToOneNotNull(Dispatchers.Default)
 
     val employee = Employee("john", "John Johnson")
 
