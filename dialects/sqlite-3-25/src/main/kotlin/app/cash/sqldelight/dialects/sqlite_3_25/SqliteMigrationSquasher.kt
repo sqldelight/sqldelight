@@ -8,8 +8,6 @@ import com.alecstrong.sql.psi.core.psi.SqlAlterTableRules
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
 
 internal class SqliteMigrationSquasher(
   private val parentSquasher: MigrationSquasher,
@@ -24,7 +22,7 @@ internal class SqliteMigrationSquasher(
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableRenameColumn, SqlColumnName::class.java)!!
         val column = alterTableRules.alteredTable(into).columnDefList.map { it.columnName }.single { it.textMatches(columnName.text) }
         val columnAlias = PsiTreeUtil.getChildOfType(alterTableRules.alterTableRenameColumn, SqlColumnAlias::class.java)!!
-        into.text.replaceRange(column.startOffset until column.endOffset, columnAlias.text)
+        into.text.replaceRange(column.textRange.startOffset until column.textRange.endOffset, columnAlias.text)
       }
       else -> parentSquasher.squish(alterTableRules, into)
     }

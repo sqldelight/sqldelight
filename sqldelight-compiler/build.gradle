@@ -25,38 +25,34 @@ grammarKit {
 
 dependencies {
   api libs.sqlPsi
-  api(project(':sqldelight-compiler:dialect')) {
-    exclude group: "com.jetbrains.intellij.platform", module: "core-impl"
-  }
+  api(project(':sqldelight-compiler:dialect'))
 
   implementation libs.kotlinPoet
   implementation libs.jgrapht
 
   compileOnly libs.sqliteJdbc
   compileOnly libs.intellij.core
-  compileOnly libs.intellij.lang
-  compileOnly libs.intellij.java
+  compileOnly libs.intellij.projectModel
   compileOnly libs.intellij.testFramework
 
   testImplementation libs.burst
   testImplementation libs.sqliteJdbc
   testImplementation libs.intellij.core
-  testImplementation libs.intellij.lang
-  testImplementation libs.intellij.java
+  testImplementation libs.intellij.projectModel
   testImplementation libs.intellij.testFramework
   testImplementation libs.kotlin.test.junit
   testImplementation libs.truth
   testImplementation project(':test-util')
   testImplementation project(':dialects:hsql')
-  testImplementation project(path: ':dialects:mysql', configuration: 'shadowRuntimeElements')
-  testImplementation project(path: ':dialects:postgresql', configuration: 'shadowRuntimeElements')
+  testImplementation project(':dialects:mysql')
+  testImplementation project(':dialects:postgresql')
   testImplementation project(':dialects:sqlite-3-18')
-  testImplementation project(path: ':dialects:sqlite-3-24', configuration: 'shadowRuntimeElements')
-  testImplementation project(path: ':dialects:sqlite-3-25', configuration: 'shadowRuntimeElements')
-  testImplementation project(path: ':dialects:sqlite-3-30', configuration: 'shadowRuntimeElements')
-  testImplementation project(path: ':dialects:sqlite-3-33', configuration: 'shadowRuntimeElements')
-  testImplementation project(path: ':dialects:sqlite-3-35', configuration: 'shadowRuntimeElements')
-  testImplementation project(path: ':dialects:sqlite-3-38', configuration: 'shadowRuntimeElements')
+  testImplementation project(':dialects:sqlite-3-24')
+  testImplementation project(':dialects:sqlite-3-25')
+  testImplementation project(':dialects:sqlite-3-30')
+  testImplementation project(':dialects:sqlite-3-33')
+  testImplementation project(':dialects:sqlite-3-35')
+  testImplementation project(':dialects:sqlite-3-38')
 }
 
 tasks.register('pluginVersion') {

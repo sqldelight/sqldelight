@@ -10,12 +10,12 @@ grammarKit {
 }
 
 dependencies {
-  compileOnly project(':sqldelight-compiler:dialect')
-  compileOnly libs.intellij.lang
+  api project(':sqldelight-compiler:dialect')
+
+  compileOnly libs.intellij.ideImpl
 
   testImplementation project(':dialects:sqlite-3-18')
-  testImplementation libs.intellij.core
-  testImplementation libs.intellij.lang
+  testImplementation libs.intellij.ideImpl
   testImplementation libs.junit
   testImplementation libs.truth
   testImplementation project(':sqldelight-compiler:dialect')
