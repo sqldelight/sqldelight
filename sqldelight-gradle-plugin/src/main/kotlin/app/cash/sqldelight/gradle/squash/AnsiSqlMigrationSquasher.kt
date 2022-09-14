@@ -28,13 +28,13 @@ class AnsiSqlMigrationSquasher(
           createNewSqlFile(squasher.squish(rules, into = currentFile))
         }.text
       }
-      statement.dropIndexStmt != null -> {
+      statement.dropIndexStmt != null && statement.dropIndexStmt?.indexName != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.singleOrNull {
           it.indexName.textMatches(statement.dropIndexStmt!!.indexName!!.text)
         } ?: throw Exception("Create statement not found for drop index statement ${statement.dropIndexStmt}")
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
-      statement.dropTableStmt != null -> {
+      statement.dropTableStmt != null && statement.dropTableStmt?.tableName != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.singleOrNull {
           it.tableName.textMatches(statement.dropTableStmt!!.tableName!!.text)
         } ?: throw Exception("Create statement not found for drop table statement ${statement.dropTableStmt}")
@@ -47,13 +47,13 @@ class AnsiSqlMigrationSquasher(
           fileText.replaceRange(element.startOffset..element.endOffset, "")
         }
       }
-      statement.dropTriggerStmt != null -> {
+      statement.dropTriggerStmt != null && statement.dropTriggerStmt?.triggerName != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.singleOrNull {
           it.triggerName.textMatches(statement.dropTriggerStmt!!.triggerName!!.text)
         } ?: throw Exception("Create statement not found for drop trigger statement ${statement.dropTriggerStmt}")
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
-      statement.dropViewStmt != null -> {
+      statement.dropViewStmt != null  && statement.dropViewStmt?.viewName != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.singleOrNull {
           it.viewName.textMatches(statement.dropViewStmt!!.viewName!!.text)
         } ?: throw Exception("Create statement not found for drop view statement ${statement.dropViewStmt}")
