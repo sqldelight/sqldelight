@@ -143,7 +143,7 @@ class MigrationTest {
 
     assertThat(output.output).contains(
       """
-      |Create statement not found for drop statement
+      |Create statement not found for
       """.trimMargin(),
     )
   }
