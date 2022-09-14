@@ -33,7 +33,7 @@ class AnsiSqlMigrationSquasher(
           it.indexName.textMatches(statement.dropIndexStmt!!.indexName!!.text)
         }
         if (create == null) {
-          throw Exception("Create statement not found for drop statement ${statement.dropIndexStmt}")
+          throw Exception("Create statement not found for drop index statement ${statement.dropIndexStmt}")
         }
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
@@ -42,7 +42,7 @@ class AnsiSqlMigrationSquasher(
           it.tableName.textMatches(statement.dropTableStmt!!.tableName!!.text)
         }
         if (create == null) {
-          throw Exception("Create statement not found for drop statement ${statement.dropTableStmt}")
+          throw Exception("Create statement not found for drop table statement ${statement.dropTableStmt}")
         }
         val drops = currentFile.findChildrenOfType<SqlNamedElementImpl>()
           .filter { it.reference?.resolve() == create.tableName }
@@ -58,7 +58,7 @@ class AnsiSqlMigrationSquasher(
           it.triggerName.textMatches(statement.dropTriggerStmt!!.triggerName!!.text)
         }
         if (create == null) {
-          throw Exception("Create statement not found for drop statement ${statement.dropTriggerStmt}")
+          throw Exception("Create statement not found for drop trigger statement ${statement.dropTriggerStmt}")
         }
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
@@ -67,7 +67,7 @@ class AnsiSqlMigrationSquasher(
           it.viewName.textMatches(statement.dropViewStmt!!.viewName!!.text)
         }
         if (create == null) {
-          throw Exception("Create statement not found for drop statement ${statement.dropViewStmt}")
+          throw Exception("Create statement not found for drop view statement ${statement.dropViewStmt}")
         }
         currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
       }
