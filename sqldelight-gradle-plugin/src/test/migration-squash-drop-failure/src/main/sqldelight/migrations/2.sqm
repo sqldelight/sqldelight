@@ -1,1 +1,1 @@
-DROP VIEW View_test;
+DROP VIEW IF EXISTS View_test;
