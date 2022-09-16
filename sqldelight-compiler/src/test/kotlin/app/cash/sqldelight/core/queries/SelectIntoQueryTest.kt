@@ -51,7 +51,7 @@ class SelectIntoQueryTest {
       |  public val BAR: kotlin.Long,
       |)
       |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 

@@ -33,7 +33,7 @@ internal class MixedNamedAndPositionalParamsInspection : LocalInspectionTool() {
         if (bindExprs.size < 2) {
           return
         }
-        val params = bindExprs.map { it.bindParameter.text }
+        val params = bindExprs.mapNotNull { it.bindParameter?.text }
         val positional = params.filter { it.matches(positional) }
         val named = params.filter { it.matches(named) }
         if (positional.isNotEmpty() && named.isNotEmpty()) {

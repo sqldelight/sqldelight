@@ -36,8 +36,6 @@ import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindParameter
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
-import com.alecstrong.sql.psi.core.psi.SqlSelectIntoClause
-import com.alecstrong.sql.psi.core.psi.SqlSetStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
