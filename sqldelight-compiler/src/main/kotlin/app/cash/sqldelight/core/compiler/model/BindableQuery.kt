@@ -93,12 +93,8 @@ abstract class BindableQuery(
     val namesSeen = mutableSetOf<String>()
     var maxIndexSeen = 0
     statement.findChildrenOfType<SqlBindExpr>().forEach { bindArg ->
-      if (bindArg.parent is SqlSelectIntoClause || bindArg.parent is SqlSetStmt) {
-        // No special support for embedded sql `SELECT * INTO ?` or `SET ? = `:
-        // mapping the bind parameters to host variables must be implemented by the caller/precompiler
-        return@forEach
-      }
-      bindArg.bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
+      val bindParameter = bindArg.bindParameter ?: return@forEach
+      bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
         if (!indexesSeen.add(index)) {
           result.findAndReplace(bindArg, index) { it.index == index }
           return@forEach
@@ -107,7 +103,7 @@ abstract class BindableQuery(
         result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
         return@forEach
       }
-      bindArg.bindParameter.identifier?.let {
+      bindParameter.identifier?.let {
         if (!namesSeen.add(it.text)) {
           result.findAndReplace(bindArg) { (_, type, _) -> type.name == it.text }
           return@forEach
@@ -181,7 +177,7 @@ abstract class BindableQuery(
           type = newArgumentType.run {
             copy(
               javaType = javaType.copy(nullable = current.type.javaType.isNullable || newType.javaType.isNullable),
-              name = bindArg.bindParameter.identifier?.text ?: name,
+              name = bindArg.bindParameter?.identifier?.text ?: name,
             )
           },
         ),

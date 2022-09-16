@@ -39,6 +39,7 @@ import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
@@ -197,14 +198,16 @@ data class NamedQuery(
   ): List<IntermediateType> {
     return queryExposed().flatMap {
       val table = it.table?.name
-      return@flatMap it.columns.map { queryColumn ->
-        var name = queryColumn.element.functionName()
+      val into = (this as? SqlSelectStmt)?.selectIntoClause
+      return@flatMap it.columns.mapIndexed { index, queryColumn ->
+        var name = if (into != null) {
+          into.hostVariableList[index].hostVariableId!!.text
+        } else queryColumn.element.functionName()
         if (!namesUsed.add(name)) {
           if (table != null) name = "${table}_$name"
           while (!namesUsed.add(name)) name += "_"
         }
-
-        return@map queryColumn.type().copy(name = name)
+        return@mapIndexed queryColumn.type().copy(name = name)
       }
     }
   }

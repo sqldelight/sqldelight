@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core.queries
 
+import app.cash.sqldelight.core.compiler.QueryInterfaceGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
@@ -22,7 +23,7 @@ class SelectIntoQueryTest {
       |);
       |
       |selectForId:
-      |SELECT value, id INTO ?, ?
+      |SELECT value, id INTO :FOO, :BAR
       |FROM data
       |WHERE id = ?;
       """.trimMargin(),
@@ -32,7 +33,7 @@ class SelectIntoQueryTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (value_: kotlin.String, id: kotlin.Long) -> T): app.cash.sqldelight.Query<T> = SelectForIdQuery(id) { cursor ->
+      |public fun <T : kotlin.Any> selectForId(id: kotlin.Long, mapper: (FOO: kotlin.String, BAR: kotlin.Long) -> T): app.cash.sqldelight.Query<T> = SelectForIdQuery(id) { cursor ->
       |  mapper(
       |    cursor.getString(0)!!,
       |    cursor.getLong(1)!!
@@ -41,13 +42,24 @@ class SelectIntoQueryTest {
       |
       """.trimMargin(),
     )
+
+    val dataClassGenerator = QueryInterfaceGenerator(file.namedQueries.first())
+    assertThat(dataClassGenerator.kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class SelectForId(
+      |  public val FOO: kotlin.String,
+      |  public val BAR: kotlin.Long,
+      |)
+      |
+      """.trimMargin()
+    )
   }
 
   @Test fun `embeddedSQL works with single select`() {
     val file = FixtureCompiler.parseSql(
       """
       |select:
-      |SELECT abs(42) INTO ?;
+      |SELECT abs(42) INTO :FOO;
       |
       """.trimMargin(),
       tempFolder,
@@ -68,7 +80,7 @@ class SelectIntoQueryTest {
     val file = FixtureCompiler.parseSql(
       """
       |abs:
-      |SET ? = abs(42);
+      |SET :FOO = abs(42);
       |
       """.trimMargin(),
       tempFolder,
@@ -113,7 +125,7 @@ class SelectIntoQueryTest {
     val file = FixtureCompiler.parseSql(
       """
       |setSelect:
-      |SET ? = SELECT abs(42);
+      |SET :FOO = SELECT abs(42);
       |
       """.trimMargin(),
       tempFolder,
