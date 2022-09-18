@@ -16,6 +16,7 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
     "?2" to "?",
     "BLOB" to "TEXT",
     "id TEXT GENERATED ALWAYS AS (2) UNIQUE NOT NULL" to "id TEXT GENERATED ALWAYS AS (2) NOT NULL STORED",
+    "id INTEGER GENERATED ALWAYS AS (42) NOT NULL," to "id INTEGER GENERATED ALWAYS AS (42) NOT NULL STORED,",
     "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
       to "'(', ')', ',', '.', <binary like operator real>, <jsona binary operator real>, <jsonb binary operator real>, BETWEEN or IN expected, got ','",
   )
