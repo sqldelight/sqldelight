@@ -17,10 +17,10 @@ repositories {
 android {
   namespace "app.cash.sqldelight.integration"
 
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
 
   defaultConfig {
-    minSdk deps.versions.minSdk.get() as int
+    minSdk libs.versions.minSdk.get() as int
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
@@ -44,10 +44,10 @@ kotlin {
   sourceSets {
     commonTest {
       dependencies {
-        implementation deps.kotlin.test.common
-        implementation deps.kotlin.test.commonAnnotations
-        implementation deps.stately.core
-        implementation deps.stately.concurrency
+        implementation libs.kotlin.test.common
+        implementation libs.kotlin.test.commonAnnotations
+        implementation libs.stately.core
+        implementation libs.stately.concurrency
         implementation "app.cash.sqldelight:runtime:${app.cash.sqldelight.VersionKt.VERSION}"
       }
     }
@@ -58,7 +58,7 @@ kotlin {
     }
     androidTest {
       dependencies {
-        implementation deps.kotlin.test.junit
+        implementation libs.kotlin.test.junit
         implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
       }
     }

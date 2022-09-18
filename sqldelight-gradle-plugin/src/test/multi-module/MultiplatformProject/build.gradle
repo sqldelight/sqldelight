@@ -11,7 +11,7 @@ sqldelight {
 android {
   namespace "app.cash.sqldelight.multiplatform.project"
 
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
 
   buildTypes {
     release {}

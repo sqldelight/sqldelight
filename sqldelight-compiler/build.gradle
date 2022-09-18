@@ -1,8 +1,8 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.grammarKitComposer)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.grammarKitComposer)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 test {
@@ -20,32 +20,32 @@ sourceSets {
 }
 
 grammarKit {
-  intellijRelease.set(deps.versions.idea)
+  intellijRelease.set(libs.versions.idea)
 }
 
 dependencies {
-  api deps.sqlPsi
+  api libs.sqlPsi
   api(project(':sqldelight-compiler:dialect')) {
     exclude group: "com.jetbrains.intellij.platform", module: "core-impl"
   }
 
-  implementation deps.kotlinPoet
-  implementation deps.jgrapht
+  implementation libs.kotlinPoet
+  implementation libs.jgrapht
 
-  compileOnly deps.sqliteJdbc
-  compileOnly deps.intellij.core
-  compileOnly deps.intellij.lang
-  compileOnly deps.intellij.java
-  compileOnly deps.intellij.testFramework
+  compileOnly libs.sqliteJdbc
+  compileOnly libs.intellij.core
+  compileOnly libs.intellij.lang
+  compileOnly libs.intellij.java
+  compileOnly libs.intellij.testFramework
 
-  testImplementation deps.burst
-  testImplementation deps.sqliteJdbc
-  testImplementation deps.intellij.core
-  testImplementation deps.intellij.lang
-  testImplementation deps.intellij.java
-  testImplementation deps.intellij.testFramework
-  testImplementation deps.kotlin.test.junit
-  testImplementation deps.truth
+  testImplementation libs.burst
+  testImplementation libs.sqliteJdbc
+  testImplementation libs.intellij.core
+  testImplementation libs.intellij.lang
+  testImplementation libs.intellij.java
+  testImplementation libs.intellij.testFramework
+  testImplementation libs.kotlin.test.junit
+  testImplementation libs.truth
   testImplementation project(':test-util')
   testImplementation project(':dialects:hsql')
   testImplementation project(path: ':dialects:mysql', configuration: 'shadowRuntimeElements')

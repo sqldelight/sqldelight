@@ -1,27 +1,27 @@
 plugins {
-  alias(deps.plugins.shadow)
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.grammarKitComposer)
-  alias(deps.plugins.publish)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.grammarKitComposer)
+  alias(libs.plugins.publish)
 }
 
 grammarKit {
-  intellijRelease.set(deps.versions.idea)
+  intellijRelease.set(libs.versions.idea)
 }
 
 dependencies {
   api project(':dialects:sqlite-3-30')
 
   compileOnly project(':sqldelight-compiler:dialect')
-  compileOnly deps.intellij.core
-  compileOnly deps.intellij.lang
+  compileOnly libs.intellij.core
+  compileOnly libs.intellij.lang
 
-  testImplementation deps.intellij.core
-  testImplementation deps.intellij.lang
-  testImplementation deps.junit
-  testImplementation deps.truth
+  testImplementation libs.intellij.core
+  testImplementation libs.intellij.lang
+  testImplementation libs.junit
+  testImplementation libs.truth
   testImplementation project(':sqldelight-compiler:dialect')
-  testImplementation deps.sqlPsiTestFixtures
+  testImplementation libs.sqlPsiTestFixtures
 }
 
 tasks.getByName("shadowJar").configure {

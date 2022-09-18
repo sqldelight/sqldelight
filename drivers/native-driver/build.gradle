@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
-  alias(deps.plugins.kotlin.multiplatform)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 def ideaActive = System.getProperty("idea.active") == "true"
@@ -35,14 +35,14 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation deps.kotlin.test.common
-        implementation deps.testhelp
+        implementation libs.kotlin.test.common
+        implementation libs.testhelp
       }
     }
     nativeMain {
       dependsOn(commonMain)
       dependencies {
-        api deps.sqliter
+        api libs.sqliter
       }
     }
     nativeTest {

@@ -1,6 +1,6 @@
 plugins {
-  alias(deps.plugins.kotlin.multiplatform)
-  alias(deps.plugins.kotlin.native.cocoapods)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.native.cocoapods)
   id("app.cash.sqldelight")
 }
 
@@ -50,7 +50,7 @@ kotlin {
   }
   sourceSets.jsTest.dependencies {
     implementation "org.jetbrains.kotlin:kotlin-test-js"
-    implementation deps.kotlin.coroutines.core
+    implementation libs.kotlin.coroutines.core
     implementation "app.cash.sqldelight:sqljs-driver"
   }
 
