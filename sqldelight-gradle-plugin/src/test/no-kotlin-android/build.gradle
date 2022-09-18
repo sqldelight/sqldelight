@@ -12,7 +12,7 @@ repositories {
 }
 
 android {
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
 
   lint {
     textReport true

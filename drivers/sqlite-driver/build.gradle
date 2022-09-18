@@ -1,7 +1,7 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 archivesBaseName = 'sqldelight-sqlite-driver'
@@ -9,7 +9,7 @@ archivesBaseName = 'sqldelight-sqlite-driver'
 dependencies {
   api project(':drivers:jdbc-driver')
 
-  implementation deps.sqliteJdbc
+  implementation libs.sqliteJdbc
 
   testImplementation project(':drivers:driver-test')
 }

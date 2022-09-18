@@ -1,8 +1,8 @@
 plugins {
-  alias(deps.plugins.android.application) apply false
-  alias(deps.plugins.android.library) apply false
-  alias(deps.plugins.kotlin.multiplatform) apply false
-  alias(deps.plugins.kotlin.android) apply false
-  alias(deps.plugins.kotlin.js) apply false
-  alias(deps.plugins.kotlin.native.cocoapods) apply false
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.library) apply false
+  alias(libs.plugins.kotlin.multiplatform) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.js) apply false
+  alias(libs.plugins.kotlin.native.cocoapods) apply false
 }

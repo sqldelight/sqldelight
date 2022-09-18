@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
 }
 
@@ -20,18 +20,18 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation deps.kotlin.test.common
-        implementation deps.kotlin.test.commonAnnotations
+        implementation libs.kotlin.test.common
+        implementation libs.kotlin.test.commonAnnotations
       }
     }
     jvmTest {
       dependencies {
-        implementation deps.kotlin.test.junit
+        implementation libs.kotlin.test.junit
       }
     }
     jsTest {
       dependencies {
-        implementation deps.kotlin.test.js
+        implementation libs.kotlin.test.js
       }
     }
   }

@@ -1,5 +1,5 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlin.jvm)
   id("java-gradle-plugin")
 }
 
@@ -13,5 +13,5 @@ gradlePlugin {
 }
 
 dependencies {
-  compileOnly deps.kotlin.plugin
+  compileOnly libs.kotlin.plugin
 }

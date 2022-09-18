@@ -22,5 +22,5 @@ repositories {
 }
 
 dependencies {
-  implementation deps.truth
+  implementation libs.truth
 }
