@@ -8,10 +8,6 @@ pluginManagement {
     includeBuild("buildLogic")
 }
 
-dependencyResolutionManagement {
-    defaultLibrariesExtensionName.set('deps')
-}
-
 rootProject.name = 'sqldelight'
 
 include ':adapters:primitive-adapters'

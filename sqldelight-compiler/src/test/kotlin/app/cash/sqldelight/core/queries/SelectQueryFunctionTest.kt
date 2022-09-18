@@ -201,7 +201,7 @@ class SelectQueryFunctionTest {
     val generator = SelectQueryGenerator(file.namedQueries.first())
     assertThat(generator.customResultTypeFunction().toString()).contains(
       """
-      |public fun selectValues(): app.cash.sqldelight.Query<kotlin.String>
+      |public fun selectValues(): app.cash.sqldelight.ExecutableQuery<kotlin.String>
       """.trimMargin(),
     )
   }
@@ -482,7 +482,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
+      |public fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
       |  mapper(
       |    null
       |  )
@@ -1573,7 +1573,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun selectIf(): app.cash.sqldelight.Query<kotlin.String> = app.cash.sqldelight.Query(${query.id}, emptyArray(), driver, "Test.sq", "selectIf", "SELECT IF(1 = 1, 'yes', 'no')") { cursor ->
+      |public fun selectIf(): app.cash.sqldelight.ExecutableQuery<kotlin.String> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "selectIf", "SELECT IF(1 = 1, 'yes', 'no')") { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  cursor.getString(0)!!
       |}
@@ -1790,7 +1790,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-        |public fun query(expr: kotlin.String): app.cash.sqldelight.Query<kotlin.String> = QueryQuery(expr) { cursor ->
+        |public fun query(expr: kotlin.String): app.cash.sqldelight.ExecutableQuery<kotlin.String> = QueryQuery(expr) { cursor ->
         |  cursor.getString(0)!!
         |}
         |

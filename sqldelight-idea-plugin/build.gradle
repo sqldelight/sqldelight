@@ -1,17 +1,17 @@
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 
 plugins {
-  alias(deps.plugins.intellij)
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.changelog)
-  alias(deps.plugins.ksp)
+  alias(libs.plugins.intellij)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.changelog)
+  alias(libs.plugins.ksp)
 }
 
 intellij {
   updateSinceUntilBuild = false
 
   // Comment version and uncomment localPath to test a local IDE build.
-  version = "IC-${deps.versions.idea.get()}"
+  version = "IC-${libs.versions.idea.get()}"
 //  localPath = "/Applications/Android Studio.app"
 
   pluginName = 'SQLDelight'
@@ -91,18 +91,18 @@ repositories {
 }
 
 dependencies {
-  ksp deps.moshiCodegen
+  ksp libs.moshiCodegen
 
   implementation project(':sqldelight-compiler')
 
-  implementation deps.sqliteJdbc
-  implementation(deps.bugsnag) {
+  implementation libs.sqliteJdbc
+  implementation(libs.bugsnag) {
     exclude group: "org.slf4j"
   }
-  implementation deps.picnic
-  implementation deps.moshi
+  implementation libs.picnic
+  implementation libs.moshi
 
-  testImplementation deps.truth
+  testImplementation libs.truth
   testImplementation project(':dialects:sqlite-3-18')
   testImplementation project(':test-util')
 }

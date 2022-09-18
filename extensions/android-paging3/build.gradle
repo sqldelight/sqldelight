@@ -1,7 +1,7 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 archivesBaseName = 'sqldelight-androidx-paging3'
@@ -9,12 +9,12 @@ archivesBaseName = 'sqldelight-androidx-paging3'
 dependencies {
   // workaround for https://youtrack.jetbrains.com/issue/KT-27059
   api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
-  api deps.androidx.paging3.common
+  api libs.androidx.paging3.common
 
   testImplementation project(':drivers:sqlite-driver')
-  testImplementation deps.truth
-  testImplementation deps.kotlin.test.junit
-  testImplementation deps.kotlin.coroutines.test
+  testImplementation libs.truth
+  testImplementation libs.kotlin.test.junit
+  testImplementation libs.kotlin.coroutines.test
 }
 
 // workaround for https://youtrack.jetbrains.com/issue/KT-27059

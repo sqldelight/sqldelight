@@ -230,11 +230,11 @@ class SelectQueryGenerator(
     if (query.arguments.isEmpty()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
-      if (query.tablesObserved != null) {
+      val tablesObserved = query.tablesObserved
+      if (tablesObserved.isNullOrEmpty()) {
         function.addCode(
-          "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
+          "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
           QUERY_TYPE,
-          queryKeys(query.tablesObserved!!),
           query.statement.containingFile.name,
           query.name,
           query.statement.rawSqlText(),
@@ -242,8 +242,9 @@ class SelectQueryGenerator(
         )
       } else {
         function.addCode(
-          "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
+          "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
           QUERY_TYPE,
+          queryKeys(tablesObserved),
           query.statement.containingFile.name,
           query.name,
           query.statement.rawSqlText(),
@@ -266,18 +267,17 @@ class SelectQueryGenerator(
   }
 
   /**
-   * Either emptyArray() or arrayOf("table1", "table2")
+   * Add the table listener array: arrayOf("table1", "table2")
    */
   private fun queryKeys(tablesObserved: List<TableNameElement>): CodeBlock {
-    return if (tablesObserved.isEmpty()) CodeBlock.of("emptyArray()")
-    else tablesObserved.map { CodeBlock.of("\"${it.name}\"") }
+    return tablesObserved.map { CodeBlock.of("\"${it.name}\"") }
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
   private fun NamedQuery.supertype() = when {
     queryable is SetQueryWithResults ->
       if (queryable.select.compoundSelectStmt != null) QUERY_TYPE else EXECUTABLE_QUERY_TYPE
-    tablesObserved == null -> EXECUTABLE_QUERY_TYPE
+    tablesObserved.isNullOrEmpty() -> EXECUTABLE_QUERY_TYPE
     else -> QUERY_TYPE
   }
 

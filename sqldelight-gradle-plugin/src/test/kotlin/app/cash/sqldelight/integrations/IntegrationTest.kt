@@ -273,4 +273,13 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun selectWithoutFromTest() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/selectWithoutFrom"))
+      .withArguments("clean", "assemble", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }

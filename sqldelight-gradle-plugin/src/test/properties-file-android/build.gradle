@@ -15,7 +15,7 @@ repositories {
 android {
   namespace "com.example"
 
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
 
   defaultConfig {
     minSdk 30

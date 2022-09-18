@@ -22,5 +22,5 @@ repositories {
 dependencies {
     implementation "org.hsqldb:hsqldb:2.5.0"
     implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
-    implementation deps.truth
+    implementation libs.truth
 }
