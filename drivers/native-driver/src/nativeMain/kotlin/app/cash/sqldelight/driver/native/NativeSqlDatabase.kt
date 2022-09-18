@@ -112,10 +112,14 @@ class NativeSqliteDriver(
     maxReaderConnections = maxReaderConnections,
   )
 
+  /**
+   * @param onConfiguration Callback to hook into [DatabaseConfiguration] creation.
+   */
   constructor(
     schema: SqlSchema,
     name: String,
     maxReaderConnections: Int = 1,
+    onConfiguration: (DatabaseConfiguration) -> DatabaseConfiguration = { it },
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
@@ -126,7 +130,7 @@ class NativeSqliteDriver(
       upgrade = { connection, oldVersion, newVersion ->
         wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
       },
-    ),
+    ).let(onConfiguration),
     maxReaderConnections = maxReaderConnections,
   )
 
