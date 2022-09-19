@@ -14,7 +14,7 @@ publishing {
          */
         maven {
           name = "internal"
-          url = providers.gradleProperty("internalUrl").forUseAtConfigurationTime()
+          url = providers.gradleProperty("internalUrl")
           credentials(PasswordCredentials)
         }
     }
