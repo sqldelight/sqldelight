@@ -1,12 +1,31 @@
 package app.cash.sqldelight.async.coroutines
 
 import app.cash.sqldelight.Query
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 suspend fun <T : Any> Query<T>.awaitAsList(): List<T> = execute { cursor ->
   val result = mutableListOf<T>()
   while (cursor.next()) result.add(mapper(cursor))
   result
 }.await()
+
+/**
+ * Obtains the results of the query as a 'Flow'.
+ */
+fun <T : Any> Query<T>.resultFlow(
+  context: CoroutineContext = Dispatchers.Default,
+): Flow<T> = callbackFlow {
+  withContext(context) {
+    execute { cursor ->
+      while (cursor.next()) trySend(mapper(cursor))
+      close()
+    }
+  }
+}
 
 suspend fun <T : Any> Query<T>.awaitAsOne(): T {
   return awaitAsOneOrNull()
