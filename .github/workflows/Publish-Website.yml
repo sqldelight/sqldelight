@@ -1,16 +1,30 @@
-name: Publish the mkdocs to gh-pages
+name: Publish the mkdocs to GitHub Pages
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: "docs"
+  cancel-in-progress: false
 
 jobs:
   deploy-website:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}  
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
+      - uses: actions/configure-pages@v2  
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -25,14 +39,14 @@ jobs:
           pip3 install -r .github/workflows/requirements.txt
           mkdocs build
 
-      - name: Deploy 🚀
+      - uses: actions/upload-pages-artifact@v1
         if: success()
-        uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: site # The folder the action should deploy.
-          SINGLE_COMMIT: true
+          path: site
+      - name: Deploy to GitHub Pages
+        if: success()
+        id: deployment
+        uses: actions/deploy-pages@main
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
