@@ -8,9 +8,8 @@ archivesBaseName = 'sqldelight-r2dbc-driver'
 
 dependencies {
   api project(':runtime')
-  implementation libs.r2dbc
-  implementation libs.kotlin.coroutines.core
-  implementation libs.kotlin.coroutines.reactive
+  api libs.r2dbc
+  api libs.kotlin.coroutines.reactive
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
