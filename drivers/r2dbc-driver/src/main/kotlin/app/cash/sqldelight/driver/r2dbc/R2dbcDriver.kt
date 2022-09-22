@@ -29,7 +29,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
       val result = prepared.execute().awaitSingle()
 
       val rowSet = result.map { row, rowMetadata ->
-        List(rowMetadata.columnMetadatas.size) { index -> index to row.get(index) }.toMap()
+        List(rowMetadata.columnMetadatas.size) { index -> row.get(index) }
       }.asFlow().toList()
 
       return@AsyncValue mapper(R2dbcCursor(rowSet))
@@ -152,7 +152,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 /**
  * TODO: Write a better async cursor API
  */
-class R2dbcCursor(val rowSet: List<Map<Int, Any?>>) : SqlCursor {
+class R2dbcCursor(val rowSet: List<List<Any?>>) : SqlCursor {
   var row = -1
     private set
 
