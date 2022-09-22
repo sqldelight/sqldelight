@@ -70,8 +70,7 @@ class PostgreSqlTest {
         time = LocalTime.of(21, 30, 59, 10000),
         timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
         timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-      ).awaitAsOne()
-      ,
+      ).awaitAsOne(),
     )
       .isEqualTo(
         Dates(
