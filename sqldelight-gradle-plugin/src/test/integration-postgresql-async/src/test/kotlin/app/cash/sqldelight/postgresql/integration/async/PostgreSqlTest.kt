@@ -1,12 +1,13 @@
-package app.cash.sqldelight.postgresql.integration
+package app.cash.sqldelight.postgresql.integration.async
 
-import app.cash.sqldelight.async.coroutines.*
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
+import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.db.OptimisticLockException
-import app.cash.sqldelight.driver.r2dbc.*
-import app.cash.sqldelight.postgresql.integration.async.*
+import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
-import io.r2dbc.spi.*
-import kotlinx.coroutines.reactive.*
+import io.r2dbc.spi.ConnectionFactories
+import kotlinx.coroutines.reactive.awaitSingle
 import org.junit.Assert
 import org.junit.Test
 import java.time.LocalDate
