@@ -11,5 +11,5 @@ abstract class BindParameterMixin(node: ASTNode) : SqlCompositeElementImpl(node)
    * Some sql dialects support other bind parameter besides `?`, but sqldelight should still replace the
    * user provided parameter with [replaceWith] for a homogen generated code.
    */
-  open val replaceWith: String = "?"
+  open fun replaceWith(isAsync: Boolean, index: Int): String = "?"
 }

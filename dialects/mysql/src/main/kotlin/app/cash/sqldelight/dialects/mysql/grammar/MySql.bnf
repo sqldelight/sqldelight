@@ -112,7 +112,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 bind_parameter ::= ( '?' | ':' {identifier} ) {
-  mixin = "app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin"
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
