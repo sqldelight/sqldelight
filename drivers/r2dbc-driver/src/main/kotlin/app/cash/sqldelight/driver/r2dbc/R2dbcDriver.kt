@@ -8,7 +8,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
-import kotlinx.coroutines.reactive.awaitLast
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 
 class R2dbcDriver(private val connection: Connection) : SqlDriver {
@@ -29,7 +31,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
       val rowSet = mutableListOf<Map<Int, Any?>>()
       result.map { row, rowMetadata ->
         rowSet.add(rowMetadata.columnMetadatas.mapIndexed { index, _ -> index to row.get(index) }.toMap())
-      }.awaitLast()
+      }.asFlow().collect()
 
       return@AsyncValue mapper(R2dbcCursor(rowSet))
     }
@@ -47,7 +49,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
 
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
-      return@AsyncValue result.rowsUpdated.awaitSingle()
+      return@AsyncValue result.rowsUpdated.awaitFirstOrNull()?.toLong() ?: 0
     }
   }
 
@@ -64,7 +66,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     this.transaction = transaction
 
     if (enclosing == null) {
-      connection.beginTransaction().awaitSingle()
+      connection.beginTransaction().awaitFirstOrNull()
     }
 
     return@AsyncValue transaction
@@ -88,9 +90,9 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {
         if (successful) {
-          connection.commitTransaction().awaitSingle()
+          connection.commitTransaction().awaitFirstOrNull()
         } else {
-          connection.rollbackTransaction().awaitSingle()
+          connection.rollbackTransaction().awaitFirstOrNull()
         }
       }
       transaction = enclosingTransaction
