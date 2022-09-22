@@ -16,6 +16,15 @@ class DialectIntegrationTests {
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsMySqlAsync() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-mysql-async"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun integrationTestsMySqlSchemaDefinitions() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-mysql-schema"))

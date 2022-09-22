@@ -206,7 +206,7 @@ abstract class QueryGenerator(
           // This allows us to use the same algorithm for non Sqlite dialects
           // :name becomes ?
           if (bindParameter != null) {
-            replacements.add(bindArg.range to bindParameter.replaceWith)
+            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
           }
         }
       }

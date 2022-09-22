@@ -4,5 +4,5 @@ import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.intellij.lang.ASTNode
 
 abstract class BindParameterMixin(node: ASTNode) : BindParameterMixin(node) {
-  override val replaceWith: String = if (text == "DEFAULT") text else "?"
+  override fun replaceWith(isAsync: Boolean, index: Int): String = if (text == "DEFAULT") text else "?"
 }
