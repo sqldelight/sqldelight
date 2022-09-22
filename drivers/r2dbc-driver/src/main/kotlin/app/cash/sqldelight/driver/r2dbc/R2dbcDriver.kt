@@ -8,7 +8,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
@@ -28,10 +28,9 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
 
-      val rowSet = mutableListOf<Map<Int, Any?>>()
-      result.map { row, rowMetadata ->
-        rowSet.add(rowMetadata.columnMetadatas.mapIndexed { index, _ -> index to row.get(index) }.toMap())
-      }.asFlow().collect()
+      val rowSet = result.map { row, rowMetadata ->
+        List(rowMetadata.columnMetadatas.size) { index -> index to row.get(index) }.toMap()
+      }.asFlow().toList()
 
       return@AsyncValue mapper(R2dbcCursor(rowSet))
     }
