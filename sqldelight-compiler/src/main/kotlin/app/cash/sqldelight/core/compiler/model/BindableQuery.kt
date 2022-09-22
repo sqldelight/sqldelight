@@ -93,7 +93,7 @@ abstract class BindableQuery(
     var maxIndexSeen = 0
     statement.findChildrenOfType<SqlBindExpr>().forEach { bindArg ->
       val bindParameter = bindArg.bindParameter
-      if (bindParameter is BindParameterMixin && !bindParameter.isDefault) {
+      if (bindParameter is BindParameterMixin && bindParameter.text != "DEFAULT") {
         bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
           if (!indexesSeen.add(index)) {
             result.findAndReplace(bindArg, index) { it.index == index }

@@ -12,12 +12,4 @@ abstract class BindParameterMixin(node: ASTNode) : SqlCompositeElementImpl(node)
    * user provided parameter with [replaceWith] for a homogen generated code.
    */
   open val replaceWith: String = "?"
-
-  /**
-   * If true, this parameter is not used by code generators during parameter mapping.
-   *
-   * Some sql dialects support generated and default columns, so sqldelight should skip this parameter to not
-   * require and map it from the given parameters.
-   */
-  open val isDefault: Boolean = false
 }

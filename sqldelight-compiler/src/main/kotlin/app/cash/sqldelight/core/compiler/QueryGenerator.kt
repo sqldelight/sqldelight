@@ -176,7 +176,7 @@ abstract class QueryGenerator(
         argumentCounts.add("${type.name}.size")
       } else {
         val bindParameter = bindArg?.bindParameter as? BindParameterMixin
-        if (bindParameter == null || !bindParameter.isDefault) {
+        if (bindParameter == null || bindParameter.text != "DEFAULT") {
           nonArrayBindArgsCount += 1
 
           if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
