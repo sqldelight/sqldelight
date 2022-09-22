@@ -1,0 +1,23 @@
+CREATE TABLE dog (
+  name VARCHAR(8) NOT NULL,
+  breed TEXT NOT NULL,
+  is_good INTEGER NOT NULL DEFAULT 1
+);
+
+insertDog:
+INSERT INTO dog
+VALUES (?, ?, DEFAULT);
+
+selectDogs:
+SELECT *
+FROM dog;
+
+selectGoodDogs:
+SELECT *
+FROM dog
+WHERE :someBoolean AND 1 = 1;
+
+insertAndReturn:
+INSERT INTO dog
+VALUES (?, ?, DEFAULT)
+RETURNING *;

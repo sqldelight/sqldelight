@@ -43,6 +43,15 @@ class DialectIntegrationTests {
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsPostgreSqlAsync() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-postgresql-async"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun `dialect accepts version catalog dependency`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-catalog"))
