@@ -6,7 +6,7 @@ CREATE TABLE dog (
 
 insertDog:
 INSERT INTO dog
-VALUES (?, ?, ?);
+VALUES (?, ?, DEFAULT);
 
 selectDogs:
 SELECT *

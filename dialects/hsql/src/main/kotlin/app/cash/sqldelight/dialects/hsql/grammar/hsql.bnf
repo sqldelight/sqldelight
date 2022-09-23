@@ -79,7 +79,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   implements = "com.alecstrong.sql.psi.core.psi.SqlColumnConstraint"
   override = true
 }
-bind_parameter ::= ( DEFAULT | '?' | ':' {identifier} ) {
+bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   mixin = "app.cash.sqldelight.dialects.hsql.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"

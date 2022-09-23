@@ -21,7 +21,7 @@ class MySqlTest {
   }
 
   @Test fun simpleSelect() = runTest { database ->
-    database.dogQueries.insertDog("Tilda", "Pomeranian", true)
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
     assertThat(database.dogQueries.selectDogs().awaitAsOne())
       .isEqualTo(
         Dog(
@@ -35,10 +35,10 @@ class MySqlTest {
   @Test
   fun simpleSelectWithIn() = runTest { database ->
     with(database) {
-      dogQueries.insertDog("Tilda", "Pomeranian", true)
-      dogQueries.insertDog("Tucker", "Portuguese Water Dog", true)
-      dogQueries.insertDog("Cujo", "Pomeranian", false)
-      dogQueries.insertDog("Buddy", "Pomeranian", true)
+      dogQueries.insertDog("Tilda", "Pomeranian")
+      dogQueries.insertDog("Tucker", "Portuguese Water Dog")
+      dogQueries.insertDog("Cujo", "Pomeranian")
+      dogQueries.insertDog("Buddy", "Pomeranian")
       assertThat(
         dogQueries.selectDogsByBreedAndNames(
           breed = "Pomeranian",

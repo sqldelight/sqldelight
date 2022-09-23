@@ -110,7 +110,7 @@ type_name ::= (
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
   override = true
 }
-bind_parameter ::= ( DEFAULT | '?' | ':' {identifier} ) {
+bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
