@@ -48,7 +48,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
 
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
-      return@AsyncValue result.rowsUpdated.awaitFirstOrNull() ?: 0
+      return@AsyncValue result.rowsUpdated.awaitFirstOrNull()?.toLong() ?: 0
     }
   }
 
