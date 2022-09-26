@@ -22,21 +22,21 @@ intellij {
       "org.jetbrains.android"
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
-    patchPluginXml {
+    tasks.named('patchPluginXml') {
       changeNotes = (provider { changelog.get(project.version).toHTML() })
     }
   } else {
-    patchPluginXml {
+    tasks.named('patchPluginXml') {
       version = "$VERSION_NAME-${System.currentTimeMillis()}"
     }
   }
 }
 
-runIde {
+tasks.named('runIde') {
   maxHeapSize = "4g"
 }
 
-runPluginVerifier {
+tasks.named('runPluginVerifier') {
   ideVersions = [
       "IC-2021.1",
       "IC-2021.2.3",
@@ -57,7 +57,7 @@ changelog {
   path = "$rootDir/CHANGELOG.md"
 }
 
-compileKotlin {
+tasks.named('compileKotlin') {
   kotlinOptions {
     freeCompilerArgs = ['-Xjvm-default=enable']
   }
@@ -77,7 +77,7 @@ def getPluginToken() {
   return hasProperty('intellijPublishToken') ? intellijPublishToken : ""
 }
 
-publishPlugin {
+tasks.named('publishPlugin') {
   token = getPluginToken()
   channels = [isReleaseBuild() ? 'Stable' : 'EAP']
 }
@@ -111,7 +111,7 @@ def getBugsnagKey() {
   return hasProperty('SQLDELIGHT_BUGSNAG_KEY') ? SQLDELIGHT_BUGSNAG_KEY : ''
 }
 
-task bugsnagKey {
+tasks.register('bugsnagKey') {
   def outputDir = file("src/generated/kotlin")
   def versionFile = file("$outputDir/app.cash.sqldelight/intellij/Bugsnag.kt")
 
@@ -128,10 +128,10 @@ internal val BUGSNAG_KEY = "${getBugsnagKey()}"
   }
 }
 
-tasks.named('compileKotlin').configure { dependsOn('bugsnagKey') }
+tasks.named('compileKotlin') { dependsOn('bugsnagKey') }
 
-tasks.named('buildSearchableOptions').configure { enabled = false }
+tasks.named('buildSearchableOptions') { enabled = false }
 
 afterEvaluate {
-  tasks.named('kspKotlin').configure { dependsOn('bugsnagKey') }
+  tasks.named('kspKotlin') { dependsOn('bugsnagKey') }
 }
