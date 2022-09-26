@@ -88,7 +88,7 @@ val GIT_SHA = "${getGitHash}"
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 afterEvaluate {
-  tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
-  tasks.named('dokkaHtml').configure { dependsOn('pluginVersion') }
-  tasks.named('javaSourcesJar').configure { dependsOn('pluginVersion') }
+  tasks.named('compileKotlin') { dependsOn('pluginVersion') }
+  tasks.named('dokkaHtml') { dependsOn('pluginVersion') }
+  tasks.named('javaSourcesJar') { dependsOn('pluginVersion') }
 }

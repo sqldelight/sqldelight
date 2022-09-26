@@ -79,7 +79,7 @@ allprojects {
   version = VERSION_NAME
 }
 
-tasks.named("dokkaHtmlMultiModule").configure {
+tasks.named("dokkaHtmlMultiModule") {
   outputDirectory = file("$rootDir/docs/2.x")
 
   moduleName.set("SQLDelight")
