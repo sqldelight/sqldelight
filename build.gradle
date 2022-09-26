@@ -52,12 +52,12 @@ allprojects {
     }
   }
 
-  tasks.withType(JavaCompile) {
+  tasks.withType(JavaCompile).configureEach {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
 
-  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask) {
+  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask).configureEach {
     doFirst {
       // https://github.com/JetBrains/gradle-grammar-kit-plugin/pull/78.
       logging.captureStandardOutput(LogLevel.INFO)
@@ -65,10 +65,8 @@ allprojects {
   }
 
   // https://youtrack.jetbrains.com/issue/KT-46466
-  tasks.withType(org.gradle.plugins.signing.Sign) { signingTask ->
-    tasks.withType(org.gradle.api.publish.maven.tasks.AbstractPublishToMaven) { publishTask ->
-      publishTask.dependsOn(signingTask)
-    }
+  tasks.withType(org.gradle.api.publish.maven.tasks.AbstractPublishToMaven).configureEach {
+    dependsOn(tasks.withType(Sign))
   }
 
   configurations.all {
