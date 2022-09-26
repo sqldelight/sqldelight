@@ -111,7 +111,7 @@ def getBugsnagKey() {
   return hasProperty('SQLDELIGHT_BUGSNAG_KEY') ? SQLDELIGHT_BUGSNAG_KEY : ''
 }
 
-task bugsnagKey {
+tasks.register('bugsnagKey') {
   def outputDir = file("src/generated/kotlin")
   def versionFile = file("$outputDir/app.cash.sqldelight/intellij/Bugsnag.kt")
 

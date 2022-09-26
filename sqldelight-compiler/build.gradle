@@ -58,7 +58,7 @@ dependencies {
   testImplementation project(path: ':dialects:sqlite-3-38', configuration: 'shadowRuntimeElements')
 }
 
-task pluginVersion {
+tasks.register('pluginVersion') {
   def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
