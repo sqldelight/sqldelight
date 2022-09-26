@@ -72,15 +72,11 @@ class MultiplatformConventions : Plugin<Project> {
 
       // linking fails for the linux test build if not built on a linux host
       // ensure the tests and linking for them is only done on linux hosts
-      if (!HostManager.hostIsLinux) {
-        project.tasks.findByName("linuxX64Test")?.enabled = false
-        project.tasks.findByName("linkDebugTestLinuxX64")?.enabled = false
-      }
+      project.tasks.named("linuxX64Test") { it.enabled = HostManager.hostIsLinux }
+      project.tasks.named("linkDebugTestLinuxX64") { it.enabled = HostManager.hostIsLinux }
 
-      if (!HostManager.hostIsMingw) {
-        project.tasks.findByName("mingwX64Test")?.enabled = false
-        project.tasks.findByName("linkDebugTestMingwX64")?.enabled = false
-      }
+      project.tasks.named("mingwX64Test") { it.enabled = HostManager.hostIsMingw }
+      project.tasks.named("linkDebugTestMingwX64") { it.enabled = HostManager.hostIsMingw }
     }
   }
 }

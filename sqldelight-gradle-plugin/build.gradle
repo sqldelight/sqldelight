@@ -65,7 +65,7 @@ dependencies {
   testImplementation libs.testParameterInjector
 }
 
-test {
+tasks.named('test') {
   // The integration tests require local installations of artifacts.
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
@@ -112,7 +112,7 @@ tasks.named('check') {
   dependsOn(testing.suites.dockerTest)
 }
 
-tasks.dockerTest.configure {
+tasks.named('dockerTest') {
   if (project.hasProperty("Instrumentation")) enabled = false
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
@@ -127,7 +127,7 @@ tasks.dockerTest.configure {
   )
 }
 
-validatePlugins {
+tasks.named('validatePlugins') {
   enableStricterValidation = true
 }
 
@@ -136,7 +136,7 @@ if (System.getenv("CI") == "true") {
 
   configurations.compileOnly.extendsFrom(configurations.shade)
 
-  tasks.getByName("shadowJar").configure {
+  tasks.named("shadowJar") {
     archiveClassifier.set("")
     minimize()
     configurations = [project.configurations.shade]
@@ -151,8 +151,8 @@ if (System.getenv("CI") == "true") {
   }
 
   artifacts {
-    runtimeOnly(shadowJar)
-    archives(shadowJar)
+    runtimeOnly(tasks.named('shadowJar'))
+    archives(tasks.named('shadowJar'))
   }
 } else {
   configurations.implementation.extendsFrom(configurations.shade)

@@ -5,7 +5,7 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-test {
+tasks.named('test') {
   testLogging {
     events "passed", "skipped", "failed"
     exceptionFormat "full"

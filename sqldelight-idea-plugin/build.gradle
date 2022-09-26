@@ -22,21 +22,21 @@ intellij {
       "org.jetbrains.android"
   ]
   if (!project.version.endsWith("SNAPSHOT")) {
-    patchPluginXml {
+    tasks.named('patchPluginXml') {
       changeNotes = (provider { changelog.get(project.version).toHTML() })
     }
   } else {
-    patchPluginXml {
+    tasks.named('patchPluginXml') {
       version = "$VERSION_NAME-${System.currentTimeMillis()}"
     }
   }
 }
 
-runIde {
+tasks.named('runIde') {
   maxHeapSize = "4g"
 }
 
-runPluginVerifier {
+tasks.named('runPluginVerifier') {
   ideVersions = [
       "IC-2021.1",
       "IC-2021.2.3",
@@ -57,7 +57,7 @@ changelog {
   path = "$rootDir/CHANGELOG.md"
 }
 
-compileKotlin {
+tasks.named('compileKotlin') {
   kotlinOptions {
     freeCompilerArgs = ['-Xjvm-default=enable']
   }
@@ -77,7 +77,7 @@ def getPluginToken() {
   return hasProperty('intellijPublishToken') ? intellijPublishToken : ""
 }
 
-publishPlugin {
+tasks.named('publishPlugin') {
   token = getPluginToken()
   channels = [isReleaseBuild() ? 'Stable' : 'EAP']
 }
