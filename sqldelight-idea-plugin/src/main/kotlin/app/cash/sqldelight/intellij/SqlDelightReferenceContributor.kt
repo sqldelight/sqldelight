@@ -17,6 +17,8 @@ import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.util.ProcessingContext
 import org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex
 import org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
 
 internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -86,5 +88,9 @@ private fun getKotlinTopLevelTypeAliasFqNameIndex(): KotlinTopLevelTypeAliasFqNa
   } catch (e: Exception) {
     /* intentionally empty, fall back to getInstance() call in case of errors */
   }
-  return KotlinTopLevelTypeAliasFqNameIndex.getInstance()
+  // Call the method getInstance on the companion type.
+  val companionMethod =
+    KotlinTopLevelTypeAliasFqNameIndex::class.companionObject!!.java.getMethod("getInstance")
+  return companionMethod.invoke(KotlinTopLevelTypeAliasFqNameIndex::class.companionObjectInstance!!)
+    as KotlinTopLevelTypeAliasFqNameIndex
 }
