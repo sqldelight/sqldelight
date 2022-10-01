@@ -5,7 +5,7 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-test {
+tasks.named('test') {
   testLogging {
     events "passed", "skipped", "failed"
     exceptionFormat "full"
@@ -58,7 +58,7 @@ dependencies {
   testImplementation project(path: ':dialects:sqlite-3-38', configuration: 'shadowRuntimeElements')
 }
 
-task pluginVersion {
+tasks.register('pluginVersion') {
   def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
@@ -88,7 +88,7 @@ val GIT_SHA = "${getGitHash}"
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 afterEvaluate {
-  tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
-  tasks.named('dokkaHtml').configure { dependsOn('pluginVersion') }
-  tasks.named('javaSourcesJar').configure { dependsOn('pluginVersion') }
+  tasks.named('compileKotlin') { dependsOn('pluginVersion') }
+  tasks.named('dokkaHtml') { dependsOn('pluginVersion') }
+  tasks.named('javaSourcesJar') { dependsOn('pluginVersion') }
 }

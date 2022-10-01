@@ -282,4 +282,13 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun `deriveSchemaFromMigrations creates a db without queries`() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/derive-schema-no-queries"))
+      .withArguments("clean", "build", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }

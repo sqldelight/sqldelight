@@ -1,0 +1,9 @@
+apply from: "../settings.gradle"
+
+rootProject.name = 'derive-schema-no-queries'
+
+buildCache {
+  local {
+    directory = new File(rootDir, 'build-cache')
+  }
+}

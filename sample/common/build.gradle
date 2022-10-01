@@ -72,7 +72,7 @@ kotlin {
 }
 
 afterEvaluate {
-  tasks.named("compileCommonMainKotlinMetadata").configure {
+  tasks.named("compileCommonMainKotlinMetadata") {
     // https://youtrack.jetbrains.com/issue/KT-51293
     enabled = false
   }

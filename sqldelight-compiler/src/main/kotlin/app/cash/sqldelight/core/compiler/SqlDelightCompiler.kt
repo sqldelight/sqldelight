@@ -72,7 +72,7 @@ object SqlDelightCompiler {
 
   fun writeImplementations(
     module: Module,
-    sourceFile: SqlDelightQueriesFile,
+    sourceFile: SqlDelightFile,
     implementationFolder: String,
     output: FileAppender,
   ) {
