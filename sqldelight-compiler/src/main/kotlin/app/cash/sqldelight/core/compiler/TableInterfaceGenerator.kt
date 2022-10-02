@@ -45,7 +45,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       SqlDelightStmtIdentifier::class.java,
     )
     identifier?.childOfType(SqlTypes.JAVADOC)?.let { javadoc ->
-      javadocText(javadoc)?.let { typeSpec.addKdoc(it) }
+      typeSpec.addKdoc(javadocText(javadoc))
     }
 
     val constructor = FunSpec.constructorBuilder()

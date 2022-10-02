@@ -13,6 +13,8 @@ import app.cash.sqldelight.core.TestDialect.SQLITE_3_38
 import app.cash.sqldelight.dialects.hsql.HsqlDialect
 import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.LONG
 
 internal val TestDialect.textType
   get() = when (this) {
@@ -29,6 +31,12 @@ internal val TestDialect.blobType
 internal val TestDialect.intType
   get() = when (this) {
     MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_38, POSTGRESQL, HSQL -> "INTEGER"
+  }
+
+internal val TestDialect.intKotlinType
+  get() = when (this) {
+    SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_38 -> LONG
+    MYSQL, POSTGRESQL, HSQL -> INT
   }
 
 /**
@@ -54,7 +62,7 @@ internal val TestDialect.cursorCheck
   get() = when {
     dialect.isSqlite -> ""
     else -> when (dialect) {
-      is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n    "
+      is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n  "
       else -> throw IllegalStateException("Unknown dialect: $this")
     }
   }

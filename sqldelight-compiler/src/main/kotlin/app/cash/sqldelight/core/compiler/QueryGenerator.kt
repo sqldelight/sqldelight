@@ -311,7 +311,7 @@ abstract class QueryGenerator(
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
-    if (query.javadoc != null) javadocText(query.javadoc)?.let { builder.addKdoc(it) }
+    if (query.javadoc != null) { builder.addKdoc(javadocText(query.javadoc)) }
   }
 
   protected open fun awaiting(): Pair<String, String>? = "%L" to ".await()"
