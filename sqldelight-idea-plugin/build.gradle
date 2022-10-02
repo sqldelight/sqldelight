@@ -105,7 +105,6 @@ dependencies {
 
   testImplementation libs.truth
   testImplementation project(':dialects:sqlite-3-18')
-  testImplementation project(':test-util')
 }
 
 def getBugsnagKey() {
