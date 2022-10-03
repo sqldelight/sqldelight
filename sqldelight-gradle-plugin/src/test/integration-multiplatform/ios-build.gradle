@@ -30,8 +30,7 @@ kotlin {
   sourceSets {
     commonTest {
       dependencies {
-        implementation libs.kotlin.test.common
-        implementation libs.kotlin.test.commonAnnotations
+        implementation libs.kotlin.test
         implementation libs.stately.core
         implementation libs.stately.concurrency
         implementation "app.cash.sqldelight:runtime:${app.cash.sqldelight.VersionKt.VERSION}"

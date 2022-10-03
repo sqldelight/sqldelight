@@ -17,8 +17,7 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation libs.kotlin.test.common
-        implementation libs.kotlin.test.commonAnnotations
+        implementation libs.kotlin.test
       }
     }
     jvmTest {
