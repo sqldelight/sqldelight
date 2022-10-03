@@ -14,7 +14,7 @@ ktlint = "0.46.1"
 test = "1.4.0"
 agp = "7.3.0"
 compileSdk = "31"
-minSdk = "14"
+minSdk = "16"
 sqlPsi = "0.4.2"
 
 [libraries]
