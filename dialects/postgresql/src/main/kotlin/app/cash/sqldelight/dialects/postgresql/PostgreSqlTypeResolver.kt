@@ -78,7 +78,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     return functionExpr.postgreSqlFunctionType() ?: parentResolver.functionType(functionExpr)
   }
 
-  private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.toLowerCase()) {
+  private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.lowercase()) {
     "greatest" -> encapsulatingType(exprList, PrimitiveType.INTEGER, REAL, TEXT, BLOB)
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)

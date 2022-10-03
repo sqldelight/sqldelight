@@ -90,7 +90,7 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     }
   }
 
-  private fun SqlFunctionExpr.typeReturned() = when (functionName.text.toLowerCase()) {
+  private fun SqlFunctionExpr.typeReturned() = when (functionName.text.lowercase()) {
     "round" -> {
       // Single arg round function returns an int. Otherwise real.
       if (exprList.size == 1) {

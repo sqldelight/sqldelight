@@ -16,7 +16,7 @@ open class StatementValidatorMixin(node: ASTNode) : SqlStmtImpl(node) {
       it.annotateReservedKeywords(annotationHolder)
     }
     node.getChildren(TokenSet.create(SqlTypes.ID)).forEach {
-      if (it.text.toUpperCase(Locale.ROOT) in invalidIds) {
+      if (it.text.uppercase() in invalidIds) {
         annotationHolder.createErrorAnnotation(this, "Reserved keyword in sqlite")
       }
     }
