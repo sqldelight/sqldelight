@@ -11,7 +11,10 @@ sourceSets {
 
 kotlin {
   mingwX86()
-  js()
+  js {
+    nodejs()
+    browser()
+  }
 
   sourceSets {
     commonMain {

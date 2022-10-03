@@ -7,7 +7,10 @@ plugins {
 archivesBaseName = 'sqldelight-async-extensions'
 
 kotlin {
-  js()
+  js {
+    nodejs()
+    browser()
+  }
 
   sourceSets {
     commonMain {

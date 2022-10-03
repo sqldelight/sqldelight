@@ -9,7 +9,10 @@ plugins {
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
-  js()
+  js {
+    nodejs()
+    browser()
+  }
 
   sourceSets {
     commonMain {

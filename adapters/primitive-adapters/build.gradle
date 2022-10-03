@@ -10,7 +10,10 @@ archivesBaseName = 'sqldelight-primitive-adapters'
 
 kotlin {
   mingwX86()
-  js()
+  js {
+    nodejs()
+    browser()
+  }
 
   sourceSets {
     commonMain {
