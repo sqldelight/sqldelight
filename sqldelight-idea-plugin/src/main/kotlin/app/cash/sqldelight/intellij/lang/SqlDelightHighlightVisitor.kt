@@ -25,7 +25,7 @@ class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
   private var myHolder: HighlightInfoHolder? = null
 
   override fun suitableForFile(file: PsiFile): Boolean {
-    val file = file as? SqlDelightFile ?: return false
+    if (file !is SqlDelightFile) return false
     val module = file.module ?: return false
     return SqlDelightProjectService.getInstance(file.project).fileIndex(module).isConfigured
   }
