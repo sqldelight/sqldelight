@@ -1,5 +1,8 @@
-package app.cash.sqldelight.mysql.integration
+package app.cash.sqldelight.mysql.integration.async
 
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
+import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
@@ -13,13 +16,13 @@ class MySqlTest {
     val connection = factory.create().awaitSingle()
     val driver = R2dbcDriver(connection)
 
-    val db = MyDatabase(driver).also { MyDatabase.Schema.create(driver) }
+    val db = MyDatabase(driver).also { MyDatabase.Schema.awaitCreate(driver) }
     block(db)
   }
 
   @Test fun simpleSelect() = runTest { database ->
-    database.dogQueries.insertDog("Tilda", "Pomeranian", true)
-    assertThat(database.dogQueries.selectDogs().executeAsOne())
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    assertThat(database.dogQueries.selectDogs().awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
@@ -32,15 +35,15 @@ class MySqlTest {
   @Test
   fun simpleSelectWithIn() = runTest { database ->
     with(database) {
-      dogQueries.insertDog("Tilda", "Pomeranian", true)
-      dogQueries.insertDog("Tucker", "Portuguese Water Dog", true)
-      dogQueries.insertDog("Cujo", "Pomeranian", false)
-      dogQueries.insertDog("Buddy", "Pomeranian", true)
+      dogQueries.insertDog("Tilda", "Pomeranian")
+      dogQueries.insertDog("Tucker", "Portuguese Water Dog")
+      dogQueries.insertDog("Cujo", "Pomeranian")
+      dogQueries.insertDog("Buddy", "Pomeranian")
       assertThat(
         dogQueries.selectDogsByBreedAndNames(
           breed = "Pomeranian",
           name = listOf("Tilda", "Buddy"),
-        ).executeAsList(),
+        ).awaitAsList(),
       )
         .containsExactly(
           Dog(

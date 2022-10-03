@@ -1,15 +1,15 @@
-package app.cash.sqldelight.postgresql.integration
+package app.cash.sqldelight.postgresql.integration.async
 
-import app.cash.sqldelight.Query
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
+import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.db.OptimisticLockException
-import app.cash.sqldelight.driver.jdbc.JdbcDriver
+import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
+import io.r2dbc.spi.ConnectionFactories
+import kotlinx.coroutines.reactive.awaitSingle
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -17,27 +17,20 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:9.6.8:///my_db")
-  val driver = object : JdbcDriver() {
-    override fun getConnection() = conn
-    override fun closeConnection(connection: Connection) = Unit
-    override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun notifyListeners(queryKeys: Array<String>) = Unit
-  }
-  val database = MyDatabase(driver)
+  private val factory = ConnectionFactories.get("r2dbc:tc:postgresql:///myDb?TC_IMAGE_TAG=9.6.8")
 
-  @Before fun before() {
-    MyDatabase.Schema.create(driver)
+  private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
+    val connection = factory.create().awaitSingle()
+    val driver = R2dbcDriver(connection)
+    val db = MyDatabase(driver)
+    MyDatabase.Schema.awaitCreate(driver)
+    block(db)
   }
 
-  @After fun after() {
-    conn.close()
-  }
-
-  @Test fun simpleSelect() {
+  @Test fun simpleSelect() = runTest { database ->
+    Assert.assertEquals(0, database.dogQueries.selectDogs().awaitAsList().size)
     database.dogQueries.insertDog("Tilda", "Pomeranian")
-    assertThat(database.dogQueries.selectDogs().executeAsOne())
+    assertThat(database.dogQueries.selectDogs().awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
@@ -47,9 +40,9 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun booleanSelect() {
+  @Test fun booleanSelect() = runTest { database ->
     database.dogQueries.insertDog("Tilda", "Pomeranian")
-    assertThat(database.dogQueries.selectGoodDogs(true).executeAsOne())
+    assertThat(database.dogQueries.selectGoodDogs(true).awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
@@ -59,8 +52,8 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun returningInsert() {
-    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian").executeAsOne())
+  @Test fun returningInsert() = runTest { database ->
+    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian").awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
@@ -70,14 +63,14 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun testDates() {
+  @Test fun testDates() = runTest { database ->
     assertThat(
       database.datesQueries.insertDate(
         date = LocalDate.of(2020, 1, 1),
         time = LocalTime.of(21, 30, 59, 10000),
         timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
         timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-      ).executeAsOne(),
+      ).awaitAsOne(),
     )
       .isEqualTo(
         Dates(
@@ -89,16 +82,16 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun testDateTrunc() {
+  @Test fun testDateTrunc() = runTest { database ->
     database.datesQueries.insertDate(
       date = LocalDate.of(2020, 1, 1),
       time = LocalTime.of(21, 30, 59, 10000),
       timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
       timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-    ).executeAsOne()
+    ).awaitAsOne()
 
     assertThat(
-      database.datesQueries.selectDateTrunc().executeAsOne(),
+      database.datesQueries.selectDateTrunc().awaitAsOne(),
     )
       .isEqualTo(
         SelectDateTrunc(
@@ -108,33 +101,33 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun testSerial() {
+  @Test fun testSerial() = runTest { database ->
     database.run {
       oneEntityQueries.transaction {
         oneEntityQueries.insert("name1")
         oneEntityQueries.insert("name2")
         oneEntityQueries.insert("name3")
       }
-      assertThat(oneEntityQueries.selectAll().executeAsList().map { it.id }).containsExactly(1, 2, 3)
+      assertThat(oneEntityQueries.selectAll().awaitAsList().map { it.id }).containsExactly(1, 2, 3)
     }
   }
 
-  @Test fun testArrays() {
-    with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).executeAsOne()) {
+  @Test fun testArrays() = runTest { database ->
+    with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).awaitAsOne()) {
       assertThat(intArray!!.asList()).containsExactly(1, 2).inOrder()
       assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
     }
   }
 
-  @Test fun now() {
-    val now = database.datesQueries.selectNow().executeAsOne()
+  @Test fun now() = runTest { database ->
+    val now = database.datesQueries.selectNow().awaitAsOne()
     assertThat(now).isNotNull()
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
   }
 
-  @Test fun successfulOptimisticLock() {
+  @Test fun successfulOptimisticLock() = runTest { database ->
     with(database.withLockQueries) {
-      val row = insertText("sup").executeAsOne()
+      val row = insertText("sup").awaitAsOne()
 
       updateText(
         id = row.id,
@@ -142,13 +135,13 @@ class PostgreSqlTest {
         text = "sup2",
       )
 
-      assertThat(selectForId(row.id).executeAsOne().text).isEqualTo("sup2")
+      assertThat(selectForId(row.id).awaitAsOne().text).isEqualTo("sup2")
     }
   }
 
-  @Test fun unsuccessfulOptimisticLock() {
+  @Test fun unsuccessfulOptimisticLock() = runTest { database ->
     with(database.withLockQueries) {
-      val row = insertText("sup").executeAsOne()
+      val row = insertText("sup").awaitAsOne()
 
       updateText(
         id = row.id,
