@@ -5,10 +5,14 @@ import app.cash.sqldelight.core.TestDialect.SQLITE_3_18
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.binderCheck
+import app.cash.sqldelight.core.dialects.cursorCheck
+import app.cash.sqldelight.core.dialects.intKotlinType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.LONG
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -193,6 +197,31 @@ class JavadocTest {
       |
       """.trimMargin(),
     )
+
+    val int = testDialect.intKotlinType
+    val toInt = when (int) {
+      LONG -> ""
+      INT -> ".toInt()"
+      else -> error("Unknown kotlinType $int")
+    }
+
+    assertThat(selectGenerator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |/**
+      | * Queries all values.
+      | */
+      |public fun <T : kotlin.Any> selectAll(mapper: (_id: $int, value_: kotlin.String) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-585795480, arrayOf("test"), driver, "Test.sq", "selectAll", ""${'"'}
+      ||SELECT *
+      ||FROM test
+      |""${'"'}.trimMargin()) { cursor ->
+      |  ${testDialect.cursorCheck(2)}mapper(
+      |    cursor.getLong(0)!!$toInt,
+      |    cursor.getString(1)!!
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
   }
 
   @Test fun `select - misformatted javadoc`(testDialect: TestDialect) {
@@ -200,7 +229,7 @@ class JavadocTest {
       createTable(testDialect) + """
       |/**
       |Queries all values.
-      | */
+      |*/
       |selectAll:
       |SELECT *
       |FROM test;

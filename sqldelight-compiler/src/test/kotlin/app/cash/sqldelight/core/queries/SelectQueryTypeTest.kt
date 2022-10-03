@@ -1254,7 +1254,7 @@ class SelectQueryTypeTest {
       |  |SELECT birthday, age
       |  |FROM adults
       |  ""${'"'}.trimMargin()) { cursor ->
-      |    ${dialect.cursorCheck}mapper(
+      |    ${dialect.cursorCheck(4)}mapper(
       |      cursor.getString(0)?.let { childrenAdapter.birthdayAdapter.decode(it) },
       |      cursor.getString(1)
       |    )

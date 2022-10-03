@@ -116,7 +116,7 @@ class SelectQueryGenerator(
   }
 
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
-    val function = FunSpec.builder(query.name)
+    val function = FunSpec.builder(query.name).also(::addJavadoc)
     val params = mutableListOf<CodeBlock>()
 
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->

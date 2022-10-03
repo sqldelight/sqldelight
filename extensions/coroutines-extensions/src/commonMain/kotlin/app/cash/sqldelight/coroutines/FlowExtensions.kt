@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.jvm.JvmName
-import kotlin.jvm.JvmOverloads
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
 @JvmName("toFlow")
@@ -55,7 +54,6 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOne(
   context: CoroutineContext,
 ): Flow<T> = map {
@@ -64,7 +62,6 @@ fun <T : Any> Flow<Query<T>>.mapToOne(
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
   defaultValue: T,
   context: CoroutineContext,
@@ -74,7 +71,6 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
   context: CoroutineContext,
 ): Flow<T?> = map {
@@ -83,7 +79,6 @@ fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
   context: CoroutineContext,
 ): Flow<T> = mapNotNull {
@@ -92,7 +87,6 @@ fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToList(
   context: CoroutineContext,
 ): Flow<List<T>> = map {
