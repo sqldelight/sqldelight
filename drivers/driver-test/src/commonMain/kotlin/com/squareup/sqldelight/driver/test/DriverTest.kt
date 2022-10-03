@@ -10,7 +10,6 @@ import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.internal.Atomic
 import app.cash.sqldelight.internal.getValue
 import app.cash.sqldelight.internal.setValue
-import kotlin.js.JsName
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -82,9 +81,8 @@ abstract class DriverTest {
     driver.close()
   }
 
-  @JsName("insertCanRunMultipleTimes")
   @Test
-  fun `insert can run multiple times`() {
+  fun insertCanRunMultipleTimes() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -137,9 +135,8 @@ abstract class DriverTest {
     }
   }
 
-  @JsName("queryCanRunMultipleTimes")
   @Test
-  fun `query can run multiple times`() {
+  fun queryCanRunMultipleTimes() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -183,9 +180,7 @@ abstract class DriverTest {
     )
   }
 
-  @JsName("SqlResultSetGettersReturnNullIfTheColumnValuesAreNULL")
-  @Test
-  fun `SqlResultSet getters return null if the column values are NULL`() {
+  @Test fun sqlResultSetGettersReturnNullIfTheColumnValuesAreNULL() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }

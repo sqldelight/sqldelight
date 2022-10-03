@@ -8,7 +8,6 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.logs.LogSqliteDriver
-import kotlin.js.JsName
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -32,9 +31,8 @@ class LogSqliteDriverTest {
     logs.clear()
   }
 
-  @JsName("insertLogsCorrect")
   @Test
-  fun `insert logs are correct`() {
+  fun insertLogsAreCorrect() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -51,9 +49,8 @@ class LogSqliteDriverTest {
     assertEquals("EXECUTE\n INSERT INTO test VALUES (?, ?);", logs[2])
   }
 
-  @JsName("queryLogsCorrect")
   @Test
-  fun `query logs are correct`() {
+  fun queryLogsAreCorrect() {
     val query = {
       driver.executeQuery(3, "SELECT * FROM test", {}, 0)
     }
@@ -63,9 +60,8 @@ class LogSqliteDriverTest {
     assertEquals("QUERY\n SELECT * FROM test", logs[0])
   }
 
-  @JsName("transactionLogsCorrect")
   @Test
-  fun `transaction logs are correct`() {
+  fun transactionLogsAreCorrect() {
     transacter.transaction {}
     transacter.transaction { rollback() }
     transacter.transaction {

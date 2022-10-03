@@ -4,7 +4,6 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import kotlin.js.JsName
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -38,9 +37,8 @@ abstract class TransacterTest {
     driver.close()
   }
 
-  @JsName("afterCommitRunsAfterTransactionCommits")
   @Test
-  fun `afterCommit runs after transaction commits`() {
+  fun afterCommitRunsAfterTransactionCommits() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -50,9 +48,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @JsName("afterCommitDoesNotRunAfterTransactionRollbacks")
   @Test
-  fun `afterCommit does not run after transaction rollbacks`() {
+  fun afterCommitDoesNotRunAfterTransactionRollbacks() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -63,9 +60,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @JsName("afterCommitRunsAfterEnclosingTransactionCommits")
   @Test
-  fun `afterCommit runs after enclosing transaction commits`() {
+  fun afterCommitRunsAfterEnclosingTransactionCommits() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -82,9 +78,8 @@ abstract class TransacterTest {
     assertEquals(2, counter)
   }
 
-  @JsName("afterCommitDoesNotRunInNestedTransactionWhenEnclosingRollsBack")
   @Test
-  fun `afterCommit does not run in nested transaction when enclosing rolls back`() {
+  fun afterCommitDoesNotRunInNestedTransactionWhenEnclosingRollsBack() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -100,9 +95,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @JsName("afterCommitDoesNotRunInNestedTransactionWhenNestedRollsBack")
   @Test
-  fun `afterCommit does not run in nested transaction when nested rolls back`() {
+  fun afterCommitDoesNotRunInNestedTransactionWhenNestedRollsBack() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -119,9 +113,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @JsName("afterRollbackNoOpsIfTheTransactionNeverRollsBack")
   @Test
-  fun `afterRollback no-ops if the transaction never rolls back`() {
+  fun afterRollbackNoOpsIfTheTransactionNeverRollsBack() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -130,9 +123,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @JsName("afterRollbackRunsAfterARollbackOccurs")
   @Test
-  fun `afterRollback runs after a rollback occurs`() {
+  fun afterRollbackRunsAfterARollbackOccurs() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -142,9 +134,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @JsName("afterRollbackRunsAfterAnInnerTransactionRollsBack")
   @Test
-  fun `afterRollback runs after an inner transaction rolls back`() {
+  fun afterRollbackRunsAfterAnInnerTransactionRollsBack() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -157,9 +148,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @JsName("afterRollbackRunsInAnInnerTransactionWhenTheOuterTransactionRollsBack")
   @Test
-  fun `afterRollback runs in an inner transaction when the outer transaction rolls back`() {
+  fun afterRollbackRunsInAnInnerTransactionWhenTheOuterTransactionRollsBack() {
     var counter = 0
     transacter.transaction {
       transaction {
@@ -171,9 +161,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @JsName("transactionsCloseThemselvesOutProperly")
   @Test
-  fun `transactions close themselves out properly`() {
+  fun transactionsCloseThemselvesOutProperly() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -186,9 +175,8 @@ abstract class TransacterTest {
     assertEquals(2, counter)
   }
 
-  @JsName("settingNoEnclosingFailsIfThereIsACurrentlyRunningTransaction")
   @Test
-  fun `setting no enclosing fails if there is a currently running transaction`() {
+  fun settingNoEnclosingFailsIfThereIsACurrentlyRunningTransaction() {
     transacter.transaction(noEnclosing = true) {
       assertFailsWith<IllegalStateException> {
         transacter.transaction(noEnclosing = true) {
@@ -198,9 +186,8 @@ abstract class TransacterTest {
     }
   }
 
-  @JsName("anExceptionThrownInPostRollbackFunctionIsCombinedWithTheExceptionInTheMainBody")
   @Test
-  fun `An exception thrown in postRollback function is combined with the exception in the main body`() {
+  fun anExceptionThrownInPostRollbackFunctionIsCombinedWithTheExceptionInTheMainBody() {
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
     val t = assertFailsWith<Throwable>() {
@@ -215,9 +202,8 @@ abstract class TransacterTest {
     assertTrue("Exception thrown in rollback not in message($t)") { t.toString().contains("ExceptionB") }
   }
 
-  @JsName("weCanReturnAValueFromATransaction")
   @Test
-  fun `we can return a value from a transaction`() {
+  fun weCanReturnAValueFromATransaction() {
     val result: String = transacter.transactionWithResult {
       return@transactionWithResult "sup"
     }
@@ -225,9 +211,8 @@ abstract class TransacterTest {
     assertEquals(result, "sup")
   }
 
-  @JsName("weCanRollbackWithValueFromATransaction")
   @Test
-  fun `we can rollback with value from a transaction`() {
+  fun weCanRollbackWithValueFromATransaction() {
     val result: String = transacter.transactionWithResult {
       rollback("rollback")
 
