@@ -28,7 +28,7 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeRe
     }
   }
 
-  private fun SqlFunctionExpr.sqliteFunctionType() = when (functionName.text.toLowerCase()) {
+  private fun SqlFunctionExpr.sqliteFunctionType() = when (functionName.text.lowercase()) {
     "printf" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "datetime", "julianday", "strftime", "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version" -> {
       IntermediateType(TEXT)

@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core.lang.psi
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.parentOfType

@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core.compiler
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.DATA

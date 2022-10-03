@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core.compiler
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.compiler.integration.javadocText
 import app.cash.sqldelight.core.lang.ADAPTER_NAME

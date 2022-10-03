@@ -1,5 +1,7 @@
 package app.cash.sqldelight.core.lang
 
+import app.cash.sqldelight.core.capitalize
+import app.cash.sqldelight.core.decapitalize
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
