@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core.compiler
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.compiler.model.SelectQueryable

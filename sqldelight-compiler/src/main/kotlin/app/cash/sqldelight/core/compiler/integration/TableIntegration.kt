@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core.compiler.integration
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.SqlDelightFile

@@ -15,6 +15,8 @@
  */
 package app.cash.sqldelight.core.compiler.model
 
+import app.cash.sqldelight.core.capitalize
+import app.cash.sqldelight.core.decapitalize
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.cursorGetter
