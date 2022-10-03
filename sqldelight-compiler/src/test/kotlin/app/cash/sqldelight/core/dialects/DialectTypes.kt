@@ -58,11 +58,10 @@ internal val TestDialect.binderCheck
  *
  * See [SelectQueryGenerator].
  */
-internal val TestDialect.cursorCheck
-  get() = when {
-    dialect.isSqlite -> ""
-    else -> when (dialect) {
-      is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n  "
-      else -> throw IllegalStateException("Unknown dialect: $this")
-    }
+internal fun TestDialect.cursorCheck(whitespaces: Int) = when {
+  dialect.isSqlite -> ""
+  else -> when (dialect) {
+    is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)\n${" ".repeat(whitespaces)}"
+    else -> throw IllegalStateException("Unknown dialect: $this")
   }
+}

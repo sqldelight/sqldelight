@@ -198,7 +198,6 @@ class JavadocTest {
       """.trimMargin(),
     )
 
-    val cursorCheck = "${testDialect.cursorCheck}mapper("
     val int = testDialect.intKotlinType
     val toInt = when (int) {
       LONG -> ""
@@ -215,7 +214,7 @@ class JavadocTest {
       ||SELECT *
       ||FROM test
       |""${'"'}.trimMargin()) { cursor ->
-      |  $cursorCheck
+      |  ${testDialect.cursorCheck(2)}mapper(
       |    cursor.getLong(0)!!$toInt,
       |    cursor.getString(1)!!
       |  )
