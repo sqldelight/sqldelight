@@ -5,8 +5,7 @@ plugins {
 }
 
 kotlin {
-
-  target {
+  js {
     nodejs {
       testTask {
         useMocha {
@@ -23,18 +22,17 @@ kotlin {
       }
     }
   }
+}
 
-  sourceSets["main"].dependencies {
-    api project(':runtime')
-    implementation libs.kotlin.coroutines.core
-  }
-  sourceSets["test"].dependencies {
-    implementation libs.kotlin.test.js
-    implementation npm('sql.js', libs.versions.sqljs.get())
-    implementation devNpm("copy-webpack-plugin", "9.1.0")
-    implementation libs.kotlin.coroutines.test
-    implementation project(':extensions:async-extensions')
-  }
+dependencies {
+  api project(':runtime')
+  implementation libs.kotlin.coroutines.core
+
+  testImplementation libs.kotlin.test.js
+  testImplementation npm('sql.js', libs.versions.sqljs.get())
+  testImplementation devNpm("copy-webpack-plugin", "9.1.0")
+  testImplementation libs.kotlin.coroutines.test
+  testImplementation project(':extensions:async-extensions')
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
