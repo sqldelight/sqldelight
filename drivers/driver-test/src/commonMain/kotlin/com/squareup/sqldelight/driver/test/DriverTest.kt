@@ -83,7 +83,8 @@ abstract class DriverTest {
   }
 
   @JsName("insertCanRunMultipleTimes")
-  @Test fun `insert can run multiple times`() {
+  @Test
+  fun `insert can run multiple times`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -137,7 +138,8 @@ abstract class DriverTest {
   }
 
   @JsName("queryCanRunMultipleTimes")
-  @Test fun `query can run multiple times`() {
+  @Test
+  fun `query can run multiple times`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -182,7 +184,8 @@ abstract class DriverTest {
   }
 
   @JsName("SqlResultSetGettersReturnNullIfTheColumnValuesAreNULL")
-  @Test fun `SqlResultSet getters return null if the column values are NULL`() {
+  @Test
+  fun `SqlResultSet getters return null if the column values are NULL`() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }

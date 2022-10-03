@@ -39,7 +39,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterCommitRunsAfterTransactionCommits")
-  @Test fun `afterCommit runs after transaction commits`() {
+  @Test
+  fun `afterCommit runs after transaction commits`() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -50,7 +51,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterCommitDoesNotRunAfterTransactionRollbacks")
-  @Test fun `afterCommit does not run after transaction rollbacks`() {
+  @Test
+  fun `afterCommit does not run after transaction rollbacks`() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -62,7 +64,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterCommitRunsAfterEnclosingTransactionCommits")
-  @Test fun `afterCommit runs after enclosing transaction commits`() {
+  @Test
+  fun `afterCommit runs after enclosing transaction commits`() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -80,7 +83,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterCommitDoesNotRunInNestedTransactionWhenEnclosingRollsBack")
-  @Test fun `afterCommit does not run in nested transaction when enclosing rolls back`() {
+  @Test
+  fun `afterCommit does not run in nested transaction when enclosing rolls back`() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -97,7 +101,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterCommitDoesNotRunInNestedTransactionWhenNestedRollsBack")
-  @Test fun `afterCommit does not run in nested transaction when nested rolls back`() {
+  @Test
+  fun `afterCommit does not run in nested transaction when nested rolls back`() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -115,7 +120,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterRollbackNoOpsIfTheTransactionNeverRollsBack")
-  @Test fun `afterRollback no-ops if the transaction never rolls back`() {
+  @Test
+  fun `afterRollback no-ops if the transaction never rolls back`() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -125,7 +131,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterRollbackRunsAfterARollbackOccurs")
-  @Test fun `afterRollback runs after a rollback occurs`() {
+  @Test
+  fun `afterRollback runs after a rollback occurs`() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -136,7 +143,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterRollbackRunsAfterAnInnerTransactionRollsBack")
-  @Test fun `afterRollback runs after an inner transaction rolls back`() {
+  @Test
+  fun `afterRollback runs after an inner transaction rolls back`() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -150,7 +158,8 @@ abstract class TransacterTest {
   }
 
   @JsName("afterRollbackRunsInAnInnerTransactionWhenTheOuterTransactionRollsBack")
-  @Test fun `afterRollback runs in an inner transaction when the outer transaction rolls back`() {
+  @Test
+  fun `afterRollback runs in an inner transaction when the outer transaction rolls back`() {
     var counter = 0
     transacter.transaction {
       transaction {
@@ -163,7 +172,8 @@ abstract class TransacterTest {
   }
 
   @JsName("transactionsCloseThemselvesOutProperly")
-  @Test fun `transactions close themselves out properly`() {
+  @Test
+  fun `transactions close themselves out properly`() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -177,7 +187,8 @@ abstract class TransacterTest {
   }
 
   @JsName("settingNoEnclosingFailsIfThereIsACurrentlyRunningTransaction")
-  @Test fun `setting no enclosing fails if there is a currently running transaction`() {
+  @Test
+  fun `setting no enclosing fails if there is a currently running transaction`() {
     transacter.transaction(noEnclosing = true) {
       assertFailsWith<IllegalStateException> {
         transacter.transaction(noEnclosing = true) {
