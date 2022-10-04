@@ -54,7 +54,6 @@ class MultiplatformConventions : Plugin<Project> {
       jvm()
 
       js {
-        nodejs()
         browser()
       }
 
