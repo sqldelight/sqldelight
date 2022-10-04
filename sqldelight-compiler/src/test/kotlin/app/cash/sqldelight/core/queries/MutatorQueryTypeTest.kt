@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.TestDialect
+import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.test.util.FixtureCompiler
@@ -895,4 +896,49 @@ class MutatorQueryTypeTest {
       """.trimMargin(),
     )
   }
+
+    @Test fun `delete using named list parameter twice is fine`() {
+        val file = FixtureCompiler.parseSql(
+            """
+      |CREATE TABLE data (
+      |  id INTEGER AS Int PRIMARY KEY,
+      |  other INTEGER AS Int NOT NULL
+      |);
+      |
+      |delete {
+      |  DELETE FROM data WHERE id IN :ids;
+      |  DELETE FROM data WHERE other IN :ids;
+      |}
+      """.trimMargin(),
+            tempFolder,
+            fileName = "Data.sq",
+        )
+
+        val mutator = file.namedExecutes.first()
+        val generator = ExecuteQueryGenerator(mutator)
+
+        assertThat(generator.function().toString()).isEqualTo(
+            """
+      |public fun delete(ids: kotlin.collections.Collection<Int>): kotlin.Unit {
+      |  transaction {
+      |    val idsIndexes = createArguments(count = ids.size)
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.size) {
+      |          ids.forEachIndexed { index, ids_ ->
+      |            bindLong(index, data_Adapter.idAdapter.encode(ids_))
+      |          }
+      |        }
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE other IN ${'$'}idsIndexes""${'"'}, ids.size) {
+      |          ids.forEachIndexed { index, ids_ ->
+      |            bindLong(index, data_Adapter.idAdapter.encode(ids_))
+      |          }
+      |        }
+      |  }
+      |  notifyQueries(${mutator.id}) { emit ->
+      |    emit("data")
+      |  }
+      |}
+      |
+      """.trimMargin(),
+        )
+    }
 }

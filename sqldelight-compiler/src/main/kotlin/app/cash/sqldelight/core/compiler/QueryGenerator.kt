@@ -66,13 +66,16 @@ abstract class QueryGenerator(
       } else {
         result.beginControlFlow("transaction")
       }
+      val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
-        result.add(executeBlock(statement, query.idForIndex(index)))
+        val (block,additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
+        handledArrayArgs.addAll(additionalArrayArgs)
+        result.add(block)
       }
       result.endControlFlow()
       if (generateAsync && query is NamedQuery) { result.endControlFlow() }
     } else {
-      result.add(executeBlock(query.statement, query.id))
+      result.add(executeBlock(query.statement, emptySet(), query.id).first)
     }
 
     return result.build()
@@ -80,8 +83,9 @@ abstract class QueryGenerator(
 
   private fun executeBlock(
     statement: PsiElement,
+    handledArrayArgs: Set<BindableQuery.Argument>,
     id: Int,
-  ): CodeBlock {
+  ): Pair<CodeBlock,Set<BindableQuery.Argument>> {
     val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
 
     val result = CodeBlock.builder()
@@ -145,7 +149,7 @@ abstract class QueryGenerator(
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
-        if (seenArrayArguments.add(argument)) {
+        if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {
           result.addStatement(
             """
             |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
@@ -303,7 +307,7 @@ abstract class QueryGenerator(
       )
     }
 
-    return result.build()
+    return Pair(result.build(),seenArrayArguments)
   }
 
   private fun PsiElement.leftWhitspace(): String {
