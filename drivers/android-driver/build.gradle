@@ -8,7 +8,7 @@ archivesBaseName = 'sqldelight-android-driver'
 
 android {
   compileSdk libs.versions.compileSdk.get() as int
-  namespace = "com.squareup.sqldelight.driver.android"
+  namespace = "app.cash.sqldelight.driver.android"
 
   lint {
     textReport true
