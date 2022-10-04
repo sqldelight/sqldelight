@@ -6,6 +6,7 @@
 
 - The Paging 3 extension API has changed to only allow int types for the count.
 - The coroutines extension now requires a dispatcher to be passed in instead of defaulting.
+- Dialect and Driver classes are final, use delegation instead.
 
 ### Added
 - [HSQL Dialect] Hsql: Support using DEFAULT for generated columns in Insert (#3372 by [Philip Wedemann][hfhbd])
@@ -536,7 +537,7 @@ Also just a general shoutout to [Matthew Haughton][3flex] who did a lot of work 
 ### Fixed
 - [Compiler]Support Javadoc on tables and fix multiple javadoc in one file (#1224)
 - [Compiler] Enable inserting a value for synthesized columns (#1351)
-- [Compiler] Fix inconsistency in directory name sanitizing (by [Zac Sweers][ZacS])
+- [Compiler] Fix inconsistency in directory name sanitizing (by [Zac Sweers][ZacSweers])
 - [Compiler] Synthesized columns should retain nullability across joins (#1656)
 - [Compiler] Pin the delete statement on the delete keyword (#1643)
 - [Compiler] Fix quoting (#1525 by [Angus Holder][AngusH])
@@ -805,7 +806,7 @@ Initial release.
   [MariusV]: https://github.com/MariusVolkhart
   [SaketN]: https://github.com/saket
   [RomanZ]: https://github.com/romtsn
-  [ZacS]: https://github.com/ZacSweers
+  [ZacSweers]: https://github.com/ZacSweers
   [AngusH]: https://github.com/angusholder
   [drampelt]: https://github.com/drampelt
   [endanke]: https://github.com/endanke
