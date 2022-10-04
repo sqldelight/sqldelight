@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS oneEntity (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+insert:
+INSERT INTO oneEntity(name)
+VALUES (?);
+
+selectAll:
+SELECT * FROM oneEntity;
+
+insertUpdate:
+INSERT INTO oneEntity AS one VALUES ? ON CONFLICT(id) DO UPDATE SET id = one.id + EXCLUDED.id, name = EXCLUDED.name;

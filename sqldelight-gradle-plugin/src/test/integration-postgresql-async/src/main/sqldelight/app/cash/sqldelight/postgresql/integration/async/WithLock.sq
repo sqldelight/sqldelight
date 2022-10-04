@@ -1,0 +1,25 @@
+CREATE TABLE withLock(
+  id SERIAL AS VALUE NOT NULL,
+  version INTEGER AS LOCK NOT NULL DEFAULT 0,
+  text TEXT NOT NULL
+);
+
+insertText:
+INSERT INTO withLock (text)
+VALUES (?)
+RETURNING *;
+
+updateText:
+UPDATE withLock
+SET
+  text = :text,
+  version = :version + 1
+WHERE
+  id = :id AND
+  version = :version
+;
+
+selectForId:
+SELECT *
+FROM withLock
+WHERE id = :id;

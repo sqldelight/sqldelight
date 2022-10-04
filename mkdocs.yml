@@ -243,4 +243,4 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '2.0.0-alpha03'
+    sqldelight: '2.0.0-alpha04'

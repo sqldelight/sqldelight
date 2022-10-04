@@ -124,6 +124,8 @@ tasks.named('dockerTest') {
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:r2dbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
   )
 }
 

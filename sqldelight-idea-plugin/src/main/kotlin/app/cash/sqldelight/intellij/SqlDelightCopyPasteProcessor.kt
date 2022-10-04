@@ -100,7 +100,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     }
 
     val references = values.first().data
-    if (references.isNullOrEmpty()) {
+    if (references.isEmpty()) {
       return
     }
 
@@ -129,7 +129,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
       if (oldImports.isEmpty()) {
         document.insertString(0, "$newImports\n\n")
       } else {
-        val endOffset = importStmtList.map { it.textOffset + it.textLength }.max() ?: 0
+        val endOffset = importStmtList.maxOfOrNull { it.textOffset + it.textLength } ?: 0
         document.replaceString(0, endOffset, newImports)
       }
     }

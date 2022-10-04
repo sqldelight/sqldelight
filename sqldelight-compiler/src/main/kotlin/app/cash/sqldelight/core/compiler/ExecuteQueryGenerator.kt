@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core.compiler
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.model.NamedExecute
 import app.cash.sqldelight.core.compiler.model.NamedMutator
 import app.cash.sqldelight.core.lang.argumentType
