@@ -68,7 +68,7 @@ abstract class QueryGenerator(
       }
       val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
-        val (block,additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
+        val (block, additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
         handledArrayArgs.addAll(additionalArrayArgs)
         result.add(block)
       }
@@ -85,7 +85,7 @@ abstract class QueryGenerator(
     statement: PsiElement,
     handledArrayArgs: Set<BindableQuery.Argument>,
     id: Int,
-  ): Pair<CodeBlock,Set<BindableQuery.Argument>> {
+  ): Pair<CodeBlock, Set<BindableQuery.Argument>> {
     val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
 
     val result = CodeBlock.builder()
@@ -307,7 +307,7 @@ abstract class QueryGenerator(
       )
     }
 
-    return Pair(result.build(),seenArrayArguments)
+    return Pair(result.build(), seenArrayArguments)
   }
 
   private fun PsiElement.leftWhitspace(): String {

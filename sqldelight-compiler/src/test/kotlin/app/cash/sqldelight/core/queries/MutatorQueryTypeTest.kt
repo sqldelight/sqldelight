@@ -897,9 +897,9 @@ class MutatorQueryTypeTest {
     )
   }
 
-    @Test fun `delete using named list parameter twice is fine`() {
-        val file = FixtureCompiler.parseSql(
-            """
+  @Test fun `delete using named list parameter twice is fine`() {
+    val file = FixtureCompiler.parseSql(
+      """
       |CREATE TABLE data (
       |  id INTEGER AS Int PRIMARY KEY,
       |  other INTEGER AS Int NOT NULL
@@ -910,15 +910,15 @@ class MutatorQueryTypeTest {
       |  DELETE FROM data WHERE other IN :ids;
       |}
       """.trimMargin(),
-            tempFolder,
-            fileName = "Data.sq",
-        )
+      tempFolder,
+      fileName = "Data.sq",
+    )
 
-        val mutator = file.namedExecutes.first()
-        val generator = ExecuteQueryGenerator(mutator)
+    val mutator = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(mutator)
 
-        assertThat(generator.function().toString()).isEqualTo(
-            """
+    assertThat(generator.function().toString()).isEqualTo(
+      """
       |public fun delete(ids: kotlin.collections.Collection<Int>): kotlin.Unit {
       |  transaction {
       |    val idsIndexes = createArguments(count = ids.size)
@@ -939,6 +939,6 @@ class MutatorQueryTypeTest {
       |}
       |
       """.trimMargin(),
-        )
-    }
+    )
+  }
 }
