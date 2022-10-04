@@ -24,7 +24,7 @@ class TreeUtilTest {
 
     val createTable = file.sqlStatements().first().statement.createTableStmt!!
 
-    assertThat(createTable.rawSqlText()).isEqualTo(
+    assertThat(createTable.rawSqlText(isAsync = false)).isEqualTo(
       """
       |CREATE TABLE test (
       |  value TEXT,
@@ -55,7 +55,7 @@ class TreeUtilTest {
 
     val insert1 = file.sqlStatements().elementAt(1).statement.insertStmt!!
 
-    assertThat(insert1.rawSqlText()).isEqualTo(
+    assertThat(insert1.rawSqlText(isAsync = false)).isEqualTo(
       """
       |INSERT INTO test (value, other_value)
       |VALUES (?, ?)
@@ -64,7 +64,7 @@ class TreeUtilTest {
 
     val insert2 = file.sqlStatements().elementAt(2).statement.insertStmt!!
 
-    assertThat(insert2.rawSqlText()).isEqualTo(
+    assertThat(insert2.rawSqlText(isAsync = false)).isEqualTo(
       """
       |INSERT INTO test
       |VALUES (?, ?, ?)
@@ -85,7 +85,7 @@ class TreeUtilTest {
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
-    assertThat(createTable.rawSqlText()).isEqualTo(
+    assertThat(createTable.rawSqlText(isAsync = false)).isEqualTo(
       """
       |CREATE VIRTUAL TABLE data USING fts5 (
       |  value,
@@ -108,7 +108,7 @@ class TreeUtilTest {
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
-    assertThat(createTable.rawSqlText()).isEqualTo(
+    assertThat(createTable.rawSqlText(isAsync = false)).isEqualTo(
       """
       |CREATE VIRTUAL TABLE data USING fts5 (
       |  value,
@@ -131,7 +131,7 @@ class TreeUtilTest {
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
-    assertThat(createTable.rawSqlText()).isEqualTo(
+    assertThat(createTable.rawSqlText(isAsync = false)).isEqualTo(
       """
       |CREATE VIRTUAL TABLE data USING fts5 (
       |  value UNINDEXED,
@@ -154,7 +154,7 @@ class TreeUtilTest {
 
     val createTable = file.sqlStatements().first().statement.createVirtualTableStmt!!
 
-    assertThat(createTable.rawSqlText()).isEqualTo(
+    assertThat(createTable.rawSqlText(isAsync = false)).isEqualTo(
       """
       |CREATE VIRTUAL TABLE data USING FTS5 (
       |  value,

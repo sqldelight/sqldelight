@@ -196,7 +196,7 @@ internal class DatabaseGenerator(
       // Derive the schema from queries files.
       sourceFolders.flatMap { it.queryFiles() }
         .sortedBy { it.name }
-        .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
+        .forInitializationStatements(dialect.allowsReferenceCycles, generateAsync) { sqlText ->
           val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
           createFunction.addStatement(statement, sqlText.toCodeLiteral())
         }
@@ -209,7 +209,7 @@ internal class DatabaseGenerator(
         .filter { it.isSchema() }
         .forEach {
           val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
-          createFunction.addStatement(statement, it.rawSqlText().toCodeLiteral())
+          createFunction.addStatement(statement, it.rawSqlText(generateAsync).toCodeLiteral())
         }
     }
 
@@ -231,7 +231,7 @@ internal class DatabaseGenerator(
         migrationFile.sqlStatements().forEach {
           migrateFunction.addStatement(
             if (generateAsync) "$DRIVER_NAME.execute(null, %S, 0).await()" else "$DRIVER_NAME.execute(null, %S, 0)",
-            it.rawSqlText(),
+            it.rawSqlText(generateAsync),
           )
         }
         migrateFunction.endControlFlow()

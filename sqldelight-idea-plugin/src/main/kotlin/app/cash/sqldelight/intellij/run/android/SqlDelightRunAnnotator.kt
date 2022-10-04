@@ -66,7 +66,8 @@ class SqlDelightRunAnnotator : Annotator {
     override fun actionPerformed(e: AnActionEvent) {
       val element = originalElement.element ?: return
 
-      val text = element.rawSqlText().trim().replace("\\s+".toRegex(), " ")
+      val asyncNotSupported = false
+      val text = element.rawSqlText(isAsync = asyncNotSupported).trim().replace("\\s+".toRegex(), " ")
       val s = """
       |package com.example;
       |

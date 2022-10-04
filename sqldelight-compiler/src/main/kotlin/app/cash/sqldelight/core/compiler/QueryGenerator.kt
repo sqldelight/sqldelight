@@ -206,7 +206,7 @@ abstract class QueryGenerator(
           // This allows us to use the same algorithm for non Sqlite dialects
           // :name becomes ?
           if (bindParameter != null) {
-            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
+            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount - 1))
           }
         }
       }
@@ -231,7 +231,7 @@ abstract class QueryGenerator(
       argumentCounts.add(0, nonArrayBindArgsCount.toString())
     }
     val arguments = mutableListOf<Any>(
-      statement.rawSqlText(replacements),
+      statement.rawSqlText(generateAsync, replacements),
       argumentCounts.ifEmpty { listOf(0) }.joinToString(" + "),
     )
 

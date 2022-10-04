@@ -105,6 +105,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
         }
         sourceFiles.forInitializationStatements(
           environment.dialect.allowsReferenceCycles,
+          environment.generateAsync,
         ) { sqlText ->
           connection.prepareStatement(sqlText).execute()
         }

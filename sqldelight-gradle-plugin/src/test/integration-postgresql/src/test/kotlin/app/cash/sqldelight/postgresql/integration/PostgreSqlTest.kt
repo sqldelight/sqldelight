@@ -71,6 +71,15 @@ class PostgreSqlTest {
   }
 
   @Test fun testDates() {
+    database.datesQueries.insertDateOnly(
+      Dates(
+        date = LocalDate.of(2020, 1, 1),
+        time = LocalTime.of(21, 30, 59, 10000),
+        timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
+        timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+      ),
+    )
+
     assertThat(
       database.datesQueries.insertDate(
         date = LocalDate.of(2020, 1, 1),

@@ -140,6 +140,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
       sourceFiles.forInitializationStatements(
         environment.dialect.allowsReferenceCycles,
+        environment.generateAsync,
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
@@ -176,7 +177,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         file.sqlStmtList!!.stmtList.forEach {
           initStatements.add(
             CatalogDatabase.InitStatement(
-              it.rawSqlText(),
+              it.rawSqlText(environment.generateAsync),
               "Error compiling ${file.name}",
             ),
           )

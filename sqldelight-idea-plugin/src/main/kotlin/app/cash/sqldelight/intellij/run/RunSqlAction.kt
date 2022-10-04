@@ -32,7 +32,8 @@ internal class RunSqlAction(
       if (!dialog.showAndGet() || dialog.result.any { it.value.isEmpty() }) return
       dialog.result.map { p -> p.range to p.value }
     }
-    val sqlStmt = stmt.rawSqlText(replacements).trim().replace("\\s+".toRegex(), " ")
+    val asyncNotSupported = false
+    val sqlStmt = stmt.rawSqlText(isAsync = asyncNotSupported, replacements).trim().replace("\\s+".toRegex(), " ")
     val identifier = stmt.getPrevSiblingIgnoringWhitespace() as? StmtIdentifier
     executor.execute(sqlStmt, identifier)
   }

@@ -117,13 +117,11 @@ class SelectQueryGenerator(
 
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
     val function = FunSpec.builder(query.name).also(::addJavadoc)
-    val params = mutableListOf<CodeBlock>()
 
     query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
       function.addParameter(argument.name, argument.argumentType())
-      params.add(CodeBlock.of(argument.name))
     }
 
     if (query.needsWrapper()) {
@@ -236,7 +234,7 @@ class SelectQueryGenerator(
           QUERY_TYPE,
           query.statement.containingFile.name,
           query.name,
-          query.statement.rawSqlText(),
+          query.statement.rawSqlText(generateAsync),
           mapperLambda.build(),
         )
       } else {
@@ -246,7 +244,7 @@ class SelectQueryGenerator(
           queryKeys(tablesObserved),
           query.statement.containingFile.name,
           query.name,
-          query.statement.rawSqlText(),
+          query.statement.rawSqlText(generateAsync),
           mapperLambda.build(),
         )
       }

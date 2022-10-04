@@ -26,8 +26,10 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
@@ -151,7 +153,7 @@ inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
   return PsiTreeUtil.getNextSiblingOfType(this, T::class.java)!!
 }
 
-private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
+private fun PsiElement.rangesToReplace(isAsync: Boolean): List<Pair<IntRange, String>> {
   return if (this is ColumnTypeMixin && javaTypeName != null) {
     listOf(
       Pair(
@@ -180,14 +182,18 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       ),
     )
   } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
+    val bindExpr = childOfType(SqlTypes.BIND_EXPR)!! as SqlBindExpr
+    val parameterMixin = bindExpr.bindParameter as BindParameterMixin
     listOf(
       Pair(
-        first = childOfType(SqlTypes.BIND_EXPR)!!.range,
-        second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" },
+        first = bindExpr.range,
+        second = List(parent!!.columns.size) { index ->
+          parameterMixin.replaceWith(isAsync = isAsync, index = index)
+        }.joinToString(separator = ", ", prefix = "(", postfix = ")"),
       ),
     )
   } else {
-    children.flatMap { it.rangesToReplace() }
+    children.flatMap { it.rangesToReplace(isAsync) }
   }
 }
 
@@ -199,9 +205,10 @@ private val IntRange.length: Int
   get() = endInclusive - start + 1
 
 fun PsiElement.rawSqlText(
+  isAsync: Boolean,
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
-  return (replacements + rangesToReplace())
+  return (replacements + rangesToReplace(isAsync = isAsync))
     .sortedBy { it.first.first }
     .map { (range, replacement) -> (range - node.startOffset) to replacement }
     .fold(
@@ -217,6 +224,7 @@ val PsiElement.range: IntRange
 
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   allowReferenceCycles: Boolean,
+  isAsync: Boolean,
   body: (sqlText: String) -> Unit,
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
@@ -241,19 +249,20 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   when (allowReferenceCycles) {
     // If we allow cycles, don't attempt to order the table creation statements. The dialect
     // is permissive.
-    true -> tables.forEach { body(it.rawSqlText()) }
-    false -> tables.buildGraph().topological().forEach { body(it.rawSqlText()) }
+    true -> tables.forEach { body(it.rawSqlText(isAsync)) }
+    false -> tables.buildGraph().topological().forEach { body(it.rawSqlText(isAsync)) }
   }
 
   views.orderStatements(
     { it.viewName.name },
     { view: SqlCreateViewStmt -> view.compoundSelectStmt!!.findChildrenOfType<SqlTableName>() },
     { it.name },
+    isAsync = isAsync,
     body,
   )
 
-  creators.forEach { body(it.rawSqlText()) }
-  miscellanious.forEach { body(it.rawSqlText()) }
+  creators.forEach { body(it.rawSqlText(isAsync)) }
+  miscellanious.forEach { body(it.rawSqlText(isAsync)) }
 }
 
 private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt, DefaultEdge> {
@@ -286,6 +295,7 @@ private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
   nameSelector: (T) -> String,
   relationIdentifier: (T) -> Collection<E>,
   relatedNameSelector: (E) -> String,
+  isAsync: Boolean,
   body: (sqlText: String) -> Unit,
 ) {
   val statementsLeft = this.map(nameSelector).toMutableSet()
@@ -296,7 +306,7 @@ private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
         return@removeAll false
       }
 
-      body(statement.rawSqlText())
+      body(statement.rawSqlText(isAsync))
       statementsLeft.remove(nameSelector(statement))
       return@removeAll true
     }

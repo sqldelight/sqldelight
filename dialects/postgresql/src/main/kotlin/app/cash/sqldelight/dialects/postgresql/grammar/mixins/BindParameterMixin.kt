@@ -5,7 +5,7 @@ import com.intellij.lang.ASTNode
 
 abstract class BindParameterMixin(node: ASTNode) : BindParameterMixin(node) {
   override fun replaceWith(isAsync: Boolean, index: Int): String = when {
-    isAsync -> "$$index"
+    isAsync -> "$${index + 1}"
     else -> "?"
   }
 }

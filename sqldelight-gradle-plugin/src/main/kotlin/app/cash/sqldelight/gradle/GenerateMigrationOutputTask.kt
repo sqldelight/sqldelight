@@ -100,7 +100,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
         )
         output.writeText(
           migrationFile.sqlStmtList?.stmtList.orEmpty()
-            .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText()};" },
+            .filterNotNull().joinToString(separator = "\n\n") { "${it.rawSqlText(properties.generateAsync)};" },
         )
       }
     }

@@ -30,7 +30,8 @@ import java.awt.datatransfer.StringSelection
 class CopyAsSqliteAction : AnAction() {
   override fun actionPerformed(e: AnActionEvent) {
     val element = e.sqlElementAtCaret() ?: return
-    CopyPasteManager.getInstance().setContents(StringSelection(element.rawSqlText()))
+    val asyncNotSupported = false
+    CopyPasteManager.getInstance().setContents(StringSelection(element.rawSqlText(isAsync = asyncNotSupported)))
   }
 
   override fun update(e: AnActionEvent) {

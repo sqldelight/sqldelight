@@ -30,7 +30,7 @@ class QueriesTypeGenerator(
    *       transactions: ThreadLocal<Transacter.Transaction>
    *     ) : TransacterImpl(driver, transactions)
    */
-  fun generateType(packageName: String): TypeSpec? {
+  fun generateType(): TypeSpec? {
     if (file.isEmpty()) {
       return null
     }
