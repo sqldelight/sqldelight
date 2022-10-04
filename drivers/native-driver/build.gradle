@@ -35,7 +35,7 @@ kotlin {
     }
     commonTest {
       dependencies {
-        implementation libs.kotlin.test.common
+        implementation libs.kotlin.test
         implementation libs.testhelp
       }
     }

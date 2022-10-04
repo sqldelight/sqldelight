@@ -53,6 +53,10 @@ class MultiplatformConventions : Plugin<Project> {
 
       jvm()
 
+      js {
+        browser()
+      }
+
       iosX64()
       iosArm32()
       iosArm64()
