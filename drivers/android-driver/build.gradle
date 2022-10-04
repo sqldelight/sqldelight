@@ -8,6 +8,7 @@ archivesBaseName = 'sqldelight-android-driver'
 
 android {
   compileSdk libs.versions.compileSdk.get() as int
+  namespace = "app.cash.sqldelight.driver.android"
 
   lint {
     textReport true
