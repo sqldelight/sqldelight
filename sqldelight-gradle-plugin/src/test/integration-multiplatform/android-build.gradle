@@ -18,7 +18,7 @@ repositories {
 
 android {
   compileSdkVersion versions.compileSdk
-  namespace "app.cash.sqldelight.integration"
+  namespace "com.squareup.sqldelight.integration"
 
   defaultConfig {
     minSdkVersion versions.minSdk
