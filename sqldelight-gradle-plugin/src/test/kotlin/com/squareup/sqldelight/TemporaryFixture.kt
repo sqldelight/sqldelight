@@ -13,7 +13,7 @@ import org.gradle.tooling.GradleConnector
 import java.io.File
 
 internal class TemporaryFixture : AutoCloseable {
-  val fixtureRoot = File("src/test/temporary-fixture").absoluteFile
+  val fixtureRoot = File("src/test/temporary-fixture-${System.identityHashCode(this)}").absoluteFile
 
   init {
     fixtureRoot.mkdir()

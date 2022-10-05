@@ -28,6 +28,7 @@ sqldelight {
 
 android {
   compileSdkVersion versions.compileSdk
+  namespace "com.squareup.sqldelight.integration"
 
   defaultConfig {
     minSdkVersion versions.minSdk
