@@ -8,4 +8,6 @@ abstract class BindParameterMixin(node: ASTNode) : BindParameterMixin(node) {
     isAsync -> "$$index"
     else -> "?"
   }
+
+  override fun useNumberedIndices(isAsync: Boolean) = isAsync
 }

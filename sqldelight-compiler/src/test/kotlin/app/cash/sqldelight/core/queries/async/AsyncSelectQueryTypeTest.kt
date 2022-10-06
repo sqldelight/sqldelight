@@ -260,4 +260,218 @@ class AsyncSelectQueryTypeTest {
       """.trimMargin(),
     )
   }
+
+  @Test
+  fun `IN in async postgresql queries uses numbered indices`() {
+    val result = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT
+      |);
+      |
+      |selectForMultipleIds:
+      |SELECT *
+      |FROM data
+      |WHERE id IN ?;
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+      generateAsync = true,
+    )
+
+    val query = result.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+        |private inner class SelectForMultipleIdsQuery<out T : kotlin.Any>(
+        |  public val id: kotlin.collections.Collection<kotlin.Int>,
+        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+        |) : app.cash.sqldelight.Query<T>(mapper) {
+        |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+        |    driver.addListener(listener, arrayOf("data"))
+        |  }
+        |
+        |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+        |    driver.removeListener(listener, arrayOf("data"))
+        |  }
+        |
+        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> {
+        |    val idIndexes0 = createNumberedArguments(offset = 0, count = id.size)
+        |    return driver.executeQuery(null, ""${'"'}
+        |        |SELECT *
+        |        |FROM data
+        |        |WHERE id IN ${"$"}idIndexes0
+        |        ""${'"'}.trimMargin(), mapper, id.size) {
+        |          check(this is app.cash.sqldelight.driver.r2dbc.R2dbcPreparedStatement)
+        |          id.forEachIndexed { index, id_ ->
+        |            bindLong(index, id_.toLong())
+        |          }
+        |        }
+        |  }
+        |
+        |  public override fun toString(): kotlin.String = "Test.sq:selectForMultipleIds"
+        |}
+        |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `offset calculation for IN in async postgresql queries is fine`() {
+    val result = FixtureCompiler.parseSql(
+      """
+    |CREATE TABLE data (
+    |  id INTEGER PRIMARY KEY,
+    |  value TEXT
+    |);
+    |
+    |selectForValueAndMultipleIds:
+    |SELECT *
+    |FROM data
+    |WHERE value = ? AND id IN ?;
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+      generateAsync = true,
+    )
+
+    val query = result.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectForValueAndMultipleIdsQuery<out T : kotlin.Any>(
+      |  public val value_: kotlin.String?,
+      |  public val id: kotlin.collections.Collection<kotlin.Int>,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.addListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |    driver.removeListener(listener, arrayOf("data"))
+      |  }
+      |
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> {
+      |    val idIndexes0 = createNumberedArguments(offset = 1, count = id.size)
+      |    return driver.executeQuery(null, ""${'"'}
+      |        |SELECT *
+      |        |FROM data
+      |        |WHERE value ${"$"}{ if (value_ == null) "IS" else "=" } $1 AND id IN ${"$"}idIndexes0
+      |        ""${'"'}.trimMargin(), mapper, 1 + id.size) {
+      |          check(this is app.cash.sqldelight.driver.r2dbc.R2dbcPreparedStatement)
+      |          bindString(0, value_)
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 1, id_.toLong())
+      |          }
+      |        }
+      |  }
+      |
+      |  public override fun toString(): kotlin.String = "Test.sq:selectForValueAndMultipleIds"
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `offset calculation for IN in async postgresql transactions with same list multiple times is fine`() {
+    val result = FixtureCompiler.parseSql(
+      """
+    |CREATE TABLE data (
+    |  id INTEGER PRIMARY KEY,
+    |  value TEXT
+    |);
+    |
+    |deleteByValueAndMultipleIdsInTransaction {
+    |  DELETE FROM data WHERE value= ? AND id IN :id;
+    |  DELETE FROM data WHERE id IN :id;
+    |}
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+      generateAsync = true,
+    )
+
+    val query = result.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public suspend fun deleteByValueAndMultipleIdsInTransaction(value_: kotlin.String?, id: kotlin.collections.Collection<kotlin.Int>): kotlin.Unit {
+      |  transaction {
+      |    val idIndexes0 = createNumberedArguments(offset = 1, count = id.size)
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE value${"$"}{ if (value_ == null) " IS" else "=" } ${'$'}1 AND id IN ${"$"}idIndexes0""${'"'}, 1 + id.size) {
+      |          check(this is app.cash.sqldelight.driver.r2dbc.R2dbcPreparedStatement)
+      |          bindString(0, value_)
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 1, id_.toLong())
+      |          }
+      |        }.await()
+      |    val idIndexes1 = createNumberedArguments(offset = 0, count = id.size)
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${"$"}idIndexes1""${'"'}, id.size) {
+      |          check(this is app.cash.sqldelight.driver.r2dbc.R2dbcPreparedStatement)
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index, id_.toLong())
+      |          }
+      |        }.await()
+      |  }
+      |  notifyQueries(1231275350) { emit ->
+      |    emit("data")
+      |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `IN in async sqlite transactions does not use numbered indices`() {
+    val result = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT
+      |);
+      |
+      |deleteByValueAndMultipleIdsInTransaction {
+      |  DELETE FROM data WHERE value= ? AND id IN :id;
+      |  DELETE FROM data WHERE id IN :id;
+      |}
+      """.trimMargin(),
+      tempFolder,
+      generateAsync = true,
+    )
+
+    val query = result.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(query)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |public suspend fun deleteByValueAndMultipleIdsInTransaction(value_: kotlin.String?, id: kotlin.collections.Collection<kotlin.Long>): kotlin.Unit {
+      |  transaction {
+      |    val idIndexes = createArguments(count = id.size)
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE value${"$"}{ if (value_ == null) " IS" else "=" } ? AND id IN ${"$"}idIndexes""${'"'}, 1 + id.size) {
+      |          bindString(0, value_)
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index + 1, id_)
+      |          }
+      |        }.await()
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${"$"}idIndexes""${'"'}, id.size) {
+      |          id.forEachIndexed { index, id_ ->
+      |            bindLong(index, id_)
+      |          }
+      |        }.await()
+      |  }
+      |  notifyQueries(1231275350) { emit ->
+      |    emit("data")
+      |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
 }

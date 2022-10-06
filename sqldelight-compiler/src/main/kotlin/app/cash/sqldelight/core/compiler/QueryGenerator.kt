@@ -68,20 +68,21 @@ abstract class QueryGenerator(
       }
       val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
-        val (block, additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
+        val (block, additionalArrayArgs) = executeBlock(index, statement, handledArrayArgs, query.idForIndex(index))
         handledArrayArgs.addAll(additionalArrayArgs)
         result.add(block)
       }
       result.endControlFlow()
       if (generateAsync && query is NamedQuery) { result.endControlFlow() }
     } else {
-      result.add(executeBlock(query.statement, emptySet(), query.id).first)
+      result.add(executeBlock(0, query.statement, emptySet(), query.id).first)
     }
 
     return result.build()
   }
 
   private fun executeBlock(
+    blockIndex: Int,
     statement: PsiElement,
     handledArrayArgs: Set<BindableQuery.Argument>,
     id: Int,
@@ -147,19 +148,33 @@ abstract class QueryGenerator(
       val offset = (precedingArrays.map { "$it.size" } + "$nonArrayBindArgsCount")
         .joinToString(separator = " + ").replace(" + 0", "")
       if (bindArg?.isArrayParameter() == true) {
+        val bindParameter = bindArg.bindParameter as? BindParameterMixin
+        val useNumberedIndices = bindParameter?.useNumberedIndices(generateAsync) ?: false
         needsFreshStatement = true
 
-        if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {
+        val declareVariable = seenArrayArguments.add(argument) && (useNumberedIndices || !handledArrayArgs.contains(argument))
+        val variableName = if (useNumberedIndices) {
+          "${type.name}Indexes$blockIndex"
+        } else {
+          "${type.name}Indexes"
+        }
+        if (declareVariable && useNumberedIndices) {
           result.addStatement(
             """
-            |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
+            |val $variableName = createNumberedArguments(offset = $offset, count = ${type.name}.size)
+            """.trimMargin(),
+          )
+        } else if (declareVariable) {
+          result.addStatement(
+            """
+            |val $variableName = createArguments(count = ${type.name}.size)
             """.trimMargin(),
           )
         }
 
         // Replace the single bind argument with the array of bind arguments:
         // WHERE id IN ${idIndexes}
-        replacements.add(bindArg.range to "\$${type.name}Indexes")
+        replacements.add(bindArg.range to "\$$variableName")
 
         // Perform the necessary binds:
         // id.forEachIndex { index, parameter ->

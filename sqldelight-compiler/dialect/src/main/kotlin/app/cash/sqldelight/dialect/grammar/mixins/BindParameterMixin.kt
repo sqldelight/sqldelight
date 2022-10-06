@@ -12,4 +12,6 @@ abstract class BindParameterMixin(node: ASTNode) : SqlCompositeElementImpl(node)
    * user provided parameter with [replaceWith] for a homogen generated code.
    */
   open fun replaceWith(isAsync: Boolean, index: Int): String = "?"
+
+  open fun useNumberedIndices(isAsync: Boolean) = false
 }

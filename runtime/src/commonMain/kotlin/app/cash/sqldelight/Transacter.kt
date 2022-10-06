@@ -336,6 +336,24 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
       append(')')
     }
   }
+
+  /**
+   * For internal use, creates a string in the format ($1, $2, $3) where there are [count] variables beginning at
+   * [offset] +1.
+   */
+  protected fun createNumberedArguments(offset: Int, count: Int): String {
+    if (count == 0) return "()"
+
+    return buildString(3 * count + 1) {
+      append("(\$")
+      append(offset + 1)
+      repeat(count - 1) {
+        append(",\$")
+        append(offset + 1 + index)
+      }
+      append(')')
+    }
+  }
 }
 
 /**
