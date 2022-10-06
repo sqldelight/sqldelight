@@ -99,4 +99,17 @@ class AndroidDriverTest : DriverTest() {
 
     assertFalse(factory.lastConfiguration.useNoBackupDirectory)
   }
+
+  @Test
+  fun `using a custom callback works`() {
+    AndroidSqliteDriver(
+      schema = schema,
+      context = getApplicationContext(),
+      callback = object : AndroidSqliteDriver.Callback(schema) {
+        override fun onOpen(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+          db.execSQL("PRAGMA foreign_keys=ON;")
+        }
+      },
+    )
+  }
 }
