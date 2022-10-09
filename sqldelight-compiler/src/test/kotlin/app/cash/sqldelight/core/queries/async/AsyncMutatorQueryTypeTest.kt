@@ -35,7 +35,7 @@ class AsyncMutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }.await()
@@ -79,7 +79,7 @@ class AsyncMutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }.await()
@@ -129,7 +129,7 @@ class AsyncMutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }.await()

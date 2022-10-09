@@ -51,7 +51,7 @@ sealed class ConnectionWrapper : SqlDriver {
   final override fun execute(
     identifier: Int?,
     sql: String,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> = QueryResult.Value(
     accessStatement(false, identifier, sql, binders) { statement ->
@@ -63,7 +63,7 @@ sealed class ConnectionWrapper : SqlDriver {
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> = QueryResult.Value(
     accessStatement(true, identifier, sql, binders) { statement ->

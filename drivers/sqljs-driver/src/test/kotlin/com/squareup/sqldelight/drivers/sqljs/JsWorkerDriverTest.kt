@@ -33,7 +33,7 @@ class JsWorkerDriverTest {
               |  value TEXT
               |);
         """.trimMargin(),
-        0,
+        emptyList(),
       ).await()
       driver.execute(
         1,
@@ -46,7 +46,7 @@ class JsWorkerDriverTest {
               |  real_value REAL
               |);
         """.trimMargin(),
-        0,
+        emptyList(),
       ).await()
     }
 
@@ -63,15 +63,15 @@ class JsWorkerDriverTest {
   fun insert_can_run_multiple_times() = runTest { driver ->
 
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.await(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.await(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
 
     suspend fun query(mapper: (SqlCursor) -> Unit) {
-      driver.awaitQuery(3, "SELECT * FROM test", mapper, 0)
+      driver.awaitQuery(3, "SELECT * FROM test", mapper, emptyList())
     }
 
     suspend fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.awaitQuery(4, "SELECT changes()", mapper, 0)
+      return driver.awaitQuery(4, "SELECT changes()", mapper, emptyList())
     }
 
     query {
@@ -111,7 +111,7 @@ class JsWorkerDriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    driver.await(5, "DELETE FROM test", 0)
+    driver.await(5, "DELETE FROM test", emptyList())
     assertEquals(2, changes { it.next(); it.getLong(0) })
 
     query {
@@ -123,11 +123,11 @@ class JsWorkerDriverTest {
   fun query_can_run_multiple_times() = runTest { driver ->
 
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.await(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.await(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
 
     suspend fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.awaitQuery(4, "SELECT changes()", mapper, 0)
+      return driver.awaitQuery(4, "SELECT changes()", mapper, emptyList())
     }
 
     insert {
@@ -142,7 +142,7 @@ class JsWorkerDriverTest {
     assertEquals(1, changes { it.next(); it.getLong(0) })
 
     suspend fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
-      driver.awaitQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
+      driver.awaitQuery(6, "SELECT * FROM test WHERE value = ?", mapper, listOf(33), binders)
     }
     query(
       binders = {
@@ -171,11 +171,11 @@ class JsWorkerDriverTest {
   @Test
   fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = runTest { driver ->
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", listOf(37, 40, 43, 46, 49), binders)
     }
 
     suspend fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.awaitQuery(4, "SELECT changes()", mapper, 0)
+      return driver.awaitQuery(4, "SELECT changes()", mapper, emptyList())
     }
 
     val inserted = insert {
@@ -194,14 +194,14 @@ class JsWorkerDriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
-    driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, emptyList())
     changes { it.next(); it.getLong(0) }
   }
 
   @Test
   fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = runTest { driver ->
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", listOf(37, 40, 43, 46, 49), binders)
     }
 
     insert {
@@ -220,7 +220,7 @@ class JsWorkerDriverTest {
       it.getBytes(3)?.forEachIndexed { index, byte -> assertEquals(index.toByte(), byte) }
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
-    driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, emptyList())
   }
 
   @Test

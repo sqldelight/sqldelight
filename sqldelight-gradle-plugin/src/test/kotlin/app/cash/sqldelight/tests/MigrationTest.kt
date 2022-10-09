@@ -261,20 +261,20 @@ class MigrationTest {
       |          |  value TEXT NOT NULL,
       |          |  value2 TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIEW testView AS
       |          |SELECT *
       |          |FROM test
-      |          ""${'"'}.trimMargin(), 0)
-      |      driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
+      |          ""${'"'}.trimMargin(), emptyList())
+      |      driver.execute(null, "CREATE INDEX testIndex ON test(value)", emptyList())
       |      driver.execute(null, ""${'"'}
       |          |CREATE TRIGGER testTrigger
       |          |AFTER DELETE ON test
       |          |BEGIN
       |          |INSERT INTO test VALUES ("1", "2");
       |          |END
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -284,20 +284,20 @@ class MigrationTest {
       |      newVersion: Int,
       |    ): QueryResult<Unit> {
       |      if (oldVersion <= 1 && newVersion > 1) {
-      |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
-      |        driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
+      |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", emptyList())
+      |        driver.execute(null, "CREATE INDEX testIndex ON test(value)", emptyList())
       |        driver.execute(null, ""${'"'}
       |            |CREATE TRIGGER testTrigger
       |            |AFTER DELETE ON test
       |            |BEGIN
       |            |INSERT INTO test VALUES ("1", "2");
       |            |END
-      |            ""${'"'}.trimMargin(), 0)
+      |            ""${'"'}.trimMargin(), emptyList())
       |        driver.execute(null, ""${'"'}
       |            |CREATE VIEW testView AS
       |            |SELECT *
       |            |FROM test
-      |            ""${'"'}.trimMargin(), 0)
+      |            ""${'"'}.trimMargin(), emptyList())
       |      }
       |      return QueryResult.Unit
       |    }

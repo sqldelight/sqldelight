@@ -20,7 +20,7 @@ abstract class BaseConcurrencyTest {
       0,
       "SELECT count(*) FROM test",
       { it.next(); it.getLong(0)!! },
-      0,
+      emptyList(),
     ).value
   }
 
@@ -122,7 +122,7 @@ abstract class BaseConcurrencyTest {
                 value TEXT NOT NULL
                );
             """.trimIndent(),
-            0,
+            emptyList(),
           )
           return QueryResult.Unit
         }
@@ -163,7 +163,7 @@ abstract class BaseConcurrencyTest {
   }
 
   internal fun insertTestData(testData: TestData, driver: SqlDriver = this.driver) {
-    driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
+    driver.execute(1, "INSERT INTO test VALUES (?, ?)", listOf(25, 28)) {
       bindLong(0, testData.id)
       bindString(1, testData.value)
     }

@@ -25,13 +25,13 @@ class AndroidDriverTest : DriverTest() {
   fun `cached statement can be reused`() {
     val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
-    driver.executeQuery(1, "SELECT * FROM test", {}, 0, { bindable = this })
+    driver.executeQuery(1, "SELECT * FROM test", {}, emptyList(), { bindable = this })
 
     driver.executeQuery(
       1,
       "SELECT * FROM test",
       {},
-      0,
+      emptyList(),
       {
         assertSame(bindable, this)
       },
@@ -42,15 +42,15 @@ class AndroidDriverTest : DriverTest() {
   fun `cached statement is evicted and closed`() {
     val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
-    driver.executeQuery(1, "SELECT * FROM test", {}, 0, { bindable = this })
+    driver.executeQuery(1, "SELECT * FROM test", {}, emptyList(), { bindable = this })
 
-    driver.executeQuery(2, "SELECT * FROM test", {}, 0)
+    driver.executeQuery(2, "SELECT * FROM test", {}, emptyList())
 
     driver.executeQuery(
       1,
       "SELECT * FROM test",
       {},
-      0,
+      emptyList(),
       {
         assertNotSame(bindable, this)
       },
@@ -61,7 +61,7 @@ class AndroidDriverTest : DriverTest() {
   fun `uncached statement is closed`() {
     val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
     lateinit var bindable: AndroidStatement
-    driver.execute(null, "SELECT * FROM test", 0) {
+    driver.execute(null, "SELECT * FROM test", emptyList()) {
       bindable = this as AndroidStatement
     }
 

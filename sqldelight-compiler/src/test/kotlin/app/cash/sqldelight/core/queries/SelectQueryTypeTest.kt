@@ -148,7 +148,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), mapper, 1) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(30)) {
       |    bindLong(0, id)
       |  }
       |
@@ -177,7 +177,7 @@ class SelectQueryTypeTest {
       |private inner class SelectWithoutFromQuery<out T : kotlin.Any>(
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id}, ""${'"'}SELECT 42""${'"'}, mapper, 0)
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id}, ""${'"'}SELECT 42""${'"'}, mapper, emptyList())
       |
       |  public override fun toString(): kotlin.String = "Test.sq:selectWithoutFrom"
       |}
@@ -226,7 +226,7 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  |AND value = ?
-      |  ""${'"'}.trimMargin(), mapper, 2) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(30, 44)) {
       |    bindLong(0, id)
       |    bindString(1, value_)
       |  }
@@ -276,7 +276,7 @@ class SelectQueryTypeTest {
       |        |SELECT *
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes
-      |        ""${'"'}.trimMargin(), mapper, id.size) {
+      |        ""${'"'}.trimMargin(), mapper, id.mapIndexed { index, _ -> 31 + 2*index + 1 }) {
       |          id.forEachIndexed { index, id_ ->
       |            bindLong(index, id_)
       |          }
@@ -330,7 +330,7 @@ class SelectQueryTypeTest {
       |        |SELECT *
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
-      |        ""${'"'}.trimMargin(), mapper, 1 + id.size + id.size) {
+      |        ""${'"'}.trimMargin(), mapper, listOf(id.mapIndexed { index, _ -> 31 + 2*index + 1 }, listOf(47 + idIndexes.length), id.mapIndexed { index, _ -> 59 + idIndexes.length + 2*index + 1 }).flatten()) {
       |          id.forEachIndexed { index, id_ ->
       |            bindLong(index, id_)
       |          }
@@ -381,7 +381,7 @@ class SelectQueryTypeTest {
        |    driver.removeListener(listener, arrayOf("socialFeedItem"))
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
+       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, listOf(67 + (if (userId == null) 2 else 1))) {
        |    bindString(0, userId)
        |  }
        |
@@ -424,7 +424,7 @@ class SelectQueryTypeTest {
        |    driver.removeListener(listener, arrayOf("socialFeedItem"))
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
+       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, listOf(68)) {
        |    bindString(0, userId)
        |  }
        |
@@ -476,7 +476,7 @@ class SelectQueryTypeTest {
        |  |SELECT _id, username
        |  |FROM Friend
        |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
-       |  ""${'"'}.trimMargin(), mapper, 2) {
+       |  ""${'"'}.trimMargin(), mapper, listOf(45 + (if (userId == null) 4 else 1), 59 + (if (userId == null) 4 else 1))) {
        |    bindString(0, userId)
        |    bindString(1, username)
        |  }
@@ -527,7 +527,7 @@ class SelectQueryTypeTest {
        |  |SELECT _id, username
        |  |FROM Friend
        |  |WHERE userId=? OR username=? LIMIT 2
-       |  ""${'"'}.trimMargin(), mapper, 2) {
+       |  ""${'"'}.trimMargin(), mapper, listOf(46, 60)) {
        |    bindString(0, userId)
        |    bindString(1, username)
        |  }
@@ -592,7 +592,7 @@ class SelectQueryTypeTest {
       |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?
       |  |AND val IS ?
       |  |AND val IS NOT ?
-      |  ""${'"'}.trimMargin(), mapper, 6) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(30 + (if (val_ == null) 2 else 1), 43 + (if (val_ == null) 2 else 1), 54 + (if (val_ == null) 2 else 1) + (if (val___ == null) 6 else 2), 65 + (if (val_ == null) 2 else 1) + (if (val___ == null) 6 else 2) + (if (val____ == null) 6 else 2), 78 + (if (val_ == null) 2 else 1) + (if (val___ == null) 6 else 2) + (if (val____ == null) 6 else 2), 95 + (if (val_ == null) 2 else 1) + (if (val___ == null) 6 else 2) + (if (val____ == null) 6 else 2))) {
       |    bindString(0, val_)
       |    bindString(1, val__)
       |    bindString(2, val___)
@@ -660,7 +660,7 @@ class SelectQueryTypeTest {
       |  |AND val != ?
       |  |AND val IS ?
       |  |AND val IS NOT ?
-      |  ""${'"'}.trimMargin(), mapper, 6) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(31, 44, 57, 70, 83, 100)) {
       |    bindString(0, val_)
       |    bindString(1, val__)
       |    bindString(2, val___)
@@ -714,7 +714,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE data MATCH ? AND rowid = ?
-      |  ""${'"'}.trimMargin(), mapper, 2) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(36, 50)) {
       |    bindString(0, data)
       |    bindLong(1, rowid)
       |  }
@@ -765,7 +765,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE data MATCH '"one ' || ? || '" * '
-      |  ""${'"'}.trimMargin(), mapper, 1) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(47)) {
       |    bindString(0, value)
       |  }
       |
@@ -826,7 +826,7 @@ class SelectQueryTypeTest {
       |        |  AND id IN ${"$"}idIndexes
       |        |  AND (token != ? OR (name = ? OR ? = 'foo'))
       |        |  AND token IN ${"$"}token_Indexes
-      |        ""${'"'}.trimMargin(), mapper, 4 + id.size + token_.size) {
+      |        ""${'"'}.trimMargin(), mapper, listOf(listOf(33), id.mapIndexed { index, _ -> 47 + 2*index + 1 }, listOf(64 + idIndexes.length, 77 + idIndexes.length, 82 + idIndexes.length), token_.mapIndexed { index, _ -> 109 + idIndexes.length + 2*index + 1 }).flatten()) {
       |          bindString(0, token)
       |          id.forEachIndexed { index, id_ ->
       |            bindLong(index + 1, id_)
@@ -892,7 +892,7 @@ class SelectQueryTypeTest {
       |  |WHERE id ${'$'}{ if (id == null) "IS" else "=" } ? OR id IN child_ids
       |  |LIMIT ?
       |  |OFFSET ?
-      |  ""${'"'}.trimMargin(), mapper, 4) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(49 + (if (id == null) 2 else 1), 81 + (if (id == null) 2 else 1) + (if (id == null) 2 else 1), 108 + (if (id == null) 2 else 1) + (if (id == null) 2 else 1), 117 + (if (id == null) 2 else 1) + (if (id == null) 2 else 1))) {
       |    bindLong(0, id)
       |    bindLong(1, id)
       |    bindLong(2, limit)
@@ -950,7 +950,7 @@ class SelectQueryTypeTest {
       |  |WHERE id = ? OR id IN child_ids
       |  |LIMIT ?
       |  |OFFSET ?
-      |  ""${'"'}.trimMargin(), mapper, 4) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(50, 83, 110, 119)) {
       |    bindLong(0, id)
       |    bindLong(1, id)
       |    bindLong(2, limit)
@@ -1004,7 +1004,7 @@ class SelectQueryTypeTest {
       |        |SELECT *
       |        |FROM data
       |        |WHERE id IN ${'$'}idIndexes
-      |        ""${'"'}.trimMargin(), mapper, id.size) {
+      |        ""${'"'}.trimMargin(), mapper, id.mapIndexed { index, _ -> 31 + 2*index + 1 }) {
       |          id.forEachIndexed { index, id_ ->
       |            bindLong(index, id_?.let { data_Adapter.idAdapter.encode(it) })
       |          }
@@ -1070,7 +1070,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
-      |  ""${'"'}.trimMargin(), mapper, 2) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(32 + (if (token == null) 2 else 1), 37 + (if (token == null) 2 else 1))) {
       |    ${binderCheck}bindString(0, token)
       |    bindString(1, token)
       |  }
@@ -1119,7 +1119,7 @@ class SelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE token = ? OR ? IS NULL
-      |  ""${'"'}.trimMargin(), mapper, 2) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(33, 38)) {
       |    ${binderCheck}bindString(0, token)
       |    bindString(1, token)
       |  }
@@ -1416,13 +1416,13 @@ class SelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value)
       |        }
       |  }
@@ -1467,13 +1467,13 @@ class SelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value__)
       |        }
       |  }
@@ -1518,13 +1518,13 @@ class SelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value_)
       |        }
       |  }
@@ -1569,13 +1569,13 @@ class SelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value__)
       |        }
       |  }
@@ -1624,13 +1624,13 @@ class SelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value_)
       |        }
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value__)
       |        }
       |  }
@@ -1724,7 +1724,7 @@ class SelectQueryTypeTest {
         |    return driver.executeQuery(null, ""${'"'}
         |        |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
         |        |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
-        |        ""${'"'}.trimMargin(), mapper, values.size + values.size) {
+        |        ""${'"'}.trimMargin(), mapper, listOf(values.mapIndexed { index, _ -> 54 + 2*index + 1 }, values.mapIndexed { index, _ -> 106 + valuesIndexes.length + 2*index + 1 }).flatten()) {
         |          values.forEachIndexed { index, values_ ->
         |            bindString(index, ComboDataAdapter.value_Adapter.encode(values_))
         |          }
@@ -1776,14 +1776,14 @@ class SelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value_)
       |        }
       |    driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
       |        |SELECT value
       |        |  FROM data
       |        |  WHERE id = last_insert_rowid()
-      |        ""${'"'}.trimMargin(), mapper, 0)
+      |        ""${'"'}.trimMargin(), mapper, emptyList())
       |  }
       |
       |  public override fun toString(): kotlin.String = "Test.sq:insertAndReturn"

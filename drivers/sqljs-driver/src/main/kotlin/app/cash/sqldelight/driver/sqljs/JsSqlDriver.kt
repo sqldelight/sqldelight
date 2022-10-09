@@ -51,11 +51,11 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     val cursor = createOrGetStatement(identifier, sql).run {
-      bind(parameters, binders)
+      bind(parameterIndices.size, binders)
       JsSqlCursor(this)
     }
 
@@ -66,9 +66,14 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     }
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<Long> =
+  override fun execute(
+    identifier: Int?,
+    sql: String,
+    parameterIndices: List<Int>,
+    binders: (SqlPreparedStatement.() -> Unit)?,
+  ): QueryResult<Long> =
     createOrGetStatement(identifier, sql).run {
-      bind(parameters, binders)
+      bind(parameterIndices.size, binders)
       step()
       freemem()
       return QueryResult.Value(0)

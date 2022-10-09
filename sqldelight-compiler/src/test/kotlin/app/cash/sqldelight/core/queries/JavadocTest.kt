@@ -283,7 +283,7 @@ class JavadocTest {
       |  driver.execute(${insert.id}, ""${'"'}
       |      |INSERT INTO test(value)
       |      |VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(32)) {
       |        ${testDialect.binderCheck}bindString(0, value_)
       |      }
       |  notifyQueries(${insert.id}) { emit ->
@@ -323,7 +323,7 @@ class JavadocTest {
       |      |UPDATE test
       |      |SET value = ?
       |      |WHERE _id = ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 38)) {
       |        bindString(0, value_)
       |        bindLong(1, _id)
       |      }
@@ -359,7 +359,7 @@ class JavadocTest {
       | * Delete all.
       | */
       |public fun deleteAll(): kotlin.Unit {
-      |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, emptyList())
       |  notifyQueries(${delete.id}) { emit ->
       |    emit("test")
       |  }

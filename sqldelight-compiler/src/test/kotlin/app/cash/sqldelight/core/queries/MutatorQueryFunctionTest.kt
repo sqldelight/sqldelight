@@ -42,7 +42,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${insert.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(25)) {
       |        ${dialect.binderCheck}bindString(0, customTextValue)
       |      }
       |  notifyQueries(${insert.id}) { emit ->
@@ -78,7 +78,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id)
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -112,7 +112,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
+      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, emptyList())
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -146,7 +146,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, data_.id)
       |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -185,7 +185,7 @@ class MutatorQueryFunctionTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 39 + (if (oldValue == null) 2 else 1))) {
       |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
       |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -223,7 +223,7 @@ class MutatorQueryFunctionTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE value = ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 40)) {
       |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
       |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -260,7 +260,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, data_.id)
       |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -297,7 +297,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data (id)
       |      |VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(30)) {
       |        bindLong(0, data_.id)
       |      }
       |  notifyQueries(1642410240) { emit ->
@@ -333,7 +333,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data (id)
       |      |VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(30)) {
       |        bindLong(0, id)
       |      }
       |  notifyQueries(1642410240) { emit ->
@@ -372,7 +372,7 @@ class MutatorQueryFunctionTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id IN ${"$"}idIndexes
-      |      ""${'"'}.trimMargin(), 1 + id.size) {
+      |      ""${'"'}.trimMargin(), listOf(listOf(24), id.mapIndexed { index, _ -> 38 + 2*index + 1 }).flatten()) {
       |        bindString(0, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        id.forEachIndexed { index, id_ ->
       |          bindLong(index + 1, id_)
@@ -416,7 +416,7 @@ class MutatorQueryFunctionTest {
       |      |  SELECT CASE WHEN ? IS NULL THEN some_column ELSE ? END
       |      |  FROM some_table
       |      |)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(57, 89)) {
       |        bindLong(0, some_column)
       |        bindLong(1, some_column)
       |      }
@@ -468,7 +468,7 @@ class MutatorQueryFunctionTest {
       |      |    b = ?,
       |      |    c = ?,
       |      |    d = ?
-      |      ""${'"'}.trimMargin(), 4) {
+      |      ""${'"'}.trimMargin(), listOf(36, 47, 58, 69)) {
       |        bindString(0, a)
       |        bindString(1, b)
       |        bindBytes(2, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
@@ -516,7 +516,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |UPDATE paymentHistoryConfig
       |      |SET (a, b, c, d) = (?, ?, ?, ?)
-      |      ""${'"'}.trimMargin(), 4) {
+      |      ""${'"'}.trimMargin(), listOf(48, 51, 54, 57)) {
       |        bindString(0, a)
       |        bindString(1, b)
       |        bindBytes(2, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
@@ -555,7 +555,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${insert.id}, ""${'"'}
       |      |INSERT INTO nullableTypes
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(34, 37)) {
       |        bindString(0, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
       |        bindString(1, nullableTypes.val2)
       |      }
@@ -599,7 +599,7 @@ class MutatorQueryFunctionTest {
       |      |INSERT OR REPLACE
       |      |INTO category (rowid, id, name, description)
       |      |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
-      |      ""${'"'}.trimMargin(), 4) {
+      |      ""${'"'}.trimMargin(), listOf(122, 133, 136, 139)) {
       |        bindString(0, id)
       |        bindString(1, id)
       |        bindString(2, name)
@@ -638,7 +638,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
     |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): kotlin.Unit {
-    |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
+    |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, listOf(37, 40, 80)) {
     |        val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
     |        bindString(0, id)
     |        bindString(1, data__)
@@ -678,7 +678,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO annotation
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(31, 34)) {
       |        bindLong(0, annotation_.id)
       |        bindString(1, annotation_.name)
       |      }

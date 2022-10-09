@@ -103,14 +103,50 @@ abstract class QueryGenerator(
             }
             positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
           }
+      } else if (argument.positions.isNotEmpty()) {
+        argument.positions.forEach { position ->
+          positionToArgument.add(Triple(position, argument, null))
+        }
       } else {
-        positionToArgument.add(Triple(0, argument, null))
+        throw IllegalStateException("Internal Error: Either bindArgs or position must be known for each argument")
       }
     }
 
     val bindStatements = CodeBlock.builder()
+
     val replacements = mutableListOf<Pair<IntRange, String>>()
-    val argumentCounts = mutableListOf<String>()
+    // Stores the index change beteen the given statement and the sql string in the generated code due to replacements
+    // with static text (e.g. ":variable" to "?")
+    var staticIndexChange = 0
+    fun addStaticReplacement(range: IntRange, replacement: String) {
+      replacements.add(Pair(range, replacement))
+      staticIndexChange += replacement.length - range.count()
+    }
+    // Stores the index change beteen the given statement and the sql string in the generated code due to replacements
+    // with dynamic (calculated at runtime) text due to conditional replacmenet (null checks) or arry arguments (`IN ?`)
+    val dynamicIndexChanges = mutableListOf<String>()
+
+    // add a dynamic replacement with a condition and two possible actual replacements
+    fun addDynamicReplacement(range: IntRange, condition: String, trueReplacement: String, falseReplacement: String) {
+      val block = CodeBlock.of("if ($condition) \"$trueReplacement\" else \"$falseReplacement\"")
+      replacements.add(range to "\${ $block }")
+      staticIndexChange -= range.count()
+      if (trueReplacement.length == falseReplacement.length) {
+        staticIndexChange += trueReplacement.length
+      } else {
+        val indexChangeBlock = CodeBlock.of("(if ($condition) ${trueReplacement.length} else ${falseReplacement.length})")
+        dynamicIndexChanges.add(indexChangeBlock.toString())
+      }
+    }
+
+    // add a dynamic replacement with a string variable calculated at runtime
+    fun addDynamicReplacement(range: IntRange, runtimeStringVariable: String) {
+      staticIndexChange -= range.count()
+      replacements.add(range to "\$$runtimeStringVariable")
+      dynamicIndexChanges.add("$runtimeStringVariable.length")
+    }
+
+    val argumentIndices = mutableListOf<Pair<String, Boolean>>()
 
     var needsFreshStatement = false
 
@@ -139,13 +175,16 @@ abstract class QueryGenerator(
       bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
     // For each argument in the sql
-    orderedBindArgs.forEach { (_, argument, bindArg) ->
+    orderedBindArgs.forEach { (position, argument, bindArg) ->
       val type = argument.type
       // Need to replace the single argument with a group of indexed arguments, calculated at
       // runtime from the list parameter:
       // val idIndexes = id.mapIndexed { index, _ -> "?${previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
       val offset = (precedingArrays.map { "$it.size" } + "$nonArrayBindArgsCount")
         .joinToString(separator = " + ").replace(" + 0", "")
+
+      // fun not val since `dynamicIndexChanges` could change after this line and before use.
+      fun replacementOffset() = dynamicIndexChanges.ifEmpty { listOf(0) }.joinToString(separator = " + ")
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
@@ -156,10 +195,6 @@ abstract class QueryGenerator(
             """.trimMargin(),
           )
         }
-
-        // Replace the single bind argument with the array of bind arguments:
-        // WHERE id IN ${idIndexes}
-        replacements.add(bindArg.range to "\$${type.name}Indexes")
 
         // Perform the necessary binds:
         // id.forEachIndex { index, parameter ->
@@ -177,7 +212,22 @@ abstract class QueryGenerator(
         )
 
         precedingArrays.add(type.name)
-        argumentCounts.add("${type.name}.size")
+        // add list of values to arguments index list
+        // id.mapIndexed { index, _ -> <offset> + <dynamically_calculated_offset> + 2*index + 1 }
+        // the index calculation depends on `createArguments`: every argument requires 2 chars ('(?' or ',?').
+        // Therefor we mulitply the index by two to calculate the correct offset
+        argumentIndices.add(
+          Pair(
+            """
+          |${type.name}.mapIndexed { index, _ -> ${bindArg.range.start - statement.range.start + staticIndexChange} + ${replacementOffset()} + 2*index + 1 }
+            """.trimMargin().replace(" + 0", ""),
+            true,
+          ),
+        )
+
+        // Replace the single bind argument with the array of bind arguments:
+        // WHERE id IN ${idIndexes}
+        addDynamicReplacement(bindArg.range, "${type.name}Indexes")
       } else {
         val bindParameter = bindArg?.bindParameter as? BindParameterMixin
         if (bindParameter == null || bindParameter.text != "DEFAULT") {
@@ -197,8 +247,7 @@ abstract class QueryGenerator(
                 nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
               }
 
-              val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
-              replacements.add(symbol.range to "\${ $block }")
+              addDynamicReplacement(symbol.range, "${type.name} == null", nullableEquality, symbol.text)
             }
           }
 
@@ -206,11 +255,22 @@ abstract class QueryGenerator(
           // statement.bindLong(0, id)
           bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
 
+          // add replacement of a single values to the arguments
+          // <offset> + <dynamically_calculated_offset>
+          val offset = bindArg?.range?.start ?: position
+          argumentIndices.add(
+            Pair(
+              "${offset - statement.range.start + staticIndexChange} + ${replacementOffset()}"
+                .replace(" + 0", ""),
+              false,
+            ),
+          )
+
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects
           // :name becomes ?
-          if (bindParameter != null) {
-            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
+          if (bindArg != null) {
+            addStaticReplacement(bindArg.range, "?")
           }
         }
       }
@@ -231,17 +291,38 @@ abstract class QueryGenerator(
     // statement = database.prepareStatement("SELECT * FROM test")
     val isNamedQuery = query is NamedQuery &&
       (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
-    if (nonArrayBindArgsCount != 0) {
-      argumentCounts.add(0, nonArrayBindArgsCount.toString())
+    val offsetList = when {
+      argumentIndices.isEmpty() ->
+        // no arguments, offset list is empty
+        "emptyList()"
+      argumentIndices.size == 1 && argumentIndices[0].second ->
+        // there is only one argument and its an array argument => it can be used directly, without another list around it
+        argumentIndices[0].first
+      argumentIndices.any { it.second } -> {
+        // at least one argument is an array argument  -> calculate list of lists and flatten
+        val (indicesSublist, inSubList) = argumentIndices.fold(Pair("", false)) { (listArg, inSubList), (index, isArray) ->
+          Pair(
+            listArg + when {
+              !inSubList && !isArray -> ", listOf($index" // start new sub list
+              inSubList && !isArray -> ", $index" // continue existing sub list
+              !inSubList && isArray -> ", $index" // not in sub list and no need to start a new one
+              else -> "), $index" // end existing sub list before starting a new one
+            },
+            !isArray,
+          )
+        }
+        "listOf(${indicesSublist.substring(2)}${if (inSubList) ")" else ""}).flatten()"
+      }
+      else ->
+        // no array arguments, claculate flat list
+        argumentIndices.map { it.first }.joinToString(", ", "listOf(", ")")
     }
-    val arguments = mutableListOf<Any>(
-      statement.rawSqlText(replacements),
-      argumentCounts.ifEmpty { listOf(0) }.joinToString(" + "),
-    )
+
+    val arguments = mutableListOf<Any>(statement.rawSqlText(replacements), offsetList)
 
     var binder: String
 
-    if (argumentCounts.isEmpty()) {
+    if (argumentIndices.isEmpty()) {
       binder = ""
     } else {
       val binderLambda = CodeBlock.builder()

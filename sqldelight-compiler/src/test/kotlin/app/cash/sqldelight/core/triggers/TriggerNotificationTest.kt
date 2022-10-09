@@ -50,7 +50,7 @@ class TriggerNotificationTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id)
       |        bindString(1, value_)
       |      }
@@ -103,7 +103,7 @@ class TriggerNotificationTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |DELETE FROM data
       |      |WHERE id = ?
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(28)) {
       |        bindLong(0, id)
       |      }
       |  notifyQueries(-1854133518) { emit ->
@@ -156,7 +156,7 @@ class TriggerNotificationTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 37)) {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
@@ -210,7 +210,7 @@ class TriggerNotificationTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 37)) {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
@@ -265,7 +265,7 @@ class TriggerNotificationTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 37)) {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
@@ -320,7 +320,7 @@ class TriggerNotificationTest {
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(24, 37)) {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
@@ -373,7 +373,7 @@ class TriggerNotificationTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(37, 40)) {
       |        bindLong(0, id)
       |        bindString(1, value)
       |      }
@@ -427,7 +427,7 @@ class TriggerNotificationTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(37, 40)) {
       |        bindLong(0, id)
       |        bindString(1, value)
       |      }
@@ -482,7 +482,7 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteAllFoos(): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
+      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, emptyList())
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("bar")
       |    emit("foo")

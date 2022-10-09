@@ -25,6 +25,7 @@ import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.IntermediateType
@@ -75,14 +76,23 @@ abstract class BindableQuery(
    */
   val arguments: List<Argument> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
+      val offset = statement.insertStmtValues?.childOfType(SqlTypes.BIND_EXPR)!!.range.start
       return@lazy statement.columns.mapIndexed { index, column ->
         Argument(
-          index + 1,
-          column.type().let {
+          index = index + 1,
+          type = column.type().let {
             it.copy(
               name = "${allocateName(statement.tableName)}.${it.name}",
             )
           },
+          // for every argument after the first there are 3 characters inserted. e.g.:
+          // (Assuming a table with 2 columns)
+          // `INSERT ... VALUES ?` is replaced by
+          // `INSERT ... VALUES (?, ?, ?)
+          // the first argument starts at the offset of the original questionmark + 1, every following ? is further
+          // offset by 3 characters: the last questionmark, one comma and a space. Therefor the actual offset for each
+          // argument is calculated by <offset of the replaced questionmark> + 1 + 3 * <number of previous arguments>
+          positions = mutableListOf(offset + 3 * index + 1),
         )
       }
     }
@@ -203,6 +213,7 @@ abstract class BindableQuery(
     val index: Int,
     val type: IntermediateType,
     val bindArgs: MutableList<SqlBindExpr> = mutableListOf(),
+    val positions: MutableList<Int> = mutableListOf(),
   )
 
   companion object {

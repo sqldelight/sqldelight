@@ -110,7 +110,7 @@ class OptimisticLockTest {
       |      |WHERE
       |      |  id = ? AND
       |      |  version = ?
-      |      ""${'"'}.trimMargin(), 4) {
+      |      ""${'"'}.trimMargin(), listOf(25, 40, 59, 77)) {
       |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
       |        bindString(0, text)
       |        bindLong(1, version.version.toLong())

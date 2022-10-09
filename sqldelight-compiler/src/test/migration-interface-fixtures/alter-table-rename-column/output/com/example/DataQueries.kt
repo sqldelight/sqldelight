@@ -13,7 +13,7 @@ public class DataQueries(
     driver.execute(-2118611703, """
         |INSERT INTO test
         |VALUES (?, ?)
-        """.trimMargin(), 2) {
+        """.trimMargin(), listOf(25, 28)) {
           check(this is JdbcPreparedStatement)
           bindString(0, test.third)
           bindString(1, test.second?.let { testAdapter.secondAdapter.encode(it) })

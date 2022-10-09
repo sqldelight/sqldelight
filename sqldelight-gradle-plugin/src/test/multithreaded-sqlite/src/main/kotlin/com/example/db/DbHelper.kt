@@ -53,21 +53,21 @@ class DbHelper(
         check(cursor.next())
         return cursor.getLong(0)!!.toInt()
       }
-      return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, 0, null).value
+      return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, emptyList(), null).value
     }
     set(value) {
-      driver.execute(null, "PRAGMA user_version = $value;", 0, null)
+      driver.execute(null, "PRAGMA user_version = $value;", emptyList(), null)
     }
 
   var journalMode: String = journalMode
     private set(value) {
-      driver.execute(null, "PRAGMA journal_mode = $value;", 0, null)
+      driver.execute(null, "PRAGMA journal_mode = $value;", emptyList(), null)
       field = value
     }
 
   var foreignKeys: Boolean = foreignKeys
     set(value) {
-      driver.execute(null, "PRAGMA foreign_keys = ${if (value) 1 else 0};", 0, null)
+      driver.execute(null, "PRAGMA foreign_keys = ${if (value) 1 else 0};", emptyList(), null)
       field = value
     }
 }

@@ -39,7 +39,7 @@ abstract class QueryTest {
                 value TEXT NOT NULL
                );
             """.trimIndent(),
-            0,
+            emptyList(),
           )
           return QueryResult.Unit
         }
@@ -164,7 +164,7 @@ abstract class QueryTest {
   }
 
   private fun insertTestData(testData: TestData) {
-    driver.execute(1, "INSERT INTO test VALUES (?, ?)", 2) {
+    driver.execute(1, "INSERT INTO test VALUES (?, ?)", listOf(25, 28)) {
       bindLong(0, testData.id)
       bindString(1, testData.value)
     }
@@ -173,7 +173,7 @@ abstract class QueryTest {
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(mapper) {
       override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
-        return driver.executeQuery(0, "SELECT * FROM test", mapper, 0, null)
+        return driver.executeQuery(0, "SELECT * FROM test", mapper, emptyList(), null)
       }
 
       override fun addListener(listener: Listener) {

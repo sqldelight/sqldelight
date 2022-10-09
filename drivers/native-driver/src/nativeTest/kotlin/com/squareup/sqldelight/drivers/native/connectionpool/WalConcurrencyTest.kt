@@ -104,7 +104,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
   private fun testDataQuery(): Query<TestData> {
     return object : Query<TestData>(mapper) {
       override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
-        return driver.executeQuery(0, "SELECT * FROM test", mapper, 0, null)
+        return driver.executeQuery(0, "SELECT * FROM test", mapper, emptyList(), null)
       }
 
       override fun addListener(listener: Listener) {

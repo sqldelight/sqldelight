@@ -832,7 +832,7 @@ class InterfaceGeneration {
       |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
       |        driver.executeQuery(null,
       |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
-      |        1) {
+      |        listOf(35 + (if (album_id == null) 2 else 1))) {
       |      bindLong(0, album_id)
       |    }
       |
@@ -907,7 +907,7 @@ class InterfaceGeneration {
       |    driver.execute(${result.compiledFile.namedMutators[0].id}, ""${'"'}
       |        |INSERT INTO subscriptionEntity(user_id2)
       |        |VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(49)) {
       |          check(this is JdbcPreparedStatement)
       |          bindLong(0, user_id2.toLong())
       |        }
@@ -935,7 +935,7 @@ class InterfaceGeneration {
       |    |  VALUES (?)
       |    |  RETURNING user_id AS insert_id
       |    |) SELECT insert_id FROM inserted_ids
-      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |    ""${'"'}.trimMargin(), mapper, listOf(73)) {
       |      check(this is JdbcPreparedStatement)
       |      bindString(0, slack_user_id)
       |    }
@@ -1056,7 +1056,7 @@ class InterfaceGeneration {
       |    |)
       |    |SELECT descendants.id, descendants.parent_id
       |    |FROM descendants
-      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |    ""${'"'}.trimMargin(), mapper, listOf(91)) {
       |      bindLong(0, id)
       |    }
       |

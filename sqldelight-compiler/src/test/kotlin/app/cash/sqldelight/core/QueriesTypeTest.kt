@@ -89,13 +89,13 @@ class QueriesTypeTest {
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE other (
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -175,7 +175,7 @@ class QueriesTypeTest {
       |    driver.execute(${insert.id}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), 2) {
+      |        ""${'"'}.trimMargin(), listOf(25, 28)) {
       |          bindLong(0, id)
       |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
@@ -201,7 +201,7 @@ class QueriesTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |    ""${'"'}.trimMargin(), mapper, listOf(30)) {
       |      bindLong(0, id)
       |    }
       |
@@ -273,7 +273,7 @@ class QueriesTypeTest {
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -306,7 +306,7 @@ class QueriesTypeTest {
       |    driver.execute(${insert.id}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), 2) {
+      |        ""${'"'}.trimMargin(), listOf(25, 28)) {
       |          bindLong(0, data_.id)
       |          bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
@@ -368,7 +368,7 @@ class QueriesTypeTest {
       |          |  id TEXT PRIMARY KEY,
       |          |  value INTEGER NOT NULL
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -448,7 +448,7 @@ class QueriesTypeTest {
       |          |  id,
       |          |  value
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -503,7 +503,7 @@ class QueriesTypeTest {
       |    driver.execute(${insert.id}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), 2) {
+      |        ""${'"'}.trimMargin(), listOf(25, 28)) {
       |          bindLong(0, id)
       |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
@@ -529,7 +529,7 @@ class QueriesTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |    ""${'"'}.trimMargin(), mapper, listOf(30)) {
       |      bindLong(0, id)
       |    }
       |
@@ -603,7 +603,7 @@ class QueriesTypeTest {
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -657,7 +657,7 @@ class QueriesTypeTest {
       |    driver.execute(${insert.id}, ""${'"'}
       |        |INSERT INTO search
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), 2) {
+      |        ""${'"'}.trimMargin(), listOf(27, 30)) {
       |          bindLong(0, id)
       |          bindString(1, value_)
       |        }
@@ -683,7 +683,7 @@ class QueriesTypeTest {
       |    |SELECT id, offsets(search)
       |    |FROM search
       |    |WHERE search MATCH ?
-      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |    ""${'"'}.trimMargin(), mapper, listOf(58)) {
       |      bindString(0, search)
       |    }
       |

@@ -95,7 +95,7 @@ private class SimpleQuery<out RowType : Any>(
   mapper: (SqlCursor) -> RowType,
 ) : Query<RowType>(mapper) {
   override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
-    return driver.executeQuery(identifier, query, mapper, 0, null)
+    return driver.executeQuery(identifier, query, mapper, emptyList(), null)
   }
 
   override fun toString() = "$fileName:$label"
@@ -118,7 +118,7 @@ private class SimpleExecutableQuery<out RowType : Any>(
   mapper: (SqlCursor) -> RowType,
 ) : ExecutableQuery<RowType>(mapper) {
   override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
-    return driver.executeQuery(identifier, query, mapper, 0, null)
+    return driver.executeQuery(identifier, query, mapper, emptyList(), null)
   }
 
   override fun toString() = "$fileName:$label"

@@ -42,7 +42,7 @@ Database.Schema.migrateWithCallbacks(
     driver = database,
     oldVersion = 0,
     newVersion = Database.Schema.version,
-    AfterVersion(3) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+    AfterVersion(3) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", emptyList()) },
 )
 ```
 
@@ -53,7 +53,7 @@ Database.Schema.migrateWithCallbacks(
     driver = database,
     oldVersion = 0,
     newVersion = Database.Schema.version,
-    AfterVersionWithDriver(3) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+    AfterVersionWithDriver(3) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", emptyList()) },
 )
 ```
 

@@ -33,7 +33,7 @@ interface SqlDriver : Closeable {
    *   successfully. The generic result of the lambda is returned to the caller, as soon as the
    *   mutual exclusion on the database connection ends. The cursor **must not escape** the block
    *   scope.
-   * @param [parameters] The number of bindable parameters [sql] contains.
+   * @param [parameterIndicess] The indices of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
    */
@@ -41,7 +41,7 @@ interface SqlDriver : Closeable {
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)? = null,
   ): QueryResult<R>
 
@@ -51,7 +51,7 @@ interface SqlDriver : Closeable {
    * @param [identifier] An opaque, unique value that can be used to implement any driver-side
    *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
    * @param [sql] The SQL string to be executed.
-   * @param [parameters] The number of bindable parameters [sql] contains.
+   * @param [parameterIndicess] The indices of bindable parameters [sql] contains.
    * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
    *   statement.
    *
@@ -63,7 +63,7 @@ interface SqlDriver : Closeable {
   fun execute(
     identifier: Int?,
     sql: String,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)? = null,
   ): QueryResult<Long>
 

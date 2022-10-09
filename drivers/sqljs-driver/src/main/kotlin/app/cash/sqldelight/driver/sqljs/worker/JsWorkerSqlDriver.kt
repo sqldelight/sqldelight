@@ -36,7 +36,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
   private var messageCounter = 0
   private var transaction: Transacter.Transaction? = null
 
-  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (SqlCursor) -> R, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<R> {
+  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (SqlCursor) -> R, parameterIndices: List<Int>, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<R> {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
@@ -61,7 +61,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     }
   }
 
-  override fun execute(identifier: Int?, sql: String, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<Long> {
+  override fun execute(identifier: Int?, sql: String, parameterIndices: List<Int>, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<Long> {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 

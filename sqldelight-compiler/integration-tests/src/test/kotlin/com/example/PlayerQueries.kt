@@ -165,7 +165,7 @@ public class PlayerQueries(
     driver.execute(-1595716666, """
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
-        """.trimMargin(), 4) {
+        """.trimMargin(), listOf(27, 30, 33, 36)) {
           bindString(0, name.name)
           bindLong(1, number)
           bindString(2, team?.let { it.name })
@@ -182,7 +182,7 @@ public class PlayerQueries(
         |UPDATE player
         |SET team = ?
         |WHERE number IN $numberIndexes
-        """.trimMargin(), 1 + number.size) {
+        """.trimMargin(), listOf(listOf(25), number.mapIndexed { index, _ ->  44 + 2 * index }).flatten()) {
           bindString(0, team?.let { it.name })
           number.forEachIndexed { index, number_ ->
             bindLong(index + 1, number_)
@@ -194,11 +194,11 @@ public class PlayerQueries(
   }
 
   public fun foreignKeysOn(): Unit {
-    driver.execute(-1596558949, """PRAGMA foreign_keys = 1""", 0)
+    driver.execute(-1596558949, """PRAGMA foreign_keys = 1""", emptyList())
   }
 
   public fun foreignKeysOff(): Unit {
-    driver.execute(2046279987, """PRAGMA foreign_keys = 0""", 0)
+    driver.execute(2046279987, """PRAGMA foreign_keys = 0""", emptyList())
   }
 
   private inner class InsertAndReturnQuery<out T : Any>(
@@ -213,7 +213,7 @@ public class PlayerQueries(
       driver.execute(-452007405, """
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
-          """.trimMargin(), 4) {
+          """.trimMargin(), listOf(29, 32, 35, 38)) {
             bindString(0, name.name)
             bindLong(1, number)
             bindString(2, team?.let { it.name })
@@ -223,7 +223,7 @@ public class PlayerQueries(
           |SELECT *
           |  FROM player
           |  WHERE player.rowid = last_insert_rowid()
-          """.trimMargin(), mapper, 0)
+          """.trimMargin(), mapper, emptyList())
     }
 
     public override fun toString(): String = "Player.sq:insertAndReturn"
@@ -246,7 +246,7 @@ public class PlayerQueries(
     |SELECT *
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
-    """.trimMargin(), mapper, 1) {
+    """.trimMargin(), mapper, listOf(33 + if (team == null) 2 else 1)) {
       bindString(0, team?.let { it.name })
     }
 
@@ -271,7 +271,7 @@ public class PlayerQueries(
           |SELECT *
           |FROM player
           |WHERE number IN $numberIndexes
-          """.trimMargin(), mapper, number.size) {
+          """.trimMargin(), mapper, number.mapIndexed { index, _ -> 38 + 2 * index }) {
             number.forEachIndexed { index, number_ ->
               bindLong(index, number_)
             }

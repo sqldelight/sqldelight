@@ -26,7 +26,7 @@ class KeyedQueryPagingSourceTest {
 
   @Before fun before() {
     driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
+    driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", emptyList())
     (0L until 10L).forEach { this.insert(it) }
     transacter = object : TransacterImpl(driver) {}
   }
@@ -177,7 +177,7 @@ class KeyedQueryPagingSourceTest {
     """.trimMargin()
 
     return object : Query<Long>({ cursor -> cursor.getLong(0)!! }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 3, sql = sql, mapper = mapper, parameters = 2) {
+      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 3, sql = sql, mapper = mapper, parameterIndices = listOf(107, 108)) {
         bindLong(0, limit)
         bindLong(1, anchor)
       }
@@ -197,7 +197,7 @@ class KeyedQueryPagingSourceTest {
     return object : Query<Long>(
       { cursor -> cursor.getLong(0)!! },
     ) {
-      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameters = 2) {
+      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameterIndices = listOf(43, 59)) {
         bindLong(0, beginInclusive)
         bindLong(1, endExclusive)
       }
@@ -208,7 +208,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   private fun insert(value: Long, db: SqlDriver = driver) {
-    db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
+    db.execute(0, "INSERT INTO testTable (value) VALUES (?)", listOf(38)) {
       bindLong(0, value)
     }
   }

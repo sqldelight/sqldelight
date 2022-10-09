@@ -197,7 +197,7 @@ internal class DatabaseGenerator(
       sourceFolders.flatMap { it.queryFiles() }
         .sortedBy { it.name }
         .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
-          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, emptyList()).await()" else "$DRIVER_NAME.execute(null, %L, emptyList())"
           createFunction.addStatement(statement, sqlText.toCodeLiteral())
         }
     } else {
@@ -208,7 +208,7 @@ internal class DatabaseGenerator(
       orderedMigrations.flatMap { it.sqlStatements() }
         .filter { it.isSchema() }
         .forEach {
-          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, emptyList()).await()" else "$DRIVER_NAME.execute(null, %L, emptyList())"
           createFunction.addStatement(statement, it.rawSqlText().toCodeLiteral())
         }
     }
@@ -230,7 +230,7 @@ internal class DatabaseGenerator(
         )
         migrationFile.sqlStatements().forEach {
           migrateFunction.addStatement(
-            if (generateAsync) "$DRIVER_NAME.execute(null, %S, 0).await()" else "$DRIVER_NAME.execute(null, %S, 0)",
+            if (generateAsync) "$DRIVER_NAME.execute(null, %S, emptyList()).await()" else "$DRIVER_NAME.execute(null, %S, emptyList())",
             it.rawSqlText(),
           )
         }

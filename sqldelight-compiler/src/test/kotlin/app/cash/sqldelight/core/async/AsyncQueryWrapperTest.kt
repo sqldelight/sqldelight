@@ -84,7 +84,7 @@ class AsyncQueryWrapperTest {
         |          |  value2 TEXT,
         |          |  value3 REAL
         |          |)
-        |          ""${'"'}.trimMargin(), 0).await()
+        |          ""${'"'}.trimMargin(), emptyList()).await()
         |    }
         |
         |    public override fun migrate(
@@ -97,13 +97,13 @@ class AsyncQueryWrapperTest {
         |            |CREATE TABLE test (
         |            |  value1 TEXT
         |            |)
-        |            ""${'"'}.trimMargin(), 0).await()
+        |            ""${'"'}.trimMargin(), emptyList()).await()
         |      }
         |      if (oldVersion <= 1 && newVersion > 1) {
-        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0).await()
+        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", emptyList()).await()
         |      }
         |      if (oldVersion <= 2 && newVersion > 2) {
-        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0).await()
+        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", emptyList()).await()
         |      }
         |    }
         |  }

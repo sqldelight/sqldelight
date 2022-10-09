@@ -19,21 +19,21 @@ class TestDb(
   var eveId: Long = 0
 
   init {
-    db.execute(null, "PRAGMA foreign_keys=ON", 0)
+    db.execute(null, "PRAGMA foreign_keys=ON", emptyList())
 
-    db.execute(null, CREATE_EMPLOYEE, 0)
+    db.execute(null, CREATE_EMPLOYEE, emptyList())
     aliceId = employee(Employee("alice", "Alice Allison"))
     bobId = employee(Employee("bob", "Bob Bobberson"))
     eveId = employee(Employee("eve", "Eve Evenson"))
 
-    db.execute(null, CREATE_MANAGER, 0)
+    db.execute(null, CREATE_MANAGER, emptyList())
     manager(eveId, aliceId)
   }
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(mapper) {
       override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
-        return db.executeQuery(null, query, mapper, 0)
+        return db.executeQuery(null, query, mapper, emptyList())
       }
 
       override fun addListener(listener: Listener) {
@@ -62,13 +62,13 @@ class TestDb(
       |VALUES (?, ?)
       |
       """.trimMargin(),
-      2,
+      listOf(54, 57),
     ) {
       bindString(0, employee.username)
       bindString(1, employee.name)
     }
     notify(TABLE_EMPLOYEE)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0).value
+    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, emptyList()).value
   }
 
   fun manager(
@@ -82,13 +82,13 @@ class TestDb(
       |VALUES (?, ?)
       |
       """.trimMargin(),
-      2,
+      listOf(62, 65),
     ) {
       bindLong(0, employeeId)
       bindLong(1, managerId)
     }
     notify(TABLE_MANAGER)
-    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, 0).value
+    return db.executeQuery(2, "SELECT last_insert_rowid()", ::getLong, emptyList()).value
   }
 
   companion object {

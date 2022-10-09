@@ -91,13 +91,13 @@ class AsyncQueriesTypeTest {
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0).await()
+      |          ""${'"'}.trimMargin(), emptyList()).await()
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE other (
       |          |  id INTEGER PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0).await()
+      |          ""${'"'}.trimMargin(), emptyList()).await()
       |    }
       |
       |    public override fun migrate(
@@ -177,7 +177,7 @@ class AsyncQueriesTypeTest {
       |    driver.execute(${insert.id}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
-      |        ""${'"'}.trimMargin(), 2) {
+      |        ""${'"'}.trimMargin(), listOf(25, 28)) {
       |          bindLong(0, id)
       |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }.await()
@@ -203,7 +203,7 @@ class AsyncQueriesTypeTest {
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?
-      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |    ""${'"'}.trimMargin(), mapper, listOf(30)) {
       |      bindLong(0, id)
       |    }
       |

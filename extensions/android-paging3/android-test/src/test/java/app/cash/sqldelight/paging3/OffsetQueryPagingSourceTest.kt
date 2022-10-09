@@ -47,7 +47,7 @@ class OffsetQueryPagingSourceTest {
   @Before
   fun init() {
     driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
+    driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", emptyList())
     transacter = object : TransacterImpl(driver) {}
   }
 
@@ -649,7 +649,7 @@ class OffsetQueryPagingSourceTest {
       TestItem(cursor.getLong(0)!!)
     },
   ) {
-    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
+    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, listOf(30, 39)) {
       bindLong(0, limit)
       bindLong(1, offset)
     }
@@ -680,7 +680,7 @@ class OffsetQueryPagingSourceTest {
 
   private fun insertItems(items: List<TestItem>) {
     items.forEach {
-      driver.execute(0, "INSERT INTO TestItem (id) VALUES (?)", 1) {
+      driver.execute(0, "INSERT INTO TestItem (id) VALUES (?)", listOf(34)) {
         bindLong(0, it.id)
       }
     }
@@ -688,14 +688,14 @@ class OffsetQueryPagingSourceTest {
 
   private fun deleteItem(item: TestItem): Long =
     driver
-      .execute(0, "DELETE FROM TestItem WHERE id = ?;", 1) {
+      .execute(0, "DELETE FROM TestItem WHERE id = ?;", listOf(32)) {
         bindLong(0, item.id)
       }
       .value
 
   private fun deleteItems(range: IntRange): Long =
     driver
-      .execute(0, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
+      .execute(0, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", listOf(33, 45)) {
         bindLong(0, range.first.toLong())
         bindLong(1, range.last.toLong())
       }

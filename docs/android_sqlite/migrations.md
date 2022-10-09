@@ -9,7 +9,7 @@ val driver: SqlDriver = AndroidSqliteDriver(
     name = "test.db",
     callback = AndroidSqliteDriver.Callback(
         schema = Database.Schema,
-        AfterVersion(3) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+        AfterVersion(3) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", emptyList()) },
     )
 )
 ```

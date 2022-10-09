@@ -14,14 +14,44 @@ import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 
 class R2dbcDriver(private val connection: Connection) : SqlDriver {
+  private fun calcParameterReplacementAdditionalLength(parameters: Int): Int {
+    var numbers = 9 // numbers with current length
+    var strLen = 1 // length of each number in characters
+    var remaining = parameters // numbers not included in sum
+    var lengthSum = 0
+    while (remaining > numbers) {
+      remaining -= numbers
+      lengthSum += strLen * numbers
+      numbers *= 10
+      strLen += 1
+    }
+    return lengthSum + remaining * strLen
+  }
+
+  private fun replaceParameters(sql: String, parameterIndices: List<Int>): String {
+    val additionalSpace = calcParameterReplacementAdditionalLength(parameterIndices.size)
+    return buildString(sql.length + additionalSpace) {
+      var lastIndex = 0
+      parameterIndices.forEachIndexed { parameterIndex, stringIndex ->
+        append(sql.substring(lastIndex, stringIndex))
+        append("$")
+        append(parameterIndex + 1)
+        lastIndex = stringIndex + 1
+      }
+      if (lastIndex < sql.length) {
+        append(sql.substring(lastIndex))
+      }
+    }
+  }
+
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
-    val prepared = connection.createStatement(sql).also { statement ->
+    val prepared = connection.createStatement(replaceParameters(sql, parameterIndices)).also { statement ->
       R2dbcPreparedStatement(statement).apply { if (binders != null) this.binders() }
     }
 
@@ -39,10 +69,10 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
   override fun execute(
     identifier: Int?,
     sql: String,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
-    val prepared = connection.createStatement(sql).also { statement ->
+    val prepared = connection.createStatement(replaceParameters(sql, parameterIndices)).also { statement ->
       R2dbcPreparedStatement(statement).apply { if (binders != null) this.binders() }
     }
 

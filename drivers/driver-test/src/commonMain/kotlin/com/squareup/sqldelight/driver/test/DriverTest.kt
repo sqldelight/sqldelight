@@ -32,7 +32,7 @@ abstract class DriverTest {
               |  value TEXT
               |);
         """.trimMargin(),
-        0,
+        emptyList(),
       )
       driver.execute(
         1,
@@ -45,7 +45,7 @@ abstract class DriverTest {
               |  real_value REAL
               |);
         """.trimMargin(),
-        0,
+        emptyList(),
       )
       return QueryResult.Unit
     }
@@ -67,7 +67,7 @@ abstract class DriverTest {
         it.next()
         it.getLong(0)
       }
-      driver.executeQuery(null, "SELECT changes()", mapper, 0).value
+      driver.executeQuery(null, "SELECT changes()", mapper, emptyList()).value
     }
   }
 
@@ -84,10 +84,10 @@ abstract class DriverTest {
   @Test
   fun insertCanRunMultipleTimes() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
     fun query(mapper: (SqlCursor) -> Unit) {
-      driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
+      driver.executeQuery(3, "SELECT * FROM test", mapper, emptyList())
     }
 
     query {
@@ -127,7 +127,7 @@ abstract class DriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    driver.execute(5, "DELETE FROM test", 0)
+    driver.execute(5, "DELETE FROM test", emptyList())
     assertEquals(2, changes())
 
     query {
@@ -138,7 +138,7 @@ abstract class DriverTest {
   @Test
   fun queryCanRunMultipleTimes() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
 
     insert {
@@ -153,7 +153,7 @@ abstract class DriverTest {
     assertEquals(1, changes())
 
     fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
-      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
+      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, listOf(33), binders)
     }
 
     query(
@@ -182,7 +182,7 @@ abstract class DriverTest {
 
   @Test fun sqlResultSetGettersReturnNullIfTheColumnValuesAreNULL() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", listOf(37, 40, 43, 46, 49), binders)
     }
     insert {
       bindLong(0, 1)
@@ -201,6 +201,6 @@ abstract class DriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
-    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, emptyList())
   }
 }

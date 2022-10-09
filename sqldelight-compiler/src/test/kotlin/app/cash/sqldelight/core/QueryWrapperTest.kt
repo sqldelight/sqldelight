@@ -62,11 +62,11 @@ class QueryWrapperTest {
       |          |  _id INTEGER NOT NULL PRIMARY KEY,
       |          |  value TEXT
       |          |)
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      driver.execute(null, ""${'"'}
       |          |INSERT INTO test_table
       |          |VALUES (1, 'test')
-      |          ""${'"'}.trimMargin(), 0)
+      |          ""${'"'}.trimMargin(), emptyList())
       |      return QueryResult.Unit
       |    }
       |
@@ -151,13 +151,13 @@ class QueryWrapperTest {
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
         |          |  value TEXT
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test_table2(
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
         |          |  value TEXT
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -224,12 +224,12 @@ class QueryWrapperTest {
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE child(
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -317,13 +317,13 @@ class QueryWrapperTest {
         |          |  id INTEGER PRIMARY KEY,
         |          |  child_id INTEGER REFERENCES child(id)
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE child(
         |          |  id INTEGER PRIMARY KEY,
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -400,25 +400,25 @@ class QueryWrapperTest {
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE child1(
         |          |  id INTEGER PRIMARY KEY,
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE child2(
         |          |  id INTEGER PRIMARY KEY,
         |          |  parent_id INTEGER REFERENCES parent(id)
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE grandchild(
         |          |  parent1_id INTEGER REFERENCES child1(id),
         |          |  parent2_id INTEGER REFERENCES child2(id)
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -481,12 +481,12 @@ class QueryWrapperTest {
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW A AS
         |          |SELECT 1
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW B AS
         |          |SELECT *
         |          |FROM A
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -555,15 +555,15 @@ class QueryWrapperTest {
         |          |CREATE TABLE test (
         |          |  value TEXT
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, ""${'"'}
         |          |CREATE TRIGGER A
         |          |BEFORE DELETE ON test
         |          |BEGIN
         |          |INSERT INTO test DEFAULT VALUES;
         |          |END
-        |          ""${'"'}.trimMargin(), 0)
-        |      driver.execute(null, "CREATE INDEX B ON test(value)", 0)
+        |          ""${'"'}.trimMargin(), emptyList())
+        |      driver.execute(null, "CREATE INDEX B ON test(value)", emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -651,7 +651,7 @@ class QueryWrapperTest {
         |          |  value2 TEXT,
         |          |  value3 REAL
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      return QueryResult.Unit
         |    }
         |
@@ -665,13 +665,13 @@ class QueryWrapperTest {
         |            |CREATE TABLE test (
         |            |  value1 TEXT
         |            |)
-        |            ""${'"'}.trimMargin(), 0)
+        |            ""${'"'}.trimMargin(), emptyList())
         |      }
         |      if (oldVersion <= 1 && newVersion > 1) {
-        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
+        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", emptyList())
         |      }
         |      if (oldVersion <= 2 && newVersion > 2) {
-        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
+        |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", emptyList())
         |      }
         |      return QueryResult.Unit
         |    }
@@ -748,7 +748,7 @@ class QueryWrapperTest {
         |          |  special TEXT,
         |          |  url TEXT NOT NULL
         |          |)
-        |          ""${'"'}.trimMargin(), 0)
+        |          ""${'"'}.trimMargin(), emptyList())
         |      driver.execute(null, buildString(75360) {
         |          append(""${'"'}
         |          |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
@@ -766,7 +766,7 @@ class QueryWrapperTest {
         """
         |          |  ('class_01_ability_499', 'class_01', 'aaaaaaaaaaaaaaa', 1, NULL, 'https://stuff.example.com/this/is/a/bunch/of/path/data/class_01_ability_499.png')
         |          ""${'"'}.trimMargin())
-        |          }, 0)
+        |          }, emptyList())
         |      return QueryResult.Unit
         |    }
         |

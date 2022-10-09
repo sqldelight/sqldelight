@@ -118,7 +118,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
   override fun execute(
     identifier: Int?,
     sql: String,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
     val (connection, onClose) = connectionAndClose()
@@ -139,7 +139,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     val (connection, onClose) = connectionAndClose()

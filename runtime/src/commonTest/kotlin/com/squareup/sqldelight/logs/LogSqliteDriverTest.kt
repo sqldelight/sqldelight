@@ -34,7 +34,7 @@ class LogSqliteDriverTest {
   @Test
   fun insertLogsAreCorrect() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
 
     insert {
@@ -52,7 +52,7 @@ class LogSqliteDriverTest {
   @Test
   fun queryLogsAreCorrect() {
     val query = {
-      driver.executeQuery(3, "SELECT * FROM test", {}, 0)
+      driver.executeQuery(3, "SELECT * FROM test", {}, emptyList())
     }
 
     query()
@@ -66,7 +66,7 @@ class LogSqliteDriverTest {
     transacter.transaction { rollback() }
     transacter.transaction {
       val insert = { binders: SqlPreparedStatement.() -> Unit ->
-        driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+        driver.execute(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
       }
 
       insert {
@@ -91,7 +91,7 @@ class FakeSqlDriver : SqlDriver {
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     return QueryResult.Value(mapper(FakeSqlCursor()))
@@ -100,7 +100,7 @@ class FakeSqlDriver : SqlDriver {
   override fun execute(
     identifier: Int?,
     sql: String,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
     return QueryResult.Value(0)

@@ -9,16 +9,16 @@ suspend fun <R> SqlDriver.awaitQuery(
   identifier: Int?,
   sql: String,
   mapper: (SqlCursor) -> R,
-  parameters: Int,
+  parameterIndices: List<Int>,
   binders: (SqlPreparedStatement.() -> Unit)? = null,
-): R = executeQuery<R>(identifier, sql, mapper, parameters, binders).await()
+): R = executeQuery<R>(identifier, sql, mapper, parameterIndices, binders).await()
 
 suspend fun SqlDriver.await(
   identifier: Int?,
   sql: String,
-  parameters: Int,
+  parameterIndices: List<Int>,
   binders: (SqlPreparedStatement.() -> Unit)? = null,
-): Long = execute(identifier, sql, parameters, binders).await()
+): Long = execute(identifier, sql, parameterIndices, binders).await()
 
 suspend fun SqlSchema.awaitCreate(driver: SqlDriver) = create(driver).await()
 

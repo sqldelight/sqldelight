@@ -30,7 +30,7 @@ class JsDriverTest {
               |  value TEXT
               |);
         """.trimMargin(),
-        0,
+        emptyList(),
       )
       driver.execute(
         1,
@@ -43,7 +43,7 @@ class JsDriverTest {
               |  real_value REAL
               |);
         """.trimMargin(),
-        0,
+        emptyList(),
       )
       return QueryResult.Unit
     }
@@ -74,13 +74,13 @@ class JsDriverTest {
   @Test fun insert_can_run_multiple_times() = driverPromise.then { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
     fun query(mapper: (SqlCursor) -> Unit) {
-      driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
+      driver.executeQuery(3, "SELECT * FROM test", mapper, emptyList())
     }
     fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0).value
+      return driver.executeQuery(4, "SELECT changes()", mapper, emptyList()).value
     }
 
     query {
@@ -120,7 +120,7 @@ class JsDriverTest {
       assertEquals("Jake", it.getString(1))
     }
 
-    driver.execute(5, "DELETE FROM test", 0)
+    driver.execute(5, "DELETE FROM test", emptyList())
     assertEquals(2, changes { it.next(); it.getLong(0) })
 
     query {
@@ -131,10 +131,10 @@ class JsDriverTest {
   @Test fun query_can_run_multiple_times() = driverPromise.then { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
+      driver.execute(2, "INSERT INTO test VALUES (?, ?);", listOf(25, 28), binders)
     }
     fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0).value
+      return driver.executeQuery(4, "SELECT changes()", mapper, emptyList()).value
     }
 
     insert {
@@ -149,7 +149,7 @@ class JsDriverTest {
     assertEquals(1, changes { it.next(); it.getLong(0) })
 
     fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
-      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
+      driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, listOf(33), binders)
     }
     query(
       binders = {
@@ -178,10 +178,10 @@ class JsDriverTest {
   @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = driverPromise.then { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", listOf(37, 40, 43, 46, 49), binders)
     }
     fun changes(mapper: (SqlCursor) -> Long?): Long? {
-      return driver.executeQuery(4, "SELECT changes()", mapper, 0).value
+      return driver.executeQuery(4, "SELECT changes()", mapper, emptyList()).value
     }
 
     insert {
@@ -201,13 +201,13 @@ class JsDriverTest {
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
     }
-    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, emptyList())
   }
 
   @Test fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = driverPromise.then { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
-      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
+      driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", listOf(37, 40, 43, 46, 49), binders)
     }
 
     insert {
@@ -226,6 +226,6 @@ class JsDriverTest {
       it.getBytes(3)?.forEachIndexed { index, byte -> assertEquals(index.toByte(), byte) }
       assertEquals(Float.MAX_VALUE.toDouble(), it.getDouble(4))
     }
-    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
+    driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, emptyList())
   }
 }

@@ -111,14 +111,14 @@ class MySqlTest {
 
     try {
       transacter.transaction {
-        driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
-        afterRollback { driver.execute(null, "DROP TABLE throw_test", 0, null) }
+        driver.execute(null, "CREATE TABLE throw_test(some Text)", emptyList(), null)
+        afterRollback { driver.execute(null, "DROP TABLE throw_test", emptyList(), null) }
         throw ExpectedException()
       }
       Assert.fail()
     } catch (_: ExpectedException) {
       transacter.transaction {
-        driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
+        driver.execute(null, "CREATE TABLE throw_test(some Text)", emptyList(), null)
       }
     }
   }

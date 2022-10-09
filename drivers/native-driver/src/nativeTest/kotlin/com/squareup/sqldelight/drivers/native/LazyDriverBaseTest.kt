@@ -52,7 +52,7 @@ abstract class LazyDriverBaseTest {
                   |  value TEXT
                   |);
           """.trimMargin(),
-          0,
+          emptyList(),
         )
         driver.execute(
           30,
@@ -65,7 +65,7 @@ abstract class LazyDriverBaseTest {
                   |  real_value REAL
                   |);
           """.trimMargin(),
-          0,
+          emptyList(),
         )
         return QueryResult.Unit
       }

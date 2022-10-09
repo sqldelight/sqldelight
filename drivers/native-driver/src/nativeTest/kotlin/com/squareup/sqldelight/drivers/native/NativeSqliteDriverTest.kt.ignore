@@ -69,7 +69,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
     val INSERTS = 10_000
     for (i in 0 until INSERTS) {
       ops.exe {
-        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
           bindLong(1, i.toLong())
           bindString(2, "Hey $i")
         }
@@ -80,7 +80,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
     assertEquals(INSERTS.toLong(), countTestRows(driver))
     val strSet = mutableSetOf<String>()
-    val query = driver.executeQuery(2, "select id, value from test", 0)
+    val query = driver.executeQuery(2, "select id, value from test", emptyList())
     var sum = 0L
     while (query.next()) {
       strSet.add(query.getString(1)!!)
@@ -95,7 +95,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   fun `failing transaction clears lock`() {
     assertFails {
       transacter.transaction {
-        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
           bindLong(1, 1)
           bindString(2, "asdf")
         }
@@ -106,7 +106,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
     transacter.transaction {
       try {
-        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
           bindLong(1, 1)
           bindString(2, "asdf")
         }
@@ -124,7 +124,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   fun `bad bind doens't taint future binding`() {
     transacter.transaction {
       assertFails {
-        driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+        driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
           bindLong(1, 1)
           bindString(3, "asdf")
         }
@@ -132,7 +132,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
     }
 
     transacter.transaction {
-      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
         bindLong(1, 1)
         bindString(2, "asdf")
       }
@@ -144,7 +144,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   @Test
   fun `failed bind dumps sqlite statement`() {
     assertFails {
-      driver.execute(1, "insert into test(id, value) values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value) values(?, ?)", listOf(35, 38)) {
         assertEquals(0, driver.queryPool.entry.statementCache.size)
         bindLong(1, 1L)
         throw assertFails { bindLong(3, 1L) }
@@ -165,7 +165,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
           transacter.transaction {
 
             for (i in 0 until 10) {
-              driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+              driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
                 bindLong(1, i.toLong())
                 bindString(2, "Hey $i")
               }
@@ -176,16 +176,16 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
         }
 
         exeQuiet {
-          driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+          driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
             bindLong(1, i.toLong())
             bindString(3, "Hey $i")
           }
         }
 
-        driver.executeQuery(2, "select id, value from test", 0).next()
+        driver.executeQuery(2, "select id, value from test", emptyList()).next()
 
         exeQuiet {
-          driver.executeQuery(3, "select id, value from toast", 0).next()
+          driver.executeQuery(3, "select id, value from toast", emptyList()).next()
         }
       }
     }
@@ -241,7 +241,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
         transacter.transaction {
           try {
             for (j in 0 until LOOPS) {
-              conn.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+              conn.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
                 val idInt = i * LOOPS + j + start
                 bindLong(1, idInt.toLong())
                 bindString(2, "row $idInt")
@@ -260,7 +260,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
 
   @Test
   fun `query statements cached but only 1`() {
-    val stmt = { driver.executeQuery(1, "select * from test", 0) }
+    val stmt = { driver.executeQuery(1, "select * from test", emptyList()) }
 
     assertEquals(0, driver.queryPool.entry.statementCache.size)
     assertEquals(0, driver.queryPool.entry.cursorCollection.size)
@@ -307,7 +307,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   @Test
   fun `query exception clears statement`() {
     assertFails {
-      driver.executeQuery(1, "select * from test", 0) {
+      driver.executeQuery(1, "select * from test", emptyList()) {
         throw assertFails { bindLong(1, 2L) }
       }
     }
@@ -350,7 +350,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   @Test
   fun `caching by index works as expected`() {
     val transacter = transacter
-    driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+    driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
       bindLong(1, 22L)
       bindString(2, "Hey 22")
     }
@@ -359,7 +359,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
     assertEquals(0, driver.transactionPool.entry.statementCache.size)
 
     transacter.transaction {
-      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
         bindLong(1, 33L)
         bindString(2, "Hey 33")
       }
@@ -372,7 +372,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
         driver.transactionPool.entry.statementCache.entries.iterator().next().value
 
     transacter.transaction {
-      driver.execute(1, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(1, "insert into test(id, value)values(?, ?)", listOf(34, 37)) {
         bindLong(1, 34L)
         bindString(2, "Hey 34")
       }
@@ -389,7 +389,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
   @Test
   fun `null identifier doesn't cache`() {
     val transacter = transacter
-    driver.execute(null, "insert into test(id, value)values(?, ?)", 2) {
+    driver.execute(null, "insert into test(id, value)values(?, ?)", emptyList()) {
       bindLong(1, 22L)
       bindString(2, "Hey 22")
     }
@@ -399,7 +399,7 @@ abstract class NativeSqliteDriverTest : LazyDriverBaseTest() {
     assertEquals(0, driver.transactionPool.entry.statementCache.size)
 
     transacter.transaction {
-      driver.execute(null, "insert into test(id, value)values(?, ?)", 2) {
+      driver.execute(null, "insert into test(id, value)values(?, ?)", emptyList()) {
         bindLong(1, 23L)
         bindString(2, "Hey 23")
       }

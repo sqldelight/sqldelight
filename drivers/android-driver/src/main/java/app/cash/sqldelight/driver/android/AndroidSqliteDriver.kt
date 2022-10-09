@@ -165,7 +165,7 @@ class AndroidSqliteDriver private constructor(
   override fun execute(
     identifier: Int?,
     sql: String,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> = execute(identifier, { AndroidPreparedStatement(database.compileStatement(sql)) }, binders, { execute() })
 
@@ -173,9 +173,9 @@ class AndroidSqliteDriver private constructor(
     identifier: Int?,
     sql: String,
     mapper: (SqlCursor) -> R,
-    parameters: Int,
+    parameterIndices: List<Int>,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
+  ) = execute(identifier, { AndroidQuery(sql, database, parameterIndices.size) }, binders) { executeQuery(mapper) }
 
   override fun close() {
     statements.evictAll()

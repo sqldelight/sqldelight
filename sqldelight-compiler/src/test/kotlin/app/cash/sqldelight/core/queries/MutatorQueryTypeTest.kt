@@ -41,7 +41,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -80,7 +80,7 @@ class MutatorQueryTypeTest {
     |  driver.execute(${mutator.id}, ""${'"'}
     |      |INSERT INTO data
     |      |VALUES (?, ?)
-    |      ""${'"'}.trimMargin(), 2) {
+    |      ""${'"'}.trimMargin(), listOf(25, 28)) {
     |        bindLong(0, data_Adapter.idAdapter.encode(data_.id))
     |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
     |      }
@@ -134,7 +134,7 @@ class MutatorQueryTypeTest {
       |      |    link = ?
       |      |WHERE packageName = ?
       |      |  AND className = ?
-      |      ""${'"'}.trimMargin(), 4) {
+      |      ""${'"'}.trimMargin(), listOf(29, 43, 65, 85)) {
       |        bindBoolean(0, deprecated)
       |        bindString(1, link)
       |        bindString(2, packageName)
@@ -179,7 +179,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -228,7 +228,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -286,7 +286,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -324,7 +324,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
-      |      ""${'"'}.trimMargin(), 2) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28)) {
       |        bindLong(0, id?.let { data_Adapter.idAdapter.encode(it) })
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
@@ -379,7 +379,7 @@ class MutatorQueryTypeTest {
       |      |  INNER JOIN data AS data2
       |      |  ON data.id = data2.id
       |      |)
-      |      ""${'"'}.trimMargin(), 0)
+      |      ""${'"'}.trimMargin(), emptyList())
       |  notifyQueries(${mutator.id}) { emit ->
       |    emit("data")
       |  }
@@ -414,7 +414,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(33)) {
       |        bindBytes(0, value_)
       |      }
       |  notifyQueries(208179736) { emit ->
@@ -451,7 +451,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |VALUES (?)
-      |      ""${'"'}.trimMargin(), 1) {
+      |      ""${'"'}.trimMargin(), listOf(33)) {
       |        bindDouble(0, value_)
       |      }
       |  notifyQueries(${mutator.id}) { emit ->
@@ -530,7 +530,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      |      ""${'"'}.trimMargin(), 20) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28, 31, 34, 37, 40, 43, 46, 49, 52, 55, 58, 61, 64, 67, 70, 73, 76, 79, 82)) {
       |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
       |        bindLong(0, if (boolean0) 1L else 0L)
       |        bindLong(1, boolean1?.let { if (it) 1L else 0L })
@@ -629,7 +629,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      |      ""${'"'}.trimMargin(), 20) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28, 31, 34, 37, 40, 43, 46, 49, 52, 55, 58, 61, 64, 67, 70, 73, 76, 79, 82)) {
       |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
       |        bindLong(0, if (boolean0) 1L else 0L)
       |        bindLong(1, boolean1?.let { if (it) 1L else 0L })
@@ -712,7 +712,7 @@ class MutatorQueryTypeTest {
       |  driver.execute(${mutator.id}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      |      ""${'"'}.trimMargin(), 12) {
+      |      ""${'"'}.trimMargin(), listOf(25, 28, 31, 34, 37, 40, 43, 46, 49, 52, 55, 58)) {
       |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
       |        bindLong(0, smallint0.toLong())
       |        bindLong(1, smallint1?.let { it.toLong() })
@@ -778,7 +778,7 @@ class MutatorQueryTypeTest {
       |  deprecated: kotlin.Boolean,
       |  link: kotlin.String,
       |): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
+      |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, listOf(75, 78, 81, 84)) {
       |        bindString(0, packageName)
       |        bindString(1, className)
       |        bindBoolean(2, deprecated)
@@ -829,7 +829,7 @@ class MutatorQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
     |public fun insertItem(content: kotlin.String?): kotlin.Unit {
-    |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
+    |  driver.execute(${mutator.id}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, listOf(48)) {
     |        bindString(0, content)
     |      }
     |  notifyQueries(${mutator.id}) { emit ->
@@ -883,7 +883,7 @@ class MutatorQueryTypeTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
     |public fun updateFoobarSelected(selected: kotlin.Boolean, id: kotlin.Long): kotlin.Unit {
-    |  driver.execute(1531606598, ""${'"'}UPDATE OR IGNORE foobar SET selected = ? WHERE id = ?""${'"'}, 2) {
+    |  driver.execute(1531606598, ""${'"'}UPDATE OR IGNORE foobar SET selected = ? WHERE id = ?""${'"'}, listOf(39, 52)) {
     |        bindBoolean(0, selected)
     |        bindLong(1, id)
     |      }
@@ -922,12 +922,12 @@ class MutatorQueryTypeTest {
       |public fun delete(ids: kotlin.collections.Collection<Int>): kotlin.Unit {
       |  transaction {
       |    val idsIndexes = createArguments(count = ids.size)
-      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.size) {
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.mapIndexed { index, _ -> 29 + 2*index + 1 }) {
       |          ids.forEachIndexed { index, ids_ ->
       |            bindLong(index, data_Adapter.idAdapter.encode(ids_))
       |          }
       |        }
-      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE other IN ${'$'}idsIndexes""${'"'}, ids.size) {
+      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE other IN ${'$'}idsIndexes""${'"'}, ids.mapIndexed { index, _ -> 32 + 2*index + 1 }) {
       |          ids.forEachIndexed { index, ids_ ->
       |            bindLong(index, data_Adapter.idAdapter.encode(ids_))
       |          }

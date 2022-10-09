@@ -143,7 +143,7 @@ class AsyncSelectQueryTypeTest {
       |  |SELECT *
       |  |FROM data
       |  |WHERE id = ?
-      |  ""${'"'}.trimMargin(), mapper, 1) {
+      |  ""${'"'}.trimMargin(), mapper, listOf(30)) {
       |    bindLong(0, id)
       |  }
       |
@@ -187,13 +187,13 @@ class AsyncSelectQueryTypeTest {
       |    driver.execute(${query.idForIndex(0)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value)
       |        }.await()
       |    driver.execute(${query.idForIndex(1)}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
+      |        ""${'"'}.trimMargin(), listOf(35)) {
       |          bindLong(0, value)
       |        }.await()
       |  }
@@ -243,14 +243,14 @@ class AsyncSelectQueryTypeTest {
       |      driver.execute(${query.idForIndex(0)}, ""${'"'}
       |          |INSERT INTO data (value)
       |          |  VALUES (?)
-      |          ""${'"'}.trimMargin(), 1) {
+      |          ""${'"'}.trimMargin(), listOf(35)) {
       |            bindLong(0, value_)
       |          }.await()
       |      driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
       |          |SELECT value
       |          |  FROM data
       |          |  WHERE id = last_insert_rowid()
-      |          ""${'"'}.trimMargin(), mapper, 0)
+      |          ""${'"'}.trimMargin(), mapper, emptyList())
       |    }
       |  }
       |

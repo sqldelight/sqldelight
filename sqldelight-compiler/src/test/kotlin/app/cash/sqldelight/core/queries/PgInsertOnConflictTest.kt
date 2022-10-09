@@ -39,7 +39,7 @@ class PgInsertOnConflictTest {
             |      |INSERT INTO data
             |      |VALUES (?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?
-            |      ""${'"'}.trimMargin(), 3) {
+            |      ""${'"'}.trimMargin(), listOf(25, 28, 69)) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
             |        bindLong(0, id?.let { it.toLong() })
             |        bindString(1, c1)
@@ -89,7 +89,7 @@ class PgInsertOnConflictTest {
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?
-            |      ""${'"'}.trimMargin(), 6) {
+            |      ""${'"'}.trimMargin(), listOf(25, 28, 31, 34, 75, 85)) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
             |        bindLong(0, id?.let { it.toLong() })
             |        bindString(1, c1)
@@ -142,7 +142,7 @@ class PgInsertOnConflictTest {
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?, col3 = ?
-            |      ""${'"'}.trimMargin(), 7) {
+            |      ""${'"'}.trimMargin(), listOf(25, 28, 31, 34, 75, 85, 95)) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
             |        bindLong(0, id?.let { it.toLong() })
             |        bindString(1, c1)
