@@ -54,7 +54,7 @@ class PgInsertReturningTest {
         |  )
         |}
         |
-      """.trimMargin()
+      """.trimMargin(),
     )
   }
 }
