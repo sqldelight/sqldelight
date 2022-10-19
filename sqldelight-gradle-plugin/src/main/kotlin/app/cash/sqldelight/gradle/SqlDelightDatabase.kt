@@ -100,12 +100,12 @@ class SqlDelightDatabase(
   fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(delegatedProject.dependencyProject)
 
   @Suppress("unused") // Public API used in gradle files.
-  fun dependency(dependencyProject: Project) {
+  fun dependency(dependencyProject: Project, databaseName: String? = null) {
     project.evaluationDependsOn(dependencyProject.path)
 
     val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
       ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
-    val database = dependency.databases.singleOrNull { it.name == name }
+    val database = dependency.databases.singleOrNull { it.name == (databaseName ?: name) }
       ?: throw IllegalStateException("No database named $name in $dependencyProject")
     check(database.packageName != packageName) { "Detected a schema that already has the package name $packageName in project $dependencyProject" }
     dependencies.add(database)
