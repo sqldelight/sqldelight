@@ -166,4 +166,12 @@ class PostgreSqlTest {
       } catch (e: OptimisticLockException) { }
     }
   }
+
+  @Test fun values() {
+    with(database.valueQueries) {
+      val id: ValueTable.Id = insertValue(ValueTable(ValueTable.Id(42), "")).executeAsOne()
+      assertThat(id.id).isEqualTo(42)
+      insertRef(RefTable(RefTable.Id(10), id))
+    }
+  }
 }

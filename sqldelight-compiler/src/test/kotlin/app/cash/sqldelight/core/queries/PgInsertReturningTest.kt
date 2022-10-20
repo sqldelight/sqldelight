@@ -46,7 +46,7 @@ class PgInsertReturningTest {
     )
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-        |public fun <T : kotlin.Any> insertReturn(data_: com.example.Data_, mapper: (id: kotlin.Int, data_: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = InsertReturnQuery(data_.id, data_.data_) { cursor ->
+        |public fun <T : kotlin.Any> insertReturn(data_: com.example.Data_, mapper: (id: kotlin.Int, data_: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = InsertReturnQuery(data_) { cursor ->
         |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
         |  mapper(
         |    cursor.getLong(0)!!.toInt(),
@@ -92,7 +92,7 @@ class PgInsertReturningTest {
     )
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-        |public fun <T : kotlin.Any> insertReturn(data_: com.example.Data_, mapper: (data_: kotlin.String?, id: kotlin.Int) -> T): app.cash.sqldelight.ExecutableQuery<T> = InsertReturnQuery(data_.id, data_.data_) { cursor ->
+        |public fun <T : kotlin.Any> insertReturn(data_: com.example.Data_, mapper: (data_: kotlin.String?, id: kotlin.Int) -> T): app.cash.sqldelight.ExecutableQuery<T> = InsertReturnQuery(data_) { cursor ->
         |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
         |  mapper(
         |    cursor.getString(0),

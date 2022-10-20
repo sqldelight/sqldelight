@@ -33,6 +33,7 @@ import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -60,25 +61,36 @@ internal abstract class ColumnTypeMixin(
   TypedColumn,
   SqlDelightColumnType {
   override fun type(): IntermediateType {
-    val columnName = (parent as SqlColumnDef).columnName
-    val columnConstraintList = (parent as SqlColumnDef).columnConstraintList
+    val parent = parent as SqlColumnDef
+    val columnName = parent.columnName
+    val columnConstraintList = parent.columnConstraintList
 
-    var type = typeResolver.definitionType(typeName).copy(column = (parent as SqlColumnDef), name = allocateName(columnName))
+    var type = typeResolver.definitionType(typeName).copy(column = parent, name = allocateName(columnName))
     javaTypeName?.type()?.let { type = type.copy(javaType = it) }
 
     // Ensure we use the same value type for a foreign key.
-    columnConstraintList.mapNotNull { it.foreignKeyClause }.singleOrNull() // Foreign Key
+    val tableForeignKeyClause = (parent.parent as? SqlCreateTableStmt)?.tableConstraintList?.mapNotNull {
+      val columnIndex = it.columnNameList.map { it.name }.indexOf(columnName.name)
+      if (columnIndex != -1) {
+        it.foreignKeyClause?.columnNameList?.get(columnIndex)
+      } else null
+    }?.singleOrNull()
+
+    val columnConstraint = columnConstraintList.mapNotNull {
+      it.foreignKeyClause
+    }.singleOrNull() // Foreign Key
       ?.columnNameList?.singleOrNull() // Foreign Column
-      ?.reference?.resolve()?.let { resolvedKey -> // Resolved Column
-        val dialectType = resolvedKey.castSafelyTo<SqlColumnName>() // Column Name
-          ?.parent?.castSafelyTo<SqlColumnDef>() // Column Definition
-          ?.columnType?.castSafelyTo<ColumnTypeMixin>() // Column type
-          ?.type()?.dialectType?.castSafelyTo<ValueTypeDialectType>() ?: return@let // SqlDelight type
-        type = type.copy(
-          dialectType = dialectType,
-          javaType = dialectType.javaType,
-        )
-      }
+
+    (tableForeignKeyClause ?: columnConstraint)?.reference?.resolve()?.let { resolvedKey -> // Resolved Column
+      val dialectType = resolvedKey.castSafelyTo<SqlColumnName>() // Column Name
+        ?.parent?.castSafelyTo<SqlColumnDef>() // Column Definition
+        ?.columnType?.castSafelyTo<ColumnTypeMixin>() // Column type
+        ?.type()?.dialectType?.castSafelyTo<ValueTypeDialectType>() ?: return@let // SqlDelight type
+      type = type.copy(
+        dialectType = dialectType,
+        javaType = dialectType.javaType,
+      )
+    }
 
     valueClass()?.let { valueType ->
       val newDialectType = ValueTypeDialectType(valueType.name!!, type.dialectType)

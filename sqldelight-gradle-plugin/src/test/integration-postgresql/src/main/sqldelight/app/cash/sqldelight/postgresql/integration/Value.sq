@@ -1,0 +1,17 @@
+CREATE TABLE valueTable (
+id INTEGER AS VALUE PRIMARY KEY,
+s VARCHAR(50)
+);
+
+CREATE TABLE refTable (
+id INTEGER AS VALUE PRIMARY KEY,
+valueID INTEGER,
+
+CONSTRAINT fk_value_id FOREIGN KEY (valueID) REFERENCES valueTable(id)
+);
+
+insertValue:
+INSERT INTO valueTable VALUES ? RETURNING id;
+
+insertRef:
+INSERT INTO refTable VALUES ?;
