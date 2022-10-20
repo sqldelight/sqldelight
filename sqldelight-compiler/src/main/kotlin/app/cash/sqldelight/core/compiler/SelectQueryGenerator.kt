@@ -253,8 +253,7 @@ class SelectQueryGenerator(
       function.addCode(
         "return %N(%L)%L",
         query.customQuerySubtype,
-        query.arguments.sortedBy { it.index }
-          .joinToString { (_, parameter) -> parameter.name },
+        query.parameters.joinToString { it.name },
         mapperLambda.build(),
       )
     }
@@ -310,7 +309,7 @@ class SelectQueryGenerator(
       .addCode(executeBlock())
 
     // For each bind argument the query has.
-    query.arguments.sortedBy { it.index }.forEach { (_, parameter) ->
+    query.parameters.forEach { parameter ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
       // val id: Int
       queryType.addProperty(
