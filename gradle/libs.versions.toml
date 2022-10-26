@@ -60,7 +60,7 @@ rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.5" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.39.3.0" }
 postgresJdbc = { module = "org.postgresql:postgresql", version = "42.5.0" }
-mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.30" }
+mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.31" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
 schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref = "schemaCrawler" }
