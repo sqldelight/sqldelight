@@ -24,5 +24,5 @@ dependencies {
   implementation libs.sqliteJdbc
   implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
-  implementation("com.squareup.moshi:moshi:1.13.0")
+  implementation libs.moshi
 }
