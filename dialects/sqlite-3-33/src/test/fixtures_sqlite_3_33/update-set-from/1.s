@@ -40,4 +40,11 @@ FROM (
   ON otherTest.id = test2.id2
 );
 
-
+UPDATE test
+SET id = newId
+FROM (
+  SELECT test.id AS newId
+  FROM test2
+  INNER JOIN test
+  ON test.id = test2.id2
+);
