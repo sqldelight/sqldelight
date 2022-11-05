@@ -39,7 +39,7 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
   channel.trySend(Unit)
 
   val listener = Query.Listener {
-      channel.trySend(Unit)
+    channel.trySend(Unit)
   }
 
   addListener(listener)
