@@ -54,6 +54,7 @@ dependencies {
   testImplementation project(path: ':dialects:sqlite-3-24', configuration: 'shadowRuntimeElements')
   testImplementation project(path: ':dialects:sqlite-3-25', configuration: 'shadowRuntimeElements')
   testImplementation project(path: ':dialects:sqlite-3-30', configuration: 'shadowRuntimeElements')
+  testImplementation project(path: ':dialects:sqlite-3-33', configuration: 'shadowRuntimeElements')
   testImplementation project(path: ':dialects:sqlite-3-35', configuration: 'shadowRuntimeElements')
   testImplementation project(path: ':dialects:sqlite-3-38', configuration: 'shadowRuntimeElements')
 }

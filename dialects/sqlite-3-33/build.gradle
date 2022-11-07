@@ -10,7 +10,7 @@ grammarKit {
 }
 
 dependencies {
-  api project(':dialects:sqlite-3-33')
+  api project(':dialects:sqlite-3-30')
 
   compileOnly project(':sqldelight-compiler:dialect')
   compileOnly libs.intellij.core
@@ -44,7 +44,7 @@ configurations {
 }
 
 tasks.named("compileKotlin") {
-  dependsOn(":dialects:sqlite-3-33:shadowJar")
+  dependsOn(":dialects:sqlite-3-30:shadowJar")
 }
 
 artifacts {
