@@ -307,4 +307,14 @@ class MigrationTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `successful migration works properly without classloader isolation`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-success-noisolation"))
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
+
 }

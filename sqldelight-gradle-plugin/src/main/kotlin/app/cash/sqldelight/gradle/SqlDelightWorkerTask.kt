@@ -25,4 +25,8 @@ abstract class SqlDelightWorkerTask : SourceTask() {
     workerExecutor.classLoaderIsolation {
       it.classpath.from(classpath)
     }
+
+  internal fun workQueueNoIsolation(): WorkQueue =
+    workerExecutor.noIsolation()
+
 }

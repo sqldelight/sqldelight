@@ -51,6 +51,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @Input var verifyDefinitions: Boolean = true
 
+  @Input var disableClassLoaderIsolation: Boolean = false
+
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
    * https://github.com/gradle/gradle/issues/14223 is resolved. */
@@ -60,7 +62,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @TaskAction
   fun verifyMigrations() {
     runCatching {
-      val workQueue = workQueue()
+      val workQueue = if (disableClassLoaderIsolation) workQueueNoIsolation() else workQueue()
       workQueue.submit(VerifyMigrationAction::class.java) {
         it.workingDirectory.set(workingDirectory)
         it.projectName.set(projectName)
