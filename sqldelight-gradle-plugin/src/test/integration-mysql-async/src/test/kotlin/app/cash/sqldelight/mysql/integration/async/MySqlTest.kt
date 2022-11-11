@@ -14,7 +14,7 @@ class MySqlTest {
 
   private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
     val connection = factory.create().awaitSingle()
-    val driver = R2dbcDriver(connection)
+    val driver = R2dbcDriver(connection, replaceParameter = false)
 
     val db = MyDatabase(driver).also { MyDatabase.Schema.awaitCreate(driver) }
     block(db)

@@ -21,7 +21,7 @@ class PostgreSqlTest {
 
   private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
     val connection = factory.create().awaitSingle()
-    val driver = R2dbcDriver(connection)
+    val driver = R2dbcDriver(connection, replaceParameter = true)
     val db = MyDatabase(driver)
     MyDatabase.Schema.awaitCreate(driver)
     block(db)

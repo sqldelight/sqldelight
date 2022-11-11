@@ -13,7 +13,7 @@ import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 
-class R2dbcDriver(private val connection: Connection) : SqlDriver {
+class R2dbcDriver(private val connection: Connection, private val replaceParameter: Boolean) : SqlDriver {
   private fun calcParameterReplacementAdditionalLength(parameters: Int): Int {
     var numbers = 9 // numbers with current length
     var strLen = 1 // length of each number in characters
@@ -28,9 +28,9 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
     return lengthSum + remaining * strLen
   }
 
-  private fun replaceParameters(sql: String, parameterIndices: List<Int>): String {
+  private fun replaceParameters(sql: String, parameterIndices: List<Int>): String = if (replaceParameter) {
     val additionalSpace = calcParameterReplacementAdditionalLength(parameterIndices.size)
-    return buildString(sql.length + additionalSpace) {
+    buildString(sql.length + additionalSpace) {
       var lastIndex = 0
       parameterIndices.forEachIndexed { parameterIndex, stringIndex ->
         append(sql.substring(lastIndex, stringIndex))
@@ -42,6 +42,8 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
         append(sql.substring(lastIndex))
       }
     }
+  } else {
+    sql
   }
 
   override fun <R> executeQuery(
