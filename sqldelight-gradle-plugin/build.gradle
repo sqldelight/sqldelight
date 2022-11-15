@@ -161,4 +161,13 @@ if (System.getenv("CI") == "true") {
   configurations.implementation.extendsFrom(configurations.shade)
 }
 
+PublishArtifact sources = artifacts.add('sourceArtifacts', tasks.named("kotlinSourcesJar"))
+publishing {
+  publications {
+    it.register("mavenJavaSource", MavenPublication) {
+      it.artifact(sources)
+    }
+  }
+}
+
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
