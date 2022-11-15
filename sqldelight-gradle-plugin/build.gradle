@@ -164,7 +164,7 @@ if (System.getenv("CI") == "true") {
 PublishArtifact sources = artifacts.add('sourceArtifacts', tasks.named("kotlinSourcesJar"))
 publishing {
   publications {
-    it.register("mavenJavaSource", MavenPublication) {
+    it.register("pluginMaven", MavenPublication) {
       it.artifact(sources)
     }
   }
