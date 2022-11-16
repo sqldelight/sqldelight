@@ -58,14 +58,14 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
 private fun KotlinMultiplatformExtension.sources(): List<Source> {
   // For multiplatform we only support SQLDelight in commonMain
   return listOf(
-          Source(
-                  type = KotlinPlatformType.common,
-                  nativePresetName = "common",
-                  name = "commonMain",
-                  variantName = null,
-                  sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
-                  sourceSets = listOf("commonMain"),
-          )
+    Source(
+      type = KotlinPlatformType.common,
+      nativePresetName = "common",
+      name = "commonMain",
+      variantName = null,
+      sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
+      sourceSets = listOf("commonMain"),
+    )
   )
 }
 
