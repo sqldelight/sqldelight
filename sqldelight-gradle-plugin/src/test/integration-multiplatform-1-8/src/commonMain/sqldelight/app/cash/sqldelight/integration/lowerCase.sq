@@ -1,0 +1,10 @@
+CREATE TABLE lowercase (
+  value TEXT NOT NULL
+);
+
+INSERT INTO lowercase
+VALUES ('sup');
+
+selectAll:
+SELECT *
+FROM lowercase;

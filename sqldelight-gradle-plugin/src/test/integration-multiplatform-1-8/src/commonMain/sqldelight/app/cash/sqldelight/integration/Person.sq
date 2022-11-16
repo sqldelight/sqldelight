@@ -1,0 +1,50 @@
+CREATE TABLE person (
+  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL
+);
+
+INSERT INTO person (first_name, last_name)
+VALUES ('Alec', 'Strong'),
+       ('Matt', 'Precious'),
+       ('Jake', 'Wharton'),
+       ('Bob', 'Bob');
+
+deleteAll:
+DELETE FROM person;
+
+equivalentNames:
+SELECT *
+FROM person
+WHERE first_name = ?1 AND last_name = ?1;
+
+equivalentNames2:
+SELECT *
+FROM person
+WHERE first_name = ?2 AND last_name = ?2;
+
+equivalentNamesNamed:
+SELECT *
+FROM person
+WHERE first_name = :name AND last_name = :name;
+
+indexedArgLast:
+SELECT *
+FROM person
+WHERE first_name = ? AND last_name = ?1;
+
+indexedArgLast2:
+SELECT *
+FROM person
+WHERE first_name = ? AND last_name = ?2;
+
+nameIn:
+SELECT *
+FROM person
+WHERE first_name IN ?;
+
+multipleNameIn:
+SELECT *
+FROM person
+WHERE first_name IN ?
+OR last_name IN ?;

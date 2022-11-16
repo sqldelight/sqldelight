@@ -1,0 +1,17 @@
+CREATE TABLE nullableTypes (
+  val1 TEXT AS kotlin.collections.List<kotlin.String>,
+  val2 TEXT
+);
+
+insertNullableType:
+INSERT INTO nullableTypes
+VALUES ?;
+
+selectAll:
+SELECT *
+FROM nullableTypes;
+
+exprOnNullableColumn:
+SELECT *
+FROM nullableTypes
+WHERE val2 IS ?;
