@@ -1,0 +1,9 @@
+apply from: "../settings.gradle"
+
+rootProject.name = 'integration'
+
+buildCache {
+  local {
+    directory = new File(rootDir, 'build-cache')
+  }
+}

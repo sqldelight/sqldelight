@@ -1,0 +1,13 @@
+CREATE TABLE myTable (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    field1 INTEGER NOT NULL,
+    field2 INTEGER NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO myTable VALUES ?;
+
+select:
+SELECT *
+FROM myTable
+WHERE field1 IN ? AND field2 = ?;

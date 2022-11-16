@@ -207,4 +207,14 @@ class PluginTest {
     assertThat(result.output)
       .contains("SQLDelight Gradle plugin was applied but there are no databases set up.")
   }
+
+  @Test
+  fun `the dependency accessor extensions work`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/dependency-accessors"))
+      .withArguments("build", "--stacktrace")
+      .build()
+
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }
