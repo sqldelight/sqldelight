@@ -40,14 +40,6 @@ kotlin {
         implementation "app.cash.sqldelight:runtime:+"
       }
     }
-//    commonTest {
-//      dependencies {
-//        implementation deps.kotlin.test.common
-//        implementation deps.kotlin.test.commonAnnotations
-//        implementation deps.stately.core
-//        implementation deps.stately.concurrency
-//      }
-//    }
   }
 }
 
