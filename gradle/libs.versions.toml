@@ -72,7 +72,7 @@ stately-collections = { module = "co.touchlab:stately-collections", version.ref 
 
 testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
-testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.9" }
+testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.10" }
 
 r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "0.9.1.RELEASE" }
 
