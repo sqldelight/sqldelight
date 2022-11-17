@@ -26,11 +26,3 @@ actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit): dynami
 
   db.close()
 }
-
-actual class AtomicInt actual constructor(value_: Int) {
-  actual var value: Int = value_
-
-  actual fun increment() {
-    value++
-  }
-}
