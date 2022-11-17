@@ -19,8 +19,3 @@ package app.cash.sqldelight.coroutines
 import kotlinx.coroutines.CoroutineScope
 
 expect fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit)
-
-expect class AtomicInt(value_: Int) {
-  var value: Int
-  fun increment()
-}

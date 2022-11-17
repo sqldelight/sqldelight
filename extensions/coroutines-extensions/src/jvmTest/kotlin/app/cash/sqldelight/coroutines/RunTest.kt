@@ -17,22 +17,10 @@
 package app.cash.sqldelight.coroutines
 
 import kotlinx.coroutines.CoroutineScope
-import java.util.concurrent.atomic.AtomicInteger
 
 actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = kotlinx.coroutines.test.runTest {
   val db = setupDb()
   body(db)
 
   db.close()
-}
-
-actual class AtomicInt actual constructor(value_: Int) {
-  private val atomicInteger = AtomicInteger(value_)
-  actual var value: Int
-    get() = atomicInteger.get()
-    set(value) = atomicInteger.set(value)
-
-  actual fun increment() {
-    atomicInteger.incrementAndGet()
-  }
 }
