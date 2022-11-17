@@ -18,6 +18,7 @@ kotlin {
     }
     commonTest {
       dependencies {
+        implementation libs.kotlin.coroutines.test
         implementation libs.kotlin.test
         implementation libs.turbine
         implementation libs.stately.concurrency
@@ -26,7 +27,6 @@ kotlin {
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
-        implementation libs.kotlin.coroutines.test
         implementation project(':drivers:sqlite-driver')
       }
       languageSettings {
