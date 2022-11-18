@@ -19,7 +19,7 @@ import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.db.migrateWithCallbacks
 
-private val DEFAULT_CACHE_SIZE = 20
+private const val DEFAULT_CACHE_SIZE = 20
 
 class AndroidSqliteDriver private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
@@ -118,7 +118,7 @@ class AndroidSqliteDriver private constructor(
     return QueryResult.Value(transaction)
   }
 
-  override fun currentTransaction() = transactions.get()
+  override fun currentTransaction(): Transacter.Transaction? = transactions.get()
 
   inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?,
@@ -184,13 +184,8 @@ class AndroidSqliteDriver private constructor(
 
   open class Callback(
     private val schema: SqlSchema,
-    vararg callbacks: AfterVersion,
+    private vararg val callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
-    private val callbacks = callbacks
-
-    constructor(
-      schema: SqlSchema,
-    ) : this(schema, *emptyArray<AfterVersion>())
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
