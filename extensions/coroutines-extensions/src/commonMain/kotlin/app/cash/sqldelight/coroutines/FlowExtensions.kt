@@ -38,10 +38,8 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
   val channel = Channel<Unit>(CONFLATED)
   channel.trySend(Unit)
 
-  val listener = object : Query.Listener {
-    override fun queryResultsChanged() {
-      channel.trySend(Unit)
-    }
+  val listener = Query.Listener {
+    channel.trySend(Unit)
   }
 
   addListener(listener)

@@ -148,7 +148,7 @@ abstract class Query<out RowType : Any>(
   /**
    * An interface for listening to changes in the result set of a query.
    */
-  interface Listener {
+  fun interface Listener {
     /**
      * Called whenever the query this listener was attached to is dirtied.
      *
