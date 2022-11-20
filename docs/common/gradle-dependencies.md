@@ -1,10 +1,10 @@
-## Dependencies
+## Schema Dependencies
 
 You can specify schema dependencies on another module:
 
 === "Kotlin"
     ```kotlin
-    // projecta/build.gradle.kts
+    // project-a/build.gradle.kts
 
     sqldelight {
       database("MyDatabase") {
@@ -15,7 +15,7 @@ You can specify schema dependencies on another module:
     ```
 === "Groovy"
     ```groovy
-    // projecta/build.gradle
+    // project-a/build.gradle
 
     sqldelight {
       MyDatabase {
@@ -31,7 +31,7 @@ different package, so here is what `ProjectB`'s gradle might look like:
 
 === "Kotlin"
     ```kotlin hl_lines="4"
-    // projectb/build.gradle.kts
+    // project-b/build.gradle.kts
 
     sqldelight {
       // Same database name
@@ -42,7 +42,7 @@ different package, so here is what `ProjectB`'s gradle might look like:
     ```
 === "Groovy"
     ```groovy hl_lines="4"
-    // projecta/build.gradle
+    // project-b/build.gradle
 
     sqldelight {
       // Same database name
