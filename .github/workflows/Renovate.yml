@@ -3,9 +3,7 @@ name: Extra Renovate Checks
 on:
   pull_request:
     paths:
-      - '.github/**'
-    branches:
-      - renovate/*
+      - '.github/workflows/requirements.txt'
 
 jobs:
   mkdocs_requirements:
