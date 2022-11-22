@@ -764,7 +764,7 @@ class SelectQueryFunctionTest {
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
       |  mapper(
-      |    cursor.getArray(0),
+      |    cursor.getArray<kotlin.Short>(0),
       |    cursor.getLong(1)!!.toShort(),
       |    cursor.getLong(2)?.let { it.toShort() },
       |    data_Adapter.smallint2Adapter.decode(cursor.getLong(3)!!.toShort()),
