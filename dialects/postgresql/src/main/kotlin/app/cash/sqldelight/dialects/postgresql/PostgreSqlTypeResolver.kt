@@ -67,7 +67,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             CodeBlock.of("bindObject($columnIndex, %L)\n", value)
 
           override fun cursorGetter(columnIndex: Int, cursorName: String) =
-            CodeBlock.of("$cursorName.getArray($columnIndex)")
+            CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
         },
       )
     }
