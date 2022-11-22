@@ -19,4 +19,4 @@ jobs:
           python-version: 3.8
 
       - name: Install Requirements
-        run: pip3 install -r .github/workflows/prepare_mkdocs.sh
+        run: pip3 install -r .github/workflows/requirements.txt
