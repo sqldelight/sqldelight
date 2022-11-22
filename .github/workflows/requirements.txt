@@ -8,7 +8,7 @@ MarkupSafe==2.1.1
 mkdocs==1.4.2
 mkdocs-macros-plugin==0.7.0
 mkdocs-material==8.5.10
-mkdocs-material-extensions==1.1
+mkdocs-material-extensions==1.1.1
 Pygments==2.13.0
 pymdown-extensions==9.8
 python-dateutil==2.8.2
