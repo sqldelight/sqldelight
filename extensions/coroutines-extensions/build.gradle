@@ -1,41 +1,39 @@
 import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
 }
 
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
-  js()
-
   sourceSets {
     commonMain {
       dependencies {
         api project(':runtime')
-        api deps.kotlin.coroutines.core
+        api libs.kotlin.coroutines.core
         implementation project(":extensions:async-extensions")
       }
     }
     commonTest {
       dependencies {
-        implementation deps.kotlin.test.common
-        implementation deps.kotlin.test.commonAnnotations
-        implementation deps.turbine
+        implementation libs.kotlin.test
+        implementation libs.turbine
+        implementation libs.stately.concurrency
       }
     }
     jvmTest {
       dependencies {
-        implementation deps.kotlin.test.junit
-        implementation deps.kotlin.coroutines.test
+        implementation libs.kotlin.test.junit
+        implementation libs.kotlin.coroutines.test
         implementation project(':drivers:sqlite-driver')
       }
     }
     jsTest {
       dependencies {
-        implementation deps.kotlin.test.js
+        implementation libs.kotlin.test.js
         implementation project(':drivers:sqljs-driver')
       }
     }

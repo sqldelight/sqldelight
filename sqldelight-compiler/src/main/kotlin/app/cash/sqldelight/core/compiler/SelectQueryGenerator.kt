@@ -62,8 +62,7 @@ class SelectQueryGenerator(
    */
   fun defaultResultTypeFunction(): FunSpec {
     val argNameAllocator = NameAllocator()
-    val parametersAndTypes = query.arguments.sortedBy { it.index }
-      .map { (_, arg) -> argNameAllocator.newName(arg.name, arg) to arg.argumentType() }
+    val parametersAndTypes = query.parameters.map { argNameAllocator.newName(it.name, it) to it.argumentType() }
 
     val function = defaultResultTypeFunctionInterface(parametersAndTypes)
     val params = parametersAndTypes.map { (name) -> CodeBlock.of(name) }
@@ -116,14 +115,12 @@ class SelectQueryGenerator(
   }
 
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
-    val function = FunSpec.builder(query.name)
-    val params = mutableListOf<CodeBlock>()
+    val function = FunSpec.builder(query.name).also(::addJavadoc)
 
-    query.arguments.sortedBy { it.index }.forEach { (_, argument) ->
+    query.parameters.forEach {
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
-      function.addParameter(argument.name, argument.argumentType())
-      params.add(CodeBlock.of(argument.name))
+      function.addParameter(it.name, it.argumentType())
     }
 
     if (query.needsWrapper()) {
@@ -256,8 +253,7 @@ class SelectQueryGenerator(
       function.addCode(
         "return %N(%L)%L",
         query.customQuerySubtype,
-        query.arguments.sortedBy { it.index }
-          .joinToString { (_, parameter) -> parameter.name },
+        query.parameters.joinToString { it.name },
         mapperLambda.build(),
       )
     }
@@ -313,7 +309,7 @@ class SelectQueryGenerator(
       .addCode(executeBlock())
 
     // For each bind argument the query has.
-    query.arguments.sortedBy { it.index }.forEach { (_, parameter) ->
+    query.parameters.forEach { parameter ->
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
       // val id: Int
       queryType.addProperty(

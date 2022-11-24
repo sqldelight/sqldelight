@@ -5,7 +5,10 @@ import app.cash.sqldelight.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import app.cash.sqldelight.coroutines.Employee.Companion.USERNAME
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.turbine.test
+import co.touchlab.stately.concurrency.AtomicInt
+import co.touchlab.stately.concurrency.value
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import kotlin.test.Test
@@ -103,7 +106,7 @@ class QueryAsFlowTest : DbTest {
   @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
       .asFlow()
-      .mapToOneNotNull()
+      .mapToOneNotNull(Dispatchers.Default)
 
     val employee = Employee("john", "John Johnson")
 
@@ -113,7 +116,7 @@ class QueryAsFlowTest : DbTest {
         flow.test {
           assertEquals(employee, awaitItem())
           cancel()
-          timesCancelled.increment()
+          timesCancelled.incrementAndGet()
         }
       }
     }

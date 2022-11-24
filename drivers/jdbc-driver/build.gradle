@@ -1,7 +1,7 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 archivesBaseName = 'sqldelight-jdbc-driver'

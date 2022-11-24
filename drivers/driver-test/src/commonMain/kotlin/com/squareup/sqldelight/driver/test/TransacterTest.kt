@@ -37,7 +37,8 @@ abstract class TransacterTest {
     driver.close()
   }
 
-  @Test fun `afterCommit runs after transaction commits`() {
+  @Test
+  fun afterCommitRunsAfterTransactionCommits() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -47,7 +48,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @Test fun `afterCommit does not run after transaction rollbacks`() {
+  @Test
+  fun afterCommitDoesNotRunAfterTransactionRollbacks() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -58,7 +60,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @Test fun `afterCommit runs after enclosing transaction commits`() {
+  @Test
+  fun afterCommitRunsAfterEnclosingTransactionCommits() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -75,7 +78,8 @@ abstract class TransacterTest {
     assertEquals(2, counter)
   }
 
-  @Test fun `afterCommit does not run in nested transaction when enclosing rolls back`() {
+  @Test
+  fun afterCommitDoesNotRunInNestedTransactionWhenEnclosingRollsBack() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -91,7 +95,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @Test fun `afterCommit does not run in nested transaction when nested rolls back`() {
+  @Test
+  fun afterCommitDoesNotRunInNestedTransactionWhenNestedRollsBack() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -108,7 +113,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @Test fun `afterRollback no-ops if the transaction never rolls back`() {
+  @Test
+  fun afterRollbackNoOpsIfTheTransactionNeverRollsBack() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -117,7 +123,8 @@ abstract class TransacterTest {
     assertEquals(0, counter)
   }
 
-  @Test fun `afterRollback runs after a rollback occurs`() {
+  @Test
+  fun afterRollbackRunsAfterARollbackOccurs() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -127,7 +134,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @Test fun `afterRollback runs after an inner transaction rolls back`() {
+  @Test
+  fun afterRollbackRunsAfterAnInnerTransactionRollsBack() {
     var counter = 0
     transacter.transaction {
       afterRollback { counter++ }
@@ -140,7 +148,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @Test fun `afterRollback runs in an inner transaction when the outer transaction rolls back`() {
+  @Test
+  fun afterRollbackRunsInAnInnerTransactionWhenTheOuterTransactionRollsBack() {
     var counter = 0
     transacter.transaction {
       transaction {
@@ -152,7 +161,8 @@ abstract class TransacterTest {
     assertEquals(1, counter)
   }
 
-  @Test fun `transactions close themselves out properly`() {
+  @Test
+  fun transactionsCloseThemselvesOutProperly() {
     var counter = 0
     transacter.transaction {
       afterCommit { counter++ }
@@ -165,7 +175,8 @@ abstract class TransacterTest {
     assertEquals(2, counter)
   }
 
-  @Test fun `setting no enclosing fails if there is a currently running transaction`() {
+  @Test
+  fun settingNoEnclosingFailsIfThereIsACurrentlyRunningTransaction() {
     transacter.transaction(noEnclosing = true) {
       assertFailsWith<IllegalStateException> {
         transacter.transaction(noEnclosing = true) {
@@ -176,7 +187,7 @@ abstract class TransacterTest {
   }
 
   @Test
-  fun `An exception thrown in postRollback function is combined with the exception in the main body`() {
+  fun anExceptionThrownInPostRollbackFunctionIsCombinedWithTheExceptionInTheMainBody() {
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
     val t = assertFailsWith<Throwable>() {
@@ -192,7 +203,7 @@ abstract class TransacterTest {
   }
 
   @Test
-  fun `we can return a value from a transaction`() {
+  fun weCanReturnAValueFromATransaction() {
     val result: String = transacter.transactionWithResult {
       return@transactionWithResult "sup"
     }
@@ -201,7 +212,7 @@ abstract class TransacterTest {
   }
 
   @Test
-  fun `we can rollback with value from a transaction`() {
+  fun weCanRollbackWithValueFromATransaction() {
     val result: String = transacter.transactionWithResult {
       rollback("rollback")
 

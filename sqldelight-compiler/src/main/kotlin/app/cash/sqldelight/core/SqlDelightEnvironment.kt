@@ -174,6 +174,7 @@ class SqlDelightEnvironment(
           output = writer,
           includeAll = true,
         )
+        SqlDelightCompiler.writeImplementations(module, migrationFile, moduleName, writer)
       }
       logger("----- END ${migrationFile.name} in $timeTaken ms ------")
     }

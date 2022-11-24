@@ -19,6 +19,7 @@ import app.cash.sqldelight.core.lang.util.rawSqlText
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -65,13 +66,16 @@ abstract class QueryGenerator(
       } else {
         result.beginControlFlow("transaction")
       }
+      val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
-        result.add(executeBlock(statement, query.idForIndex(index)))
+        val (block, additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
+        handledArrayArgs.addAll(additionalArrayArgs)
+        result.add(block)
       }
       result.endControlFlow()
       if (generateAsync && query is NamedQuery) { result.endControlFlow() }
     } else {
-      result.add(executeBlock(query.statement, query.id))
+      result.add(executeBlock(query.statement, emptySet(), query.id).first)
     }
 
     return result.build()
@@ -79,8 +83,9 @@ abstract class QueryGenerator(
 
   private fun executeBlock(
     statement: PsiElement,
+    handledArrayArgs: Set<BindableQuery.Argument>,
     id: Int,
-  ): CodeBlock {
+  ): Pair<CodeBlock, Set<BindableQuery.Argument>> {
     val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
 
     val result = CodeBlock.builder()
@@ -144,7 +149,7 @@ abstract class QueryGenerator(
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
-        if (seenArrayArguments.add(argument)) {
+        if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {
           result.addStatement(
             """
             |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
@@ -174,36 +179,39 @@ abstract class QueryGenerator(
         precedingArrays.add(type.name)
         argumentCounts.add("${type.name}.size")
       } else {
-        nonArrayBindArgsCount += 1
+        val bindParameter = bindArg?.bindParameter as? BindParameterMixin
+        if (bindParameter == null || bindParameter.text != "DEFAULT") {
+          nonArrayBindArgsCount += 1
 
-        if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
-          val parent = bindArg?.parent
-          if (parent is SqlBinaryEqualityExpr) {
-            needsFreshStatement = true
+          if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
+            val parent = bindArg?.parent
+            if (parent is SqlBinaryEqualityExpr) {
+              needsFreshStatement = true
 
-            var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
-            val nullableEquality: String
-            if (symbol != null) {
-              nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
-            } else {
-              symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
-              nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+              var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
+              val nullableEquality: String
+              if (symbol != null) {
+                nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
+              } else {
+                symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
+                nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+              }
+
+              val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
+              replacements.add(symbol.range to "\${ $block }")
             }
-
-            val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
-            replacements.add(symbol.range to "\${ $block }")
           }
-        }
 
-        // Binds each parameter to the statement:
-        // statement.bindLong(0, id)
-        bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
+          // Binds each parameter to the statement:
+          // statement.bindLong(0, id)
+          bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
 
-        // Replace the named argument with a non named/indexed argument.
-        // This allows us to use the same algorithm for non Sqlite dialects
-        // :name becomes ?
-        if (bindArg != null) {
-          replacements.add(bindArg.range to "?")
+          // Replace the named argument with a non named/indexed argument.
+          // This allows us to use the same algorithm for non Sqlite dialects
+          // :name becomes ?
+          if (bindParameter != null) {
+            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
+          }
         }
       }
     }
@@ -293,13 +301,13 @@ abstract class QueryGenerator(
         """
         if (result%L == 0L) throw %T(%S)
         """.trimIndent(),
-        if (generateAsync) ".await()" else ".value",
+        if (generateAsync) "" else ".value",
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
         "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match",
       )
     }
 
-    return result.build()
+    return Pair(result.build(), seenArrayArguments)
   }
 
   private fun PsiElement.leftWhitspace(): String {
@@ -311,7 +319,7 @@ abstract class QueryGenerator(
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
-    if (query.javadoc != null) javadocText(query.javadoc)?.let { builder.addKdoc(it) }
+    if (query.javadoc != null) { builder.addKdoc(javadocText(query.javadoc)) }
   }
 
   protected open fun awaiting(): Pair<String, String>? = "%L" to ".await()"

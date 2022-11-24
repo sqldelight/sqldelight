@@ -1,13 +1,13 @@
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 dependencies {
-  api deps.sqlPsi
-  api deps.kotlinPoet
-  api deps.intellij.core
+  api libs.sqlPsi
+  api libs.kotlinPoet
+  api libs.intellij.core
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

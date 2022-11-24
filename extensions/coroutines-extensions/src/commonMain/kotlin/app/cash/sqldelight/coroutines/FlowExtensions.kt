@@ -22,7 +22,6 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +31,6 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.jvm.JvmName
-import kotlin.jvm.JvmOverloads
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
 @JvmName("toFlow")
@@ -40,10 +38,8 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
   val channel = Channel<Unit>(CONFLATED)
   channel.trySend(Unit)
 
-  val listener = object : Query.Listener {
-    override fun queryResultsChanged() {
-      channel.trySend(Unit)
-    }
+  val listener = Query.Listener {
+    channel.trySend(Unit)
   }
 
   addListener(listener)
@@ -56,46 +52,41 @@ fun <T : Any> Query<T>.asFlow(): Flow<Query<T>> = flow {
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOne(
-  context: CoroutineContext = Dispatchers.Default,
+  context: CoroutineContext,
 ): Flow<T> = map {
   withContext(context) {
     it.awaitAsOne()
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneOrDefault(
   defaultValue: T,
-  context: CoroutineContext = Dispatchers.Default,
+  context: CoroutineContext,
 ): Flow<T> = map {
   withContext(context) {
     it.awaitAsOneOrNull() ?: defaultValue
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneOrNull(
-  context: CoroutineContext = Dispatchers.Default,
+  context: CoroutineContext,
 ): Flow<T?> = map {
   withContext(context) {
     it.awaitAsOneOrNull()
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToOneNotNull(
-  context: CoroutineContext = Dispatchers.Default,
+  context: CoroutineContext,
 ): Flow<T> = mapNotNull {
   withContext(context) {
     it.awaitAsOneOrNull()
   }
 }
 
-@JvmOverloads
 fun <T : Any> Flow<Query<T>>.mapToList(
-  context: CoroutineContext = Dispatchers.Default,
+  context: CoroutineContext,
 ): Flow<List<T>> = map {
   withContext(context) {
     it.awaitAsList()

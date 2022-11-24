@@ -1,5 +1,54 @@
 # Change Log
 
+## [2.0.0-alpha04] - 2022-10-03
+
+### Breaking Changes
+
+- The Paging 3 extension API has changed to only allow int types for the count.
+- The coroutines extension now requires a dispatcher to be passed in instead of defaulting.
+- Dialect and Driver classes are final, use delegation instead.
+
+### Added
+- [HSQL Dialect] Hsql: Support using DEFAULT for generated columns in Insert (#3372 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] PostgreSQL: Support using DEFAULT for generated columns in INSERT  (#3373 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] Add NOW() to PostgreSQL (#3403 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] PostgreSQL Add NOT operator (#3504 by [Philip Wedemann][hfhbd])
+- [Paging] Allow passing in CoroutineContext to *QueryPagingSource (#3384)
+- [Gradle Plugin] Add better version catalog support for dialects (#3435)
+- [Native Driver] Add callback to hook into DatabaseConfiguration creation of NativeSqliteDriver (#3512 by [Sven Jacobs][svenjacobs])
+
+### Changed
+- [Paging] Add a default dispatcher to the KeyedQueryPagingSource backed QueryPagingSource function (#3385)
+- [Paging] Make OffsetQueryPagingSource only work with Int (#3386)
+- [Async Runtime] Move await* to upper class ExecutableQuery (#3524 by [Philip Wedemann][hfhbd])
+- [Coroutines Extensions] Remove default params to flow extensions (#3489)
+
+### Fixed
+- [Gradle Plugin] Update to Kotlin 1.7.20 (#3542 by [Zac Sweers][zacsweers])
+- [R2DBC Driver] Adopt R2DBC changes which do not always send a value (#3525 by [Philip Wedemann][hfhbd])
+- [HSQL Dialect] Fix failing sqlite VerifyMigrationTask with Hsql (#3380 by [Philip Wedemann][hfhbd])
+- [Gradle Plugin] Convert tasks to use lazy configuration API (by [Matthew Haughton][3flex])
+- [Gradle Plugin] Avoid NPEs in Kotlin 1.7.20 (#3398 by [Zac Sweers][ZacSweers])
+- [Gradle Plugin] Fix description of squash migrations task (#3449)
+- [IDE Plugin] Fix NoSuchFieldError in newer Kotlin plugins (#3422 by [Madis Pink][madisp])
+- [IDE Plugin] IDEA: UnusedQueryInspection - fix ArrayIndexOutOfBoundsException. (#3427 by [Niklas Baudy][vanniktech])
+- [IDE Plugin] Use reflection for old kotlin plugin references
+- [Compiler] Custom dialect with extension function don't create imports (#3338 by [Philip Wedemann][hfhbd])
+- [Compiler] Fix escaping CodeBlock.of("${CodeBlock.toString()}") (#3340 by [Philip Wedemann][hfhbd])
+- [Compiler] Await async execute statements in migrations (#3352)
+- [Compiler] Fix AS (#3370 by [Philip Wedemann][hfhbd])
+- [Compiler] `getObject`  method supports automatic filling of the actual type. (#3401 by [Rob X][robx])
+- [Compiler] Fix codegen for async grouped returning statements (#3411)
+- [Compiler] Infer the Kotlin type of bind parameter, if possible, or fail with a better error message (#3413 by [Philip Wedemann][hfhbd])
+- [Compiler] Don't allow ABS("foo") (#3430 by [Philip Wedemann][hfhbd])
+- [Compiler] Support inferring kotlin type from other parameters (#3431 by [Philip Wedemann][hfhbd])
+- [Compiler] Always create the database implementation (#3540 by [Philip Wedemann][hfhbd])
+- [Compiler] Relax javaDoc and add it to custom mapper function too (#3554 [Philip Wedemann][hfhbd])
+- [Compiler] Fix DEFAULT in binding (by [Philip Wedemann][hfhbd])
+- [Paging] Fix Paging 3 (#3396)
+- [Paging] Allow construction of OffsetQueryPagingSource with Long (#3409)
+- [Paging] Don't statically swap Dispatchers.Main (#3428)
+
 ## [2.0.0-alpha03] - 2022-06-17
 
 ### Breaking Changes
@@ -488,7 +537,7 @@ Also just a general shoutout to [Matthew Haughton][3flex] who did a lot of work 
 ### Fixed
 - [Compiler]Support Javadoc on tables and fix multiple javadoc in one file (#1224)
 - [Compiler] Enable inserting a value for synthesized columns (#1351)
-- [Compiler] Fix inconsistency in directory name sanitizing (by [Zac Sweers][ZacS])
+- [Compiler] Fix inconsistency in directory name sanitizing (by [Zac Sweers][ZacSweers])
 - [Compiler] Synthesized columns should retain nullability across joins (#1656)
 - [Compiler] Pin the delete statement on the delete keyword (#1643)
 - [Compiler] Fix quoting (#1525 by [Angus Holder][AngusH])
@@ -757,7 +806,7 @@ Initial release.
   [MariusV]: https://github.com/MariusVolkhart
   [SaketN]: https://github.com/saket
   [RomanZ]: https://github.com/romtsn
-  [ZacS]: https://github.com/ZacSweers
+  [ZacSweers]: https://github.com/ZacSweers
   [AngusH]: https://github.com/angusholder
   [drampelt]: https://github.com/drampelt
   [endanke]: https://github.com/endanke
@@ -793,3 +842,6 @@ Initial release.
   [julioromano]: https://github.com/julioromano
   [PaulWoitaschek]: https://github.com/PaulWoitaschek
   [kpgalligan]: https://github.com/kpgalligan
+  [robx]: https://github.com/robxyy
+  [madisp]: https://github.com/madisp
+  [svenjacobs]: https://github.com/svenjacobs

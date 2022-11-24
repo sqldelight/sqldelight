@@ -1,5 +1,6 @@
 package app.cash.sqldelight.postgresql.integration
 
+import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
@@ -25,7 +26,18 @@ class PostgreSqlTest {
     override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
     override fun notifyListeners(queryKeys: Array<String>) = Unit
   }
-  val database = MyDatabase(driver)
+  val database = MyDatabase(
+    driver,
+    arraysAdapter = Arrays.Adapter(
+      object : ColumnAdapter<Array<UInt>, Array<Int>> {
+        override fun decode(databaseValue: Array<Int>): Array<UInt> =
+          databaseValue.map { it.toUInt() }.toTypedArray()
+
+        override fun encode(value: Array<UInt>): Array<Int> =
+          value.map { it.toInt() }.toTypedArray()
+      },
+    ),
+  )
 
   @Before fun before() {
     MyDatabase.Schema.create(driver)
@@ -36,7 +48,7 @@ class PostgreSqlTest {
   }
 
   @Test fun simpleSelect() {
-    database.dogQueries.insertDog("Tilda", "Pomeranian", 1)
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
     assertThat(database.dogQueries.selectDogs().executeAsOne())
       .isEqualTo(
         Dog(
@@ -48,7 +60,7 @@ class PostgreSqlTest {
   }
 
   @Test fun booleanSelect() {
-    database.dogQueries.insertDog("Tilda", "Pomeranian", 1)
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
     assertThat(database.dogQueries.selectGoodDogs(true).executeAsOne())
       .isEqualTo(
         Dog(
@@ -60,7 +72,7 @@ class PostgreSqlTest {
   }
 
   @Test fun returningInsert() {
-    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian", 1).executeAsOne())
+    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian").executeAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
@@ -120,8 +132,8 @@ class PostgreSqlTest {
   }
 
   @Test fun testArrays() {
-    with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).executeAsOne()) {
-      assertThat(intArray!!.asList()).containsExactly(1, 2).inOrder()
+    with(database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two")).executeAsOne()) {
+      assertThat(intArray!!.asList()).containsExactly(1u, 2u).inOrder()
       assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
     }
   }
@@ -164,6 +176,14 @@ class PostgreSqlTest {
         )
         Assert.fail()
       } catch (e: OptimisticLockException) { }
+    }
+  }
+
+  @Test fun values() {
+    with(database.valueQueries) {
+      val id: ValueTable.Id = insertValue(ValueTable(ValueTable.Id(42), "")).executeAsOne()
+      assertThat(id.id).isEqualTo(42)
+      insertRef(RefTable(RefTable.Id(10), id))
     }
   }
 }

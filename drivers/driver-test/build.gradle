@@ -15,14 +15,14 @@ kotlin {
       dependencies {
         api project(':runtime')
 
-        implementation deps.kotlin.test.common
-        implementation deps.kotlin.test.commonAnnotations
+        implementation libs.kotlin.test
+        implementation libs.stately.concurrency
       }
     }
 
     jvmMain {
       dependencies {
-        implementation deps.kotlin.test.junit
+        implementation libs.kotlin.test.junit
       }
     }
   }

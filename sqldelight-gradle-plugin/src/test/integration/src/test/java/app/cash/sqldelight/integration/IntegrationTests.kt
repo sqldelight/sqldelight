@@ -183,4 +183,25 @@ class IntegrationTests {
       ),
     )
   }
+
+  @Test fun views() {
+    queryWrapper.viewQueries.insert(TableForView(42, 42L))
+    assertThat(
+      queryWrapper.viewQueries.get().executeAsOne(),
+    ).isEqualTo(
+      TableForView(
+        id = 42,
+        foo = 42L,
+      ),
+    )
+
+    assertThat(
+      queryWrapper.viewQueries.getView2().executeAsOne(),
+    ).isEqualTo(
+      TableForView(
+        id = 42,
+        foo = 42L,
+      ),
+    )
+  }
 }

@@ -50,7 +50,7 @@ class MySqlTypeResolver(
     return functionExpr.mySqlFunctionType() ?: parentResolver.functionType(functionExpr)
   }
 
-  private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.toLowerCase()) {
+  private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.lowercase()) {
     "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
     "concat" -> encapsulatingType(exprList, TEXT)
     "last_insert_id" -> IntermediateType(INTEGER)

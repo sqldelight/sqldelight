@@ -62,3 +62,6 @@ CREATE TABLE all_types(
 
   some_int2_array INT2[]
 );
+
+SELECT * FROM all_types
+WHERE NOT some_boolean AND NOT some_bool = some_boolean AND NOT TRUE;

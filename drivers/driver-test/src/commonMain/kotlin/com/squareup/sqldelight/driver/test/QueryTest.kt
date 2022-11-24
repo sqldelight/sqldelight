@@ -5,7 +5,7 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.internal.Atomic
+import co.touchlab.stately.concurrency.AtomicInt
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -133,11 +133,11 @@ abstract class QueryTest {
   }
 
   @Test fun notifyDataChangedNotifiesListeners() {
-    val notifies = Atomic(0)
+    val notifies = AtomicInt(0)
     val query = testDataQuery()
     val listener = object : Query.Listener {
       override fun queryResultsChanged() {
-        notifies.increment()
+        notifies.incrementAndGet()
       }
     }
 
@@ -149,11 +149,11 @@ abstract class QueryTest {
   }
 
   @Test fun removeListenerActuallyRemovesListener() {
-    val notifies = Atomic(0)
+    val notifies = AtomicInt(0)
     val query = testDataQuery()
     val listener = object : Query.Listener {
       override fun queryResultsChanged() {
-        notifies.increment()
+        notifies.incrementAndGet()
       }
     }
 
@@ -188,6 +188,3 @@ abstract class QueryTest {
 
   private data class TestData(val id: Long, val value: String)
 }
-
-// Not actually atomic, the type needs to be as the listeners get frozen.
-private fun Atomic<Int>.increment() = set(get() + 1)

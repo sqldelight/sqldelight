@@ -7,7 +7,6 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.impl.SqlStmtImpl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.tree.TokenSet
-import java.util.Locale
 
 open class StatementValidatorMixin(node: ASTNode) : SqlStmtImpl(node) {
   private fun SqlCompositeElement.annotateReservedKeywords(annotationHolder: SqlAnnotationHolder) {
@@ -16,7 +15,7 @@ open class StatementValidatorMixin(node: ASTNode) : SqlStmtImpl(node) {
       it.annotateReservedKeywords(annotationHolder)
     }
     node.getChildren(TokenSet.create(SqlTypes.ID)).forEach {
-      if (it.text.toUpperCase(Locale.ROOT) in invalidIds) {
+      if (it.text.uppercase() in invalidIds) {
         annotationHolder.createErrorAnnotation(this, "Reserved keyword in sqlite")
       }
     }

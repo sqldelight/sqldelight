@@ -1,38 +1,38 @@
 plugins {
-  alias(deps.plugins.shadow)
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.ksp)
-  alias(deps.plugins.grammarKitComposer)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.grammarKitComposer)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 
 grammarKit {
-  intellijRelease.set(deps.versions.idea)
+  intellijRelease.set(libs.versions.idea)
 }
 
 dependencies {
-  ksp deps.moshiCodegen
+  ksp libs.moshiCodegen
 
-  api deps.postgresJdbc
+  api libs.postgresJdbc
 
   compileOnly project(':sqldelight-compiler:dialect')
-  compileOnly deps.intellij.core
-  compileOnly deps.intellij.lang
-  compileOnly deps.intellij.core.ui
-  compileOnly deps.moshi
+  compileOnly libs.intellij.core
+  compileOnly libs.intellij.lang
+  compileOnly libs.intellij.core.ui
+  compileOnly libs.moshi
 
-  testImplementation deps.intellij.core
-  testImplementation deps.intellij.lang
-  testImplementation deps.junit
-  testImplementation deps.truth
+  testImplementation libs.intellij.core
+  testImplementation libs.intellij.lang
+  testImplementation libs.junit
+  testImplementation libs.truth
   testImplementation project(':sqldelight-compiler:dialect')
-  testImplementation deps.sqlPsiTestFixtures
+  testImplementation libs.sqlPsiTestFixtures
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
-tasks.getByName("shadowJar").configure {
+tasks.named("shadowJar") {
   classifier = ''
   include "*.jar"
   include "app/cash/sqldelight/**"
@@ -40,7 +40,7 @@ tasks.getByName("shadowJar").configure {
   include 'META-INF/services/*'
 }
 
-tasks.jar.configure {
+tasks.named('jar') {
   // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
   enabled = false
 }
@@ -48,11 +48,11 @@ tasks.jar.configure {
 configurations {
   [apiElements, runtimeElements].each {
     it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
-    it.outgoing.artifact(shadowJar)
+    it.outgoing.artifact(tasks.named('shadowJar'))
   }
 }
 
 artifacts {
-  runtimeOnly(shadowJar)
-  archives(shadowJar)
+  runtimeOnly(tasks.named('shadowJar'))
+  archives(tasks.named('shadowJar'))
 }

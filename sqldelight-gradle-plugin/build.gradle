@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.shadow) apply false
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.shadow) apply false
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
   id("java-gradle-plugin")
   id("jvm-test-suite")
 }
@@ -36,36 +36,36 @@ configurations {
 }
 
 dependencies {
-  api(deps.sqlPsi) {
+  api(libs.sqlPsi) {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
   }
 
-  implementation deps.sqliteJdbc
-  implementation deps.objectDiff
-  implementation deps.schemaCrawler.tools
-  implementation deps.schemaCrawler.sqlite
+  implementation libs.sqliteJdbc
+  implementation libs.objectDiff
+  implementation libs.schemaCrawler.tools
+  implementation libs.schemaCrawler.sqlite
 
   shade project(':sqlite-migrations')
   shade project(':sqldelight-compiler')
-  shade deps.intellij.analysis
-  shade deps.intellij.core
-  shade deps.intellij.java
-  shade deps.intellij.lang
-  shade deps.intellij.testFramework
+  shade libs.intellij.analysis
+  shade libs.intellij.core
+  shade libs.intellij.java
+  shade libs.intellij.lang
+  shade libs.intellij.testFramework
 
   compileOnly gradleApi()
-  implementation deps.kotlin.plugin
-  compileOnly deps.android.plugin
+  implementation libs.kotlin.plugin
+  compileOnly libs.android.plugin
 
-  testImplementation deps.sqlPsi
+  testImplementation libs.sqlPsi
   testImplementation project(':sqlite-migrations')
   testImplementation project(':sqldelight-compiler')
-  testImplementation deps.junit
-  testImplementation deps.truth
-  testImplementation deps.testParameterInjector
+  testImplementation libs.junit
+  testImplementation libs.truth
+  testImplementation libs.testParameterInjector
 }
 
-test {
+tasks.named('test') {
   // The integration tests require local installations of artifacts.
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
@@ -76,6 +76,7 @@ test {
       ":dialects:sqlite-3-24:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-25:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-30:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-33:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-35:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-38:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
@@ -112,7 +113,7 @@ tasks.named('check') {
   dependsOn(testing.suites.dockerTest)
 }
 
-tasks.dockerTest.configure {
+tasks.named('dockerTest') {
   if (project.hasProperty("Instrumentation")) enabled = false
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
@@ -124,10 +125,12 @@ tasks.dockerTest.configure {
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:r2dbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
   )
 }
 
-validatePlugins {
+tasks.named('validatePlugins') {
   enableStricterValidation = true
 }
 
@@ -136,7 +139,7 @@ if (System.getenv("CI") == "true") {
 
   configurations.compileOnly.extendsFrom(configurations.shade)
 
-  tasks.getByName("shadowJar").configure {
+  tasks.named("shadowJar") {
     archiveClassifier.set("")
     minimize()
     configurations = [project.configurations.shade]
@@ -151,8 +154,8 @@ if (System.getenv("CI") == "true") {
   }
 
   artifacts {
-    runtimeOnly(shadowJar)
-    archives(shadowJar)
+    runtimeOnly(tasks.named('shadowJar'))
+    archives(tasks.named('shadowJar'))
   }
 } else {
   configurations.implementation.extendsFrom(configurations.shade)

@@ -1,12 +1,15 @@
 package app.cash.sqldelight.core.compiler.model
 
+import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement.QueryColumn
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCteTableName
+import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.intellij.psi.util.PsiTreeUtil
 
 class SelectQueryable(
@@ -40,6 +43,17 @@ class SelectQueryable(
     }
     tablesSelected.forEach {
       if (it.query.columns.flattenCompounded() == pureColumns) {
+        val table = it.query.table
+        if (table is SqlViewName) {
+          // check, if this view uses exactly 1 pure table and use this table, if found.
+          val createViewStmt = table.nameIdentifier?.parentOfType<SqlCreateViewStmt>()?.compoundSelectStmt
+          if (createViewStmt != null) {
+            val foundPureTable = SelectQueryable(createViewStmt).pureTable
+            if (foundPureTable != null) {
+              return@lazy foundPureTable
+            }
+          }
+        }
         return@lazy it.tableName
       }
     }

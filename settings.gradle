@@ -8,10 +8,6 @@ pluginManagement {
     includeBuild("buildLogic")
 }
 
-dependencyResolutionManagement {
-    defaultLibrariesExtensionName.set('deps')
-}
-
 rootProject.name = 'sqldelight'
 
 include ':adapters:primitive-adapters'
@@ -23,6 +19,7 @@ include ':dialects:sqlite-3-18'
 include ':dialects:sqlite-3-24'
 include ':dialects:sqlite-3-25'
 include ':dialects:sqlite-3-30'
+include ':dialects:sqlite-3-33'
 include ':dialects:sqlite-3-35'
 include ':dialects:sqlite-3-38'
 include ':drivers:android-driver'

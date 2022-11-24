@@ -1,6 +1,7 @@
 package app.cash.sqldelight.gradle
 
 import app.cash.sqldelight.VERSION
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source

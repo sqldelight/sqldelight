@@ -12,7 +12,7 @@ sqldelight {
 android {
   namespace "com.example.sqldelight"
 
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
 
   buildTypes {
     release {}
@@ -34,5 +34,5 @@ android {
 dependencies {
   implementation project(path: ':MultiplatformProject')
   implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
-  implementation deps.truth
+  implementation libs.truth
 }

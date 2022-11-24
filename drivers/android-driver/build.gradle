@@ -1,13 +1,14 @@
 plugins {
-  alias(deps.plugins.android.library)
-  alias(deps.plugins.kotlin.android)
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
 }
 archivesBaseName = 'sqldelight-android-driver'
 
 android {
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
+  namespace = "app.cash.sqldelight.driver.android"
 
   lint {
     textReport true
@@ -15,7 +16,7 @@ android {
   }
 
   defaultConfig {
-    minSdk deps.versions.minSdk.get() as int
+    minSdk libs.versions.minSdk.get() as int
   }
 
   buildFeatures {
@@ -32,14 +33,14 @@ android {
 dependencies {
   // workaround for https://youtrack.jetbrains.com/issue/KT-27059
   api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
-  api deps.androidx.sqlite
+  api libs.androidx.sqlite
 
-  implementation deps.androidx.sqliteFramework
+  implementation libs.androidx.sqliteFramework
 
   testImplementation project(':drivers:driver-test')
-  testImplementation deps.junit
-  testImplementation deps.androidx.test.core
-  testImplementation deps.robolectric
+  testImplementation libs.junit
+  testImplementation libs.androidx.test.core
+  testImplementation libs.robolectric
 }
 
 // workaround for https://youtrack.jetbrains.com/issue/KT-27059
@@ -50,3 +51,8 @@ configurations.all {
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+// https://github.com/Kotlin/dokka/issues/2472
+afterEvaluate {
+  tasks.named("javaDocReleaseGeneration") { enabled(false) }
+}

@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.lang.util.TableNameElement.CreateTableName
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
@@ -13,16 +14,13 @@ import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.intellij.psi.PsiElement
 
-internal sealed class TableNameElement {
-  abstract val name: String
+internal interface TableNameElement {
+  val namedElement: NamedElement
+  val name get() = namedElement.name
 
-  data class CreateTableName(private val tableName: SqlTableName) : TableNameElement() {
-    override val name get() = tableName.name
-  }
+  data class CreateTableName(override val namedElement: SqlTableName) : TableNameElement
 
-  data class NewTableName(private val newTableName: SqlNewTableName) : TableNameElement() {
-    override val name get() = newTableName.name
-  }
+  data class NewTableName(override val namedElement: SqlNewTableName) : TableNameElement
 }
 
 internal fun SqlCompoundSelectStmt.tablesObserved() = findChildrenOfType<SqlTableName>()

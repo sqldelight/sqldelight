@@ -9,24 +9,24 @@ buildscript {
 }
 
 plugins {
-  alias(deps.plugins.grammarKitComposer) apply false
-  alias(deps.plugins.kotlin.multiplatform) apply false
-  alias(deps.plugins.kotlin.jvm) apply false
-  alias(deps.plugins.kotlin.android) apply false
-  alias(deps.plugins.kotlin.js) apply false
-  alias(deps.plugins.ksp) apply false
-  alias(deps.plugins.android.application) apply false
-  alias(deps.plugins.android.library) apply false
-  alias(deps.plugins.publish) apply false
-  alias(deps.plugins.dokka)
-  alias(deps.plugins.spotless)
+  alias(libs.plugins.grammarKitComposer) apply false
+  alias(libs.plugins.kotlin.multiplatform) apply false
+  alias(libs.plugins.kotlin.jvm) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.js) apply false
+  alias(libs.plugins.ksp) apply false
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.library) apply false
+  alias(libs.plugins.publish) apply false
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.spotless)
 }
 
 spotless {
   kotlin {
     target "**/*.kt"
     targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*"
-    ktlint(deps.versions.ktlint.get()).editorConfigOverride([
+    ktlint(libs.versions.ktlint.get()).editorConfigOverride([
       "indent_size": "2",
        "disabled_rules": "package-name",
        "ij_kotlin_allow_trailing_comma": "true",
@@ -53,12 +53,12 @@ allprojects {
     }
   }
 
-  tasks.withType(JavaCompile) {
+  tasks.withType(JavaCompile).configureEach {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
 
-  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask) {
+  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask).configureEach {
     doFirst {
       // https://github.com/JetBrains/gradle-grammar-kit-plugin/pull/78.
       logging.captureStandardOutput(LogLevel.INFO)
@@ -66,10 +66,8 @@ allprojects {
   }
 
   // https://youtrack.jetbrains.com/issue/KT-46466
-  tasks.withType(org.gradle.plugins.signing.Sign) { signingTask ->
-    tasks.withType(org.gradle.api.publish.maven.tasks.AbstractPublishToMaven) { publishTask ->
-      publishTask.dependsOn(signingTask)
-    }
+  tasks.withType(org.gradle.api.publish.maven.tasks.AbstractPublishToMaven).configureEach {
+    dependsOn(tasks.withType(Sign))
   }
 
   configurations.all {
@@ -82,7 +80,7 @@ allprojects {
   version = VERSION_NAME
 }
 
-tasks.named("dokkaHtmlMultiModule").configure {
+tasks.named("dokkaHtmlMultiModule") {
   outputDirectory = file("$rootDir/docs/2.x")
 
   moduleName.set("SQLDelight")

@@ -1,6 +1,6 @@
 plugins {
-  alias(deps.plugins.publish)
-  alias(deps.plugins.dokka)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
 }
 
@@ -11,36 +11,34 @@ sourceSets {
 
 kotlin {
   mingwX86()
-  js()
 
   sourceSets {
     commonMain {
     }
     commonTest {
       dependencies {
-        implementation deps.kotlin.test.common
-        implementation deps.kotlin.test.commonAnnotations
+        implementation libs.kotlin.test
       }
     }
     jvmTest {
       dependencies {
-        implementation deps.kotlin.test.junit
-        implementation deps.stately.collections
+        implementation libs.kotlin.test.junit
+        implementation libs.stately.collections
       }
     }
     jsTest {
       dependencies {
-        implementation deps.kotlin.test.js
+        implementation libs.kotlin.test.js
       }
     }
     nativeMain {
       dependencies {
-        implementation deps.stately.concurrency
+        implementation libs.stately.concurrency
       }
     }
     nativeTest{
       dependencies {
-        implementation deps.stately.collections
+        implementation libs.stately.collections
       }
     }
   }

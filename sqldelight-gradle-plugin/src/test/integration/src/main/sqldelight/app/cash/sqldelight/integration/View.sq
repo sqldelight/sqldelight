@@ -1,0 +1,17 @@
+CREATE TABLE tableForView(
+id INTEGER,
+foo INTEGER
+);
+
+CREATE VIEW viewForView AS SELECT * FROM tableForView;
+
+CREATE VIEW viewForViewForView AS SELECT * FROM viewForView;
+
+get:
+SELECT * FROM viewForView;
+
+getView2:
+SELECT id, foo FROM viewForViewForView;
+
+insert:
+INSERT INTO tableForView VALUES ?;

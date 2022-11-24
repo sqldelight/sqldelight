@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.MigrationFile
@@ -72,7 +73,7 @@ object SqlDelightCompiler {
 
   fun writeImplementations(
     module: Module,
-    sourceFile: SqlDelightQueriesFile,
+    sourceFile: SqlDelightFile,
     implementationFolder: String,
     output: FileAppender,
   ) {

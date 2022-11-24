@@ -82,7 +82,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
   ): PsiElement {
     val elementText = javaTypeMixin.text
     val className = classes.map { clazz -> findMissingNestedClassName(clazz, elementText) }
-      .maxBy { it.length }
+      .maxByOrNull { it.length }
       ?.substringBefore(".") ?: return javaTypeMixin.firstChild
     return javaTypeMixin.children.first { it.textMatches(className) }
   }

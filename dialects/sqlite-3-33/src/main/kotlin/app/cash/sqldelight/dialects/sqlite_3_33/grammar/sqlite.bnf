@@ -1,0 +1,58 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+  ]
+}
+
+overrides ::= update_stmt | update_stmt_limited
+
+update_stmt ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
+  update_set_clause
+  [ FROM {join_clause} ]
+  [ WHERE <<expr '-1'>> ] {
+  implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmt"
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_33.grammar.mixins.UpdateStmtMixin"
+  pin = 4
+  override = true
+}
+
+update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
+  update_set_clause
+  [ FROM {join_clause} ]
+  [ WHERE <<expr '-1'>> ]
+  [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
+  LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] {
+  implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_33.grammar.mixins.UpdateStmtLimitedMixin"
+  pin = 4
+  override = true
+}
+
+private update_set_clause ::= SET (( {column_name} EQ {setter_expression} {update_stmt_subsequent_setter} * ) | ( LP {column_name} ( COMMA {column_name} ) * RP ) EQ ( LP {setter_expression} ( COMMA {setter_expression} ) * RP )) {
+  pin(".*") = 1
+}

@@ -1,10 +1,11 @@
 plugins {
-  alias(deps.plugins.android.application)
-  alias(deps.plugins.kotlin.android)
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
 }
 
 android {
-  compileSdk deps.versions.compileSdk.get() as int
+  compileSdk libs.versions.compileSdk.get() as int
+  namespace = "com.example.sqldelight.hockey"
 
   lint {
     textOutput file("$reportsDir/lint-results.txt")
@@ -12,7 +13,7 @@ android {
 
   defaultConfig {
     minSdk 21
-    targetSdk deps.versions.compileSdk.get() as int
+    targetSdk libs.versions.compileSdk.get() as int
 
     applicationId 'com.example.sqldelight.hockey'
 
@@ -40,7 +41,7 @@ android {
 dependencies {
   implementation project(':common')
 
-  implementation deps.androidx.recyclerView
+  implementation libs.androidx.recyclerView
 
   implementation "app.cash.sqldelight:android-driver"
 }

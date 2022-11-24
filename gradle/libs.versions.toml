@@ -1,25 +1,24 @@
 [versions]
-kotlin = "1.7.10"
-dokka = "1.6.10"
+kotlin = "1.7.21"
+dokka = "1.7.20"
 kotlinCoroutines = "1.6.4"
 idea = "212.5712.43" # Chipmunk (2021.2.1) Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.2.0"
-schemaCrawler = "16.18.1"
+schemaCrawler = "16.19.1"
 stately = "1.2.3"
-sqliter = "1.2.1"
+sqliter = "1.2.2"
 testhelp = "0.6.4"
 sqljs = "1.6.2"
 paging3 = "3.1.1"
 ktlint = "0.46.1"
-test = "1.4.0"
-agp = "7.2.2"
+test = "1.5.0"
+agp = "7.3.1"
 compileSdk = "31"
-minSdk = "14"
+minSdk = "16"
 sqlPsi = "0.4.2"
 
 [libraries]
-kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
-kotlin-test-commonAnnotations = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
@@ -33,7 +32,6 @@ androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSq
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 androidx-paging3-common = { module = "androidx.paging:paging-common", version.ref = "paging3" }
 androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging3" }
-androidx-paging3-rx3 = { module = "androidx.paging:paging-rxjava3", version.ref = "paging3" }
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.2.1" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
@@ -41,7 +39,7 @@ kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.12.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
 jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.1" }
 truth = { module = "com.google.truth:truth", version = "1.1.3" }
-turbine = { module = "app.cash.turbine:turbine", version = "0.8.0" }
+turbine = { module = "app.cash.turbine:turbine", version = "0.12.1" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.6.4" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.6.0" }
 moshi = { module = "com.squareup.moshi:moshi", version = "1.14.0" }
@@ -56,12 +54,12 @@ intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", versi
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
-robolectric = { module = "org.robolectric:robolectric", version = "4.8.2" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.9" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.5" }
-sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.39.2.1" }
-postgresJdbc = { module = "org.postgresql:postgresql", version = "42.5.0" }
-mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.30" }
+sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.40.0.0" }
+postgresJdbc = { module = "org.postgresql:postgresql", version = "42.5.1" }
+mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.31" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
 schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref = "schemaCrawler" }
@@ -74,9 +72,9 @@ stately-collections = { module = "co.touchlab:stately-collections", version.ref 
 
 testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
-testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.8" }
+testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.10" }
 
-r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
+r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "0.9.1.RELEASE" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -89,8 +87,8 @@ kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 intellij = { id = "org.jetbrains.intellij", version = "1.9.0" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.10" }
-publish = { id = "com.vanniktech.maven.publish", version = "0.21.0" }
-spotless = { id = "com.diffplug.spotless", version = "6.10.0" }
-changelog = { id = "org.jetbrains.changelog", version = "1.3.1" }
+publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.11.0" }
+changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
-ksp = { id = "com.google.devtools.ksp", version = "1.7.10-1.0.6" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.21-1.0.8" }

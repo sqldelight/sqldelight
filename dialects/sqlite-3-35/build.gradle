@@ -1,37 +1,37 @@
 plugins {
-  alias(deps.plugins.shadow)
-  alias(deps.plugins.kotlin.jvm)
-  alias(deps.plugins.grammarKitComposer)
-  alias(deps.plugins.publish)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.grammarKitComposer)
+  alias(libs.plugins.publish)
 }
 
 grammarKit {
-  intellijRelease.set(deps.versions.idea)
+  intellijRelease.set(libs.versions.idea)
 }
 
 dependencies {
-  api project(':dialects:sqlite-3-30')
+  api project(':dialects:sqlite-3-33')
 
   compileOnly project(':sqldelight-compiler:dialect')
-  compileOnly deps.intellij.core
-  compileOnly deps.intellij.lang
+  compileOnly libs.intellij.core
+  compileOnly libs.intellij.lang
 
-  testImplementation deps.intellij.core
-  testImplementation deps.intellij.lang
-  testImplementation deps.junit
-  testImplementation deps.truth
+  testImplementation libs.intellij.core
+  testImplementation libs.intellij.lang
+  testImplementation libs.junit
+  testImplementation libs.truth
   testImplementation project(':sqldelight-compiler:dialect')
-  testImplementation deps.sqlPsiTestFixtures
+  testImplementation libs.sqlPsiTestFixtures
 }
 
-tasks.getByName("shadowJar").configure {
+tasks.named("shadowJar") {
   classifier = ''
   include "*.jar"
   include "app/cash/sqldelight/**"
   include 'META-INF/services/*'
 }
 
-tasks.jar.configure {
+tasks.named('jar') {
   // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
   enabled = false
 }
@@ -39,17 +39,17 @@ tasks.jar.configure {
 configurations {
   [apiElements, runtimeElements].each {
     it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
-    it.outgoing.artifact(shadowJar)
+    it.outgoing.artifact(tasks.named('shadowJar'))
   }
 }
 
-tasks.getByName("compileKotlin").configure {
-  dependsOn(":dialects:sqlite-3-30:shadowJar")
+tasks.named("compileKotlin") {
+  dependsOn(":dialects:sqlite-3-33:shadowJar")
 }
 
 artifacts {
-  runtimeOnly(shadowJar)
-  archives(shadowJar)
+  runtimeOnly(tasks.named('shadowJar'))
+  archives(tasks.named('shadowJar'))
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

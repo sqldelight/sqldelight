@@ -118,7 +118,7 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
     }
 
     is SqlFunctionExpr -> {
-      fun argumentType(expr: SqlExpr) = when (functionName.text.toLowerCase()) {
+      fun argumentType(expr: SqlExpr) = when (functionName.text.lowercase()) {
         "instr" -> when (expr) {
           exprList.getOrNull(1) -> IntermediateType(TEXT)
           else -> typeResolver.functionType(this)

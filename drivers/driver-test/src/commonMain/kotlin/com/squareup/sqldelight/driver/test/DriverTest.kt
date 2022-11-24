@@ -7,9 +7,8 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.internal.Atomic
-import app.cash.sqldelight.internal.getValue
-import app.cash.sqldelight.internal.setValue
+import co.touchlab.stately.concurrency.AtomicReference
+import co.touchlab.stately.concurrency.value
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -56,13 +55,13 @@ abstract class DriverTest {
       newVersion: Int,
     ) = QueryResult.Unit
   }
-  private var transacter by Atomic<Transacter?>(null)
+  private var transacter = AtomicReference<Transacter?>(null)
 
   abstract fun setupDatabase(schema: SqlSchema): SqlDriver
 
   private fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection
-    return transacter!!.transactionWithResult {
+    return transacter.value!!.transactionWithResult {
       val mapper: (SqlCursor) -> Long? = {
         it.next()
         it.getLong(0)
@@ -73,15 +72,16 @@ abstract class DriverTest {
 
   @BeforeTest fun setup() {
     driver = setupDatabase(schema = schema)
-    transacter = object : TransacterImpl(driver) {}
+    transacter.value = object : TransacterImpl(driver) {}
   }
 
   @AfterTest fun tearDown() {
-    transacter = null
+    transacter.value = null
     driver.close()
   }
 
-  @Test fun `insert can run multiple times`() {
+  @Test
+  fun insertCanRunMultipleTimes() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -134,7 +134,8 @@ abstract class DriverTest {
     }
   }
 
-  @Test fun `query can run multiple times`() {
+  @Test
+  fun queryCanRunMultipleTimes() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
@@ -178,7 +179,7 @@ abstract class DriverTest {
     )
   }
 
-  @Test fun `SqlResultSet getters return null if the column values are NULL`() {
+  @Test fun sqlResultSetGettersReturnNullIfTheColumnValuesAreNULL() {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
     }
