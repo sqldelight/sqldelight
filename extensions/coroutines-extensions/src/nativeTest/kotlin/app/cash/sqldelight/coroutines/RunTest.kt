@@ -25,5 +25,3 @@ actual fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = runBl
 
   db.close()
 }
-
-actual typealias AtomicInt = kotlin.native.concurrent.AtomicInt

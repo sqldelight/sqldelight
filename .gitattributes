@@ -17,3 +17,7 @@
 *.woff2         binary
 *.ico           binary
 *.a             binary
+
+# GitHub syntax highligthing 
+*.sq            linguist-language=SQL
+*.sqm           linguist-language=SQL

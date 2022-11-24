@@ -27,6 +27,7 @@ kotlin {
 dependencies {
   api project(':runtime')
   implementation libs.kotlin.coroutines.core
+  implementation libs.stately.concurrency
 
   testImplementation libs.kotlin.test.js
   testImplementation npm('sql.js', libs.versions.sqljs.get())

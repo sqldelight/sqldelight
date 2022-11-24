@@ -1,5 +1,6 @@
 package app.cash.sqldelight.postgresql.integration
 
+import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
@@ -25,7 +26,18 @@ class PostgreSqlTest {
     override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
     override fun notifyListeners(queryKeys: Array<String>) = Unit
   }
-  val database = MyDatabase(driver)
+  val database = MyDatabase(
+    driver,
+    arraysAdapter = Arrays.Adapter(
+      object : ColumnAdapter<Array<UInt>, Array<Int>> {
+        override fun decode(databaseValue: Array<Int>): Array<UInt> =
+          databaseValue.map { it.toUInt() }.toTypedArray()
+
+        override fun encode(value: Array<UInt>): Array<Int> =
+          value.map { it.toInt() }.toTypedArray()
+      },
+    ),
+  )
 
   @Before fun before() {
     MyDatabase.Schema.create(driver)
@@ -120,8 +132,8 @@ class PostgreSqlTest {
   }
 
   @Test fun testArrays() {
-    with(database.arraysQueries.insertAndReturn(arrayOf(1, 2), arrayOf("one", "two")).executeAsOne()) {
-      assertThat(intArray!!.asList()).containsExactly(1, 2).inOrder()
+    with(database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two")).executeAsOne()) {
+      assertThat(intArray!!.asList()).containsExactly(1u, 2u).inOrder()
       assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
     }
   }

@@ -97,12 +97,13 @@ upsert_do_update ::= SET {column_name} EQ {setter_expression} {update_stmt_subse
 
 update_stmt_limited ::= [ {with_clause} ] UPDATE [ OR ROLLBACK | OR ABORT | OR REPLACE | OR FAIL | OR IGNORE ] {qualified_table_name}
   update_set_clause
+  [ FROM {join_clause} ]
   [ WHERE <<expr '-1'>> ]
   [ returning_clause ]
   [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
   LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl"
-  implements = "com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited"
+  extends = "app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl.SqliteUpdateStmtLimitedImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.SqliteUpdateStmtLimited"
   pin = 4
   override = true
 }

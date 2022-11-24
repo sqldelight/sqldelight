@@ -21,6 +21,7 @@ kotlin {
       dependencies {
         implementation libs.kotlin.test
         implementation libs.turbine
+        implementation libs.stately.concurrency
       }
     }
     jvmTest {

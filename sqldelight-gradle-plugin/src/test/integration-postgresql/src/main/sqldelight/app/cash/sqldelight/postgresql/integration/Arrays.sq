@@ -1,5 +1,5 @@
 CREATE TABLE arrays(
-  intArray INTEGER[],
+  intArray INTEGER[] AS kotlin.Array<kotlin.UInt>,
   textArray TEXT[]
 );
 

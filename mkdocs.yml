@@ -219,8 +219,23 @@ theme:
   favicon: images/icon-cashapp.png
   logo: images/icon-cashapp.png
   palette:
-    primary: 'deep purple'
-    accent: 'pink'
+    # Palette toggle for light mode
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      primary: 'deep purple'
+      accent: 'pink'
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      media: "(prefers-color-scheme: dark)"
+      primary: 'deep purple'
+      accent: 'pink'
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
     - navigation.tabs
     - content.tabs.link
