@@ -253,4 +253,20 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  /**
+   * See https://github.com/cashapp/sqldelight/pull/3671
+   */
+  @Test
+  fun `integration build task compiles successfully with kotlin 1-8`() {
+    val integrationRoot = File("src/test/integration-multiplatform-1-8")
+
+    val runner = GradleRunner.create()
+      .forwardOutput()
+      .withCommonConfiguration(integrationRoot)
+      .withArguments("clean", "build", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
 }

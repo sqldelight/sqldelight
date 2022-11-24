@@ -1,0 +1,51 @@
+buildscript {
+  apply from: "${projectDir.absolutePath}/../../../../gradle/dependencies.gradle"
+
+  repositories {
+    maven {
+      url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+    mavenCentral()
+    google()
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+  }
+
+
+  dependencies {
+    classpath 'com.squareup.sqldelight:gradle-plugin:+'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0-Beta'
+    classpath deps.plugins.android
+  }
+}
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.squareup.sqldelight'
+
+repositories {
+  maven {
+    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+  }
+  mavenCentral()
+  google()
+}
+
+kotlin {
+  jvm()
+  macosArm64()
+
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation "app.cash.sqldelight:runtime:+"
+      }
+    }
+  }
+}
+
+
+sqldelight {
+  QueryWrapper {
+    packageName = "com.squareup.sqldelight.integration"
+  }
+}

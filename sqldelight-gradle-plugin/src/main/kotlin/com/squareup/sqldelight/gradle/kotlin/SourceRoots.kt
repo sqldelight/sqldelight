@@ -15,9 +15,6 @@ import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import java.io.File
 
 /**
@@ -38,7 +35,7 @@ import java.io.File
 internal fun SqlDelightDatabase.sources(): List<Source> {
   // Multiplatform project.
   project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let {
-    return it.sources(project)
+    return it.sources()
   }
 
   // Android project.
@@ -58,31 +55,18 @@ internal fun SqlDelightDatabase.sources(): List<Source> {
   )
 }
 
-private fun KotlinMultiplatformExtension.sources(project: Project): List<Source> {
-  // For multiplatform we only support SQLDelight in commonMain - to support other source sets
-  // we would need to generate expect/actual SQLDelight code which at least right now doesn't
-  // seem like there is a use case for. However this code is capable of running on any Target type.
-  val target = targets.single { it is KotlinMetadataTarget }
-  return target.compilations.mapNotNull { compilation ->
-    if (compilation.name.endsWith(suffix = "Test", ignoreCase = true)) {
-      // TODO: If we can include these compilations as sqldelight compilation units, we solve
-      //  the testing problem. However there's no api to get the main compilation for a test
-      //  compilation, except for native where KotlinNativeCompilation has a
-      //  "friendCompilationName" which is the main compilation unit. There looks to be
-      //  nothing for the other compilation units, but we should revisit later to see if
-      //  theres a way to accomplish this.
-      return@mapNotNull null
-    }
-    val targetName = if (target is KotlinMetadataTarget) "common" else target.name
+private fun KotlinMultiplatformExtension.sources(): List<Source> {
+  // For multiplatform we only support SQLDelight in commonMain
+  return listOf(
     Source(
-      type = target.platformType,
-      nativePresetName = (target as? KotlinNativeTarget)?.preset?.name,
-      name = "$targetName${compilation.name.capitalize()}",
-      variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
-      sourceDirectorySet = compilation.defaultSourceSet.kotlin,
-      sourceSets = compilation.allKotlinSourceSets.map { it.name },
+      type = KotlinPlatformType.common,
+      nativePresetName = "common",
+      name = "commonMain",
+      variantName = null,
+      sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
+      sourceSets = listOf("commonMain"),
     )
-  }
+  )
 }
 
 private fun BaseExtension.sources(project: Project): List<Source> {
