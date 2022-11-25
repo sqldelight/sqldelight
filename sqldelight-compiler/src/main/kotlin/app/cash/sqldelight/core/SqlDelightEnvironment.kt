@@ -186,7 +186,7 @@ class SqlDelightEnvironment(
       }
     }
 
-    return CompilationStatus.Success()
+    return CompilationStatus.Success
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
@@ -274,7 +274,7 @@ class SqlDelightEnvironment(
     }
 
   sealed class CompilationStatus {
-    class Success : CompilationStatus()
+    object Success : CompilationStatus()
     class Failure(val errors: List<String>) : CompilationStatus()
   }
 
