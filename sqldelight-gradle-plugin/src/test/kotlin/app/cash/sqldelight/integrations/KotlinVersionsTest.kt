@@ -59,7 +59,7 @@ class KotlinVersionsTest(val kotlinVersion: String) {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "assemble", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
+      .withArguments("clean", "compileKotlinJs", "compileKotlinIosArm64", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
