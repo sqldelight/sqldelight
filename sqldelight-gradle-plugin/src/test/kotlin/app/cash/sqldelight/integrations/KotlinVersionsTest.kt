@@ -23,14 +23,13 @@ import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import org.junit.runners.Parameterized.Parameter
 import org.junit.runners.Parameterized.Parameters
 import java.io.File
 
 @RunWith(Parameterized::class)
-class KotlinVersionsTest {
+class KotlinVersionsTest(val kotlinVersion: String) {
   companion object {
-    @Parameters
+    @Parameters(name = "{0}")
     @JvmStatic
     fun kotlinVersions() = listOf(
       "1.6.21",
@@ -38,9 +37,6 @@ class KotlinVersionsTest {
       "1.8.0-Beta",
     )
   }
-
-  @Parameter
-  lateinit var kotlinVersion: String
 
   @Test
   fun `integration jvm compiles successfully with different Kotlin versions`() {
