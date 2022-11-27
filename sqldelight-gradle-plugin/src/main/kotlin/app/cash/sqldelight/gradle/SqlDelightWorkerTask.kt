@@ -28,5 +28,4 @@ abstract class SqlDelightWorkerTask : SourceTask() {
 
   internal fun workQueueNoIsolation(): WorkQueue =
     workerExecutor.noIsolation()
-
 }

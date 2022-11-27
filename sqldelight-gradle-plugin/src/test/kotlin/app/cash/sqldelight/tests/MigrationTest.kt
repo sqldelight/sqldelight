@@ -316,5 +316,4 @@ class MigrationTest {
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
-
 }
