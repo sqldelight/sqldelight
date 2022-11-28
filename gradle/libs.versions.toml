@@ -91,4 +91,4 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.12.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
-ksp = { id = "com.google.devtools.ksp", version = "1.7.21-1.0.8" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.22-1.0.8" }
