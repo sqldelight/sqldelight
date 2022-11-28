@@ -181,8 +181,7 @@ class SqlDelightDatabase(
   internal fun registerTasks() {
     sources.forEach { source ->
       val allFiles = sourceFolders(source)
-      val sourceFiles = project.files(*allFiles.filter { !it.dependency }.map { it.folder }.toTypedArray())
-      val dependencyFiles = project.files(*allFiles.filter { it.dependency }.map { it.folder }.toTypedArray())
+      val sourceFiles = project.files(*allFiles.map { it.folder }.toTypedArray())
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
@@ -190,7 +189,7 @@ class SqlDelightDatabase(
         it.properties = getProperties()
         it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.outputDirectory = source.outputDir
-        it.source(sourceFiles + dependencyFiles)
+        it.source(sourceFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = SqlDelightPlugin.GROUP
@@ -214,15 +213,15 @@ class SqlDelightDatabase(
       }
 
       if (!deriveSchemaFromMigrations) {
-        addMigrationTasks(sourceFiles.files + dependencyFiles.files, source)
+        addMigrationTasks(sourceFiles.files, source)
       }
 
       if (deriveSchemaFromMigrations) {
-        addSquashTask(sourceFiles.files + dependencyFiles.files, source)
+        addSquashTask(sourceFiles.files, source)
       }
 
       if (migrationOutputDirectory != null) {
-        addMigrationOutputTasks(sourceFiles.files + dependencyFiles.files, source)
+        addMigrationOutputTasks(sourceFiles.files, source)
       }
     }
   }
