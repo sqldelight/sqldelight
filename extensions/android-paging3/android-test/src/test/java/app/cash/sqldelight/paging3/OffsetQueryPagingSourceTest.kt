@@ -649,7 +649,7 @@ class OffsetQueryPagingSourceTest {
       TestItem(cursor.getLong(0)!!)
     },
   ) {
-    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(1, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
+    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
       bindLong(0, limit)
       bindLong(1, offset)
     }
@@ -680,7 +680,7 @@ class OffsetQueryPagingSourceTest {
 
   private fun insertItems(items: List<TestItem>) {
     items.forEach {
-      driver.execute(0, "INSERT INTO TestItem (id) VALUES (?)", 1) {
+      driver.execute(21, "INSERT INTO TestItem (id) VALUES (?)", 1) {
         bindLong(0, it.id)
       }
     }
@@ -688,14 +688,14 @@ class OffsetQueryPagingSourceTest {
 
   private fun deleteItem(item: TestItem): Long =
     driver
-      .execute(0, "DELETE FROM TestItem WHERE id = ?;", 1) {
+      .execute(22, "DELETE FROM TestItem WHERE id = ?;", 1) {
         bindLong(0, item.id)
       }
       .value
 
   private fun deleteItems(range: IntRange): Long =
     driver
-      .execute(0, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
+      .execute(23, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
         bindLong(0, range.first.toLong())
         bindLong(1, range.last.toLong())
       }
