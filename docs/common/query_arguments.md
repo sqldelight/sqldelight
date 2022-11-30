@@ -64,3 +64,9 @@ val rickardRakell = HockeyPlayer(
 )
 playerQueries.insertPlayer(rickardRakell)
 ```
+
+## Input Sanitization
+
+SQLDelight uses query placeholders to pass arguments into queries.
+The actual sanitization of argument inputs is done by the underlying driver implementation on each respective platform and dialect.
+

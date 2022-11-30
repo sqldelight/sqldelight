@@ -2,6 +2,10 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             from(files("../../../gradle/libs.versions.toml"))
+            String overwriteKotlinVersion = settings.ext.find("overwriteKotlinVersion")
+            if (overwriteKotlinVersion != null) {
+                version("kotlin", overwriteKotlinVersion)
+            }
         }
     }
 }

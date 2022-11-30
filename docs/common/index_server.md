@@ -1,7 +1,12 @@
-SQLDelight needs to know the schema of your database. If you always create your schema fresh with
-create table statements, you'll want to put those statements in `.sq` files,
-as shown [here](#fresh-schema). If you apply migration files to an already running database,
-you'll want to rename your migration files to `.sqm` files, as shown [here](#migration-schema)
+SQLDelight needs to know the schema of your database. There are typically two approaches to setting up your database's 
+schema. The "Fresh Schema" approach assumes that you are starting with an empty database, and that all the statements 
+necessary to bring it to the desired state will be applied all at once. The "Migration Schema" approach on the other 
+hand assumes that you already have a database and schema set up (e.g. an existing production database), and that you'll 
+progressively apply migrations over time to update your database's schema.
+
+In SQLDelight, these approaches translate to either writing your table definitions in `.sq` files for a 
+"[Fresh Schema](#fresh-schema)", or by writing migration statements in `.sqm` files for a "[Migration Schema](#migration-schema)".
+In both cases, your SQL _queries_ will be written in `.sq` files ([as shown here](#typesafe-sql)).
 
 ## Fresh Schema
 
@@ -39,10 +44,10 @@ order the migration file runs in. For example, given this hierarchy:
 
 ```
 src
---main
-----sqldelight
-------v1__backend.sqm
-------v2__backend.sqm
+`-- main
+    `-- sqldelight
+        |-- v1__backend.sqm
+        `-- v2__backend.sqm
 ```
 
 SQLDelight will create the schema by applying `v1__backend.sqm` and then `v2__backend.sqm`. Place
