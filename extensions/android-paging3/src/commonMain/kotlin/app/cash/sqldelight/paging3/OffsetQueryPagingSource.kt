@@ -15,7 +15,14 @@
  */
 package app.cash.sqldelight.paging3
 
-import app.cash.paging.*
+import app.cash.paging.PagingSourceLoadParams
+import app.cash.paging.PagingSourceLoadParamsAppend
+import app.cash.paging.PagingSourceLoadParamsPrepend
+import app.cash.paging.PagingSourceLoadParamsRefresh
+import app.cash.paging.PagingSourceLoadResult
+import app.cash.paging.PagingSourceLoadResultInvalid
+import app.cash.paging.PagingSourceLoadResultPage
+import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import kotlinx.coroutines.withContext
@@ -44,6 +51,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
         is PagingSourceLoadParamsPrepend<*> -> maxOf(0, key - params.loadSize)
         is PagingSourceLoadParamsAppend<*> -> key
         is PagingSourceLoadParamsRefresh<*> -> if (key >= count) maxOf(0, count - params.loadSize) else key
+        else -> error("Unknown PagingSourceLoadParams ${params::class}")
       }
       val data = queryProvider(limit, offset)
         .also { currentQuery = it }

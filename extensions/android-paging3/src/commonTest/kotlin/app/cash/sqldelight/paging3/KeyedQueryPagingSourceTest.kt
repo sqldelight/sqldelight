@@ -1,19 +1,33 @@
+/*
+ * Copyright (C) 2016 Square, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package app.cash.sqldelight.paging3
 
-import androidx.paging.PagingConfig
-import androidx.paging.PagingSource.LoadParams.Refresh
-import androidx.paging.PagingSource.LoadResult
-import androidx.paging.PagingState
+import app.cash.paging.PagingConfig
+import app.cash.paging.PagingSourceLoadParamsRefresh
+import app.cash.paging.PagingSourceLoadResultPage
+import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import org.junit.Before
-import org.junit.Test
+import kotlinx.coroutines.test.runTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -24,8 +38,8 @@ class KeyedQueryPagingSourceTest {
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
 
-  @Before fun before() {
-    driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+  @BeforeTest fun before() {
+    driver = provideDbDriver()
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
     (0L until 10L).forEach { this.insert(it) }
     transacter = object : TransacterImpl(driver) {}
@@ -39,12 +53,12 @@ class KeyedQueryPagingSourceTest {
       context = EmptyCoroutineContext,
     )
 
-    runBlocking {
+    runTest {
       val expected = (0L until 10L).chunked(2).iterator()
       var nextKey: Long? = null
       do {
-        val results = source.load(Refresh(nextKey, 2, false))
-        nextKey = (results as LoadResult.Page).nextKey
+        val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 2, false))
+        nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
         assertEquals(expected = expected.next(), actual = results.data)
       } while (nextKey != null)
     }
@@ -58,12 +72,12 @@ class KeyedQueryPagingSourceTest {
       context = EmptyCoroutineContext,
     )
 
-    runBlocking {
+    runTest {
       val expected = (0L until 10L).chunked(3).iterator()
       var nextKey: Long? = null
       do {
-        val results = source.load(Refresh(nextKey, 3, false))
-        nextKey = (results as LoadResult.Page).nextKey
+        val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 3, false))
+        nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
         assertEquals(expected = expected.next(), actual = results.data)
       } while (nextKey != null)
     }
@@ -77,9 +91,11 @@ class KeyedQueryPagingSourceTest {
       context = EmptyCoroutineContext,
     )
 
-    val results = runBlocking { source.load(Refresh(key = 5L, loadSize = 2, false)) }
+    runTest {
+      val results = source.load(PagingSourceLoadParamsRefresh(key = 5L, loadSize = 2, false))
 
-    assertEquals(listOf(5L), (results as LoadResult.Page).data)
+      assertEquals(listOf(5L), (results as PagingSourceLoadResultPage<Long, Long>).data)
+    }
   }
 
   @Test fun `misaligned last page has correct data`() {
@@ -90,11 +106,13 @@ class KeyedQueryPagingSourceTest {
       context = EmptyCoroutineContext,
     )
 
-    val results = runBlocking { source.load(Refresh(key = 9L, loadSize = 3, false)) }
+    runTest {
+      val results = source.load(PagingSourceLoadParamsRefresh(key = 9L, loadSize = 3, false))
 
-    assertEquals(expected = listOf(9L), (results as LoadResult.Page).data)
-    assertEquals(expected = 6L, results.prevKey)
-    assertEquals(expected = null, results.nextKey)
+      assertEquals(expected = listOf(9L), (results as PagingSourceLoadResultPage<Long, Long>).data)
+      assertEquals(expected = 6L, results.prevKey)
+      assertEquals(expected = null, results.nextKey)
+    }
   }
 
   @Test fun `invoking getRefreshKey before first load returns null key`() {
@@ -125,17 +143,19 @@ class KeyedQueryPagingSourceTest {
       context = EmptyCoroutineContext,
     )
 
-    val results = runBlocking { source.load(Refresh(key = null, loadSize = 3, false)) }
-    val refreshKey = source.getRefreshKey(
-      PagingState(
-        listOf(results as LoadResult.Page),
-        null,
-        PagingConfig(3),
-        0,
-      ),
-    )
+    runTest {
+      val results = source.load(PagingSourceLoadParamsRefresh(key = null, loadSize = 3, false))
+      val refreshKey = source.getRefreshKey(
+        PagingState(
+          listOf(results as PagingSourceLoadResultPage<Long, Long>),
+          null,
+          PagingConfig(3),
+          0,
+        ),
+      )
 
-    assertEquals(0L, refreshKey)
+      assertEquals(0L, refreshKey)
+    }
   }
 
   @Test fun `invoking getRefreshKey with single loaded middle page returns correct result`() {
@@ -146,17 +166,19 @@ class KeyedQueryPagingSourceTest {
       context = EmptyCoroutineContext,
     )
 
-    val results = runBlocking { source.load(Refresh(key = 6L, loadSize = 3, false)) }
-    val refreshKey = source.getRefreshKey(
-      PagingState(
-        listOf(results as LoadResult.Page),
-        null,
-        PagingConfig(3),
-        0,
-      ),
-    )
+    runTest {
+      val results = source.load(PagingSourceLoadParamsRefresh(key = 6L, loadSize = 3, false))
+      val refreshKey = source.getRefreshKey(
+        PagingState(
+          listOf(results as PagingSourceLoadResultPage<Long, Long>),
+          null,
+          PagingConfig(3),
+          0,
+        ),
+      )
 
-    assertEquals(6L, refreshKey)
+      assertEquals(6L, refreshKey)
+    }
   }
 
   private fun pageBoundaries(anchor: Long?, limit: Long): Query<Long> {
