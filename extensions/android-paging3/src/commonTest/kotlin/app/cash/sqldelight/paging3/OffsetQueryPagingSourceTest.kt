@@ -248,7 +248,7 @@ class OffsetQueryPagingSourceTest {
     // TestItemId 30-34 loaded
     assertContentEquals(ITEMS_LIST.subList(30, 35), result.data)
     // second append using nextKey from previous load
-        val result2 = pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 = pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // TestItemId 35 - 39 loaded
     assertContentEquals(ITEMS_LIST.subList(35, 40), result2.data)
@@ -546,7 +546,7 @@ class OffsetQueryPagingSourceTest {
     // clips to 0
     val refreshKey = 0
 
-        val result2 = pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 = pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // database should only have 70 items left
     Pager(CONFIG, pagingSourceFactory = { pagingSource2 })

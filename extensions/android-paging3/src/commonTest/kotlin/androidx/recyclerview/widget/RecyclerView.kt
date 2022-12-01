@@ -18,5 +18,5 @@ package androidx.recyclerview.widget
 
 object RecyclerView {
 
-    const val NO_POSITION = -1
+  const val NO_POSITION = -1
 }
