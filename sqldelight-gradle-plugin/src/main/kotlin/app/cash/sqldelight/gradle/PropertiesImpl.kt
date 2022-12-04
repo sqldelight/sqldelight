@@ -40,6 +40,7 @@ data class SqlDelightCompilationUnitImpl(
   @Nested override val sourceFolders: List<SqlDelightSourceFolderImpl>,
   // Output directory is already cached [SqlDelightTask.outputDirectory].
   @Internal override val outputDirectoryFile: File,
+  @Internal override val testOutputDirectoryFile: File,
 ) : SqlDelightCompilationUnit
 
 data class SqlDelightSourceFolderImpl(

@@ -54,6 +54,9 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
   var outputDirectory: File? = null
 
+  @get:OutputDirectory
+  var testOutputDirectory: File? = null
+
   @get:Input abstract val projectName: Property<String>
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
@@ -66,6 +69,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   fun generateSqlDelightFiles() {
     workQueue().submit(GenerateInterfaces::class.java) {
       it.outputDirectory.set(outputDirectory)
+      it.testOutputDirectory.set(testOutputDirectory)
       it.projectName.set(projectName)
       it.properties.set(properties)
       it.verifyMigrations.set(verifyMigrations)
@@ -83,6 +87,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
   interface GenerateInterfacesWorkParameters : WorkParameters {
     val outputDirectory: DirectoryProperty
+    val testOutputDirectory: DirectoryProperty
     val projectName: Property<String>
     val properties: Property<SqlDelightDatabaseProperties>
     val compilationUnit: Property<SqlDelightCompilationUnit>

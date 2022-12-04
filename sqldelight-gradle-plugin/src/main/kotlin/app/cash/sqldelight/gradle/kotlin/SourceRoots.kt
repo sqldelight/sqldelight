@@ -1,5 +1,6 @@
 package app.cash.sqldelight.gradle.kotlin
 
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.gradle.SqlDelightDatabase
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
@@ -57,6 +58,7 @@ internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
       name = "main",
       sourceSets = listOf("main"),
       sourceDirectorySet = sourceSets.getByName("main").kotlin,
+      testSourceDirectorySet = sourceSets.getByName("test").kotlin,
     ),
   )
 }
@@ -67,6 +69,7 @@ private fun KotlinJsProjectExtension.sources(): List<Source> {
       type = KotlinPlatformType.js,
       name = "main",
       sourceDirectorySet = sourceSets.getByName("main").kotlin,
+      testSourceDirectorySet = sourceSets.getByName("test").kotlin,
       sourceSets = listOf("main"),
     ),
   )
@@ -83,6 +86,7 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
       name = "commonMain",
       variantName = "commonMain",
       sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
+      testSourceDirectorySet = sourceSets.getByName("commonTest").kotlin,
       sourceSets = listOf("commonMain"),
     ),
   )
@@ -106,6 +110,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       name = variant.name,
       variantName = variant.name,
       sourceDirectorySet = sourceSets[variant.name]!!,
+      testSourceDirectorySet = sourceSets["test${variant.name.capitalize()}"]!!,
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
         variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
@@ -128,6 +133,7 @@ internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
   val sourceDirectorySet: SourceDirectorySet,
+  val testSourceDirectorySet: SourceDirectorySet,
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,

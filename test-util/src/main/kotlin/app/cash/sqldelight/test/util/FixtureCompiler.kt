@@ -99,6 +99,7 @@ object FixtureCompiler {
     generateDb: Boolean = true,
     writer: ((String) -> Appendable)? = null,
     outputDirectory: File = File(fixtureRoot, "output"),
+    outputTestDirectory: File = File(fixtureRoot, "test"),
     deriveSchemaFromMigrations: Boolean = false,
     treatNullAsUnknownForEquality: Boolean = false,
     generateAsync: Boolean = false,
@@ -106,7 +107,7 @@ object FixtureCompiler {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect, generateAsync)
+    val parser = TestEnvironment(outputDirectory,outputTestDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect, generateAsync)
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 

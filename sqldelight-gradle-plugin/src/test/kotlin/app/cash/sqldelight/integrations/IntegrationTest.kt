@@ -27,6 +27,7 @@ import java.io.File
 class IntegrationTest {
   @Test fun integrationTests() {
     val runner = GradleRunner.create()
+      .withDebug(true)
       .withCommonConfiguration(File("src/test/integration"))
       .withArguments("clean", "check", "--stacktrace")
 

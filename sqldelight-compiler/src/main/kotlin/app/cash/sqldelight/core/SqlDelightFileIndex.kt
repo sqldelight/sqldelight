@@ -67,6 +67,17 @@ interface SqlDelightFileIndex {
   fun outputDirectories(): List<String>
 
   /**
+   * @return A list of output directory paths that generated **test** code should be placed in, relative to
+   * [contentRoot], for the given [file].
+   */
+  fun testOutputDirectory(file: SqlDelightFile): List<String>
+
+  /**
+   * @return A list of all SQLDelight output directories for **test** sources.
+   */
+  fun testOutputDirectories(): List<String>
+
+  /**
    * @return The source roots of sqldelight files for [file].
    */
   fun sourceFolders(file: VirtualFile, includeDependencies: Boolean = true): Collection<VirtualFile>

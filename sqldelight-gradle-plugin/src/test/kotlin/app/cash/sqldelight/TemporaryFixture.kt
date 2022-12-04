@@ -70,6 +70,7 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
               )
             },
             outputDirectoryFile = it.outputDirectoryFile,
+            testOutputDirectoryFile = it.testOutputDirectoryFile
           )
         },
         className = it.className,

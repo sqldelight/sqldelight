@@ -20,6 +20,9 @@ internal class SqlDelightFileIndexImpl : SqlDelightFileIndex {
   override fun outputDirectory(file: SqlDelightFile) = throw UnsupportedOperationException()
   override fun outputDirectories() = throw UnsupportedOperationException()
 
+  override fun testOutputDirectory(file: SqlDelightFile): List<String> = throw UnsupportedOperationException()
+  override fun testOutputDirectories(): List<String> = throw UnsupportedOperationException()
+
   override fun packageName(file: SqlDelightFile) = ""
   override fun sourceFolders(
     file: VirtualFile,

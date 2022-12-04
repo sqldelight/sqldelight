@@ -55,6 +55,9 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
     override fun outputDirectory(file: SqlDelightFile) = outputDirectories()
     override fun outputDirectories() = listOf("")
 
+    override fun testOutputDirectory(file: SqlDelightFile): List<String> = testOutputDirectories()
+    override fun testOutputDirectories(): List<String> = listOf("")
+
     override fun sourceFolders(
       file: SqlDelightFile,
       includeDependencies: Boolean,

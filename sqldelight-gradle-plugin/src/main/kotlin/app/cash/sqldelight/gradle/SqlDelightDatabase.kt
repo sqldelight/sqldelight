@@ -87,6 +87,9 @@ class SqlDelightDatabase(
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
+  private val generatedTestSourcesDirectory
+    get() = File(project.buildDir, "generated/sqldelight/test/$name")
+
   private val sources by lazy { sources(project) }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
 
@@ -137,6 +140,7 @@ class SqlDelightDatabase(
             name = source.name,
             sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = source.outputDir,
+            testOutputDirectoryFile = source.testOutputDir,
           )
         },
         rootDirectory = project.projectDir,
@@ -190,6 +194,7 @@ class SqlDelightDatabase(
         it.properties = getProperties()
         it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.outputDirectory = source.outputDir
+        it.testOutputDirectory = source.testOutputDir
         it.source(sourceFiles + dependencyFiles)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
@@ -201,11 +206,13 @@ class SqlDelightDatabase(
       }
 
       val outputDirectoryProvider: Provider<File> = task.map { it.outputDirectory!! }
+      val testOutputDirectoryProvider: Provider<File> = task.map { it.testOutputDirectory!! }
 
       // Add the source dependency on the generated code.
       // Use a Provider generated from the task to carry task dependencies
       // See https://github.com/cashapp/sqldelight/issues/2119
       source.sourceDirectorySet.srcDir(outputDirectoryProvider)
+      source.testSourceDirectorySet.srcDir(testOutputDirectoryProvider)
       // And register the output directory to the IDE if needed
       source.registerGeneratedDirectory?.invoke(outputDirectoryProvider)
 
@@ -310,4 +317,8 @@ class SqlDelightDatabase(
   private val Source.outputDir get() =
     if (sources.size > 1) File(generatedSourcesDirectory, name)
     else generatedSourcesDirectory
+
+  private val Source.testOutputDir get() =
+    if (sources.size > 1) File(generatedTestSourcesDirectory, name)
+    else generatedTestSourcesDirectory
 }

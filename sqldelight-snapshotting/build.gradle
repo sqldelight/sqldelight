@@ -1,0 +1,18 @@
+plugins {
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.multiplatform")
+}
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        api project(":runtime")
+        api libs.picnic
+        api libs.kotlin.serialization.core
+        api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+      }
+    }
+  }
+}

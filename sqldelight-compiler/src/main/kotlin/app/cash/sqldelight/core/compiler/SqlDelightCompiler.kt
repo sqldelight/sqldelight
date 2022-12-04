@@ -26,15 +26,16 @@ import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
+import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
+import com.intellij.configurationStore.serialize
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiElement
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.NameAllocator
+import com.squareup.kotlinpoet.*
 import java.io.Closeable
+import java.io.File
 
 private typealias FileAppender = (fileName: String) -> Appendable
 
@@ -136,18 +137,68 @@ object SqlDelightCompiler {
         return@forEach
       }
 
+      val typeSpec = tryWithElement(statement) {
+        val generator = TableInterfaceGenerator(query)
+        generator.kotlinImplementationSpec()
+      }
+
       val fileSpec = FileSpec.builder(packageName, allocateName(query.tableName))
+        .apply { if (typeSpec != null) addType(typeSpec) }
+        .build()
+
+      val serializerFileSpec = FileSpec.builder(packageName, "${query.tableName.name}Serializer")
         .apply {
-          tryWithElement(statement) {
-            val generator = TableInterfaceGenerator(query)
-            addType(generator.kotlinImplementationSpec())
-          }
+          if (typeSpec != null) addType(
+            SnapshotSerializerGenerator(
+              packageName,
+              typeSpec,
+              query
+            ).implementationSpec()
+          )
         }
         .build()
 
       statement.sqFile().generatedDirectories?.forEach { directory ->
         fileSpec.writeToAndClose(output("$directory/${allocateName(query.tableName).capitalize()}.kt"))
       }
+
+      statement.sqFile().testGeneratedDirectories?.forEach { directory ->
+        serializerFileSpec.writeToAndClose(output("$directory/${allocateName(query.tableName).capitalize()}Serializer.kt"))
+      }
+    }
+  }
+
+  internal fun writeTestSerializersModule(
+    module: Module,
+    files: List<SqlDelightFile>,
+  ) {
+    val index = SqlDelightFileIndex.getInstance(module)
+
+    val builder =
+      PropertySpec.builder("${index.className}SerializersModule", ClassName("kotlinx.serialization.modules", "SerializersModule"))
+    val initializer = CodeBlock.builder()
+      .beginControlFlow("%M", MemberName("kotlinx.serialization.modules", "SerializersModule"))
+
+    files.forEach { file ->
+      val packageName = file.packageName ?: return@forEach
+
+      file.tables(false).forEach { query ->
+        val name = allocateName(query.tableName).capitalize()
+        initializer.addStatement(
+          "contextual(%T::class, %T)",
+          ClassName(packageName, name),
+          ClassName(packageName, "${name}Serializer")
+        )
+      }
+    }
+
+    val moduleSpec = builder.initializer(initializer.endControlFlow().build()).build()
+    val fileSpec = FileSpec.builder(index.packageName, "${index.className}SerializersModule")
+      .addProperty(moduleSpec)
+      .build()
+
+    index.testOutputDirectories().forEach { directory ->
+      fileSpec.writeTo(File(directory))
     }
   }
 

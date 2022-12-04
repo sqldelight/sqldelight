@@ -99,6 +99,7 @@ class PropertiesFileTest {
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false),
           ),
           outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
+          testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CashDatabase"),
         ),
       )
     }

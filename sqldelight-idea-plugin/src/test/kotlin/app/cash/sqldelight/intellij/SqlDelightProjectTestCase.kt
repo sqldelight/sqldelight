@@ -48,21 +48,25 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
         SqlDelightCompilationUnitImpl(
           name = "internalDebug",
           outputDirectoryFile = File(tempRoot.path, "build"),
+          testOutputDirectoryFile = File(tempRoot.path, "test"),
           sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalDebug/sqldelight"), false)),
         ),
         SqlDelightCompilationUnitImpl(
           name = "internalRelease",
           outputDirectoryFile = File(tempRoot.path, "build"),
+          testOutputDirectoryFile = File(tempRoot.path, "test"),
           sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internal/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/internalRelease/sqldelight"), false)),
         ),
         SqlDelightCompilationUnitImpl(
           name = "productionDebug",
           outputDirectoryFile = File(tempRoot.path, "build"),
+          testOutputDirectoryFile = File(tempRoot.path, "test"),
           sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/debug/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionDebug/sqldelight"), false)),
         ),
         SqlDelightCompilationUnitImpl(
           name = "productionRelease",
           outputDirectoryFile = File(tempRoot.path, "build"),
+          testOutputDirectoryFile = File(tempRoot.path, "test"),
           sourceFolders = listOf(SqlDelightSourceFolderImpl(File(tempRoot.path, "src/main/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/production/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/release/sqldelight"), false), SqlDelightSourceFolderImpl(File(tempRoot.path, "src/productionRelease/sqldelight"), false)),
         ),
       ),
@@ -94,6 +98,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     override val name: String,
     override val sourceFolders: List<SqlDelightSourceFolder>,
     override val outputDirectoryFile: File,
+    override val testOutputDirectoryFile: File,
   ) : SqlDelightCompilationUnit
 
   protected inline fun <reified T : PsiElement> searchForElement(text: String): Collection<T> {

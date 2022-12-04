@@ -46,6 +46,7 @@ class CompilationUnitTests {
             name = "main",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)),
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb"),
           ),
         )
       }
@@ -94,6 +95,7 @@ class CompilationUnitTests {
                 name = "main",
                 sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)),
                 outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+                testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb"),
               ),
             ),
             dependencies = emptyList(),
@@ -110,6 +112,7 @@ class CompilationUnitTests {
                   SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
                 ),
                 outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/OtherDb"),
+                testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/OtherDb"),
               ),
             ),
             dependencies = emptyList(),
@@ -167,6 +170,7 @@ class CompilationUnitTests {
             name = "commonMain",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), false)),
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb"),
           ),
         )
       }
@@ -244,6 +248,7 @@ class CompilationUnitTests {
             name = "commonMain",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), false)),
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb"),
           ),
         )
       }
@@ -323,6 +328,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23DemoDebug/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23DemoDebug"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi23DemoDebug"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi23DemoRelease",
@@ -335,6 +341,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23DemoRelease"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi23DemoRelease"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi23DemoSqldelight",
@@ -347,6 +354,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23DemoSqldelight"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi23DemoSqldelight"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi23FullDebug",
@@ -359,6 +367,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23FullDebug/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23FullDebug"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi23FullDebug"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi23FullRelease",
@@ -371,6 +380,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23FullRelease"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi23FullRelease"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi23FullSqldelight",
@@ -383,6 +393,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23FullSqldelight"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi23FullSqldelight"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi21DemoDebug",
@@ -395,6 +406,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21DemoDebug/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21DemoDebug"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi21DemoDebug"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi21DemoRelease",
@@ -407,6 +419,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21DemoRelease"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi21DemoRelease"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi21DemoSqldelight",
@@ -419,6 +432,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21DemoSqldelight"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi21DemoSqldelight"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi21FullDebug",
@@ -431,6 +445,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21FullDebug/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21FullDebug"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi21FullDebug"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi21FullRelease",
@@ -443,6 +458,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21FullRelease"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi21FullRelease"),
           ),
           SqlDelightCompilationUnitImpl(
             name = "minApi21FullSqldelight",
@@ -455,6 +471,7 @@ class CompilationUnitTests {
               SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
             ).sortedBy { it.folder.absolutePath },
             outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21FullSqldelight"),
+            testOutputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/test/CommonDb/minApi21FullSqldelight"),
           ),
         )
       }

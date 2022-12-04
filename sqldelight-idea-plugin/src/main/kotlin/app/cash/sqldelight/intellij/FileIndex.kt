@@ -68,8 +68,24 @@ class FileIndex(
     return properties.compilationUnits.map { it.outputDirectoryPath }.distinct()
   }
 
+  override fun testOutputDirectory(file: SqlDelightFile): List<String> {
+    val file = file.virtualFile ?: return emptyList()
+    val compilationUnits = properties.compilationUnits.filter { compilationUnit ->
+      compilationUnit.sourceFolders.any { it.folder.localVirtualFile()?.isAncestorOf(file) == true }
+    }
+    return compilationUnits.map { it.testOutputDirectoryPath }.distinct()
+  }
+
+  override fun testOutputDirectories(): List<String> {
+    return properties.compilationUnits.map { it.testOutputDirectoryPath }.distinct()
+  }
+
   private val SqlDelightCompilationUnit.outputDirectoryPath get() =
     outputDirectoryFile.relativeTo(File(contentRoot.path))
+      .path.replace(File.separatorChar, '/').trimEnd('/')
+
+  private val SqlDelightCompilationUnit.testOutputDirectoryPath get() =
+    testOutputDirectoryFile.relativeTo(File(contentRoot.path))
       .path.replace(File.separatorChar, '/').trimEnd('/')
 
   override fun sourceFolders(

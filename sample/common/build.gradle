@@ -1,5 +1,6 @@
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
+  id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin
   alias(libs.plugins.kotlin.native.cocoapods)
   id("app.cash.sqldelight")
 }
@@ -24,6 +25,7 @@ kotlin {
   sourceSets.commonTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test-common'
     implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+    implementation 'app.cash.sqldelight:sqldelight-snapshotting'
   }
 
   // Configure jvm.

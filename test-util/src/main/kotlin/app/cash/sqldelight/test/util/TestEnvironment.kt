@@ -16,6 +16,7 @@ import java.io.File
 
 internal class TestEnvironment(
   private val outputDirectory: File = File("output"),
+  private val outputTestDirectory: File = File("test"),
   private val deriveSchemaFromMigrations: Boolean = false,
   private val treatNullAsUnknownForEquality: Boolean = false,
   private val dialect: SqlDelightDialect = SqliteDialect(),
@@ -28,6 +29,7 @@ internal class TestEnvironment(
     val compilationUnit = object : SqlDelightCompilationUnit {
       override val name = "test"
       override val outputDirectoryFile = outputDirectory
+      override val testOutputDirectoryFile: File = outputTestDirectory
       override val sourceFolders = emptyList<SqlDelightSourceFolder>()
     }
     val environment = SqlDelightEnvironment(

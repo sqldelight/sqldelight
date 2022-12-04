@@ -149,6 +149,7 @@ class SqlDelightEnvironment(
       return@writer file.writer()
     }
 
+    val allFiles = mutableListOf<SqlDelightFile>()
     var sourceFile: SqlDelightFile? = null
     var topMigrationFile: MigrationFile? = null
     forSourceFiles {
@@ -163,8 +164,11 @@ class SqlDelightEnvironment(
         SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
         sourceFile = it
       }
+      allFiles += it
       logger("----- END ${it.name} in $timeTaken ms ------")
     }
+
+    SqlDelightCompiler.writeTestSerializersModule(module, allFiles)
 
     topMigrationFile?.let { migrationFile ->
       logger("----- START ${migrationFile.name} ms -------")
@@ -292,6 +296,10 @@ class SqlDelightEnvironment(
     override fun outputDirectories(): List<String> {
       return listOf(compilationUnit.outputDirectoryFile.absolutePath)
     }
+
+    override fun testOutputDirectory(file: SqlDelightFile): List<String>  = testOutputDirectories()
+
+    override fun testOutputDirectories(): List<String> = listOf(compilationUnit.testOutputDirectoryFile.absolutePath)
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       return@lazy (sourceFolders + dependencyFolders)
