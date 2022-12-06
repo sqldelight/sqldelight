@@ -46,6 +46,7 @@ moshi = { module = "com.squareup.moshi:moshi", version = "1.14.0" }
 moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version = "1.14.0" }
 
 intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
+intellij-core-ui = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "idea" }
 intellij-ideImpl = { module = "com.jetbrains.intellij.platform:ide-impl", version.ref = "idea" }
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
 intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }

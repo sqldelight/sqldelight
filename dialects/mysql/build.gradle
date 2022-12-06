@@ -17,6 +17,7 @@ dependencies {
   api project(':sqldelight-compiler:dialect')
 
   compileOnly libs.intellij.ideImpl
+  compileOnly libs.intellij.core.ui
   compileOnly libs.moshi
 
   testImplementation libs.intellij.ideImpl
