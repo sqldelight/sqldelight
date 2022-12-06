@@ -62,6 +62,7 @@ class PropertiesFileTest {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  mavenCentral()
         |}
         |
         |archivesBaseName = 'Test'

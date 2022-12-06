@@ -25,6 +25,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  mavenCentral()
         |}
         |
         |sqldelight {
@@ -68,6 +69,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  mavenCentral()
         |}
         |
         |sqldelight {
@@ -137,6 +139,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  mavenCentral()
         |}
         |
         |sqldelight {
@@ -190,6 +193,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  mavenCentral()
         |}
         |
         |sqldelight {
@@ -267,6 +271,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  mavenCentral()
         |}
         |
         |sqldelight {
