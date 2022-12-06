@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// Copied from https://github.com/cashapp/multiplatform-paging/blob/androidx-main/paging/paging-runtime/src/commonMain/kotlin/androidx/paging/AsyncPagingDataDiffer.kt
+
 @file:Suppress("OPTIONAL_DECLARATION_USAGE_IN_NON_COMMON_SOURCE")
 
 package androidx.paging

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// Copied from https://github.com/cashapp/multiplatform-paging/blob/androidx-main/paging/paging-runtime/src/commonMain/kotlin/androidx/recyclerview/widget/RecyclerView.kt
+
 package androidx.recyclerview.widget
 
 object RecyclerView {

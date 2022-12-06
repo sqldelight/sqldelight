@@ -15,6 +15,8 @@
  */
 package androidx.recyclerview.widget
 
+// Copied from https://github.com/cashapp/multiplatform-paging/blob/androidx-main/paging/paging-runtime/src/commonMain/kotlin/androidx/recyclerview/widget/BatchingListUpdateCallback.kt
+
 import kotlin.math.max
 import kotlin.math.min
 
