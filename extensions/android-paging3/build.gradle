@@ -15,12 +15,14 @@ kotlin {
       dependencies {
         api project(':runtime')
         api libs.app.cash.paging.common
+        implementation libs.kotlin.coroutines.core
       }
     }
     commonTest {
       dependencies {
         implementation libs.kotlin.test
         implementation libs.kotlin.coroutines.test
+        implementation libs.stately.concurrency
       }
     }
     iosTest {
