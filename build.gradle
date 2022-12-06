@@ -57,6 +57,11 @@ allprojects {
     targetCompatibility = JavaVersion.VERSION_11
   }
 
+  // Workaround for yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320
+  tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask).configureEach {
+    args.addAll(["--mutex", "file:${file("build/.yarn-mutex")}".toString()])
+  }
+
   tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask).configureEach {
     doFirst {
       // https://github.com/JetBrains/gradle-grammar-kit-plugin/pull/78.
