@@ -31,14 +31,10 @@ dependencies {
   implementation libs.jgrapht
 
   compileOnly libs.sqliteJdbc
-  compileOnly libs.intellij.core
-  compileOnly libs.intellij.projectModel
   compileOnly libs.intellij.testFramework
 
   testImplementation libs.burst
   testImplementation libs.sqliteJdbc
-  testImplementation libs.intellij.core
-  testImplementation libs.intellij.projectModel
   testImplementation libs.intellij.testFramework
   testImplementation libs.kotlin.test.junit
   testImplementation libs.truth
