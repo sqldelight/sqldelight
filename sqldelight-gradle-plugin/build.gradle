@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.shadow) apply false
+  alias(libs.plugins.shadow)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("java-gradle-plugin")
@@ -31,9 +31,9 @@ gradlePlugin {
 }
 
 configurations {
-  bundled
   shade
 }
+configurations.compileOnly.extendsFrom(configurations.shade)
 
 dependencies {
   api(libs.sqlPsi) {
@@ -45,13 +45,16 @@ dependencies {
   implementation libs.schemaCrawler.tools
   implementation libs.schemaCrawler.sqlite
 
-  shade project(':sqlite-migrations')
-  shade project(':sqldelight-compiler')
-  shade libs.intellij.analysis
-  shade libs.intellij.core
-  shade libs.intellij.java
-  shade libs.intellij.lang
-  shade libs.intellij.testFramework
+  implementation project(':sqlite-migrations')
+  implementation project(':sqldelight-compiler')
+  // Only shade the minimum IntelliJ libs.
+  shade libs.intellij.analysisImpl
+  shade(libs.intellij.testFramework) {
+    transitive = false
+  }
+  shade(libs.intellij.langImpl) {
+    transitive = false
+  }
 
   compileOnly gradleApi()
   implementation libs.kotlin.plugin
@@ -134,31 +137,29 @@ tasks.named('validatePlugins') {
   enableStricterValidation = true
 }
 
-if (System.getenv("CI") == "true") {
-  apply plugin: 'com.github.johnrengelman.shadow'
+tasks.named("shadowJar") {
+  archiveClassifier.set("")
+  configurations = [project.configurations.shade]
 
-  configurations.compileOnly.extendsFrom(configurations.shade)
+  include '*.jar'
+  include '**/*.class'
+  include 'META-INF/gradle-plugins/*'
+  include "misc/*.properties"
+  include 'messages/*.properties'
+  include "org/intellij/**"
+  include "com/intellij/**"
+  include "org/picocontainer/**"
+  include "it/unimi/**"
+  include "org/jdom/**"
+  include "com/github/benmanes/**"
 
-  tasks.named("shadowJar") {
-    archiveClassifier.set("")
-    minimize()
-    configurations = [project.configurations.shade]
+  exclude '/groovy**'
+  exclude '/kotlin/**'
+}
 
-    include '*.jar'
-    include '**/*.class'
-    include 'META-INF/gradle-plugins/*'
-    include 'messages/*.properties'
-
-    exclude '/groovy**'
-    exclude '/kotlin/**'
-  }
-
-  artifacts {
-    runtimeOnly(tasks.named('shadowJar'))
-    archives(tasks.named('shadowJar'))
-  }
-} else {
-  configurations.implementation.extendsFrom(configurations.shade)
+artifacts {
+  runtimeOnly(tasks.named('shadowJar'))
+  archives(tasks.named('shadowJar'))
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

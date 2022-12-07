@@ -108,7 +108,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         compilationUnit = parameters.compilationUnit.get(),
-        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
     }
 

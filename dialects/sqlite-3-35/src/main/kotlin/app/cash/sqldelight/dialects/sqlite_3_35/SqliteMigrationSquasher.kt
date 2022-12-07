@@ -7,8 +7,6 @@ import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAlterTableRules
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
 
 internal class SqliteMigrationSquasher(
   private val parentSquasher: MigrationSquasher,
@@ -23,7 +21,7 @@ internal class SqliteMigrationSquasher(
         val createTable = alterTableRules.alteredTable(into)
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableDropColumn, SqlColumnName::class.java)!!
         into.text.replaceRange(
-          createTable.columnDefList.first().startOffset until createTable.columnDefList.last().endOffset,
+          createTable.columnDefList.first().textRange.startOffset until createTable.columnDefList.last().textRange.endOffset,
           createTable.columnDefList.filterNot { it.columnName.textMatches(columnName.text) }
             .joinToString(separator = ",\n  ") { it.text },
         )

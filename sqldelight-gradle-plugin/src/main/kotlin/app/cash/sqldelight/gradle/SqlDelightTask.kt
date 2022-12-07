@@ -99,7 +99,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
         properties = parameters.properties.get(),
         moduleName = parameters.projectName.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
-        dialect = ServiceLoader.load(SqlDelightDialect::class.java).findFirst().get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->

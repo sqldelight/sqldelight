@@ -11,8 +11,6 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlIndexName
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
 
 internal class MySqlMigrationSquasher(
   private val parentSquasher: MigrationSquasher,
@@ -24,11 +22,11 @@ internal class MySqlMigrationSquasher(
     if (alterTableRule !is MySqlAlterTableRules) return parentSquasher.squish(alterTableRule, into)
     return when {
       alterTableRule.alterTableAddConstraint != null -> {
-        val startIndex = alterTableRule.alteredTable(into).columnDefList.last().endOffset
+        val startIndex = alterTableRule.alteredTable(into).columnDefList.last().textRange.endOffset
         into.text.replaceRange(startIndex until startIndex, ",\n  ${alterTableRule.alterTableAddConstraint!!.tableConstraint.text}")
       }
       alterTableRule.alterTableAddIndex != null -> {
-        val startIndex = alterTableRule.alteredTable(into).columnDefList.last().endOffset
+        val startIndex = alterTableRule.alteredTable(into).columnDefList.last().textRange.endOffset
         val constraint = alterTableRule.alterTableAddIndex!!.text.substringAfter("ADD").trim()
         into.text.replaceRange(startIndex until startIndex, ",\n  $constraint")
       }
@@ -36,7 +34,7 @@ internal class MySqlMigrationSquasher(
         val indexName = PsiTreeUtil.findChildOfType(alterTableRule.alterTableDropIndex, SqlIndexName::class.java)!!
         val createIndex = into.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }
           .single { it.indexName.textMatches(indexName.text) }
-        into.text.removeRange(createIndex.startOffset..createIndex.endOffset)
+        into.text.removeRange(createIndex.textRange.startOffset..createIndex.textRange.endOffset)
       }
       alterTableRule.alterTableAddColumn != null -> {
         val placement = alterTableRule.alterTableAddColumn!!.placementClause
@@ -60,12 +58,12 @@ internal class MySqlMigrationSquasher(
         into.text.replaceWithPlacement(alterTableRule.alteredTable(into), null, null, columnName)
       }
       alterTableRule.alterTableConvertCharacterSet != null -> {
-        val startIndex = alterTableRule.alteredTable(into).endOffset
+        val startIndex = alterTableRule.alteredTable(into).textRange.endOffset
         val rule = alterTableRule.alterTableConvertCharacterSet!!.text.substringAfter("TO")
         into.text.replaceRange(startIndex until startIndex, rule)
       }
       alterTableRule.rowFormatClause != null -> {
-        val startIndex = alterTableRule.alteredTable(into).endOffset
+        val startIndex = alterTableRule.alteredTable(into).textRange.endOffset
         into.text.replaceRange(startIndex until startIndex, " ${alterTableRule.rowFormatClause!!.text}")
       }
       else -> parentSquasher.squish(alterTableRule, into)
@@ -99,7 +97,7 @@ internal class MySqlMigrationSquasher(
     }
 
     return this.replaceRange(
-      createTableStmt.columnDefList.first().startOffset until createTableStmt.columnDefList.last().endOffset,
+      createTableStmt.columnDefList.first().textRange.startOffset until createTableStmt.columnDefList.last().textRange.endOffset,
       columnDefs.joinToString(separator = ",\n  ") { it.text },
     )
   }

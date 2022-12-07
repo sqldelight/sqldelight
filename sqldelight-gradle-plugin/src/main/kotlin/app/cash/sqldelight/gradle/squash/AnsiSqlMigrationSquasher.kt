@@ -9,9 +9,12 @@ import com.alecstrong.sql.psi.core.psi.SchemaContributor
 import com.alecstrong.sql.psi.core.psi.SqlAlterTableRules
 import com.alecstrong.sql.psi.core.psi.SqlNamedElementImpl
 import com.alecstrong.sql.psi.core.psi.SqlStmt
-import com.intellij.psi.util.parentOfType
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
+
+private inline fun <reified T : PsiElement> PsiElement.parentOfType(withSelf: Boolean = false): T? {
+  return PsiTreeUtil.getParentOfType(this, T::class.java, !withSelf)
+}
 
 class AnsiSqlMigrationSquasher(
   private val createNewSqlFile: (String) -> SqlFileBase,
@@ -32,7 +35,7 @@ class AnsiSqlMigrationSquasher(
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.single {
           it.indexName.textMatches(statement.dropIndexStmt!!.indexName!!.text)
         }
-        currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
+        currentFile.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
       statement.dropTableStmt != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.single {
@@ -43,21 +46,21 @@ class AnsiSqlMigrationSquasher(
           .mapNotNull {
             it.parentOfType<SchemaContributor>()
           }
-        drops.sortedByDescending { it.startOffset }.fold(currentFile.text) { fileText, element ->
-          fileText.replaceRange(element.startOffset..element.endOffset, "")
+        drops.sortedByDescending { it.textRange.startOffset }.fold(currentFile.text) { fileText, element ->
+          fileText.replaceRange(element.textRange.startOffset..element.textRange.endOffset, "")
         }
       }
       statement.dropTriggerStmt != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.single {
           it.triggerName.textMatches(statement.dropTriggerStmt!!.triggerName!!.text)
         }
-        currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
+        currentFile.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
       statement.dropViewStmt != null -> {
         val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.single {
           it.viewName.textMatches(statement.dropViewStmt!!.viewName!!.text)
         }
-        currentFile.text.replaceRange(create.startOffset..create.endOffset, "")
+        currentFile.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
       else -> {
         currentFile.text + statement.text + ";\n"
@@ -74,14 +77,14 @@ class AnsiSqlMigrationSquasher(
         val tableName = alterTableRules.alteredTable(into).tableName
         val newName = alterTableRules.alterTableRenameTable!!.newTableName.text
         val elementsToRename = into.findChildrenOfType<SqlNamedElementImpl>().filter { it.reference?.resolve() == tableName }
-        elementsToRename.sortedByDescending { it.startOffset }.fold(into.text) { fileText, element ->
+        elementsToRename.sortedByDescending { it.textRange.startOffset }.fold(into.text) { fileText, element ->
           fileText.replaceRange(element.range, newName)
         }
       }
       alterTableRules.alterTableAddColumn != null -> {
         val createTable = alterTableRules.alteredTable(into)
         into.text.replaceRange(
-          createTable.columnDefList.first().startOffset until createTable.columnDefList.last().endOffset,
+          createTable.columnDefList.first().textRange.startOffset until createTable.columnDefList.last().textRange.endOffset,
           (createTable.columnDefList + alterTableRules.alterTableAddColumn!!.columnDef)
             .joinToString(separator = ",\n  ") { it.text },
         )

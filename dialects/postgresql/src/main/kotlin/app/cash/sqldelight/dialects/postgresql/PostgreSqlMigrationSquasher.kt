@@ -7,8 +7,6 @@ import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlAlterTableRules
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
 
 internal class PostgreSqlMigrationSquasher(
   private val parentSquasher: MigrationSquasher,
@@ -22,13 +20,13 @@ internal class PostgreSqlMigrationSquasher(
       alterTableRules.alterTableRenameColumn != null -> {
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableRenameColumn, SqlColumnName::class.java)!!
         val column = alterTableRules.alteredTable(into).columnDefList.map { it.columnName }.single { it.textMatches(columnName.text) }
-        into.text.replaceRange(column.startOffset until column.endOffset, alterTableRules.alterTableRenameColumn!!.alterTableColumnAlias!!.text)
+        into.text.replaceRange(column.textRange.startOffset until column.textRange.endOffset, alterTableRules.alterTableRenameColumn!!.alterTableColumnAlias!!.text)
       }
       alterTableRules.alterTableDropColumn != null -> {
         val createTable = alterTableRules.alteredTable(into)
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableDropColumn, SqlColumnName::class.java)!!
         into.text.replaceRange(
-          createTable.columnDefList.first().startOffset until createTable.columnDefList.last().endOffset,
+          createTable.columnDefList.first().textRange.startOffset until createTable.columnDefList.last().textRange.endOffset,
           createTable.columnDefList.filterNot { it.columnName.textMatches(columnName.text) }
             .joinToString(separator = ",\n  ") { it.text },
         )

@@ -45,12 +45,12 @@ picnic = { module = "com.jakewharton.picnic:picnic", version = "0.6.0" }
 moshi = { module = "com.squareup.moshi:moshi", version = "1.14.0" }
 moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version = "1.14.0" }
 
-intellij-java = { module = "com.jetbrains.intellij.java:java-psi", version.ref = "idea" }
-intellij-core = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
+intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
 intellij-core-ui = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "idea" }
-intellij-lang = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
+intellij-ideImpl = { module = "com.jetbrains.intellij.platform:ide-impl", version.ref = "idea" }
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
-intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
+intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
+intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "idea" }
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }

@@ -26,13 +26,9 @@ class SqlDelightDatabase(
   var migrationOutputFileFormat: String = ".sql",
   var generateAsync: Boolean = false,
 ) {
-  internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
-    isTransitive = false
-  }
+  internal val configuration = project.configurations.create("${name}DialectClasspath")
 
-  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath").apply {
-    isTransitive = false
-  }
+  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath")
 
   internal var addedDialect: Boolean = false
 

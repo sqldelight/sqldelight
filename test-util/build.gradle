@@ -7,9 +7,6 @@ dependencies {
   api project(':dialects:sqlite-3-18')
 
   implementation libs.sqlPsi
-  implementation libs.intellij.core
-  implementation libs.intellij.lang
-  implementation libs.intellij.java
   implementation libs.intellij.testFramework
   implementation libs.junit
 }

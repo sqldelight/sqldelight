@@ -1,6 +1,5 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
@@ -14,31 +13,5 @@ repositories {
 
 dependencies {
     api "app.cash.sqldelight:sqlite-3-18-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
-
-    compileOnly "app.cash.sqldelight:dialect-api:${app.cash.sqldelight.VersionKt.VERSION}"
-}
-
-tasks.getByName("shadowJar").configure {
-    classifier = ''
-    include "*.jar"
-    include "app/cash/sqldelight/**"
-    include "foo/**"
-    include 'META-INF/services/*'
-}
-
-tasks.jar.configure {
-    // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
-    enabled = false
-}
-
-configurations {
-    [apiElements, runtimeElements].each {
-        it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
-        it.outgoing.artifact(shadowJar)
-    }
-}
-
-artifacts {
-    runtimeOnly(shadowJar)
-    archives(shadowJar)
+    compileOnly libs.intellij.coreImpl
 }
