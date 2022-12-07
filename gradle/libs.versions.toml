@@ -9,6 +9,7 @@ stately = "1.2.3"
 sqliter = "1.2.2"
 testhelp = "0.6.4"
 sqljs = "1.6.2"
+paging-mpp = "3.1.1-0.1.1"
 paging3 = "3.1.1"
 ktlint = "0.46.1"
 test = "1.5.0"
@@ -30,7 +31,8 @@ androidx-test-core = { module = "androidx.test:core", version.ref = "test" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "test" }
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
-androidx-paging3-common = { module = "androidx.paging:paging-common", version.ref = "paging3" }
+app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
+app-cash-paging-runtime = { module = "app.cash.paging:paging-runtime", version.ref = "paging-mpp" }
 androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging3" }
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.2.1" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
