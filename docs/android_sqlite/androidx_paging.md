@@ -1,25 +1,23 @@
-# Android Paging
-
-## AndroidX Paging
+# AndroidX Paging
 
 To use SQLDelight with [Android's Paging 3 Library](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) add a dependency on the paging extension artifact.
 
 === "Kotlin"
     ```kotlin
     dependencies {
-      implementation("app.cash.sqldelight:android-paging3-extensions:{{ versions.sqldelight }}")
+      implementation("app.cash.sqldelight:androidx-paging3-extensions:{{ versions.sqldelight }}")
     }
     ```
 === "Groovy"
     ```groovy
     dependencies {
-      implementation "app.cash.sqldelight:android-paging3-extensions:{{ versions.sqldelight }}"
+      implementation "app.cash.sqldelight:androidx-paging3-extensions:{{ versions.sqldelight }}"
     }
     ```
 
 SQLDelight offers two methods for paging data -- offset based paging and keyset paging.
 
-### Offset Based Paging
+## Offset Based Paging
 
 Offset paging achieves paged results using `OFFSET` and `LIMIT` clauses. Creating a `PagingSource` that performs offset based paging requires a count query as well as the paged query.
 
@@ -46,7 +44,7 @@ val pagingSource: PagingSource = QueryPagingSource(
 
 By default, queries are performed on `Dispatchers.IO` if no context is specified. Consumers expecting to use RxJava's `Scheduler` to perform queries should use the [`Scheduler.asCoroutineDispatcher`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html) extension function.
 
-### Keyset Paging
+## Keyset Paging
 
 Offset paging is simple and easy to maintain. Unfortunately it performs poorly on large datasets. The `OFFSET` clause of a SQL statement really just drops already executed rows in a SQL query. Therefore, as the number to `OFFSET` grows, so does the amount of time it takes to execute your query. To overcome this, SQLDelight offers a "keyset paging" implementation of `PagingSource`. Rather than querying an entire dataset and inefficiently dropping the first `OFFSET` elements, keyset paging operates using a unique column to restrict the bounds of your queries. This performs better at the expense of higher developer maintenance. 
 

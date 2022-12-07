@@ -25,7 +25,7 @@ nav:
     - 'Extensions':
         - 'RxJava': android_sqlite/rxjava.md
         - 'Coroutines': android_sqlite/coroutines.md
-        - 'Android Paging': android_sqlite/android_paging.md
+        - 'AndroidX Paging': android_sqlite/androidx_paging.md
     - 'Migrations': android_sqlite/migrations.md
     - 'Testing': android_sqlite/testing.md
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
@@ -35,7 +35,7 @@ nav:
         - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
         - 'rxjava2-extensions': 2.x/extensions/rxjava2-extensions/index.html
         - 'rxjava3-extensions': 2.x/extensions/rxjava3-extensions/index.html
-        - 'android-paging3': 2.x/extensions/android-paging3/index.html
+        - 'androidx-paging3': 2.x/extensions/androidx-paging3/index.html
         - 'android-driver': 2.x/drivers/android-driver/index.html
         - 'runtime': 2.x/runtime/index.html
     - '1.x API':
