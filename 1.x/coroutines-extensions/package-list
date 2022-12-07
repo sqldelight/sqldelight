@@ -1,0 +1,11 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines////PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/index.md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines//asFlow/com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]#/PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/as-flow.md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines//mapToList/kotlinx.coroutines.flow.Flow[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#kotlin.coroutines.CoroutineContext/PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/map-to-list.md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines//mapToOne/kotlinx.coroutines.flow.Flow[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#kotlin.coroutines.CoroutineContext/PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/map-to-one.md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines//mapToOneNotNull/kotlinx.coroutines.flow.Flow[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#kotlin.coroutines.CoroutineContext/PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/map-to-one-not-null.md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines//mapToOneOrDefault/kotlinx.coroutines.flow.Flow[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#TypeParam(bounds=[kotlin.Any])#kotlin.coroutines.CoroutineContext/PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/map-to-one-or-default.md
+$dokka.location:com.squareup.sqldelight.runtime.coroutines//mapToOneOrNull/kotlinx.coroutines.flow.Flow[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#kotlin.coroutines.CoroutineContext/PointingToDeclaration/coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/map-to-one-or-null.md
+com.squareup.sqldelight.runtime.coroutines
+

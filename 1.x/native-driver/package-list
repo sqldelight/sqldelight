@@ -1,0 +1,16 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.drivers.native////PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/index.md
+$dokka.location:com.squareup.sqldelight.drivers.native//wrapConnection/#DatabaseConnection#kotlin.Function1[com.squareup.sqldelight.db.SqlDriver,kotlin.Unit]/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/wrap-connection.md
+$dokka.location:com.squareup.sqldelight.drivers.native/ConnectionWrapper///PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-connection-wrapper/index.md
+$dokka.location:com.squareup.sqldelight.drivers.native/ConnectionWrapper/execute/#kotlin.Int?#kotlin.String#kotlin.Int#kotlin.Function1[com.squareup.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-connection-wrapper/execute.md
+$dokka.location:com.squareup.sqldelight.drivers.native/ConnectionWrapper/executeQuery/#kotlin.Int?#kotlin.String#kotlin.Int#kotlin.Function1[com.squareup.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-connection-wrapper/execute-query.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver///PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/index.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver/NativeSqliteDriver/#DatabaseConfiguration#kotlin.Int/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/-native-sqlite-driver.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver/NativeSqliteDriver/#DatabaseManager#kotlin.Int/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/-native-sqlite-driver.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver/NativeSqliteDriver/#com.squareup.sqldelight.db.SqlDriver.Schema#kotlin.String#kotlin.Int/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/-native-sqlite-driver.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver/close/#/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/close.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver/currentTransaction/#/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/current-transaction.md
+$dokka.location:com.squareup.sqldelight.drivers.native/NativeSqliteDriver/newTransaction/#/PointingToDeclaration/native-driver/com.squareup.sqldelight.drivers.native/-native-sqlite-driver/new-transaction.md
+com.squareup.sqldelight.drivers.native
+

@@ -1,0 +1,11 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.runtime.rx////PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/index.md
+$dokka.location:com.squareup.sqldelight.runtime.rx//asObservable/com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]#io.reactivex.Scheduler/PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/as-observable.md
+$dokka.location:com.squareup.sqldelight.runtime.rx//mapToList/io.reactivex.Observable[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#/PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/map-to-list.md
+$dokka.location:com.squareup.sqldelight.runtime.rx//mapToOne/io.reactivex.Observable[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#/PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/map-to-one.md
+$dokka.location:com.squareup.sqldelight.runtime.rx//mapToOneNonNull/io.reactivex.Observable[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#/PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/map-to-one-non-null.md
+$dokka.location:com.squareup.sqldelight.runtime.rx//mapToOneOrDefault/io.reactivex.Observable[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#TypeParam(bounds=[kotlin.Any])/PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/map-to-one-or-default.md
+$dokka.location:com.squareup.sqldelight.runtime.rx//mapToOptional/io.reactivex.Observable[com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#/PointingToDeclaration/rxjava2-extensions/com.squareup.sqldelight.runtime.rx/map-to-optional.md
+com.squareup.sqldelight.runtime.rx
+

@@ -1,0 +1,22 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.android////PointingToDeclaration/android-driver/com.squareup.sqldelight.android/index.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Callback///PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-callback/index.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Callback/Callback/#com.squareup.sqldelight.db.SqlDriver.Schema#kotlin.Array[com.squareup.sqldelight.db.AfterVersionWithDriver]/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-callback/-callback.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Callback/Callback/#com.squareup.sqldelight.db.SqlDriver.Schema#kotlin.Array[com.squareup.sqldelight.db.AfterVersion]/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-callback/-callback.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Callback/Callback/#com.squareup.sqldelight.db.SqlDriver.Schema/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-callback/-callback.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Callback/onCreate/#androidx.sqlite.db.SupportSQLiteDatabase/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-callback/on-create.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Callback/onUpgrade/#androidx.sqlite.db.SupportSQLiteDatabase#kotlin.Int#kotlin.Int/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-callback/on-upgrade.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Transaction///PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-transaction/index.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver.Transaction/Transaction/#com.squareup.sqldelight.Transacter.Transaction?/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-transaction/-transaction.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver///PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/index.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/AndroidSqliteDriver/#androidx.sqlite.db.SupportSQLiteDatabase#kotlin.Int/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-android-sqlite-driver.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/AndroidSqliteDriver/#androidx.sqlite.db.SupportSQLiteOpenHelper/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-android-sqlite-driver.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/AndroidSqliteDriver/#com.squareup.sqldelight.db.SqlDriver.Schema#android.content.Context#kotlin.String?#androidx.sqlite.db.SupportSQLiteOpenHelper.Factory#androidx.sqlite.db.SupportSQLiteOpenHelper.Callback#kotlin.Int#kotlin.Boolean/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/-android-sqlite-driver.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/close/#/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/close.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/currentTransaction/#/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/current-transaction.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/execute/#kotlin.Int?#kotlin.String#kotlin.Int#kotlin.Function1[com.squareup.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/execute.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/executeQuery/#kotlin.Int?#kotlin.String#kotlin.Int#kotlin.Function1[com.squareup.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/execute-query.md
+$dokka.location:com.squareup.sqldelight.android/AndroidSqliteDriver/newTransaction/#/PointingToDeclaration/android-driver/com.squareup.sqldelight.android/-android-sqlite-driver/new-transaction.md
+com.squareup.sqldelight.android
+

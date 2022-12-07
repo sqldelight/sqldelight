@@ -1,0 +1,7 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.android.paging3////PointingToDeclaration/android-paging3/com.squareup.sqldelight.android.paging3/index.md
+$dokka.location:com.squareup.sqldelight.android.paging3//QueryPagingSource/#com.squareup.sqldelight.Query[kotlin.Long]#com.squareup.sqldelight.Transacter#kotlinx.coroutines.CoroutineDispatcher#kotlin.Function2[kotlin.Long,kotlin.Long,com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]/PointingToDeclaration/android-paging3/com.squareup.sqldelight.android.paging3/-query-paging-source.md
+$dokka.location:com.squareup.sqldelight.android.paging3//QueryPagingSource/#com.squareup.sqldelight.Transacter#kotlinx.coroutines.CoroutineDispatcher#kotlin.Function2[TypeParam(bounds=[kotlin.Any])?,kotlin.Long,com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#kotlin.Function2[TypeParam(bounds=[kotlin.Any]),TypeParam(bounds=[kotlin.Any])?,com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]/PointingToDeclaration/android-paging3/com.squareup.sqldelight.android.paging3/-query-paging-source.md
+com.squareup.sqldelight.android.paging3
+

@@ -1,0 +1,8 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.android.paging////PointingToDeclaration/android-paging/com.squareup.sqldelight.android.paging/index.md
+$dokka.location:com.squareup.sqldelight.android.paging/QueryDataSourceFactory///PointingToDeclaration/android-paging/com.squareup.sqldelight.android.paging/-query-data-source-factory/index.md
+$dokka.location:com.squareup.sqldelight.android.paging/QueryDataSourceFactory/QueryDataSourceFactory/#kotlin.Function2[kotlin.Long,kotlin.Long,com.squareup.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]#com.squareup.sqldelight.Query[kotlin.Long]#com.squareup.sqldelight.Transacter/PointingToDeclaration/android-paging/com.squareup.sqldelight.android.paging/-query-data-source-factory/-query-data-source-factory.md
+$dokka.location:com.squareup.sqldelight.android.paging/QueryDataSourceFactory/create/#/PointingToDeclaration/android-paging/com.squareup.sqldelight.android.paging/-query-data-source-factory/create.md
+com.squareup.sqldelight.android.paging
+

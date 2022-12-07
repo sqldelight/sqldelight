@@ -1,0 +1,23 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqlite.migrations////PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/index.md
+$dokka.location:com.squareup.sqlite.migrations//findDatabaseFiles/kotlin.sequences.Sequence[java.io.File]#/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/find-database-files.md
+$dokka.location:com.squareup.sqlite.migrations/CatalogDatabase.Companion///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-catalog-database/-companion/index.md
+$dokka.location:com.squareup.sqlite.migrations/CatalogDatabase.Companion/fromFile/#kotlin.String#kotlin.collections.List[kotlin.String]/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-catalog-database/-companion/from-file.md
+$dokka.location:com.squareup.sqlite.migrations/CatalogDatabase.Companion/withInitStatements/#kotlin.collections.List[kotlin.String]/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-catalog-database/-companion/with-init-statements.md
+$dokka.location:com.squareup.sqlite.migrations/CatalogDatabase///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-catalog-database/index.md
+$dokka.location:com.squareup.sqlite.migrations/Database///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-database/index.md
+$dokka.location:com.squareup.sqlite.migrations/Database/Database/#/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-database/-database.md
+$dokka.location:com.squareup.sqlite.migrations/DatabaseComparator///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-database-comparator/index.md
+$dokka.location:com.squareup.sqlite.migrations/DatabaseComparator/compare/#TypeParam(bounds=[com.squareup.sqlite.migrations.Database])#TypeParam(bounds=[com.squareup.sqlite.migrations.Database])/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-database-comparator/compare.md
+$dokka.location:com.squareup.sqlite.migrations/DatabaseDiff///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-database-diff/index.md
+$dokka.location:com.squareup.sqlite.migrations/DatabaseDiff/printTo/#java.lang.Appendable/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-database-diff/print-to.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseComparator///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-comparator/index.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseComparator/ObjectDifferDatabaseComparator/#kotlin.Function1[kotlin.String,kotlin.Unit]?/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-comparator/-object-differ-database-comparator.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseComparator/compare/#com.squareup.sqlite.migrations.CatalogDatabase#com.squareup.sqlite.migrations.CatalogDatabase/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-comparator/compare.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseDiff///PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-diff/index.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseDiff/ObjectDifferDatabaseDiff/#de.danielbechler.diff.node.DiffNode/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-diff/-object-differ-database-diff.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseDiff/printTo/#java.lang.Appendable/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-diff/print-to.md
+$dokka.location:com.squareup.sqlite.migrations/ObjectDifferDatabaseDiff/toString/#/PointingToDeclaration/sqlite-migrations/com.squareup.sqlite.migrations/-object-differ-database-diff/to-string.md
+com.squareup.sqlite.migrations
+

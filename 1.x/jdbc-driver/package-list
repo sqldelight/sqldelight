@@ -1,0 +1,45 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.sqlite.driver////PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver//asJdbcDriver/javax.sql.DataSource#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/as-jdbc-driver.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager.Transaction///PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/-transaction/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager.Transaction/Transaction/#com.squareup.sqldelight.sqlite.driver.ConnectionManager.Transaction?#com.squareup.sqldelight.sqlite.driver.ConnectionManager#java.sql.Connection/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/-transaction/-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager.Transaction/connection/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/-transaction/connection.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager///PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/beginTransaction/java.sql.Connection#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/begin-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/close/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/close.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/closeConnection/#java.sql.Connection/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/close-connection.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/endTransaction/java.sql.Connection#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/end-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/getConnection/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/get-connection.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/rollbackTransaction/java.sql.Connection#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/rollback-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/ConnectionManager/transaction/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-connection-manager/transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor///PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/JdbcCursor/#java.sql.PreparedStatement#java.sql.ResultSet#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/-jdbc-cursor.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/close/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/close.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/getBytes/#kotlin.Int/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/get-bytes.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/getDouble/#kotlin.Int/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/get-double.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/getLong/#kotlin.Int/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/get-long.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/getString/#kotlin.Int/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/get-string.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcCursor/next/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-cursor/next.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver///PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/JdbcDriver/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/-jdbc-driver.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/beginTransaction/java.sql.Connection#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/begin-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/close/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/close.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/connectionAndClose/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/connection-and-close.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/currentTransaction/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/current-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/endTransaction/java.sql.Connection#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/end-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/execute/#kotlin.Int?#kotlin.String#kotlin.Int#kotlin.Function1[com.squareup.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/execute.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/executeQuery/#kotlin.Int?#kotlin.String#kotlin.Int#kotlin.Function1[com.squareup.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/execute-query.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/newTransaction/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/new-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/rollbackTransaction/java.sql.Connection#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/rollback-transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcDriver/transaction/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-driver/transaction.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement///PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/JdbcPreparedStatement/#java.sql.PreparedStatement/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/-jdbc-prepared-statement.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/bindBytes/#kotlin.Int#kotlin.ByteArray?/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/bind-bytes.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/bindDouble/#kotlin.Int#kotlin.Double?/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/bind-double.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/bindLong/#kotlin.Int#kotlin.Long?/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/bind-long.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/bindString/#kotlin.Int#kotlin.String?/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/bind-string.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/execute/#/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/execute.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcPreparedStatement/executeQuery/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/jdbc-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-prepared-statement/execute-query.md
+com.squareup.sqldelight.sqlite.driver
+

@@ -1,0 +1,9 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.squareup.sqldelight.sqlite.driver////PointingToDeclaration/sqlite-driver/com.squareup.sqldelight.sqlite.driver/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcSqliteDriver.Companion///PointingToDeclaration/sqlite-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-sqlite-driver/-companion/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcSqliteDriver.Companion/IN_MEMORY/#/PointingToDeclaration/sqlite-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-sqlite-driver/-companion/-i-n_-m-e-m-o-r-y.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcSqliteDriver///PointingToDeclaration/sqlite-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-sqlite-driver/index.md
+$dokka.location:com.squareup.sqldelight.sqlite.driver/JdbcSqliteDriver/JdbcSqliteDriver/#kotlin.String#java.util.Properties/PointingToDeclaration/sqlite-driver/com.squareup.sqldelight.sqlite.driver/-jdbc-sqlite-driver/-jdbc-sqlite-driver.md
+com.squareup.sqldelight.sqlite.driver
+
