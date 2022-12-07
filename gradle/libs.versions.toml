@@ -2,7 +2,7 @@
 kotlin = "1.7.22"
 dokka = "1.7.20"
 kotlinCoroutines = "1.6.4"
-idea = "211.7628.21" # Android Studio Bumblebee (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+idea = "223.7571.203" # Android Studio Bumblebee (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.2.0"
 schemaCrawler = "16.19.2"
 stately = "1.2.3"
