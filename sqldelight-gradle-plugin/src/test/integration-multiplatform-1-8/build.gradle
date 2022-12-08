@@ -14,7 +14,7 @@ buildscript {
 
   dependencies {
     classpath 'com.squareup.sqldelight:gradle-plugin:+'
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0-Beta'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0-RC'
     classpath deps.plugins.android
   }
 }
