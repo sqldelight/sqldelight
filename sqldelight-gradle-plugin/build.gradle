@@ -48,7 +48,23 @@ dependencies {
   implementation project(':sqlite-migrations')
   implementation project(':sqldelight-compiler')
   // Only shade the minimum IntelliJ libs.
-  shade libs.intellij.analysisImpl
+  shade libs.intellij.core
+  shade libs.intellij.analysis
+  shade (libs.intellij.lang) {
+    transitive = false
+  }
+  shade(libs.intellij.coreImpl) {
+    transitive = false
+  }
+  shade(libs.intellij.projectModel) {
+    transitive = false
+  }
+  shade(libs.intellij.projectModelImpl) {
+    transitive = false
+  }
+  shade(libs.intellij.analysisImpl) {
+    transitive = false
+  }
   shade(libs.intellij.testFramework) {
     transitive = false
   }
