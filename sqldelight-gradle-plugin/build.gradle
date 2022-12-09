@@ -48,7 +48,8 @@ dependencies {
   implementation project(':sqlite-migrations')
   implementation project(':sqldelight-compiler')
   // Only shade the minimum IntelliJ libs.
-  shade libs.intellij.core
+  shade(libs.intellij.core)
+  // Analysis has no dependencies.
   shade libs.intellij.analysis
   shade (libs.intellij.lang) {
     transitive = false
@@ -72,7 +73,6 @@ dependencies {
     transitive = false
   }
 
-  compileOnly gradleApi()
   implementation libs.kotlin.plugin
   compileOnly libs.android.plugin
 
@@ -156,6 +156,11 @@ tasks.named('validatePlugins') {
 tasks.named("shadowJar") {
   archiveClassifier.set("")
   configurations = [project.configurations.shade]
+
+  minimize {
+    exclude(dependency(libs.intellij.testFramework.get()))
+    exclude(dependency(libs.intellij.langImpl.get()))
+  }
 
   include '*.jar'
   include '**/*.class'
