@@ -35,6 +35,7 @@ class KotlinVersionsTest(val kotlinVersion: String) {
       "1.6.21",
       "1.7.20",
       "1.8.0-Beta",
+      "1.8.0-RC",
     )
   }
 
