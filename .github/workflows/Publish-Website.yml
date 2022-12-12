@@ -53,11 +53,11 @@ jobs:
 
       - name: Deploy SNAPSHOT Docs with mike 🗿
         if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
-        run: mike deploy --push ${{ steps.version.output.VERSION_NAME }} snapshot
+        run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} snapshot
 
       - name: Deploy Docs with mike 🚀
         if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
-        run: mike deploy --push ${{ steps.version.outputs.VERSION_NAME }} latest
+        run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} latest
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
