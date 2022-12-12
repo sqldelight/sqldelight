@@ -1,0 +1,3289 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="SQLDelight - Generates typesafe Kotlin APIs from SQL">
+      
+      
+        <link rel="canonical" href="https://cashapp.github.io/sqldelight/1.x/sqldelight-gradle-plugin/com.squareup.sqldelight.gradle/-verify-migration-task/">
+      
+      
+        <meta name="author" content="Square, Inc.">
+      
+      <link rel="shortcut icon" href="../../../../images/icon-cashapp.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.7">
+    
+    
+      
+        <title>VerifyMigrationTask   - SQLDelight - SQLDelight</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.b8ac9624.min.css">
+      
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.28f3ef9a.min.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../../css/app.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#verifymigrationtask" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://cashapp.github.io/sqldelight/" title="SQLDelight" class="md-header-nav__button md-logo" aria-label="SQLDelight">
+      
+  <img src="../../../../images/icon-cashapp.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            SQLDelight
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              VerifyMigrationTask   - SQLDelight
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/cashapp/sqldelight/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sqldelight
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  <li class="md-tabs__item">
+    
+      <a href="../../../.." class="md-tabs__link md-tabs__link--active">
+        Overview
+      </a>
+    
+  </li>
+
+      
+        
+      
+        
+      
+        
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../android_sqlite/" class="md-tabs__link">
+          Android
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../multiplatform_sqlite/" class="md-tabs__link">
+          Multiplatform
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../jvm_mysql/" class="md-tabs__link">
+          MySQL (JVM)
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../jvm_postgresql/" class="md-tabs__link">
+          PostgreSQL (JVM)
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../jvm_h2/" class="md-tabs__link">
+          HSQL (JVM)
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../native_sqlite/" class="md-tabs__link">
+          SQLite (Native)
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../jvm_sqlite/" class="md-tabs__link">
+          SQLite (JVM)
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../../js_sqlite/" class="md-tabs__link">
+          SQLite (JS)
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../android-driver/com.squareup.sqldelight.android/" class="md-tabs__link">
+          1.x API
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://cashapp.github.io/sqldelight/" title="SQLDelight" class="md-nav__button md-logo" aria-label="SQLDelight">
+      
+  <img src="../../../../images/icon-cashapp.png" alt="logo">
+
+    </a>
+    SQLDelight
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/cashapp/sqldelight/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sqldelight
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../.." title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../../changelog/" title="Changelog" class="md-nav__link">
+      Changelog
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../../contributing/" title="Contributing" class="md-nav__link">
+      Contributing
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../../code_of_conduct/" title="Code of Conduct" class="md-nav__link">
+      Code of Conduct
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Android
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Android" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Android
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-2" type="checkbox" id="nav-5-2">
+    
+    <label class="md-nav__link" for="nav-5-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Extensions
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Extensions" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Extensions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/rxjava/" title="RxJava" class="md-nav__link">
+      RxJava
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/coroutines/" title="Coroutines" class="md-nav__link">
+      Coroutines
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/android_paging/" title="Android Paging" class="md-nav__link">
+      Android Paging
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/testing/" title="Testing" class="md-nav__link">
+      Testing
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/upgrading/" title="Upgrading Pre-1.0" class="md-nav__link">
+      Upgrading Pre-1.0
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-9" type="checkbox" id="nav-5-9">
+    
+    <label class="md-nav__link" for="nav-5-9">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-9">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../rxjava2-extensions/com.squareup.sqldelight.runtime.rx/" title="rxjava2-extensions" class="md-nav__link">
+      rxjava2-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../rxjava3-extensions/com.squareup.sqldelight.runtime.rx3/" title="rxjava3-extensions" class="md-nav__link">
+      rxjava3-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../android-paging/com.squareup.sqldelight.android.paging/" title="android-paging" class="md-nav__link">
+      android-paging
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../android-driver/com.squareup.sqldelight.android/" title="android-driver" class="md-nav__link">
+      android-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../android_sqlite/resources/" title="Resources" class="md-nav__link">
+      Resources
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Multiplatform
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Multiplatform" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Multiplatform
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-2" type="checkbox" id="nav-6-2">
+    
+    <label class="md-nav__link" for="nav-6-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-3" type="checkbox" id="nav-6-3">
+    
+    <label class="md-nav__link" for="nav-6-3">
+      Extensions
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Extensions" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Extensions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/coroutines/" title="Coroutines" class="md-nav__link">
+      Coroutines
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../multiplatform_sqlite/resources/" title="Resources" class="md-nav__link">
+      Resources
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-8" type="checkbox" id="nav-6-8">
+    
+    <label class="md-nav__link" for="nav-6-8">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      MySQL (JVM)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="MySQL (JVM)" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        MySQL (JVM)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2">
+    
+    <label class="md-nav__link" for="nav-7-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-7-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_mysql/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-6" type="checkbox" id="nav-7-6">
+    
+    <label class="md-nav__link" for="nav-7-6">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-7-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../jdbc-driver/com.squareup.sqldelight.sqlite.driver/" title="jdbc-driver" class="md-nav__link">
+      jdbc-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      PostgreSQL (JVM)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="PostgreSQL (JVM)" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        PostgreSQL (JVM)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8-2" type="checkbox" id="nav-8-2">
+    
+    <label class="md-nav__link" for="nav-8-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-8-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_postgresql/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8-6" type="checkbox" id="nav-8-6">
+    
+    <label class="md-nav__link" for="nav-8-6">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-8-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../jdbc-driver/com.squareup.sqldelight.sqlite.driver/" title="jdbc-driver" class="md-nav__link">
+      jdbc-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+    
+    <label class="md-nav__link" for="nav-9">
+      HSQL (JVM)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="HSQL (JVM)" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        HSQL (JVM)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-9-2" type="checkbox" id="nav-9-2">
+    
+    <label class="md-nav__link" for="nav-9-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-9-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_h2/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-9-6" type="checkbox" id="nav-9-6">
+    
+    <label class="md-nav__link" for="nav-9-6">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-9-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../jdbc-driver/com.squareup.sqldelight.sqlite.driver/" title="jdbc-driver" class="md-nav__link">
+      jdbc-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+    
+    <label class="md-nav__link" for="nav-10">
+      SQLite (Native)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQLite (Native)" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQLite (Native)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10-2" type="checkbox" id="nav-10-2">
+    
+    <label class="md-nav__link" for="nav-10-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-10-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10-3" type="checkbox" id="nav-10-3">
+    
+    <label class="md-nav__link" for="nav-10-3">
+      Extensions
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Extensions" data-md-level="2">
+      <label class="md-nav__title" for="nav-10-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Extensions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/coroutines/" title="Coroutines" class="md-nav__link">
+      Coroutines
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../native_sqlite/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10-7" type="checkbox" id="nav-10-7">
+    
+    <label class="md-nav__link" for="nav-10-7">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-10-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../native-driver/com.squareup.sqldelight.drivers.native/" title="native-driver" class="md-nav__link">
+      native-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
+    
+    <label class="md-nav__link" for="nav-11">
+      SQLite (JVM)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQLite (JVM)" data-md-level="1">
+      <label class="md-nav__title" for="nav-11">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQLite (JVM)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-2" type="checkbox" id="nav-11-2">
+    
+    <label class="md-nav__link" for="nav-11-2">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
+    
+    <label class="md-nav__link" for="nav-11-3">
+      Extensions
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Extensions" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Extensions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/rxjava/" title="RxJava" class="md-nav__link">
+      RxJava
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/coroutines/" title="Coroutines" class="md-nav__link">
+      Coroutines
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../jvm_sqlite/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-7" type="checkbox" id="nav-11-7">
+    
+    <label class="md-nav__link" for="nav-11-7">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-11-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../rxjava2-extensions/com.squareup.sqldelight.runtime.rx/" title="rxjava2-extensions" class="md-nav__link">
+      rxjava2-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../rxjava3-extensions/com.squareup.sqldelight.runtime.rx3/" title="rxjava3-extensions" class="md-nav__link">
+      rxjava3-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../sqlite-driver/com.squareup.sqldelight.sqlite.driver/" title="sqlite-driver" class="md-nav__link">
+      sqlite-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12">
+    
+    <label class="md-nav__link" for="nav-12">
+      SQLite (JS)
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQLite (JS)" data-md-level="1">
+      <label class="md-nav__title" for="nav-12">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQLite (JS)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/" title="Getting Started" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/multiplatform/" title="Multiplatform" class="md-nav__link">
+      Multiplatform
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3">
+    
+    <label class="md-nav__link" for="nav-12-3">
+      SQL
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="SQL" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        SQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/custom_projections/" title="Projections" class="md-nav__link">
+      Projections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/query_arguments/" title="Arguments" class="md-nav__link">
+      Arguments
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/transactions/" title="Transactions" class="md-nav__link">
+      Transactions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/grouping_statements/" title="Grouping Statements" class="md-nav__link">
+      Grouping Statements
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-4" type="checkbox" id="nav-12-4">
+    
+    <label class="md-nav__link" for="nav-12-4">
+      Extensions
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Extensions" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-4">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Extensions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/coroutines/" title="Coroutines" class="md-nav__link">
+      Coroutines
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/migrations/" title="Migrations" class="md-nav__link">
+      Migrations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/intellij_plugin/" title="IntelliJ Plugin" class="md-nav__link">
+      IntelliJ Plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../../js_sqlite/gradle/" title="Gradle" class="md-nav__link">
+      Gradle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8">
+    
+    <label class="md-nav__link" for="nav-12-8">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="2">
+      <label class="md-nav__title" for="nav-12-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../sqljs-driver/com.squareup.sqldelight.drivers.sqljs/" title="sqljs-driver" class="md-nav__link">
+      sqljs-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-13" type="checkbox" id="nav-13">
+    
+    <label class="md-nav__link" for="nav-13">
+      1.x API
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="1.x API" data-md-level="1">
+      <label class="md-nav__title" for="nav-13">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        1.x API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../android-driver/com.squareup.sqldelight.android/" title="android-driver" class="md-nav__link">
+      android-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../android-paging/com.squareup.sqldelight.android.paging/" title="android-paging" class="md-nav__link">
+      android-paging
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../coroutines-extensions/com.squareup.sqldelight.runtime.coroutines/" title="coroutines-extensions" class="md-nav__link">
+      coroutines-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../jdbc-driver/com.squareup.sqldelight.sqlite.driver/" title="jdbc-driver" class="md-nav__link">
+      jdbc-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../native-driver/com.squareup.sqldelight.drivers.native/" title="native-driver" class="md-nav__link">
+      native-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../runtime/com.squareup.sqldelight/" title="runtime" class="md-nav__link">
+      runtime
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../rxjava2-extensions/com.squareup.sqldelight.runtime.rx/" title="rxjava2-extensions" class="md-nav__link">
+      rxjava2-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../rxjava3-extensions/com.squareup.sqldelight.runtime.rx3/" title="rxjava3-extensions" class="md-nav__link">
+      rxjava3-extensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../sqlite-driver/com.squareup.sqldelight.sqlite.driver/" title="sqlite-driver" class="md-nav__link">
+      sqlite-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../sqljs-driver/com.squareup.sqldelight.drivers.sqljs/" title="sqljs-driver" class="md-nav__link">
+      sqljs-driver
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-13-11" type="checkbox" id="nav-13-11">
+    
+    <label class="md-nav__link" for="nav-13-11">
+      Internal
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Internal" data-md-level="2">
+      <label class="md-nav__title" for="nav-13-11">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Internal
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../sqldelight-compiler/com.squareup.sqldelight.core.compiler/" title="sqldelight-compiler" class="md-nav__link">
+      sqldelight-compiler
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../" title="sqldelight-gradle-plugin" class="md-nav__link">
+      sqldelight-gradle-plugin
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../sqlite-migrations/com.squareup.sqlite.migrations/" title="sqlite-migrations" class="md-nav__link">
+      sqlite-migrations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/cashapp/sqldelight/edit/master/docs/1.x/sqldelight-gradle-plugin/com.squareup.sqldelight.gradle/-verify-migration-task/index.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                <p>//<a href="../../../">sqldelight-gradle-plugin</a>/<a href="../">com.squareup.sqldelight.gradle</a>/<a href="./">VerifyMigrationTask</a></p>
+<h1 id="verifymigrationtask">VerifyMigrationTask</h1>
+<p>[jvm] @CacheableTask()  </p>
+<p>abstract class <a href="./">VerifyMigrationTask</a> : <a href="../-sql-delight-worker-task/">SqlDelightWorkerTask</a>   </p>
+<h2 id="types">Types</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationAction///PointingToDeclaration/"></a><a href="-verify-migration-action/">VerifyMigrationAction</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationAction///PointingToDeclaration/"></a>[jvm]  <br>Content  <br>abstract class <a href="-verify-migration-action/">VerifyMigrationAction</a> : WorkAction&lt;<a href="-verify-migration-work-parameters/">VerifyMigrationTask.VerifyMigrationWorkParameters</a>&gt;   <br><br><br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationWorkParameters///PointingToDeclaration/"></a><a href="-verify-migration-work-parameters/">VerifyMigrationWorkParameters</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationWorkParameters///PointingToDeclaration/"></a>[jvm]  <br>Content  <br>interface <a href="-verify-migration-work-parameters/">VerifyMigrationWorkParameters</a> : WorkParameters  <br><br><br></td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/appendParallelSafeAction/#org.gradle.api.Action[org.gradle.api.Task]/PointingToDeclaration/"></a><a href="./#-424813929%2FFunctions%2F-2101871059">appendParallelSafeAction</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/appendParallelSafeAction/#org.gradle.api.Action[org.gradle.api.Task]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-424813929%2FFunctions%2F-2101871059">appendParallelSafeAction</a>(p0: Action<in Task>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/compareTo/#org.gradle.api.Task/PointingToDeclaration/"></a><a href="./#-1116459948%2FFunctions%2F-2101871059">compareTo</a></td>
+<td><a name="org.gradle.api/DefaultTask/compareTo/#org.gradle.api.Task/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open operator override fun <a href="./#-1116459948%2FFunctions%2F-2101871059">compareTo</a>(other: Task): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/configure/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-651065582%2FFunctions%2F-2101871059">configure</a></td>
+<td><a name="org.gradle.api/DefaultTask/configure/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-651065582%2FFunctions%2F-2101871059">configure</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/ConventionTask/conventionMapping/#kotlin.String#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-746992047%2FFunctions%2F-2101871059">conventionMapping</a></td>
+<td><a name="org.gradle.api.internal/ConventionTask/conventionMapping/#kotlin.String#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open fun <a href="./#-746992047%2FFunctions%2F-2101871059">conventionMapping</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, p1: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;): Task  <br>open fun <a href="./#-1075172172%2FFunctions%2F-2101871059">conventionMapping</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, p1: <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Callable.html">Callable</a>&lt;*&gt;): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/dependsOn/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a><a href="./#2111273635%2FFunctions%2F-2101871059">dependsOn</a></td>
+<td><a name="org.gradle.api/DefaultTask/dependsOn/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#2111273635%2FFunctions%2F-2101871059">dependsOn</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/SqlDelightWorkerTask/disableClassLoaderIsolation/#/PointingToDeclaration/"></a><a href="../-sql-delight-worker-task/disable-class-loader-isolation/">disableClassLoaderIsolation</a></td>
+<td><a name="com.squareup.sqldelight.gradle/SqlDelightWorkerTask/disableClassLoaderIsolation/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>fun <a href="../-sql-delight-worker-task/disable-class-loader-isolation/">disableClassLoaderIsolation</a>()  <br>More info  <br>Makes the task use WorkerExecutor.noIsolation instead of WorkerExecutor.classLoaderIsolation  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/doFirst/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-703048367%2FFunctions%2F-2101871059">doFirst</a></td>
+<td><a name="org.gradle.api/DefaultTask/doFirst/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-703048367%2FFunctions%2F-2101871059">doFirst</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;): Task  <br>open override fun <a href="./#-520847272%2FFunctions%2F-2101871059">doFirst</a>(p0: Action<in Task>): Task  <br>open override fun <a href="./#1566242643%2FFunctions%2F-2101871059">doFirst</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, p1: Action<in Task>): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/doLast/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-1502020925%2FFunctions%2F-2101871059">doLast</a></td>
+<td><a name="org.gradle.api/DefaultTask/doLast/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1502020925%2FFunctions%2F-2101871059">doLast</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;): Task  <br>open override fun <a href="./#21389222%2FFunctions%2F-2101871059">doLast</a>(p0: Action<in Task>): Task  <br>open override fun <a href="./#-1638599135%2FFunctions%2F-2101871059">doLast</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, p1: Action<in Task>): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/exclude/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#797845476%2FFunctions%2F-2101871059">exclude</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/exclude/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#797845476%2FFunctions%2F-2101871059">exclude</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;): SourceTask  <br>open override fun <a href="./#-1078894444%2FFunctions%2F-2101871059">exclude</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>): SourceTask  <br>open override fun <a href="./#1586137626%2FFunctions%2F-2101871059">exclude</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;): SourceTask  <br>open override fun <a href="./#1599462955%2FFunctions%2F-2101871059">exclude</a>(p0: Spec<FileTreeElement>): SourceTask  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/finalizedBy/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-1068823156%2FFunctions%2F-2101871059">finalizedBy</a></td>
+<td><a name="org.gradle.api/DefaultTask/finalizedBy/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1068823156%2FFunctions%2F-2101871059">finalizedBy</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getActions/#/PointingToDeclaration/"></a><a href="./#-1460891205%2FFunctions%2F-2101871059">getActions</a></td>
+<td><a name="org.gradle.api/DefaultTask/getActions/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1460891205%2FFunctions%2F-2101871059">getActions</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html">MutableList</a><Action\<in Task>>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getAnt/#/PointingToDeclaration/"></a><a href="./#716947857%2FFunctions%2F-2101871059">getAnt</a></td>
+<td><a name="org.gradle.api/DefaultTask/getAnt/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#716947857%2FFunctions%2F-2101871059">getAnt</a>(): AntBuilder  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getAsDynamicObject/#/PointingToDeclaration/"></a><a href="./#1881814752%2FFunctions%2F-2101871059">getAsDynamicObject</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getAsDynamicObject/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>open override fun <a href="./#1881814752%2FFunctions%2F-2101871059">getAsDynamicObject</a>(): DynamicObject  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getConvention/#/PointingToDeclaration/"></a><a href="./#-1835585251%2FFunctions%2F-2101871059">getConvention</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getConvention/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>~~open~~ ~~override~~ ~~fun~~ <a href="./#-1835585251%2FFunctions%2F-2101871059">~~getConvention~~</a>~~(~~~~)~~~~:~~ Convention  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/ConventionTask/getConventionMapping/#/PointingToDeclaration/"></a><a href="./#-1874307394%2FFunctions%2F-2101871059">getConventionMapping</a></td>
+<td><a name="org.gradle.api.internal/ConventionTask/getConventionMapping/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>open override fun <a href="./#-1874307394%2FFunctions%2F-2101871059">getConventionMapping</a>(): ConventionMapping  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getDependsOn/#/PointingToDeclaration/"></a><a href="./#1403910226%2FFunctions%2F-2101871059">getDependsOn</a></td>
+<td><a name="org.gradle.api/DefaultTask/getDependsOn/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1403910226%2FFunctions%2F-2101871059">getDependsOn</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getDescription/#/PointingToDeclaration/"></a><a href="./#1684061724%2FFunctions%2F-2101871059">getDescription</a></td>
+<td><a name="org.gradle.api/DefaultTask/getDescription/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1684061724%2FFunctions%2F-2101871059">getDescription</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>?  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getDestroyables/#/PointingToDeclaration/"></a><a href="./#2100433539%2FFunctions%2F-2101871059">getDestroyables</a></td>
+<td><a name="org.gradle.api/DefaultTask/getDestroyables/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#2100433539%2FFunctions%2F-2101871059">getDestroyables</a>(): TaskDestroyables  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getDidWork/#/PointingToDeclaration/"></a><a href="./#-1560092184%2FFunctions%2F-2101871059">getDidWork</a></td>
+<td><a name="org.gradle.api/DefaultTask/getDidWork/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1560092184%2FFunctions%2F-2101871059">getDidWork</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getEnabled/#/PointingToDeclaration/"></a><a href="./#-1884969993%2FFunctions%2F-2101871059">getEnabled</a></td>
+<td><a name="org.gradle.api/DefaultTask/getEnabled/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1884969993%2FFunctions%2F-2101871059">getEnabled</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/getExcludes/#/PointingToDeclaration/"></a><a href="./#-385563349%2FFunctions%2F-2101871059">getExcludes</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/getExcludes/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>open override fun <a href="./#-385563349%2FFunctions%2F-2101871059">getExcludes</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getExtensions/#/PointingToDeclaration/"></a><a href="./#-299924498%2FFunctions%2F-2101871059">getExtensions</a></td>
+<td><a name="org.gradle.api/DefaultTask/getExtensions/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-299924498%2FFunctions%2F-2101871059">getExtensions</a>(): ExtensionContainer  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getFinalizedBy/#/PointingToDeclaration/"></a><a href="./#1910779451%2FFunctions%2F-2101871059">getFinalizedBy</a></td>
+<td><a name="org.gradle.api/DefaultTask/getFinalizedBy/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1910779451%2FFunctions%2F-2101871059">getFinalizedBy</a>(): TaskDependency  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getGroup/#/PointingToDeclaration/"></a><a href="./#2021856569%2FFunctions%2F-2101871059">getGroup</a></td>
+<td><a name="org.gradle.api/DefaultTask/getGroup/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#2021856569%2FFunctions%2F-2101871059">getGroup</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>?  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getIdentityPath/#/PointingToDeclaration/"></a><a href="./#-1866673525%2FFunctions%2F-2101871059">getIdentityPath</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getIdentityPath/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1866673525%2FFunctions%2F-2101871059">getIdentityPath</a>(): Path  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getImpliesSubProjects/#/PointingToDeclaration/"></a><a href="./#1876946475%2FFunctions%2F-2101871059">getImpliesSubProjects</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getImpliesSubProjects/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1876946475%2FFunctions%2F-2101871059">getImpliesSubProjects</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/getIncludes/#/PointingToDeclaration/"></a><a href="./#-1904134535%2FFunctions%2F-2101871059">getIncludes</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/getIncludes/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>open override fun <a href="./#-1904134535%2FFunctions%2F-2101871059">getIncludes</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getInputs/#/PointingToDeclaration/"></a><a href="./#720224825%2FFunctions%2F-2101871059">getInputs</a></td>
+<td><a name="org.gradle.api/DefaultTask/getInputs/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#720224825%2FFunctions%2F-2101871059">getInputs</a>(): TaskInputsInternal  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getLocalState/#/PointingToDeclaration/"></a><a href="./#-1250451364%2FFunctions%2F-2101871059">getLocalState</a></td>
+<td><a name="org.gradle.api/DefaultTask/getLocalState/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1250451364%2FFunctions%2F-2101871059">getLocalState</a>(): TaskLocalState  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getLogger/#/PointingToDeclaration/"></a><a href="./#1836976242%2FFunctions%2F-2101871059">getLogger</a></td>
+<td><a name="org.gradle.api/DefaultTask/getLogger/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1836976242%2FFunctions%2F-2101871059">getLogger</a>(): Logger  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getLogging/#/PointingToDeclaration/"></a><a href="./#1735270809%2FFunctions%2F-2101871059">getLogging</a></td>
+<td><a name="org.gradle.api/DefaultTask/getLogging/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1735270809%2FFunctions%2F-2101871059">getLogging</a>(): LoggingManager  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getMustRunAfter/#/PointingToDeclaration/"></a><a href="./#378434120%2FFunctions%2F-2101871059">getMustRunAfter</a></td>
+<td><a name="org.gradle.api/DefaultTask/getMustRunAfter/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#378434120%2FFunctions%2F-2101871059">getMustRunAfter</a>(): TaskDependency  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getName/#/PointingToDeclaration/"></a><a href="./#-1116810985%2FFunctions%2F-2101871059">getName</a></td>
+<td><a name="org.gradle.api/DefaultTask/getName/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1116810985%2FFunctions%2F-2101871059">getName</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getOnlyIf/#/PointingToDeclaration/"></a><a href="./#-1826728411%2FFunctions%2F-2101871059">getOnlyIf</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getOnlyIf/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1826728411%2FFunctions%2F-2101871059">getOnlyIf</a>(): Spec<in TaskInternal>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getOutputs/#/PointingToDeclaration/"></a><a href="./#-1310067514%2FFunctions%2F-2101871059">getOutputs</a></td>
+<td><a name="org.gradle.api/DefaultTask/getOutputs/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1310067514%2FFunctions%2F-2101871059">getOutputs</a>(): TaskOutputsInternal  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getPath/#/PointingToDeclaration/"></a><a href="./#-1496184643%2FFunctions%2F-2101871059">getPath</a></td>
+<td><a name="org.gradle.api/DefaultTask/getPath/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1496184643%2FFunctions%2F-2101871059">getPath</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/getPatternSetFactory/#/PointingToDeclaration/"></a><a href="./#497676158%2FFunctions%2F-2101871059">getPatternSetFactory</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/getPatternSetFactory/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Inject()  <br>  <br>open fun <a href="./#497676158%2FFunctions%2F-2101871059">getPatternSetFactory</a>(): Factory<PatternSet>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getProject/#/PointingToDeclaration/"></a><a href="./#646440735%2FFunctions%2F-2101871059">getProject</a></td>
+<td><a name="org.gradle.api/DefaultTask/getProject/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#646440735%2FFunctions%2F-2101871059">getProject</a>(): Project  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getRequiredServices/#/PointingToDeclaration/"></a><a href="./#-1179833295%2FFunctions%2F-2101871059">getRequiredServices</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getRequiredServices/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1179833295%2FFunctions%2F-2101871059">getRequiredServices</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a>&lt;Provider&lt;out BuildService&lt;*&gt;&gt;&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getServices/#/PointingToDeclaration/"></a><a href="./#-830723824%2FFunctions%2F-2101871059">getServices</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getServices/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>open fun <a href="./#-830723824%2FFunctions%2F-2101871059">getServices</a>(): ServiceRegistry  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getSharedResources/#/PointingToDeclaration/"></a><a href="./#623626092%2FFunctions%2F-2101871059">getSharedResources</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getSharedResources/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#623626092%2FFunctions%2F-2101871059">getSharedResources</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html">MutableList</a><ResourceLock>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getShouldRunAfter/#/PointingToDeclaration/"></a><a href="./#-147243362%2FFunctions%2F-2101871059">getShouldRunAfter</a></td>
+<td><a name="org.gradle.api/DefaultTask/getShouldRunAfter/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-147243362%2FFunctions%2F-2101871059">getShouldRunAfter</a>(): TaskDependency  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/getSource/#/PointingToDeclaration/"></a><a href="get-source/">getSource</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/getSource/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@InputFiles()  <br>@SkipWhenEmpty()  <br>@PathSensitive(value = PathSensitivity.RELATIVE)  <br>  <br>open override fun <a href="get-source/">getSource</a>(): FileTree  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getStandardOutputCapture/#/PointingToDeclaration/"></a><a href="./#-114752220%2FFunctions%2F-2101871059">getStandardOutputCapture</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getStandardOutputCapture/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-114752220%2FFunctions%2F-2101871059">getStandardOutputCapture</a>(): StandardOutputCapture  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getState/#/PointingToDeclaration/"></a><a href="./#1512365927%2FFunctions%2F-2101871059">getState</a></td>
+<td><a name="org.gradle.api/DefaultTask/getState/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1512365927%2FFunctions%2F-2101871059">getState</a>(): TaskStateInternal  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getTaskActions/#/PointingToDeclaration/"></a><a href="./#-225278604%2FFunctions%2F-2101871059">getTaskActions</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getTaskActions/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-225278604%2FFunctions%2F-2101871059">getTaskActions</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html">MutableList</a><InputChangesAwareTaskAction>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getTaskDependencies/#/PointingToDeclaration/"></a><a href="./#1905104436%2FFunctions%2F-2101871059">getTaskDependencies</a></td>
+<td><a name="org.gradle.api/DefaultTask/getTaskDependencies/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1905104436%2FFunctions%2F-2101871059">getTaskDependencies</a>(): TaskDependencyInternal  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getTaskIdentity/#/PointingToDeclaration/"></a><a href="./#1554408235%2FFunctions%2F-2101871059">getTaskIdentity</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getTaskIdentity/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1554408235%2FFunctions%2F-2101871059">getTaskIdentity</a>(): TaskIdentity&lt;*&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getTemporaryDir/#/PointingToDeclaration/"></a><a href="./#-2017904826%2FFunctions%2F-2101871059">getTemporaryDir</a></td>
+<td><a name="org.gradle.api/DefaultTask/getTemporaryDir/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-2017904826%2FFunctions%2F-2101871059">getTemporaryDir</a>(): <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/getTemporaryDirFactory/#/PointingToDeclaration/"></a><a href="./#261670398%2FFunctions%2F-2101871059">getTemporaryDirFactory</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/getTemporaryDirFactory/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#261670398%2FFunctions%2F-2101871059">getTemporaryDirFactory</a>(): Factory&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a>&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/getTimeout/#/PointingToDeclaration/"></a><a href="./#722372055%2FFunctions%2F-2101871059">getTimeout</a></td>
+<td><a name="org.gradle.api/DefaultTask/getTimeout/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#722372055%2FFunctions%2F-2101871059">getTimeout</a>(): Property&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html">Duration</a>&gt;  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/hasProperty/#kotlin.String/PointingToDeclaration/"></a><a href="./#126205915%2FFunctions%2F-2101871059">hasProperty</a></td>
+<td><a name="org.gradle.api/DefaultTask/hasProperty/#kotlin.String/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#126205915%2FFunctions%2F-2101871059">hasProperty</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/hasTaskActions/#/PointingToDeclaration/"></a><a href="./#580990648%2FFunctions%2F-2101871059">hasTaskActions</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/hasTaskActions/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#580990648%2FFunctions%2F-2101871059">hasTaskActions</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/include/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#861658290%2FFunctions%2F-2101871059">include</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/include/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#861658290%2FFunctions%2F-2101871059">include</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;): SourceTask  <br>open override fun <a href="./#-2126140318%2FFunctions%2F-2101871059">include</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>): SourceTask  <br>open override fun <a href="./#888006504%2FFunctions%2F-2101871059">include</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;): SourceTask  <br>open override fun <a href="./#-1515909219%2FFunctions%2F-2101871059">include</a>(p0: Spec<FileTreeElement>): SourceTask  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/isEnabled/#/PointingToDeclaration/"></a><a href="./#-685189299%2FFunctions%2F-2101871059">isEnabled</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/isEnabled/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>@Internal()  <br>  <br>open fun <a href="./#-685189299%2FFunctions%2F-2101871059">isEnabled</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/isHasCustomActions/#/PointingToDeclaration/"></a><a href="./#1322490778%2FFunctions%2F-2101871059">isHasCustomActions</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/isHasCustomActions/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1322490778%2FFunctions%2F-2101871059">isHasCustomActions</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/mustRunAfter/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a><a href="./#749493465%2FFunctions%2F-2101871059">mustRunAfter</a></td>
+<td><a name="org.gradle.api/DefaultTask/mustRunAfter/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#749493465%2FFunctions%2F-2101871059">mustRunAfter</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>): Task  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/onlyIf/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#1865972459%2FFunctions%2F-2101871059">onlyIf</a></td>
+<td><a name="org.gradle.api/DefaultTask/onlyIf/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1865972459%2FFunctions%2F-2101871059">onlyIf</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;)  <br>open override fun <a href="./#-1672474855%2FFunctions%2F-2101871059">onlyIf</a>(p0: Spec<in Task>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/prependParallelSafeAction/#org.gradle.api.Action[org.gradle.api.Task]/PointingToDeclaration/"></a><a href="./#-762296623%2FFunctions%2F-2101871059">prependParallelSafeAction</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/prependParallelSafeAction/#org.gradle.api.Action[org.gradle.api.Task]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-762296623%2FFunctions%2F-2101871059">prependParallelSafeAction</a>(p0: Action<in Task>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/property/#kotlin.String/PointingToDeclaration/"></a><a href="./#256317559%2FFunctions%2F-2101871059">property</a></td>
+<td><a name="org.gradle.api/DefaultTask/property/#kotlin.String/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#256317559%2FFunctions%2F-2101871059">property</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>?  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setActions/#kotlin.collections.MutableList[org.gradle.api.Action[org.gradle.api.Task]]/PointingToDeclaration/"></a><a href="./#896075938%2FFunctions%2F-2101871059">setActions</a></td>
+<td><a name="org.gradle.api/DefaultTask/setActions/#kotlin.collections.MutableList[org.gradle.api.Action[org.gradle.api.Task]]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#896075938%2FFunctions%2F-2101871059">setActions</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html">MutableList</a><Action\<in Task>>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setDependsOn/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a><a href="./#-906274712%2FFunctions%2F-2101871059">setDependsOn</a></td>
+<td><a name="org.gradle.api/DefaultTask/setDependsOn/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-906274712%2FFunctions%2F-2101871059">setDependsOn</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;*&gt;)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setDescription/#kotlin.String?/PointingToDeclaration/"></a><a href="./#300635527%2FFunctions%2F-2101871059">setDescription</a></td>
+<td><a name="org.gradle.api/DefaultTask/setDescription/#kotlin.String?/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#300635527%2FFunctions%2F-2101871059">setDescription</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>?)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setDidWork/#kotlin.Boolean/PointingToDeclaration/"></a><a href="./#488409913%2FFunctions%2F-2101871059">setDidWork</a></td>
+<td><a name="org.gradle.api/DefaultTask/setDidWork/#kotlin.Boolean/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#488409913%2FFunctions%2F-2101871059">setDidWork</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setEnabled/#kotlin.Boolean/PointingToDeclaration/"></a><a href="./#-794884344%2FFunctions%2F-2101871059">setEnabled</a></td>
+<td><a name="org.gradle.api/DefaultTask/setEnabled/#kotlin.Boolean/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-794884344%2FFunctions%2F-2101871059">setEnabled</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/setExcludes/#kotlin.collections.MutableIterable[kotlin.String]/PointingToDeclaration/"></a><a href="./#-844178981%2FFunctions%2F-2101871059">setExcludes</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/setExcludes/#kotlin.collections.MutableIterable[kotlin.String]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-844178981%2FFunctions%2F-2101871059">setExcludes</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;): SourceTask  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setFinalizedBy/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a><a href="./#-1228001%2FFunctions%2F-2101871059">setFinalizedBy</a></td>
+<td><a name="org.gradle.api/DefaultTask/setFinalizedBy/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1228001%2FFunctions%2F-2101871059">setFinalizedBy</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;*&gt;)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setGroup/#kotlin.String?/PointingToDeclaration/"></a><a href="./#-461508892%2FFunctions%2F-2101871059">setGroup</a></td>
+<td><a name="org.gradle.api/DefaultTask/setGroup/#kotlin.String?/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-461508892%2FFunctions%2F-2101871059">setGroup</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>?)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.internal/AbstractTask/setImpliesSubProjects/#kotlin.Boolean/PointingToDeclaration/"></a><a href="./#-1101285724%2FFunctions%2F-2101871059">setImpliesSubProjects</a></td>
+<td><a name="org.gradle.api.internal/AbstractTask/setImpliesSubProjects/#kotlin.Boolean/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1101285724%2FFunctions%2F-2101871059">setImpliesSubProjects</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/setIncludes/#kotlin.collections.MutableIterable[kotlin.String]/PointingToDeclaration/"></a><a href="./#-1011407283%2FFunctions%2F-2101871059">setIncludes</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/setIncludes/#kotlin.collections.MutableIterable[kotlin.String]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1011407283%2FFunctions%2F-2101871059">setIncludes</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;): SourceTask  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setMustRunAfter/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a><a href="./#-1327021878%2FFunctions%2F-2101871059">setMustRunAfter</a></td>
+<td><a name="org.gradle.api/DefaultTask/setMustRunAfter/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1327021878%2FFunctions%2F-2101871059">setMustRunAfter</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;*&gt;)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setOnlyIf/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-1041132009%2FFunctions%2F-2101871059">setOnlyIf</a></td>
+<td><a name="org.gradle.api/DefaultTask/setOnlyIf/#groovy.lang.Closure[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1041132009%2FFunctions%2F-2101871059">setOnlyIf</a>(p0: Closure&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>&gt;)  <br>open override fun <a href="./#-2014333331%2FFunctions%2F-2101871059">setOnlyIf</a>(p0: Spec<in Task>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setProperty/#kotlin.String#kotlin.Any/PointingToDeclaration/"></a><a href="./#-167956675%2FFunctions%2F-2101871059">setProperty</a></td>
+<td><a name="org.gradle.api/DefaultTask/setProperty/#kotlin.String#kotlin.Any/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-167956675%2FFunctions%2F-2101871059">setProperty</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, p1: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/setShouldRunAfter/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a><a href="./#-1521926348%2FFunctions%2F-2101871059">setShouldRunAfter</a></td>
+<td><a name="org.gradle.api/DefaultTask/setShouldRunAfter/#kotlin.collections.MutableIterable[*]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-1521926348%2FFunctions%2F-2101871059">setShouldRunAfter</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html">MutableIterable</a>&lt;*&gt;)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/setSource/#kotlin.Any/PointingToDeclaration/"></a><a href="./#830165790%2FFunctions%2F-2101871059">setSource</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/setSource/#kotlin.Any/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open fun <a href="./#830165790%2FFunctions%2F-2101871059">setSource</a>(p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>)  <br>open fun <a href="./#660708194%2FFunctions%2F-2101871059">setSource</a>(p0: FileTree)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/shouldRunAfter/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a><a href="./#-141443281%2FFunctions%2F-2101871059">shouldRunAfter</a></td>
+<td><a name="org.gradle.api/DefaultTask/shouldRunAfter/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#-141443281%2FFunctions%2F-2101871059">shouldRunAfter</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>): TaskDependency  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api.tasks/SourceTask/source/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a><a href="./#1526085750%2FFunctions%2F-2101871059">source</a></td>
+<td><a name="org.gradle.api.tasks/SourceTask/source/#kotlin.Array[kotlin.Any]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open fun <a href="./#1526085750%2FFunctions%2F-2101871059">source</a>(vararg p0: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>): SourceTask  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="org.gradle.api/DefaultTask/usesService/#org.gradle.api.provider.Provider[org.gradle.api.services.BuildService[*]]/PointingToDeclaration/"></a><a href="./#1533452544%2FFunctions%2F-2101871059">usesService</a></td>
+<td><a name="org.gradle.api/DefaultTask/usesService/#org.gradle.api.provider.Provider[org.gradle.api.services.BuildService[*]]/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>open override fun <a href="./#1533452544%2FFunctions%2F-2101871059">usesService</a>(p0: Provider&lt;out BuildService&lt;*&gt;&gt;)  <br><br><br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/verifyMigrations/#/PointingToDeclaration/"></a><a href="verify-migrations/">verifyMigrations</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/verifyMigrations/#/PointingToDeclaration/"></a>[jvm]  <br>Content  <br>fun <a href="verify-migrations/">verifyMigrations</a>()  <br><br><br></td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties">Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/compilationUnit/#/PointingToDeclaration/"></a><a href="compilation-unit/">compilationUnit</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/compilationUnit/#/PointingToDeclaration/"></a> [jvm] lateinit var <a href="compilation-unit/">compilationUnit</a>: <a href="../-sql-delight-compilation-unit-impl/">SqlDelightCompilationUnitImpl</a>   <br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/pluginVersion/#/PointingToDeclaration/"></a><a href="plugin-version/">pluginVersion</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/pluginVersion/#/PointingToDeclaration/"></a> [jvm] @Input()  <br>  <br>val <a href="plugin-version/">pluginVersion</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>   <br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/projectName/#/PointingToDeclaration/"></a><a href="project-name/">projectName</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/projectName/#/PointingToDeclaration/"></a> [jvm] @Input()  <br>  <br>val <a href="project-name/">projectName</a>: Property&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>&gt;   <br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/properties/#/PointingToDeclaration/"></a><a href="properties/">properties</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/properties/#/PointingToDeclaration/"></a> [jvm] lateinit var <a href="properties/">properties</a>: <a href="../-sql-delight-database-properties-impl/">SqlDelightDatabasePropertiesImpl</a>   <br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/verifyMigrations/#/PointingToDeclaration/"></a><a href="verify-migrations/">verifyMigrations</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/verifyMigrations/#/PointingToDeclaration/"></a> [jvm] @Input()  <br>  <br>var <a href="verify-migrations/">verifyMigrations</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = false   <br></td>
+</tr>
+<tr>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/workingDirectory/#/PointingToDeclaration/"></a><a href="working-directory/">workingDirectory</a></td>
+<td><a name="com.squareup.sqldelight.gradle/VerifyMigrationTask/workingDirectory/#/PointingToDeclaration/"></a> [jvm] @Internal()  <br>  <br>lateinit var <a href="working-directory/">workingDirectory</a>: <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a>Directory where the database files are copied for the migration scripts to run against.   <br></td>
+</tr>
+</tbody>
+</table>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2019 Square, Inc.
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../../assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.d5fec882.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../../../..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../../../../assets/javascripts/worker/search.fae956e7.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
