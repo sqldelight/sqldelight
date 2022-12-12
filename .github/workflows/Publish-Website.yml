@@ -1,6 +1,8 @@
 name: Publish the mkdocs to GitHub Pages
 
 on:
+  push:
+    branches: [master]
   release:
     types: [published]
   workflow_dispatch:
@@ -13,7 +15,7 @@ jobs:
   deploy-website:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pages: write
       id-token: write
       
@@ -31,22 +33,31 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Get Docs Version
+        run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
+        id: version
+
       - name: Prep mkdocs
-        run: .github/workflows/prepare_mkdocs.sh
+        run: .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Build mkdocs
         run: |
           pip3 install -r .github/workflows/requirements.txt
           mkdocs build
 
-      - uses: actions/upload-pages-artifact@v1
-        if: success()
-        with:
-          path: site
-      - name: Deploy to GitHub Pages
-        if: success()
-        id: deployment
-        uses: actions/deploy-pages@main
+      - name: Configure git for mike
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch origin gh-pages --depth=1
+
+      - name: Deploy SNAPSHOT Docs with mike 🗿
+        if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
+        run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} snapshot
+
+      - name: Deploy Docs with mike 🚀
+        if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
+        run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} latest
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"

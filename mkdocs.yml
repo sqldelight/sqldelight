@@ -255,7 +255,10 @@ markdown_extensions:
 plugins:
   - search
   - macros
+  - mike
 
 extra:
   versions:
     sqldelight: '2.0.0-alpha04'
+  version:
+    provider: mike
