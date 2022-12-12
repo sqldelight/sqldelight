@@ -38,7 +38,7 @@ jobs:
         id: version
 
       - name: Prep mkdocs
-        run: .github/workflows/prepare_mkdocs.sh ${{ steps.version.output.VERSION_NAME }}
+        run: .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Build mkdocs
         run: |
@@ -52,12 +52,12 @@ jobs:
           git fetch origin gh-pages --depth=1
 
       - name: Deploy SNAPSHOT Docs with mike 🗿
-        if: ${{ success() && contains(steps.version.output.VERSION_NAME, 'SNAPSHOT') }}
+        if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
         run: mike deploy --push ${{ steps.version.output.VERSION_NAME }} snapshot
 
       - name: Deploy Docs with mike 🚀
-        if: ${{ success() && !contains(steps.version.output.VERSION_NAME , 'SNAPSHOT') }}
-        run: mike deploy --push ${{ steps.version.output.VERSION_NAME }} latest
+        if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
+        run: mike deploy --push ${{ steps.version.outputs.VERSION_NAME }} latest
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
