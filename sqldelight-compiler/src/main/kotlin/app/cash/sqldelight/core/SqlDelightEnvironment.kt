@@ -324,11 +324,9 @@ class SqlDelightEnvironment(
 
       for (sourceFolder in sourceFolders(file)) {
         val path = file.parent!!.relativePathUnder(sourceFolder)
-        if (path != null) return path.joinToString(separator = ".") {
-          SqlDelightFileIndex.sanitizeDirectoryName(
-            it,
-          )
-        }
+        if (path != null) return SqlDelightFileIndex.applyPackagePrefix(packageName, path.joinToString(separator = ".") {
+          SqlDelightFileIndex.sanitizeDirectoryName(it)
+        })
       }
 
       throw IllegalStateException(

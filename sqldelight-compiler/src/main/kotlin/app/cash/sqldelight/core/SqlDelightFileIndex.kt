@@ -82,5 +82,10 @@ interface SqlDelightFileIndex {
     fun sanitizeDirectoryName(name: String): String {
       return name.filter { it.isLetterOrDigit() }
     }
+
+    fun applyPackagePrefix(packagePrefix: String, packageName: String): String {
+      val prefix = packagePrefix.removeSuffix(".") + "."
+      return prefix + packageName.removePrefix(prefix)
+    }
   }
 }
