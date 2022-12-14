@@ -38,11 +38,9 @@ tasks.named('runIde') {
 
 tasks.named('runPluginVerifier') {
   ideVersions = [
-      "IC-2021.1.3",
-      "IC-2021.2.4",
-      "IC-2021.3.3",
-      "IC-2022.1.4",
-      "IC-2022.2.2",
+      "IC-2022.1.4", // AS: Electric Eel (2022.1.1) RC 1
+      "IC-2022.2.4", // IC
+      "IC-2022.3.1", // IC
   ]
 
   def customFailureLevel = FailureLevel.ALL
@@ -50,8 +48,9 @@ tasks.named('runPluginVerifier') {
   customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
   customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
   customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
+  customFailureLevel.remove(FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES)
 
-  setFailureLevel(customFailureLevel)
+  failureLevel = customFailureLevel
 }
 
 changelog {
@@ -96,6 +95,7 @@ dependencies {
   implementation libs.moshi
 
   testImplementation libs.truth
+  testImplementation libs.intellij.android
   testImplementation project(':dialects:sqlite-3-18')
 }
 

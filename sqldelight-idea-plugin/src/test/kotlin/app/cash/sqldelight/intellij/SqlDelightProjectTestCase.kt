@@ -22,11 +22,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import java.io.File
 import java.io.PrintStream
+import kotlin.io.path.absolutePathString
 
 abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile
     get() = module.rootManager.contentRoots.single()
   override fun setUp() {
+    val tmp = java.nio.file.Files.createTempDirectory("ideaHack")
+    System.setProperty("idea.home.path", tmp.absolutePathString())
     super.setUp()
     SqliteDialect().setup()
     SqldelightParserUtil.overrideSqlParser()

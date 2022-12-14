@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
@@ -7,6 +9,12 @@ plugins {
 // https://youtrack.jetbrains.com/issue/KTIJ-14471
 sourceSets {
   main
+}
+
+tasks.withType(KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
 }
 
 kotlin {

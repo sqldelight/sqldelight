@@ -20,11 +20,16 @@ dependencies {
   compileOnly libs.intellij.core.ui
   compileOnly libs.moshi
 
-  testImplementation libs.intellij.ideImpl
+  testImplementation(libs.intellij.ideImpl) {
+    exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-core"
+  }
+  testImplementation libs.kotlin.coroutines.core
   testImplementation libs.junit
   testImplementation libs.truth
   testImplementation project(':sqldelight-compiler:dialect')
-  testImplementation libs.sqlPsiTestFixtures
+  testImplementation(libs.sqlPsiTestFixtures) {
+    exclude group: "com.jetbrains.intellij.platform"
+  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

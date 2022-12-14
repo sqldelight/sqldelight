@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
@@ -5,6 +7,12 @@ plugins {
 }
 
 archivesBaseName = 'sqldelight-androidx-paging3'
+
+tasks.withType(KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+}
 
 kotlin {
   ios()

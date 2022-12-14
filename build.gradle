@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
   dependencies {
     classpath("com.squareup.okhttp3:okhttp") {
@@ -43,6 +45,8 @@ allprojects {
     google()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/" }
+    maven { url "https://maven.pkg.jetbrains.space/public/p/ktor/eap" }
   }
 
   tasks.withType(Test).configureEach {
@@ -55,6 +59,12 @@ allprojects {
   tasks.withType(JavaCompile).configureEach {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+  }
+
+  tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+      jvmTarget = "11"
+    }
   }
 
   // Workaround for yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320
@@ -74,10 +84,17 @@ allprojects {
     dependsOn(tasks.withType(Sign))
   }
 
-  configurations.all {
+  configurations.configureEach {
     exclude group: 'com.jetbrains.rd'
     exclude group: 'com.github.jetbrains', module: 'jetCheck'
     exclude group: 'org.roaringbitmap'
+    exclude group: "com.jetbrains.infra"
+    exclude group: "org.jetbrains.teamcity"
+    exclude group: "org.roaringbitmap"
+    exclude group: "ai.grazie.spell"
+    exclude group: "ai.grazie.model"
+    exclude group: "ai.grazie.utils"
+    exclude group: "ai.grazie.nlp"
   }
 
   group = GROUP

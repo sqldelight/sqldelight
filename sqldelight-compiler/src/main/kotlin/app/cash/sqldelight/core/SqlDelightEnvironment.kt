@@ -38,7 +38,6 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileTypeFileViewProviders
@@ -49,7 +48,6 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import org.picocontainer.MutablePicoContainer
 import java.io.File
 import java.util.StringTokenizer
 import kotlin.math.log10
@@ -73,15 +71,12 @@ class SqlDelightEnvironment(
     .map { it.folder },
 ) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
   SqlDelightProjectService {
-  val project: Project = projectEnvironment.project
+  val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
-    (project.picoContainer as MutablePicoContainer).registerComponentInstance(
-      SqlDelightProjectService::class.java.name,
-      this,
-    )
+    project.registerService(SqlDelightProjectService::class.java, this)
 
     CoreApplicationEnvironment.registerExtensionPoint(
       module.extensionArea,

@@ -7,6 +7,9 @@ dependencies {
   api project(':dialects:sqlite-3-18')
 
   implementation libs.sqlPsi
-  implementation libs.intellij.testFramework
+  implementation(libs.intellij.testFramework) {
+    exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-core"
+  }
+  implementation libs.kotlin.coroutines.core
   implementation libs.junit
 }

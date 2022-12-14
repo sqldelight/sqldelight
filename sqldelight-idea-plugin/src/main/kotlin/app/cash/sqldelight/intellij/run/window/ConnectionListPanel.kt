@@ -11,7 +11,6 @@ import com.intellij.ui.AnActionButton
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
-import org.jetbrains.kotlin.utils.addToStdlib.firstNotNullResult
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.event.MouseAdapter
@@ -115,7 +114,7 @@ internal class ConnectionListPanel(
   }
 
   private fun JComponent.connectionPanel(): ConnectionListPanel? {
-    return components.firstNotNullResult {
+    return components.firstNotNullOfOrNull {
       when (it) {
         is ConnectionListPanel -> it
         is JComponent -> it.connectionPanel()

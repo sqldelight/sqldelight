@@ -28,11 +28,11 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v3.9.0
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
         with:
@@ -69,6 +69,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          arch: x86_64
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
 
       - name: Run ios tests

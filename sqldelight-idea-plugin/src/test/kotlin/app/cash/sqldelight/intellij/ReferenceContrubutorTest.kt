@@ -2,9 +2,9 @@ package app.cash.sqldelight.intellij
 
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import com.google.common.truth.Truth.assertThat
+import com.intellij.psi.util.childrenOfType
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtTypeAlias
-import org.jetbrains.plugins.groovy.lang.psi.util.childrenOfType
 
 class ReferenceContrubutorTest : SqlDelightFixtureTestCase() {
 
