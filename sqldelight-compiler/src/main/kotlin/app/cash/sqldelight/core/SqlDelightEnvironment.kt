@@ -30,7 +30,6 @@ import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
-import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -106,8 +105,9 @@ class SqlDelightEnvironment(
 
   override fun clearIndex() = throw UnsupportedOperationException()
 
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles {
+  @JvmName("forSqlSourceFiles")
+  fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    super.forSourceFiles<SqlFileBase> {
       if (it.fileType != MigrationFileType ||
         verifyMigrations ||
         properties.deriveSchemaFromMigrations
@@ -124,15 +124,12 @@ class SqlDelightEnvironment(
     val errors = sortedMapOf<Int, MutableList<String>>()
     val extraAnnotators = listOf(OptimisticLockValidator())
     annotate(
-      object : SqlAnnotationHolder {
-        override fun createErrorAnnotation(element: PsiElement, s: String) {
-          val key = element.sqFile().order ?: Integer.MAX_VALUE
-          errors.putIfAbsent(key, ArrayList())
-          errors[key]!!.add(errorMessage(element, s))
-        }
-      },
       extraAnnotators,
-    )
+    ) { element, message ->
+      val key = element.sqFile().order ?: Integer.MAX_VALUE
+      errors.putIfAbsent(key, ArrayList())
+      errors[key]!!.add(errorMessage(element, message))
+    }
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
     val writer = writer@{ fileName: String ->

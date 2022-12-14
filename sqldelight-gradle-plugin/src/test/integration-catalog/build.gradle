@@ -18,6 +18,7 @@ repositories {
   maven {
     url "file://${projectDir.absolutePath}/../../../../build/localMaven"
   }
+  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   mavenCentral()
 }
 

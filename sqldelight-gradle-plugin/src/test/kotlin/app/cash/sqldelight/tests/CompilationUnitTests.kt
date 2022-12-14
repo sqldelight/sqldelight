@@ -25,6 +25,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         |  mavenCentral()
         |}
         |
@@ -71,6 +72,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         |  mavenCentral()
         |}
         |
@@ -143,6 +145,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         |  mavenCentral()
         |}
         |
@@ -199,6 +202,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         |  mavenCentral()
         |}
         |
@@ -279,6 +283,7 @@ class CompilationUnitTests {
         |  maven {
         |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
         |  }
+        |  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         |  mavenCentral()
         |}
         |

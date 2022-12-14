@@ -15,7 +15,7 @@ ktlint = "0.46.1"
 agp = "7.4.2"
 compileSdk = "33"
 minSdk = "16"
-sqlPsi = "0.4.2"
+sqlPsi = "0.5.0-SNAPSHOT"
 testContainers = "1.17.6"
 
 [libraries]
