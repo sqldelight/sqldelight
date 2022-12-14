@@ -51,7 +51,7 @@ internal class TestEnvironment(
     )
     LanguageParserDefinitions.INSTANCE.forLanguage(SqlDelightLanguage).createParser(environment.project)
     LanguageParserDefinitions.INSTANCE.forLanguage(MigrationLanguage).createParser(environment.project)
-    environment.annotate(annotationHolder, listOf(OptimisticLockValidator()))
+    environment.annotate(listOf(OptimisticLockValidator()), annotationHolder)
     return environment
   }
 }

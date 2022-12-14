@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialect.api
 
+import com.alecstrong.sql.psi.core.PredefinedTable
 import com.squareup.kotlinpoet.ClassName
 import javax.swing.Icon
 
@@ -49,4 +50,9 @@ interface SqlDelightDialect {
    * Called when this dialect should initialize its parser.
    */
   fun setup()
+
+  /**
+   * Specify predefined system tables in SQL
+   */
+  val predefinedSystemTables: List<PredefinedTable> get() = emptyList()
 }

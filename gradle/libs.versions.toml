@@ -15,7 +15,7 @@ ktlint = "0.46.1"
 agp = "7.4.0"
 compileSdk = "31"
 minSdk = "16"
-sqlPsi = "0.4.2"
+sqlPsi = "0.5.0-SNAPSHOT"
 testContainers = "1.17.6"
 
 [libraries]
@@ -62,8 +62,8 @@ intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-
 
 jna = { module = "net.java.dev.jna:jna", version = "5.13.0" }
 
-sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
-sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
+sqlPsi = { module = "app.softwork.sql.psi:core", version.ref = "sqlPsi" }
+sqlPsiTestFixtures  = { module = "app.softwork.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.9.2" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.6" }

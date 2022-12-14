@@ -39,6 +39,7 @@ spotless {
 
 allprojects {
   repositories {
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
     mavenCentral()
     google()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }

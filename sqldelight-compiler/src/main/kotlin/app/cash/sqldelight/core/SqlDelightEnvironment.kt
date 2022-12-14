@@ -23,6 +23,7 @@ import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
@@ -69,7 +70,7 @@ class SqlDelightEnvironment(
   private val dependencyFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && it.dependency }
     .map { it.folder },
-) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders, dialect.predefinedSystemTables, SqlDelightLanguage),
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
@@ -106,8 +107,9 @@ class SqlDelightEnvironment(
 
   override fun clearIndex() = throw UnsupportedOperationException()
 
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles {
+  @JvmName("forSqlFileBaseSourceFiles")
+  fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    super.forSourceFiles<SqlFileBase> {
       if (it.fileType != MigrationFileType ||
         verifyMigrations ||
         properties.deriveSchemaFromMigrations
@@ -124,14 +126,12 @@ class SqlDelightEnvironment(
     val errors = sortedMapOf<Int, MutableList<String>>()
     val extraAnnotators = listOf(OptimisticLockValidator())
     annotate(
-      object : SqlAnnotationHolder {
-        override fun createErrorAnnotation(element: PsiElement, s: String) {
-          val key = element.sqFile().order ?: Integer.MAX_VALUE
-          errors.putIfAbsent(key, ArrayList())
-          errors[key]!!.add(errorMessage(element, s))
-        }
-      },
       extraAnnotators,
+      SqlAnnotationHolder { element, message ->
+        val key = element.sqFile().order ?: Integer.MAX_VALUE
+        errors.putIfAbsent(key, ArrayList())
+        errors[key]!!.add(errorMessage(element, message))
+      },
     )
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
