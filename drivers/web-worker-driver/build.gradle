@@ -1,0 +1,30 @@
+plugins {
+    alias(libs.plugins.kotlin.js)
+    alias(libs.plugins.publish)
+    alias(libs.plugins.dokka)
+}
+
+kotlin {
+    js {
+        browser {
+            testTask {
+                useKarma {
+                    useHeadlessChrome()
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    api project(':runtime')
+    implementation libs.kotlin.coroutines.core
+
+    testImplementation libs.kotlin.test.js
+    testImplementation npm('sql.js', libs.versions.sqljs.get())
+    testImplementation devNpm("copy-webpack-plugin", "9.1.0")
+    testImplementation libs.kotlin.coroutines.test
+    testImplementation project(':extensions:async-extensions')
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

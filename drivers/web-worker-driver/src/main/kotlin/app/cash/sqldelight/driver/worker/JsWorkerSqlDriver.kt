@@ -1,4 +1,4 @@
-package app.cash.sqldelight.driver.sqljs.worker
+package app.cash.sqldelight.driver.worker
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
@@ -7,7 +7,9 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.sqljs.QueryResults
+import app.cash.sqldelight.driver.worker.api.WorkerResult
+import app.cash.sqldelight.driver.worker.api.WorkerResponse
+import app.cash.sqldelight.driver.worker.api.WorkerRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
@@ -25,9 +27,9 @@ private fun <T> jsObject(block: T.() -> Unit): T {
 }
 
 suspend fun initAsyncSqlDriver(
-  workerPath: String = "/worker.sql-wasm.js",
+  worker: Worker,
   schema: SqlSchema? = null,
-): SqlDriver = JsWorkerSqlDriver(Worker(workerPath)).withSchema(schema)
+): SqlDriver = JsWorkerSqlDriver(worker).withSchema(schema)
 
 suspend fun SqlDriver.withSchema(schema: SqlSchema? = null): SqlDriver = this.also { schema?.create(it)?.await() }
 
@@ -40,24 +42,13 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
-    val messageId = messageCounter++
-    val message = jsObject<WorkerMessage> {
-      this.id = messageId
-      this.action = "exec"
-      this.sql = sql
-      this.params = bound.parameters.toTypedArray()
-    }
-
     return QueryResult.AsyncValue {
-      val data = worker.sendMessage(messageId, message).unsafeCast<WorkerData>()
-
-      val table = if (data.results.isNotEmpty()) {
-        data.results[0]
-      } else {
-        jsObject { values = arrayOf() }
+      val response = worker.sendMessage(Action.EXEC) {
+        this.sql = sql
+        this.params = bound.parameters.toTypedArray()
       }
 
-      return@AsyncValue mapper(JsWorkerSqlCursor(table))
+      return@AsyncValue mapper(JsWorkerSqlCursor(checkNotNull(response.result) { "The worker result was null" }))
     }
   }
 
@@ -65,17 +56,13 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
-    val messageId = messageCounter++
-    val message = jsObject<WorkerMessage> {
-      this.id = messageId
-      this.action = "exec"
-      this.sql = sql
-      this.params = bound.parameters.toTypedArray()
-    }
-
     return QueryResult.AsyncValue {
-      worker.sendMessage(messageId, message)
-      return@AsyncValue 0
+      val response = worker.sendMessage(Action.EXEC) {
+        this.sql = sql
+        this.params = bound.parameters.toTypedArray()
+      }
+      val result = checkNotNull(response.result) { "The worker result was null" }
+      return@AsyncValue (if (result.values.isEmpty()) { 0L } else { result.values[0][0].unsafeCast<Double>().toLong() })
     }
   }
 
@@ -104,7 +91,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     val transaction = Transaction(enclosing)
     this.transaction = transaction
     if (enclosing == null) {
-      worker.run("BEGIN TRANSACTION")
+      worker.sendMessage(Action.BEGIN_TRANSACTION)
     }
 
     return@AsyncValue transaction
@@ -118,23 +105,24 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {
         if (successful) {
-          worker.run("END TRANSACTION")
+          worker.sendMessage(Action.END_TRANSACTION)
         } else {
-          worker.run("ROLLBACK TRANSACTION")
+          worker.sendMessage(Action.ROLLBACK_TRANSACTION)
         }
       }
       transaction = enclosingTransaction
     }
   }
 
-  private suspend fun Worker.sendMessage(id: Int, message: dynamic): WorkerData = suspendCancellableCoroutine { continuation ->
+  private suspend fun Worker.sendMessage(action: Action, message: RequestBuilder.() -> Unit = {}): WorkerResponse = suspendCancellableCoroutine { continuation ->
+    val id = messageCounter++
     val messageListener = object : EventListener {
       override fun handleEvent(event: Event) {
-        val data = event.unsafeCast<MessageEvent>().data.unsafeCast<WorkerData>()
+        val data = event.unsafeCast<MessageEvent>().data.unsafeCast<WorkerResponse>()
         if (data.id == id) {
           removeEventListener("message", this)
           if (data.error != null) {
-            continuation.resumeWithException(JsWorkerException(data.error!!))
+            continuation.resumeWithException(JsWorkerException(JSON.stringify(data.error, arrayOf("message", "arguments", "type", "name"))))
           } else {
             continuation.resume(data)
           }
@@ -145,14 +133,18 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     val errorListener = object : EventListener {
       override fun handleEvent(event: Event) {
         removeEventListener("error", this)
-        continuation.resumeWithException(JsWorkerException(event.toString()))
+        continuation.resumeWithException(JsWorkerException(JSON.stringify(event, arrayOf("message", "arguments", "type", "name")) + js("Object.entries(event)")))
       }
     }
 
     addEventListener("message", messageListener)
     addEventListener("error", errorListener)
 
-    postMessage(message)
+    postMessage(jsObject<WorkerRequest> {
+      this.unsafeCast<RequestBuilder>().message()
+      this.id = id
+      this.action = action.key
+    })
 
     continuation.invokeOnCancellation {
       removeEventListener("message", messageListener)
@@ -160,36 +152,36 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     }
   }
 
-  private suspend fun Worker.run(sql: String) {
-    val messageId = messageCounter++
-    val message = jsObject<WorkerMessage> {
-      this.id = messageId
-      this.action = "exec"
-      this.sql = sql
-    }
-
-    sendMessage(messageId, message)
+  /**
+   * An enum mapping of [WorkerRequest.action]
+   */
+  private enum class Action(val key: String) {
+    EXEC("exec"),
+    BEGIN_TRANSACTION("begin_transaction"),
+    END_TRANSACTION("end_transaction"),
+    ROLLBACK_TRANSACTION("rollback_transaction"),
   }
 }
 
-class JsWorkerSqlCursor(private val table: QueryResults) : SqlCursor {
+private external interface RequestBuilder {
+  var sql: String?
+  var params: Array<Any?>?
+}
+
+class JsWorkerSqlCursor(private val table: WorkerResult) : SqlCursor {
   private var currentRow = -1
 
   override fun next(): Boolean = ++currentRow < table.values.size
 
-  override fun getString(index: Int): String? = table.values[currentRow][index]
+  override fun getString(index: Int): String? = table.values[currentRow][index].unsafeCast<String?>()
 
   override fun getLong(index: Int): Long? = (table.values[currentRow][index] as? Double)?.toLong()
 
   override fun getBytes(index: Int): ByteArray? = (table.values[currentRow][index] as? Uint8Array)?.let { Int8Array(it.buffer).unsafeCast<ByteArray>() }
 
-  override fun getDouble(index: Int): Double? = table.values[currentRow][index]
+  override fun getDouble(index: Int): Double? = table.values[currentRow][index].unsafeCast<Double?>()
 
-  override fun getBoolean(index: Int): Boolean? {
-    val double = (table.values[currentRow][index] as? Double)
-    return if (double == null) null
-    else double.toLong() == 1L
-  }
+  override fun getBoolean(index: Int): Boolean? = table.values[currentRow][index].unsafeCast<Boolean?>()
 }
 
 internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
@@ -215,12 +207,6 @@ internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    parameters.add(
-      when (boolean) {
-        null -> null
-        true -> 1.0
-        false -> 0.0
-      },
-    )
+    parameters.add(boolean)
   }
 }

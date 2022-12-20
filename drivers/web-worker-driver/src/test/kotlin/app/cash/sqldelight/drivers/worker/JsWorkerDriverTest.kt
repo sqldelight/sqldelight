@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.drivers.sqljs
+package app.cash.sqldelight.drivers.worker
 
 import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
@@ -9,8 +9,9 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.sqljs.worker.JsWorkerException
-import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
+import app.cash.sqldelight.driver.worker.JsWorkerException
+import app.cash.sqldelight.driver.worker.initAsyncSqlDriver
+import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -60,7 +61,7 @@ class JsWorkerDriverTest {
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
-    val driver = initAsyncSqlDriver("/worker.sql-wasm.js", schema)
+    val driver = initAsyncSqlDriver(js("""new Worker(new URL("./sqljs.worker.js", import.meta.url))""").unsafeCast<Worker>(), schema)
     block(driver)
     driver.close()
   }

@@ -1,7 +1,9 @@
 const path = require("path");
 const dist = path.resolve("../../node_modules/sql.js/dist/")
 const wasm = path.join(dist, "sql-wasm.wasm")
-const worker = path.join(dist, "worker.sql-wasm.js")
+const worker = path.resolve("kotlin/sqljs.worker.js")
+
+console.error("Some text")
 
 config.files.push({
     pattern: wasm,
@@ -17,5 +19,5 @@ config.files.push({
     nocache: false,
 });
 
-config.proxies["/sql-wasm.wasm"] = `/absolute${wasm}`
-config.proxies["/worker.sql-wasm.js"] = `/absolute${worker}`
+config.proxies["/sql-wasm.wasm"] = path.join("/absolute/", wasm)
+config.proxies["/sqljs.worker.js"] = path.join("/absolute/", worker)
