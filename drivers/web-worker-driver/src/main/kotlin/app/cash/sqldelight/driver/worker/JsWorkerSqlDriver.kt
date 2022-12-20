@@ -7,9 +7,9 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.worker.api.WorkerResult
-import app.cash.sqldelight.driver.worker.api.WorkerResponse
 import app.cash.sqldelight.driver.worker.api.WorkerRequest
+import app.cash.sqldelight.driver.worker.api.WorkerResponse
+import app.cash.sqldelight.driver.worker.api.WorkerResult
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
@@ -140,11 +140,13 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     addEventListener("message", messageListener)
     addEventListener("error", errorListener)
 
-    postMessage(jsObject<WorkerRequest> {
-      this.unsafeCast<RequestBuilder>().message()
-      this.id = id
-      this.action = action.key
-    })
+    postMessage(
+      jsObject<WorkerRequest> {
+        this.unsafeCast<RequestBuilder>().message()
+        this.id = id
+        this.action = action.key
+      },
+    )
 
     continuation.invokeOnCancellation {
       removeEventListener("message", messageListener)

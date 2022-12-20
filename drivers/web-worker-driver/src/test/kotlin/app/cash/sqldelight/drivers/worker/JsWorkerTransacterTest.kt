@@ -30,7 +30,7 @@ class JsWorkerTransacterTest {
     kotlinx.coroutines.test.runTest {
       val driver = initAsyncSqlDriver(
         worker = js("""new Worker(new URL("./sqljs.worker.js", import.meta.url))""").unsafeCast<Worker>(),
-        schema = schema
+        schema = schema,
       )
       val transacter = object : SuspendingTransacterImpl(driver) {}
       block(driver, transacter)
