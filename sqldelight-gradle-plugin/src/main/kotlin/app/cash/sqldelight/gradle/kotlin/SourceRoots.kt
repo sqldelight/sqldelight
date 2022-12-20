@@ -79,9 +79,9 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   return listOf(
     Source(
       type = KotlinPlatformType.common,
-      nativePresetName = null,
+      nativePresetName = "common",
       name = "commonMain",
-      variantName = "commonMain",
+      variantName = null,
       sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
       sourceSets = listOf("commonMain"),
     ),

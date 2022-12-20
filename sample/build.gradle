@@ -6,3 +6,8 @@ plugins {
   alias(libs.plugins.kotlin.js) apply false
   alias(libs.plugins.kotlin.native.cocoapods) apply false
 }
+
+// Workaround yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320
+tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask).configureEach {
+  args.addAll(["--mutex", "file:${file("../build/.yarn-mutex")}".toString()])
+}

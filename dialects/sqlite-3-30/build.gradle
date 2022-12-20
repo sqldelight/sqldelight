@@ -1,5 +1,4 @@
 plugins {
-  alias(libs.plugins.shadow)
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
@@ -12,44 +11,13 @@ grammarKit {
 dependencies {
   api project(':dialects:sqlite-3-25')
 
-  compileOnly project(':sqldelight-compiler:dialect')
-  compileOnly libs.intellij.core
-  compileOnly libs.intellij.lang
+  compileOnly libs.intellij.ideImpl
 
-  testImplementation libs.intellij.core
-  testImplementation libs.intellij.lang
+  testImplementation libs.intellij.ideImpl
   testImplementation libs.junit
   testImplementation libs.truth
   testImplementation project(':sqldelight-compiler:dialect')
   testImplementation libs.sqlPsiTestFixtures
-}
-
-tasks.named("shadowJar") {
-  classifier = ''
-  include "*.jar"
-  include "app/cash/sqldelight/**"
-  include 'META-INF/services/*'
-}
-
-tasks.named('jar') {
-  // Prevents shadowJar (with classifier = '') and this task from writing to the same path.
-  enabled = false
-}
-
-configurations {
-  [apiElements, runtimeElements].each {
-    it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
-    it.outgoing.artifact(tasks.named('shadowJar'))
-  }
-}
-
-tasks.named("compileKotlin") {
-  dependsOn(":dialects:sqlite-3-25:shadowJar")
-}
-
-artifacts {
-  runtimeOnly(tasks.named('shadowJar'))
-  archives(tasks.named('shadowJar'))
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

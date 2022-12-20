@@ -12,7 +12,7 @@ import java.io.File
 
 data class SqlDelightPropertiesFileImpl(
   override val databases: List<SqlDelightDatabasePropertiesImpl>,
-  override val dialectJar: File,
+  override val dialectJars: Collection<File>,
   override val minimumSupportedVersion: String,
   override val currentVersion: String,
   override val moduleJars: Collection<File> = emptySet(),

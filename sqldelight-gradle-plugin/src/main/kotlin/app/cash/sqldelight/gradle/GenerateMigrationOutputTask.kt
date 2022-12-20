@@ -83,7 +83,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
         properties = properties,
         verifyMigrations = false,
         compilationUnit = parameters.compilationUnit.get(),
-        dialect = ServiceLoader.load(SqlDelightDialect::class.java).single(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile
