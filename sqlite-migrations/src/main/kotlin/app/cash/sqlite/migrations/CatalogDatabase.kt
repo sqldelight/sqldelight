@@ -6,8 +6,10 @@ import schemacrawler.schemacrawler.LoadOptionsBuilder
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.tools.utility.SchemaCrawlerUtility
+import us.fatehi.utility.datasource.DatabaseConnectionSource
+import us.fatehi.utility.datasource.DatabaseConnectionSources
+import us.fatehi.utility.datasource.MultiUseUserCredentials
 import java.sql.Connection
-import java.sql.DriverManager
 import java.sql.SQLException
 
 class CatalogDatabase private constructor(
@@ -33,16 +35,17 @@ class CatalogDatabase private constructor(
     }
 
     fun fromFile(path: String, initStatements: List<InitStatement>): CatalogDatabase {
-      return createConnection(path).init(initStatements).use {
+      return createConnection(path).also { it.get().init(initStatements) }.use {
         CatalogDatabase(SchemaCrawlerUtility.getCatalog(it, schemaCrawlerOptions))
       }
     }
 
-    private fun createConnection(path: String): Connection {
+    private fun createConnection(path: String): DatabaseConnectionSource {
+      val credentials = MultiUseUserCredentials("why", "is this needed")
       return try {
-        DriverManager.getConnection("jdbc:sqlite:$path")
+        DatabaseConnectionSources.newDatabaseConnectionSource("jdbc:sqlite:$path", credentials)
       } catch (e: SQLException) {
-        DriverManager.getConnection("jdbc:sqlite:$path")
+        DatabaseConnectionSources.newDatabaseConnectionSource("jdbc:sqlite:$path", credentials)
       }
     }
 
