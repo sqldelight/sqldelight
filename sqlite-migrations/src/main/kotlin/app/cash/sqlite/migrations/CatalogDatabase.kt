@@ -1,5 +1,6 @@
 package app.cash.sqlite.migrations
 
+import org.sqlite.SQLiteDataSource
 import schemacrawler.schema.Catalog
 import schemacrawler.schemacrawler.LimitOptionsBuilder
 import schemacrawler.schemacrawler.LoadOptionsBuilder
@@ -8,7 +9,6 @@ import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.tools.utility.SchemaCrawlerUtility
 import us.fatehi.utility.datasource.DatabaseConnectionSource
 import us.fatehi.utility.datasource.DatabaseConnectionSources
-import us.fatehi.utility.datasource.MultiUseUserCredentials
 import java.sql.Connection
 import java.sql.SQLException
 
@@ -41,11 +41,10 @@ class CatalogDatabase private constructor(
     }
 
     private fun createConnection(path: String): DatabaseConnectionSource {
-      val credentials = MultiUseUserCredentials("why", "is this needed")
       return try {
-        DatabaseConnectionSources.newDatabaseConnectionSource("jdbc:sqlite:$path", credentials)
+        DatabaseConnectionSources.fromDataSource(SQLiteDataSource().apply { url = "jdbc:sqlite:$path" })
       } catch (e: SQLException) {
-        DatabaseConnectionSources.newDatabaseConnectionSource("jdbc:sqlite:$path", credentials)
+        DatabaseConnectionSources.fromDataSource(SQLiteDataSource().apply { url = "jdbc:sqlite:$path" })
       }
     }
 
