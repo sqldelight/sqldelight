@@ -7,7 +7,7 @@ let db = null;
 console.log("AYO WTF")
 
 async function createDatabase() {
-  let SQL = await initSqlJs({ localFile: file => file });
+  let SQL = await initSqlJs({ locateFile: file => '/sql-wasm.wasm' });
   db = new SQL.Database();
 }
 
@@ -22,7 +22,7 @@ function onModuleReady() {
 
       return postMessage({
         id: data.id,
-        results: db.exec(data.sql, data.params)
+        results: db.exec(data.sql, data.params)[0] ?? { values: [] }
       });
     case "begin_transaction":
       return postMessage({

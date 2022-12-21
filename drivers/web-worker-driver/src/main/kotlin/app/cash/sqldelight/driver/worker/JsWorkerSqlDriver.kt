@@ -48,7 +48,9 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
         this.params = bound.parameters.toTypedArray()
       }
 
-      return@AsyncValue mapper(JsWorkerSqlCursor(checkNotNull(response.result) { "The worker result was null" }))
+      console.log(JSON.stringify(response))
+
+      return@AsyncValue mapper(JsWorkerSqlCursor(checkNotNull(response.results) { "The worker result was null" }))
     }
   }
 
@@ -61,8 +63,10 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
-      val result = checkNotNull(response.result) { "The worker result was null" }
-      return@AsyncValue (if (result.values.isEmpty()) { 0L } else { result.values[0][0].unsafeCast<Double>().toLong() })
+      return@AsyncValue when {
+        response.results.values.isEmpty() -> 0L
+        else -> response.results.values[0][0].unsafeCast<Double>().toLong()
+      }
     }
   }
 
@@ -158,6 +162,9 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
    * An enum mapping of [WorkerRequest.action]
    */
   private enum class Action(val key: String) {
+    /**
+     * Execute a SQL statement.
+     */
     EXEC("exec"),
     BEGIN_TRANSACTION("begin_transaction"),
     END_TRANSACTION("end_transaction"),

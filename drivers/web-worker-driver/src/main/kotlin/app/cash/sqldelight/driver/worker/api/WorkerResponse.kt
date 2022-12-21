@@ -18,8 +18,8 @@ internal external interface WorkerResponse {
   var id: Int
 
   /**
-   * An array of [WorkerResult] containing any of the rows that were returned by the query.
-   * The array could be empty! In general, we only expect one QueryResult to be returned.
+   * A [WorkerResult] containing any values that were returned by the worker.
+   * @see WorkerResult
    */
-  var result: WorkerResult?
+  var results: WorkerResult
 }

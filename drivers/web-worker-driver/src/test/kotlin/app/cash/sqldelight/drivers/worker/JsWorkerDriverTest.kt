@@ -232,22 +232,9 @@ class JsWorkerDriverTest {
 
   @Test
   fun worker_exceptions_are_handled_correctly() = runTest { driver ->
-    println("IS_LEGACY: $IS_LEGACY")
-    // Despite the exception being thrown correctly in LEGACY builds, this test fails for some reason
-    if (IS_LEGACY) return@runTest
-
     val error = assertFailsWith<JsWorkerException> {
       schema.awaitCreate(driver)
     }
     assertContains(error.toString(), "table test already exists")
-  }
-
-  // TODO: Remove this once LEGACY builds are dropped
-  companion object {
-    private data class Obj(val entry: String)
-
-    private val prototype = js("Object").getPrototypeOf(Obj("test"))
-    private val prototypeProps: Array<String> = js("Object").getOwnPropertyNames(prototype).unsafeCast<Array<String>>()
-    private val IS_LEGACY = prototypeProps.firstOrNull { it.contains("_get_") } == null
   }
 }

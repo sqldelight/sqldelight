@@ -7,10 +7,10 @@ package app.cash.sqldelight.driver.worker.api
  */
 external interface WorkerResult {
   /**
-   * The "table" of values in the result, as rows and columns.
+   * The "table" of values in the result, as rows of columns.
    * i.e. `values[row][col]`
    *
-   * The row/col layout of this array behaves the same as any other result set for a SQL operation.
+   * If the query returns no rows, then this should be an empty array.
    */
   var values: Array<Array<dynamic /* Number | String | Boolean | Uint8Array | Nothing? */>>
 }
