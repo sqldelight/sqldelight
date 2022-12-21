@@ -1,11 +1,6 @@
-console.log("Testing")
-
 import initSqlJs from "sql.js";
 
 let db = null;
-
-console.log("AYO WTF")
-
 async function createDatabase() {
   let SQL = await initSqlJs({ locateFile: file => '/sql-wasm.wasm' });
   db = new SQL.Database();
