@@ -75,7 +75,13 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
 
-      # Build the sample
+      # Build the sample, drop with 1.8.20:
+      # https://youtrack.jetbrains.com/issue/KT-52172/Multiplatform-Support-composite-builds
+      - name: Build the runtime for the sample
+        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        run: ./gradlew :runtime:assemble
+
+       # Build the sample
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
         uses: gradle/gradle-build-action@v2
