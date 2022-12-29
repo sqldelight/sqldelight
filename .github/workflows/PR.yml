@@ -101,4 +101,4 @@ jobs:
           report_paths: '**/build/test-results/test/TEST-*.xml'
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError -XX:MetaspaceSize=1g"
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=false -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError -XX:MetaspaceSize=1g"
