@@ -4001,11 +4001,11 @@
 
 <p>SQLDelight generates typesafe kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.</p>
 <p>SQLDelight understands your existing SQL schema.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockey_player</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">AUTOINCREMENT</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nb">number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockey_player</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">AUTOINCREMENT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="nb">number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
 </code></pre></div>
 <p>It generates typesafe code for any labeled SQL statements.</p>
 <p><img alt="intro.gif" src="images/intro.gif" /></p>
@@ -4028,41 +4028,41 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="c1">// settings.gradle.kts</span><span class="w"></span>
-<span class="n">pluginManagement</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">repositories</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">gradlePluginPortal</span><span class="p">()</span><span class="w"></span>
-<span class="w">        </span><span class="n">maven</span><span class="p">(</span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// settings.gradle.kts</span>
+<span class="n">pluginManagement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">repositories</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">gradlePluginPortal</span><span class="p">()</span>
+<span class="w">        </span><span class="n">maven</span><span class="p">(</span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="c1">// build.gradle.kts</span><span class="w"></span>
-<span class="n">plugins</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s">&quot;SNAPSHOT-VERSION&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="c1">// build.gradle.kts</span>
+<span class="n">plugins</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s">&quot;SNAPSHOT-VERSION&quot;</span>
+<span class="p">}</span>
 
-<span class="n">repositories</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">maven</span><span class="p">(</span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">repositories</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">maven</span><span class="p">(</span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="c1">// settings.gradle</span><span class="w"></span>
-<span class="n">pluginManagement</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">repositories</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">gradlePluginPortal</span><span class="o">()</span><span class="w"></span>
-<span class="w">        </span><span class="n">maven</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="s2">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"></span>
-<span class="w">    </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// settings.gradle</span>
+<span class="n">pluginManagement</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">repositories</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">gradlePluginPortal</span><span class="o">()</span>
+<span class="w">        </span><span class="n">maven</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="s2">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
 
-<span class="c1">// build.gradle</span><span class="w"></span>
-<span class="n">plugins</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s2">&quot;SNAPSHOT-VERSION&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<span class="c1">// build.gradle</span>
+<span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s2">&quot;SNAPSHOT-VERSION&quot;</span>
+<span class="o">}</span>
 
-<span class="n">repositories</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">maven</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="s2">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<span class="n">repositories</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">maven</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="s2">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="w"> </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>

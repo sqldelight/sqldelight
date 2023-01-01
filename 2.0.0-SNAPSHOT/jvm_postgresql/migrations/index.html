@@ -4003,20 +4003,20 @@
 <p>Using custom kotlin types in migration files means those files are no longer valid SQL.
 You can optionally configure a gradle task to output your migration files as valid SQL for other
 services to read from:</p>
-<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">migrationOutputDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="o">(</span><span class="s2">&quot;$buildDir/resources/main/migrations&quot;</span><span class="o">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">migrationOutputFileFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.sql&quot;</span><span class="w"> </span><span class="c1">// Defaults to .sql</span><span class="w"></span>
-<span class="w">  </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">migrationOutputDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="o">(</span><span class="s2">&quot;$buildDir/resources/main/migrations&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="n">migrationOutputFileFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.sql&quot;</span><span class="w"> </span><span class="c1">// Defaults to .sql</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>This creates a new task <code>generateMainDatabaseMigrations</code> which will output your <code>.sqm</code> files as
 valid SQL in the output directory, with the output format. Create a dependency from your
 compileKotlin task so that services such as flyway will have the files available on their
 classpath:</p>
-<div class="highlight"><pre><span></span><code><span class="n">compileKotlin</span><span class="o">.</span><span class="na">configure</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">dependsOn</span><span class="w"> </span><span class="s2">&quot;generateMainDatabaseMigrations&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">compileKotlin</span><span class="o">.</span><span class="na">configure</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">dependsOn</span><span class="w"> </span><span class="s2">&quot;generateMainDatabaseMigrations&quot;</span>
+<span class="o">}</span>
 </code></pre></div>
 
 

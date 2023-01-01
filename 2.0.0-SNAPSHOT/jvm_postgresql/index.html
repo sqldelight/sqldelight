@@ -4054,39 +4054,39 @@ and encounter parts of the dialect which are unsupported, please report at
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">plugins</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s">&quot;2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">plugins</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s">&quot;2.0.0-alpha04&quot;</span>
+<span class="p">}</span>
 
-<span class="n">repositories</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">google</span><span class="p">()</span><span class="w"></span>
-<span class="w">  </span><span class="n">mavenCentral</span><span class="p">()</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">repositories</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">google</span><span class="p">()</span>
+<span class="w">  </span><span class="n">mavenCentral</span><span class="p">()</span>
+<span class="p">}</span>
 
-<span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="n">dialect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;app.cash.sqldeight:postgres-dialect:2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example&quot;</span>
+<span class="w">    </span><span class="n">dialect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;app.cash.sqldeight:postgres-dialect:2.0.0-alpha04&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">plugins</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s2">&quot;2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s2">&quot;2.0.0-alpha04&quot;</span>
+<span class="o">}</span>
 
-<span class="n">repositories</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">google</span><span class="o">()</span><span class="w"></span>
-<span class="w">  </span><span class="n">mavenCentral</span><span class="o">()</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<span class="n">repositories</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">google</span><span class="o">()</span>
+<span class="w">  </span><span class="n">mavenCentral</span><span class="o">()</span>
+<span class="o">}</span>
 
-<span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span><span class="w"></span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="n">dialect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldeight:postgres-dialect:2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
+<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">    </span><span class="n">dialect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldeight:postgres-dialect:2.0.0-alpha04&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>
@@ -4103,15 +4103,15 @@ In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> fil
 <p>Put your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. Typically the first statement in the SQL file creates a table.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">hockeyPlayer_full_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">full_name</span><span class="p">);</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">hockeyPlayer_full_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">full_name</span><span class="p">);</span>
 
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Ryan Getzlaf&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Ryan Getzlaf&#39;</span><span class="p">);</span>
 </code></pre></div>
 <p>In the same <code>.sq</code> files you can start placing your sql statements to be executed <a href="#typesafe-sql">at runtime</a>.</p>
 <h2 id="migration-schema">Migration Schema</h2>
@@ -4119,23 +4119,23 @@ In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> fil
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kotlin</label><label for="__tabbed_2_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">...</span><span class="w"></span>
-<span class="w">    </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;sqldelight&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;sqldelight&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="o">...</span><span class="w"></span>
-<span class="w">    </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;sqldelight&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">    </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
-<span class="w">  </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="w">    </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;sqldelight&quot;</span><span class="o">]</span>
+<span class="w">    </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>
@@ -4159,53 +4159,53 @@ connection managers.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Kotlin</label><label for="__tabbed_3_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:jdbc-driver:2.0.0-alpha04&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:jdbc-driver:2.0.0-alpha04&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:jdbc-driver:2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:jdbc-driver:2.0.0-alpha04&quot;</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>
 </div>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataSource</span><span class="p">.</span><span class="na">asJdbcDriver</span><span class="p">()</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataSource</span><span class="p">.</span><span class="na">asJdbcDriver</span><span class="p">()</span>
 </code></pre></div>
 <p>Regardless of if you specify the schema as fresh create table statements or through migrations,
 runtime SQL goes in <code>.sq</code> files.</p>
 <p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 
-<span class="k">insert</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">);</span><span class="w"></span>
+<span class="k">insert</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">);</span>
 
-<span class="n">insertFullPlayerObject</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<span class="n">insertFullPlayerObject</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
 <p>Files with labeled statements in them will have a queries file generated from them that matches the <code>.sq</code> file name - putting the above sql into <code>Player.sq</code> generates <code>PlayerQueries.kt</code>. To get a reference to <code>PlayerQueries</code> you need to wrap the driver we made above:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// In reality the database and driver above should be created a single time</span><span class="w"></span>
-<span class="c1">// and passed around using your favourite dependency injection/service</span><span class="w"></span>
-<span class="c1">// locator/singleton pattern.</span><span class="w"></span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// In reality the database and driver above should be created a single time</span>
+<span class="c1">// and passed around using your favourite dependency injection/service</span>
+<span class="c1">// locator/singleton pattern.</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span>
 
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span><span class="w"></span>
+<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
+<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span>
 
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span><span class="w"></span>
+<span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span>
+<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
+<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span>
+<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
 </code></pre></div>
 <p>And that's it! Check out the other pages on the sidebar for other functionality.</p>
 

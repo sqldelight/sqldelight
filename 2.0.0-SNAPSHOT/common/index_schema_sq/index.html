@@ -3941,15 +3941,15 @@
 <p>Put your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. Typically the first statement in the SQL file creates a table.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">hockeyPlayer_full_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">full_name</span><span class="p">);</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">hockeyPlayer_full_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">full_name</span><span class="p">);</span>
 
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Ryan Getzlaf&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Ryan Getzlaf&#39;</span><span class="p">);</span>
 </code></pre></div>
 
 

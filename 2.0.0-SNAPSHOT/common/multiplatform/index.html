@@ -3945,14 +3945,14 @@
 
 <h1 id="multiplatform">Multiplatform</h1>
 <p>To use SQLDelight in Kotlin multiplatform configure the Gradle plugin with a package to generate code into.</p>
-<div class="highlight"><pre><span></span><code><span class="n">apply</span><span class="w"> </span><span class="nl">plugin:</span><span class="w"> </span><span class="s2">&quot;org.jetbrains.kotlin.multiplatform&quot;</span><span class="w"></span>
-<span class="n">apply</span><span class="w"> </span><span class="nl">plugin:</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">apply</span><span class="w"> </span><span class="nl">plugin:</span><span class="w"> </span><span class="s2">&quot;org.jetbrains.kotlin.multiplatform&quot;</span>
+<span class="n">apply</span><span class="w"> </span><span class="nl">plugin:</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span>
 
-<span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.hockey&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.hockey&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>Put <code>.sq</code> files in the <code>src/commonMain/sqldelight</code> directory, and then <code>expect</code> a <code>SqlDriver</code> to be provided by individual platforms when creating the <code>Database</code>. Migration files should also be in the same <code>src/commonMain/sqldelight</code> directory.</p>
 

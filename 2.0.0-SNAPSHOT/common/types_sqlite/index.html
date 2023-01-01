@@ -3968,27 +3968,27 @@
 <h2 id="sqlite-types">SQLite Types</h2>
 <p>SQLDelight column definitions are identical to regular SQLite column definitions but support an <a href="#custom-column-types">extra column constraint</a>
 which specifies the Kotlin type of the column in the generated interface.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">some_types</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">some_types</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">some_long</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w">           </span><span class="c1">-- Stored as INTEGER in db, retrieved as Long</span>
 <span class="w">  </span><span class="n">some_double</span><span class="w"> </span><span class="nb">REAL</span><span class="p">,</span><span class="w">            </span><span class="c1">-- Stored as REAL in db, retrieved as Double</span>
 <span class="w">  </span><span class="n">some_string</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w">            </span><span class="c1">-- Stored as TEXT in db, retrieved as String</span>
 <span class="w">  </span><span class="n">some_blob</span><span class="w"> </span><span class="nb">BLOB</span><span class="p">,</span><span class="w">              </span><span class="c1">-- Stored as BLOB in db, retrieved as ByteArray</span>
-<span class="p">);</span><span class="w"></span>
+<span class="p">);</span>
 </code></pre></div>
 <h2 id="primitives">Primitives</h2>
 <p>A sibling module that adapts primitives for your convenience.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:primitive-adapters:2.0.0-alpha04&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:primitive-adapters:2.0.0-alpha04&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:primitive-adapters:2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:primitive-adapters:2.0.0-alpha04&quot;</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>

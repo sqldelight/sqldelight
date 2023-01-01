@@ -5445,11 +5445,11 @@
 <h3 id="breaking-changes_1">Breaking Changes</h3>
 <ul>
 <li>Dialects are now references like actual gradle dependencies.
-<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">dialect</span><span class="o">(</span><span class="s2">&quot;app.cash.sqldelight:postgres-dialect:2.0.0-alpha03&quot;</span><span class="o">)</span><span class="w"></span>
-<span class="w">  </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">dialect</span><span class="o">(</span><span class="s2">&quot;app.cash.sqldelight:postgres-dialect:2.0.0-alpha03&quot;</span><span class="o">)</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></li>
 <li>The <code>AfterVersionWithDriver</code> type was removed in favour of <code>AfterVersion</code> which now always has the driver.</li>
 <li>The <code>Schema</code> type is no longer a subtype of <code>SqlDriver</code></li>

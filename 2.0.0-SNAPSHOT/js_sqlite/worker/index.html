@@ -4020,67 +4020,67 @@
 <h1 id="running-in-a-web-worker">Running in a Web Worker</h1>
 <p>To use the SqlJs driver with sql.js running in a web worker, first update your gradle configuration
 to generate asynchronous SQLDelight interfaces.</p>
-<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
-<span class="w">    </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">        </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>The web worker driver only works with browser targets.
 In addition to the base webpack configuration needed for the SqlJs driver, the web worker script must also be copied.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// project/webpack.config.d/wasm.js</span><span class="w"></span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;copy-webpack-plugin&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="p">({</span><span class="w"></span>
-<span class="w">        </span><span class="nx">patterns</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/sql-wasm.wasm&#39;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/worker.sql-wasm.js&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">})</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// project/webpack.config.d/wasm.js</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;copy-webpack-plugin&#39;</span><span class="p">);</span>
+<span class="nx">config</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">patterns</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/sql-wasm.wasm&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/worker.sql-wasm.js&#39;</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="p">);</span>
 </code></pre></div>
 <p>The function to initialize the driver is a <code>suspend</code> function and must be called within a coroutine.
 Since this driver is asynchronous, all query functions are also <code>suspend</code> functions.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setupDb</span><span class="p">():</span><span class="w"> </span><span class="n">AsyncSqlDriver</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">initAsyncSqlDriver</span><span class="p">(</span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setupDb</span><span class="p">():</span><span class="w"> </span><span class="n">AsyncSqlDriver</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">initAsyncSqlDriver</span><span class="p">(</span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span>
+<span class="p">}</span>
 
-<span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">getData</span><span class="p">(</span><span class="n">database</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="p">):</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">MyData</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">myDataQueries</span><span class="p">.</span><span class="na">getAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">()</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">getData</span><span class="p">(</span><span class="n">database</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="p">):</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">MyData</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">myDataQueries</span><span class="p">.</span><span class="na">getAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">()</span>
+<span class="p">}</span>
 </code></pre></div>
 <h2 id="custom-workers">Custom Workers</h2>
 <p>By default, the js worker driver will load a web worker from <code>/worker.sql-wasm.js</code> (the additional file copied in the webpack config).
 The driver supports loading custom workers, or workers located at a different path by providing the URL to the <code>initAsyncSqlDriver()</code> function.</p>
-<div class="highlight"><pre><span></span><code><span class="n">initAsyncSqlDriver</span><span class="p">(</span><span class="n">workerPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/path/to/my/worker.js&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">initAsyncSqlDriver</span><span class="p">(</span><span class="n">workerPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/path/to/my/worker.js&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Custom workers must be able to receive and process messages sent by the driver that are defined in the <a href="1.x/sqljs-driver/app.cash.sqldelight.app.cash.sqldelight.driver.sqljs.worker/-worker-message/"><code>WorkerMessage</code></a> interface.
 The driver expects a responding message to be sent that matches the <a href="1.x/sqljs-driver/app.cash.sqldelight.app.cash.sqldelight.driver.sqljs.worker/-worker-data/"><code>WorkerData</code></a> interface.</p>
 <h2 id="testing">Testing</h2>
 <p>To run karma tests with the web worker, the karma config must be updated to copy and proxy the worker script file in addition to the WebAssembly file.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// project/karma.config.d/wasm.js</span><span class="w"></span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">);</span><span class="w"></span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&quot;../../node_modules/sql.js/dist/&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">wasm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dist</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sql-wasm.wasm&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">worker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dist</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;worker.sql-wasm.js&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// project/karma.config.d/wasm.js</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&quot;../../node_modules/sql.js/dist/&quot;</span><span class="p">)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">wasm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dist</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sql-wasm.wasm&quot;</span><span class="p">)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">worker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dist</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;worker.sql-wasm.js&quot;</span><span class="p">)</span>
 
-<span class="nx">config</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"></span>
-<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">wasm</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">worker</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="p">});</span><span class="w"></span>
+<span class="nx">config</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">wasm</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">worker</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="p">});</span>
 
-<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/sql-wasm.wasm&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">wasm</span><span class="si">}</span><span class="sb">`</span><span class="w"></span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/worker.sql-wasm.js&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">worker</span><span class="si">}</span><span class="sb">`</span><span class="w"></span>
+<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/sql-wasm.wasm&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">wasm</span><span class="si">}</span><span class="sb">`</span>
+<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/worker.sql-wasm.js&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">worker</span><span class="si">}</span><span class="sb">`</span>
 </code></pre></div>
 
 

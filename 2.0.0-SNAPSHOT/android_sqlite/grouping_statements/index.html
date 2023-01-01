@@ -3953,15 +3953,15 @@
   <h1>Grouping Statements</h1>
 
 <p>You can group multiple SQL statements together to be executed at once inside a transaction:</p>
-<div class="highlight"><pre><span></span><code><span class="n">upsert</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">  </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">myTable</span><span class="w"></span>
-<span class="w">  </span><span class="k">SET</span><span class="w"> </span><span class="n">column1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">column1</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">column2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">column2</span><span class="w"></span>
-<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">id</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">upsert</span><span class="w"> </span><span class="err">{</span>
+<span class="w">  </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">myTable</span>
+<span class="w">  </span><span class="k">SET</span><span class="w"> </span><span class="n">column1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">column1</span><span class="p">,</span>
+<span class="w">      </span><span class="n">column2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">column2</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">id</span><span class="p">;</span>
 
-<span class="w">  </span><span class="k">INSERT</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">IGNORE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">myTable</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="n">column2</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(:</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="n">column2</span><span class="p">);</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+<span class="w">  </span><span class="k">INSERT</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">IGNORE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">myTable</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="n">column2</span><span class="p">)</span>
+<span class="w">  </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(:</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="n">column2</span><span class="p">);</span>
+<span class="err">}</span>
 </code></pre></div>
 
 

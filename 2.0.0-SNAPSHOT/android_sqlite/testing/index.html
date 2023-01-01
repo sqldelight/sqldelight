@@ -3957,32 +3957,32 @@ driver:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">testImplementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:sqlite-driver:2.0.0-alpha04&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">testImplementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:sqlite-driver:2.0.0-alpha04&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">testImplementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:sqlite-driver:2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">testImplementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:sqlite-driver:2.0.0-alpha04&quot;</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>
 </div>
-<div class="highlight"><pre><span></span><code><span class="c1">// When your test needs a driver</span><span class="w"></span>
-<span class="nd">@Before</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">before</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// When your test needs a driver</span>
+<span class="nd">@Before</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">before</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">)</span>
+<span class="w">  </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>If you are using the SQLite that comes bundled with Android (rather than shipping <a href="https://github.com/requery/sqlite-android/">your own</a>), you can override the version of <a href="https://github.com/xerial/sqlite-jdbc">sqlite-jdbc</a> to one that <a href="https://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android#4377116">matches your Android minSdkVersion</a>, for example for API 23 use SQLite 3.8.10.2:</p>
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">testImplementation</span><span class="o">(</span><span class="s1">&#39;org.xerial:sqlite-jdbc:3.8.10.2&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// Override the version of sqlite used by sqlite-driver to match Android API 23</span><span class="w"></span>
-<span class="w">    </span><span class="n">force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
-<span class="w">  </span><span class="o">}</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">testImplementation</span><span class="o">(</span><span class="s1">&#39;org.xerial:sqlite-jdbc:3.8.10.2&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1">// Override the version of sqlite used by sqlite-driver to match Android API 23</span>
+<span class="w">    </span><span class="n">force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div>
 
 

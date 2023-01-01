@@ -3939,35 +3939,35 @@
   <h1>Index queries</h1>
 
 <p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 
-<span class="k">insert</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">);</span><span class="w"></span>
+<span class="k">insert</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">);</span>
 
-<span class="n">insertFullPlayerObject</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<span class="n">insertFullPlayerObject</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
 <p>Files with labeled statements in them will have a queries file generated from them that matches the <code>.sq</code> file name - putting the above sql into <code>Player.sq</code> generates <code>PlayerQueries.kt</code>. To get a reference to <code>PlayerQueries</code> you need to wrap the driver we made above:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// In reality the database and driver above should be created a single time</span><span class="w"></span>
-<span class="c1">// and passed around using your favourite dependency injection/service</span><span class="w"></span>
-<span class="c1">// locator/singleton pattern.</span><span class="w"></span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">// In reality the database and driver above should be created a single time</span>
+<span class="c1">// and passed around using your favourite dependency injection/service</span>
+<span class="c1">// locator/singleton pattern.</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span>
 
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span><span class="w"></span>
+<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
+<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span>
 
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span><span class="w"></span>
+<span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span>
+<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
+<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span>
+<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
 </code></pre></div>
 <p>And that's it! Check out the other pages on the sidebar for other functionality.</p>
 

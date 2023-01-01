@@ -3964,26 +3964,26 @@
 <p>Upgrade the gradle plugin from 0.7.2 to 0.9.0. This upgrades the transitive dependencies and generated code to instead use AndroidX, which is a requirement of SQLDelight. This should be done at the same time as you upgrading your own project to AndroidX, and cannot be done separately since SQLDelight generates code which references android support/AndroidX.</p>
 <p><em>ALTERNATIVELY</em> Upgrade the gradle plugin from 0.7 to 0.8.0 before then upgrading to 0.9.0. This upgrades to AndroidX without changing the sqldelight package name to <code>com.squareup.sqldelight.prerelease</code></p>
 <p>Suppose on SQLDelight 0.9 you have this <code>User.sq</code> file:</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
 
-<span class="n">insertDefaultData</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">user</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alec&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="n">insertDefaultData</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">user</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alec&#39;</span><span class="p">);</span>
 
-<span class="n">users</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="k">user</span><span class="p">;</span><span class="w"></span>
+<span class="n">users</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="k">user</span><span class="p">;</span>
 
-<span class="k">names</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="k">user</span><span class="p">;</span><span class="w"></span>
+<span class="k">names</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="k">user</span><span class="p">;</span>
 
-<span class="n">insertUser</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">user</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">);</span><span class="w"></span>
+<span class="n">insertUser</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">user</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">);</span>
 </code></pre></div>
 <p>This will generate the <code>UserModel</code> class with methods for your queries. </p>
 <p>Copy and paste all <code>*Model.java</code> files out of the build directory and into your <code>src/main/java</code> folder. </p>
@@ -3994,47 +3994,47 @@ To add these back in add an <code>implementation</code> dependency on <code>com.
 in your <code>*Model.java</code> files. If things aren't working at this point, please file an issue!</p>
 <p>Begin by modifying your <code>SupportSQLiteOpenHelper.Callback</code> to call into the now generated <code>Database</code>
 which holds generated code for SQL Delight 1.0:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">//Before</span><span class="w"></span>
-<span class="nd">@Override</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">(</span><span class="n">SupportSQLiteDatabase</span><span class="w"> </span><span class="n">db</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">db</span><span class="p">.</span><span class="na">execSql</span><span class="p">(</span><span class="n">UserModel</span><span class="p">.</span><span class="na">CREATE_TABLE</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="n">db</span><span class="p">.</span><span class="na">execSql</span><span class="p">(</span><span class="n">UserModel</span><span class="p">.</span><span class="na">INSERTDEFAULTDATA</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="c1">// Other create table/initialization</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">//Before</span>
+<span class="nd">@Override</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">(</span><span class="n">SupportSQLiteDatabase</span><span class="w"> </span><span class="n">db</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">db</span><span class="p">.</span><span class="na">execSql</span><span class="p">(</span><span class="n">UserModel</span><span class="p">.</span><span class="na">CREATE_TABLE</span><span class="p">);</span>
+<span class="w">  </span><span class="n">db</span><span class="p">.</span><span class="na">execSql</span><span class="p">(</span><span class="n">UserModel</span><span class="p">.</span><span class="na">INSERTDEFAULTDATA</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// Other create table/initialization</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>In SQL Delight 1.0 all unlabeled statements in <code>.sq</code> files (including <code>CREATE</code> statements) will be run
 during <code>onCreate</code>, so we can remove the <code>insertDefaultData</code> identifier from above:</p>
 <p><code>User.sq</code>
-<div class="highlight"><pre><span></span><code><span class="p">...</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="p">...</span>
 
 <span class="c1">--insertDefaultData:</span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">user</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alec&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">user</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alec&#39;</span><span class="p">);</span>
 
-<span class="p">...</span><span class="w"></span>
+<span class="p">...</span>
 </code></pre></div></p>
 <p>and now your <code>SupportSQLiteOpenHelper.Callback</code> should call into the <code>Database</code> for <code>create</code></p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Override</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">(</span><span class="n">SupportSQLiteDatabase</span><span class="w"> </span><span class="n">db</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">SqlDriver</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">db</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">(</span><span class="n">SupportSQLiteDatabase</span><span class="w"> </span><span class="n">db</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">SqlDriver</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+<span class="w">  </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>You can do the same for your migrations if you place them in <code>.sqm</code> files, but thats not necessary part
 of the upgrade.</p>
 <p>At this point things should still work normally.</p>
 <p>Next add in the code to create your <code>Database</code> as part of an object graph/singleton pattern/whevs:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Provides</span><span class="w"> </span><span class="nd">@Singleton</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">SupportSQLiteOpenHelper</span><span class="w"> </span><span class="nf">provideDatabaseHelper</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="nd">@App</span><span class="w"> </span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">SupportSQLiteOpenHelper</span><span class="p">.</span><span class="na">Configuration</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">SupportSQLiteOpenHelper</span><span class="p">.</span><span class="na">Configuration</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="n">DATABASE_NAME</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="p">.</span><span class="na">callback</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">MyDatabaseCallback</span><span class="p">())</span><span class="w"></span>
-<span class="w">      </span><span class="p">.</span><span class="na">build</span><span class="p">();</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FrameworkSQLiteOpenHelperFactory</span><span class="p">().</span><span class="na">create</span><span class="p">(</span><span class="n">config</span><span class="p">);</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Provides</span><span class="w"> </span><span class="nd">@Singleton</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">SupportSQLiteOpenHelper</span><span class="w"> </span><span class="nf">provideDatabaseHelper</span><span class="p">(</span>
+<span class="w">    </span><span class="nd">@App</span><span class="w"> </span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">SupportSQLiteOpenHelper</span><span class="p">.</span><span class="na">Configuration</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">SupportSQLiteOpenHelper</span><span class="p">.</span><span class="na">Configuration</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="n">DATABASE_NAME</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="na">callback</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">MyDatabaseCallback</span><span class="p">())</span>
+<span class="w">      </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FrameworkSQLiteOpenHelperFactory</span><span class="p">().</span><span class="na">create</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+<span class="p">}</span>
 
-<span class="nd">@Provides</span><span class="w"> </span><span class="nd">@Singleton</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="nf">provideDatabase</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="n">SupportSQLiteOpenHelper</span><span class="w"> </span><span class="n">helper</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">helper</span><span class="p">));</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="nd">@Provides</span><span class="w"> </span><span class="nd">@Singleton</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="nf">provideDatabase</span><span class="p">(</span>
+<span class="w">    </span><span class="n">SupportSQLiteOpenHelper</span><span class="w"> </span><span class="n">helper</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">helper</span><span class="p">));</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>If you're also using SQL Brite make sure you create a <code>BriteDatabase</code> with the same <code>SupportSQLiteOpenHelper</code>
 that's being used to create the <code>Database</code>.</p>
@@ -4043,31 +4043,31 @@ that's being used to create the <code>Database</code>.</p>
 using only SQL Delight will be similar.</p>
 <p>Mutating queries can be converted individually by using the <code>Database</code>:</p>
 <p>before:
-<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">insertUser</span><span class="p">:</span><span class="w"> </span><span class="n">UserModel</span><span class="p">.</span><span class="na">InsertUser</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">lazy</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">UserModel</span><span class="p">.</span><span class="na">InsertUser</span><span class="p">(</span><span class="n">datbaseOpenHelper</span><span class="p">.</span><span class="na">writableDatabase</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">insertUser</span><span class="p">:</span><span class="w"> </span><span class="n">UserModel</span><span class="p">.</span><span class="na">InsertUser</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">lazy</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">UserModel</span><span class="p">.</span><span class="na">InsertUser</span><span class="p">(</span><span class="n">datbaseOpenHelper</span><span class="p">.</span><span class="na">writableDatabase</span><span class="p">)</span>
+<span class="p">}</span>
 
-<span class="n">insertUser</span><span class="p">.</span><span class="na">bind</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jake&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="n">insertUser</span><span class="p">.</span><span class="na">executeInsert</span><span class="p">()</span><span class="w"></span>
+<span class="n">insertUser</span><span class="p">.</span><span class="na">bind</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jake&quot;</span><span class="p">)</span>
+<span class="n">insertUser</span><span class="p">.</span><span class="na">executeInsert</span><span class="p">()</span>
 </code></pre></div></p>
 <p>after:
-<div class="highlight"><pre><span></span><code><span class="n">database</span><span class="p">.</span><span class="na">userQueries</span><span class="p">.</span><span class="na">insertUser</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jake&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">database</span><span class="p">.</span><span class="na">userQueries</span><span class="p">.</span><span class="na">insertUser</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jake&quot;</span><span class="p">)</span>
 </code></pre></div></p>
 <p>You no longer need a "Factory" type to perform queries, the query wrapper is all that is needed.</p>
 <p>before:
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="p">.</span><span class="na">FACTORY</span><span class="p">.</span><span class="na">users</span><span class="p">()</span><span class="w"></span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">usersObservable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">briteDatabase</span><span class="p">.</span><span class="na">createQuery</span><span class="p">(</span><span class="n">query</span><span class="p">.</span><span class="na">tables</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="na">statement</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="na">args</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="na">mapToList</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="na">FACTORY</span><span class="p">.</span><span class="na">usersMapper</span><span class="p">()</span><span class="o">::</span><span class="n">map</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="p">.</span><span class="na">FACTORY</span><span class="p">.</span><span class="na">users</span><span class="p">()</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">usersObservable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">briteDatabase</span><span class="p">.</span><span class="na">createQuery</span><span class="p">(</span><span class="n">query</span><span class="p">.</span><span class="na">tables</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="na">statement</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="na">args</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="na">mapToList</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="na">FACTORY</span><span class="p">.</span><span class="na">usersMapper</span><span class="p">()</span><span class="o">::</span><span class="n">map</span><span class="p">)</span>
 </code></pre></div></p>
 <p>after:
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">usersObservable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">userQueries</span><span class="p">.</span><span class="na">users</span><span class="p">()</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="na">asObservable</span><span class="p">(</span><span class="n">Schedulers</span><span class="p">.</span><span class="na">io</span><span class="p">())</span><span class="w"> </span><span class="c1">// The scheduler to run the query on.</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="na">mapToList</span><span class="p">()</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">usersObservable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">userQueries</span><span class="p">.</span><span class="na">users</span><span class="p">()</span>
+<span class="w">  </span><span class="p">.</span><span class="na">asObservable</span><span class="p">(</span><span class="n">Schedulers</span><span class="p">.</span><span class="na">io</span><span class="p">())</span><span class="w"> </span><span class="c1">// The scheduler to run the query on.</span>
+<span class="w">  </span><span class="p">.</span><span class="na">mapToList</span><span class="p">()</span>
 </code></pre></div></p>
 <p>If you still want to use a custom type, pass it as a parameter to the query.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">myUsersObservable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">userQueries</span><span class="p">.</span><span class="na">users</span><span class="p">(</span><span class="o">::</span><span class="n">MyUser</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="na">asObservable</span><span class="p">(</span><span class="n">Schedulers</span><span class="p">.</span><span class="na">io</span><span class="p">())</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="na">mapToList</span><span class="p">()</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">myUsersObservable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">userQueries</span><span class="p">.</span><span class="na">users</span><span class="p">(</span><span class="o">::</span><span class="n">MyUser</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="na">asObservable</span><span class="p">(</span><span class="n">Schedulers</span><span class="p">.</span><span class="na">io</span><span class="p">())</span>
+<span class="w">  </span><span class="p">.</span><span class="na">mapToList</span><span class="p">()</span>
 </code></pre></div>
 <p>Once you no longer have references to <code>UserModel.java</code>, delete the whole class. Repeat for each of
 your <code>*Model.java</code> files until upgrading is complete!</p>

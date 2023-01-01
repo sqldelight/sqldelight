@@ -3961,11 +3961,11 @@
 <h2 id="custom-types-in-migrations">Custom Types in Migrations</h2>
 <p>If migrations are the schema's source of truth, you can also specify
 the exposed kotlin type when altering a table:</p>
-<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">String</span><span class="p">;</span><span class="w"></span>
-<span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">collection</span><span class="p">.</span><span class="n">List</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">String</span><span class="p">;</span>
+<span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">collection</span><span class="p">.</span><span class="n">List</span><span class="p">;</span>
 
-<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_table</span><span class="w"></span>
-<span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">new_column</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_table</span>
+<span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">new_column</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">;</span>
 </code></pre></div>
 
 

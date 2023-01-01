@@ -4047,7 +4047,7 @@
 <p>SQLDelight column definitions are identical to regular H2 column definitions but support an
 <a href="#custom-column-types">extra column constraint</a> which specifies the Kotlin type of the column in the
 generated interface.</p>
-<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">some_types</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">some_types</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">some_tiny_int</span><span class="w"> </span><span class="n">TINYINT</span><span class="p">,</span><span class="w">                           </span><span class="c1">-- Retrieved as Byte</span>
 <span class="w">  </span><span class="n">some_small_int</span><span class="w"> </span><span class="nb">SMALLINT</span><span class="p">,</span><span class="w">                         </span><span class="c1">-- Retrieved as Short</span>
 <span class="w">  </span><span class="n">some_integer</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w">                            </span><span class="c1">-- Retrieved as Int</span>
@@ -4089,58 +4089,58 @@ generated interface.</p>
 <span class="w">  </span><span class="n">some_interval3</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="k">DAY</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">HOUR</span><span class="p">,</span><span class="w">          </span><span class="c1">-- Retrieved as ByteArray</span>
 <span class="w">  </span><span class="n">some_interval4</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="k">MINUTE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">SECOND</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="w">  </span><span class="c1">-- Retrieved as ByteArray</span>
 <span class="w">  </span><span class="n">some_interval5</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="k">SECOND</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="w">              </span><span class="c1">-- Retrieved as ByteArray</span>
-<span class="p">);</span><span class="w"></span>
+<span class="p">);</span>
 </code></pre></div>
 <h2 id="custom-column-types">Custom Column Types</h2>
 <p>If you'd like to retrieve columns as custom types you can specify a Kotlin type:</p>
-<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">String</span><span class="p">;</span><span class="w"></span>
-<span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">collections</span><span class="p">.</span><span class="n">List</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">String</span><span class="p">;</span>
+<span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">collections</span><span class="p">.</span><span class="n">List</span><span class="p">;</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">cup_wins</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">cup_wins</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
 </code></pre></div>
 <p>However, creating the <code>Database</code> will require you to provide a <code>ColumnAdapter</code> which knows how to map between the database type and your custom type:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">listOfStringsAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">ColumnAdapter</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="n">databaseValue</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">databaseValue</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="n">listOf</span><span class="p">()</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="n">databaseValue</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="na">joinToString</span><span class="p">(</span><span class="n">separator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">listOfStringsAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">ColumnAdapter</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="n">databaseValue</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">databaseValue</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">listOf</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">databaseValue</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="na">joinToString</span><span class="p">(</span><span class="n">separator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">queryWrapper</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">hockeyPlayerAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">.</span><span class="na">Adapter</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="n">cup_winsAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOfStringsAdapter</span><span class="w"></span>
-<span class="w">  </span><span class="p">)</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">queryWrapper</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span>
+<span class="w">  </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="p">,</span>
+<span class="w">  </span><span class="n">hockeyPlayerAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">.</span><span class="na">Adapter</span><span class="p">(</span>
+<span class="w">    </span><span class="n">cup_winsAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOfStringsAdapter</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
 <h2 id="enums">Enums</h2>
 <p>As a convenience the SQLDelight runtime includes a <code>ColumnAdapter</code> for storing an enum as String data.</p>
-<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">hockey</span><span class="p">.</span><span class="n">HockeyPlayer</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">hockey</span><span class="p">.</span><span class="n">HockeyPlayer</span><span class="p">;</span>
 
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="k">position</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">.</span><span class="k">Position</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">position</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">.</span><span class="k">Position</span>
+<span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">queryWrapper</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">hockeyPlayerAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">.</span><span class="na">Adapter</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="n">positionAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EnumColumnAdapter</span><span class="p">()</span><span class="w"></span>
-<span class="w">  </span><span class="p">)</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">queryWrapper</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span>
+<span class="w">  </span><span class="n">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="p">,</span>
+<span class="w">  </span><span class="n">hockeyPlayerAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">.</span><span class="na">Adapter</span><span class="p">(</span>
+<span class="w">    </span><span class="n">positionAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EnumColumnAdapter</span><span class="p">()</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
 <h2 id="custom-types-in-migrations">Custom Types in Migrations</h2>
 <p>If migrations are the schema's source of truth, you can also specify
 the exposed kotlin type when altering a table:</p>
-<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">String</span><span class="p">;</span><span class="w"></span>
-<span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">collection</span><span class="p">.</span><span class="n">List</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">String</span><span class="p">;</span>
+<span class="n">import</span><span class="w"> </span><span class="n">kotlin</span><span class="p">.</span><span class="n">collection</span><span class="p">.</span><span class="n">List</span><span class="p">;</span>
 
-<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_table</span><span class="w"></span>
-<span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">new_column</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">my_table</span>
+<span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">new_column</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">;</span>
 </code></pre></div>
 
 

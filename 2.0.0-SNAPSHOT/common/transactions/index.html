@@ -3974,59 +3974,59 @@
 
 <h2 id="api">API</h2>
 <p>If you want to execute multiple statements under one transaction, use <code>transaction</code> function. </p>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">players</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="o">&lt;</span><span class="n">Player</span><span class="o">&gt;</span><span class="p">()</span><span class="w"></span>
-<span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transaction</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span><span class="w"></span>
-<span class="w">    </span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">players</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="o">&lt;</span><span class="n">Player</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transaction</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span>
+<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span>
+<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>To return a value from a transaction, use the <code>transactionWithResult</code> function.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">players</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Player</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transactionWithResult</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">()</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">players</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Player</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transactionWithResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">()</span>
+<span class="p">}</span>
 </code></pre></div>
 <h2 id="rollback">Rollback</h2>
 <p>Transactions will roll back if an exception occurs anywhere in them. You can manually roll back a
 transaction anywhere inside of one, but if your transaction returns a value you will need to specify
 a value for the transaction to return.</p>
-<div class="highlight"><pre><span></span><code><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transaction</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="n">rollback</span><span class="p">()</span><span class="w"></span>
-<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span><span class="w"></span>
-<span class="w">    </span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transaction</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="n">rollback</span><span class="p">()</span>
+<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span>
+<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span>
+<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">numberInserted</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transactionWithResult</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="n">rollback</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span><span class="w"></span>
-<span class="w">    </span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">size</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">numberInserted</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transactionWithResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="n">rollback</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span>
+<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span>
+<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">size</span>
+<span class="p">}</span>
 </code></pre></div>
 <h2 id="callbacks">Callbacks</h2>
 <p>You can register callbacks to occur after a transaction has completed or rolled back:</p>
-<div class="highlight"><pre><span></span><code><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transaction</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">afterRollback</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="p">(</span><span class="s">&quot;No players were inserted.&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="n">afterCommit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="p">(</span><span class="s">&quot;</span><span class="si">${</span><span class="n">players</span><span class="p">.</span><span class="na">size</span><span class="si">}</span><span class="s"> players were inserted.&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transaction</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">afterRollback</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="p">(</span><span class="s">&quot;No players were inserted.&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="n">afterCommit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="p">(</span><span class="s">&quot;</span><span class="si">${</span><span class="n">players</span><span class="p">.</span><span class="na">size</span><span class="si">}</span><span class="s"> players were inserted.&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 
-<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="w"></span>
-<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span><span class="w"></span>
-<span class="w">    </span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="n">players</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span>
+<span class="w">      </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">number</span><span class="p">,</span>
+<span class="w">      </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">fullName</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
 

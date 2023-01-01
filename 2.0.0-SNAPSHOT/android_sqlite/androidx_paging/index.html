@@ -4024,15 +4024,15 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:androidx-paging3-extensions:2.0.0-alpha04&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:androidx-paging3-extensions:2.0.0-alpha04&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:androidx-paging3-extensions:2.0.0-alpha04&quot;</span><span class="w"></span>
-<span class="o">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:androidx-paging3-extensions:2.0.0-alpha04&quot;</span>
+<span class="o">}</span>
 </code></pre></div>
 </div>
 </div>
@@ -4040,61 +4040,61 @@
 <p>SQLDelight offers two methods for paging data -- offset based paging and keyset paging.</p>
 <h2 id="offset-based-paging">Offset Based Paging</h2>
 <p>Offset paging achieves paged results using <code>OFFSET</code> and <code>LIMIT</code> clauses. Creating a <code>PagingSource</code> that performs offset based paging requires a count query as well as the paged query.</p>
-<div class="highlight"><pre><span></span><code><span class="n">countPlayers</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">countPlayers</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 
-<span class="n">players</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="k">LIMIT</span><span class="w"> </span><span class="p">:</span><span class="k">limit</span><span class="w"> </span><span class="k">OFFSET</span><span class="w"> </span><span class="p">:</span><span class="k">offset</span><span class="p">;</span><span class="w"></span>
+<span class="n">players</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="p">:</span><span class="k">limit</span><span class="w"> </span><span class="k">OFFSET</span><span class="w"> </span><span class="p">:</span><span class="k">offset</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">app.cash.sqldelight.android.paging3.QueryPagingSource</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">app.cash.sqldelight.android.paging3.QueryPagingSource</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">pagingSource</span><span class="p">:</span><span class="w"> </span><span class="n">PagingSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QueryPagingSource</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">countQuery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">countPlayers</span><span class="p">(),</span><span class="w"></span>
-<span class="w">  </span><span class="n">transacter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Dispatchers</span><span class="p">.</span><span class="na">IO</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">queryProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="o">::</span><span class="n">players</span><span class="p">,</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">pagingSource</span><span class="p">:</span><span class="w"> </span><span class="n">PagingSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QueryPagingSource</span><span class="p">(</span>
+<span class="w">  </span><span class="n">countQuery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">countPlayers</span><span class="p">(),</span>
+<span class="w">  </span><span class="n">transacter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">,</span>
+<span class="w">  </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Dispatchers</span><span class="p">.</span><span class="na">IO</span><span class="p">,</span>
+<span class="w">  </span><span class="n">queryProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="o">::</span><span class="n">players</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
 <p>By default, queries are performed on <code>Dispatchers.IO</code> if no context is specified. Consumers expecting to use RxJava's <code>Scheduler</code> to perform queries should use the <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html"><code>Scheduler.asCoroutineDispatcher</code></a> extension function.</p>
 <h2 id="keyset-paging">Keyset Paging</h2>
 <p>Offset paging is simple and easy to maintain. Unfortunately it performs poorly on large datasets. The <code>OFFSET</code> clause of a SQL statement really just drops already executed rows in a SQL query. Therefore, as the number to <code>OFFSET</code> grows, so does the amount of time it takes to execute your query. To overcome this, SQLDelight offers a "keyset paging" implementation of <code>PagingSource</code>. Rather than querying an entire dataset and inefficiently dropping the first <code>OFFSET</code> elements, keyset paging operates using a unique column to restrict the bounds of your queries. This performs better at the expense of higher developer maintenance. </p>
 <p>The <code>queryProvider</code> callback that this paging source accepts has two parameters -- a <code>beginInclusive</code> non-null unique <code>Key</code> as well as an <code>endExclusive</code> nullable unique <code>Key?</code>. An example of the core paging query is shown below. </p>
-<div class="highlight"><pre><span></span><code><span class="n">keyedQuery</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">:</span><span class="n">beginInclusive</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">:</span><span class="n">endExclusive</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="p">:</span><span class="n">endExclusive</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"></span>
-<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">keyedQuery</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">:</span><span class="n">beginInclusive</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">:</span><span class="n">endExclusive</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="p">:</span><span class="n">endExclusive</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span>
 </code></pre></div>
 <p>Queries used in keyset paging must have a unique ordering like shown above. </p>
 <p>Both <code>beginInclusive</code> and <code>endExclusive</code> are <em>pre-calculated</em> keys that act as page boundaries. Page sizes are established when pre-calculating page boundaries. The <code>pageBoundariesProvider</code> callback takes an <code>anchor: Key?</code> parameter as well as a <code>limit: Int?</code> parameter. An example query that pre-calculates page boundaries is shown below. </p>
-<div class="highlight"><pre><span></span><code><span class="n">pageBoundaries</span><span class="p">:</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">pageBoundaries</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span>
-<span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="k">SELECT</span><span class="w"></span>
-<span class="w">    </span><span class="n">id</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">CASE</span><span class="w"></span>
-<span class="w">      </span><span class="k">WHEN</span><span class="w"> </span><span class="p">((</span><span class="n">row_number</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ASC</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">:</span><span class="k">limit</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">      </span><span class="k">WHEN</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">anchor</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">      </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
-<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">page_boundary</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="w">  </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ASC</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">page_boundary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">SELECT</span>
+<span class="w">    </span><span class="n">id</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CASE</span>
+<span class="w">      </span><span class="k">WHEN</span><span class="w"> </span><span class="p">((</span><span class="n">row_number</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ASC</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">:</span><span class="k">limit</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">WHEN</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">anchor</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">page_boundary</span><span class="p">;</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="w">  </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ASC</span>
+<span class="p">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">page_boundary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 </code></pre></div>
 <p>Pre-calculating page boundaries of a SQL query will likely require <a href="https://www.sqlite.org/windowfunctions.html">SQLite Window Functions</a>. Window functions were introduced in SQLite version 3.25.0, and therefore are not available by default until Android API 30. To use keyset paging SQLDelight recommends either setting <code>minApi 30</code> <em>or</em> bundling your own SQLite version. The Requery organization <a href="https://github.com/requery/sqlite-android">offers an up-to-date distribution</a> of SQLite as a standalone library. </p>
 <p>The AndroidX paging library allows for the first page fetch to differ in size from the subsequent page fetches with <code>PagingConfig.initialLoadSize</code>. <strong>This functionality should be avoided</strong>, as the <code>pageBoundariesProvider</code> callback is invoked a single time on the first page fetch. Failing to have matching <code>PagingConifg.initialLoadSize</code> and <code>PagingConfig.pageSize</code> will result in unexpected page boundary generation. </p>
 <p>This paging source <em>does not</em> support jumping. </p>
 <p>To create this paging source, use the <code>QueryPagingSource</code> factory function. </p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">app.cash.sqldelight.android.paging3.QueryPagingSource</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">app.cash.sqldelight.android.paging3.QueryPagingSource</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">keyedSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QueryPagingSource</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">transacter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Dispatchers</span><span class="p">.</span><span class="na">IO</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">pageBoundariesProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="o">::</span><span class="n">pageBoundaries</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">queryProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="o">::</span><span class="n">keyedQuery</span><span class="p">,</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">keyedSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QueryPagingSource</span><span class="p">(</span>
+<span class="w">  </span><span class="n">transacter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">,</span>
+<span class="w">  </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Dispatchers</span><span class="p">.</span><span class="na">IO</span><span class="p">,</span>
+<span class="w">  </span><span class="n">pageBoundariesProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="o">::</span><span class="n">pageBoundaries</span><span class="p">,</span>
+<span class="w">  </span><span class="n">queryProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="o">::</span><span class="n">keyedQuery</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
 <p>By default, queries are performed on <code>Dispatchers.IO</code> if no context is specified. Consumers expecting to use RxJava's <code>Scheduler</code> to perform queries should use the <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html"><code>Scheduler.asCoroutineDispatcher</code></a> extension function.</p>
 

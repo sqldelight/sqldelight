@@ -3998,45 +3998,45 @@
 <h2 id="type-inference">Type Inference</h2>
 <p>SQLDelight will infer the correct type and nullability of runtime parameters,
 including custom column types.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectByNumber</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">selectByNumber</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selectNumber10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectByNumber</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)</span><span class="w"></span>
-<span class="n">println</span><span class="p">(</span><span class="n">selectNumber10</span><span class="p">.</span><span class="na">executeAsOne</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints &quot;Corey Perry&quot;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selectNumber10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectByNumber</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)</span>
+<span class="n">println</span><span class="p">(</span><span class="n">selectNumber10</span><span class="p">.</span><span class="na">executeAsOne</span><span class="p">())</span>
+<span class="c1">// Prints &quot;Corey Perry&quot;</span>
 </code></pre></div>
 <h2 id="named-arguments">Named Arguments</h2>
 <p>Named parameters or indexed parameters can be used.</p>
-<div class="highlight"><pre><span></span><code><span class="n">firstOrLastName</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;% &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">:</span><span class="n">name</span><span class="p">)</span><span class="w"></span>
-<span class="k">OR</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="p">(:</span><span class="n">name</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; %&#39;</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">firstOrLastName</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;% &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">:</span><span class="n">name</span><span class="p">)</span>
+<span class="k">OR</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="p">(:</span><span class="n">name</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; %&#39;</span><span class="p">);</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">playerQueries</span><span class="p">.</span><span class="na">firstOrLastName</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Ryan&quot;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">playerQueries</span><span class="p">.</span><span class="na">firstOrLastName</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Ryan&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="variable-arguments">Variable Arguments</h2>
 <p>Sets of values can also be passed as an argument.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectByNames</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">selectByNames</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectByNames</span><span class="p">(</span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Alec&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jake&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Matt&quot;</span><span class="p">))</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectByNames</span><span class="p">(</span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Alec&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Jake&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Matt&quot;</span><span class="p">))</span>
 </code></pre></div>
 <h2 id="inserts">Inserts</h2>
 <p><code>INSERT VALUES</code> arguments can be bound to with the table's data class.</p>
-<div class="highlight"><pre><span></span><code><span class="n">insertPlayer</span><span class="p">:</span><span class="w"></span>
-<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"></span>
-<span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">insertPlayer</span><span class="p">:</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">rickardRakell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Rickard Rakell&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">67</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertPlayer</span><span class="p">(</span><span class="n">rickardRakell</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">rickardRakell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span>
+<span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Rickard Rakell&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">67</span>
+<span class="p">)</span>
+<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertPlayer</span><span class="p">(</span><span class="n">rickardRakell</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="input-sanitization">Input Sanitization</h2>
 <p>SQLDelight uses query placeholders to pass arguments into queries.

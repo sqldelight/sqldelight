@@ -3939,9 +3939,9 @@
   <h1>Coroutines usage</h1>
 
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">players</span><span class="p">:</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">HockeyPlayer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">  </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">()</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="na">asFlow</span><span class="p">()</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="na">mapToList</span><span class="p">()</span><span class="w"></span>
+<span class="w">  </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">asFlow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">mapToList</span><span class="p">()</span>
 </code></pre></div>
 <p>This flow emits the query result, and emits a new result every time the database changes for that query.</p>
 

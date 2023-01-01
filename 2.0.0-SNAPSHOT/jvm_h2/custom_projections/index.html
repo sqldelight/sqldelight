@@ -3961,20 +3961,20 @@
 
 <h1 id="projections">Projections</h1>
 <p>By default queries will return a data class with your projection, but you can override the behavior with a typesafe mapper.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selectAllNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="n">mapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">full_name</span><span class="p">.</span><span class="na">toUppercase</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">)</span><span class="w"></span>
-<span class="n">println</span><span class="p">(</span><span class="n">selectAllNames</span><span class="p">.</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints [&quot;RYAN GETZLAF&quot;, &quot;COREY PERRY&quot;]</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selectAllNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">(</span>
+<span class="w">  </span><span class="n">mapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">full_name</span><span class="p">.</span><span class="na">toUppercase</span><span class="p">()</span><span class="w"> </span><span class="p">}</span>
+<span class="p">)</span>
+<span class="n">println</span><span class="p">(</span><span class="n">selectAllNames</span><span class="p">.</span><span class="na">executeAsList</span><span class="p">())</span>
+<span class="c1">// Prints [&quot;RYAN GETZLAF&quot;, &quot;COREY PERRY&quot;]</span>
 </code></pre></div>
 <p>In general you should be leveraging SQL to do custom projections whenever possible.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectNames</span><span class="p">:</span><span class="w"></span>
-<span class="k">SELECT</span><span class="w"> </span><span class="k">upper</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span><span class="w"></span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">selectNames</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">upper</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selectAllNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectNames</span><span class="p">()</span><span class="w"></span>
-<span class="n">println</span><span class="p">(</span><span class="n">selectAllNames</span><span class="p">.</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"></span>
-<span class="c1">// Prints [&quot;RYAN GETZLAF&quot;, &quot;COREY PERRY&quot;]</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selectAllNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectNames</span><span class="p">()</span>
+<span class="n">println</span><span class="p">(</span><span class="n">selectAllNames</span><span class="p">.</span><span class="na">executeAsList</span><span class="p">())</span>
+<span class="c1">// Prints [&quot;RYAN GETZLAF&quot;, &quot;COREY PERRY&quot;]</span>
 </code></pre></div>
 
 
