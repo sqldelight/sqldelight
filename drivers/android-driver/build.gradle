@@ -51,8 +51,3 @@ configurations.all {
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
-
-// https://github.com/Kotlin/dokka/issues/2472
-afterEvaluate {
-  tasks.named("javaDocReleaseGeneration") { enabled(false) }
-}
