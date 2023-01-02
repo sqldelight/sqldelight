@@ -4,23 +4,27 @@ For greater customization, you can declare databases explicitly using the Gradle
 
 ## SQLDelight Configuration
 
-### `database`
+### `databases`
 
-Configures SQLDelight to create a database with the given name.
+Container for databases. Configures SQLDelight to create each one with the given name.
 
 === "Kotlin"
     ```kotlin
     sqldelight {
-      database("MyDatabase") {
-        // Database configuration here
+      databases {
+        create("MyDatabase") {
+          // Database configuration here
+        }
       }
     }
     ```
 === "Groovy"
     ```groovy
     sqldelight {
-      MyDatabase {
-        // Database configuration here
+      databases {
+        MyDatabase {
+          // Database configuration here
+        }
       }
     }
     ```
@@ -29,26 +33,32 @@ Configures SQLDelight to create a database with the given name.
 
 ### `linkSqlite`
 
-Type: `Boolean`
+Type: `Property<Boolean>`
 
 For native targets. Whether sqlite should be automatically linked.
 
-Defaults to true.
+Defaults to `true`.
 
-```kotlin
-linkSqlite = true
-```
+=== "Kotlin"
+    ```kotlin
+    linkSqlite.set(true)
+    ```
+=== "Groovy"
+    ```groovy
+    linkSqlite = true
+    ```
 
 ## Database Configuration
 
 ### `packageName`
 
-Type: `String`
+Type: `Property<String>`
 
 Package name used for the database class.
+
 === "Kotlin"
     ```kotlin
-    packageName = "com.example.db"
+    packageName.set("com.example.db")
     ```
 === "Groovy"
     ```groovy
@@ -59,7 +69,7 @@ Package name used for the database class.
 
 ### `sourceFolders`
 
-Type: `Collection<String>`
+Type: `ListProperty<String>`
 
 An collection of folders that the plugin will look in for your `.sq` and `.sqm` files.
 These folder paths are relative to your existing source set, so if you specify `listOf("db")`
@@ -69,7 +79,7 @@ Defaults to `listOf("sqldelight")`.
 
 === "Kotlin"
     ```kotlin
-    sourceFolders = listOf("db")
+    sourceFolders.set(listOf("db"))
     ```
 === "Groovy"
     ```groovy
@@ -79,7 +89,7 @@ Defaults to `listOf("sqldelight")`.
 
 ### `schemaOutputDirectory`
 
-Type: `File`
+Type: `DirectoryProperty`
 
 The directory where `.db` schema files should be stored, relative to the project root.
 These files are used to verify that migrations yield a database with the latest schema.
@@ -89,7 +99,7 @@ If `null`, the migration verification tasks will not be created.
 
 === "Kotlin"
     ```kotlin
-    schemaOutputDirectory = file("src/main/sqldelight/databases")
+    schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
     ```
 === "Groovy"
     ```groovy
@@ -152,7 +162,7 @@ Available dialects:
 
 ### `verifyMigrations`
 
-Type: `Boolean`
+Type: `Property<Boolean>`
 
 If set to true, migration files will fail during the build process if there are any errors in them.
 
@@ -160,7 +170,7 @@ Defaults to `false`.
 
 === "Kotlin"
     ```kotlin
-    verifyMigrations = true
+    verifyMigrations.set(true)
     ```
 === "Groovy"
     ```groovy
@@ -171,7 +181,7 @@ Defaults to `false`.
 
 ### `treatNullAsUnknownForEquality`
 
-Type: `Boolean`
+Type: `Property<Boolean>`
 
 If set to true, SQLDelight will not replace an equality comparison with a nullable typed value when using `IS`.
 
@@ -179,7 +189,7 @@ Defaults to `false`.
 
 === "Kotlin"
     ```kotlin
-    treatNullAsUnknownForEquality = true
+    treatNullAsUnknownForEquality.set(true)
     ```
 === "Groovy"
     ```groovy
@@ -190,13 +200,15 @@ Defaults to `false`.
 
 ### `generateAsync`
 
-Type: `Boolean`
+Type: `Property<Boolean>`
 
 If set to true, SQLDelight will generate suspending query methods for us with asynchronous drivers.
 
+Defaults to `false`.
+
 === "Kotlin"
     ```kotlin
-    generateAsync = true
+    generateAsync.set(true)
     ```
 === "Groovy"
     ```groovy
@@ -207,16 +219,16 @@ If set to true, SQLDelight will generate suspending query methods for us with as
 
 ### `deriveSchemaFromMigrations`
 
-Type: `Boolean`
+Type: `Property<Boolean>`
 
 If set to true, the schema for your database will be derived from your `.sqm` files as if each migration had been applied.
 If false, your schema is defined in `.sq` files.
 
-Defaults to false.
+Defaults to `false`.
 
 === "Kotlin"
     ```kotlin
-    deriveSchemaFromMigrations = true
+    deriveSchemaFromMigrations.set(true)
     ```
 === "Groovy"
     ```groovy

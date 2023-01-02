@@ -5,10 +5,12 @@ to generate asynchronous SQLDelight interfaces.
 
 ```groovy
 sqldelight {
+  databases {
     Database {
-        packageName = "com.example"
-        generateAsync = true
+      packageName = "com.example"
+      generateAsync = true
     }
+  }
 }
 ```
 

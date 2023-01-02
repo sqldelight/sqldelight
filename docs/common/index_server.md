@@ -21,20 +21,24 @@ First, configure gradle to use migrations to assemble the schema:
 === "Kotlin"
     ```kotlin
     sqldelight {
-      database("Database") {
-        ...
-        sourceFolders = listOf("sqldelight")
-        deriveSchemaFromMigrations = true
+      databases {
+        create("Database") {
+          ...
+          sourceFolders = listOf("sqldelight")
+          deriveSchemaFromMigrations = true
+        }
       }
     }
     ```
 === "Groovy"
     ```groovy
     sqldelight {
-      Database {
-        ...
-        sourceFolders = ["sqldelight"]
-        deriveSchemaFromMigrations = true
+      databases {
+        Database {
+          ...
+          sourceFolders = ["sqldelight"]
+          deriveSchemaFromMigrations = true
+        }
       }
     }
     ```
