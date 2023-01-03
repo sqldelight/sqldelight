@@ -118,6 +118,7 @@ tasks.named('test') {
         ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
         ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
         ":runtime:publishIosArm32PublicationToInstallLocallyRepository",
+        ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
     )
   }
   useJUnit {
