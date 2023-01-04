@@ -28,6 +28,9 @@ kotlin {
         implementation libs.kotlin.coroutines.test
         implementation project(':drivers:sqlite-driver')
       }
+      languageSettings {
+        optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
+      }
     }
     jsTest {
       dependencies {
@@ -58,7 +61,6 @@ kotlin {
   sourceSets.matching { it.name.endsWith("Test") }.all {
     it.languageSettings {
       optIn('kotlin.time.ExperimentalTime')
-      optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
     }
   }
 }
