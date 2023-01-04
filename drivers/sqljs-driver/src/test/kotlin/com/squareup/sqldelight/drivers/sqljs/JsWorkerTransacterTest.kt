@@ -2,6 +2,7 @@ package com.squareup.sqldelight.drivers.sqljs
 
 import app.cash.sqldelight.SuspendingTransacter
 import app.cash.sqldelight.SuspendingTransacterImpl
+import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -20,6 +21,7 @@ class JsWorkerTransacterTest {
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int,
+      vararg callbacks: AfterVersion,
     ): QueryResult<Unit> = QueryResult.Unit
   }
 

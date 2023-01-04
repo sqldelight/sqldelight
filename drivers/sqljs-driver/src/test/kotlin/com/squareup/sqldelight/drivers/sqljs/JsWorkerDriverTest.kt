@@ -3,6 +3,7 @@ package com.squareup.sqldelight.drivers.sqljs
 import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitQuery
+import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -50,7 +51,12 @@ class JsWorkerDriverTest {
       ).await()
     }
 
-    override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = QueryResult.AsyncValue {}
+    override fun migrate(
+      driver: SqlDriver,
+      oldVersion: Int,
+      newVersion: Int,
+      vararg callbacks: AfterVersion,
+    ) = QueryResult.AsyncValue {}
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {

@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.drivers.sqljs
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -46,6 +47,7 @@ class JsQueryTest {
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int,
+      vararg callbacks: AfterVersion,
     ): QueryResult<Unit> {
       // No-op.
       return QueryResult.Unit
