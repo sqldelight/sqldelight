@@ -22,13 +22,6 @@ kotlin {
       }
     }
   }
-
-  sourceSets.matching { it.name.endsWith("Test") }.all {
-    it.languageSettings {
-      optIn('kotlin.time.ExperimentalTime')
-      optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
-    }
-  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

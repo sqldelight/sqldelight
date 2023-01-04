@@ -57,12 +57,6 @@ kotlin {
       linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs", "-lsqlite3"]
     }
   }
-
-  sourceSets.matching { it.name.endsWith("Test") }.all {
-    it.languageSettings {
-      optIn('kotlin.time.ExperimentalTime')
-    }
-  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
