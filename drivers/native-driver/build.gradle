@@ -6,8 +6,6 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-def ideaActive = System.getProperty("idea.active") == "true"
-
 kotlin {
   iosX64()
   iosArm32()
