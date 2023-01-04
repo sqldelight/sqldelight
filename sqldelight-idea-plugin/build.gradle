@@ -65,9 +65,7 @@ tasks.named('compileKotlin') {
 }
 
 kotlin {
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
-  }
+  jvmToolchain(11)
 }
 
 def isReleaseBuild() {
