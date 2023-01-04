@@ -26,9 +26,15 @@ class SqlDelightDatabase(
   var migrationOutputFileFormat: String = ".sql",
   var generateAsync: Boolean = false,
 ) {
-  internal val configuration = project.configurations.create("${name}DialectClasspath")
+  internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
+    isCanBeConsumed = false
+    isVisible = false
+  }
 
-  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath")
+  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath").apply {
+    isCanBeConsumed = false
+    isVisible = false
+  }
 
   internal var addedDialect: Boolean = false
 
