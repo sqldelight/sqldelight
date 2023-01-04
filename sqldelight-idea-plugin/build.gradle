@@ -58,12 +58,6 @@ changelog {
   path = "$rootDir/CHANGELOG.md"
 }
 
-tasks.named('compileKotlin') {
-  kotlinOptions {
-    freeCompilerArgs = ['-Xjvm-default=enable']
-  }
-}
-
 kotlin {
   jvmToolchain(11)
 }
