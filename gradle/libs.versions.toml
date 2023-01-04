@@ -12,7 +12,6 @@ sqljs = "1.6.2"
 paging-mpp = "3.1.1-0.1.1"
 paging3 = "3.1.1"
 ktlint = "0.46.1"
-test = "1.5.2"
 agp = "7.3.1"
 compileSdk = "31"
 minSdk = "16"
@@ -27,8 +26,8 @@ kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 kotlin-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinCoroutines" }
 kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
-androidx-test-core = { module = "androidx.test:core", version.ref = "test" }
-androidx-test-runner = { module = "androidx.test:runner", version.ref = "test" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "1.5.0" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "1.5.2" }
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
