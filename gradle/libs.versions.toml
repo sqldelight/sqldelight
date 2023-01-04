@@ -26,8 +26,8 @@ kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 kotlin-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinCoroutines" }
 kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
-androidx-test-core = { module = "androidx.test:core", version.ref = "1.5.0" }
-androidx-test-runner = { module = "androidx.test:runner", version.ref = "1.5.2" }
+androidx-test-core = "androidx.test:core:1.5.0"
+androidx-test-runner = "androidx.test:runner:1.5.2"
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
