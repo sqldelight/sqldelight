@@ -20,16 +20,6 @@ kotlin {
         implementation libs.kotlin.test
       }
     }
-    jvmTest {
-      dependencies {
-        implementation libs.kotlin.test.junit
-      }
-    }
-    jsTest {
-      dependencies {
-        implementation libs.kotlin.test.js
-      }
-    }
   }
 }
 
