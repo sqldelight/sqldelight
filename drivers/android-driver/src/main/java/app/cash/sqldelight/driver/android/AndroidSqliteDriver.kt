@@ -199,7 +199,7 @@ class AndroidSqliteDriver private constructor(
         AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
         oldVersion,
         newVersion,
-        *callbacks
+        *callbacks,
       )
     }
   }
