@@ -18,6 +18,8 @@ internal val VALUE_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("Value")
 internal val ASYNC_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("AsyncValue")
 internal val UNIT_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("Unit")
 
+internal val AFTER_VERSION_TYPE = ClassName("app.cash.sqldelight.db", "AfterVersion")
+
 internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
 
 internal const val CUSTOM_DATABASE_NAME = "database"

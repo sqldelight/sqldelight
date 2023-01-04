@@ -31,8 +31,10 @@ interface SqlSchema {
 
   /**
    * Use [driver] to migrate from schema [oldVersion] to [newVersion].
+   * Each of the [callbacks] are executed during the migration whenever the upgrade to the version specified by
+   * [AfterVersion.afterVersion] has been completed.
    */
-  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int): QueryResult<Unit>
+  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int, vararg callbacks: AfterVersion): QueryResult<Unit>
 }
 
 /**
@@ -40,35 +42,6 @@ interface SqlSchema {
  * has finished migrating to [afterVersion].
  */
 class AfterVersion(
-  internal val afterVersion: Int,
-  internal val block: (SqlDriver) -> Unit,
+  public val afterVersion: Int,
+  public val block: (SqlDriver) -> Unit,
 )
-
-/**
- * Run [SqlSchema.migrate] normally but execute [callbacks] during the migration whenever
- * it finished upgrading to a version specified by [AfterVersion.afterVersion].
- */
-fun SqlSchema.migrateWithCallbacks(
-  driver: SqlDriver,
-  oldVersion: Int,
-  newVersion: Int,
-  vararg callbacks: AfterVersion,
-) {
-  var lastVersion = oldVersion
-
-  // For each callback within the [oldVersion..newVersion) range, alternate between migrating
-  // the schema and invoking each callback.
-  callbacks.filter { it.afterVersion in oldVersion until newVersion }
-    .sortedBy { it.afterVersion }
-    .forEach { callback ->
-      migrate(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
-      callback.block(driver)
-      lastVersion = callback.afterVersion + 1
-    }
-
-  // If there were no callbacks, or the newVersion is higher than the highest callback,
-  // complete the migration.
-  if (lastVersion < newVersion) {
-    migrate(driver, lastVersion, newVersion)
-  }
-}

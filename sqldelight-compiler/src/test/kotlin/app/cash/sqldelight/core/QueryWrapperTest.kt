@@ -35,6 +35,7 @@ class QueryWrapperTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.AfterVersion
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -74,6 +75,7 @@ class QueryWrapperTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
@@ -113,6 +115,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -165,6 +168,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
@@ -198,6 +202,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -237,6 +242,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
@@ -290,6 +296,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -331,6 +338,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
@@ -374,6 +382,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -426,6 +435,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
@@ -456,6 +466,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -494,6 +505,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
@@ -529,6 +541,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -571,6 +584,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}
@@ -623,6 +637,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -655,7 +670,7 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    private fun migrateInternal(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
@@ -672,6 +687,28 @@ class QueryWrapperTest {
         |      }
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
+        |      }
+        |      return QueryResult.Unit
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
+        |    ): QueryResult<Unit> {
+        |      var lastVersion = oldVersion
+        |
+        |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
+        |      .sortedBy { it.afterVersion }
+        |      .forEach { callback ->
+        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
+        |        callback.block(driver)
+        |        lastVersion = callback.afterVersion + 1
+        |      }
+        |
+        |      if (lastVersion < newVersion) {
+        |        migrateInternal(driver, lastVersion, newVersion)
         |      }
         |      return QueryResult.Unit
         |    }
@@ -716,6 +753,7 @@ class QueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -774,6 +812,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
         |    ): QueryResult<Unit> = QueryResult.Unit
         |  }
         |}

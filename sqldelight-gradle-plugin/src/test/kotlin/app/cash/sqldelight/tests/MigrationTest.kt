@@ -278,7 +278,7 @@ class MigrationTest {
       |      return QueryResult.Unit
       |    }
       |
-      |    public override fun migrate(
+      |    private fun migrateInternal(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
@@ -298,6 +298,28 @@ class MigrationTest {
       |            |SELECT *
       |            |FROM test
       |            ""${'"'}.trimMargin(), 0)
+      |      }
+      |      return QueryResult.Unit
+      |    }
+      |
+      |    public override fun migrate(
+      |      driver: SqlDriver,
+      |      oldVersion: Int,
+      |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
+      |    ): QueryResult<Unit> {
+      |      var lastVersion = oldVersion
+      |
+      |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
+      |      .sortedBy { it.afterVersion }
+      |      .forEach { callback ->
+      |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
+      |        callback.block(driver)
+      |        lastVersion = callback.afterVersion + 1
+      |      }
+      |
+      |      if (lastVersion < newVersion) {
+      |        migrateInternal(driver, lastVersion, newVersion)
       |      }
       |      return QueryResult.Unit
       |    }
