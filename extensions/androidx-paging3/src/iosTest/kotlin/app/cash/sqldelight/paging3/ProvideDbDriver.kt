@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.paging3
 
+import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -28,6 +29,7 @@ private fun defaultSchema(): SqlSchema {
       driver: SqlDriver,
       oldVersion: Int,
       newVersion: Int,
+      vararg callbacks: AfterVersion,
     ) = QueryResult.Unit
   }
 }
