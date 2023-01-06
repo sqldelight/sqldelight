@@ -76,8 +76,10 @@ class PropertiesFileTest {
         |}
         |
         |sqldelight {
-        |  CashDatabase {
-        |    packageName = "app.cash.sqldelight.sample"
+        |  databases {
+        |    CashDatabase {
+        |      packageName = "app.cash.sqldelight.sample"
+        |    }
         |  }
         |}
         |

@@ -21,8 +21,10 @@ dependencies {
 }
 
 sqldelight {
-  QueryWrapper {
-    
+  databases {
+    QueryWrapper {
+
+    }
   }
 }
 

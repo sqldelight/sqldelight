@@ -6,9 +6,11 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  MyDatabase {
-    packageName = "com.sample"
-    dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+  databases {
+    MyDatabase {
+      packageName = "com.sample"
+      dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+    }
   }
 }
 

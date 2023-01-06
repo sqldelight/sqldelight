@@ -7,9 +7,11 @@ You can specify schema dependencies on another module:
     // project-a/build.gradle.kts
 
     sqldelight {
-      database("MyDatabase") {
-        packageName = "com.example.projecta"
-        dependency(project(":ProjectB"))
+      databases {
+        create("MyDatabase") {
+          packageName.set("com.example.projecta")
+          dependency(project(":ProjectB"))
+        }
       }
     }
     ```
@@ -18,9 +20,11 @@ You can specify schema dependencies on another module:
     // project-a/build.gradle
 
     sqldelight {
-      MyDatabase {
-        packageName = "com.example.projecta"
-        dependency project(":ProjectB")
+      databases {
+        MyDatabase {
+          packageName = "com.example.projecta"
+          dependency project(":ProjectB")
+        }
       }
     }
     ```
@@ -34,9 +38,11 @@ different package, so here is what `ProjectB`'s gradle might look like:
     // project-b/build.gradle.kts
 
     sqldelight {
-      // Same database name
-      database("MyDatabase") {
-        package = "com.example.projectb"
+      databases {
+        // Same database name
+        create("MyDatabase") {
+          package = "com.example.projectb"
+        }
       }
     }
     ```
@@ -45,9 +51,11 @@ different package, so here is what `ProjectB`'s gradle might look like:
     // project-b/build.gradle
 
     sqldelight {
-      // Same database name
-      MyDatabase {
-        package = "com.example.projectb"
+      databases {
+        // Same database name
+        MyDatabase {
+          package = "com.example.projectb"
+        }
       }
     }
     ```

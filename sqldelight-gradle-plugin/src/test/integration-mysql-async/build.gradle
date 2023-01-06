@@ -6,10 +6,12 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  MyDatabase {
-    packageName = "app.cash.sqldelight.mysql.integration.async"
-    dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    generateAsync = true
+  databases {
+    MyDatabase {
+      packageName = "app.cash.sqldelight.mysql.integration.async"
+      dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      generateAsync = true
+    }
   }
 }
 

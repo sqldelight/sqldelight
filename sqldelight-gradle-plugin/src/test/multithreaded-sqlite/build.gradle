@@ -19,9 +19,11 @@ dependencies {
 }
 
 sqldelight {
-  Database {
-    packageName = "com.example.db"
-    schemaOutputDirectory = file("src/main/sqldelight/databases")
-    dialect("app.cash.sqldelight:sqlite-3-24-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+  databases {
+    Database {
+      packageName = "com.example.db"
+      schemaOutputDirectory = file("src/main/sqldelight/databases")
+      dialect("app.cash.sqldelight:sqlite-3-24-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+    }
   }
 }

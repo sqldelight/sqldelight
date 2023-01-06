@@ -12,9 +12,11 @@ First apply the gradle plugin in your project.
     }
     
     sqldelight {
-      database("Database") {
-        packageName = "com.example"{% if dialect %}
-        dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+      databases {
+        create("Database") {
+          packageName.set("com.example"){% if dialect %}
+          dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+        }
       }
     }
     ```
@@ -30,9 +32,11 @@ First apply the gradle plugin in your project.
     }
 
     sqldelight {
-      Database { // This will be the name of the generated database class.
-        packageName = "com.example"{% if dialect %}
-        dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+      databases {
+        Database { // This will be the name of the generated database class.
+          packageName = "com.example"{% if dialect %}
+          dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+        }
       }
     }
     ```

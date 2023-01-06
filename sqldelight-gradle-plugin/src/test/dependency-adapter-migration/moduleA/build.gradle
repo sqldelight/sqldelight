@@ -7,11 +7,13 @@ dependencies {
 }
 
 sqldelight {
-  Database {
-    packageName = "com.example.modulea"
-    dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    deriveSchemaFromMigrations = true
-    verifyMigrations = true
-    dependency project(":bottom")
+  databases {
+    Database {
+      packageName = "com.example.modulea"
+      dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      deriveSchemaFromMigrations = true
+      verifyMigrations = true
+      dependency project(":bottom")
+    }
   }
 }

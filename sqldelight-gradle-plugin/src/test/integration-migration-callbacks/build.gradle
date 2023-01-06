@@ -13,9 +13,11 @@ repositories {
 }
 
 sqldelight {
-  QueryWrapper {
-    packageName = "app.cash.sqldelight.integration"
-    deriveSchemaFromMigrations = true
+  databases {
+    QueryWrapper {
+      packageName = "app.cash.sqldelight.integration"
+      deriveSchemaFromMigrations = true
+    }
   }
 }
 

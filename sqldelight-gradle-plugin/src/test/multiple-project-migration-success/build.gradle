@@ -13,14 +13,16 @@ repositories {
 }
 
 sqldelight {
-  DatabaseA {
-    packageName = "com.example"
-    sourceFolders = ["projectA"]
-    verifyMigrations = true
-  }
-  DatabaseB {
-    packageName = "com.example"
-    sourceFolders = ["projectB"]
-    verifyMigrations = true
+  databases {
+    DatabaseA {
+      packageName = "com.example"
+      sourceFolders = ["projectA"]
+      verifyMigrations = true
+    }
+    DatabaseB {
+      packageName = "com.example"
+      sourceFolders = ["projectB"]
+      verifyMigrations = true
+    }
   }
 }

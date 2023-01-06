@@ -13,8 +13,10 @@ repositories {
 }
 
 sqldelight {
-  QueryWrapper {
-    packageName = "app.cash.sqldelight.integration"
+  databases {
+    QueryWrapper {
+      packageName = "app.cash.sqldelight.integration"
+    }
   }
 }
 

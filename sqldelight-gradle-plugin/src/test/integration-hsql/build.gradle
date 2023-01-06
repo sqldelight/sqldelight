@@ -6,10 +6,12 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
+  databases {
     MyDatabase {
         packageName = "app.cash.sqldelight.hsql.integration"
         dialect("app.cash.sqldelight:hsql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
     }
+  }
 }
 
 repositories {

@@ -7,8 +7,10 @@ apply plugin: "org.jetbrains.kotlin.multiplatform"
 apply plugin: "app.cash.sqldelight"
 
 sqldelight {
-  MyDatabase {
-    packageName = "com.example.hockey"
+  databases {
+    MyDatabase {
+      packageName = "com.example.hockey"
+    }
   }
 }
 ```

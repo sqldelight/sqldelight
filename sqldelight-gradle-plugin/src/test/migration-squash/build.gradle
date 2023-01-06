@@ -6,23 +6,25 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
-  mysqlDatabase {
-    sourceFolders = ["sqldelight/mysql"]
-    packageName = "app.cash.sqldelight.mysql.integration"
-    dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    deriveSchemaFromMigrations = true
-  }
-  postgresDatabase {
-    sourceFolders = ["sqldelight/postgres"]
-    packageName = "app.cash.sqldelight.postgres.integration"
-    dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    deriveSchemaFromMigrations = true
-  }
-  sqliteDatabase {
-    sourceFolders = ["sqldelight/sqlite"]
-    packageName = "app.cash.sqldelight.sqlite.integration"
-    dialect("app.cash.sqldelight:sqlite-3-35-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
-    deriveSchemaFromMigrations = true
+  databases {
+    mysqlDatabase {
+      sourceFolders = ["sqldelight/mysql"]
+      packageName = "app.cash.sqldelight.mysql.integration"
+      dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      deriveSchemaFromMigrations = true
+    }
+    postgresDatabase {
+      sourceFolders = ["sqldelight/postgres"]
+      packageName = "app.cash.sqldelight.postgres.integration"
+      dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      deriveSchemaFromMigrations = true
+    }
+    sqliteDatabase {
+      sourceFolders = ["sqldelight/sqlite"]
+      packageName = "app.cash.sqldelight.sqlite.integration"
+      dialect("app.cash.sqldelight:sqlite-3-35-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      deriveSchemaFromMigrations = true
+    }
   }
 }
 

@@ -48,7 +48,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
-    extension.project = project
 
     val androidPluginHandler = { _: Plugin<*> ->
       android.set(true)
@@ -85,7 +84,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
     val isJsOnly = if (isMultiplatform) false else project.plugins.hasPlugin("org.jetbrains.kotlin.js")
 
-    val needsAsyncRuntime = extension.databases.any { it.generateAsync }
+    val needsAsyncRuntime = extension.databases.any { it.generateAsync.get() }
     val runtimeDependencies = mutableListOf<Dependency>().apply {
       add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
       if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION"))
@@ -112,7 +111,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
     }
 
-    if (extension.linkSqlite) {
+    if (extension.linkSqlite.getOrElse(true)) {
       project.linkSqlite()
     }
 
@@ -120,11 +119,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       if (databases.isEmpty() && android.get() && !isMultiplatform) {
         // Default to a database for android named "Database" to keep things simple.
         databases.add(
-          SqlDelightDatabase(
-            project = project,
-            name = "Database",
-            packageName = project.packageName(),
-          ).apply {
+          objects.newInstance(SqlDelightDatabase::class.java, project, "Database").apply {
+            packageName.set(project.packageName())
             project.sqliteVersion()?.let(::dialect)
           },
         )
@@ -143,8 +139,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
 
       databases.forEach { database ->
-        if (database.packageName == null && android.get() && !isMultiplatform) {
-          database.packageName = project.packageName()
+        if (database.packageName.getOrNull() == null && android.get() && !isMultiplatform) {
+          database.packageName.set(project.packageName())
         }
         if (!database.addedDialect && android.get() && !isMultiplatform) {
           project.sqliteVersion()?.let(database::dialect)
