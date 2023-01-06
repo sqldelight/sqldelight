@@ -2646,8 +2646,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    database
+  <a href="#databases" class="md-nav__link">
+    databases
   </a>
   
 </li>
@@ -4089,8 +4089,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    database
+  <a href="#databases" class="md-nav__link">
+    databases
   </a>
   
 </li>
@@ -4212,22 +4212,26 @@
 <h1 id="gradle">Gradle</h1>
 <p>For greater customization, you can declare databases explicitly using the Gradle DSL.</p>
 <h2 id="sqldelight-configuration">SQLDelight Configuration</h2>
-<h3 id="database"><code>database</code></h3>
-<p>Configures SQLDelight to create a database with the given name.</p>
+<h3 id="databases"><code>databases</code></h3>
+<p>Container for databases. Configures SQLDelight to create each database with the given name.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Database configuration here</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Database configuration here.</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="c1">// Database configuration here</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="c1">// Database configuration here.</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -4236,19 +4240,29 @@
 </div>
 <hr />
 <h3 id="linksqlite"><code>linkSqlite</code></h3>
-<p>Type: <code>Boolean</code></p>
+<p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>For native targets. Whether sqlite should be automatically linked.</p>
-<p>Defaults to true.</p>
-<div class="highlight"><pre><span></span><code><span class="n">linkSqlite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-</code></pre></div>
-<h2 id="database-configuration">Database Configuration</h2>
-<h3 id="packagename"><code>packageName</code></h3>
-<p>Type: <code>String</code></p>
-<p>Package name used for the database class.</p>
+<p>Defaults to <code>true</code>.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kotlin</label><label for="__tabbed_2_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example.db&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">linkSqlite</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">linkSqlite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="database-configuration">Database Configuration</h2>
+<h3 id="packagename"><code>packageName</code></h3>
+<p>Type: <code>Property&lt;String&gt;</code></p>
+<p>Package name used for the database class.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Kotlin</label><label for="__tabbed_3_2">Groovy</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example.db&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4259,15 +4273,15 @@
 </div>
 <hr />
 <h3 id="sourcefolders"><code>sourceFolders</code></h3>
-<p>Type: <code>Collection&lt;String&gt;</code></p>
+<p>Type: <code>ListProperty&lt;String&gt;</code></p>
 <p>An collection of folders that the plugin will look in for your <code>.sq</code> and <code>.sqm</code> files.
 These folder paths are relative to your existing source set, so if you specify <code>listOf("db")</code>
 then the plugin will look into <code>src/main/db</code> or <code>src/commondMain/db</code>.</p>
 <p>Defaults to <code>listOf("sqldelight")</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Kotlin</label><label for="__tabbed_3_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Kotlin</label><label for="__tabbed_4_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;db&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">sourceFolders</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;db&quot;</span><span class="p">))</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4278,15 +4292,15 @@ then the plugin will look into <code>src/main/db</code> or <code>src/commondMain
 </div>
 <hr />
 <h3 id="schemaoutputdirectory"><code>schemaOutputDirectory</code></h3>
-<p>Type: <code>File</code></p>
+<p>Type: <code>DirectoryProperty</code></p>
 <p>The directory where <code>.db</code> schema files should be stored, relative to the project root.
 These files are used to verify that migrations yield a database with the latest schema.</p>
 <p>Defaults to <code>null</code>.<br />
 If <code>null</code>, the migration verification tasks will not be created.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Kotlin</label><label for="__tabbed_4_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Kotlin</label><label for="__tabbed_5_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">schemaOutputDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;src/main/sqldelight/databases&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">schemaOutputDirectory</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">file</span><span class="p">(</span><span class="s">&quot;src/main/sqldelight/databases&quot;</span><span class="p">))</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4299,7 +4313,7 @@ If <code>null</code>, the migration verification tasks will not be created.</p>
 <h3 id="dependency"><code>dependency</code></h3>
 <p>Type: <code>Project</code></p>
 <p>Optionally specify schema dependencies on other gradle projects <a href="#schema-dependencies">(see below)</a>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Kotlin</label><label for="__tabbed_5_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Kotlin</label><label for="__tabbed_6_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dependency</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="s">&quot;:other-project&quot;</span><span class="p">))</span>
@@ -4332,7 +4346,7 @@ Otherwise defaults to SQLite 3.18.</p>
 <li>SQLite 3.35: <code>sqlite-3-35-dialect</code></li>
 <li>SQLite 3.38: <code>sqlite-3-38-dialect</code></li>
 </ul>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Kotlin</label><label for="__tabbed_6_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Kotlin</label><label for="__tabbed_7_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dialect</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:sqlite-3-24-dialect:2.0.0-alpha04&quot;</span><span class="p">)</span>
@@ -4346,13 +4360,13 @@ Otherwise defaults to SQLite 3.18.</p>
 </div>
 <hr />
 <h3 id="verifymigrations"><code>verifyMigrations</code></h3>
-<p>Type: <code>Boolean</code></p>
+<p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, migration files will fail during the build process if there are any errors in them.</p>
 <p>Defaults to <code>false</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Kotlin</label><label for="__tabbed_7_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Kotlin</label><label for="__tabbed_8_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">verifyMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="n">verifyMigrations</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4363,13 +4377,13 @@ Otherwise defaults to SQLite 3.18.</p>
 </div>
 <hr />
 <h3 id="treatnullasunknownforequality"><code>treatNullAsUnknownForEquality</code></h3>
-<p>Type: <code>Boolean</code></p>
+<p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, SQLDelight will not replace an equality comparison with a nullable typed value when using <code>IS</code>.</p>
 <p>Defaults to <code>false</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Kotlin</label><label for="__tabbed_8_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Kotlin</label><label for="__tabbed_9_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">treatNullAsUnknownForEquality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="n">treatNullAsUnknownForEquality</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4380,12 +4394,13 @@ Otherwise defaults to SQLite 3.18.</p>
 </div>
 <hr />
 <h3 id="generateasync"><code>generateAsync</code></h3>
-<p>Type: <code>Boolean</code></p>
+<p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, SQLDelight will generate suspending query methods for us with asynchronous drivers.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Kotlin</label><label for="__tabbed_9_2">Groovy</label></div>
+<p>Defaults to <code>false</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Kotlin</label><label for="__tabbed_10_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="n">generateAsync</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4396,14 +4411,14 @@ Otherwise defaults to SQLite 3.18.</p>
 </div>
 <hr />
 <h3 id="deriveschemafrommigrations"><code>deriveSchemaFromMigrations</code></h3>
-<p>Type: <code>Boolean</code></p>
+<p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, the schema for your database will be derived from your <code>.sqm</code> files as if each migration had been applied.
 If false, your schema is defined in <code>.sq</code> files.</p>
-<p>Defaults to false.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Kotlin</label><label for="__tabbed_10_2">Groovy</label></div>
+<p>Defaults to <code>false</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Kotlin</label><label for="__tabbed_11_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="n">deriveSchemaFromMigrations</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4414,15 +4429,17 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 </div>
 <h2 id="schema-dependencies">Schema Dependencies</h2>
 <p>You can specify schema dependencies on another module:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Kotlin</label><label for="__tabbed_11_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Kotlin</label><label for="__tabbed_12_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle.kts</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example.projecta&quot;</span>
-<span class="w">    </span><span class="n">dependency</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="s">&quot;:ProjectB&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example.projecta&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">dependency</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="s">&quot;:ProjectB&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4431,9 +4448,11 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projecta&quot;</span>
-<span class="w">    </span><span class="n">dependency</span><span class="w"> </span><span class="n">project</span><span class="o">(</span><span class="s2">&quot;:ProjectB&quot;</span><span class="o">)</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projecta&quot;</span>
+<span class="w">      </span><span class="n">dependency</span><span class="w"> </span><span class="n">project</span><span class="o">(</span><span class="s2">&quot;:ProjectB&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -4443,15 +4462,17 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 <p>This looks for <code>MyDatabase</code> in <code>ProjectB</code> and includes it's schema when compiling. For this to work,
 ProjectB must have a database with the same name (<code>MyDatabase</code> in this case) but generate in a
 different package, so here is what <code>ProjectB</code>'s gradle might look like:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Kotlin</label><label for="__tabbed_12_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Kotlin</label><label for="__tabbed_13_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle.kts</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="hll"><span class="w">  </span><span class="c1">// Same database name</span>
-</span><span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">package</span><span class="w"> </span><span class="nn">=</span><span class="w"> </span><span class="s">&quot;com.example.projectb&quot;</span>
+<span class="hll"><span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+</span><span class="w">    </span><span class="c1">// Same database name</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">package</span><span class="w"> </span><span class="nn">=</span><span class="w"> </span><span class="s">&quot;com.example.projectb&quot;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4460,9 +4481,11 @@ different package, so here is what <code>ProjectB</code>'s gradle might look lik
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="hll"><span class="w">  </span><span class="c1">// Same database name</span>
-</span><span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="kn">package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projectb&quot;</span>
+<span class="hll"><span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+</span><span class="w">    </span><span class="c1">// Same database name</span>
+<span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="kn">package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projectb&quot;</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>

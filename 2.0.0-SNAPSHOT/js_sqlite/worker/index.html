@@ -4021,10 +4021,12 @@
 <p>To use the SqlJs driver with sql.js running in a web worker, first update your gradle configuration
 to generate asynchronous SQLDelight interfaces.</p>
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
-<span class="w">        </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">      </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>The web worker driver only works with browser targets.

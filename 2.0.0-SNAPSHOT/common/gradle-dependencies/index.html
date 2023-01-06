@@ -3962,9 +3962,11 @@
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle.kts</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example.projecta&quot;</span>
-<span class="w">    </span><span class="n">dependency</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="s">&quot;:ProjectB&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example.projecta&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">dependency</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="s">&quot;:ProjectB&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3973,9 +3975,11 @@
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projecta&quot;</span>
-<span class="w">    </span><span class="n">dependency</span><span class="w"> </span><span class="n">project</span><span class="o">(</span><span class="s2">&quot;:ProjectB&quot;</span><span class="o">)</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projecta&quot;</span>
+<span class="w">      </span><span class="n">dependency</span><span class="w"> </span><span class="n">project</span><span class="o">(</span><span class="s2">&quot;:ProjectB&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -3991,9 +3995,11 @@ different package, so here is what <code>ProjectB</code>'s gradle might look lik
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle.kts</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="hll"><span class="w">  </span><span class="c1">// Same database name</span>
-</span><span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">package</span><span class="w"> </span><span class="nn">=</span><span class="w"> </span><span class="s">&quot;com.example.projectb&quot;</span>
+<span class="hll"><span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+</span><span class="w">    </span><span class="c1">// Same database name</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;MyDatabase&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">package</span><span class="w"> </span><span class="nn">=</span><span class="w"> </span><span class="s">&quot;com.example.projectb&quot;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4002,9 +4008,11 @@ different package, so here is what <code>ProjectB</code>'s gradle might look lik
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="hll"><span class="w">  </span><span class="c1">// Same database name</span>
-</span><span class="w">  </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="kn">package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projectb&quot;</span>
+<span class="hll"><span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+</span><span class="w">    </span><span class="c1">// Same database name</span>
+<span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="kn">package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example.projectb&quot;</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>

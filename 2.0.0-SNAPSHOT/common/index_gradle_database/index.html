@@ -3946,8 +3946,10 @@
 <span class="p">}</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example&quot;</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3963,8 +3965,10 @@
 <span class="o">}</span>
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
-<span class="w">    </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
+<span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>

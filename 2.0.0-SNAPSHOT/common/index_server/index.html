@@ -3997,20 +3997,24 @@ In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> fil
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">database</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">...</span>
-<span class="w">    </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;sqldelight&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="p">...</span>
+<span class="w">      </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;sqldelight&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="o">...</span>
-<span class="w">    </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;sqldelight&quot;</span><span class="o">]</span>
-<span class="w">    </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="o">...</span>
+<span class="w">      </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;sqldelight&quot;</span><span class="o">]</span>
+<span class="w">      </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
