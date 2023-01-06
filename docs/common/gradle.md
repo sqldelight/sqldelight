@@ -6,14 +6,14 @@ For greater customization, you can declare databases explicitly using the Gradle
 
 ### `databases`
 
-Container for databases. Configures SQLDelight to create each one with the given name.
+Container for databases. Configures SQLDelight to create each database with the given name.
 
 === "Kotlin"
     ```kotlin
     sqldelight {
       databases {
         create("MyDatabase") {
-          // Database configuration here
+          // Database configuration here.
         }
       }
     }
@@ -23,7 +23,7 @@ Container for databases. Configures SQLDelight to create each one with the given
     sqldelight {
       databases {
         MyDatabase {
-          // Database configuration here
+          // Database configuration here.
         }
       }
     }
