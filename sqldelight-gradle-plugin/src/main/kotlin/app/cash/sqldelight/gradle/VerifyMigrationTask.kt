@@ -38,18 +38,29 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @Input
   val pluginVersion = VERSION
 
-  @get:Input abstract val projectName: Property<String>
+  @get:Input 
+  abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @get:Internal abstract var workingDirectory: File
+  @get:Internal 
+  abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested 
+  abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested 
+  abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input 
+  abstract val verifyMigrations: Property<Boolean>
 
-  @Input var verifyDefinitions: Boolean = true
+  @get:Input 
+  abstract val verifyDefinitions: Property<Boolean>
+  
+  init {
+    verifyMigrations.convention(false)
+    verifyDefinitions.convention(true)
+  }
 
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once

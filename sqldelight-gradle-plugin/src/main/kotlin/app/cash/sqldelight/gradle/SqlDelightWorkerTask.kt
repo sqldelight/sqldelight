@@ -1,5 +1,6 @@
 package app.cash.sqldelight.gradle
 
+import org.gradle.api.Named
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
@@ -13,7 +14,7 @@ import javax.inject.Inject
  * in tasks
  */
 @CacheableTask
-abstract class SqlDelightWorkerTask : SourceTask() {
+abstract class SqlDelightWorkerTask : SourceTask(), Named {
 
   @get:Inject
   internal abstract val workerExecutor: WorkerExecutor

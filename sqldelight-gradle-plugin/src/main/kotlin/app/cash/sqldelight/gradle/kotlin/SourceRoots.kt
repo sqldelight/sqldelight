@@ -7,16 +7,13 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
-import org.gradle.api.Task
+import org.gradle.api.file.Directory
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Provider
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import java.io.File
 
 /**
  * @return A list of source roots and their dependencies.
@@ -33,25 +30,25 @@ import java.io.File
  *
  *    Multiplatform environment with android target (oh boy)
  */
-internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
+internal fun SqlDelightDatabase.sources(project: Project): Provider<List<Source>> = project.provider {
   // Multiplatform project.
   project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let {
-    return it.sources()
+    return@provider it.sources()
   }
 
   // kotlin.js only projects
   project.extensions.findByType(KotlinJsProjectExtension::class.java)?.let {
-    return it.sources()
+    return@provider it.sources()
   }
 
   // Android project.
   project.extensions.findByName("android")?.let {
-    return (it as BaseExtension).sources(project)
+    return@provider (it as BaseExtension).sources(project)
   }
 
   // Kotlin project.
   val sourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
-  return listOf(
+  return@provider listOf(
     Source(
       type = KotlinPlatformType.jvm,
       name = "main",
@@ -108,19 +105,9 @@ private fun BaseExtension.sources(project: Project): List<Source> {
       sourceDirectorySet = sourceSets[variant.name]!!,
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
-        variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
+        variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get().asFile)
       },
     )
-  }
-}
-
-private fun TaskContainer.namedOrNull(
-  taskName: String,
-): TaskProvider<Task>? {
-  return try {
-    named(taskName)
-  } catch (_: Exception) {
-    null
   }
 }
 
@@ -131,9 +118,9 @@ internal data class Source(
   val name: String,
   val variantName: String? = null,
   val sourceSets: List<String>,
-  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null,
+  val registerGeneratedDirectory: ((Provider<Directory>) -> Unit)? = null,
 ) {
-  fun closestMatch(sources: Collection<Source>): Source? {
+  fun closestMatch(sources: Provider<List<Source>>): Provider<Source> {
     var matches = sources.filter {
       type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
     }

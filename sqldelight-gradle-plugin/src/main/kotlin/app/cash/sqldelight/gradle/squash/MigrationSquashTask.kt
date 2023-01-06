@@ -34,11 +34,14 @@ abstract class MigrationSquashTask : SqlDelightWorkerTask() {
   @Input
   val pluginVersion = VERSION
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input
+  abstract val projectName: Property<String>
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested 
+  abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested
+  abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @TaskAction
   fun generateSquashedMigrationFile() {

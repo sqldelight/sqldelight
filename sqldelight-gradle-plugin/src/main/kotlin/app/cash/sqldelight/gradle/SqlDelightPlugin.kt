@@ -21,38 +21,32 @@ import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.android.packageName
 import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 abstract class SqlDelightPlugin : Plugin<Project> {
-  private val android = AtomicBoolean(false)
-  private val kotlin = AtomicBoolean(false)
-
   @get:Inject
   abstract val registry: ToolingModelBuilderRegistry
-
-  private lateinit var extension: SqlDelightExtension
 
   override fun apply(project: Project) {
     require(GradleVersion.current() >= GradleVersion.version("7.0")) {
       "SQLDelight requires Gradle version 7.0 or greater"
     }
 
-    extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
+    val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
+    registry.register(PropertiesModelBuilder(extension.databases))
 
     val androidPluginHandler = { _: Plugin<*> ->
-      android.set(true)
       project.afterEvaluate {
-        project.setupSqlDelightTasks(afterAndroid = true)
+        project.setupSqlDelightTasks(afterAndroid = true, extension)
       }
     }
     project.plugins.withId("com.android.application", androidPluginHandler)
@@ -61,33 +55,30 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     project.plugins.withId("com.android.feature", androidPluginHandler)
     project.plugins.withId("com.android.dynamic-feature", androidPluginHandler)
 
-    val kotlinPluginHandler = { _: Plugin<*> -> kotlin.set(true) }
+    val kotlinPluginHandler = { _: Plugin<*> ->
+      project.setupSqlDelightTasks(afterAndroid = false, extension)
+    }
     project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
     project.plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
     project.plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
     project.plugins.withId("org.jetbrains.kotlin.js", kotlinPluginHandler)
     project.plugins.withId("kotlin2js", kotlinPluginHandler)
-
-    project.afterEvaluate {
-      project.setupSqlDelightTasks(afterAndroid = false)
-    }
   }
 
-  private fun Project.setupSqlDelightTasks(afterAndroid: Boolean) {
-    if (android.get() && !afterAndroid) return
-
-    check(kotlin.get()) {
-      "SQL Delight Gradle plugin applied in " +
-        "project '${project.path}' but no supported Kotlin plugin was found"
-    }
-
+  private fun Project.setupSqlDelightTasks(afterAndroid: Boolean, extension: SqlDelightExtension) {
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
     val isJsOnly = if (isMultiplatform) false else project.plugins.hasPlugin("org.jetbrains.kotlin.js")
 
-    val needsAsyncRuntime = extension.databases.any { it.generateAsync.get() }
-    val runtimeDependencies = mutableListOf<Dependency>().apply {
-      add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
-      if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION"))
+    val needsAsyncRuntime = objects.setProperty(Boolean::class.java)
+    extension.databases.configureEach {
+      needsAsyncRuntime.add(it.generateAsync) 
+    }
+    val runtimeDependencies = needsAsyncRuntime.map {
+      val runtime = project.dependencies.create("app.cash.sqldelight:runtime:$VERSION")
+      if (it.contains(true)) {
+        val asyncExtension = project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION")
+        listOf(runtime, asyncExtension)
+      } else listOf(runtime)
     }
 
     // Add the runtime dependency.
@@ -97,78 +88,72 @@ abstract class SqlDelightPlugin : Plugin<Project> {
           project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
         val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
         project.configurations.getByName(sourceSet.apiConfigurationName)
-          .dependencies.addAll(runtimeDependencies)
+          .dependencies.addAllLater(runtimeDependencies)
       }
       isJsOnly -> {
         val sourceSets =
           project.extensions.getByType(KotlinJsProjectExtension::class.java).sourceSets
         val sourceSet = (sourceSets.getByName("main") as DefaultKotlinSourceSet)
         project.configurations.getByName(sourceSet.apiConfigurationName)
-          .dependencies.addAll(runtimeDependencies)
+          .dependencies.addAllLater(runtimeDependencies)
       }
       else -> {
-        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
+        project.configurations.getByName("api").dependencies.addAllLater(runtimeDependencies)
       }
     }
-
-    if (extension.linkSqlite.getOrElse(true)) {
-      project.linkSqlite()
-    }
+    
+    project.linkSqlite(extension.linkSqlite)
 
     extension.run {
-      if (databases.isEmpty() && android.get() && !isMultiplatform) {
+      if (afterAndroid && databases.isEmpty()) {
         // Default to a database for android named "Database" to keep things simple.
-        databases.add(
-          objects.newInstance(SqlDelightDatabase::class.java, project, "Database").apply {
-            packageName.set(project.packageName())
-            project.sqliteVersion()?.let(::dialect)
-          },
-        )
-      } else if (databases.isEmpty()) {
-        logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
+        databases.maybeRegister("Database") { db ->
+          db.packageName.convention(project.packageName())
+          project.sqliteVersion()?.let {
+            db.dialect.convention(it)
+          }
+        }
       }
 
-      project.tasks.register("generateSqlDelightInterface") {
+      project.tasks.maybeRegister("generateSqlDelightInterface") {
         it.group = GROUP
         it.description = "Aggregation task which runs every interface generation task for every given source"
       }
 
-      project.tasks.register("verifySqlDelightMigration") {
+      project.tasks.maybeRegister("verifySqlDelightMigration") {
         it.group = GROUP
         it.description = "Aggregation task which runs every migration task for every given source"
       }
 
-      databases.forEach { database ->
-        if (database.packageName.getOrNull() == null && android.get() && !isMultiplatform) {
-          database.packageName.set(project.packageName())
+      databases.configureEach { database ->
+        database.packageName.convention(project.packageName())
+        if (afterAndroid) {
+          project.sqliteVersion()?.let {
+            database.dialect.convention(it)
+          }
+        } else {
+          database.dialect.convention(project.dependencies.create("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION"))
         }
-        if (!database.addedDialect && android.get() && !isMultiplatform) {
-          project.sqliteVersion()?.let(database::dialect)
-        }
-        if (!database.addedDialect) {
-          database.dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
-        }
+
         database.registerTasks()
       }
-
-      registry.register(PropertiesModelBuilder(databases))
     }
   }
 
   class PropertiesModelBuilder(
-    private val databases: Iterable<SqlDelightDatabase>,
+    private val databases: NamedDomainObjectContainer<SqlDelightDatabase>,
   ) : ToolingModelBuilder {
     override fun canBuild(modelName: String): Boolean {
       return modelName == SqlDelightPropertiesFile::class.java.name
     }
 
-    override fun buildAll(modelName: String, project: Project): Any {
+    override fun buildAll(modelName: String, project: Project): SqlDelightPropertiesFile {
       return SqlDelightPropertiesFileImpl(
-        databases = databases.map { it.getProperties() },
+        databases = databases.map { it.properties().get() },
         currentVersion = VERSION,
         minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
-        dialectJars = databases.first().configuration.files,
-        moduleJars = databases.first().moduleConfiguration.files,
+        dialectJars = databases.first().configuration.get().files,
+        moduleJars = databases.first().moduleConfiguration.get().files,
       )
     }
   }

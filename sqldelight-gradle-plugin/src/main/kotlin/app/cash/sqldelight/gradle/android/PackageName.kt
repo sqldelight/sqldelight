@@ -4,6 +4,7 @@ import app.cash.sqldelight.VERSION
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 
 internal fun Project.packageName(): String {
   val androidExtension = extensions.getByType(BaseExtension::class.java)
@@ -26,10 +27,11 @@ internal fun Project.packageName(): String {
   )
 }
 
-internal fun Project.sqliteVersion(): String? {
+internal fun Project.sqliteVersion(): Dependency? {
   val androidExtension = extensions.getByType(BaseExtension::class.java)
   val minSdk = androidExtension.defaultConfig.minSdk ?: return null
-  if (minSdk >= 31) return "app.cash.sqldelight:sqlite-3-30-dialect:$VERSION"
-  if (minSdk >= 30) return "app.cash.sqldelight:sqlite-3-25-dialect:$VERSION"
-  return "app.cash.sqldelight:sqlite-3-18-dialect:$VERSION"
+  return dependencies.create(
+    if (minSdk >= 31) "app.cash.sqldelight:sqlite-3-30-dialect:$VERSION" else if (minSdk >= 30) "app.cash.sqldelight:sqlite-3-25-dialect:$VERSION"
+    else "app.cash.sqldelight:sqlite-3-18-dialect:$VERSION",
+  )
 }

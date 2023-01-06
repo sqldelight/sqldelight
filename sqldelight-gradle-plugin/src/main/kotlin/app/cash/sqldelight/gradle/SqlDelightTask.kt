@@ -41,7 +41,6 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
 import java.util.ServiceLoader
 
 @CacheableTask
@@ -52,15 +51,22 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   val pluginVersion = VERSION
 
   @get:OutputDirectory
-  var outputDirectory: File? = null
+  abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested
+  abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested 
+  abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input
+  abstract val verifyMigrations: Property<Boolean>
+  
+  init {
+    verifyMigrations.convention(false)
+  }
 
   @TaskAction
   fun generateSqlDelightFiles() {

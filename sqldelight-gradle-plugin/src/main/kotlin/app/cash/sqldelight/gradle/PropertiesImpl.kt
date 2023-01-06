@@ -5,6 +5,8 @@ import app.cash.sqldelight.core.SqlDelightDatabaseName
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.core.SqlDelightSourceFolder
+import org.gradle.api.file.Directory
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
@@ -20,7 +22,7 @@ data class SqlDelightPropertiesFileImpl(
 
 data class SqlDelightDatabasePropertiesImpl(
   @Input override val packageName: String,
-  @Nested override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
+  @Nested val compilationUnitsProvider: Provider<List<SqlDelightCompilationUnitImpl>>,
   @Input override val className: String,
   @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
   @Input override val deriveSchemaFromMigrations: Boolean = false,
@@ -28,7 +30,10 @@ data class SqlDelightDatabasePropertiesImpl(
   @Input override val generateAsync: Boolean = false,
   // Only used by intellij plugin to help with resolution.
   @Internal override val rootDirectory: File,
-) : SqlDelightDatabaseProperties
+) : SqlDelightDatabaseProperties {
+  override val compilationUnits: List<SqlDelightCompilationUnitImpl> 
+    get() = compilationUnitsProvider.get()
+}
 
 data class SqlDelightDatabaseNameImpl(
   @Input override val packageName: String,
@@ -37,13 +42,21 @@ data class SqlDelightDatabaseNameImpl(
 
 data class SqlDelightCompilationUnitImpl(
   @Input override val name: String,
-  @Nested override val sourceFolders: List<SqlDelightSourceFolderImpl>,
+  @Nested val sourceDirectories: Provider<List<SqlDelightSourceFolderImpl>>,
   // Output directory is already cached [SqlDelightTask.outputDirectory].
-  @Internal override val outputDirectoryFile: File,
-) : SqlDelightCompilationUnit
+  @Internal val outputDirectory: Provider<Directory>,
+) : SqlDelightCompilationUnit {
+  override val sourceFolders: List<SqlDelightSourceFolderImpl> 
+    get() = sourceDirectories.get()
+  override val outputDirectoryFile: File
+    get() = outputDirectory.get().asFile
+}
 
 data class SqlDelightSourceFolderImpl(
   // Sources are already cached [SqlDelightTask.getSources]
-  @Internal override val folder: File,
+  @Internal val directory: Directory,
   @Input override val dependency: Boolean = false,
-) : SqlDelightSourceFolder
+) : SqlDelightSourceFolder {
+  override val folder: File
+    get() = directory.asFile
+}
