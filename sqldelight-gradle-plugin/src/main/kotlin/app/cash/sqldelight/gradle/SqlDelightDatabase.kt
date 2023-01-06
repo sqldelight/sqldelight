@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 abstract class SqlDelightDatabase @Inject constructor(
   val project: Project,
-  var name: String,
+  val name: String,
 ) {
 
   init {
