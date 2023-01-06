@@ -48,14 +48,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
-    extension.databases.all {
-      it.sourceFolders.convention(listOf("sqldelight"))
-      it.deriveSchemaFromMigrations.convention(false)
-      it.verifyMigrations.convention(false)
-      it.migrationOutputFileFormat.convention(".sql")
-      it.generateAsync.convention(false)
-      it.treatNullAsUnknownForEquality.convention(false)
-    }
 
     val androidPluginHandler = { _: Plugin<*> ->
       android.set(true)

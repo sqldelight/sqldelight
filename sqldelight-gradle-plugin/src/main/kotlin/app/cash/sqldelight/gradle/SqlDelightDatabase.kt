@@ -22,6 +22,16 @@ abstract class SqlDelightDatabase @Inject constructor(
   val project: Project,
   var name: String,
 ) {
+
+  init {
+    sourceFolders.convention(listOf("sqldelight"))
+    deriveSchemaFromMigrations.convention(false)
+    verifyMigrations.convention(false)
+    migrationOutputFileFormat.convention(".sql")
+    generateAsync.convention(false)
+    treatNullAsUnknownForEquality.convention(false)
+  }
+
   abstract val packageName: Property<String>
   abstract val schemaOutputDirectory: DirectoryProperty
   abstract val sourceFolders: ListProperty<String>
