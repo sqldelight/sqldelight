@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.konan.target.HostManager
-
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
@@ -30,6 +28,9 @@ kotlin {
         implementation libs.kotlin.coroutines.test
         implementation project(':drivers:sqlite-driver')
       }
+      languageSettings {
+        optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
+      }
     }
     jsTest {
       dependencies {
@@ -54,13 +55,6 @@ kotlin {
   configure([targets.mingwX64]) {
     binaries.configureEach {
       linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs", "-lsqlite3"]
-    }
-  }
-
-  sourceSets.matching { it.name.endsWith("Test") }.all {
-    it.languageSettings {
-      optIn('kotlin.time.ExperimentalTime')
-      optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
     }
   }
 }

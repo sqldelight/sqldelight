@@ -12,13 +12,6 @@ dependencies {
   compileOnly libs.schemaCrawler.sqlite
 
   implementation libs.sqlPsi
-
-  testImplementation libs.sqliteJdbc
-  testImplementation libs.objectDiff
-  testImplementation libs.schemaCrawler.tools
-  testImplementation libs.schemaCrawler.sqlite
-  testImplementation libs.junit
-  testImplementation libs.truth
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

@@ -14,20 +14,6 @@ kotlin {
         api libs.kotlin.coroutines.core
       }
     }
-    jvmTest {
-      dependencies {
-        implementation libs.kotlin.test.junit
-        implementation libs.kotlin.coroutines.test
-        implementation project(':drivers:sqlite-driver')
-      }
-    }
-  }
-
-  sourceSets.matching { it.name.endsWith("Test") }.all {
-    it.languageSettings {
-      optIn('kotlin.time.ExperimentalTime')
-      optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
-    }
   }
 }
 

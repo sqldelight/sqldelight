@@ -37,15 +37,15 @@ include ':web'
 
 includeBuild('..') {
   dependencySubstitution {
-    substitute module("app.cash.sqldelight:primitive-adapters") with project(":adapters:primitive-adapters")
-    substitute module("app.cash.sqldelight:sqlite-driver") with project(":drivers:sqlite-driver")
-    substitute module("app.cash.sqldelight:android-driver") with project(":drivers:android-driver")
-    substitute module("app.cash.sqldelight:native-driver") with project(":drivers:native-driver")
-    substitute module("app.cash.sqldelight:sqljs-driver") with project(":drivers:sqljs-driver")
-    substitute module("app.cash.sqldelight:runtime") with project(":runtime")
-    substitute module("app.cash.sqldelight:runtime-jvm") with project(":runtime")
-    substitute module("app.cash.sqldelight:gradle-plugin") with project(":sqldelight-gradle-plugin")
-    substitute module("app.cash.sqldelight:sqlite-3-18-dialect") with project(":dialects:sqlite-3-18")
-    substitute module("app.cash.sqldelight:async-extensions") with project(":extensions:async-extensions")
+    substitute module("app.cash.sqldelight:primitive-adapters") using project(":adapters:primitive-adapters")
+    substitute module("app.cash.sqldelight:sqlite-driver") using project(":drivers:sqlite-driver")
+    substitute module("app.cash.sqldelight:android-driver") using project(":drivers:android-driver")
+    substitute module("app.cash.sqldelight:native-driver") using project(":drivers:native-driver")
+    substitute module("app.cash.sqldelight:sqljs-driver") using project(":drivers:sqljs-driver")
+    substitute module("app.cash.sqldelight:runtime") using project(":runtime")
+    substitute module("app.cash.sqldelight:runtime-jvm") using project(":runtime")
+    substitute module("app.cash.sqldelight:gradle-plugin") using project(":sqldelight-gradle-plugin")
+    substitute module("app.cash.sqldelight:sqlite-3-18-dialect") using project(":dialects:sqlite-3-18")
+    substitute module("app.cash.sqldelight:async-extensions") using project(":extensions:async-extensions")
   }
 }

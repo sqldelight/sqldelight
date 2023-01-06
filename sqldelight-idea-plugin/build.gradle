@@ -58,16 +58,8 @@ changelog {
   path = "$rootDir/CHANGELOG.md"
 }
 
-tasks.named('compileKotlin') {
-  kotlinOptions {
-    freeCompilerArgs = ['-Xjvm-default=enable']
-  }
-}
-
 kotlin {
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
-  }
+  jvmToolchain(11)
 }
 
 def isReleaseBuild() {

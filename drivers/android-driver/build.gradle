@@ -46,13 +46,8 @@ dependencies {
 // workaround for https://youtrack.jetbrains.com/issue/KT-27059
 configurations.all {
     resolutionStrategy.dependencySubstitution {
-        substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") with project(':runtime')
+        substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") using project(':runtime')
     }
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
-
-// https://github.com/Kotlin/dokka/issues/2472
-afterEvaluate {
-  tasks.named("javaDocReleaseGeneration") { enabled(false) }
-}
