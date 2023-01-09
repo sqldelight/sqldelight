@@ -17,7 +17,6 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.db.migrateWithCallbacks
 
 private const val DEFAULT_CACHE_SIZE = 20
 
@@ -196,15 +195,12 @@ class AndroidSqliteDriver private constructor(
       oldVersion: Int,
       newVersion: Int,
     ) {
-      if (callbacks.isNotEmpty()) {
-        schema.migrateWithCallbacks(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1), oldVersion, newVersion, *callbacks)
-      } else {
-        schema.migrate(
-          AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
-          oldVersion,
-          newVersion,
-        )
-      }
+      schema.migrate(
+        AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
+        oldVersion,
+        newVersion,
+        *callbacks,
+      )
     }
   }
 }

@@ -52,6 +52,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.AfterVersion
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -103,6 +104,7 @@ class QueriesTypeTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
@@ -241,6 +243,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.AfterVersion
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -281,6 +284,7 @@ class QueriesTypeTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
@@ -341,6 +345,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.AfterVersion
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -376,6 +381,7 @@ class QueriesTypeTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
@@ -416,6 +422,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.AfterVersion
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -456,6 +463,7 @@ class QueriesTypeTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}
@@ -573,6 +581,7 @@ class QueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.AfterVersion
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -611,6 +620,7 @@ class QueriesTypeTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
+      |      vararg callbacks: AfterVersion,
       |    ): QueryResult<Unit> = QueryResult.Unit
       |  }
       |}

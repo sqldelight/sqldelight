@@ -56,6 +56,7 @@ class AsyncQueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.SuspendingTransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -87,7 +88,7 @@ class AsyncQueryWrapperTest {
         |          ""${'"'}.trimMargin(), 0).await()
         |    }
         |
-        |    public override fun migrate(
+        |    private fun migrateInternal(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
@@ -104,6 +105,28 @@ class AsyncQueryWrapperTest {
         |      }
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0).await()
+        |      }
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
+        |    ): QueryResult<Unit> = QueryResult.AsyncValue {
+        |      var lastVersion = oldVersion
+        |
+        |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
+        |      .sortedBy { it.afterVersion }
+        |      .forEach { callback ->
+        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion +
+        |          1).await()
+        |        callback.block(driver)
+        |        lastVersion = callback.afterVersion + 1
+        |      }
+        |
+        |      if (lastVersion < newVersion) {
+        |        migrateInternal(driver, lastVersion, newVersion).await()
         |      }
         |    }
         |  }

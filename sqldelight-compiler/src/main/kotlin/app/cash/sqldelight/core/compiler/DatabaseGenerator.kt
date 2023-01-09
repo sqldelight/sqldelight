@@ -17,6 +17,7 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.lang.AFTER_VERSION_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
@@ -43,6 +44,7 @@ import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.KModifier.VARARG
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -156,8 +158,8 @@ internal class DatabaseGenerator(
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
     val newVersion = ParameterSpec.builder("newVersion", INT).build()
 
-    val migrateFunction = FunSpec.builder("migrate")
-      .addModifiers(OVERRIDE)
+    val migrateFunction = FunSpec.builder("migrateInternal")
+      .addModifiers(PRIVATE)
       .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
       .addParameter(oldVersion)
@@ -197,7 +199,8 @@ internal class DatabaseGenerator(
       sourceFolders.flatMap { it.queryFiles() }
         .sortedBy { it.name }
         .forInitializationStatements(dialect.allowsReferenceCycles) { sqlText ->
-          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+          val statement =
+            if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
           createFunction.addStatement(statement, sqlText.toCodeLiteral())
         }
     } else {
@@ -208,12 +211,14 @@ internal class DatabaseGenerator(
       orderedMigrations.flatMap { it.sqlStatements() }
         .filter { it.isSchema() }
         .forEach {
-          val statement = if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+          val statement =
+            if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
           createFunction.addStatement(statement, it.rawSqlText().toCodeLiteral())
         }
     }
 
     var maxVersion = 1
+    val hasMigrations = sourceFolders.flatMap { it.migrationFiles() }.isNotEmpty()
 
     sourceFolders.flatMap { it.migrationFiles() }
       .sortedBy { it.version }
@@ -250,7 +255,8 @@ internal class DatabaseGenerator(
         TypeSpec.objectBuilder("Schema")
           .addSuperinterface(DATABASE_SCHEMA_TYPE)
           .addFunction(createFunction.build())
-          .addFunction(migrateFunction.build())
+          .apply { if (hasMigrations) addFunction(migrateFunction.build()) }
+          .addFunction(migrateImplementation(hasMigrations))
           .addProperty(
             PropertySpec.builder("version", INT, OVERRIDE)
               .getter(FunSpec.getterBuilder().addStatement("return $maxVersion").build())
@@ -261,6 +267,50 @@ internal class DatabaseGenerator(
       .addSuperinterface(ClassName(fileIndex.packageName, fileIndex.className))
       .primaryConstructor(constructor.build())
       .build()
+  }
+
+  private fun migrateImplementation(hasMigrations: Boolean): FunSpec {
+    val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
+    val newVersion = ParameterSpec.builder("newVersion", INT).build()
+    val callbacks = ParameterSpec.builder("callbacks", AFTER_VERSION_TYPE).addModifiers(VARARG).build()
+
+    val migrateFunction = FunSpec.builder("migrate")
+      .addModifiers(OVERRIDE)
+      .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+      .addParameter(DRIVER_NAME, DRIVER_TYPE)
+      .addParameter(oldVersion)
+      .addParameter(newVersion)
+      .addParameter(callbacks)
+      .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
+      .apply {
+        if (hasMigrations) {
+          addCode(
+            """var lastVersion = oldVersion
+              |
+              |callbacks.filter { it.afterVersion in oldVersion until newVersion }
+              |.sortedBy { it.afterVersion }
+              |.forEach { callback ->
+              |  migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)${if (generateAsync) ".await()" else ""}
+              |  callback.block(driver)
+              |  lastVersion = callback.afterVersion + 1
+              |}
+              |
+              |if (lastVersion < newVersion) {
+              |  migrateInternal(driver, lastVersion, newVersion)${if (generateAsync) ".await()" else ""}
+              |}
+              |
+            """.trimMargin(),
+          )
+        }
+      }
+      .apply {
+        if (!generateAsync) {
+          addStatement("return %T", UNIT_RESULT_TYPE)
+        } else {
+          endControlFlow()
+        }
+      }
+    return migrateFunction.build()
   }
 
   private fun SqlStmt.isSchema() = when {

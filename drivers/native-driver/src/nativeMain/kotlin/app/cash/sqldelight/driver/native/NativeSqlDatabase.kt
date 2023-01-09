@@ -2,6 +2,7 @@ package app.cash.sqldelight.driver.native
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
@@ -120,6 +121,7 @@ class NativeSqliteDriver(
     name: String,
     maxReaderConnections: Int = 1,
     onConfiguration: (DatabaseConfiguration) -> DatabaseConfiguration = { it },
+    vararg callbacks: AfterVersion,
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
@@ -128,7 +130,7 @@ class NativeSqliteDriver(
         wrapConnection(connection) { schema.create(it) }
       },
       upgrade = { connection, oldVersion, newVersion ->
-        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion, *callbacks) }
       },
     ).let(onConfiguration),
     maxReaderConnections = maxReaderConnections,

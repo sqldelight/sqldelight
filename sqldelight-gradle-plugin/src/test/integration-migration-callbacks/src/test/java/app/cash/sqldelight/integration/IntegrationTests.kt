@@ -1,7 +1,6 @@
 package app.cash.sqldelight.integration
 
 import app.cash.sqldelight.db.AfterVersion
-import app.cash.sqldelight.db.migrateWithCallbacks
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.google.common.truth.Truth.assertThat
@@ -10,7 +9,7 @@ import org.junit.Test
 class IntegrationTests {
   @Test fun migrationCallbacks() {
     val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    QueryWrapper.Schema.migrateWithCallbacks(
+    QueryWrapper.Schema.migrate(
       driver = database,
       oldVersion = 0,
       newVersion = QueryWrapper.Schema.version,
@@ -35,7 +34,7 @@ class IntegrationTests {
       oldVersion = 0,
       newVersion = 2,
     )
-    QueryWrapper.Schema.migrateWithCallbacks(
+    QueryWrapper.Schema.migrate(
       driver = database,
       oldVersion = 2,
       newVersion = QueryWrapper.Schema.version,
@@ -54,7 +53,7 @@ class IntegrationTests {
 
   @Test fun migrationCallbackGreaterThanNewVersionNotCalled() {
     val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    QueryWrapper.Schema.migrateWithCallbacks(
+    QueryWrapper.Schema.migrate(
       driver = database,
       oldVersion = 0,
       newVersion = QueryWrapper.Schema.version,

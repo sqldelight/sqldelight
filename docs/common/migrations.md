@@ -25,7 +25,7 @@ ALTER TABLE hockeyPlayer ADD COLUMN draft_year INTEGER;
 ALTER TABLE hockeyPlayer ADD COLUMN draft_order INTEGER;
 ```
 
-These SQL statements are run by `Database.Schema.migrate()`. Migration files go in the same source set as your `.sq` files.
+These SQL statements are run by the `Database.Schema.migrate()` method. Migration files go in the same source set as your `.sq` files.
 
 ## Verifying Migrations
 
@@ -35,25 +35,14 @@ To generate a `.db` file from your latest schema, run the `generateSqlDelightSch
 
 ## Code Migrations
 
-If you run your migration from code and would like to perform data migrations you can use the `Database.Schema.migrateWithCallbacks` api:
+If you run your migration from code and would like to perform data migrations you can use the `Database.Schema.migrate` api:
 
 ```kotlin
-Database.Schema.migrateWithCallbacks(
+Database.Schema.migrate(
     driver = database,
     oldVersion = 0,
     newVersion = Database.Schema.version,
-    AfterVersion(3) { database.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
-)
-```
-
-Alternatively, it is often useful to receive the `SqlDriver` as a parameter. In those cases, you can use `AfterVersionWithDriver` class instead:
-
-```kotlin
-Database.Schema.migrateWithCallbacks(
-    driver = database,
-    oldVersion = 0,
-    newVersion = Database.Schema.version,
-    AfterVersionWithDriver(3) { it.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
+    AfterVersion(3) { driver -> driver.execute(null, "INSERT INTO test (value) VALUES('hello')", 0) },
 )
 ```
 
