@@ -2337,57 +2337,52 @@
      <a href="../runtime/app.cash.sqldelight.db/-closeable/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span><span>Closeable</span></span></span></span></a>
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-2" pageid="runtime::app.cash.sqldelight.db//migrateWithCallbacks/app.cash.sqldelight.db.SqlSchema#app.cash.sqldelight.db.SqlDriver#kotlin.Int#kotlin.Int#kotlin.Array[app.cash.sqldelight.db.AfterVersion]/PointingToDeclaration//-2112917107"> 
-    <div class="overview">
-     <a href="../runtime/app.cash.sqldelight.db/migrate-with-callbacks.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon function"></span><span class="nav-link-child"><span>migrate</span><wbr><span>With</span><wbr><span><span>Callbacks()</span></span></span></span></a>
-    </div> 
-   </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-3" pageid="runtime::app.cash.sqldelight.db/OptimisticLockException///PointingToDeclaration//-2112917107"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-2" pageid="runtime::app.cash.sqldelight.db/OptimisticLockException///PointingToDeclaration//-2112917107"> 
     <div class="overview">
      <a href="../runtime/app.cash.sqldelight.db/-optimistic-lock-exception/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon exception-class"></span><span class="nav-link-child"><span>Optimistic</span><wbr><span>Lock</span><wbr><span><span>Exception</span></span></span></span></a>
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-4" pageid="runtime::app.cash.sqldelight.db/QueryResult///PointingToDeclaration//-2112917107"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-3" pageid="runtime::app.cash.sqldelight.db/QueryResult///PointingToDeclaration//-2112917107"> 
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;runtime-nav-submenu-1-4&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../runtime/app.cash.sqldelight.db/-query-result/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Query</span><wbr><span><span>Result</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;runtime-nav-submenu-1-3&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../runtime/app.cash.sqldelight.db/-query-result/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Query</span><wbr><span><span>Result</span></span></span></span></a>
     </div> 
-    <div class="sideMenuPart" id="runtime-nav-submenu-1-4-0" pageid="runtime::app.cash.sqldelight.db/QueryResult.AsyncValue///PointingToDeclaration//-2112917107"> 
+    <div class="sideMenuPart" id="runtime-nav-submenu-1-3-0" pageid="runtime::app.cash.sqldelight.db/QueryResult.AsyncValue///PointingToDeclaration//-2112917107"> 
      <div class="overview">
       <a href="../runtime/app.cash.sqldelight.db/-query-result/-async-value/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Async</span><wbr><span><span>Value</span></span></span></span></a>
      </div> 
     </div> 
-    <div class="sideMenuPart" id="runtime-nav-submenu-1-4-1" pageid="runtime::app.cash.sqldelight.db/QueryResult.Unit///PointingToDeclaration//-2112917107"> 
+    <div class="sideMenuPart" id="runtime-nav-submenu-1-3-1" pageid="runtime::app.cash.sqldelight.db/QueryResult.Unit///PointingToDeclaration//-2112917107"> 
      <div class="overview">
       <a href="../runtime/app.cash.sqldelight.db/-query-result/-unit/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span><span>Unit</span></span></span></span></a>
      </div> 
     </div> 
-    <div class="sideMenuPart" id="runtime-nav-submenu-1-4-2" pageid="runtime::app.cash.sqldelight.db/QueryResult.Value///PointingToDeclaration//-2112917107"> 
+    <div class="sideMenuPart" id="runtime-nav-submenu-1-3-2" pageid="runtime::app.cash.sqldelight.db/QueryResult.Value///PointingToDeclaration//-2112917107"> 
      <div class="overview">
       <a href="../runtime/app.cash.sqldelight.db/-query-result/-value/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span><span>Value</span></span></span></span></a>
      </div> 
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-5" pageid="runtime::app.cash.sqldelight.db/SqlCursor///PointingToDeclaration//-2112917107"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-4" pageid="runtime::app.cash.sqldelight.db/SqlCursor///PointingToDeclaration//-2112917107"> 
     <div class="overview">
      <a href="../runtime/app.cash.sqldelight.db/-sql-cursor/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span><span>Cursor</span></span></span></span></a>
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-6" pageid="runtime::app.cash.sqldelight.db/SqlDriver///PointingToDeclaration//-2112917107"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-5" pageid="runtime::app.cash.sqldelight.db/SqlDriver///PointingToDeclaration//-2112917107"> 
     <div class="overview">
      <a href="../runtime/app.cash.sqldelight.db/-sql-driver/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span><span>Driver</span></span></span></span></a>
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-7" pageid="runtime::app.cash.sqldelight.db/SqlPreparedStatement///PointingToDeclaration//-2112917107"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-6" pageid="runtime::app.cash.sqldelight.db/SqlPreparedStatement///PointingToDeclaration//-2112917107"> 
     <div class="overview">
      <a href="../runtime/app.cash.sqldelight.db/-sql-prepared-statement/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Prepared</span><wbr><span><span>Statement</span></span></span></span></a>
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-8" pageid="runtime::app.cash.sqldelight.db/SqlSchema///PointingToDeclaration//-2112917107"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-7" pageid="runtime::app.cash.sqldelight.db/SqlSchema///PointingToDeclaration//-2112917107"> 
     <div class="overview">
      <a href="../runtime/app.cash.sqldelight.db/-sql-schema/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span><span>Schema</span></span></span></span></a>
     </div> 
    </div> 
-   <div class="sideMenuPart" id="runtime-nav-submenu-1-9" pageid="runtime::app.cash.sqldelight.db//use/TypeParam(bounds=[app.cash.sqldelight.db.Closeable?])#kotlin.Function1[TypeParam(bounds=[app.cash.sqldelight.db.Closeable?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration//-49974223"> 
+   <div class="sideMenuPart" id="runtime-nav-submenu-1-8" pageid="runtime::app.cash.sqldelight.db//use/TypeParam(bounds=[app.cash.sqldelight.db.Closeable?])#kotlin.Function1[TypeParam(bounds=[app.cash.sqldelight.db.Closeable?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration//-49974223"> 
     <div class="overview">
      <a href="../runtime/app.cash.sqldelight.db/use.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon function"></span><span class="nav-link-child"><span><span>use()</span></span></span></span></a>
     </div> 

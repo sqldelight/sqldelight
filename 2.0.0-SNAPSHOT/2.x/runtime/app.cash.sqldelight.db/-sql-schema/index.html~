@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">SqlSchema</a></div><p class="paragraph">API for creating and migrating a SQL database.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Extensions">Extensions</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
     <div class="tabs-section-body">
       <h2 class="">Functions</h2>
       <div class="table" data-togglable="Functions"><a data-name="1674983402%2FFunctions%2F-2112917107" anchor-label="create" id="1674983402%2FFunctions%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
@@ -74,17 +74,17 @@
             </div>
           </div>
         </div>
-<a data-name="1338367979%2FFunctions%2F-2112917107" anchor-label="migrate" id="1338367979%2FFunctions%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
+<a data-name="-775472427%2FFunctions%2F-2112917107" anchor-label="migrate" id="-775472427%2FFunctions%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
         <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
           <div class="main-subrow keyValue ">
             <div class=""><span class="inline-flex">
                 <div><a href="migrate.html"><span><span>migrate</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1338367979%2FFunctions%2F-2112917107"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-775472427%2FFunctions%2F-2112917107"></span>
                   <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="migrate.html"><span class="token function">migrate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../-sql-driver/index.html">SqlDriver</a><span class="token punctuation">, </span></span><span class="parameter ">oldVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">newVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-query-result/index.html">QueryResult</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Use <a href="migrate.html">driver</a> to migrate from schema <a href="migrate.html">oldVersion</a> to <a href="migrate.html">newVersion</a>.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="migrate.html"><span class="token function">migrate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../-sql-driver/index.html">SqlDriver</a><span class="token punctuation">, </span></span><span class="parameter ">oldVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">newVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>callbacks<span class="token operator">: </span><a href="../-after-version/index.html">AfterVersion</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-query-result/index.html">QueryResult</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Use <a href="migrate.html">driver</a> to migrate from schema <a href="migrate.html">oldVersion</a> to <a href="migrate.html">newVersion</a>. Each of the <a href="migrate.html">callbacks</a> are executed during the migration whenever the upgrade to the version specified by <a href="../-after-version/after-version.html">AfterVersion.afterVersion</a> has been completed.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -102,23 +102,6 @@
             <div>
               <div class="title">
                 <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><a data-name="379972221%2FProperties%2F-2112917107" anchor-label="version" id="379972221%2FProperties%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="version.html">version</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><a data-name="379972221%2FProperties%2F-2112917107" anchor-label="version" id="379972221%2FProperties%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a><p class="paragraph">The version of this schema.</p></div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <h2 class="tabbedcontent">Extensions</h2>
-      <div class="table" data-togglable="Extensions"><a data-name="-1487959188%2FExtensions%2F-2112917107" anchor-label="migrateWithCallbacks" id="-1487959188%2FExtensions%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="../migrate-with-callbacks.html"><span>migrate</span><wbr><span>With</span><wbr><span><span>Callbacks</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1487959188%2FExtensions%2F-2112917107"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">SqlSchema</a><span class="token punctuation">.</span><a href="../migrate-with-callbacks.html"><span class="token function">migrateWithCallbacks</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../-sql-driver/index.html">SqlDriver</a><span class="token punctuation">, </span></span><span class="parameter ">oldVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">newVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>callbacks<span class="token operator">: </span><a href="../-after-version/index.html">AfterVersion</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Run <a href="migrate.html">SqlSchema.migrate</a> normally but execute <a href="../migrate-with-callbacks.html">callbacks</a> during the migration whenever it finished upgrading to a version specified by <a href="../../../runtime/app.cash.sqldelight.db/-after-version/after-version.html">AfterVersion.afterVersion</a>.</p></div></div></div>
               </div>
             </div>
           </div>
