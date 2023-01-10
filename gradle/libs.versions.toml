@@ -59,6 +59,8 @@ intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-mod
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
 
+jna = { module = "net.java.dev.jna:jna", version = "5.9.0" }
+
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.9.2" }

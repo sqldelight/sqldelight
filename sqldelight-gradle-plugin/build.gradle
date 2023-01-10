@@ -76,7 +76,7 @@ dependencies {
   implementation libs.kotlin.plugin
   compileOnly libs.android.plugin
 
-  implementation "net.java.dev.jna:jna:5.9.0"
+  implementation libs.jna
 
   testImplementation libs.junit
   testImplementation libs.truth

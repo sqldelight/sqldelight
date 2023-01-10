@@ -45,7 +45,10 @@ allprojects {
     google()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    // Repo for the backported Android IntelliJ Plugin by Jetbrains used in Ultimate
     maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/" }
+    // Repo for Ktor eap builds used by IntelliJ. Some builds use a eap version. 
+    // When a new version of Intellij switched to a stable Ktor version, this repo can be removed. 
     maven { url "https://maven.pkg.jetbrains.space/public/p/ktor/eap" }
   }
 
