@@ -76,9 +76,8 @@ dependencies {
   implementation libs.kotlin.plugin
   compileOnly libs.android.plugin
 
-  testImplementation libs.sqlPsi
-  testImplementation project(':sqlite-migrations')
-  testImplementation project(':sqldelight-compiler')
+  implementation libs.jna
+
   testImplementation libs.junit
   testImplementation libs.truth
   testImplementation libs.testParameterInjector

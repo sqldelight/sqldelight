@@ -13,8 +13,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
+import com.intellij.ui.EditorNotificationProvider
 import com.intellij.ui.EditorNotifications
-import com.intellij.ui.EditorNotificationsImpl
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 import java.awt.Color
 
@@ -59,7 +59,7 @@ class FileIndexingNotification(
 
   companion object {
     fun getInstance(project: Project): FileIndexingNotification {
-      return DumbService.getDumbAwareExtensions(project, EditorNotificationsImpl.EP_PROJECT).firstIsInstance()
+      return DumbService.getDumbAwareExtensions(project, EditorNotificationProvider.EP_NAME).firstIsInstance()
     }
   }
 

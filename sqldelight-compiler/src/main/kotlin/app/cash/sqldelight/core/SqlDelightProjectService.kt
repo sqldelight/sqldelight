@@ -16,7 +16,6 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -40,7 +39,7 @@ interface SqlDelightProjectService {
 
   companion object {
     fun getInstance(project: Project): SqlDelightProjectService {
-      return ServiceManager.getService(project, SqlDelightProjectService::class.java)!!
+      return project.getService(SqlDelightProjectService::class.java)!!
     }
   }
 }

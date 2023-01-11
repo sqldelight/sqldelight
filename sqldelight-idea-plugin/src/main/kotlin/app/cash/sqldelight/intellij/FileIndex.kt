@@ -56,10 +56,10 @@ class FileIndex(
     }
   }
 
-  override fun outputDirectory(sqFile: SqlDelightFile): List<String> {
-    val file = sqFile.virtualFile ?: return emptyList()
+  override fun outputDirectory(file: SqlDelightFile): List<String> {
+    val vfile = file.virtualFile ?: return emptyList()
     val compilationUnits = properties.compilationUnits.filter { compilationUnit ->
-      compilationUnit.sourceFolders.any { it.folder.localVirtualFile()?.isAncestorOf(file) == true }
+      compilationUnit.sourceFolders.any { it.folder.localVirtualFile()?.isAncestorOf(vfile) == true }
     }
     return compilationUnits.map { it.outputDirectoryPath }.distinct()
   }

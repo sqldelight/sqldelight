@@ -6,7 +6,7 @@ import app.cash.sqldelight.intellij.notifications.FileIndexingNotification.Uncon
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType.RESOLVE_PROJECT
-import org.jetbrains.kotlin.idea.framework.GRADLE_SYSTEM_ID
+import org.jetbrains.kotlin.idea.configuration.GRADLE_SYSTEM_ID
 
 class GradleSystemListener : ExternalSystemTaskNotificationListenerAdapter() {
   override fun onStart(

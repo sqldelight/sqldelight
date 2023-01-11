@@ -2,7 +2,7 @@
 kotlin = "1.8.0"
 dokka = "1.7.20"
 kotlinCoroutines = "1.6.4"
-idea = "211.7628.21" # Android Studio Bumblebee (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+idea = "221.6008.13" # Electric Eel (2022.1.1) RC 1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.2.0"
 schemaCrawler = "16.19.2"
 stately = "1.2.3"
@@ -55,8 +55,11 @@ intellij-lang = { module = "com.jetbrains.intellij.platform:lang", version.ref =
 intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "idea" }
+intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-model", version.ref = "idea" }
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
+
+jna = { module = "net.java.dev.jna:jna", version = "5.9.0" }
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
@@ -91,8 +94,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.6.0" }
-grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.10" }
+intellij = { id = "org.jetbrains.intellij", version = "1.11.0" }
+grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.11" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.12.1" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }

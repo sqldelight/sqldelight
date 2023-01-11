@@ -39,6 +39,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ReferencesSearch
+import com.intellij.psi.util.childrenOfType
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
 import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
@@ -49,7 +50,6 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 import org.jetbrains.kotlin.psi.psiUtil.getNextSiblingIgnoringWhitespaceAndComments
 import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
-import org.jetbrains.plugins.groovy.lang.psi.util.childrenOfType
 
 class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   override fun getGotoDeclarationTargets(
