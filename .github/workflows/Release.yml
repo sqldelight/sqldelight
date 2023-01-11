@@ -65,6 +65,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
+
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
