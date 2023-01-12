@@ -13,7 +13,7 @@ import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 
-class R2dbcDriver(private val connection: Connection) : SqlDriver {
+class R2dbcDriver(public val connection: Connection) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
