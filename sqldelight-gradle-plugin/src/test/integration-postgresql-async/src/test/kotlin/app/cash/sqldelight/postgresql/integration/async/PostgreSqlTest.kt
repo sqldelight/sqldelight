@@ -43,7 +43,7 @@ class PostgreSqlTest {
   @Test fun getConnection() = kotlinx.coroutines.test.runTest {
     val connection = factory.create().awaitSingle()
     val driver = R2dbcDriver(connection)
-    assertEquals(driver.connection, connection)
+    assertThat(driver.connection).isEqualTo(connection)
   }
 
   @Test fun booleanSelect() = runTest { database ->
