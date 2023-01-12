@@ -1545,23 +1545,23 @@
         </div>
       </div>
       <h2 class="">Inheritors</h2>
-      <div class="table" data-togglable="Inheritors"><a data-name="-1507630024%2FInheritors%2F1896744885" anchor-label="SqlDelightInsertStmtValuesRealImpl" id="-1507630024%2FInheritors%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="../../app.cash.sqldelight.core.psi.impl/-sql-delight-insert-stmt-values-real-impl/index.html">SqlDelightInsertStmtValuesRealImpl</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1507630024%2FInheritors%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div></div>
-          </div>
-        </div>
-<a data-name="844962742%2FInheritors%2F1896744885" anchor-label="SqlDelightInsertStmtValuesImpl" id="844962742%2FInheritors%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+      <div class="table" data-togglable="Inheritors"><a data-name="844962742%2FInheritors%2F1896744885" anchor-label="SqlDelightInsertStmtValuesImpl" id="844962742%2FInheritors%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
         <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
           <div class="main-subrow keyValue ">
             <div class=""><span class="inline-flex">
                 <div><a href="../../app.cash.sqldelight.core.psi.impl/-sql-delight-insert-stmt-values-impl/index.html">SqlDelightInsertStmtValuesImpl</a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="844962742%2FInheritors%2F1896744885"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1507630024%2FInheritors%2F1896744885" anchor-label="SqlDelightInsertStmtValuesRealImpl" id="-1507630024%2FInheritors%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../app.cash.sqldelight.core.psi.impl/-sql-delight-insert-stmt-values-real-impl/index.html">SqlDelightInsertStmtValuesRealImpl</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1507630024%2FInheritors%2F1896744885"></span>
                   <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                 </span></span></div>
             <div></div>
