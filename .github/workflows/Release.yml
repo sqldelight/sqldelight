@@ -31,27 +31,29 @@ jobs:
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Assemble in parallel
+        run: ./gradlew assemble
       - name: Publish the macOS artifacts
         if: matrix.os == 'macOS-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-daemon
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-parallel
       - name: Publish the windows artifact
         if: matrix.os == 'windows-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository publishMingwX86PublicationToMavenCentralRepository
+        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository publishMingwX86PublicationToMavenCentralRepository --no-parallel
       - name: Publish the linux artifact
         if: matrix.os == 'ubuntu-18.04'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository
+        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository --no-parallel
 
   publish_plugin:
     runs-on: ubuntu-latest
@@ -68,11 +70,13 @@ jobs:
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Assemble in parallel
+        run: ./gradlew assemble
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
           ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
-        run: ./gradlew publishPlugin --stacktrace
+        run: ./gradlew publishPlugin --stacktrace --no-parallel
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs="-Xmx3g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
