@@ -40,6 +40,12 @@ class PostgreSqlTest {
       )
   }
 
+  @Test fun getConnection() = kotlinx.coroutines.test.runTest {
+    val connection = factory.create().awaitSingle()
+    val driver = R2dbcDriver(connection)
+    assertEquals(driver.connection, connection)
+  }
+
   @Test fun booleanSelect() = runTest { database ->
     database.dogQueries.insertDog("Tilda", "Pomeranian")
     assertThat(database.dogQueries.selectGoodDogs(true).awaitAsOne())
