@@ -1,4 +1,4 @@
-name: cleanup caches by a branch
+name: Cleanup Caches
 on:
   pull_request:
     types:
@@ -8,16 +8,13 @@ on:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        
       - name: Cleanup
         run: |
           gh extension install actions/gh-actions-cache
-          
-          REPO=$
-          BRANCH=$
 
           echo "Fetching list of cache key"
           cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
@@ -31,4 +28,6 @@ jobs:
           done
           echo "Done"
         env:
-          GH_TOKEN: $
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
