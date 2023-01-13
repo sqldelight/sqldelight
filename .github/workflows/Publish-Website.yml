@@ -36,7 +36,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.11 # See the pinned version in renovate.json too
 
       - name: Get Docs Version
         run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
