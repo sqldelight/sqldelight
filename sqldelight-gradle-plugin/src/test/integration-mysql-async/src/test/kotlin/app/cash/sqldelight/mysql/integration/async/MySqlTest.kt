@@ -14,11 +14,9 @@ class MySqlTest {
   private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
     MySQLContainer("mysql:8.0").use { mySqlJdbcContainer ->
       mySqlJdbcContainer.start()
-      println(mySqlJdbcContainer.jdbcUrl)
       val factory = with(mySqlJdbcContainer) {
         val mariaDBUrl =
           "r2dbc:mariadb://$username:$password@$host:$firstMappedPort/$databaseName?sslMode=TRUST&tinyInt1isBit=false"
-        println(mariaDBUrl)
         ConnectionFactories.get(mariaDBUrl)
       }
 
