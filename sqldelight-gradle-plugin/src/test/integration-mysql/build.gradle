@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
   implementation libs.mysqlJdbc
-  implementation "org.testcontainers:mysql:1.16.2"
+  implementation libs.testContainersMysql
   implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
 }

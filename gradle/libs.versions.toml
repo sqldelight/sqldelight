@@ -12,10 +12,11 @@ sqljs = "1.6.2"
 paging-mpp = "3.1.1-0.1.1"
 paging3 = "3.1.1"
 ktlint = "0.46.1"
-agp = "7.4.0"
+agp = "7.3.1"
 compileSdk = "31"
 minSdk = "16"
 sqlPsi = "0.4.2"
+testContainers = "1.17.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -84,6 +85,9 @@ burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
 testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.10" }
 
 r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
+testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
+testContainers-postgres = { module = "org.testcontainers:postgres", version.ref = "testContainers" }
+testContainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "testContainers" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
