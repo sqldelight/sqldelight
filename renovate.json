@@ -5,5 +5,8 @@
   "ignoreDeps": [ "com.jetbrains.intellij.platform", "com.jetbrains.intellij.java", "com.jetbrains.intellij.platform:analysis",
                   "com.jetbrains.intellij.platform:test-framework", "com.jetbrains.intellij.platform:lang-impl",
                   "com.jetbrains.intellij.platform:core-ui", "com.jetbrains.intellij.platform:core-impl",
-                  "com.jetbrains.intellij.java:java-psi" ]
+                  "com.jetbrains.intellij.java:java-psi" ],
+    "pip-compile": {
+        "fileMatch": [".github/workflows/requirements.in"]
+    }
 }
