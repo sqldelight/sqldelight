@@ -24,8 +24,8 @@ repositories {
 
 dependencies {
   implementation libs.mysqlJdbc
-  implementation libs.testContainersMysql
-  implementation libs.testContainersR2dbc
+  implementation libs.testContainers.mysql
+  implementation libs.testContainers.r2dbc
   implementation "org.mariadb:r2dbc-mariadb:1.1.3"
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
