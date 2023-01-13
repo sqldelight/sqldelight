@@ -83,7 +83,7 @@ testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
 testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.10" }
 
-r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "0.9.1.RELEASE" }
+r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
