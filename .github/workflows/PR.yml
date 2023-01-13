@@ -93,10 +93,18 @@ jobs:
         run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
       - name: Upload the build report
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v3
         with:
           name: error-report
           path: build-reports.zip
+      - name: Upload daemon log if crashed
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with: 
+          name: daemon-kill
+          path: |
+            **/*.log
+          if-no-files-found: ignore
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
