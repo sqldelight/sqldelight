@@ -44,9 +44,8 @@ jobs:
       # Linux tests
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'test'
-        # not parallel otherwise NativeTransacterTest fails
         run: |
-          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace --no-parallel
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test
@@ -65,7 +64,8 @@ jobs:
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-18.04'
-        run: ./gradlew linuxX64Test
+        # not parallel otherwise NativeTransacterTest fails
+        run: ./gradlew linuxX64Test --no-parallel
 
       # iOS tests
       - name: Run instrumentation tests
