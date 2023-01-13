@@ -26,7 +26,7 @@ dependencies {
   implementation libs.mysqlJdbc
   implementation "org.testcontainers:mysql:1.16.2"
   implementation "org.testcontainers:r2dbc:1.16.2"
-  implementation "dev.miku:r2dbc-mysql:0.8.2.RELEASE"
+  implementation "org.mariadb:r2dbc-mariadb:1.1.3"
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
