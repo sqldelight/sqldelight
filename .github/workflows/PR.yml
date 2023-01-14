@@ -35,14 +35,17 @@ jobs:
           java-version: 17
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
-        with:
-          cache-disabled: true
+
+      - name: Run spotless
+        run: ./gradlew spotlessCheck
+      - name: Assemble parallel
+        run: ./gradlew assemble        
 
       # Linux tests
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'test'
         run: |
-          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test
@@ -61,7 +64,8 @@ jobs:
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-18.04'
-        run: ./gradlew linuxX64Test
+        # not parallel otherwise NativeTransacterTest fails
+        run: ./gradlew linuxX64Test --no-parallel
 
       # iOS tests
       - name: Run instrumentation tests
@@ -76,12 +80,6 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
 
-      # Build the sample, drop with 1.8.20:
-      # https://youtrack.jetbrains.com/issue/KT-52172/Multiplatform-Support-composite-builds
-      - name: Build the runtime for the sample
-        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
-        run: ./gradlew :runtime:assemble
-
        # Build the sample
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
@@ -89,14 +87,13 @@ jobs:
         with:
           arguments: build --stacktrace
           build-root-directory: sample
-          cache-disabled: true
 
       - name: Bundle the build report
         if: failure()
         run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
       - name: Upload the build report
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v3
         with:
           name: error-report
           path: build-reports.zip
@@ -108,4 +105,4 @@ jobs:
           report_paths: '**/build/test-results/test/TEST-*.xml'
 
 env:
-  GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError -XX:MetaspaceSize=1g"
+  GRADLE_OPTS: -Dorg.gradle.parallel=true

@@ -32,6 +32,8 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -65,4 +67,4 @@ jobs:
         run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} latest
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.parallel=true
