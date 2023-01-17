@@ -34,12 +34,17 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - name: Setup gradle
-        uses: gradle/gradle-build-action@v2          
+        uses: gradle/gradle-build-action@v2
 
       - name: Run spotless
         run: ./gradlew spotlessCheck
       - name: Assemble parallel
-        run: ./gradlew assemble --scan
+        run: ./gradlew assemble --profile
+      - name: Upload the profile report
+        uses: actions/upload-artifact@v3
+        with:
+          name: gradle-profile
+          path: build/reports/profile
 
       # Linux tests
       - name: Run gradle tests
@@ -79,7 +84,7 @@ jobs:
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
-      
+
       # Build the sample
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
