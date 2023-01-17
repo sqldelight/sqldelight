@@ -39,7 +39,7 @@ jobs:
       - name: Run spotless
         run: ./gradlew spotlessCheck
       - name: Assemble parallel
-        run: ./gradlew assemble --scan
+        run: ./gradlew assemble
 
       # Linux tests
       - name: Run gradle tests

@@ -8,6 +8,21 @@ pluginManagement {
     includeBuild("buildLogic")
 }
 
+plugins {
+    id "com.gradle.enterprise" version "3.12.2"
+}
+
+gradleEnterprise {
+  buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+    if (System.getenv("CI")) {
+      publishAlways()
+      tag "CI"
+    }
+  }
+}
+
 rootProject.name = 'sqldelight'
 
 include ':adapters:primitive-adapters'
