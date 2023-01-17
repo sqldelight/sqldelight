@@ -99,6 +99,7 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
   }
 }
 
+// R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
 class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
@@ -110,7 +111,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 
   override fun bindLong(index: Int, long: Long?) {
     if (long == null) {
-      statement.bindNull(index, Long::class.java)
+      statement.bindNull(index, java.lang.Long::class.java)
     } else {
       statement.bind(index, long)
     }
@@ -118,7 +119,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 
   override fun bindDouble(index: Int, double: Double?) {
     if (double == null) {
-      statement.bindNull(index, Double::class.java)
+      statement.bindNull(index, java.lang.Double::class.java)
     } else {
       statement.bind(index, double)
     }
@@ -134,7 +135,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     if (boolean == null) {
-      statement.bindNull(index, Boolean::class.java)
+      statement.bindNull(index, java.lang.Boolean::class.java)
     } else {
       statement.bind(index, boolean)
     }

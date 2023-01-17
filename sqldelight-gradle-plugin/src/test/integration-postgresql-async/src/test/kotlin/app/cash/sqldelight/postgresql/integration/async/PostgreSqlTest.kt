@@ -27,15 +27,16 @@ class PostgreSqlTest {
     block(db)
   }
 
-  @Test fun simpleSelect() = runTest { database ->
+  @Test fun simpleSelectWithNullPrimitive() = runTest { database ->
     Assert.assertEquals(0, database.dogQueries.selectDogs().awaitAsList().size)
-    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Tilda", "Pomeranian", null)
     assertThat(database.dogQueries.selectDogs().awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
           is_good = 1,
+          age = null,
         ),
       )
   }
@@ -47,24 +48,26 @@ class PostgreSqlTest {
   }
 
   @Test fun booleanSelect() = runTest { database ->
-    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Tilda", "Pomeranian", null)
     assertThat(database.dogQueries.selectGoodDogs(true).awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
           is_good = 1,
+          age = null,
         ),
       )
   }
 
   @Test fun returningInsert() = runTest { database ->
-    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian").awaitAsOne())
+    assertThat(database.dogQueries.insertAndReturn("Tilda", "Pomeranian", null).awaitAsOne())
       .isEqualTo(
         Dog(
           name = "Tilda",
           breed = "Pomeranian",
           is_good = 1,
+          age = null,
         ),
       )
   }

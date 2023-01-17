@@ -1,12 +1,13 @@
 CREATE TABLE dog (
   name VARCHAR(8) NOT NULL,
   breed TEXT NOT NULL,
-  is_good INTEGER NOT NULL DEFAULT 1
+  is_good INTEGER NOT NULL DEFAULT 1,
+  age INTEGER
 );
 
 insertDog:
 INSERT INTO dog
-VALUES (?, ?, DEFAULT);
+VALUES (?, ?, DEFAULT, ?);
 
 selectDogs:
 SELECT *
@@ -19,5 +20,5 @@ WHERE :someBoolean AND 1 = 1;
 
 insertAndReturn:
 INSERT INTO dog
-VALUES (?, ?, DEFAULT)
+VALUES (?, ?, DEFAULT, ?)
 RETURNING *;
