@@ -39,12 +39,7 @@ jobs:
       - name: Run spotless
         run: ./gradlew spotlessCheck
       - name: Assemble parallel
-        run: ./gradlew assemble --profile
-      - name: Upload the profile report
-        uses: actions/upload-artifact@v3
-        with:
-          name: gradle-profile
-          path: build/reports/profile
+        run: ./gradlew assemble --scan
 
       # Linux tests
       - name: Run gradle tests
