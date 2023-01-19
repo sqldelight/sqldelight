@@ -3,7 +3,7 @@ package com.squareup.sqldelight.intellij
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter
 import com.squareup.sqldelight.core.SqlDelightProjectService
-import org.jetbrains.kotlin.idea.framework.GRADLE_SYSTEM_ID
+import org.jetbrains.kotlin.idea.configuration.GRADLE_SYSTEM_ID
 
 class GradleSystemListener : ExternalSystemTaskNotificationListenerAdapter() {
   override fun onSuccess(id: ExternalSystemTaskId) {
