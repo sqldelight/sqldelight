@@ -63,6 +63,7 @@ allprojects {
     exclude group: 'ai.grazie.utils'
     exclude group: 'io.ktor'
     exclude group: 'com.jetbrains.infra'
+    exclude group 'org.jetbrains.teamcity'
   }
 
   group = GROUP
