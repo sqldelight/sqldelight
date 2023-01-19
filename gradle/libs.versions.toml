@@ -16,6 +16,7 @@ agp = "7.4.0"
 compileSdk = "31"
 minSdk = "16"
 sqlPsi = "0.4.2"
+testContainers = "1.17.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -59,16 +60,16 @@ intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-mod
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
 
-jna = { module = "net.java.dev.jna:jna", version = "5.9.0" }
+jna = { module = "net.java.dev.jna:jna", version = "5.13.0" }
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.9.2" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
-rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.5" }
+rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.6" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.40.0.0" }
 postgresJdbc = { module = "org.postgresql:postgresql", version = "42.5.1" }
-mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.31" }
+mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.32" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
 schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref = "schemaCrawler" }
@@ -83,7 +84,10 @@ testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
 testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.10" }
 
-r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "0.9.1.RELEASE" }
+r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
+testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
+testContainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "testContainers" }
+testContainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "testContainers" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -94,10 +98,10 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.11.0" }
+intellij = { id = "org.jetbrains.intellij", version = "1.12.0" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.11" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
-spotless = { id = "com.diffplug.spotless", version = "6.12.1" }
+spotless = { id = "com.diffplug.spotless", version = "6.13.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
 ksp = { id = "com.google.devtools.ksp", version = "1.8.0-1.0.8" }

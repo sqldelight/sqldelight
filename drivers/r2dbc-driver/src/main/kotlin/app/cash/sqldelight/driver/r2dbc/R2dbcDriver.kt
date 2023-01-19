@@ -13,7 +13,7 @@ import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 
-class R2dbcDriver(private val connection: Connection) : SqlDriver {
+class R2dbcDriver(val connection: Connection) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
@@ -48,7 +48,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
 
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
-      return@AsyncValue result.rowsUpdated.awaitFirstOrNull()?.toLong() ?: 0
+      return@AsyncValue result.rowsUpdated.awaitFirstOrNull() ?: 0L
     }
   }
 
@@ -99,6 +99,7 @@ class R2dbcDriver(private val connection: Connection) : SqlDriver {
   }
 }
 
+// R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
 class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
@@ -110,7 +111,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 
   override fun bindLong(index: Int, long: Long?) {
     if (long == null) {
-      statement.bindNull(index, Long::class.java)
+      statement.bindNull(index, Long::class.javaObjectType)
     } else {
       statement.bind(index, long)
     }
@@ -118,7 +119,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 
   override fun bindDouble(index: Int, double: Double?) {
     if (double == null) {
-      statement.bindNull(index, Double::class.java)
+      statement.bindNull(index, Double::class.javaObjectType)
     } else {
       statement.bind(index, double)
     }
@@ -134,7 +135,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     if (boolean == null) {
-      statement.bindNull(index, Boolean::class.java)
+      statement.bindNull(index, Boolean::class.javaObjectType)
     } else {
       statement.bind(index, boolean)
     }
