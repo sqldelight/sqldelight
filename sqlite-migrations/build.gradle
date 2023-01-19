@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
 dependencies {
@@ -18,3 +20,13 @@ dependencies {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+tasks.withType(JavaCompile).configureEach {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType(KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = "11"
+  }
+}
