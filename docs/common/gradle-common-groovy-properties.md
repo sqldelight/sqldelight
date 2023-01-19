@@ -11,7 +11,7 @@
     // of the project. These files are used to verify that migrations yield 
     // a database with the latest schema. Defaults to null so the verification 
     // tasks will not be created.
-    schemaOutputDirectory = file("src/main/sqldelight/databases")
+    schemaOutputDirectory = file("src/main/sqldelight-databases")
 
     // Optionally specify schema dependencies on other gradle projects
     dependency project(':OtherProject')
