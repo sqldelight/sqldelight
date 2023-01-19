@@ -8,7 +8,10 @@
   "ignoreDeps": [ "com.jetbrains.intellij.platform", "com.jetbrains.intellij.java", "com.jetbrains.intellij.platform:analysis",
                   "com.jetbrains.intellij.platform:test-framework", "com.jetbrains.intellij.platform:lang-impl",
                   "com.jetbrains.intellij.platform:core-ui", "com.jetbrains.intellij.platform:core-impl",
-                  "com.jetbrains.intellij.java:java-psi" ],
+                  "com.jetbrains.intellij.java:java-psi", "com.jetbrains.intellij.platform:project-model-impl",
+                  "com.jetbrains.intellij.platform:project-model", "com.jetbrains.intellij.android:android-adt-ui-model",
+                  "com.jetbrains.intellij.platform:analysis-impl", "com.jetbrains.intellij.platform:lang",
+                  "com.jetbrains.intellij.platform:ide-impl", "com.jetbrains.intellij.platform:core" ],
   "ignorePaths": [
     ".github/workflows/requirements.txt"
   ],
