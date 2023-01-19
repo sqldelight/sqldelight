@@ -22,7 +22,7 @@ ext.deps = [
         android: 'com.android.tools.build:gradle:4.2.2',
         kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         dokka: "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
-        intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.4.0",
+        intellij: "org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.5.2",
         grammarKitComposer: "com.alecstrong:grammar-kit-composer:0.1.10",
         publish: "com.vanniktech:gradle-maven-publish-plugin:0.20.0",
         spotless: "com.diffplug.spotless:spotless-plugin-gradle:5.17.1",

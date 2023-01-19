@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
@@ -18,6 +19,15 @@ configurations {
   shade
 }
 
+tasks.withType(JavaCompile).configureEach {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType(KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = "11"
+  }
+}
 
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.alecstrong.grammar.kit.composer'
 
@@ -8,6 +10,16 @@ test {
     showExceptions true
     showStackTraces true
     showCauses true
+  }
+}
+
+tasks.withType(JavaCompile).configureEach {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType(KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = "11"
   }
 }
 
