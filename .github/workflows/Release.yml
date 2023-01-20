@@ -4,8 +4,13 @@ on:
   push:
     branches:
       - master
+      - '1.5.3'
     tags:
       - '*'
+
+concurrency:
+  group: "release"
+  cancel-in-progress: false
 
 jobs:
   publish_archives:
@@ -14,55 +19,65 @@ jobs:
         os: [macOS-latest, windows-latest, ubuntu-18.04]
 
     runs-on: ${{matrix.os}}
+    if: github.repository == 'cashapp/sqldelight'
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v2
-      - uses: actions/cache@v2.1.6
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+        uses: actions/checkout@v3
       - name: Set up JDK 11
-        uses: actions/setup-java@v2.3.1
+        uses: actions/setup-java@v3.9.0
         with:
           distribution: 'zulu'
           java-version: 11
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
 
+      - name: Assemble in parallel
+        run: ./gradlew assemble
       - name: Publish the macOS artifacts
         if: matrix.os == 'macOS-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-daemon
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-parallel
       - name: Publish the windows artifact
         if: matrix.os == 'windows-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository publishMingwX86PublicationToMavenCentralRepository
+        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository publishMingwX86PublicationToMavenCentralRepository --no-parallel
       - name: Publish the linux artifact
         if: matrix.os == 'ubuntu-18.04'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
-        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository
+        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository --no-parallel
 
   publish_plugin:
     runs-on: ubuntu-latest
+    if: github.repository == 'cashapp/sqldelight'
     needs: publish_archives
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3.9.0
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Assemble in parallel
+        run: ./gradlew assemble
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
           ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
-        run: ./gradlew publishPlugin
+        run: ./gradlew publishPlugin --stacktrace --no-parallel
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.parallel=true

@@ -31,26 +31,27 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Cache gradle
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
       - name: Set up JDK 11
         uses: actions/setup-java@v2.3.1
         with:
           distribution: 'zulu'
           java-version: 11
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
 
+      - name: Run spotless
+        run: ./gradlew spotlessCheck
+      - name: Assemble parallel
+        run: ./gradlew assemble
+
+      # Linux tests
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'test'
         run: |
-          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-18.04' && matrix.job == 'gradle-plugin-tests'
         run: |
@@ -70,38 +71,52 @@ jobs:
         run: |
           ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
+      # Windows tests
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-18.04'
-        run: ./gradlew linuxTest
+        # not parallel otherwise NativeTransacterTest fails
+        run: ./gradlew linuxTest --no-parallel
 
+      # iOS tests
       - name: Run instrumentation tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          arch: x86_64
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
+
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
+
+      # Build the sample
       - name: Build the sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
-        run: |
-          cd sample
-          ./gradlew build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build --stacktrace
+          build-root-directory: sample
 
       - name: Bundle the build report
         if: failure()
         run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
       - name: Upload the build report
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v3
         with:
           name: error-report
           path: build-reports.zip
 
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: github.repository_owner == 'cashapp' # always run even if the previous step fails if the source is from the cashapp org
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
 env:
-  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -Xms128m -XX:MaxPermSize=4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"
+  GRADLE_OPTS: -Dorg.gradle.parallel=true
