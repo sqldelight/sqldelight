@@ -8,7 +8,7 @@ Releasing
  5. Update the `gradle.properties` to the next SNAPSHOT version.
  6. `git commit -am "Prepare next development version."`
  7. `git push && git push --tags`
- 8. Wait until the "Publish a release" action completes, then visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifacts.
+ 8. Wait until the "Publish a release" action completes, then visit [Sonatype Nexus](https://s01.oss.sonatype.org/) and promote the artifacts.
  9. Update the sample app to the release version and send a PR.
  
 If the github action fails, drop the artifacts from sonatype and re run the job.

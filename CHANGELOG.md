@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.5.5] - 2023-01-20
+
+Compatibility fix for IntelliJ 2022 and Kotlin 1.8
+
 ## [1.5.3] - 2021-11-23
 ### Added
 - [JDBC Driver] Open JdbcDriver for 3rd party driver implementations (#2672 by [Philip Wedemann][hfhbd])
