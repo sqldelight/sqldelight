@@ -3,12 +3,15 @@ package com.squareup.sqldelight.test.util
 import com.alecstrong.sql.psi.core.DialectPreset
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
+import com.intellij.lang.LanguageParserDefinitions
 import com.intellij.psi.PsiElement
 import com.squareup.sqldelight.core.SqlDelightCompilationUnit
 import com.squareup.sqldelight.core.SqlDelightDatabaseName
 import com.squareup.sqldelight.core.SqlDelightDatabaseProperties
 import com.squareup.sqldelight.core.SqlDelightEnvironment
 import com.squareup.sqldelight.core.SqlDelightSourceFolder
+import com.squareup.sqldelight.core.lang.MigrationLanguage
+import com.squareup.sqldelight.core.lang.SqlDelightLanguage
 import java.io.File
 
 internal class TestEnvironment(
@@ -53,6 +56,8 @@ internal class TestEnvironment(
       moduleName = "test-module",
       compilationUnit = compilationUnit,
     )
+    LanguageParserDefinitions.INSTANCE.forLanguage(SqlDelightLanguage).createParser(environment.project)
+    LanguageParserDefinitions.INSTANCE.forLanguage(MigrationLanguage).createParser(environment.project)
     environment.annotate(annotationHolder)
     return environment
   }

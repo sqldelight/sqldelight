@@ -5,9 +5,6 @@ buildscript {
     mavenCentral()
     google()
     gradlePluginPortal()
-    maven {
-      url 'https://jitpack.io'
-    }
   }
 
   dependencies {
@@ -61,6 +58,12 @@ allprojects {
     exclude group: 'com.jetbrains.rd'
     exclude group: 'com.github.jetbrains', module: 'jetCheck'
     exclude group: 'org.roaringbitmap'
+    exclude group: 'ai.grazie.nlp'
+    exclude group: 'ai.grazie.spell'
+    exclude group: 'ai.grazie.utils'
+    exclude group: 'io.ktor'
+    exclude group: 'com.jetbrains.infra'
+    exclude group: 'org.jetbrains.teamcity'
   }
 
   group = GROUP

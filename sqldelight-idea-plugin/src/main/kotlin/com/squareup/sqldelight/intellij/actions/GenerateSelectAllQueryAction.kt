@@ -2,6 +2,7 @@ package com.squareup.sqldelight.intellij.actions
 
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.intellij.codeInsight.CodeInsightActionHandler
+import com.intellij.codeInsight.template.TemplateActionContext
 import com.intellij.codeInsight.template.TemplateManager
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl
 import com.intellij.openapi.editor.Editor
@@ -19,7 +20,7 @@ internal class GenerateSelectAllQueryAction : BaseGenerateAction(SelectAllHandle
       val createTableStmt = file.findElementAt(caretOffset)?.parentOfType<SqlCreateTableStmt>() ?: return
 
       val tableName = createTableStmt.tableName.name
-      val selectAllTemplate = TemplateManagerImpl.listApplicableTemplates(file, caretOffset, false)
+      val selectAllTemplate = TemplateManagerImpl.listApplicableTemplates(TemplateActionContext.create(file, null, caretOffset, caretOffset, false))
         .first { it.key == "sel" }
 
       val stmtList = file.findChildOfType<SqlDelightStmtList>() ?: return

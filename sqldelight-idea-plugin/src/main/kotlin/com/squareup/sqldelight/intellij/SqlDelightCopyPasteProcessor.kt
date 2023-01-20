@@ -92,7 +92,7 @@ class SqlDelightCopyPasteProcessor : CopyPastePostProcessor<ReferenceTransferabl
     editor: Editor,
     bounds: RangeMarker,
     caretOffset: Int,
-    indented: Ref<Boolean>,
+    indented: Ref<in Boolean>,
     values: List<ReferenceTransferableData>
   ) {
     if (DumbService.getInstance(project).isDumb) {
