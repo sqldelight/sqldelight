@@ -259,6 +259,6 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '2.0.0-alpha04'
+    sqldelight: '2.0.0-alpha05'
   version:
     provider: mike

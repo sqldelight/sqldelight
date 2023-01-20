@@ -1,5 +1,31 @@
 # Change Log
 
+## [2.0.0-alpha05] - 2023-01-20
+
+### Added
+- [Paging] Multiplatform paging extension (by [Jeff Lockhart][jeffdgr8])
+- [Runtime] Add fun modifier to Listener interface.
+- [SQLite Dialect] Add SQLite 3.33 support (UPDATE FROM) (by [Eliezer Graber][eygraber]))
+- [PostgreSQL Dialect] Support UPDATE FROM in postgresql (by [Eliezer Graber][eygraber]))
+
+### Changed
+- [RDBC Driver] Expose the connection (by [Philip Wedemann][hfhbd])
+- [Runtime] Move migration callbacks into main `migrate` fun
+- [Gradle Plugin] Hide Configurations from downstream projects
+- [Gradle Plugin] Only shade Intellij (by [Philip Wedemann][hfhbd])
+- [Gradle Plugin] Support Kotlin 1.8.0-Beta and add multi version Kotlin test (by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [RDBC Driver] Use javaObjectType instead (by [Philip Wedemann][hfhbd])
+- [RDBC Driver] Fix primitive null values in bindStatement (by [Philip Wedemann][hfhbd])
+- [RDBC Driver] Support R2DBC 1.0 (by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] Postgres: Fix Array without type parameter (by [Philip Wedemann][hfhbd])
+- [IDE Plugin] Bump intellij to 221.6008.13 (by [Philip Wedemann][hfhbd])
+- [Compiler] Resolve recursive origin table from pure views (by [Philip Wedemann][hfhbd])
+- [Compiler] Use value classes from table foreign key clause (by [Philip Wedemann][hfhbd])
+- [Compiler] Fix SelectQueryGenerator to support bind expression without parenthesis (by [Doogie Min][bellatoris])
+- [Compiler] Fix duplicate generation of ${name}Indexes variables when using transactions (by [Andreas Sacher][sachera])
+
 ## [2.0.0-alpha04] - 2022-10-03
 
 ### Breaking Changes
@@ -845,3 +871,6 @@ Initial release.
   [robx]: https://github.com/robxyy
   [madisp]: https://github.com/madisp
   [svenjacobs]: https://github.com/svenjacobs
+  [jeffdgr8]: https://github.com/jeffdgr8
+  [bellatoris]: https://github.com/bellatoris
+  [sachera]: https://github.com/sachera
