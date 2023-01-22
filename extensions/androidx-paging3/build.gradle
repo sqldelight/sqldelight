@@ -17,6 +17,9 @@ tasks.withType(KotlinCompile).configureEach {
 kotlin {
   ios()
   jvm()
+  js {
+    browser()
+  }
 
   sourceSets {
     commonMain {
