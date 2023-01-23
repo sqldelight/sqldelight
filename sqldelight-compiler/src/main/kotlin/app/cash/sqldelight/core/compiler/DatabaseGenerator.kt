@@ -324,6 +324,7 @@ internal class DatabaseGenerator(
     dropTableStmt != null -> true
     dropTriggerStmt != null -> true
     dropViewStmt != null -> true
+    pragmaStmt != null -> true
     else -> false
   }
 }
