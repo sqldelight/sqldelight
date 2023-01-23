@@ -737,11 +737,11 @@ class QueryWrapperTest {
       |SELECT * FROM test;
       """.trimMargin(),
       tempFolder,
-      "Query.sq"
+      "Query.sq",
     )
     val result = FixtureCompiler.compileFixture(
       tempFolder.fixtureRoot().path,
-      deriveSchemaFromMigrations = true
+      deriveSchemaFromMigrations = true,
     )
 
     assertThat(result.errors).isEmpty()
