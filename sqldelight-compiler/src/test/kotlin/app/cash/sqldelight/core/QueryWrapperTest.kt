@@ -2,6 +2,7 @@ package app.cash.sqldelight.core
 
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.fixtureRoot
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -687,6 +688,118 @@ class QueryWrapperTest {
         |      }
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
+        |      }
+        |      return QueryResult.Unit
+        |    }
+        |
+        |    public override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int,
+        |      vararg callbacks: AfterVersion,
+        |    ): QueryResult<Unit> {
+        |      var lastVersion = oldVersion
+        |
+        |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
+        |      .sortedBy { it.afterVersion }
+        |      .forEach { callback ->
+        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
+        |        callback.block(driver)
+        |        lastVersion = callback.afterVersion + 1
+        |      }
+        |
+        |      if (lastVersion < newVersion) {
+        |        migrateInternal(driver, lastVersion, newVersion)
+        |      }
+        |      return QueryResult.Unit
+        |    }
+        |  }
+        |}
+        |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `pragmas defined in migrations are included in create(SqlDriver) function`() {
+    FixtureCompiler.writeSql(
+      """
+      |PRAGMA journal_mode=wal;
+      |CREATE TABLE test (
+      |  value1 TEXT
+      |);
+      """.trimMargin(),
+      tempFolder,
+      "0.sqm",
+    )
+    FixtureCompiler.writeSql(
+      """
+      |query:
+      |SELECT * FROM test;
+      """.trimMargin(),
+      tempFolder,
+      "Query.sq"
+    )
+    val result = FixtureCompiler.compileFixture(
+      tempFolder.fixtureRoot().path,
+      deriveSchemaFromMigrations = true
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
+        |package com.example.testmodule
+        |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
+        |import app.cash.sqldelight.db.QueryResult
+        |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlSchema
+        |import com.example.QueryQueries
+        |import com.example.TestDatabase
+        |import kotlin.Int
+        |import kotlin.Unit
+        |import kotlin.reflect.KClass
+        |
+        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |  get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |    TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(
+        |  driver: SqlDriver,
+        |) : TransacterImpl(driver), TestDatabase {
+        |  public override val queryQueries: QueryQueries = QueryQueries(driver)
+        |
+        |  public object Schema : SqlSchema {
+        |    public override val version: Int
+        |      get() = 1
+        |
+        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |      driver.execute(null, "PRAGMA journal_mode=wal", 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE test (
+        |          |  value1 TEXT
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
+        |    }
+        |
+        |    private fun migrateInternal(
+        |      driver: SqlDriver,
+        |      oldVersion: Int,
+        |      newVersion: Int,
+        |    ): QueryResult<Unit> {
+        |      if (oldVersion <= 0 && newVersion > 0) {
+        |        driver.execute(null, "PRAGMA journal_mode=wal", 0)
+        |        driver.execute(null, ""${'"'}
+        |            |CREATE TABLE test (
+        |            |  value1 TEXT
+        |            |)
+        |            ""${'"'}.trimMargin(), 0)
         |      }
         |      return QueryResult.Unit
         |    }
