@@ -6,11 +6,7 @@ plugins {
   id("app.cash.sqldelight.multiplatform")
 }
 
-tasks.withType(KotlinCompile).configureEach {
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-}
+kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-primitive-adapters'
 

@@ -9,15 +9,21 @@ plugins {
   id("jvm-test-suite")
 }
 
+kotlin.jvmToolchain(11)
+
 testing {
   suites {
     dockerTest(JvmTestSuite) {
+      useJUnit()
+    }
+    grammarkitTest(JvmTestSuite) {
       useJUnit()
     }
   }
 }
 
 configurations.dockerTestImplementation.extendsFrom(configurations.testImplementation)
+configurations.grammarkitTestImplementation.extendsFrom(configurations.testImplementation)
 
 gradlePlugin {
   plugins {
@@ -27,7 +33,7 @@ gradlePlugin {
     }
   }
 
-  testSourceSets(sourceSets.test, sourceSets.dockerTest)
+  testSourceSets(sourceSets.test, sourceSets.dockerTest, sourceSets.grammarkitTest)
 }
 
 configurations {
@@ -130,7 +136,7 @@ tasks.named('test') {
 }
 
 tasks.named('check') {
-  dependsOn(testing.suites.dockerTest)
+  dependsOn(testing.suites.dockerTest, testing.suites.grammarkitTest)
 }
 
 tasks.named('dockerTest') {
@@ -148,6 +154,22 @@ tasks.named('dockerTest') {
       ":drivers:r2dbc-driver:publishAllPublicationsToInstallLocallyRepository",
       ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
   )
+}
+
+tasks.named("grammarkitTest") {
+  dependsOn(
+      ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:publishJvmPublicationToInstallLocallyRepository",
+      ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+  )
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
 }
 
 tasks.named('validatePlugins') {

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
@@ -11,11 +9,7 @@ sourceSets {
   main
 }
 
-tasks.withType(KotlinCompile).configureEach {
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-}
+kotlin.jvmToolchain(8)
 
 kotlin {
   mingwX86()

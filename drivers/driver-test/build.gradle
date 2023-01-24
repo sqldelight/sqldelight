@@ -8,6 +8,8 @@ sourceSets {
 }
 
 kotlin {
+  jvmToolchain(8)
+  
   mingwX86()
 
   sourceSets {
