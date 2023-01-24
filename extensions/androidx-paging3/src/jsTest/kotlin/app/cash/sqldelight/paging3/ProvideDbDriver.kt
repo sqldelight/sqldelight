@@ -20,4 +20,4 @@ import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import kotlinx.coroutines.await
 
 actual suspend fun provideDbDriver(): SqlDriver =
-    initSqlDriver().await()
+  initSqlDriver().await()
