@@ -15,24 +15,9 @@
  */
 package app.cash.sqldelight.paging3
 
-import app.cash.sqldelight.db.AfterVersion
-import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.native.inMemoryDriver
-
-private fun defaultSchema(): SqlSchema {
-  return object : SqlSchema {
-    override val version: Int = 1
-    override fun create(driver: SqlDriver) = QueryResult.Unit
-    override fun migrate(
-      driver: SqlDriver,
-      oldVersion: Int,
-      newVersion: Int,
-      vararg callbacks: AfterVersion,
-    ) = QueryResult.Unit
-  }
-}
+import app.cash.sqldelight.driver.sqljs.initSqlDriver
+import kotlinx.coroutines.await
 
 actual suspend fun provideDbDriver(): SqlDriver =
-  inMemoryDriver(defaultSchema())
+    initSqlDriver().await()

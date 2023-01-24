@@ -38,14 +38,14 @@ class KeyedQueryPagingSourceTest {
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
 
-  @BeforeTest fun before() {
+  @BeforeTest suspend fun before() {
     driver = provideDbDriver()
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
     (0L until 10L).forEach { this.insert(it) }
     transacter = object : TransacterImpl(driver) {}
   }
 
-  @Test fun `aligned page exhaustion gives correct results`() {
+  @Test fun aligned_page_exhaustion_gives_correct_results() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
@@ -64,7 +64,7 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  @Test fun `misaligned page exhastion gives correct results`() {
+  @Test fun misaligned_page_exhastion_gives_correct_results() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
@@ -83,7 +83,7 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  @Test fun `requesting a page with anchor not in step passes`() {
+  @Test fun requesting_a_page_with_anchor_not_in_step_passes() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
@@ -98,7 +98,7 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  @Test fun `misaligned last page has correct data`() {
+  @Test fun misaligned_last_page_has_correct_data() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
@@ -115,7 +115,7 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  @Test fun `invoking getRefreshKey before first load returns null key`() {
+  @Test fun invoking_getRefreshKey_before_first_load_returns_null_key() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
@@ -135,7 +135,7 @@ class KeyedQueryPagingSourceTest {
     )
   }
 
-  @Test fun `invoking getRefreshKey with loaded first page returns correct result`() {
+  @Test fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
@@ -158,7 +158,7 @@ class KeyedQueryPagingSourceTest {
     }
   }
 
-  @Test fun `invoking getRefreshKey with single loaded middle page returns correct result`() {
+  @Test fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() {
     val source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,

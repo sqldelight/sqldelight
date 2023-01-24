@@ -54,7 +54,7 @@ class OffsetQueryPagingSourceTest {
   private lateinit var transacter: Transacter
 
   @BeforeTest
-  fun init() {
+  suspend fun init() {
     driver = provideDbDriver()
     driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
     transacter = object : TransacterImpl(driver) {}

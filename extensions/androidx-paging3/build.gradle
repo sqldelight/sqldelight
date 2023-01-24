@@ -48,6 +48,11 @@ kotlin {
         implementation libs.androidx.paging3.runtime
       }
     }
+    jsTest {
+      dependencies {
+        implementation project(':drivers:sqljs-driver')
+      }
+    }
   }
 
   configure([targets.iosX64, targets.iosArm64]) {
