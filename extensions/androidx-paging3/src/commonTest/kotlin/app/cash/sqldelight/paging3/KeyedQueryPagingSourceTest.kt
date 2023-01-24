@@ -52,8 +52,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun aligned_page_exhaustion_gives_correct_results() {
-    runTest {
+  fun aligned_page_exhaustion_gives_correct_results() = runTest {
       before()
 
       val expected = (0L until 10L).chunked(2).iterator()
@@ -64,11 +63,9 @@ class KeyedQueryPagingSourceTest {
         assertEquals(expected = expected.next(), actual = results.data)
       } while (nextKey != null)
     }
-  }
 
   @Test
-  fun misaligned_page_exhaustion_gives_correct_results() {
-    runTest {
+  fun misaligned_page_exhaustion_gives_correct_results() = runTest {
       before()
 
       val expected = (0L until 10L).chunked(3).iterator()
@@ -79,22 +76,18 @@ class KeyedQueryPagingSourceTest {
         assertEquals(expected = expected.next(), actual = results.data)
       } while (nextKey != null)
     }
-  }
 
   @Test
-  fun requesting_a_page_with_anchor_not_in_step_passes() {
-    runTest {
+  fun requesting_a_page_with_anchor_not_in_step_passes() = runTest {
       before()
 
       val results = source.load(PagingSourceLoadParamsRefresh(key = 5L, loadSize = 2, false))
 
       assertEquals(listOf(5L), (results as PagingSourceLoadResultPage<Long, Long>).data)
     }
-  }
 
   @Test
-  fun misaligned_last_page_has_correct_data() {
-    runTest {
+  fun misaligned_last_page_has_correct_data() = runTest {
       before()
 
       val results = source.load(PagingSourceLoadParamsRefresh(key = 9L, loadSize = 3, false))
@@ -103,11 +96,9 @@ class KeyedQueryPagingSourceTest {
       assertEquals(expected = 6L, results.prevKey)
       assertEquals(expected = null, results.nextKey)
     }
-  }
 
   @Test
-  fun invoking_getRefreshKey_before_first_load_returns_null_key() {
-    runTest {
+  fun invoking_getRefreshKey_before_first_load_returns_null_key() = runTest {
       before()
 
       assertNull(
@@ -121,11 +112,9 @@ class KeyedQueryPagingSourceTest {
         ),
       )
     }
-  }
 
   @Test
-  fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() {
-    runTest {
+  fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() = runTest {
       before()
 
       val results = source.load(PagingSourceLoadParamsRefresh(key = null, loadSize = 3, false))
@@ -140,11 +129,9 @@ class KeyedQueryPagingSourceTest {
 
       assertEquals(0L, refreshKey)
     }
-  }
 
   @Test
-  fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() {
-    runTest {
+  fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() = runTest {
       before()
 
       val results = source.load(PagingSourceLoadParamsRefresh(key = 6L, loadSize = 3, false))
@@ -159,7 +146,6 @@ class KeyedQueryPagingSourceTest {
 
       assertEquals(6L, refreshKey)
     }
-  }
 
   private fun pageBoundaries(anchor: Long?, limit: Long): Query<Long> {
     val sql = """
