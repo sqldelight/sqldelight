@@ -16,6 +16,9 @@ testing {
     dockerTest(JvmTestSuite) {
       useJUnit()
     }
+    grammarkitTest(JvmTestSuite) {
+      useJUnit()
+    }
   }
 }
 
@@ -125,14 +128,16 @@ tasks.named('test') {
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
       includeCategories 'app.cash.sqldelight.Instrumentation'
+      excludeCategories 'app.cash.sqldelight.UsesGrammarKit'
     } else {
       excludeCategories 'app.cash.sqldelight.Instrumentation'
+      excludeCategories 'app.cash.sqldelight.UsesGrammarKit'
     }
   }
 }
 
 tasks.named('check') {
-  dependsOn(testing.suites.dockerTest)
+  dependsOn(testing.suites.dockerTest, testing.suites.grammarkitTest)
 }
 
 tasks.named('dockerTest') {
@@ -150,6 +155,25 @@ tasks.named('dockerTest') {
       ":drivers:r2dbc-driver:publishAllPublicationsToInstallLocallyRepository",
       ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
   )
+}
+
+tasks.named("grammarkitTest") {
+  dependsOn(
+      ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:publishJvmPublicationToInstallLocallyRepository",
+      ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+  )
+  useJUnit {
+    includesCategories 'app.cash.sqldelight.UsesGrammarKit'
+  }
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
 }
 
 tasks.named('validatePlugins') {

@@ -1,10 +1,12 @@
 package app.cash.sqldelight.dialect
 
+import app.cash.sqldelight.UsesGrammarKit
 import app.cash.sqldelight.assertions.FileSubject
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import java.io.File
 
 class DialectIntegrationTests {
@@ -50,6 +52,7 @@ class DialectIntegrationTests {
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Category(UsesGrammarKit::class)
   @Test fun customFunctionDialect() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/custom-dialect"))
