@@ -37,7 +37,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -52,24 +51,26 @@ class OffsetQueryPagingSourceTest {
 
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
+  private lateinit var pagingSource: PagingSource<Int, TestItem>
 
-  @BeforeTest
-  suspend fun init() {
+  private suspend fun setup() {
     driver = provideDbDriver()
     driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
     transacter = object : TransacterImpl(driver) {}
-  }
-
-  @Test
-  fun test_itemCount() = runTest {
-    insertItems(ITEMS_LIST)
-
-    val pagingSource = QueryPagingSource(
+    pagingSource = QueryPagingSource(
       countQuery(),
       transacter,
       EmptyCoroutineContext,
       ::query,
     )
+  }
+
+  @Test
+  fun test_itemCount() = runTest {
+    setup()
+
+    insertItems(ITEMS_LIST)
+
     pagingSource.refresh()
 
     Pager(CONFIG, pagingSourceFactory = { pagingSource })
@@ -82,13 +83,9 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun invalidDbQuery_pagingSourceDoesNotInvalidate() = runTest {
+    setup()
+
     insertItems(ITEMS_LIST)
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
     // load once to register db observers
     pagingSource.refresh()
     assertFalse(pagingSource.invalid)
@@ -102,12 +99,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_initialLoad() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -116,12 +109,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_initialEmptyLoad() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
 
     assertTrue(result.data.isEmpty())
@@ -140,13 +129,9 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_initialLoadWithInitialKey() = runTest {
+    setup()
+
     insertItems(ITEMS_LIST)
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
     // refresh with initial key = 20
     val result = pagingSource.refresh(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -156,12 +141,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun invalidInitialKey_dbEmpty_returnsEmpty() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     val result = pagingSource.refresh(key = 101) as PagingSourceLoadResultPage<Int, TestItem>
 
     assertTrue(result.data.isEmpty())
@@ -169,12 +150,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun invalidInitialKey_keyTooLarge_returnsLastPage() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     val result = pagingSource.refresh(key = 101) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -184,12 +161,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun invalidInitialKey_negativeKey() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // should throw error when initial key is negative
     val expectedException = assertFailsWith<IllegalArgumentException> {
@@ -201,12 +174,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun append_middleOfList() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     val result = pagingSource.append(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -218,12 +187,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun append_availableItemsLessThanLoadSize() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     val result = pagingSource.append(key = 97) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -235,12 +200,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_consecutiveAppend() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // first append
     val result = pagingSource.append(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
@@ -248,7 +209,8 @@ class OffsetQueryPagingSourceTest {
     // TestItemId 30-34 loaded
     assertContentEquals(ITEMS_LIST.subList(30, 35), result.data)
     // second append using nextKey from previous load
-    val result2 = pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // TestItemId 35 - 39 loaded
     assertContentEquals(ITEMS_LIST.subList(35, 40), result2.data)
@@ -256,12 +218,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun append_invalidResult() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // first append
     val result = pagingSource.append(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
@@ -281,12 +239,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun prepend_middleOfList() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     val result = pagingSource.prepend(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -297,12 +251,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun prepend_availableItemsLessThanLoadSize() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     val result = pagingSource.prepend(key = 3) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -314,12 +264,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_consecutivePrepend() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // first prepend
     val result = pagingSource.prepend(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
@@ -327,7 +273,8 @@ class OffsetQueryPagingSourceTest {
     // items pos 16-20 (TestItemId 15-19) loaded
     assertContentEquals(ITEMS_LIST.subList(15, 20), result.data)
     // second prepend using prevKey from previous load
-    val result2 = pagingSource.prepend(key = result.prevKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource.prepend(key = result.prevKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // items pos 11-15 (TestItemId 10 - 14) loaded
     assertContentEquals(ITEMS_LIST.subList(10, 15), result2.data)
@@ -335,12 +282,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun prepend_invalidResult() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // first prepend
     val result = pagingSource.prepend(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
@@ -360,12 +303,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun test_itemsBefore() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // for initial load
     val result = pagingSource.refresh(key = 50) as PagingSourceLoadResultPage<Int, TestItem>
@@ -374,13 +313,15 @@ class OffsetQueryPagingSourceTest {
     assertEquals(50, result.itemsBefore)
 
     // prepend from initial load
-    val result2 = pagingSource.prepend(key = result.prevKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource.prepend(key = result.prevKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // prepend loads items in pos 46 - 50, should have 45 item before
     assertEquals(45, result2.itemsBefore)
 
     // append from initial load
-    val result3 = pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result3 =
+      pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // append loads items in position 66 - 70 , should have 65 item before
     assertEquals(65, result3.itemsBefore)
@@ -388,12 +329,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun test_itemsAfter() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // for initial load
     val result = pagingSource.refresh(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
@@ -402,13 +339,15 @@ class OffsetQueryPagingSourceTest {
     assertEquals(55, result.itemsAfter)
 
     // prepend from initial load
-    val result2 = pagingSource.prepend(key = result.prevKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource.prepend(key = result.prevKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // prepend loads items in position 26 - 30, should have 70 item after
     assertEquals(70, result2.itemsAfter)
 
     // append from initial load
-    val result3 = pagingSource.append(result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result3 =
+      pagingSource.append(result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // append loads items in position 46 - 50 , should have 50 item after
     assertEquals(50, result3.itemsAfter)
@@ -416,12 +355,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun test_getRefreshKey() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     // initial load
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
@@ -440,7 +375,8 @@ class OffsetQueryPagingSourceTest {
     assertEquals(7, refreshKey)
 
     // append after refresh
-    val result2 = pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource.append(key = result.nextKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     assertContentEquals(ITEMS_LIST.subList(15, 20), result2.data)
     refreshKey = pagingSource.getRefreshKey(
@@ -459,12 +395,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_refreshKeyGreaterThanItemCount_lastPage() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     pagingSource.refresh(key = 70)
 
@@ -481,7 +413,8 @@ class OffsetQueryPagingSourceTest {
       EmptyCoroutineContext,
       ::query,
     )
-    val result2 = pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // database should only have 40 items left. Refresh key is invalid at this point
     // (greater than item count after deletion)
@@ -517,12 +450,8 @@ class OffsetQueryPagingSourceTest {
    */
   @Test
   fun load_refreshKeyGreaterThanItemCount_firstPage() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     pagingSource.refresh()
 
@@ -546,7 +475,8 @@ class OffsetQueryPagingSourceTest {
     // clips to 0
     val refreshKey = 0
 
-    val result2 = pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // database should only have 70 items left
     Pager(CONFIG, pagingSourceFactory = { pagingSource2 })
@@ -569,12 +499,8 @@ class OffsetQueryPagingSourceTest {
 
   @Test
   fun load_loadSizeAndRefreshKeyGreaterThanItemCount() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+    setup()
+
     insertItems(ITEMS_LIST)
     pagingSource.refresh(key = 30)
 
@@ -597,7 +523,8 @@ class OffsetQueryPagingSourceTest {
     // clips to 0
     val refreshKey = 0
 
-    val result2 = pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
+    val result2 =
+      pagingSource2.refresh(key = refreshKey) as PagingSourceLoadResultPage<Int, TestItem>
 
     // database should only have 5 items left
     Pager(CONFIG, pagingSourceFactory = { pagingSource2 })
@@ -617,24 +544,16 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun test_jumpSupport() {
-    val pagingSource = QueryPagingSource(
-      countQuery(),
-      transacter,
-      EmptyCoroutineContext,
-      ::query,
-    )
+  fun test_jumpSupport() = runTest {
+    setup()
+
     assertTrue(pagingSource.jumpingSupported)
   }
 
   @Test
   fun load_initialEmptyLoad_QueryPagingSourceLong() = runTest {
-    val pagingSource = QueryPagingSource(
-      countQueryLong(),
-      transacter,
-      EmptyCoroutineContext,
-      ::queryLong,
-    )
+    setup()
+
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
 
     assertTrue(result.data.isEmpty())
@@ -658,13 +577,17 @@ class OffsetQueryPagingSourceTest {
       TestItem(cursor.getLong(0)!!)
     },
   ) {
-    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
-      bindLong(0, limit)
-      bindLong(1, offset)
-    }
+    override fun <R> execute(mapper: (SqlCursor) -> R) =
+      driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
+        bindLong(0, limit)
+        bindLong(1, offset)
+      }
 
-    override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("TestItem"))
-    override fun removeListener(listener: Listener) = driver.removeListener(listener, arrayOf("TestItem"))
+    override fun addListener(listener: Listener) =
+      driver.addListener(listener, arrayOf("TestItem"))
+
+    override fun removeListener(listener: Listener) =
+      driver.removeListener(listener, arrayOf("TestItem"))
   }
 
   private fun countQuery() = Query(
@@ -720,33 +643,37 @@ private val CONFIG = PagingConfig(
 private val ITEMS_LIST = List(100) { TestItem(id = it.toLong()) }
 
 private val testItemDiffCallback = object : DiffUtil.ItemCallback<TestItem>() {
-  override fun areItemsTheSame(oldItem: TestItem, newItem: TestItem): Boolean = oldItem.id == newItem.id
-  override fun areContentsTheSame(oldItem: TestItem, newItem: TestItem): Boolean = oldItem == newItem
+  override fun areItemsTheSame(oldItem: TestItem, newItem: TestItem): Boolean =
+    oldItem.id == newItem.id
+
+  override fun areContentsTheSame(oldItem: TestItem, newItem: TestItem): Boolean =
+    oldItem == newItem
 }
 
 data class TestItem(val id: Long)
 
-private fun createLoadParam(loadType: LoadType, key: Int?): PagingSourceLoadParams<Int> = when (loadType) {
-  LoadType.REFRESH -> PagingSourceLoadParamsRefresh(
-    key = key,
-    loadSize = CONFIG.initialLoadSize,
-    placeholdersEnabled = CONFIG.enablePlaceholders,
-  ) as PagingSourceLoadParams<Int>
+private fun createLoadParam(loadType: LoadType, key: Int?): PagingSourceLoadParams<Int> =
+  when (loadType) {
+    LoadType.REFRESH -> PagingSourceLoadParamsRefresh(
+      key = key,
+      loadSize = CONFIG.initialLoadSize,
+      placeholdersEnabled = CONFIG.enablePlaceholders,
+    ) as PagingSourceLoadParams<Int>
 
-  LoadType.APPEND -> PagingSourceLoadParamsAppend(
-    key = key ?: -1,
-    loadSize = CONFIG.pageSize,
-    placeholdersEnabled = CONFIG.enablePlaceholders,
-  ) as PagingSourceLoadParams<Int>
+    LoadType.APPEND -> PagingSourceLoadParamsAppend(
+      key = key ?: -1,
+      loadSize = CONFIG.pageSize,
+      placeholdersEnabled = CONFIG.enablePlaceholders,
+    ) as PagingSourceLoadParams<Int>
 
-  LoadType.PREPEND -> PagingSourceLoadParamsPrepend(
-    key = key ?: -1,
-    loadSize = CONFIG.pageSize,
-    placeholdersEnabled = CONFIG.enablePlaceholders,
-  ) as PagingSourceLoadParams<Int>
+    LoadType.PREPEND -> PagingSourceLoadParamsPrepend(
+      key = key ?: -1,
+      loadSize = CONFIG.pageSize,
+      placeholdersEnabled = CONFIG.enablePlaceholders,
+    ) as PagingSourceLoadParams<Int>
 
-  else -> error("Unknown PagingSourceLoadParams ${loadType::class}")
-}
+    else -> error("Unknown PagingSourceLoadParams ${loadType::class}")
+  }
 
 private suspend fun PagingSource<Int, TestItem>.refresh(key: Int? = null): PagingSourceLoadResult<Int, TestItem> =
   load(createLoadParam(LoadType.REFRESH, key))
