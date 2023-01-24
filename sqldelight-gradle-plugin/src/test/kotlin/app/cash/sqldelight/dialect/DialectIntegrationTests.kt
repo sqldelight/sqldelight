@@ -53,7 +53,8 @@ class DialectIntegrationTests {
   }
 
   @Category(UsesGrammarKit::class)
-  @Test fun customFunctionDialect() {
+  @Test
+  fun customFunctionDialect() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/custom-dialect"))
       .withArguments("clean", "compileTestKotlin", "--stacktrace")

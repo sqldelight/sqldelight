@@ -169,7 +169,7 @@ tasks.named("grammarkitTest") {
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
   )
   useJUnit {
-    includesCategories 'app.cash.sqldelight.UsesGrammarKit'
+    includeCategories 'app.cash.sqldelight.UsesGrammarKit'
   }
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(17)
