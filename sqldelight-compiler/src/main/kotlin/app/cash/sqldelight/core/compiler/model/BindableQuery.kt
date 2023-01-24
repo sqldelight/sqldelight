@@ -179,7 +179,7 @@ abstract class BindableQuery(
           type = newArgumentType.run {
             copy(
               javaType = javaType.copy(nullable = current.type.javaType.isNullable || newType.javaType.isNullable),
-              name = bindArg.bindParameter.identifier?.text ?: name,
+              name = bindArg.bindParameter?.identifier?.text ?: name,
             )
           },
         ),

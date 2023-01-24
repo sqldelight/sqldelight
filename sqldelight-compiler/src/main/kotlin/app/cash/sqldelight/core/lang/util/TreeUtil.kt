@@ -26,9 +26,12 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.softwork.sqldelight.db2dialect.grammar.psi.Db2SelectStmt
+import app.softwork.sqldelight.db2dialect.grammar.psi.Db2SetStmt
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
@@ -191,6 +194,24 @@ private val IntRange.length: Int
   get() = endInclusive - start + 1
 
 fun PsiElement.rawSqlText(
+  replacements: List<Pair<IntRange, String>> = emptyList(),
+): String = if (this is Db2SetStmt) {
+  if (setSetterClause != null) {
+    val sql = setSetterClause!!.getRawSqlText(replacements).trim()
+    "SELECT $sql FROM SYSIBM.SYSDUMMY1"
+  } else {
+    compoundSelectStmtInternal!!.getRawSqlText(replacements)
+  }
+} else if (this is SqlCompoundSelectStmt) {
+  val removeInto = selectStmtList.mapNotNull {
+    (it as? Db2SelectStmt)?.selectIntoClause?.let {
+      IntRange(it.range.first - 1, it.range.last) to ""
+    }
+  }
+  getRawSqlText(replacements + removeInto)
+} else getRawSqlText(replacements)
+
+private fun PsiElement.getRawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
   return (replacements + rangesToReplace())

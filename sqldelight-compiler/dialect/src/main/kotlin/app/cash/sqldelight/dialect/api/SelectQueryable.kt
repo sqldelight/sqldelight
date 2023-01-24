@@ -8,8 +8,8 @@ import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCteTableName
 import com.alecstrong.sql.psi.core.psi.SqlViewName
-import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfType
 
 class SelectQueryable(
   override val select: SqlCompoundSelectStmt,

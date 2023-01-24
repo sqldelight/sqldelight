@@ -36,8 +36,8 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfType
 
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider,

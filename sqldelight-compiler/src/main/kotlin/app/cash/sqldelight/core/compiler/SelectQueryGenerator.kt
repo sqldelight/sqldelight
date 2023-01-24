@@ -32,6 +32,7 @@ import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.softwork.sqldelight.db2dialect.SetQueryWithResults
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.squareup.kotlinpoet.ANY
@@ -269,9 +270,12 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved.isNullOrEmpty()) EXECUTABLE_QUERY_TYPE
-    else QUERY_TYPE
+  private fun NamedQuery.supertype() = when {
+    queryable is SetQueryWithResults ->
+      if (queryable.select.compoundSelectStmtInternal != null && tablesObserved!!.isNotEmpty()) QUERY_TYPE else EXECUTABLE_QUERY_TYPE
+    tablesObserved.isNullOrEmpty() -> EXECUTABLE_QUERY_TYPE
+    else -> QUERY_TYPE
+  }
 
   /**
    * The private query subtype for this specific query.

@@ -1,0 +1,10 @@
+predefined:
+SELECT
+    feature_id,
+    feature_name,
+    sub_feature_id,
+    sub_feature_name,
+    is_supported,
+    is_verified_by,
+    comments
+FROM sql_features;

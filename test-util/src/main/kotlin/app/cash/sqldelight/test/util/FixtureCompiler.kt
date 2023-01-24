@@ -157,15 +157,13 @@ object FixtureCompiler {
 
   private fun createAnnotationHolder(
     errors: MutableList<String>,
-  ) = object : SqlAnnotationHolder {
-    override fun createErrorAnnotation(element: PsiElement, s: String) {
-      val documentManager = PsiDocumentManager.getInstance(element.project)
-      val name = element.containingFile.name
-      val document = documentManager.getDocument(element.containingFile)!!
-      val lineNum = document.getLineNumber(element.textOffset)
-      val offsetInLine = element.textOffset - document.getLineStartOffset(lineNum)
-      errors += "$name: (${lineNum + 1}, $offsetInLine): $s"
-    }
+  ) = SqlAnnotationHolder { element, message ->
+    val documentManager = PsiDocumentManager.getInstance(element.project)
+    val name = element.containingFile.name
+    val document = documentManager.getDocument(element.containingFile)!!
+    val lineNum = document.getLineNumber(element.textOffset)
+    val offsetInLine = element.textOffset - document.getLineStartOffset(lineNum)
+    errors += "$name: (${lineNum + 1}, $offsetInLine): $message"
   }
 
   private fun PsiFile.log(sourceFiles: StringBuilder) {

@@ -63,6 +63,7 @@ intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.
 
 jna = { module = "net.java.dev.jna:jna", version = "5.13.0" }
 
+sqlPsiDb2 = { module = "app.softwork:sqldelight-db2-dialect", version = "0.0.3-SNAPSHOT" }
 sqlPsi = { module = "app.softwork.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "app.softwork.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.9.2" }

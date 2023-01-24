@@ -37,6 +37,9 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.SelectQueryable
+import app.softwork.sqldelight.db2dialect.SetQueryWithResults
+import app.softwork.sqldelight.db2dialect.grammar.psi.Db2SelectStmt
+import app.softwork.sqldelight.db2dialect.grammar.psi.Db2SetStmt
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
@@ -130,6 +133,8 @@ data class NamedQuery(
   internal val tablesObserved: List<TableNameElement>? by lazy {
     if (queryable is SelectQueryable && queryable.select == queryable.statement) {
       queryable.select.tablesObserved()
+    } else if (queryable is SetQueryWithResults) {
+      queryable.select.compoundSelectStmtInternal?.tablesObserved()
     } else {
       null
     }
@@ -200,14 +205,15 @@ data class NamedQuery(
   ): List<IntermediateType> {
     return queryExposed().flatMap {
       val table = it.table?.name
-      return@flatMap it.columns.map { queryColumn ->
-        var name = queryColumn.element.functionName()
+      val hostVariables = (this as? Db2SelectStmt)?.selectIntoClause?.hostVariableList ?: (this as? Db2SetStmt)?.hostVariableList
+      return@flatMap it.columns.mapIndexed { index, queryColumn ->
+        var name = hostVariables?.getOrNull(index)?.hostVariableId?.text
+          ?: queryColumn.element.functionName()
         if (!namesUsed.add(name)) {
           if (table != null) name = "${table}_$name"
           while (!namesUsed.add(name)) name += "_"
         }
-
-        return@map queryColumn.type().copy(name = name)
+        return@mapIndexed queryColumn.type().copy(name = name)
       }
     }
   }

@@ -28,7 +28,7 @@ configurations.grammarkitTestImplementation.extendsFrom(configurations.testImple
 gradlePlugin {
   plugins {
     sqlDelight {
-      id = 'app.cash.sqldelight'
+      id = 'app.softwork.sqldelight'
       implementationClass = 'app.cash.sqldelight.gradle.SqlDelightPlugin'
     }
   }

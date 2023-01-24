@@ -1,0 +1,12 @@
+CREATE TABLE foo(
+id INTEGER
+);
+
+selectWithBinding:
+SELECT avg(id, :foo), id INTO :foo, :bar FROM foo WHERE id = :id;
+
+set:
+SET :foo, :bar = avg(42, :foo), 42;
+
+setSelect:
+SET :foo, :bar = SELECT avg(id, :foo), id FROM foo WHERE id = :id;

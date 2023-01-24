@@ -27,6 +27,7 @@ grammarKit {
 
 dependencies {
   api libs.sqlPsi
+  compileOnly libs.sqlPsiDb2
   api(project(':sqldelight-compiler:dialect'))
 
   implementation libs.kotlinPoet

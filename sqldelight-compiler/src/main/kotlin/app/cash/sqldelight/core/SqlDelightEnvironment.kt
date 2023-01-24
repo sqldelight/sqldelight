@@ -107,7 +107,7 @@ class SqlDelightEnvironment(
 
   override fun clearIndex() = throw UnsupportedOperationException()
 
-  @JvmName("forSqlFileBaseSourceFiles")
+  @JvmName("forSqlSourceFiles")
   fun forSourceFiles(action: (SqlFileBase) -> Unit) {
     super.forSourceFiles<SqlFileBase> {
       if (it.fileType != MigrationFileType ||
@@ -159,6 +159,14 @@ class SqlDelightEnvironment(
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
+    }
+
+    predefinedTablesVirtualFiles.value.forEach {
+      val sqlFile = PsiManager.getInstance(project).findFile(it)!! as SqlDelightFile
+      SqlDelightCompiler.writeTableInterfaces(
+        sqlFile,
+        writer,
+      )
     }
 
     topMigrationFile?.let { migrationFile ->
@@ -290,12 +298,12 @@ class SqlDelightEnvironment(
 
     private val virtualDirectoriesWithDependencies: List<VirtualFile> by lazy {
       return@lazy (sourceFolders + dependencyFolders)
-        .map { localFileSystem.findFileByPath(it.absolutePath)!! }
+        .map { localFileSystem.findFileByPath(it.absolutePath)!! } + predefinedTablesVirtualFiles.value
     }
 
     private val directoriesWithDependencies: List<PsiDirectory> by lazy {
       val psiManager = PsiManager.getInstance(projectEnvironment.project)
-      return@lazy virtualDirectoriesWithDependencies.map { psiManager.findDirectory(it)!! }
+      return@lazy virtualDirectoriesWithDependencies.mapNotNull { psiManager.findDirectory(it) }
     }
 
     private val virtualDirectories: List<VirtualFile> by lazy {
@@ -309,6 +317,10 @@ class SqlDelightEnvironment(
     }
 
     override fun packageName(file: SqlDelightFile): String {
+      val virtualFile = file.virtualFile
+      if (virtualFile in predefinedTablesVirtualFiles.value) {
+        return virtualFile!!.nameWithoutExtension
+      }
       fun PsiFileSystemItem.relativePathUnder(ancestor: PsiDirectory): List<String>? {
         if (this.virtualFile.path == ancestor.virtualFile.path) return emptyList()
         parent?.let {
