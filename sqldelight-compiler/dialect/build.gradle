@@ -4,6 +4,8 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
+kotlin.jvmToolchain(11)
+
 dependencies {
   api libs.sqlPsi
   api libs.kotlinPoet

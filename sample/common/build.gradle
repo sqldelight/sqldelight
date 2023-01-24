@@ -18,6 +18,8 @@ sqldelight {
 version = 1.0
 
 kotlin {
+  jvmToolchain(8)
+  
   // Configure common.
   sourceSets.commonMain.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'

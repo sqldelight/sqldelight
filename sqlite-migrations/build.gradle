@@ -4,6 +4,8 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
+kotlin.jvmToolchain(11)
+
 dependencies {
   // These dependencies will not be shadowed by sqldelight-gradle-plugin
   compileOnly libs.sqliteJdbc
