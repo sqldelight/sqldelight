@@ -23,6 +23,7 @@ testing {
 }
 
 configurations.dockerTestImplementation.extendsFrom(configurations.testImplementation)
+configurations.grammarkitTestImplementation.extendsFrom(configurations.testImplementation)
 
 gradlePlugin {
   plugins {
@@ -32,7 +33,7 @@ gradlePlugin {
     }
   }
 
-  testSourceSets(sourceSets.test, sourceSets.dockerTest)
+  testSourceSets(sourceSets.test, sourceSets.dockerTest, sourceSets.grammarkitTest)
 }
 
 configurations {
@@ -128,10 +129,8 @@ tasks.named('test') {
   useJUnit {
     if (project.hasProperty("Instrumentation")) {
       includeCategories 'app.cash.sqldelight.Instrumentation'
-      excludeCategories 'app.cash.sqldelight.UsesGrammarKit'
     } else {
       excludeCategories 'app.cash.sqldelight.Instrumentation'
-      excludeCategories 'app.cash.sqldelight.UsesGrammarKit'
     }
   }
 }
@@ -168,9 +167,6 @@ tasks.named("grammarkitTest") {
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
   )
-  useJUnit {
-    includeCategories 'app.cash.sqldelight.UsesGrammarKit'
-  }
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(17)
   }
