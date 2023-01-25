@@ -17,4 +17,4 @@ package app.cash.sqldelight.paging3
 
 import app.cash.sqldelight.db.SqlDriver
 
-expect fun provideDbDriver(): SqlDriver
+expect suspend fun provideDbDriver(): SqlDriver

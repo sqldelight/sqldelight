@@ -11,6 +11,9 @@ kotlin.jvmToolchain(8)
 kotlin {
   ios()
   jvm()
+  js {
+    browser()
+  }
 
   sourceSets {
     commonMain {
@@ -37,6 +40,11 @@ kotlin {
       dependencies {
         implementation project(':drivers:sqlite-driver')
         implementation libs.androidx.paging3.runtime
+      }
+    }
+    jsTest {
+      dependencies {
+        implementation project(':drivers:sqljs-driver')
       }
     }
   }

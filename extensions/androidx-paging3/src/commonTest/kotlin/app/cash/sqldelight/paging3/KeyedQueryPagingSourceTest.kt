@@ -25,104 +25,66 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
-class KeyedQueryPagingSourceTest {
+class KeyedQueryPagingSourceTest : DbTest {
 
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
+  private lateinit var source: KeyedQueryPagingSource<Long, Long>
 
-  @BeforeTest fun before() {
-    driver = provideDbDriver()
+  override suspend fun setup(driver: SqlDriver) {
+    this.driver = driver
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
     (0L until 10L).forEach { this.insert(it) }
     transacter = object : TransacterImpl(driver) {}
-  }
-
-  @Test fun `aligned page exhaustion gives correct results`() {
-    val source = KeyedQueryPagingSource(
+    source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,
       transacter = transacter,
       context = EmptyCoroutineContext,
     )
-
-    runTest {
-      val expected = (0L until 10L).chunked(2).iterator()
-      var nextKey: Long? = null
-      do {
-        val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 2, false))
-        nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
-        assertEquals(expected = expected.next(), actual = results.data)
-      } while (nextKey != null)
-    }
   }
 
-  @Test fun `misaligned page exhastion gives correct results`() {
-    val source = KeyedQueryPagingSource(
-      queryProvider = this::query,
-      pageBoundariesProvider = this::pageBoundaries,
-      transacter = transacter,
-      context = EmptyCoroutineContext,
-    )
-
-    runTest {
-      val expected = (0L until 10L).chunked(3).iterator()
-      var nextKey: Long? = null
-      do {
-        val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 3, false))
-        nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
-        assertEquals(expected = expected.next(), actual = results.data)
-      } while (nextKey != null)
-    }
+  @Test fun aligned_page_exhaustion_gives_correct_results() = runDbTest {
+    val expected = (0L until 10L).chunked(2).iterator()
+    var nextKey: Long? = null
+    do {
+      val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 2, false))
+      nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
+      assertEquals(expected = expected.next(), actual = results.data)
+    } while (nextKey != null)
   }
 
-  @Test fun `requesting a page with anchor not in step passes`() {
-    val source = KeyedQueryPagingSource(
-      queryProvider = this::query,
-      pageBoundariesProvider = this::pageBoundaries,
-      transacter = transacter,
-      context = EmptyCoroutineContext,
-    )
-
-    runTest {
-      val results = source.load(PagingSourceLoadParamsRefresh(key = 5L, loadSize = 2, false))
-
-      assertEquals(listOf(5L), (results as PagingSourceLoadResultPage<Long, Long>).data)
-    }
+  @Test fun misaligned_page_exhaustion_gives_correct_results() = runDbTest {
+    val expected = (0L until 10L).chunked(3).iterator()
+    var nextKey: Long? = null
+    do {
+      val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 3, false))
+      nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
+      assertEquals(expected = expected.next(), actual = results.data)
+    } while (nextKey != null)
   }
 
-  @Test fun `misaligned last page has correct data`() {
-    val source = KeyedQueryPagingSource(
-      queryProvider = this::query,
-      pageBoundariesProvider = this::pageBoundaries,
-      transacter = transacter,
-      context = EmptyCoroutineContext,
-    )
+  @Test fun requesting_a_page_with_anchor_not_in_step_passes() = runDbTest {
+    val results = source.load(PagingSourceLoadParamsRefresh(key = 5L, loadSize = 2, false))
 
-    runTest {
-      val results = source.load(PagingSourceLoadParamsRefresh(key = 9L, loadSize = 3, false))
-
-      assertEquals(expected = listOf(9L), (results as PagingSourceLoadResultPage<Long, Long>).data)
-      assertEquals(expected = 6L, results.prevKey)
-      assertEquals(expected = null, results.nextKey)
-    }
+    assertEquals(listOf(5L), (results as PagingSourceLoadResultPage<Long, Long>).data)
   }
 
-  @Test fun `invoking getRefreshKey before first load returns null key`() {
-    val source = KeyedQueryPagingSource(
-      queryProvider = this::query,
-      pageBoundariesProvider = this::pageBoundaries,
-      transacter = transacter,
-      context = EmptyCoroutineContext,
-    )
+  @Test fun misaligned_last_page_has_correct_data() = runDbTest {
+    val results = source.load(PagingSourceLoadParamsRefresh(key = 9L, loadSize = 3, false))
 
+    assertEquals(expected = listOf(9L), (results as PagingSourceLoadResultPage<Long, Long>).data)
+    assertEquals(expected = 6L, results.prevKey)
+    assertEquals(expected = null, results.nextKey)
+  }
+
+  @Test fun invoking_getRefreshKey_before_first_load_returns_null_key() = runDbTest {
     assertNull(
       source.getRefreshKey(
         PagingState(
@@ -135,50 +97,32 @@ class KeyedQueryPagingSourceTest {
     )
   }
 
-  @Test fun `invoking getRefreshKey with loaded first page returns correct result`() {
-    val source = KeyedQueryPagingSource(
-      queryProvider = this::query,
-      pageBoundariesProvider = this::pageBoundaries,
-      transacter = transacter,
-      context = EmptyCoroutineContext,
+  @Test fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() = runDbTest {
+    val results = source.load(PagingSourceLoadParamsRefresh(key = null, loadSize = 3, false))
+    val refreshKey = source.getRefreshKey(
+      PagingState(
+        listOf(results as PagingSourceLoadResultPage<Long, Long>),
+        null,
+        PagingConfig(3),
+        0,
+      ),
     )
 
-    runTest {
-      val results = source.load(PagingSourceLoadParamsRefresh(key = null, loadSize = 3, false))
-      val refreshKey = source.getRefreshKey(
-        PagingState(
-          listOf(results as PagingSourceLoadResultPage<Long, Long>),
-          null,
-          PagingConfig(3),
-          0,
-        ),
-      )
-
-      assertEquals(0L, refreshKey)
-    }
+    assertEquals(0L, refreshKey)
   }
 
-  @Test fun `invoking getRefreshKey with single loaded middle page returns correct result`() {
-    val source = KeyedQueryPagingSource(
-      queryProvider = this::query,
-      pageBoundariesProvider = this::pageBoundaries,
-      transacter = transacter,
-      context = EmptyCoroutineContext,
+  @Test fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() = runDbTest {
+    val results = source.load(PagingSourceLoadParamsRefresh(key = 6L, loadSize = 3, false))
+    val refreshKey = source.getRefreshKey(
+      PagingState(
+        listOf(results as PagingSourceLoadResultPage<Long, Long>),
+        null,
+        PagingConfig(3),
+        0,
+      ),
     )
 
-    runTest {
-      val results = source.load(PagingSourceLoadParamsRefresh(key = 6L, loadSize = 3, false))
-      val refreshKey = source.getRefreshKey(
-        PagingState(
-          listOf(results as PagingSourceLoadResultPage<Long, Long>),
-          null,
-          PagingConfig(3),
-          0,
-        ),
-      )
-
-      assertEquals(6L, refreshKey)
-    }
+    assertEquals(6L, refreshKey)
   }
 
   private fun pageBoundaries(anchor: Long?, limit: Long): Query<Long> {
