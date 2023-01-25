@@ -1,16 +1,10 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
 }
 
-tasks.withType(KotlinCompile).configureEach {
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-}
+kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-coroutines-extensions'
 

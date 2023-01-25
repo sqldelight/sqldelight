@@ -1,16 +1,10 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
 }
 
-tasks.withType(KotlinCompile).configureEach {
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-}
+kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-sqlite-driver'
 

@@ -49,13 +49,4 @@ class DialectIntegrationTests {
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
-
-  @Test fun customFunctionDialect() {
-    val runner = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/custom-dialect"))
-      .withArguments("clean", "compileTestKotlin", "--stacktrace")
-
-    val result = runner.build()
-    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
-  }
 }

@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
 }
 
+kotlin.jvmToolchain(11)
+
 dependencies {
   api project(':sqldelight-compiler')
   api project(':dialects:sqlite-3-18')

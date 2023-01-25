@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 buildscript {
   dependencies {
     classpath("com.squareup.okhttp3:okhttp") {
@@ -59,27 +57,9 @@ allprojects {
     }
   }
 
-  tasks.withType(JavaCompile).configureEach {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
-
-  tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-      jvmTarget = "11"
-    }
-  }
-
   // Workaround for yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320
   tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask).configureEach {
     args.addAll(["--mutex", "file:${file("build/.yarn-mutex")}".toString()])
-  }
-
-  tasks.withType(org.jetbrains.grammarkit.tasks.GenerateParserTask).configureEach {
-    doFirst {
-      // https://github.com/JetBrains/gradle-grammar-kit-plugin/pull/78.
-      logging.captureStandardOutput(LogLevel.INFO)
-    }
   }
 
   // https://youtrack.jetbrains.com/issue/KT-46466

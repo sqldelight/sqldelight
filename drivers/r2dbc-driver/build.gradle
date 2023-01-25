@@ -6,11 +6,7 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-tasks.withType(KotlinCompile).configureEach {
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-}
+kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-r2dbc-driver'
 

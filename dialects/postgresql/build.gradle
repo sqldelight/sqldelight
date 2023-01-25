@@ -10,6 +10,8 @@ grammarKit {
   intellijRelease.set(libs.versions.idea)
 }
 
+kotlin.jvmToolchain(11)
+
 dependencies {
   ksp libs.moshiCodegen
 
