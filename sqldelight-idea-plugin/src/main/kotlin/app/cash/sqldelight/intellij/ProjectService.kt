@@ -63,11 +63,11 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     Timber.plant(loggingTree)
 
     val path = Path.of(project.basePath!!)
-    if (ProjectUtil.isValidProjectPath(path)) {
-      fileIndexes = FileIndexMap()
+    fileIndexes = if (ProjectUtil.isValidProjectPath(path)) {
+      FileIndexMap()
     } else {
       // A gradle sync is needed before the file index map initializes.
-      fileIndexes = null
+      null
     }
 
     if (!ApplicationManager.getApplication().isUnitTestMode) {
