@@ -35,7 +35,6 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -47,14 +46,14 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
-class OffsetQueryPagingSourceTest {
+class OffsetQueryPagingSourceTest : DbTest {
 
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
   private lateinit var pagingSource: PagingSource<Int, TestItem>
 
-  private suspend fun setup() {
-    driver = provideDbDriver()
+  override suspend fun setup(driver: SqlDriver) {
+    this.driver = driver
     driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
     transacter = object : TransacterImpl(driver) {}
     pagingSource = QueryPagingSource(
@@ -66,9 +65,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun test_itemCount() = runTest {
-    setup()
-
+  fun test_itemCount() = runDbTest {
     insertItems(ITEMS_LIST)
 
     pagingSource.refresh()
@@ -82,9 +79,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun invalidDbQuery_pagingSourceDoesNotInvalidate() = runTest {
-    setup()
-
+  fun invalidDbQuery_pagingSourceDoesNotInvalidate() = runDbTest {
     insertItems(ITEMS_LIST)
     // load once to register db observers
     pagingSource.refresh()
@@ -98,9 +93,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_initialLoad() = runTest {
-    setup()
-
+  fun load_initialLoad() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -108,9 +101,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_initialEmptyLoad() = runTest {
-    setup()
-
+  fun load_initialEmptyLoad() = runDbTest {
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
 
     assertTrue(result.data.isEmpty())
@@ -128,9 +119,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_initialLoadWithInitialKey() = runTest {
-    setup()
-
+  fun load_initialLoadWithInitialKey() = runDbTest {
     insertItems(ITEMS_LIST)
     // refresh with initial key = 20
     val result = pagingSource.refresh(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
@@ -140,18 +129,14 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun invalidInitialKey_dbEmpty_returnsEmpty() = runTest {
-    setup()
-
+  fun invalidInitialKey_dbEmpty_returnsEmpty() = runDbTest {
     val result = pagingSource.refresh(key = 101) as PagingSourceLoadResultPage<Int, TestItem>
 
     assertTrue(result.data.isEmpty())
   }
 
   @Test
-  fun invalidInitialKey_keyTooLarge_returnsLastPage() = runTest {
-    setup()
-
+  fun invalidInitialKey_keyTooLarge_returnsLastPage() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.refresh(key = 101) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -160,9 +145,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun invalidInitialKey_negativeKey() = runTest {
-    setup()
-
+  fun invalidInitialKey_negativeKey() = runDbTest {
     insertItems(ITEMS_LIST)
     // should throw error when initial key is negative
     val expectedException = assertFailsWith<IllegalArgumentException> {
@@ -173,9 +156,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun append_middleOfList() = runTest {
-    setup()
-
+  fun append_middleOfList() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.append(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -186,9 +167,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun append_availableItemsLessThanLoadSize() = runTest {
-    setup()
-
+  fun append_availableItemsLessThanLoadSize() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.append(key = 97) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -199,9 +178,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_consecutiveAppend() = runTest {
-    setup()
-
+  fun load_consecutiveAppend() = runDbTest {
     insertItems(ITEMS_LIST)
     // first append
     val result = pagingSource.append(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
@@ -217,9 +194,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun append_invalidResult() = runTest {
-    setup()
-
+  fun append_invalidResult() = runDbTest {
     insertItems(ITEMS_LIST)
     // first append
     val result = pagingSource.append(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
@@ -238,9 +213,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun prepend_middleOfList() = runTest {
-    setup()
-
+  fun prepend_middleOfList() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.prepend(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -250,9 +223,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun prepend_availableItemsLessThanLoadSize() = runTest {
-    setup()
-
+  fun prepend_availableItemsLessThanLoadSize() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.prepend(key = 3) as PagingSourceLoadResultPage<Int, TestItem>
 
@@ -263,9 +234,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_consecutivePrepend() = runTest {
-    setup()
-
+  fun load_consecutivePrepend() = runDbTest {
     insertItems(ITEMS_LIST)
     // first prepend
     val result = pagingSource.prepend(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
@@ -281,9 +250,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun prepend_invalidResult() = runTest {
-    setup()
-
+  fun prepend_invalidResult() = runDbTest {
     insertItems(ITEMS_LIST)
     // first prepend
     val result = pagingSource.prepend(key = 20) as PagingSourceLoadResultPage<Int, TestItem>
@@ -302,9 +269,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun test_itemsBefore() = runTest {
-    setup()
-
+  fun test_itemsBefore() = runDbTest {
     insertItems(ITEMS_LIST)
     // for initial load
     val result = pagingSource.refresh(key = 50) as PagingSourceLoadResultPage<Int, TestItem>
@@ -328,9 +293,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun test_itemsAfter() = runTest {
-    setup()
-
+  fun test_itemsAfter() = runDbTest {
     insertItems(ITEMS_LIST)
     // for initial load
     val result = pagingSource.refresh(key = 30) as PagingSourceLoadResultPage<Int, TestItem>
@@ -354,9 +317,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun test_getRefreshKey() = runTest {
-    setup()
-
+  fun test_getRefreshKey() = runDbTest {
     insertItems(ITEMS_LIST)
     // initial load
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
@@ -394,9 +355,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_refreshKeyGreaterThanItemCount_lastPage() = runTest {
-    setup()
-
+  fun load_refreshKeyGreaterThanItemCount_lastPage() = runDbTest {
     insertItems(ITEMS_LIST)
     pagingSource.refresh(key = 70)
 
@@ -449,9 +408,7 @@ class OffsetQueryPagingSourceTest {
    * Ideally, in the future Paging will be able to handle this case better.
    */
   @Test
-  fun load_refreshKeyGreaterThanItemCount_firstPage() = runTest {
-    setup()
-
+  fun load_refreshKeyGreaterThanItemCount_firstPage() = runDbTest {
     insertItems(ITEMS_LIST)
     pagingSource.refresh()
 
@@ -498,9 +455,7 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun load_loadSizeAndRefreshKeyGreaterThanItemCount() = runTest {
-    setup()
-
+  fun load_loadSizeAndRefreshKeyGreaterThanItemCount() = runDbTest {
     insertItems(ITEMS_LIST)
     pagingSource.refresh(key = 30)
 
@@ -544,16 +499,12 @@ class OffsetQueryPagingSourceTest {
   }
 
   @Test
-  fun test_jumpSupport() = runTest {
-    setup()
-
+  fun test_jumpSupport() = runDbTest {
     assertTrue(pagingSource.jumpingSupported)
   }
 
   @Test
-  fun load_initialEmptyLoad_QueryPagingSourceLong() = runTest {
-    setup()
-
+  fun load_initialEmptyLoad_QueryPagingSourceLong() = runDbTest {
     val result = pagingSource.refresh() as PagingSourceLoadResultPage<Int, TestItem>
 
     assertTrue(result.data.isEmpty())

@@ -25,21 +25,20 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
-class KeyedQueryPagingSourceTest {
+class KeyedQueryPagingSourceTest : DbTest {
 
   private lateinit var driver: SqlDriver
   private lateinit var transacter: Transacter
   private lateinit var source: KeyedQueryPagingSource<Long, Long>
 
-  private suspend fun before() {
-    driver = provideDbDriver()
+  override suspend fun setup(driver: SqlDriver) {
+    this.driver = driver
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
     (0L until 10L).forEach { this.insert(it) }
     transacter = object : TransacterImpl(driver) {}
@@ -52,9 +51,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun aligned_page_exhaustion_gives_correct_results() = runTest {
-    before()
-
+  fun aligned_page_exhaustion_gives_correct_results() = runDbTest {
     val expected = (0L until 10L).chunked(2).iterator()
     var nextKey: Long? = null
     do {
@@ -65,9 +62,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun misaligned_page_exhaustion_gives_correct_results() = runTest {
-    before()
-
+  fun misaligned_page_exhaustion_gives_correct_results() = runDbTest {
     val expected = (0L until 10L).chunked(3).iterator()
     var nextKey: Long? = null
     do {
@@ -78,18 +73,14 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun requesting_a_page_with_anchor_not_in_step_passes() = runTest {
-    before()
-
+  fun requesting_a_page_with_anchor_not_in_step_passes() = runDbTest {
     val results = source.load(PagingSourceLoadParamsRefresh(key = 5L, loadSize = 2, false))
 
     assertEquals(listOf(5L), (results as PagingSourceLoadResultPage<Long, Long>).data)
   }
 
   @Test
-  fun misaligned_last_page_has_correct_data() = runTest {
-    before()
-
+  fun misaligned_last_page_has_correct_data() = runDbTest {
     val results = source.load(PagingSourceLoadParamsRefresh(key = 9L, loadSize = 3, false))
 
     assertEquals(expected = listOf(9L), (results as PagingSourceLoadResultPage<Long, Long>).data)
@@ -98,9 +89,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun invoking_getRefreshKey_before_first_load_returns_null_key() = runTest {
-    before()
-
+  fun invoking_getRefreshKey_before_first_load_returns_null_key() = runDbTest {
     assertNull(
       source.getRefreshKey(
         PagingState(
@@ -114,9 +103,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() = runTest {
-    before()
-
+  fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() = runDbTest {
     val results = source.load(PagingSourceLoadParamsRefresh(key = null, loadSize = 3, false))
     val refreshKey = source.getRefreshKey(
       PagingState(
@@ -131,9 +118,7 @@ class KeyedQueryPagingSourceTest {
   }
 
   @Test
-  fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() = runTest {
-    before()
-
+  fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() = runDbTest {
     val results = source.load(PagingSourceLoadParamsRefresh(key = 6L, loadSize = 3, false))
     val refreshKey = source.getRefreshKey(
       PagingState(
