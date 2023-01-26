@@ -2,7 +2,7 @@ package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.SqldelightParserUtil
-import app.cash.sqldelight.core.compiler.model.SqlDelightPragmaName
+import app.cash.sqldelight.dialect.api.SqlDelightPragmaName
 import app.cash.sqldelight.core.lang.psi.FunctionExprMixin
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.SqlDelightModule

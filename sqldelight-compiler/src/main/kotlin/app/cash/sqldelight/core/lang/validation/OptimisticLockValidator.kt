@@ -2,7 +2,6 @@ package app.cash.sqldelight.core.lang.validation
 
 import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.core.lang.util.parentOfType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCompilerAnnotator
 import com.alecstrong.sql.psi.core.psi.NamedElement
@@ -20,6 +19,7 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.parentOfType
 
 open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
   open fun quickFix(element: PsiElement, lock: ColumnDefMixin): IntentionAction? = null

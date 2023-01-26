@@ -26,7 +26,6 @@ import app.cash.sqldelight.core.compiler.model.NamedMutator.Update
 import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.argumentType
-import app.cash.sqldelight.core.lang.util.parentOfTypeOrNull
 import app.cash.sqldelight.core.lang.util.table
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
@@ -37,6 +36,7 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.PsiTreeUtil
 
 class SqlDelightQueriesFile(
@@ -114,7 +114,7 @@ class SqlDelightQueriesFile(
   internal val requiredAdapters by lazy {
     val binders = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
     val argumentAdapters = binders.mapNotNull {
-      it.parentOfTypeOrNull<SqlInsertStmt>()?.let {
+      it.parentOfType<SqlInsertStmt>()?.let {
         if (it.acceptsTableInterface() && it.table.needsAdapters()) return@mapNotNull it.table.adapterProperty()
       }
       typeResolver.argumentType(it).parentAdapter()

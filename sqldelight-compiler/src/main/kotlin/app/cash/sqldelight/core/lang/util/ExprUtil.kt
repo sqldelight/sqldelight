@@ -16,8 +16,8 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.compiler.model.PragmaWithResults
-import app.cash.sqldelight.core.compiler.model.SelectQueryable
+import app.cash.sqldelight.dialect.api.PragmaWithResults
+import app.cash.sqldelight.dialect.api.SelectQueryable
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType

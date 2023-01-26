@@ -52,14 +52,6 @@ import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DirectedAcyclicGraph
 import org.jgrapht.traverse.TopologicalOrderIterator
 
-internal inline fun <reified R : PsiElement> PsiElement.parentOfType(): R {
-  return PsiTreeUtil.getParentOfType(this, R::class.java)!!
-}
-
-internal inline fun <reified R : PsiElement> PsiElement.parentOfTypeOrNull(): R? {
-  return PsiTreeUtil.getParentOfType(this, R::class.java)
-}
-
 internal fun PsiElement.type(): IntermediateType = when (this) {
   is ExposableType -> type()
   is SqlTypeName -> sqFile().typeResolver.definitionType(this)

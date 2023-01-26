@@ -16,7 +16,7 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.model.NamedQuery
-import app.cash.sqldelight.core.compiler.model.SelectQueryable
+import app.cash.sqldelight.dialect.api.SelectQueryable
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
