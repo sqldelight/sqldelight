@@ -18,7 +18,6 @@ package app.cash.sqldelight.core.lang.psi
 import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.types.typeResolver
-import app.cash.sqldelight.core.lang.util.parentOfType
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightAnnotation
 import app.cash.sqldelight.core.psi.SqlDelightAnnotationValue
@@ -42,6 +41,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfType
 import com.intellij.util.castSafelyTo
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -166,7 +166,7 @@ internal abstract class ColumnTypeMixin(
   }
 
   private fun SqlDelightJavaType.type(): ClassName {
-    parentOfType<SqlDelightStmtList>().importStmtList.importStmtList.forEach { import ->
+    parentOfType<SqlDelightStmtList>()!!.importStmtList.importStmtList.forEach { import ->
       val typePrefix = text.substringBefore('.')
       if (import.javaType.text.endsWith(".$typePrefix")) {
         return text.split(".").drop(1).fold(import.javaType.type()) { current, nested ->

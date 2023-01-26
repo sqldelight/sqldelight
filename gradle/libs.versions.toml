@@ -59,6 +59,7 @@ intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-imp
 intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-model", version.ref = "idea" }
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
+intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.ref = "idea" }
 
 jna = { module = "net.java.dev.jna:jna", version = "5.13.0" }
 

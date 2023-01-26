@@ -16,10 +16,9 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
-import app.cash.sqldelight.core.compiler.model.PragmaWithResults
-import app.cash.sqldelight.core.compiler.model.SelectQueryable
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PragmaWithResults
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
@@ -28,6 +27,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.QueryWithResults
+import app.cash.sqldelight.dialect.api.SelectQueryable
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
