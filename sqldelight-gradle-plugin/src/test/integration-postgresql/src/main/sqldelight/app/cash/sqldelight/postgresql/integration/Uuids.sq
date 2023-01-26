@@ -1,0 +1,9 @@
+CREATE TABLE uuids(
+  key uuid NOT NULL
+);
+
+insertUuid:
+  INSERT INTO uuids (key) VALUES (:key);
+
+randomUuid:
+  SELECT gen_random_uuid();

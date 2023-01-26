@@ -186,4 +186,9 @@ class PostgreSqlTest {
       insertRef(RefTable(RefTable.Id(10), id))
     }
   }
+
+  @Test fun genRandomUuid() {
+    val uuid = database.datesQueries.randomUuid().executeAsOne()
+    assertThat(uuid).isNotNull()
+  }
 }
