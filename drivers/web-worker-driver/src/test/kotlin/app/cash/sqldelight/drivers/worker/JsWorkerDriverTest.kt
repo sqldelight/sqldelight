@@ -237,4 +237,14 @@ class JsWorkerDriverTest {
     }
     assertContains(error.toString(), "table test already exists")
   }
+
+  @Test
+  fun bad_worker_results_values_throws_error() = kotlinx.coroutines.test.runTest {
+    val exception = assertFailsWith<IllegalStateException> {
+      val driver = initAsyncSqlDriver(js("""new Worker(new URL("./bad.worker.js", import.meta.url))""").unsafeCast<Worker>(), schema)
+      driver.close()
+    }
+
+    assertEquals(exception.message, "The worker result values were not an array")
+  }
 }

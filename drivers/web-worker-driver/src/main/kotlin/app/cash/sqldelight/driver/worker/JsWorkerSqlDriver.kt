@@ -48,9 +48,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
         this.params = bound.parameters.toTypedArray()
       }
 
-      console.log(JSON.stringify(response))
-
-      return@AsyncValue mapper(JsWorkerSqlCursor(checkNotNull(response.results) { "The worker result was null" }))
+      return@AsyncValue mapper(JsWorkerSqlCursor(checkWorkerResults(response.results)))
     }
   }
 
@@ -63,6 +61,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
+      checkWorkerResults(response.results)
       return@AsyncValue when {
         response.results.values.isEmpty() -> 0L
         else -> response.results.values[0][0].unsafeCast<Double>().toLong()
@@ -156,6 +155,12 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
       removeEventListener("message", messageListener)
       removeEventListener("error", errorListener)
     }
+  }
+
+  private fun checkWorkerResults(results: WorkerResult?): WorkerResult {
+    checkNotNull(results) { "The worker result was null "}
+    check(js("Array.isArray(results.values)").unsafeCast<Boolean>()) { "The worker result values were not an array" }
+    return results
   }
 
   /**
