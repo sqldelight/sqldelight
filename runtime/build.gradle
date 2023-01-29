@@ -9,7 +9,10 @@ sourceSets {
   main
 }
 
-kotlin.jvmToolchain(8)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(8))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 kotlin {
   mingwX86()

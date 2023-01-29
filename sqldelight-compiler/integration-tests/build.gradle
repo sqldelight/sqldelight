@@ -2,7 +2,10 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
 }
 
-kotlin.jvmToolchain(11)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(11))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 dependencies {
   testImplementation project(':runtime')

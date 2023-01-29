@@ -8,7 +8,10 @@ grammarKit {
   intellijRelease.set(libs.versions.idea)
 }
 
-kotlin.jvmToolchain(11)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(11))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 dependencies {
   api project(':dialects:sqlite-3-25')

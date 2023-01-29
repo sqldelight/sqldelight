@@ -9,7 +9,10 @@ plugins {
   id("jvm-test-suite")
 }
 
-kotlin.jvmToolchain(11)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(11))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 testing {
   suites {

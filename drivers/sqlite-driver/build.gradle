@@ -4,7 +4,10 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-kotlin.jvmToolchain(8)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(8))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 archivesBaseName = 'sqldelight-sqlite-driver'
 

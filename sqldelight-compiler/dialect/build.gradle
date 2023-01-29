@@ -4,7 +4,10 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-kotlin.jvmToolchain(11)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(11))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 dependencies {
   api libs.sqlPsi
