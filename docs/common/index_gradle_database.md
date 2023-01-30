@@ -15,7 +15,7 @@ First apply the gradle plugin in your project.
       databases {
         create("Database") {
           packageName.set("com.example"){% if dialect %}
-          dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+          dialect("{{ dialect }}:{{ versions.sqldelight }}"){% endif %}
         }
       }
     }
@@ -35,7 +35,7 @@ First apply the gradle plugin in your project.
       databases {
         Database { // This will be the name of the generated database class.
           packageName = "com.example"{% if dialect %}
-          dialect = "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+          dialect "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
         }
       }
     }

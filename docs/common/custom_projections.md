@@ -1,4 +1,4 @@
-# Projections
+# Type Projections
 
 By default queries will return a data class with your projection, but you can override the behavior with a typesafe mapper.
 

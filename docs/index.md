@@ -1,4 +1,8 @@
-SQLDelight generates typesafe kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
+!!! info "SQLDelight 2.0"
+
+    If you are currently using SQLDelight 1.x, [check out the docs](upgrading-2.0) on upgrading to SQLDelight 2.0!
+
+SQLDelight generates typesafe Kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
 SQLDelight understands your existing SQL schema.
 
@@ -16,26 +20,48 @@ It generates typesafe code for any labeled SQL statements.
 
 ---
 
-SQLDelight supports a variety of dialects and platforms:
+## Supported Dialects and Platforms
 
-SQLite
+SQLDelight supports a variety of SQL dialects and platforms.
 
-* [Android](android_sqlite)
-* [Native (iOS, macOS, or Windows)](native_sqlite)
-* [JVM](jvm_sqlite)
-* [Javascript](js_sqlite)
-* [Multiplatform](multiplatform_sqlite)
-
-[MySQL (JVM)](jvm_mysql)
-
-[PostgreSQL (JVM)](jvm_postgresql) (Experimental)
-
-[HSQL/H2 (JVM)](jvm_h2) (Experimental)
+<div class="cash-grid" markdown="1">
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-sqlite:{ .lg .middle } __SQLite__</p>
+<hr />
+[:octicons-arrow-right-24: __Android__](android_sqlite)  
+[:octicons-arrow-right-24: __Native__ (iOS, macOS, Linux, Windows)](native_sqlite)  
+[:octicons-arrow-right-24: __JVM__](jvm_sqlite)  
+[:octicons-arrow-right-24: __JavaScript__ (Browser)](js_sqlite)  
+[:octicons-arrow-right-24: __Multiplatform__](multiplatform_sqlite)  
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-mysql:{ .lg .middle } __MySQL__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__ (JDBC)](jvm_mysql)  
+:octicons-arrow-right-24: __JVM__ (R2DBC)  
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-postgresql:{ .lg .middle } __PostgresSQL__ (Experimental)</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__ (JDBC)](jvm_postgresql)  
+:octicons-arrow-right-24: __JVM__ (R2DBC)  
+[:octicons-link-external-16: __Native__ (macOS, Linux)](https://github.com/hfhbd/postgres-native-sqldelight)
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">__HSQL / H2__<br/>(Experimental)</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__ (JDBC)](jvm_h2)  
+:octicons-arrow-right-24: __JVM__ (R2DBC)  
+</div>
+</div>
 
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
 [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
+
+Documentation pages for the latest snapshot version can be [found here](https://cashapp.github.io/sqldelight/snapshot).
+
 === "Kotlin"
     ```kotlin
     // settings.gradle.kts
