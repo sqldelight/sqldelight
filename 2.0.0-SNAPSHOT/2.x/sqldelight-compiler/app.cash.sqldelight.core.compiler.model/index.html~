@@ -115,36 +115,6 @@
             </div>
           </div>
         </div>
-<a data-name="-726550660%2FClasslikes%2F1896744885" anchor-label="PragmaWithResults" id="-726550660%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-pragma-with-results/index.html"><span>Pragma</span><wbr><span>With</span><wbr><span><span>Results</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-726550660%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-pragma-with-results/index.html">PragmaWithResults</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pragmaStmt<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlPragmaStmt///PointingToDeclaration/">SqlPragmaStmt</span></span></span><span class="token punctuation">)</span> : <a href="../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-query-with-results/index.html">QueryWithResults</a></div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-<a data-name="1438015594%2FClasslikes%2F1896744885" anchor-label="SelectQueryable" id="1438015594%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-select-queryable/index.html"><span>Select</span><wbr><span><span>Queryable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1438015594%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-select-queryable/index.html">SelectQueryable</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>select<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompoundSelectStmt///PointingToDeclaration/">SqlCompoundSelectStmt</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token operator"> = </span>select</span></span><span class="token punctuation">)</span> : <a href="../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-query-with-results/index.html">QueryWithResults</a></div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
