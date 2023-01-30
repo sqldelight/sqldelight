@@ -21,6 +21,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/upgrading-2.0/</loc>
+         <lastmod>2023-01-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/android_sqlite/</loc>
          <lastmod>2023-01-30</lastmod>
          <changefreq>daily</changefreq>
