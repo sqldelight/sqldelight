@@ -9,9 +9,9 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.worker.JsWorkerException
-import app.cash.sqldelight.driver.worker.initAsyncSqlDriver
-import org.w3c.dom.Worker
+import app.cash.sqldelight.driver.worker.WebWorkerDriver
+import app.cash.sqldelight.driver.worker.WebWorkerException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -22,7 +22,8 @@ import kotlin.test.assertTrue
 
 typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 
-class JsWorkerDriverTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+class WebWorkerDriverTest {
   private val schema = object : SqlSchema {
     override val version: Int = 1
 
@@ -61,7 +62,7 @@ class JsWorkerDriverTest {
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
-    val driver = initAsyncSqlDriver(js("""new Worker(new URL("./sqljs.worker.js", import.meta.url))""").unsafeCast<Worker>(), schema)
+    val driver = WebWorkerDriver.fromScriptUrl("./sqljs.worker.js").also { schema.create(it) }
     block(driver)
     driver.close()
   }
@@ -232,7 +233,7 @@ class JsWorkerDriverTest {
 
   @Test
   fun worker_exceptions_are_handled_correctly() = runTest { driver ->
-    val error = assertFailsWith<JsWorkerException> {
+    val error = assertFailsWith<WebWorkerException> {
       schema.awaitCreate(driver)
     }
     assertContains(error.toString(), "table test already exists")
@@ -241,7 +242,7 @@ class JsWorkerDriverTest {
   @Test
   fun bad_worker_results_values_throws_error() = kotlinx.coroutines.test.runTest {
     val exception = assertFailsWith<IllegalStateException> {
-      val driver = initAsyncSqlDriver(js("""new Worker(new URL("./bad.worker.js", import.meta.url))""").unsafeCast<Worker>(), schema)
+      val driver = WebWorkerDriver.fromScriptUrl("./bad.worker.js").also { schema.create(it) }
       driver.close()
     }
 

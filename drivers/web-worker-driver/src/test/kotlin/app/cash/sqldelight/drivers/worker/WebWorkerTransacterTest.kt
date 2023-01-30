@@ -6,15 +6,14 @@ import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.worker.initAsyncSqlDriver
-import org.w3c.dom.Worker
+import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class JsWorkerTransacterTest {
+class WebWorkerTransacterTest {
   private val schema = object : SqlSchema {
     override val version = 1
     override fun create(driver: SqlDriver) = QueryResult.Unit
@@ -28,10 +27,7 @@ class JsWorkerTransacterTest {
 
   private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) =
     kotlinx.coroutines.test.runTest {
-      val driver = initAsyncSqlDriver(
-        worker = js("""new Worker(new URL("./sqljs.worker.js", import.meta.url))""").unsafeCast<Worker>(),
-        schema = schema,
-      )
+      val driver = WebWorkerDriver.fromScriptUrl("./sqljs.worker.js").also { schema.create(it) }
       val transacter = object : SuspendingTransacterImpl(driver) {}
       block(driver, transacter)
 

@@ -6,7 +6,6 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
-import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.api.WorkerRequest
 import app.cash.sqldelight.driver.worker.api.WorkerResponse
 import app.cash.sqldelight.driver.worker.api.WorkerResult
@@ -17,23 +16,20 @@ import org.w3c.dom.MessageEvent
 import org.w3c.dom.Worker
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
+import org.w3c.dom.url.URL
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-private fun <T> jsObject(block: T.() -> Unit): T {
-  val o = js("{}").unsafeCast<T>()
-  block(o)
-  return o
-}
-
-suspend fun initAsyncSqlDriver(
-  worker: Worker,
-  schema: SqlSchema? = null,
-): SqlDriver = JsWorkerSqlDriver(worker).withSchema(schema)
-
-suspend fun SqlDriver.withSchema(schema: SqlSchema? = null): SqlDriver = this.also { schema?.create(it)?.await() }
-
-class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
+/**
+ * A [SqlDriver] implementation for interacting with SQL databases running in a Web Worker.
+ *
+ * This driver is dialect-agnostic and is instead dependent on the Worker script's implementation
+ * to handle queries and send results back from the Worker.
+ *
+ * @property worker The Worker running a SQL implementation that this driver communicates with.
+ * @see [WebWorkerDriver.fromScriptUrl]
+ */
+class WebWorkerDriver(private val worker: Worker) : SqlDriver {
   private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
   private var messageCounter = 0
   private var transaction: Transacter.Transaction? = null
@@ -125,7 +121,7 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
         if (data.id == id) {
           removeEventListener("message", this)
           if (data.error != null) {
-            continuation.resumeWithException(JsWorkerException(JSON.stringify(data.error, arrayOf("message", "arguments", "type", "name"))))
+            continuation.resumeWithException(WebWorkerException(JSON.stringify(data.error, arrayOf("message", "arguments", "type", "name"))))
           } else {
             continuation.resume(data)
           }
@@ -136,20 +132,20 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     val errorListener = object : EventListener {
       override fun handleEvent(event: Event) {
         removeEventListener("error", this)
-        continuation.resumeWithException(JsWorkerException(JSON.stringify(event, arrayOf("message", "arguments", "type", "name")) + js("Object.entries(event)")))
+        continuation.resumeWithException(WebWorkerException(JSON.stringify(event, arrayOf("message", "arguments", "type", "name")) + js("Object.entries(event)")))
       }
     }
 
     addEventListener("message", messageListener)
     addEventListener("error", errorListener)
 
-    postMessage(
-      jsObject<WorkerRequest> {
-        this.unsafeCast<RequestBuilder>().message()
-        this.id = id
-        this.action = action.key
-      },
-    )
+    val messageObject = js("{}").unsafeCast<WorkerRequest>().apply {
+      this.unsafeCast<RequestBuilder>().message()
+      this.id = id
+      this.action = action.key
+    }
+
+    postMessage(messageObject)
 
     continuation.invokeOnCancellation {
       removeEventListener("message", messageListener)
@@ -174,6 +170,22 @@ class JsWorkerSqlDriver(private val worker: Worker) : SqlDriver {
     BEGIN_TRANSACTION("begin_transaction"),
     END_TRANSACTION("end_transaction"),
     ROLLBACK_TRANSACTION("rollback_transaction"),
+  }
+
+  companion object {
+    /**
+     * Convenience method for creating a [WebWorkerDriver] from a worker script's [url].
+     * This equivalent to constructing the driver using a worker initialized in JavaScript by:
+     * ```js
+     * new Worker(new URL(url, import.meta.url))
+     * ```
+     *
+     * @param url The worker script's URL, relative to the current page.
+     */
+    fun fromScriptUrl(url: String): WebWorkerDriver {
+      val worker = Worker(URL(url, js("import.meta.url").unsafeCast<String>()).toString())
+      return WebWorkerDriver(worker)
+    }
   }
 }
 
