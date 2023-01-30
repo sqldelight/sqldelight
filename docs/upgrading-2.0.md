@@ -92,6 +92,20 @@ dependencies {
 
 ## Runtime Changes
 
+* Primitive types must now be imported into `.sq` and `.sqm` files.
+
+    ```diff
+    +{++import kotlin.Boolean++}
+    
+    CREATE TABLE HockeyPlayer (
+      name TEXT NOT NULL,
+      good INTEGER {==As Boolean==}
+    );
+    ```
+
+    Some previously supported types now require an adapter. Adapters for primitive types are available in the `app.cash.sqldelight:primitive-adapters:{{ versions.sqldelight }}` artifact.
+    e.g. The `IntColumnAdapter` for doing `INTEGER As kotlin.Int` conversions.
+
 * The `AfterVersionWithDriver` type was removed in favour of [`AfterVersion`](../2.x/runtime/app.cash.sqldelight.db/-after-version) which now always includes the driver, and the `migrateWithCallbacks` extension function was removed in favour of the main [`migrate`](../2.x/runtime/app.cash.sqldelight.db/-sql-schema/#-775472427%2FFunctions%2F-2112917107) method that now accepts callbacks.
 
     ```diff
@@ -111,8 +125,8 @@ dependencies {
 * The `Schema` type is no longer a nested type of `SqlDriver`, and is now called [`SqlSchema`](../2.x/runtime/app.cash.sqldelight.db/-sql-schema).
 
     ```diff
-    -val schema: SqlDriver.Schema
-    +val schema: SqlSchema
+    -val schema: {--SqlDriver.Schema--}
+    +val schema: {++SqlSchema++}
     ```
   
 * The [paging3 extension API](../2.x/extensions/androidx-paging3/app.cash.sqldelight.paging3/) has changed to only allow int types for the count.
