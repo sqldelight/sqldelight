@@ -1,3 +1,5 @@
+# Grouping Statements
+
 You can group multiple SQL statements together to be executed at once inside a transaction:
 
 ```sql

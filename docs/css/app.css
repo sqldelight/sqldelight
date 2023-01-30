@@ -54,3 +54,42 @@ button.dl {
 .md-typeset table:not([class]) th {
   color: black !important;
 }
+
+.cash-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.cash-grid-item {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: calc(50% - 0.5em);
+  border: 2px solid var(--md-default-fg-color--light);
+  padding: 1em;
+  border-radius: 8px;
+}
+
+.cash-grid-title {
+  margin: 0;
+  font-size: 1.3em;
+}
+
+.cash-subtle {
+  opacity: 0.62;
+}
+
+.cash-grid-item hr {
+  margin: 0.5em 0;
+}
+
+.sqldelight {
+  color: var(--md-primary-fg-color);
+}
+
+@media only screen and (max-width: 960px) {
+  .cash-grid-item {
+    width: 100%;
+  }
+}

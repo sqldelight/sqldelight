@@ -1,4 +1,4 @@
-Getting Started on JVM with SQLite
+# Getting Started on JVM with SQLite
 
 {% include 'common/index_gradle_database.md' %}
 
