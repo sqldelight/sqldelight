@@ -41,7 +41,7 @@ SQLDelight supports a variety of SQL dialects and platforms.
 :octicons-arrow-right-24: __JVM__ (R2DBC)  
 </div>
 <div class="cash-grid-item" markdown="1">
-<p class="cash-grid-title" markdown="1">:simple-postgresql:{ .lg .middle } __PostgresSQL__ (Experimental)</p>
+<p class="cash-grid-title" markdown="1">:simple-postgresql:{ .lg .middle } __PostgresSQL__</p>
 <hr />
 [:octicons-arrow-right-24: __JVM__ (JDBC)](jvm_postgresql)  
 :octicons-arrow-right-24: __JVM__ (R2DBC)  
