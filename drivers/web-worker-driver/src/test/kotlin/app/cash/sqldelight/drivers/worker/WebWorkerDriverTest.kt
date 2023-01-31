@@ -12,6 +12,7 @@ import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import app.cash.sqldelight.driver.worker.WebWorkerException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -62,7 +63,9 @@ class WebWorkerDriverTest {
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
-    val driver = WebWorkerDriver.fromScriptUrl("./sqljs.worker.js").also { schema.create(it) }
+    @Suppress("UnsafeCastFromDynamic")
+    val driver = WebWorkerDriver(Worker(js("""new URL("./sqljs.worker.js", import.meta.url)""")))
+      .also { schema.awaitCreate(it) }
     block(driver)
     driver.close()
   }
@@ -242,7 +245,9 @@ class WebWorkerDriverTest {
   @Test
   fun bad_worker_results_values_throws_error() = kotlinx.coroutines.test.runTest {
     val exception = assertFailsWith<IllegalStateException> {
-      val driver = WebWorkerDriver.fromScriptUrl("./bad.worker.js").also { schema.create(it) }
+      @Suppress("UnsafeCastFromDynamic")
+      val driver = WebWorkerDriver(Worker(js("""new URL("./bad.worker.js", import.meta.url)""")))
+        .also { schema.awaitCreate(it) }
       driver.close()
     }
 

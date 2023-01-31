@@ -17,7 +17,6 @@ import org.w3c.dom.MessageEvent
 import org.w3c.dom.Worker
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
-import org.w3c.dom.url.URL
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -158,22 +157,6 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     checkNotNull(results) { "The worker result was null " }
     check(js("Array.isArray(results.values)").unsafeCast<Boolean>()) { "The worker result values were not an array" }
     return results.values
-  }
-
-  companion object {
-    /**
-     * Convenience method for creating a [WebWorkerDriver] from a worker script's [url].
-     * This equivalent to constructing the driver using a worker initialized in JavaScript by:
-     * ```js
-     * new Worker(new URL(url, import.meta.url))
-     * ```
-     *
-     * @param url The worker script's URL, relative to the current page.
-     */
-    fun fromScriptUrl(url: String): WebWorkerDriver {
-      val worker = Worker(URL(url, js("import.meta.url").unsafeCast<String>()).toString())
-      return WebWorkerDriver(worker)
-    }
   }
 }
 

@@ -2,11 +2,13 @@ package app.cash.sqldelight.drivers.worker
 
 import app.cash.sqldelight.SuspendingTransacter
 import app.cash.sqldelight.SuspendingTransacterImpl
+import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
+import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -27,7 +29,9 @@ class WebWorkerTransacterTest {
 
   private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) =
     kotlinx.coroutines.test.runTest {
-      val driver = WebWorkerDriver.fromScriptUrl("./sqljs.worker.js").also { schema.create(it) }
+      @Suppress("UnsafeCastFromDynamic")
+      val driver = WebWorkerDriver(Worker(js("""new URL("./sqljs.worker.js", import.meta.url)""")))
+        .also { schema.awaitCreate(it) }
       val transacter = object : SuspendingTransacterImpl(driver) {}
       block(driver, transacter)
 
