@@ -56,7 +56,8 @@ module:sqlite-driver
 app.cash.sqldelight.driver.jdbc.sqlite
 module:sqljs-driver
 app.cash.sqldelight.driver.sqljs
-app.cash.sqldelight.driver.sqljs.worker
+module:web-worker-driver
+app.cash.sqldelight.driver.worker
 module:androidx-paging3
 app.cash.sqldelight.paging3
 module:async-extensions
