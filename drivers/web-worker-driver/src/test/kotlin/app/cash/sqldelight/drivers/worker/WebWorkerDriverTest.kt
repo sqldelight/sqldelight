@@ -1,4 +1,4 @@
-package com.squareup.sqldelight.drivers.sqljs
+package app.cash.sqldelight.drivers.worker
 
 import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
@@ -9,8 +9,10 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.sqljs.worker.JsWorkerException
-import app.cash.sqldelight.driver.sqljs.worker.initAsyncSqlDriver
+import app.cash.sqldelight.driver.worker.WebWorkerDriver
+import app.cash.sqldelight.driver.worker.WebWorkerException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -21,7 +23,8 @@ import kotlin.test.assertTrue
 
 typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 
-class JsWorkerDriverTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+class WebWorkerDriverTest {
   private val schema = object : SqlSchema {
     override val version: Int = 1
 
@@ -60,7 +63,9 @@ class JsWorkerDriverTest {
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
-    val driver = initAsyncSqlDriver("/worker.sql-wasm.js", schema)
+    @Suppress("UnsafeCastFromDynamic")
+    val driver = WebWorkerDriver(Worker(js("""new URL("./sqljs.worker.js", import.meta.url)""")))
+      .also { schema.awaitCreate(it) }
     block(driver)
     driver.close()
   }
@@ -231,22 +236,21 @@ class JsWorkerDriverTest {
 
   @Test
   fun worker_exceptions_are_handled_correctly() = runTest { driver ->
-    println("IS_LEGACY: $IS_LEGACY")
-    // Despite the exception being thrown correctly in LEGACY builds, this test fails for some reason
-    if (IS_LEGACY) return@runTest
-
-    val error = assertFailsWith<JsWorkerException> {
+    val error = assertFailsWith<WebWorkerException> {
       schema.awaitCreate(driver)
     }
     assertContains(error.toString(), "table test already exists")
   }
 
-  // TODO: Remove this once LEGACY builds are dropped
-  companion object {
-    private data class Obj(val entry: String)
+  @Test
+  fun bad_worker_results_values_throws_error() = kotlinx.coroutines.test.runTest {
+    val exception = assertFailsWith<IllegalStateException> {
+      @Suppress("UnsafeCastFromDynamic")
+      val driver = WebWorkerDriver(Worker(js("""new URL("./bad.worker.js", import.meta.url)""")))
+        .also { schema.awaitCreate(it) }
+      driver.close()
+    }
 
-    private val prototype = js("Object").getPrototypeOf(Obj("test"))
-    private val prototypeProps: Array<String> = js("Object").getOwnPropertyNames(prototype).unsafeCast<Array<String>>()
-    private val IS_LEGACY = prototypeProps.firstOrNull { it.contains("_get_") } == null
+    assertEquals(exception.message, "The worker result values were not an array")
   }
 }
