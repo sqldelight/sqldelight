@@ -6,6 +6,7 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.driver.worker.api.WorkerAction
 import app.cash.sqldelight.driver.worker.api.WorkerRequest
 import app.cash.sqldelight.driver.worker.api.WorkerResponse
 import app.cash.sqldelight.driver.worker.api.WorkerResult
@@ -39,7 +40,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     binders?.invoke(bound)
 
     return QueryResult.AsyncValue {
-      val response = worker.sendMessage(Action.EXEC) {
+      val response = worker.sendMessage(WorkerAction.exec) {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
@@ -53,7 +54,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     binders?.invoke(bound)
 
     return QueryResult.AsyncValue {
-      val response = worker.sendMessage(Action.EXEC) {
+      val response = worker.sendMessage(WorkerAction.exec) {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
@@ -90,7 +91,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     val transaction = Transaction(enclosing)
     this.transaction = transaction
     if (enclosing == null) {
-      worker.sendMessage(Action.BEGIN_TRANSACTION)
+      worker.sendMessage(WorkerAction.beginTransaction)
     }
 
     return@AsyncValue transaction
@@ -104,16 +105,16 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {
         if (successful) {
-          worker.sendMessage(Action.END_TRANSACTION)
+          worker.sendMessage(WorkerAction.endTransaction)
         } else {
-          worker.sendMessage(Action.ROLLBACK_TRANSACTION)
+          worker.sendMessage(WorkerAction.rollbackTransaction)
         }
       }
       transaction = enclosingTransaction
     }
   }
 
-  private suspend fun Worker.sendMessage(action: Action, message: RequestBuilder.() -> Unit = {}): WorkerResponse = suspendCancellableCoroutine { continuation ->
+  private suspend fun Worker.sendMessage(action: WorkerAction, message: RequestBuilder.() -> Unit = {}): WorkerResponse = suspendCancellableCoroutine { continuation ->
     val id = messageCounter++
     val messageListener = object : EventListener {
       override fun handleEvent(event: Event) {
@@ -142,7 +143,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     val messageObject = js("{}").unsafeCast<WorkerRequest>().apply {
       this.unsafeCast<RequestBuilder>().message()
       this.id = id
-      this.action = action.key
+      this.action = action
     }
 
     postMessage(messageObject)
@@ -153,23 +154,10 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     }
   }
 
-  private fun checkWorkerResults(results: WorkerResult?): WorkerResult {
+  private fun checkWorkerResults(results: WorkerResult?): Array<Array<dynamic>> {
     checkNotNull(results) { "The worker result was null " }
     check(js("Array.isArray(results.values)").unsafeCast<Boolean>()) { "The worker result values were not an array" }
-    return results
-  }
-
-  /**
-   * An enum mapping of [WorkerRequest.action]
-   */
-  private enum class Action(val key: String) {
-    /**
-     * Execute a SQL statement.
-     */
-    EXEC("exec"),
-    BEGIN_TRANSACTION("begin_transaction"),
-    END_TRANSACTION("end_transaction"),
-    ROLLBACK_TRANSACTION("rollback_transaction"),
+    return results.values
   }
 
   companion object {
@@ -194,20 +182,20 @@ private external interface RequestBuilder {
   var params: Array<Any?>?
 }
 
-class JsWorkerSqlCursor(private val table: WorkerResult) : SqlCursor {
+class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : SqlCursor {
   private var currentRow = -1
 
-  override fun next(): Boolean = ++currentRow < table.values.size
+  override fun next(): Boolean = ++currentRow < values.size
 
-  override fun getString(index: Int): String? = table.values[currentRow][index].unsafeCast<String?>()
+  override fun getString(index: Int): String? = values[currentRow][index].unsafeCast<String?>()
 
-  override fun getLong(index: Int): Long? = (table.values[currentRow][index] as? Double)?.toLong()
+  override fun getLong(index: Int): Long? = (values[currentRow][index] as? Double)?.toLong()
 
-  override fun getBytes(index: Int): ByteArray? = (table.values[currentRow][index] as? Uint8Array)?.let { Int8Array(it.buffer).unsafeCast<ByteArray>() }
+  override fun getBytes(index: Int): ByteArray? = (values[currentRow][index] as? Uint8Array)?.let { Int8Array(it.buffer).unsafeCast<ByteArray>() }
 
-  override fun getDouble(index: Int): Double? = table.values[currentRow][index].unsafeCast<Double?>()
+  override fun getDouble(index: Int): Double? = values[currentRow][index].unsafeCast<Double?>()
 
-  override fun getBoolean(index: Int): Boolean? = table.values[currentRow][index].unsafeCast<Boolean?>()
+  override fun getBoolean(index: Int): Boolean? = values[currentRow][index].unsafeCast<Boolean?>()
 }
 
 internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {

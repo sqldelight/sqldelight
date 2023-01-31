@@ -3,8 +3,6 @@ package app.cash.sqldelight.driver.worker.api
 /**
  * Data returned by the worker after posting a message.
  */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 internal external interface WorkerResponse {
   /**
    * An error returned by the worker, could be undefined.

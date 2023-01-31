@@ -1,11 +1,9 @@
 package app.cash.sqldelight.driver.worker.api
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 /**
  * The results of a SQL operation in the worker.
  */
-external interface WorkerResult {
+internal external interface WorkerResult {
   /**
    * The "table" of values in the result, as rows of columns.
    * i.e. `values[row][col]`

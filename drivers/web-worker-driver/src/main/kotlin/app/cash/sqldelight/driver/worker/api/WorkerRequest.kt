@@ -3,9 +3,7 @@ package app.cash.sqldelight.driver.worker.api
 /**
  * Messages sent by the SQLDelight driver to the worker.
  */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-external interface WorkerRequest {
+internal external interface WorkerRequest {
   /**
    * A unique identifier used to identify responses to this message
    * @see WorkerResponse.id
@@ -13,14 +11,10 @@ external interface WorkerRequest {
   var id: Int
 
   /**
-   * The action that the worker should run. Can be one of the following values:
-   *
-   * - `exec`: Execute the given [sql] with the given [params]
-   * - `begin_transaction`: Begin a transaction
-   * - `end_transaction`: End/commit a transaction
-   * - `rollback_transaction`: Rollback the current transaction
+   * The action that the worker should run.
+   * @see WorkerAction
    */
-  var action: String
+  var action: WorkerAction
 
   /**
    * The SQL to execute
