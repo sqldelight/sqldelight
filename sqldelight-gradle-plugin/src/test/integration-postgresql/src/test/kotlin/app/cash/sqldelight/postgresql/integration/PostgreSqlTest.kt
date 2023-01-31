@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.util.UUID
 
 class PostgreSqlTest {
   val conn = DriverManager.getConnection("jdbc:tc:postgresql:9.6.8:///my_db")
