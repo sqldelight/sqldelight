@@ -189,7 +189,7 @@ class PostgreSqlTest {
   }
 
   @Test fun genRandomUuid() {
-    val uuid: UUID = database.datesQueries.randomUuid().executeAsOne()
+    val uuid: UUID = database.uuidsQueries.randomUuid().executeAsOne()
     assertThat(uuid).isNotNull()
   }
 }
