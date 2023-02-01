@@ -1,5 +1,5 @@
 plugins {
-  alias(libs.plugins.kotlin.js)
+  alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
 }
@@ -22,18 +22,26 @@ kotlin {
       }
     }
   }
-}
 
-dependencies {
-  api projects.runtime
-  implementation libs.kotlin.coroutines.core
-  implementation libs.stately.concurrency
+  sourceSets {
+    jsMain {
+      dependencies {
+        api projects.runtime
+        implementation libs.kotlin.coroutines.core
+        implementation libs.stately.concurrency
+      }
+    }
 
-  testImplementation libs.kotlin.test.js
-  testImplementation npm('sql.js', libs.versions.sqljs.get())
-  testImplementation devNpm("copy-webpack-plugin", "9.1.0")
-  testImplementation libs.kotlin.coroutines.test
-  testImplementation project(':extensions:async-extensions')
+    jsTest {
+      dependencies {
+        implementation libs.kotlin.test.js
+        implementation npm('sql.js', libs.versions.sqljs.get())
+        implementation devNpm("copy-webpack-plugin", "9.1.0")
+        implementation libs.kotlin.coroutines.test
+        implementation project(':extensions:async-extensions')
+      }
+    }
+  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
