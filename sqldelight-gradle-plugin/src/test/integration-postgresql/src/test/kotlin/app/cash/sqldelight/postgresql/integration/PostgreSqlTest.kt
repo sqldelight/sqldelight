@@ -19,7 +19,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:9.6.8:///my_db")
+  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
