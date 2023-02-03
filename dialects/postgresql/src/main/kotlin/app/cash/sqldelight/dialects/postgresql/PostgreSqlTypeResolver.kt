@@ -87,6 +87,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL).asNullable()
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
+    "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
     else -> null
   }
 

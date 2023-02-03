@@ -16,9 +16,10 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.util.UUID
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:9.6.8:///my_db")
+  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -185,5 +186,10 @@ class PostgreSqlTest {
       assertThat(id.id).isEqualTo(42)
       insertRef(RefTable(RefTable.Id(10), id))
     }
+  }
+
+  @Test fun genRandomUuid() {
+    val uuid: UUID = database.uuidsQueries.randomUuid().executeAsOne()
+    assertThat(uuid).isNotNull()
   }
 }
