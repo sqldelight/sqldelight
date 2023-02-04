@@ -6,6 +6,14 @@ dependencyResolutionManagement {
             if (overwriteKotlinVersion != null) {
                 version("kotlin", overwriteKotlinVersion)
             }
+
+            // This version is set in the GradleRunner during test setup using the current (SNAPSHOT) version.
+            // If you want to use the test projects as standalone samples, link the Gradle project in IntelliJ 
+            // and overwrite this version.
+            String sqldelightVersion = settings.sqldelightVersion
+
+            library("sqldelight", "app.cash.sqldelight", "gradle-plugin")
+                    .versionRef(version("sqldelightVersion", sqldelightVersion))
         }
     }
 }

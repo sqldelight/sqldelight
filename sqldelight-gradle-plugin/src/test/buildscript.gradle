@@ -9,7 +9,7 @@
   }
 
   project.buildscript.dependencies {
-    classpath 'app.cash.sqldelight:gradle-plugin:+'
+    classpath libs.sqldelight
     classpath libs.kotlin.plugin
     classpath libs.android.plugin
   }

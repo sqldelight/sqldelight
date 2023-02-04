@@ -133,6 +133,7 @@ tasks.named('test') {
       excludeCategories 'app.cash.sqldelight.Instrumentation'
     }
   }
+  environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 
 tasks.named('check') {
@@ -154,6 +155,7 @@ tasks.named('dockerTest') {
       ":drivers:r2dbc-driver:publishAllPublicationsToInstallLocallyRepository",
       ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
   )
+  environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 
 tasks.named("grammarkitTest") {
@@ -163,6 +165,7 @@ tasks.named("grammarkitTest") {
       ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
       ":runtime:publishJvmPublicationToInstallLocallyRepository",
       ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",    
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
@@ -170,6 +173,7 @@ tasks.named("grammarkitTest") {
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(17)
   }
+  environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 
 tasks.named('validatePlugins') {

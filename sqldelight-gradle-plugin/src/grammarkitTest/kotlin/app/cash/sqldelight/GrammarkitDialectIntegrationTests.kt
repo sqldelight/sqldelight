@@ -5,7 +5,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import java.io.File
 
-class DialectIntegrationTests {
+class GrammarkitDialectIntegrationTests {
   @Test
   fun customFunctionDialect() {
     val runner = GradleRunner.create()
