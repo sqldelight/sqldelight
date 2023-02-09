@@ -17,7 +17,50 @@ SELECT *
 FROM dog
 WHERE :someBoolean AND 1 = 1;
 
-insertAndReturn:
+insertAndReturn1:
 INSERT INTO dog
 VALUES (?, ?, DEFAULT)
+RETURNING name;
+
+insertAndReturnMany:
+INSERT INTO dog
+VALUES (?, ?, DEFAULT)
+RETURNING name, breed;
+
+insertAndReturnAll:
+INSERT INTO dog
+VALUES (?, ?, DEFAULT)
+RETURNING *;
+
+updateAndReturn1:
+UPDATE dog
+SET is_good = ?
+WHERE name = ?
+RETURNING name;
+
+updateAndReturnMany:
+UPDATE dog
+SET is_good = ?
+WHERE name = ?
+RETURNING name, breed;
+
+updateAndReturnAll:
+UPDATE dog
+SET is_good = ?
+WHERE name = ?
+RETURNING *;
+
+deleteAndReturn1:
+DELETE FROM dog
+WHERE name = ?
+RETURNING name;
+
+deleteAndReturnMany:
+DELETE FROM dog
+WHERE name = ?
+RETURNING name, breed;
+
+deleteAndReturnAll:
+DELETE FROM dog
+WHERE name = ?
 RETURNING *;

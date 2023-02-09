@@ -4,7 +4,50 @@ CREATE TABLE person (
   last_name TEXT NOT NULL
 );
 
-insertAndReturn:
+insertAndReturn1:
 INSERT INTO person
 VALUES (?, ?, ?)
+RETURNING name;
+
+insertAndReturnMany:
+INSERT INTO person
+VALUES (?, ?, ?)
+RETURNING _id, first_name;
+
+insertAndReturnAll:
+INSERT INTO person
+VALUES (?, ?, ?)
+RETURNING *;
+
+updateAndReturn1:
+UPDATE person
+SET last_name = ?
+WHERE last_name = ?
+RETURNING name;
+
+updateAndReturnMany:
+UPDATE person
+SET last_name = ?
+WHERE last_name = ?
+RETURNING _id, first_name;
+
+updateAndReturnAll:
+UPDATE person
+SET last_name = ?
+WHERE last_name = ?
+RETURNING *;
+
+deleteAndReturn1:
+DELETE FROM person
+WHERE last_name = ?
+RETURNING name;
+
+deleteAndReturnMany:
+DELETE FROM person
+WHERE last_name = ?
+RETURNING _id, first_name;
+
+deleteAndReturnAll:
+DELETE FROM person
+WHERE last_name = ?
 RETURNING *;
