@@ -22,6 +22,7 @@ class MySqlTest {
   lateinit var connection: Connection
   lateinit var dogQueries: DogQueries
   lateinit var datesQueries: DatesQueries
+  lateinit var nullableValueQueries: NullableValueQueries
   lateinit var driver: JdbcDriver
 
   @Before
@@ -39,6 +40,7 @@ class MySqlTest {
     MyDatabase.Schema.create(driver)
     dogQueries = database.dogQueries
     datesQueries = database.datesQueries
+    nullableValueQueries = database.nullableValueQueries
   }
 
   @After
@@ -121,6 +123,20 @@ class MySqlTest {
         driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
       }
     }
+  }
+
+  @Test fun selectWhereNullable() {
+    nullableValueQueries.insertValue("abc")
+    nullableValueQueries.insertValue(null)
+
+    assertThat(nullableValueQueries.selectValue("abc").executeAsOne())
+      .isEqualTo(
+        NullableValue("abc"),
+      )
+    assertThat(nullableValueQueries.selectValue(null).executeAsOne())
+      .isEqualTo(
+        NullableValue(null),
+      )
   }
 
   private class ExpectedException : Exception()

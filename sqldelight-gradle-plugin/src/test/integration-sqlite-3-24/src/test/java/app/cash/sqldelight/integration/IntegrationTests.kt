@@ -44,4 +44,18 @@ class IntegrationTests {
         Person(4, "Bob", "Bob"),
       )
   }
+
+  @Test fun selectWhereNullable() {
+    database.nullableValueQueries.insertValue("abc")
+    database.nullableValueQueries.insertValue(null)
+
+    assertThat(database.nullableValueQueries.selectValue("abc").executeAsOne())
+      .isEqualTo(
+        NullableValue("abc"),
+      )
+    assertThat(database.nullableValueQueries.selectValue(null).executeAsOne())
+      .isEqualTo(
+        NullableValue(null),
+      )
+  }
 }

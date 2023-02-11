@@ -192,4 +192,18 @@ class PostgreSqlTest {
     val uuid: UUID = database.uuidsQueries.randomUuid().executeAsOne()
     assertThat(uuid).isNotNull()
   }
+
+  @Test fun selectWhereNullable() {
+    database.nullableValueQueries.insertValue("abc")
+    database.nullableValueQueries.insertValue(null)
+
+    assertThat(database.nullableValueQueries.selectValue("abc").executeAsOne())
+      .isEqualTo(
+        NullableValue("abc"),
+      )
+    assertThat(database.nullableValueQueries.selectValue(null).executeAsOne())
+      .isEqualTo(
+        NullableValue(null),
+      )
+  }
 }

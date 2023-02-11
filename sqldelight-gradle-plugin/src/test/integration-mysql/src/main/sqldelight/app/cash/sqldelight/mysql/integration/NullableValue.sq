@@ -1,0 +1,9 @@
+CREATE TABLE nullableValue (
+  val text
+);
+
+insertValue:
+  INSERT INTO nullableValue (val) VALUES (:value);
+
+selectValue:
+  SELECT * FROM nullableValue WHERE val = :value;
