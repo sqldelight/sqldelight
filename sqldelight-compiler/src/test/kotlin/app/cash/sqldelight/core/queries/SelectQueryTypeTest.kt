@@ -381,7 +381,7 @@ class SelectQueryTypeTest {
        |    driver.removeListener(listener, arrayOf("socialFeedItem"))
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
+       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId IS NOT DISTINCT FROM ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
        |    bindString(0, userId)
        |  }
        |
@@ -475,7 +475,7 @@ class SelectQueryTypeTest {
        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
        |  |SELECT _id, username
        |  |FROM Friend
-       |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
+       |  |WHERE userId IS NOT DISTINCT FROM ? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), mapper, 2) {
        |    bindString(0, userId)
        |    bindString(1, username)
@@ -586,10 +586,10 @@ class SelectQueryTypeTest {
       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
       |  |SELECT *
       |  |FROM data
-      |  |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?
-      |  |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?
-      |  |AND val ${"$"}{ if (val___ == null) "IS NOT" else "<>" } ?
-      |  |AND val ${"$"}{ if (val____ == null) "IS NOT" else "!=" } ?
+      |  |WHERE val IS NOT DISTINCT FROM ?
+      |  |AND val IS NOT DISTINCT FROM ?
+      |  |AND val IS DISTINCT FROM ?
+      |  |AND val IS DISTINCT FROM ?
       |  |AND val IS ?
       |  |AND val IS NOT ?
       |  ""${'"'}.trimMargin(), mapper, 6) {
@@ -886,10 +886,10 @@ class SelectQueryTypeTest {
       |  }
       |
       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
-      |  |WITH child_ids AS (SELECT id FROM data WHERE id ${'$'}{ if (id == null) "IS" else "=" } ?)
+      |  |WITH child_ids AS (SELECT id FROM data WHERE id IS NOT DISTINCT FROM ?)
       |  |SELECT *
       |  |FROM data
-      |  |WHERE id ${'$'}{ if (id == null) "IS" else "=" } ? OR id IN child_ids
+      |  |WHERE id IS NOT DISTINCT FROM ? OR id IN child_ids
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), mapper, 4) {
@@ -1069,7 +1069,7 @@ class SelectQueryTypeTest {
       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
       |  |SELECT *
       |  |FROM data
-      |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
+      |  |WHERE token IS NOT DISTINCT FROM ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
       |    ${binderCheck}bindString(0, token)
       |    bindString(1, token)

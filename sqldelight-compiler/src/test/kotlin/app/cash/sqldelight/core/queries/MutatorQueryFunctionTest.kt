@@ -184,7 +184,7 @@ class MutatorQueryFunctionTest {
       |  driver.execute(null, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
-      |      |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
+      |      |WHERE value IS NOT DISTINCT FROM ?
       |      ""${'"'}.trimMargin(), 2) {
       |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
       |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })

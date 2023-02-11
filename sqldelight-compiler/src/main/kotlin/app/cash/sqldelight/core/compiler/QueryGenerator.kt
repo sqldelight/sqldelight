@@ -191,14 +191,12 @@ abstract class QueryGenerator(
               var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
               val nullableEquality: String
               if (symbol != null) {
-                nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
+                nullableEquality = "${symbol.leftWhitspace()}IS NOT DISTINCT FROM${symbol.rightWhitespace()}"
               } else {
                 symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
-                nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+                nullableEquality = "${symbol.leftWhitspace()}IS DISTINCT FROM${symbol.rightWhitespace()}"
               }
-
-              val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
-              replacements.add(symbol.range to "\${ $block }")
+              replacements.add(symbol.range to nullableEquality)
             }
           }
 

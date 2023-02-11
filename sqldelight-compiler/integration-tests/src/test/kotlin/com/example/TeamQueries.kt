@@ -112,7 +112,7 @@ public class TeamQueries(
         driver.executeQuery(null, """
     |SELECT *
     |FROM team
-    |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
+    |WHERE inner_type IS NOT DISTINCT FROM ?
     """.trimMargin(), mapper, 1) {
       bindString(0, inner_type?.let { teamAdapter.inner_typeAdapter.encode(it) })
     }

@@ -830,9 +830,8 @@ class InterfaceGeneration {
       |    }
       |
       |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
-      |        driver.executeQuery(null,
-      |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
-      |        1) {
+      |        driver.executeQuery(null, ""${'"'}SELECT * FROM song WHERE album_id IS NOT DISTINCT FROM ?""${'"'},
+      |        mapper, 1) {
       |      bindLong(0, album_id)
       |    }
       |

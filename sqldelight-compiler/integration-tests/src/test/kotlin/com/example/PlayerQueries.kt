@@ -245,7 +245,7 @@ public class PlayerQueries(
         driver.executeQuery(null, """
     |SELECT *
     |FROM player
-    |WHERE team ${ if (team == null) "IS" else "=" } ?
+    |WHERE team IS NOT DISTINCT FROM ?
     """.trimMargin(), mapper, 1) {
       bindString(0, team?.let { it.name })
     }
