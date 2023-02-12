@@ -165,7 +165,7 @@ private external interface RequestBuilder {
   var params: Array<Any?>?
 }
 
-class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : SqlCursor {
+internal class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : SqlCursor {
   private var currentRow = -1
 
   override fun next(): Boolean = ++currentRow < values.size
