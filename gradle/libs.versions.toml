@@ -102,7 +102,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 intellij = { id = "org.jetbrains.intellij", version = "1.13.0" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.11" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
-spotless = { id = "com.diffplug.spotless", version = "6.13.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.15.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
 ksp = { id = "com.google.devtools.ksp", version = "1.8.0-1.0.8" }
