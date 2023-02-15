@@ -10,11 +10,13 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 import java.io.File
 import javax.inject.Inject
 
@@ -25,6 +27,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   init {
     sourceFolders.convention(listOf("sqldelight"))
+    srcDirs.convention(emptySet())
     deriveSchemaFromMigrations.convention(false)
     verifyMigrations.convention(false)
     migrationOutputFileFormat.convention(".sql")
@@ -35,6 +38,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   abstract val packageName: Property<String>
   abstract val schemaOutputDirectory: DirectoryProperty
   abstract val sourceFolders: ListProperty<String>
+  abstract val srcDirs: SetProperty<Directory>
   abstract val deriveSchemaFromMigrations: Property<Boolean>
   abstract val verifyMigrations: Property<Boolean>
   abstract val migrationOutputDirectory: DirectoryProperty
@@ -128,6 +132,17 @@ abstract class SqlDelightDatabase @Inject constructor(
     dependencies.add(database)
   }
 
+  fun srcDirs(vararg srcPaths: String) {
+    val srcDirectories = project.provider {
+      val srcFiles = srcPaths.map { project.file(it) }
+
+      srcFiles
+        .map { project.layout.dir(project.provider { it }).get() }
+        .toSet()
+    }
+    srcDirs.set(srcDirectories)
+  }
+
   internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
     val packageName = requireNotNull(packageName.getOrNull()) { "property packageName for $name database must be provided" }
 
@@ -180,7 +195,16 @@ abstract class SqlDelightDatabase @Inject constructor(
       }
     }
 
-    return relativeSourceFolders + dependencies.flatMap { dependency ->
+    val srcDirs = srcDirs.get().map { folder ->
+      SqlDelightSourceFolderImpl(
+        folder = folder.asFile,
+        dependency = false,
+      )
+    }
+
+    val allSourceFolders = relativeSourceFolders + srcDirs
+
+    return allSourceFolders + dependencies.flatMap { dependency ->
       val dependencySource = source.closestMatch(dependency.sources)
         ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
       val compilationUnit = dependency.getProperties().compilationUnits
