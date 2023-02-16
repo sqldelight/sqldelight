@@ -67,30 +67,9 @@ Package name used for the database class.
 
 ----
 
-### `sourceFolders`
-
-Type: `ListProperty<String>`
-
-A collection of folders that the plugin will look in for your `.sq` and `.sqm` files.
-These folder paths are relative to your existing source set, so if you specify `listOf("db")`
-then the plugin will look into `src/main/db` or `src/commondMain/db`.
-
-Defaults to `listOf("sqldelight")`.
-
-=== "Kotlin"
-    ```kotlin
-    sourceFolders.set(listOf("db"))
-    ```
-=== "Groovy"
-    ```groovy
-    sourceFolders = ['db']
-    ```
-
-----
-
 ### `srcDirs`
 
-Type: `SetProperty<Directory>`
+Type: `ConfigurableFileCollection`
 
 A collection of folders that the plugin will look in for your `.sq` and `.sqm` files.
 
@@ -98,19 +77,18 @@ Defaults to `emptySet()`.
 
 === "Kotlin"
 ```kotlin
-srcDirs.set(setOf(layout.projectDirectory.dir("main/sqldelight")))
+srcDirs.setFrom("src/main/sqldelight")
 ```
 === "Groovy"
 ```groovy
-srcDirs = [layout.projectDirectory.dir('main/sqldelight')]
+srcDirs = ['src/main/sqldelight']
 ```
 
 ----
 
-### `srcDirs(vararg srcPaths: String)`
+### `srcDirs(vararg objects: Any)`
 
-A collection of folders that the plugin will look in for your `.sq` and `.sqm` files. They are
-relative to the project directory.
+A collection of objects that the plugin will look in for your `.sq` and `.sqm` files.
 
 === "Kotlin"
 ```kotlin
