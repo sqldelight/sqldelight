@@ -14,15 +14,10 @@ repositories {
 
 sqldelight {
   databases {
-    DatabaseA {
+    Database {
       packageName = "com.example"
-      srcDirs('src/main/projectA')
-      verifyMigrations = true
-    }
-    DatabaseB {
-      packageName = "com.example"
-      srcDirs('src/main/projectB')
-      verifyMigrations = true
+      schemaOutputDirectory = file('main/sqldelight/databases')
+      srcDirs('main/sqldelight')
     }
   }
 }

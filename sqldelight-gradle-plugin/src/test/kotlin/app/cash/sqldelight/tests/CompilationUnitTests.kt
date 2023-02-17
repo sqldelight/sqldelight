@@ -82,7 +82,7 @@ class CompilationUnitTests {
         |
         |    OtherDb {
         |      packageName = "com.sample.otherdb"
-        |      sourceFolders = ["sqldelight", "otherdb"]
+        |      srcDirs('src/main/sqldelight', 'src/main/otherdb')
         |      treatNullAsUnknownForEquality = true
         |    }
         |  }
