@@ -24,7 +24,6 @@ abstract class SqlDelightDatabase @Inject constructor(
 ) {
 
   init {
-    srcDirs.setFrom(emptyList<String>())
     deriveSchemaFromMigrations.convention(false)
     verifyMigrations.convention(false)
     migrationOutputFileFormat.convention(".sql")
@@ -129,7 +128,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   fun srcDirs(vararg srcPaths: Any) {
-    srcDirs.setFrom(srcPaths)
+    srcDirs.from(srcPaths)
   }
 
   internal fun getProperties(): SqlDelightDatabasePropertiesImpl {

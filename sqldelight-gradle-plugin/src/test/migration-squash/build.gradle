@@ -8,19 +8,19 @@ apply plugin: 'app.cash.sqldelight'
 sqldelight {
   databases {
     mysqlDatabase {
-      sourceFolders = ["sqldelight/mysql"]
+      srcDirs('src/main/sqldelight/mysql')
       packageName = "app.cash.sqldelight.mysql.integration"
       dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
       deriveSchemaFromMigrations = true
     }
     postgresDatabase {
-      sourceFolders = ["sqldelight/postgres"]
+      srcDirs('src/main/sqldelight/postgres')
       packageName = "app.cash.sqldelight.postgres.integration"
       dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
       deriveSchemaFromMigrations = true
     }
     sqliteDatabase {
-      sourceFolders = ["sqldelight/sqlite"]
+      srcDirs('src/main/sqldelight/sqlite')
       packageName = "app.cash.sqldelight.sqlite.integration"
       dialect("app.cash.sqldelight:sqlite-3-35-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
       deriveSchemaFromMigrations = true

@@ -16,12 +16,12 @@ sqldelight {
   databases {
     DatabaseA {
       packageName = "com.example"
-      sourceFolders = ["projectA"]
+      srcDirs('src/main/projectA')
       verifyMigrations = true
     }
     DatabaseB {
       packageName = "com.example"
-      sourceFolders = ["projectB"]
+      srcDirs('src/main/projectB')
       verifyMigrations = true
     }
   }
