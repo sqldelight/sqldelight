@@ -247,9 +247,9 @@ private class AndroidPreparedStatement(
 }
 
 private class AndroidQuery(
-  private val sql: String,
+  override val sql: String,
   private val database: SupportSQLiteDatabase,
-  private val argCount: Int,
+  override val argCount: Int,
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds = MutableList<((SupportSQLiteProgram) -> Unit)?>(argCount) { null }
 
@@ -289,11 +289,7 @@ private class AndroidQuery(
     }
   }
 
-  override fun getSql() = sql
-
   override fun toString() = sql
-
-  override fun getArgCount() = argCount
 
   override fun close() { }
 }
