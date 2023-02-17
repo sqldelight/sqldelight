@@ -3,7 +3,7 @@ kotlin = "1.8.0"
 dokka = "1.7.20"
 kotlinCoroutines = "1.6.4"
 idea = "221.6008.13" # Electric Eel (2022.1.1) RC 1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
-androidxSqlite = "2.2.0"
+androidxSqlite = "2.3.0"
 schemaCrawler = "16.19.2"
 stately = "1.2.3"
 sqliter = "1.2.2"
@@ -13,7 +13,7 @@ paging-mpp = "3.1.1-0.1.1"
 paging3 = "3.1.1"
 ktlint = "0.46.1"
 agp = "7.4.1"
-compileSdk = "31"
+compileSdk = "33"
 minSdk = "16"
 sqlPsi = "0.4.2"
 testContainers = "1.17.6"
@@ -69,7 +69,7 @@ robolectric = { module = "org.robolectric:robolectric", version = "4.9.2" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.6" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.40.1.0" }
-postgresJdbc = { module = "org.postgresql:postgresql", version = "42.5.3" }
+postgresJdbc = { module = "org.postgresql:postgresql", version = "42.5.4" }
 mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.32" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
