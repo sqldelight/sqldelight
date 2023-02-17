@@ -3341,6 +3341,11 @@ e.g. The <code>IntColumnAdapter</code> for doing <code>INTEGER As kotlin.Int</co
 <span class="w"> </span>   .asFlow()
 <span class="gi">+   .mapToList(<ins class="critic">Dispatchers.IO</ins>)</span>
 </code></pre></div></li>
+<li>Some driver methods like <a href="../2.x/runtime/app.cash.sqldelight.db/-sql-driver/execute"><code>execute()</code></a>, <a href="../2.x/runtime/app.cash.sqldelight.db/-sql-driver/execute-query"><code>executeQuery()</code></a>, <code>newTransaction()</code>, and <code>endTransaction()</code> now return a <a href="../2.x/runtime/app.cash.sqldelight.db/-query-result"><code>QueryResult</code></a> object. Use <a href="../2.x/runtime/app.cash.sqldelight.db/-query-result/value"><code>QueryResult.value</code></a> to access the returned value.
+    <div class="highlight"><pre><span></span><code><span class="gd">-driver.executeQuery(null, &quot;PRAGMA user_version&quot;, { /*...*/ })</span>
+<span class="gi">+driver.executeQuery(null, &quot;PRAGMA user_version&quot;, { /*...*/ })<ins class="critic">.value</ins></span>
+</code></pre></div>
+    This change enables driver implementations to be based on non-blocking APIs where the returned value can be accessed using the suspending <a href="../2.x/runtime/app.cash.sqldelight.db/-query-result/await"><code>QueryResult.await()</code></a> method.</li>
 </ul>
 
 
