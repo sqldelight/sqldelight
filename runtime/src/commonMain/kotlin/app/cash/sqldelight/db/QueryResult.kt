@@ -1,5 +1,11 @@
 package app.cash.sqldelight.db
 
+/**
+ * The returned [value] is the result of a database query or other database operation.
+ *
+ * This interface enables drivers to be based on non-blocking APIs where the result can be obtained using the suspending
+ * [await] method. See [AsyncValue].
+ */
 sealed interface QueryResult<T> {
   val value: T get() = throw IllegalStateException(
     """
@@ -7,8 +13,10 @@ sealed interface QueryResult<T> {
       asynchronous usage:
 
       sqldelight {
-        MyDatabase {
-          generateAsync = true
+        databases {
+          MyDatabase {
+            generateAsync = true
+          }
         }
       }
     """.trimIndent(),
@@ -25,7 +33,7 @@ sealed interface QueryResult<T> {
   }
 
   /**
-   * A [QueryResult] representation of a Kotlin [Unit].
+   * A [QueryResult] representation of a Kotlin [Unit] for convenience.
    *
    * Equivalent to `QueryResult.Value(Unit)`.
    */
