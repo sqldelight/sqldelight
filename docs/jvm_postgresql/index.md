@@ -1,5 +1,5 @@
 ---
-dialect: "app.cash.sqldeight:postgres-dialect"
+dialect: "app.cash.sqldelight:postgresql-dialect"
 ---
 # Getting Started with PostgreSQL
 

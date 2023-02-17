@@ -1,5 +1,5 @@
 ---
-dialect: "app.cash.sqldeight:mysql-dialect"
+dialect: "app.cash.sqldelight:mysql-dialect"
 ---
 # Getting Started with MySQL
 
