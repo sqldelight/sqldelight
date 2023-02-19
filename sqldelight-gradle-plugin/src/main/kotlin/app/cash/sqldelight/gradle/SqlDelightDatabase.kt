@@ -10,9 +10,9 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import java.io.File
@@ -24,7 +24,6 @@ abstract class SqlDelightDatabase @Inject constructor(
 ) {
 
   init {
-    sourceFolders.convention(listOf("sqldelight"))
     deriveSchemaFromMigrations.convention(false)
     verifyMigrations.convention(false)
     migrationOutputFileFormat.convention(".sql")
@@ -34,7 +33,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   abstract val packageName: Property<String>
   abstract val schemaOutputDirectory: DirectoryProperty
-  abstract val sourceFolders: ListProperty<String>
+  abstract val srcDirs: ConfigurableFileCollection
   abstract val deriveSchemaFromMigrations: Property<Boolean>
   abstract val verifyMigrations: Property<Boolean>
   abstract val migrationOutputDirectory: DirectoryProperty
@@ -128,6 +127,10 @@ abstract class SqlDelightDatabase @Inject constructor(
     dependencies.add(database)
   }
 
+  fun srcDirs(vararg srcPaths: Any) {
+    srcDirs.from(srcPaths)
+  }
+
   internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
     val packageName = requireNotNull(packageName.getOrNull()) { "property packageName for $name database must be provided" }
 
@@ -169,18 +172,24 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   private fun sourceFolders(source: Source): List<SqlDelightSourceFolderImpl> {
-    val sourceFolders = sourceFolders.get()
+    val sourceFolders: List<SqlDelightSourceFolderImpl> = buildList {
+      for (dir in srcDirs) {
+        val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(folder = dir, dependency = false)
+        add(sqlDelightSourceFolder)
+      }
 
-    val relativeSourceFolders = sourceFolders.flatMap { folder ->
-      source.sourceSets.map {
-        SqlDelightSourceFolderImpl(
-          folder = File(project.projectDir, "src/$it/$folder"),
-          dependency = false,
-        )
+      if (this.isEmpty()) {
+        for (sourceSetName in source.sourceSets) {
+          val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(
+            folder = File(project.projectDir, "src/$sourceSetName/sqldelight"),
+            dependency = false,
+          )
+          add(sqlDelightSourceFolder)
+        }
       }
     }
 
-    return relativeSourceFolders + dependencies.flatMap { dependency ->
+    return sourceFolders + dependencies.flatMap { dependency ->
       val dependencySource = source.closestMatch(dependency.sources)
         ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
       val compilationUnit = dependency.getProperties().compilationUnits
