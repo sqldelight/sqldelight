@@ -8,6 +8,11 @@ internal sealed interface WorkerAction {
     inline val exec: WorkerAction get() = WorkerAction("exec")
 
     /**
+     * Execute a batch of SQL statements.
+     */
+    inline val execBatch: WorkerAction get() = WorkerAction("exec_batch")
+
+    /**
      * Begin a transaction in the underlying SQL implementation.
      */
     inline val beginTransaction: WorkerAction get() = WorkerAction("begin_transaction")

@@ -68,6 +68,25 @@ interface SqlDriver : Closeable {
   ): QueryResult<Long>
 
   /**
+   * Execute a SQL statement in batch mode.
+   *
+   * @param [identifier] An opaque, unique value that can be used to implement any driver-side
+   *   caching of prepared statements. If [identifier] is null, a fresh statement is required.
+   * @param [sql] The SQL string to be executed.
+   * @param [parameters] The number of bindable parameters [sql] contains.
+   * @param [binders] A lambda which is called before execution to bind any parameters to the SQL
+   *   statement and set up the batches.
+   *
+   * @return A list containing the number of rows updated for each batch that was executed.
+   */
+  fun executeBatch(
+    identifier: Int?,
+    sql: String,
+    parameters: Int,
+    binders: (BatchingSqlPreparedStatement.() -> Unit)? = null,
+  ): QueryResult<List<Long>> = throw UnsupportedOperationException()
+
+  /**
    * Start a new [Transacter.Transaction] on the database.
    *
    * It's up to the implementor how this method behaves for different connection/threading patterns.

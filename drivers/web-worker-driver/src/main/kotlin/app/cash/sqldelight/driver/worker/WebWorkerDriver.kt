@@ -2,6 +2,7 @@ package app.cash.sqldelight.driver.worker
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.BatchingSqlPreparedStatement
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -27,7 +28,6 @@ import kotlin.coroutines.resumeWithException
  * to handle queries and send results back from the Worker.
  *
  * @property worker The Worker running a SQL implementation that this driver communicates with.
- * @see [WebWorkerDriver.fromScriptUrl]
  */
 class WebWorkerDriver(private val worker: Worker) : SqlDriver {
   private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
@@ -39,7 +39,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     binders?.invoke(bound)
 
     return QueryResult.AsyncValue {
-      val response = worker.sendMessage(WorkerAction.exec) {
+      val response = worker.sendMessage<ExecRequestBuilder>(WorkerAction.exec) {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
@@ -53,7 +53,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     binders?.invoke(bound)
 
     return QueryResult.AsyncValue {
-      val response = worker.sendMessage(WorkerAction.exec) {
+      val response = worker.sendMessage<ExecRequestBuilder>(WorkerAction.exec) {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
@@ -62,6 +62,26 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
         response.results.values.isEmpty() -> 0L
         else -> response.results.values[0][0].unsafeCast<Double>().toLong()
       }
+    }
+  }
+
+  override fun executeBatch(identifier: Int?, sql: String, parameters: Int, binders: (BatchingSqlPreparedStatement.() -> Unit)?): QueryResult<List<Long>> {
+    val bound = JsWorkerSqlPreparedStatement()
+    binders?.invoke(bound)
+
+    return QueryResult.AsyncValue {
+      val response =
+        worker.sendMessage<ExecBatchRequestBuilder>(WorkerAction.execBatch) {
+          this.commands = bound.batches.map {
+            js("{}").unsafeCast<ExecRequestBuilder>().apply {
+              this.sql = sql
+              this.params = it.toTypedArray()
+            }
+          }.toTypedArray()
+        }
+
+      checkWorkerResults(response.results)
+      return@AsyncValue response.results.values[0].map { it.unsafeCast<Double>().toLong() }
     }
   }
 
@@ -90,7 +110,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     val transaction = Transaction(enclosing)
     this.transaction = transaction
     if (enclosing == null) {
-      worker.sendMessage(WorkerAction.beginTransaction)
+      worker.sendMessage<Nothing>(WorkerAction.beginTransaction)
     }
 
     return@AsyncValue transaction
@@ -104,16 +124,16 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {
         if (successful) {
-          worker.sendMessage(WorkerAction.endTransaction)
+          worker.sendMessage<Nothing>(WorkerAction.endTransaction)
         } else {
-          worker.sendMessage(WorkerAction.rollbackTransaction)
+          worker.sendMessage<Nothing>(WorkerAction.rollbackTransaction)
         }
       }
       transaction = enclosingTransaction
     }
   }
 
-  private suspend fun Worker.sendMessage(action: WorkerAction, message: RequestBuilder.() -> Unit = {}): WorkerResponse = suspendCancellableCoroutine { continuation ->
+  private suspend fun <T> Worker.sendMessage(action: WorkerAction, message: (T.() -> Unit)? = null): WorkerResponse = suspendCancellableCoroutine { continuation ->
     val id = messageCounter++
     val messageListener = object : EventListener {
       override fun handleEvent(event: Event) {
@@ -140,7 +160,9 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     addEventListener("error", errorListener)
 
     val messageObject = js("{}").unsafeCast<WorkerRequest>().apply {
-      this.unsafeCast<RequestBuilder>().message()
+      if (message != null) {
+        this.unsafeCast<T>().message()
+      }
       this.id = id
       this.action = action
     }
@@ -160,9 +182,13 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
   }
 }
 
-private external interface RequestBuilder {
+private external interface ExecRequestBuilder {
   var sql: String?
   var params: Array<Any?>?
+}
+
+private external interface ExecBatchRequestBuilder {
+  var commands: Array<ExecRequestBuilder>
 }
 
 internal class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : SqlCursor {
@@ -181,9 +207,11 @@ internal class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : Sq
   override fun getBoolean(index: Int): Boolean? = values[currentRow][index].unsafeCast<Boolean?>()
 }
 
-internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
+internal class JsWorkerSqlPreparedStatement : BatchingSqlPreparedStatement {
+  var parameters = mutableListOf<Any?>()
+    private set
 
-  val parameters = mutableListOf<Any?>()
+  val batches = mutableListOf<List<Any?>>()
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     parameters.add(bytes?.toTypedArray())
@@ -205,5 +233,10 @@ internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     parameters.add(boolean)
+  }
+
+  override fun addBatch() {
+    batches.add(parameters)
+    parameters = mutableListOf()
   }
 }
