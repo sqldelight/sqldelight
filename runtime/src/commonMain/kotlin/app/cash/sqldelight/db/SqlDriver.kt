@@ -83,7 +83,7 @@ interface SqlDriver : Closeable {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (BatchingSqlPreparedStatement.() -> Unit)? = null,
+    binders: (BatchableSqlPreparedStatement.() -> Unit)? = null,
   ): QueryResult<List<Long>> = throw UnsupportedOperationException()
 
   /**

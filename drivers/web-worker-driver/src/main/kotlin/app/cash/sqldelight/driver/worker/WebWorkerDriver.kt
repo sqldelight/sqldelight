@@ -2,7 +2,7 @@ package app.cash.sqldelight.driver.worker
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.db.BatchingSqlPreparedStatement
+import app.cash.sqldelight.db.BatchableSqlPreparedStatement
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -65,7 +65,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     }
   }
 
-  override fun executeBatch(identifier: Int?, sql: String, parameters: Int, binders: (BatchingSqlPreparedStatement.() -> Unit)?): QueryResult<List<Long>> {
+  override fun executeBatch(identifier: Int?, sql: String, parameters: Int, binders: (BatchableSqlPreparedStatement.() -> Unit)?): QueryResult<List<Long>> {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
@@ -207,7 +207,7 @@ internal class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : Sq
   override fun getBoolean(index: Int): Boolean? = values[currentRow][index].unsafeCast<Boolean?>()
 }
 
-internal class JsWorkerSqlPreparedStatement : BatchingSqlPreparedStatement {
+internal class JsWorkerSqlPreparedStatement : BatchableSqlPreparedStatement {
   var parameters = mutableListOf<Any?>()
     private set
 

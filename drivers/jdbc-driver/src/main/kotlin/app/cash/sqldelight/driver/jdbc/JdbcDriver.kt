@@ -4,7 +4,7 @@ package app.cash.sqldelight.driver.jdbc
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.db.BatchingSqlPreparedStatement
+import app.cash.sqldelight.db.BatchableSqlPreparedStatement
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -159,7 +159,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
     identifier: Int?,
     sql: String,
     parameters: Int,
-    binders: (BatchingSqlPreparedStatement.() -> Unit)?,
+    binders: (BatchableSqlPreparedStatement.() -> Unit)?,
   ): QueryResult<List<Long>> {
     val (connection, onClose) = connectionAndClose()
     try {
@@ -195,7 +195,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
  */
 class JdbcPreparedStatement(
   private val preparedStatement: PreparedStatement,
-) : BatchingSqlPreparedStatement {
+) : BatchableSqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       preparedStatement.setNull(index + 1, Types.BLOB)
