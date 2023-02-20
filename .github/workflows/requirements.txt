@@ -27,7 +27,7 @@ markdown==3.3.7
     #   mkdocs
     #   mkdocs-material
     #   pymdown-extensions
-markupsafe==2.1.1
+markupsafe==2.1.2
     # via jinja2
 mergedeep==1.3.4
     # via mkdocs
@@ -51,7 +51,7 @@ packaging==23.0
     # via mkdocs
 pygments==2.14.0
     # via mkdocs-material
-pymdown-extensions==9.9.1
+pymdown-extensions==9.9.2
     # via mkdocs-material
 python-dateutil==2.8.2
     # via
