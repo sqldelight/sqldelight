@@ -19,6 +19,19 @@ function onModuleReady() {
         id: data.id,
         results: db.exec(data.sql, data.params)[0] ?? { values: [] }
       });
+    case "exec_batch":
+      if (!data["commands"]) {
+        throw new Error("exec_batch: Missing commands array");
+      }
+
+      const rows = data.commands.map((command) => {
+        db.exec(command.sql, command.params);
+        return [0];
+      });
+      return postMessage({
+        id: data.id,
+        results: { values: rows }
+      })
     case "begin_transaction":
       return postMessage({
         id: data.id,

@@ -81,7 +81,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
         }
 
       checkWorkerResults(response.results)
-      return@AsyncValue response.results.values[0].map { it.unsafeCast<Double>().toLong() }
+      return@AsyncValue response.results.values.map { it[0].unsafeCast<Double>().toLong() }
     }
   }
 

@@ -1,5 +1,6 @@
 package app.cash.sqldelight.async.coroutines
 
+import app.cash.sqldelight.db.BatchableSqlPreparedStatement
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -19,6 +20,13 @@ suspend fun SqlDriver.await(
   parameters: Int,
   binders: (SqlPreparedStatement.() -> Unit)? = null,
 ): Long = execute(identifier, sql, parameters, binders).await()
+
+suspend fun SqlDriver.awaitBatch(
+  identifier: Int?,
+  sql: String,
+  parameters: Int,
+  binders: (BatchableSqlPreparedStatement.() -> Unit)? = null,
+): List<Long> = executeBatch(identifier, sql, parameters, binders).await()
 
 suspend fun SqlSchema.awaitCreate(driver: SqlDriver) = create(driver).await()
 
