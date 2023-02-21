@@ -75,7 +75,7 @@ sealed interface TransacterBase
  */
 interface Transacter : TransacterBase {
   /**
-   * Starts a [Transaction] and runs [body] in that transaction.
+   * Starts a [Transaction] and runs [bodyWithReturn] in that transaction.
    *
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
@@ -165,7 +165,7 @@ interface Transacter : TransacterBase {
  */
 interface SuspendingTransacter : TransacterBase {
   /**
-   * Starts a [Transaction] and runs [body] in that transaction.
+   * Starts a [Transaction] and runs [bodyWithReturn] in that transaction.
    *
    * @throws IllegalStateException if [noEnclosing] is true and there is already an active
    *   [Transaction] on this thread.
