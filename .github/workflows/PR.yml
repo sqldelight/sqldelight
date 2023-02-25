@@ -24,6 +24,8 @@ jobs:
             job: gradle-plugin-tests
 
     runs-on: ${{matrix.os}}
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout the repo

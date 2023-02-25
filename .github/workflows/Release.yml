@@ -19,6 +19,8 @@ jobs:
 
     runs-on: ${{matrix.os}}
     if: github.repository == 'cashapp/sqldelight'
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout the repo
@@ -58,6 +60,8 @@ jobs:
   publish_plugin:
     runs-on: ubuntu-latest
     if: github.repository == 'cashapp/sqldelight'
+    permissions:
+      contents: read
     needs: publish_archives
     steps:
       - name: Checkout the repo
