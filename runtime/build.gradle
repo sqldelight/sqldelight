@@ -2,16 +2,12 @@ plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
+  id("app.cash.sqldelight.toolchain.runtime")
 }
 
 // https://youtrack.jetbrains.com/issue/KTIJ-14471
 sourceSets {
   main
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(8))
-  vendor.set(JvmVendorSpec.AZUL)
 }
 
 kotlin {

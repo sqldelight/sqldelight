@@ -19,3 +19,4 @@ dependencyResolutionManagement {
 }
 
 include(":multiplatform-convention")
+include(":toolchain-convention")

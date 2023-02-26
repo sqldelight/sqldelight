@@ -2,11 +2,7 @@ plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(8))
-  vendor.set(JvmVendorSpec.AZUL)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
 
 archivesBaseName = 'sqldelight-coroutines-extensions'

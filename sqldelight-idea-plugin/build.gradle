@@ -5,11 +5,7 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.changelog)
   alias(libs.plugins.ksp)
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(11))
-  vendor.set(JvmVendorSpec.AZUL)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 intellij {

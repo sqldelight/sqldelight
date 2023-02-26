@@ -2,14 +2,10 @@ plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
 
 archivesBaseName = 'sqldelight-androidx-paging3'
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(8))
-  vendor.set(JvmVendorSpec.AZUL)
-}
 
 kotlin {
   ios()

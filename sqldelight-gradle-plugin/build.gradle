@@ -7,11 +7,7 @@ plugins {
   alias(libs.plugins.dokka)
   id("java-gradle-plugin")
   id("jvm-test-suite")
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(11))
-  vendor.set(JvmVendorSpec.AZUL)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 testing {

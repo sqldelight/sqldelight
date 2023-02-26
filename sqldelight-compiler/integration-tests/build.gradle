@@ -1,10 +1,6 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(11))
-  vendor.set(JvmVendorSpec.AZUL)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 dependencies {

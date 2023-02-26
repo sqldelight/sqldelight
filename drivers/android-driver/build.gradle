@@ -3,11 +3,7 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(8))
-  vendor.set(JvmVendorSpec.AZUL)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
 
 archivesBaseName = 'sqldelight-android-driver'

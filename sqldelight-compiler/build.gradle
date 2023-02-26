@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 tasks.named('test') {
@@ -13,11 +14,6 @@ tasks.named('test') {
     showStackTraces true
     showCauses true
   }
-}
-
-kotlin.jvmToolchain {
-  languageVersion.set(JavaLanguageVersion.of(11))
-  vendor.set(JvmVendorSpec.AZUL)
 }
 
 sourceSets {
