@@ -1,0 +1,2 @@
+getValue:
+SELECT VALUE FROM test1; 

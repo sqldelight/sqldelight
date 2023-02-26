@@ -17,7 +17,7 @@ sqldelight {
     Database {
       packageName = "com.example"
       schemaOutputDirectory = file('main/sqldelight/databases')
-      srcDirs('main/sqldelight')
+      srcDirs('main/sqldelight', 'other/sqldelight/Test1.sq', 'other/sqldelight/Test2.sq')
     }
   }
 }

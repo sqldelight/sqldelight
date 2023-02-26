@@ -127,6 +127,7 @@ abstract class SqlDelightDatabase @Inject constructor(
     dependencies.add(database)
   }
 
+  @Suppress("unused") // Public API used in gradle files.
   fun srcDirs(vararg srcPaths: Any) {
     srcDirs.from(srcPaths)
   }

@@ -1,0 +1,2 @@
+getAll:
+SELECT * FROM test1;
