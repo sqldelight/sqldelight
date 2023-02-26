@@ -5,9 +5,8 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.changelog)
   alias(libs.plugins.ksp)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
-
-kotlin.jvmToolchain(11)
 
 intellij {
   updateSinceUntilBuild = false

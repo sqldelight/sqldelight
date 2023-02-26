@@ -1,8 +1,7 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
-
-kotlin.jvmToolchain(11)
 
 dependencies {
   api project(':sqldelight-compiler')

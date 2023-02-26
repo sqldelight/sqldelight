@@ -2,13 +2,12 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 grammarKit {
   intellijRelease.set(libs.versions.idea)
 }
-
-kotlin.jvmToolchain(11)
 
 dependencies {
   api project(':dialects:sqlite-3-30')

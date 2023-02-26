@@ -1,12 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
-
-kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-jdbc-driver'
 

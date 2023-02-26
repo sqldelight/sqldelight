@@ -1,5 +1,6 @@
 plugins {
   id("app.cash.sqldelight.multiplatform")
+  id("app.cash.sqldelight.toolchain.runtime")
 }
 
 // https://youtrack.jetbrains.com/issue/KTIJ-14471
@@ -8,8 +9,6 @@ sourceSets {
 }
 
 kotlin {
-  jvmToolchain(8)
-  
   mingwX86()
 
   sourceSets {

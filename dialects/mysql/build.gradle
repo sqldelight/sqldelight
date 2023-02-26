@@ -4,13 +4,12 @@ plugins {
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 grammarKit {
   intellijRelease.set(libs.versions.idea)
 }
-
-kotlin.jvmToolchain(11)
 
 dependencies {
   ksp libs.moshiCodegen

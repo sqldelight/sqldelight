@@ -1,0 +1,21 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  id("java-gradle-plugin")
+}
+
+gradlePlugin {
+  plugins {
+    runtime {
+      id = "app.cash.sqldelight.toolchain.runtime"
+      implementationClass = "app.cash.sqldelight.toolchain.RuntimeToolchainConventions"
+    }
+    compiler {
+      id = "app.cash.sqldelight.toolchain.compiler"
+      implementationClass = "app.cash.sqldelight.toolchain.CompilerToolchainConventions"
+    }
+  }
+}
+
+dependencies {
+  compileOnly libs.kotlin.plugin
+}

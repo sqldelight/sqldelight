@@ -2,9 +2,8 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
-
-kotlin.jvmToolchain(11)
 
 dependencies {
   // These dependencies will not be shadowed by sqldelight-gradle-plugin

@@ -7,9 +7,8 @@ plugins {
   alias(libs.plugins.dokka)
   id("java-gradle-plugin")
   id("jvm-test-suite")
+  id("app.cash.sqldelight.toolchain.compiler")
 }
-
-kotlin.jvmToolchain(11)
 
 testing {
   suites {

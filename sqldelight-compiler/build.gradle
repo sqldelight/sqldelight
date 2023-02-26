@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 tasks.named('test') {
@@ -14,8 +15,6 @@ tasks.named('test') {
     showCauses true
   }
 }
-
-kotlin.jvmToolchain(11)
 
 sourceSets {
   main.java.srcDir "gen"
