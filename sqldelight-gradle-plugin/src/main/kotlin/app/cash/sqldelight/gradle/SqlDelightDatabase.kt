@@ -104,7 +104,8 @@ abstract class SqlDelightDatabase @Inject constructor(
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
   private val sources by lazy { sources(project) }
-  private val dependencies = mutableListOf<SqlDelightDatabase>()
+  // Mapping of dependencies to their parent project
+  private val dependencies = mutableMapOf<SqlDelightDatabase, String>()
 
   private var recursionGuard = false
 
@@ -117,14 +118,14 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
-    project.evaluationDependsOn(dependencyProject.path)
+    val path = dependencyProject.path
+    project.evaluationDependsOn(path)
 
     val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
       ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
     val database = dependency.databases.singleOrNull { it.name == name }
       ?: throw IllegalStateException("No database named $name in $dependencyProject")
-    check(database.packageName.get() != packageName.get()) { "Detected a schema that already has the package name ${packageName.get()} in project $dependencyProject" }
-    dependencies.add(database)
+    dependencies[database] = path
   }
 
   fun srcDirs(vararg srcPaths: Any) {
@@ -161,7 +162,11 @@ abstract class SqlDelightDatabase @Inject constructor(
         },
         rootDirectory = project.projectDir,
         className = name,
-        dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName.get(), it.name) },
+        dependencies = dependencies.map { (db, projectPath) ->
+          val otherPackageName = db.packageName.get()
+          check(otherPackageName != packageName) { "Detected a schema that already has the package name $packageName in project $projectPath" }
+          SqlDelightDatabaseNameImpl(otherPackageName, db.name)
+        },
         deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
         treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
         generateAsync = generateAsync.get(),
@@ -189,7 +194,7 @@ abstract class SqlDelightDatabase @Inject constructor(
       }
     }
 
-    return sourceFolders + dependencies.flatMap { dependency ->
+    return sourceFolders + dependencies.flatMap { (dependency, _) ->
       val dependencySource = source.closestMatch(dependency.sources)
         ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
       val compilationUnit = dependency.getProperties().compilationUnits
