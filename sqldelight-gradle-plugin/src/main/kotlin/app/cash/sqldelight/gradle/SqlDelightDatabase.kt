@@ -33,15 +33,9 @@ abstract class SqlDelightDatabase @Inject constructor(
   val migrationOutputFileFormat: Property<String> = project.objects.property(String::class.java).convention(".sql")
   val generateAsync: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
-  internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
-    isCanBeConsumed = false
-    isVisible = false
-  }
+  internal val configuration = project.configurations.detachedConfiguration()
 
-  internal val moduleConfiguration = project.configurations.create("${name}ModuleClasspath").apply {
-    isCanBeConsumed = false
-    isVisible = false
-  }
+  internal val moduleConfiguration = project.configurations.detachedConfiguration()
 
   internal var addedDialect: Boolean = false
 
