@@ -10,11 +10,13 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.gradle.api.specs.Spec
 import java.io.File
 import javax.inject.Inject
 
@@ -105,7 +107,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   private val sources by lazy { sources(project) }
   // Mapping of dependencies to their parent project
-  private val dependencies = mutableMapOf<SqlDelightDatabase, String>()
+  private val dependencies = mutableMapOf<SqlDelightDatabase, Project>()
 
   private var recursionGuard = false
 
@@ -118,14 +120,13 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
-    val path = dependencyProject.path
-    project.evaluationDependsOn(path)
+    project.evaluationDependsOn(dependencyProject.path)
 
     val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
       ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
     val database = dependency.databases.singleOrNull { it.name == name }
       ?: throw IllegalStateException("No database named $name in $dependencyProject")
-    dependencies[database] = path
+    dependencies[database] = dependencyProject
   }
 
   fun srcDirs(vararg srcPaths: Any) {
@@ -162,9 +163,9 @@ abstract class SqlDelightDatabase @Inject constructor(
         },
         rootDirectory = project.projectDir,
         className = name,
-        dependencies = dependencies.map { (db, projectPath) ->
+        dependencies = dependencies.map { (db, project) ->
           val otherPackageName = db.packageName.get()
-          check(otherPackageName != packageName) { "Detected a schema that already has the package name $packageName in project $projectPath" }
+          check(otherPackageName != packageName) { "Detected a schema that already has the package name $packageName in project ${project.path}" }
           SqlDelightDatabaseNameImpl(otherPackageName, db.name)
         },
         deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
@@ -209,6 +210,23 @@ abstract class SqlDelightDatabase @Inject constructor(
     }.distinct()
   }
 
+  /**
+   * Helper to wire relevant task dependencies for dependent projects' tasks. This is necessary to work in
+   * Gradle 8.0+, where otherwise-implicit task dependencies are not allowed.
+   */
+  private fun <T : Task> wireDependencyTaskDependencies(
+    task: T,
+    clazz: Class<T>,
+    nameMatches: (db: SqlDelightDatabase, otherTaskName: String) -> Boolean
+  ) {
+    // Note that because the dependency DB doesn't indicate a specific source/variant, we just depend on all of
+    // them to be safe.
+    for ((db, dbProject) in dependencies) {
+      // TaskContainer.withType() and matching() both return live collections
+      task.dependsOn(dbProject.tasks.withType(clazz).matching { nameMatches(db, it.name) })
+    }
+  }
+
   internal fun registerTasks() {
     sources.forEach { source ->
       val allFiles = sourceFolders(source)
@@ -228,6 +246,11 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.verifyMigrations = verifyMigrations.get()
         it.classpath.setFrom(configuration.fileCollection { true })
         it.classpath.from(moduleConfiguration.fileCollection { true })
+
+        wireDependencyTaskDependencies(it, SqlDelightTask::class.java) { db, otherProjectSchemaTaskName ->
+          otherProjectSchemaTaskName
+            .endsWith("${db.name}Interface")
+        }
       }
 
       val outputDirectoryProvider: Provider<File> = task.map { it.outputDirectory!! }
@@ -278,19 +301,25 @@ abstract class SqlDelightDatabase @Inject constructor(
       }
 
     if (schemaOutputDirectory.getOrNull() != null) {
+      val properties = getProperties()
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
         it.projectName.set(project.name)
-        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+        it.compilationUnit = properties.compilationUnits.single { it.name == source.name }
         it.outputDirectory = schemaOutputDirectory.get().asFile
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.${SqlDelightFileType.defaultExtension}")
         it.include("**${File.separatorChar}*.${MigrationFileType.defaultExtension}")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
-        it.properties = getProperties()
+        it.properties = properties
         it.verifyMigrations = verifyMigrations.get()
         it.classpath.setFrom(configuration.fileCollection { true })
         it.classpath.from(moduleConfiguration.fileCollection { true })
+
+        wireDependencyTaskDependencies(it, GenerateSchemaTask::class.java) { db, otherProjectSchemaTaskName ->
+          otherProjectSchemaTaskName
+            .endsWith("${db.name}Schema")
+        }
       }
     }
     project.tasks.named("check").configure {
