@@ -16,7 +16,6 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
-import org.gradle.api.specs.Spec
 import java.io.File
 import javax.inject.Inject
 
@@ -106,6 +105,7 @@ abstract class SqlDelightDatabase @Inject constructor(
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
   private val sources by lazy { sources(project) }
+
   // Mapping of dependencies to their parent project
   private val dependencies = mutableMapOf<SqlDelightDatabase, Project>()
 
@@ -220,7 +220,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   private fun <T : Task> wireDependencyTaskDependencies(
     task: T,
     clazz: Class<T>,
-    nameMatches: (db: SqlDelightDatabase, otherTaskName: String) -> Boolean
+    nameMatches: (db: SqlDelightDatabase, otherTaskName: String) -> Boolean,
   ) {
     // Note that because the dependency DB doesn't indicate a specific source/variant, we just depend on all of
     // them to be safe.
