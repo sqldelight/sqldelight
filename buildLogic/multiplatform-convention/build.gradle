@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
   alias(libs.plugins.kotlin.jvm)
   id("java-gradle-plugin")
@@ -9,6 +12,22 @@ gradlePlugin {
       id = "app.cash.sqldelight.multiplatform"
       implementationClass = "app.cash.sqldelight.multiplatform.MultiplatformConventions"
     }
+  }
+}
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.release.set(8)
+}
+
+tasks.withType(KotlinCompile).configureEach {
+  compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_1_8)
   }
 }
 

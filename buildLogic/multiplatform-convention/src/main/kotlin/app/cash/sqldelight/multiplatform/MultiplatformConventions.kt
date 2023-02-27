@@ -2,6 +2,8 @@ package app.cash.sqldelight.multiplatform
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
+import org.jetbrains.kotlin.gradle.dsl.JsSourceMapEmbedMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
@@ -41,11 +43,11 @@ class MultiplatformConventions : Plugin<Project> {
               }
             }
           }
-          it.compilations.all {
-            it.kotlinOptions.apply {
-              moduleKind = "umd"
-              sourceMap = true
-              sourceMapEmbedSources = null
+          it.compilations.configureEach { kotlinJsCompilation ->
+            kotlinJsCompilation.compilerOptions.options.apply {
+              moduleKind.set(JsModuleKind.MODULE_UMD)
+              sourceMap.set(true)
+              sourceMapEmbedSources.set(null as? JsSourceMapEmbedMode?)
             }
           }
         }
