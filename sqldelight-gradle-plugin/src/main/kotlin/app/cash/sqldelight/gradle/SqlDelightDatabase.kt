@@ -18,6 +18,7 @@ import org.gradle.api.provider.Provider
 import java.io.File
 import javax.inject.Inject
 
+@SqlDelightDsl
 abstract class SqlDelightDatabase @Inject constructor(
   val project: Project,
   val name: String,
