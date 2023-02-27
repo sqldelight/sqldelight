@@ -213,6 +213,9 @@ abstract class SqlDelightDatabase @Inject constructor(
   /**
    * Helper to wire relevant task dependencies for dependent projects' tasks. This is necessary to work in
    * Gradle 8.0+, where otherwise-implicit task dependencies are not allowed.
+   *
+   * Note that we use [Task.mustRunAfter] as the lightest touch option, as that only enforces ordering if the other
+   * project's task is scheduled to run in the current invocation.
    */
   private fun <T : Task> wireDependencyTaskDependencies(
     task: T,
@@ -223,7 +226,7 @@ abstract class SqlDelightDatabase @Inject constructor(
     // them to be safe.
     for ((db, dbProject) in dependencies) {
       // TaskContainer.withType() and matching() both return live collections
-      task.dependsOn(dbProject.tasks.withType(clazz).matching { nameMatches(db, it.name) })
+      task.mustRunAfter(dbProject.tasks.withType(clazz).matching { nameMatches(db, it.name) })
     }
   }
 
