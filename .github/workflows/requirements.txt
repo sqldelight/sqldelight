@@ -77,5 +77,5 @@ urllib3==1.26.14
     # via requests
 verspec==0.1.0
     # via mike
-watchdog==2.2.1
+watchdog==2.3.0
     # via mkdocs
