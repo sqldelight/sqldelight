@@ -18,27 +18,20 @@ import org.gradle.api.provider.Provider
 import java.io.File
 import javax.inject.Inject
 
+@SqlDelightDsl
 abstract class SqlDelightDatabase @Inject constructor(
   val project: Project,
   val name: String,
 ) {
 
-  init {
-    deriveSchemaFromMigrations.convention(false)
-    verifyMigrations.convention(false)
-    migrationOutputFileFormat.convention(".sql")
-    generateAsync.convention(false)
-    treatNullAsUnknownForEquality.convention(false)
-  }
-
   abstract val packageName: Property<String>
   abstract val schemaOutputDirectory: DirectoryProperty
   abstract val srcDirs: ConfigurableFileCollection
-  abstract val deriveSchemaFromMigrations: Property<Boolean>
-  abstract val verifyMigrations: Property<Boolean>
+  val deriveSchemaFromMigrations: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+  val verifyMigrations: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
   abstract val migrationOutputDirectory: DirectoryProperty
-  abstract val migrationOutputFileFormat: Property<String>
-  abstract val generateAsync: Property<Boolean>
+  val migrationOutputFileFormat: Property<String> = project.objects.property(String::class.java).convention(".sql")
+  val generateAsync: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isCanBeConsumed = false
@@ -98,7 +91,7 @@ abstract class SqlDelightDatabase @Inject constructor(
    * @see <a href="https://github.com/cashapp/sqldelight/issues/1490">sqldelight#1490</a>
    * @see <a href="https://en.wikipedia.org/wiki/Null_%28SQL%29#Null-specific_and_3VL-specific_comparison_predicates">Wikipedia entry on null specific comparisons in SQL</a>
    */
-  abstract val treatNullAsUnknownForEquality: Property<Boolean>
+  val treatNullAsUnknownForEquality: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
