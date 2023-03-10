@@ -78,7 +78,7 @@ dependencies {
     transitive = false
   }
 
-  implementation libs.kotlin.plugin
+  compileOnly libs.kotlin.plugin
   compileOnly libs.android.plugin
 
   implementation libs.jna
