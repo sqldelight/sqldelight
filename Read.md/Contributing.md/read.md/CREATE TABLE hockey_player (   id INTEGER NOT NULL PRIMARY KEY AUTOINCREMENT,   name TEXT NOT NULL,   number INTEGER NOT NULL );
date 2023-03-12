@@ -1,7 +1,12 @@
-# SQLDelight
+MyCode.SQL
+windixxie/Delight.yml
 Secure
 Security.md
-NSE
+CREATE TABLE hockey_player (
+  id INTEGER NOT NULL PRIMARY KEY AUTOMATE
+  AUTOMATE INCREMENT'
+  name TEXT NOT NULL,
+  number INTEGER NOT NUL
 See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
 6UJSGYQWWDMGM10
 February 6, 2023
