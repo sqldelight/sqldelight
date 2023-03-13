@@ -5,7 +5,6 @@ import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
 import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
-import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
@@ -14,6 +13,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.PsiReferenceRegistrar
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.ProcessingContext
 import org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex
 import org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex
@@ -43,9 +43,6 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
     }
 
     override fun resolve(): PsiElement? {
-      val module = ModuleUtilCore.findModuleForPsiElement(element)
-        ?: return null
-
       val elementText = element.text
       val qName = if (element.parent is SqlDelightImportStmt) {
         elementText
@@ -63,7 +60,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
         }
       }
       val project = element.project
-      val scope = module.getModuleWithDependenciesAndLibrariesScope(false)
+      val scope = GlobalSearchScope.allScope(project)
       val classNameIndex = KotlinFullClassNameIndex.getInstance()
       val ktClass = { classNameIndex[qName, project, scope].firstOrNull() }
       val typeAliasFqNameIndex = getKotlinTopLevelTypeAliasFqNameIndex()
