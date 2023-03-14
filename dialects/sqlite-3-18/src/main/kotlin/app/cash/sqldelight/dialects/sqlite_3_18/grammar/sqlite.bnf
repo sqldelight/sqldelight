@@ -12,9 +12,19 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.STORED"
   ]
 }
-overrides ::= type_name | bind_parameter | alter_table_stmt
+overrides ::= type_name
+  | bind_parameter
+  | alter_table_stmt
+  | generated_clause
 
 type_name ::= text_data_type | blob_data_type | int_data_type | real_data_type {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
@@ -38,5 +48,11 @@ alter_table_stmt ::= ALTER TABLE [ {database_name} DOT ] {table_name} {alter_tab
   elementTypeClass = "app.cash.sqldelight.dialects.sqlite_3_18.grammar.mixins.AlterTableElementType"
   stubClass = "com.alecstrong.sql.psi.core.psi.mixins.AlterTableStmtStub"
   pin = 1
+  override = true
+}
+
+generated_clause ::= [ GENERATED ALWAYS ] AS LP <<expr '-1'>> RP [ VIRTUAL | STORED ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true
 }
