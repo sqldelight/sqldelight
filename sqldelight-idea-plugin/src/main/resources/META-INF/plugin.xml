@@ -69,6 +69,7 @@
         implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
     <completion.contributor language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
+    <createDirectoryCompletionContributor implementation="app.cash.sqldelight.intellij.SqlDelightDirectoryCompletionContributor"/>
     <editorNotificationProvider
         implementation="app.cash.sqldelight.intellij.notifications.FileIndexingNotification" />
     <gotoDeclarationHandler
