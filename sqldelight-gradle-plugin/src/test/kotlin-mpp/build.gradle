@@ -44,3 +44,11 @@ kotlin {
     }
   }
 }
+
+// https://youtrack.jetbrains.com/issue/KT-55751
+configurations {
+  def myAttribute = Attribute.of("dummy.attribute", String)
+
+  debugFrameworkMacosX64 { attributes.attribute(myAttribute, "dummy-value") }
+  releaseFrameworkMacosX64 { attributes.attribute(myAttribute, "dummy-value") }
+}

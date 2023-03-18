@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'com.android.library'
 apply plugin: 'app.cash.sqldelight'
@@ -40,4 +42,8 @@ kotlin {
 
   targetFromPreset(presets.iosX64, 'iosX64')
   targetFromPreset(presets.android, 'androidLib')
+}
+
+tasks.withType(KotlinCompilationTask.class).configureEach {
+  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
 }

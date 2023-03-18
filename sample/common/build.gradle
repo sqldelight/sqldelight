@@ -75,6 +75,14 @@ kotlin {
   }
 }
 
+// https://youtrack.jetbrains.com/issue/KT-55751
+configurations {
+  def myAttribute = Attribute.of("dummy.attribute", String)
+
+  podDebugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
+  podReleaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
+}
+
 afterEvaluate {
   tasks.named("compileCommonMainKotlinMetadata") {
     // https://youtrack.jetbrains.com/issue/KT-51293
