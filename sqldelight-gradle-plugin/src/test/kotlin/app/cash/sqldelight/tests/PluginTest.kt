@@ -3,6 +3,7 @@ package app.cash.sqldelight.tests
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
 
@@ -206,5 +207,14 @@ class PluginTest {
       .build()
     assertThat(result.output)
       .contains("SQLDelight Gradle plugin was applied but there are no databases set up.")
+  }
+
+  @Test
+  fun `applying the version catalog works`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/version-catalog"))
+      .withArguments("clean", "build", "--stacktrace")
+      .build()
+    assertThat(result.task(":build")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
   }
 }

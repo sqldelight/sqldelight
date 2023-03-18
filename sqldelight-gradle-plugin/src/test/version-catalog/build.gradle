@@ -1,0 +1,13 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(sqldelightDeps.plugins.sqldelight)
+}
+
+sqldelight {
+  databases {
+    Database {
+      packageName = "com.example"
+      dialect(sqldelightDeps.dialects.mysql)
+    }
+  }
+}

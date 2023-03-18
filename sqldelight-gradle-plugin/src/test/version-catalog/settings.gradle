@@ -1,0 +1,27 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "file://${settingsDir.absolutePath}/../../../../build/localMaven"
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        maven {
+            url "file://${settingsDir.absolutePath}/../../../../build/localMaven"
+        }
+        mavenCentral()
+    }
+
+    versionCatalogs { 
+        sqldelightDeps {
+            String sqldelightVersion = settings.sqldelightVersion
+            from("app.cash.sqldelight:catalog:$sqldelightVersion")
+        }
+    }
+}
+
+apply from: "../settings.gradle"

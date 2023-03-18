@@ -1,0 +1,51 @@
+plugins {
+    id 'version-catalog'
+    alias(libs.plugins.publish)
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.versionCatalog
+        }
+    }
+}
+
+catalog {
+    versionCatalog {
+        String version = version("sqldelight", project.version.toString())
+        plugin("sqldelight", "app.cash.sqldelight").versionRef(version)
+
+        library("adapters-primitive", "app.cash.sqldelight", "primitive-adapters").versionRef(version)
+
+        library("dialects-hsql", "app.cash.sqldelight", "hsql-dialect").versionRef(version)
+        library("dialects-mysql", "app.cash.sqldelight", "mysql-dialect").versionRef(version)
+        library("dialects-postgresql", "app.cash.sqldelight", "postgresql-dialect").versionRef(version)
+        library("dialects-sqlite-module-json", "app.cash.sqldelight", "sqlite-json-module").versionRef(version)
+        library("dialects-sqlite-3.18", "app.cash.sqldelight", "sqlite-3-18-dialect").versionRef(version)
+        library("dialects-sqlite-3.24", "app.cash.sqldelight", "sqlite-3-24-dialect").versionRef(version)
+        library("dialects-sqlite-3.25", "app.cash.sqldelight", "sqlite-3-25-dialect").versionRef(version)
+        library("dialects-sqlite-3.30", "app.cash.sqldelight", "sqlite-3-30-dialect").versionRef(version)
+        library("dialects-sqlite-3.33", "app.cash.sqldelight", "sqlite-3-33-dialect").versionRef(version)
+        library("dialects-sqlite-3.35", "app.cash.sqldelight", "sqlite-3-35-dialect").versionRef(version)
+        library("dialects-sqlite-3.38", "app.cash.sqldelight", "sqlite-3-38-dialect").versionRef(version)
+
+        library("drivers-android", "app.cash.sqldelight", "android-driver").versionRef(version)
+        library("drivers-jdbc", "app.cash.sqldelight", "jdbc-driver").versionRef(version)
+        library("drivers-r2dbc", "app.cash.sqldelight", "r2dbc-driver").versionRef(version)
+        library("drivers-native", "app.cash.sqldelight", "native-driver").versionRef(version)
+        library("drivers-sqlite", "app.cash.sqldelight", "sqlite-driver").versionRef(version)
+        library("drivers-sqljs", "app.cash.sqldelight", "sqljs-driver").versionRef(version)
+        library("drivers-webworker", "app.cash.sqldelight", "web-worker-driver").versionRef(version)
+
+        library("extensions-androidx-paging3", "app.cash.sqldelight", "androidx-paging3-extensions").versionRef(version)
+        library("extensions-async", "app.cash.sqldelight", "async-extensions").versionRef(version)
+        library("extensions-coroutines", "app.cash.sqldelight", "coroutines-extensions").versionRef(version)
+        library("extensions-rxjava2", "app.cash.sqldelight", "rxjava2-extensions").versionRef(version)
+        library("extensions-rxjava3", "app.cash.sqldelight", "rxjava3-extensions").versionRef(version)
+
+        library("runtime", "app.cash.sqldelight", "runtime").versionRef(version)
+    }
+}
