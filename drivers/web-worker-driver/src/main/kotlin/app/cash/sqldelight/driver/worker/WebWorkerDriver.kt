@@ -186,7 +186,7 @@ internal class JsWorkerSqlPreparedStatement : SqlPreparedStatement {
   val parameters = mutableListOf<Any?>()
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    parameters.add(bytes?.toTypedArray())
+    parameters.add(bytes)
   }
 
   override fun bindLong(index: Int, long: Long?) {
