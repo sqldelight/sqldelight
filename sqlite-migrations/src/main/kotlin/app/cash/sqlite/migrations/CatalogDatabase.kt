@@ -7,11 +7,9 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.tools.utility.SchemaCrawlerUtility
 import java.sql.Connection
-import java.sql.Driver
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Properties
-import java.util.ServiceLoader
 
 class CatalogDatabase private constructor(
   internal val catalog: Catalog,
@@ -33,7 +31,7 @@ class CatalogDatabase private constructor(
 
     fun withInitStatements(
       initStatements: List<InitStatement>,
-      connectionProperties: Properties
+      connectionProperties: Properties,
     ): CatalogDatabase {
       return fromFile("", initStatements, connectionProperties)
     }
@@ -41,7 +39,7 @@ class CatalogDatabase private constructor(
     fun fromFile(
       path: String,
       initStatements: List<InitStatement>,
-      connectionProperties: Properties
+      connectionProperties: Properties,
     ): CatalogDatabase {
       return createConnection(path, connectionProperties).init(initStatements).use {
         CatalogDatabase(SchemaCrawlerUtility.getCatalog(it, schemaCrawlerOptions))

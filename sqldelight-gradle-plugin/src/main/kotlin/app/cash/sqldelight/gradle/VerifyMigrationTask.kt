@@ -30,7 +30,6 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import java.io.File
-import java.sql.Driver
 import java.util.Properties
 import java.util.ServiceLoader
 
