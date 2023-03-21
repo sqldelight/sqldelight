@@ -7,8 +7,11 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.tools.utility.SchemaCrawlerUtility
 import java.sql.Connection
+import java.sql.Driver
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.Properties
+import java.util.ServiceLoader
 
 class CatalogDatabase private constructor(
   internal val catalog: Catalog,
@@ -28,21 +31,28 @@ class CatalogDatabase private constructor(
           .toOptions(),
       )
 
-    fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
-      return fromFile("", initStatements)
+    fun withInitStatements(
+      initStatements: List<InitStatement>,
+      connectionProperties: Properties
+    ): CatalogDatabase {
+      return fromFile("", initStatements, connectionProperties)
     }
 
-    fun fromFile(path: String, initStatements: List<InitStatement>): CatalogDatabase {
-      return createConnection(path).init(initStatements).use {
+    fun fromFile(
+      path: String,
+      initStatements: List<InitStatement>,
+      connectionProperties: Properties
+    ): CatalogDatabase {
+      return createConnection(path, connectionProperties).init(initStatements).use {
         CatalogDatabase(SchemaCrawlerUtility.getCatalog(it, schemaCrawlerOptions))
       }
     }
 
-    private fun createConnection(path: String): Connection {
+    private fun createConnection(path: String, connectionProperties: Properties): Connection {
       return try {
-        DriverManager.getConnection("jdbc:sqlite:$path")
+        DriverManager.getConnection("jdbc:sqlite:$path", connectionProperties)
       } catch (e: SQLException) {
-        DriverManager.getConnection("jdbc:sqlite:$path")
+        DriverManager.getConnection("jdbc:sqlite:$path", connectionProperties)
       }
     }
 
