@@ -55,6 +55,9 @@
     <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
     <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
 
+    <treeStructureProvider
+        implementation="app.cash.sqldelight.intellij.SqlDelightTreeStructureProvider"/>
+
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
     <annotator language="SqlDelight"
