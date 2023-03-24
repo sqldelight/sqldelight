@@ -129,7 +129,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       connectionPropertiesMap.forEach { (key, value) ->
         connectionProperties[key] = value
       }
-      ServiceLoader.load(MigrationVerificationDriver::class.java)
+      ServiceLoader.load(MigrationVerificationDriver::class.java).findFirst()
       val catalog = createCurrentDb(connectionProperties)
 
       val databaseFiles = sourceFolders.asSequence()
