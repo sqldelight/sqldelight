@@ -8,7 +8,7 @@ class MigrationFile(
   viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
   val version: Int by lazy {
-    name.substringBeforeLast(".${MigrationFileType.EXTENSION}")
+    name.substringBeforeLast(".$MIGRATION_EXTENSION")
       .filter { it in '0'..'9' }.toIntOrNull() ?: 0
   }
 

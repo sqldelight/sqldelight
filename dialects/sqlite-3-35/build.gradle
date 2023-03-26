@@ -12,12 +12,13 @@ grammarKit {
 dependencies {
   api projects.dialects.sqlite333
 
-  compileOnly libs.intellij.ideImpl
-
-  testImplementation(libs.intellij.ideImpl) {
-    exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-core"
+  compileOnly(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
   }
-  testImplementation libs.kotlin.coroutines.core
+
+  testImplementation(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
+  }
   testImplementation libs.junit
   testImplementation libs.truth
   testImplementation(libs.sqlPsiTestFixtures) {

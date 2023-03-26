@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.inspections
 
+import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.findChildOfType
@@ -110,7 +111,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
           |)
         """.trimMargin()
         val dummyFile = factory.createFileFromText(
-          "_Dummy_.${SqlDelightFileType.EXTENSION}",
+          "_Dummy_.${SQLDELIGHT_EXTENSION}",
           SqlDelightFileType,
           createTableStmt,
         )
