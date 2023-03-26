@@ -18,12 +18,6 @@ class GradlePluginCombinationTests {
         |apply plugin: 'app.cash.sqldelight'
         |apply plugin: 'kotlin-android-extensions'
         |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |}
-        |
         |sqldelight {
         |  databases {
         |    CommonDb {
@@ -61,12 +55,6 @@ class GradlePluginCombinationTests {
     |
     |apply plugin: 'org.jetbrains.kotlin.multiplatform'
     |apply plugin: 'app.cash.sqldelight'
-    |
-    |repositories {
-    |  maven {
-    |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-    |  }
-    |}
     |
     |sqldelight {
     |  linkSqlite = false

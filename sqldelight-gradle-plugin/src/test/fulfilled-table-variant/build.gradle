@@ -6,14 +6,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'app.cash.sqldelight'
 apply plugin: 'org.jetbrains.kotlin.android'
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-  mavenCentral()
-}
-
 android {
   namespace "com.example.sqldelight"
 

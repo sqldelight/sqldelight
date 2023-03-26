@@ -2,16 +2,6 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
-  }
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-  mavenCentral()
-  maven { url "https://www.jetbrains.com/intellij-repository/releases" }
-  maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
-}
-
 dependencies {
     api "app.cash.sqldelight:sqlite-3-18-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
     compileOnly libs.intellij.coreImpl

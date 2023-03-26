@@ -7,12 +7,6 @@ buildscript {
 apply(plugin = "org.jetbrains.kotlin.jvm")
 apply(plugin = "app.cash.sqldelight")
 
-repositories {
-  maven("file://${projectDir.absolutePath}/../../../../build/localMaven")
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-  mavenCentral()
-}
-
 configure<SqlDelightExtension> {
   databases {
     create("Database") {

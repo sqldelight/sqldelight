@@ -23,6 +23,7 @@ import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
@@ -44,12 +45,14 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 import java.util.StringTokenizer
 import kotlin.math.log10
+import kotlin.reflect.KClass
 import kotlin.system.measureTimeMillis
 
 /**
@@ -68,7 +71,7 @@ class SqlDelightEnvironment(
   private val dependencyFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && it.dependency }
     .map { it.folder },
-) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders, emptyList(), SqlDelightLanguage),
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
@@ -105,9 +108,16 @@ class SqlDelightEnvironment(
 
   override fun clearIndex() = throw UnsupportedOperationException()
 
-  @JvmName("forSqlSourceFiles")
+  @JvmName("forSqlFileBases")
   fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles<SqlFileBase> {
+    forSourceFiles<SqlFileBase>(action)
+  }
+
+  override fun <T : PsiFile> forSourceFiles(
+    klass: KClass<T>,
+    action: (T) -> Unit,
+  ) {
+    super.forSourceFiles(klass) {
       if (it.fileType != MigrationFileType ||
         verifyMigrations ||
         properties.deriveSchemaFromMigrations
