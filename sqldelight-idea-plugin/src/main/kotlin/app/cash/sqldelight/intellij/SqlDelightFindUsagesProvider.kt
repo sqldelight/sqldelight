@@ -27,7 +27,7 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
       is SqlCteTableName -> "common table"
       is SqlViewName -> "view"
       is SqlNewTableName -> "renamed table"
-      else -> throw IllegalArgumentException("Unexpected type $element")
+      else -> element.node.elementType.toString()
     }
   }
 
