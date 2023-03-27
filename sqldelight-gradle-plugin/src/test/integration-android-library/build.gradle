@@ -8,14 +8,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'app.cash.sqldelight'
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-  google()
-}
-
 dependencies {
   implementation libs.androidx.sqlite
   implementation libs.androidx.sqliteFramework

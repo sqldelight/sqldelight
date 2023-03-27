@@ -15,13 +15,6 @@ sqldelight {
   }
 }
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-}
-
 dependencies {
   implementation libs.mysqlJdbc
   implementation 'org.testcontainers:mysql:1.17.6'

@@ -14,6 +14,8 @@ class MySqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fi
     "?1" to ":one",
     "?2" to ":two",
     "==" to "=",
+    "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
+      to "'(', ')', ',', '.', <binary like operator real>, <json binary operator real>, BETWEEN or IN expected, got ','",
   )
 
   override fun setupDialect() {
