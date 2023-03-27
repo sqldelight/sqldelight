@@ -16,18 +16,17 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 interface SqlDelightProjectService {
-  var dialect: SqlDelightDialect
+  val dialect: SqlDelightDialect
   var treatNullAsUnknownForEquality: Boolean
   var generateAsync: Boolean
 
-  fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
-    this.dialect = dialect
-  }
+  fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean)
 
   fun module(vFile: VirtualFile): Module?
 
@@ -38,8 +37,6 @@ interface SqlDelightProjectService {
   fun clearIndex()
 
   companion object {
-    fun getInstance(project: Project): SqlDelightProjectService {
-      return project.getService(SqlDelightProjectService::class.java)!!
-    }
+    fun getInstance(project: Project): SqlDelightProjectService = project.service()
   }
 }

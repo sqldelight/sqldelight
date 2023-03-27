@@ -1,28 +1,11 @@
 package app.cash.sqldelight.dialects.mysql
 
-import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.test.fixtures.compileFiles
 import com.google.common.truth.Truth.assertThat
-import java.io.File
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 
 class ColumnOrderingTest {
-  @Before
-  fun before() {
-    File("build/tmp").deleteRecursively()
-  }
-
-  @After
-  fun after() {
-    SqlParserUtil.reset()
-    File("build/tmp").deleteRecursively()
-  }
-
-  @Test
-  fun `tables works correctly for include all`() {
-    MySqlDialect().setup()
+  @Test fun `tables works correctly for include all`() {
     compileFiles(
       """
       |CREATE TABLE test1 (
@@ -53,6 +36,9 @@ class ColumnOrderingTest {
       |SELECT *
       |FROM test1;
       """.trimMargin(),
+      customInit = {
+        MySqlDialect().setup()
+      },
     ) { (_, testFile) ->
 
       assertThat(

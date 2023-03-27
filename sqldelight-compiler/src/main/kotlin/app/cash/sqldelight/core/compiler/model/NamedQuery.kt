@@ -115,8 +115,12 @@ data class NamedQuery(
    */
   internal val interfaceType: ClassName by lazy {
     val pureTable = pureTable
-    if (pureTable != null && pureTable.parent !is SqlCreateVirtualTableStmt) {
-      return@lazy ClassName(pureTable.sqFile().packageName!!, allocateName(pureTable).capitalize())
+    if (pureTable != null) {
+      val isSystem = pureTable.sqFile().isSystemTable
+      val isVirtual = pureTable.parent is SqlCreateVirtualTableStmt
+      if (!(isSystem || isVirtual)) {
+        return@lazy ClassName(pureTable.sqFile().packageName!!, allocateName(pureTable).capitalize())
+      }
     }
     var packageName = queryable.select.sqFile().packageName!!
     if (queryable.select.sqFile().parent?.files
@@ -137,7 +141,7 @@ data class NamedQuery(
     val pureTable = pureTable
     val parent = pureTable?.parent
 
-    return needsWrapper && (pureTable == null || parent is SqlCreateVirtualTableStmt)
+    return needsWrapper && (pureTable == null || parent is SqlCreateVirtualTableStmt || parent!!.sqFile().isSystemTable)
   }
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)

@@ -65,4 +65,14 @@ open class SqliteDialect : SqlDelightDialect {
   override fun typeResolver(parentResolver: TypeResolver): TypeResolver {
     return SqliteTypeResolver(parentResolver)
   }
+
+  override val predefinedSystemSchema: List<String> = listOf(
+    //language=sqlite
+    """
+        |CREATE TABLE sqlite_sequence(
+        |  name TEXT NOT NULL,
+        |  seq INTEGER NOT NULL
+        |);
+    """.trimMargin(),
+  )
 }

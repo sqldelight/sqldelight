@@ -39,6 +39,12 @@
 
     <colorSettingsPage implementation="app.cash.sqldelight.intellij.SqlDelightColorSettingsPage"/>
 
+      <projectConfigurable
+              parentId="tools"
+              instance="app.cash.sqldelight.intellij.settings.AppSettings"
+              id="app.cash.sqldelight.intellij.settings.AppSettings"
+              displayName="SqlDelight"/>
+
     <internalFileTemplate name="SqlDelight File"/>
     <internalFileTemplate name="SqlDelight Table"/>
     <internalFileTemplate name="SqlDelight Migration"/>

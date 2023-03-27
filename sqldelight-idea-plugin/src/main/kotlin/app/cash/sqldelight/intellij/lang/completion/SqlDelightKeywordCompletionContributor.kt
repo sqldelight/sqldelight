@@ -3,12 +3,16 @@ package app.cash.sqldelight.intellij.lang.completion
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import app.cash.sqldelight.core.lang.util.findChildOfType
+import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.intellij.settings.SettingsState
+import com.alecstrong.sql.psi.core.psi.SqlCompositeElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.TableElement
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler
 import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionInitializationContext.DUMMY_IDENTIFIER
@@ -25,6 +29,7 @@ import com.intellij.lang.parser.GeneratedParserUtilBase
 import com.intellij.lang.parser.GeneratedParserUtilBase.COMPLETION_STATE_KEY
 import com.intellij.lang.parser.GeneratedParserUtilBase.ErrorState
 import com.intellij.lang.parser.GeneratedParserUtilBase.Frame
+import com.intellij.openapi.components.service
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns.psiElement
@@ -112,7 +117,8 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
       val tempFile = PsiFileFactory.getInstance(project)
         .createFileFromText("temp.sq", SqlDelightLanguage, text, true, false)
       val completionOffset = positionStartOffset - range.startOffset
-      val state = CompletionState(completionOffset)
+      val settings = project.service<SettingsState>()
+      val state = CompletionState(completionOffset, hideSystemTables = !settings.showSystemTablesInAutoCompletion)
 
       tempFile.putUserData(COMPLETION_STATE_KEY, state)
       TreeUtil.ensureParsed(tempFile.node)
@@ -126,7 +132,10 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
       }
     }
 
-    class CompletionState(completionOffset: Int) : GeneratedParserUtilBase.CompletionState(completionOffset) {
+    class CompletionState(
+      completionOffset: Int,
+      private val hideSystemTables: Boolean,
+    ) : GeneratedParserUtilBase.CompletionState(completionOffset) {
       private val ignoredKeywords = setOf(
         ";", "=", "(", ")", ".", ",", "+", "-", "~", ">>", "<<", "<", ">", "<=", ">=", "==", "!=",
         "<>", "*", "/", "%", "&", "|", "||", "TRUE", "FALSE", "E", "ROWID", "id", "digit", "javadoc",
@@ -141,6 +150,12 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
       override fun addItem(builder: PsiBuilder, text: String) {
         val error = findReportedError(builder)
         if (error < 0 || error != builder.rawTokenIndex()) {
+          if (hideSystemTables) {
+            val sqlPsi = builder.treeBuilt.psi as SqlCompositeElement
+            if (sqlPsi is TableElement && sqlPsi.sqFile().isSystemTable) {
+              return
+            }
+          }
           super.addItem(builder, text)
         }
       }

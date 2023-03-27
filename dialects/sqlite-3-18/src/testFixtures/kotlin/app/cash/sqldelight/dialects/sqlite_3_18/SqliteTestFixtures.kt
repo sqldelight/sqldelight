@@ -6,6 +6,7 @@ import java.io.File
 object SqliteTestFixtures {
   val fixtures_sqlite_3_18 by loadFolderFromResources(target = File("build"))
   val fixtures_upsert_not_supported by loadFolderFromResources(target = File("build"))
+  val fixtures_predefined by loadFolderFromResources(target = File("build"))
 
-  val fixtures = fixtures_sqlite_3_18 + fixtures_upsert_not_supported
+  val fixtures = fixtures_sqlite_3_18 + fixtures_upsert_not_supported + fixtures_predefined
 }

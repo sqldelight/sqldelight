@@ -40,7 +40,7 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
     SqliteDialect().setup()
     SqldelightParserUtil.overrideSqlParser()
     FileIndexMap.defaultIndex = LightFileIndex()
-    SqlDelightProjectService.getInstance(project).dialect = SqliteDialect()
+    SqlDelightProjectService.getInstance(project).setDialect(SqliteDialect(), shouldInvalidate = true)
   }
 
   inner class LightFileIndex : SqlDelightFileIndex {

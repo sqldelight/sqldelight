@@ -41,7 +41,8 @@ import com.intellij.psi.util.parentOfType
 
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider,
-) : SqlDelightFile(viewProvider, SqlDelightLanguage),
+  systemTables: List<SqlDelightFile>,
+) : SqlDelightFile(viewProvider, SqlDelightLanguage, systemTables),
   SqlAnnotatedElement {
   val namedQueries by lazy {
     transactions().filterIsInstance<NamedQuery>() + sqlStatements()

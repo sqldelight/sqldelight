@@ -28,7 +28,7 @@ import com.intellij.psi.tree.ILightStubFileElementType
 class SqlDelightParserDefinition : SqlParserDefinition() {
   private val parserUtil = ParserUtil()
 
-  override fun createFile(viewProvider: FileViewProvider) = SqlDelightQueriesFile(viewProvider)
+  override fun createFile(viewProvider: FileViewProvider) = SqlDelightQueriesFile(viewProvider, parserUtil.systemTables)
   override fun getFileNodeType() = FILE
   override fun getLanguage() = SqlDelightLanguage
 

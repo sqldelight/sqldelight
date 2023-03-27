@@ -81,8 +81,7 @@ class SqlDelightEnvironment(
     project.registerService(SqlDelightProjectService::class.java, this)
 
     @Suppress("UnresolvedPluginConfigReference")
-    CoreApplicationEnvironment.registerExtensionPoint(
-      module.extensionArea,
+    CoreApplicationEnvironment.registerApplicationExtensionPoint(
       ExtensionPointName.create("com.intellij.moduleExtension"),
       ModuleExtension::class.java,
     )
@@ -90,12 +89,17 @@ class SqlDelightEnvironment(
     initializeApplication {
       registerFileType(MigrationFileType, MigrationFileType.defaultExtension)
       registerParserDefinition(MigrationParserDefinition())
+
       registerFileType(SqlDelightFileType, SqlDelightFileType.defaultExtension)
       registerParserDefinition(SqlDelightParserDefinition())
+
       registerFileType(DatabaseFileType, DatabaseFileType.defaultExtension)
       FileTypeFileViewProviders.INSTANCE.addExplicitExtension(DatabaseFileType, DatabaseFileViewProviderFactory())
     }
   }
+
+  override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean): Nothing =
+    throw UnsupportedOperationException()
 
   override var treatNullAsUnknownForEquality: Boolean = properties.treatNullAsUnknownForEquality
 
@@ -156,11 +160,15 @@ class SqlDelightEnvironment(
     var topMigrationFile: MigrationFile? = null
     forSourceFiles {
       if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
-        if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
+        if (topMigrationFile == null || it.order > topMigrationFile!!.order) {
+          topMigrationFile = it
+        }
         if (sourceFile == null) sourceFile = it
       }
 
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
+      if (it.isSystemTable) return@forSourceFiles
+
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
         SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
@@ -212,7 +220,9 @@ class SqlDelightEnvironment(
         if (errorElements.isNotEmpty()) {
           throw SqlDelightException(
             "Error Reading ${it.name}:\n\n" +
-              errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) },
+              errorElements.joinToString(separator = "\n") {
+                errorMessage(it, it.errorDescription)
+              },
           )
         }
         body(it)
@@ -220,7 +230,9 @@ class SqlDelightEnvironment(
   }
 
   private fun errorMessage(element: PsiElement, message: String): String =
-    "${element.containingFile.virtualFile.path}: (${element.lineStart}, ${element.charPositionInLine}): $message\n${detailText(element)}"
+    """${element.containingFile.virtualFile.path}: (${element.lineStart}, ${element.charPositionInLine}): $message
+      |${detailText(element)}
+    """.trimMargin()
 
   private fun detailText(element: PsiElement) = try {
     val context = context(element) ?: element

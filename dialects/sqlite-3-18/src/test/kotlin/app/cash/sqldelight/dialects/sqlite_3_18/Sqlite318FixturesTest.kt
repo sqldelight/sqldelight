@@ -7,7 +7,11 @@ import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 
 @RunWith(Parameterized::class)
-class Sqlite318FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
+class Sqlite318FixturesTest(name: String, fixtureRoot: File) : FixturesTest(
+  name = name,
+  fixtureRoot = fixtureRoot,
+  predefinedTables = SqliteDialect().predefinedSystemSchema,
+) {
   override fun setupDialect() {
     SqliteDialect().setup()
   }
