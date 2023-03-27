@@ -17,7 +17,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api projects.runtime
         api libs.app.cash.paging.common
         implementation libs.kotlin.coroutines.core
       }
@@ -31,19 +31,19 @@ kotlin {
     }
     iosTest {
       dependencies {
-        implementation project(':drivers:native-driver')
+        implementation projects.drivers.nativeDriver
         implementation libs.app.cash.paging.runtime
       }
     }
     jvmTest {
       dependencies {
-        implementation project(':drivers:sqlite-driver')
+        implementation projects.drivers.sqliteDriver
         implementation libs.androidx.paging3.runtime
       }
     }
     jsTest {
       dependencies {
-        implementation project(':drivers:sqljs-driver')
+        implementation projects.drivers.sqljsDriver
       }
     }
   }

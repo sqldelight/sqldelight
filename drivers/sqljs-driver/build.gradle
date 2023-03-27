@@ -25,7 +25,7 @@ kotlin {
 }
 
 dependencies {
-  api project(':runtime')
+  api projects.runtime
   implementation libs.kotlin.coroutines.core
   implementation libs.stately.concurrency
 

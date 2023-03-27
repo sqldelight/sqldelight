@@ -15,7 +15,7 @@ dependencies {
   ksp libs.moshiCodegen
 
   api libs.mysqlJdbc
-  api project(':sqldelight-compiler:dialect')
+  api projects.sqldelightCompiler.dialect
 
   compileOnly libs.intellij.ideImpl
   compileOnly libs.intellij.core.ui
@@ -27,7 +27,6 @@ dependencies {
   testImplementation libs.kotlin.coroutines.core
   testImplementation libs.junit
   testImplementation libs.truth
-  testImplementation project(':sqldelight-compiler:dialect')
   testImplementation(libs.sqlPsiTestFixtures) {
     exclude group: "com.jetbrains.intellij.platform"
   }

@@ -11,7 +11,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api projects.runtime
         api libs.kotlin.coroutines.core
         implementation project(":extensions:async-extensions")
       }
@@ -27,7 +27,7 @@ kotlin {
       dependencies {
         implementation libs.kotlin.test.junit
         implementation libs.kotlin.coroutines.test
-        implementation project(':drivers:sqlite-driver')
+        implementation projects.drivers.sqliteDriver
       }
       languageSettings {
         optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
@@ -35,13 +35,12 @@ kotlin {
     }
     jsTest {
       dependencies {
-        implementation libs.kotlin.test.js
-        implementation project(':drivers:sqljs-driver')
+        implementation projects.drivers.sqljsDriver
       }
     }
     nativeTest {
       dependencies {
-        implementation project(':drivers:native-driver')
+        implementation projects.drivers.nativeDriver
       }
     }
   }

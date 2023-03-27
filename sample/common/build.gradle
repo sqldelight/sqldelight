@@ -22,12 +22,10 @@ kotlin {
   
   // Configure common.
   sourceSets.commonMain.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation 'app.cash.sqldelight:primitive-adapters'
   }
   sourceSets.commonTest.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-test-common'
-    implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+    implementation 'org.jetbrains.kotlin:kotlin-test'
   }
 
   // Configure jvm.
@@ -49,12 +47,9 @@ kotlin {
     }
   }
   sourceSets.jsMain.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
     implementation npm('dateformat', '3.0.3')
   }
   sourceSets.jsTest.dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-test-js"
-    implementation libs.kotlin.coroutines.core
     implementation "app.cash.sqldelight:sqljs-driver"
   }
 
