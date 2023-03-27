@@ -33,7 +33,6 @@ abstract class SqlDelightDatabase @Inject constructor(
   abstract val migrationOutputDirectory: DirectoryProperty
   val migrationOutputFileFormat: Property<String> = project.objects.property(String::class.java).convention(".sql")
   val generateAsync: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
-  val connectionProperties: MapProperty<String, String> = project.objects.mapProperty(String::class.java, String::class.java)
 
   internal val configuration = project.configurations.create("${name}DialectClasspath").apply {
     isCanBeConsumed = false
@@ -265,7 +264,6 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.verifyMigrations = verifyMigrations.get()
         it.classpath.setFrom(configuration.fileCollection { true })
         it.classpath.from(moduleConfiguration.fileCollection { true })
-        it.connectionProperties.set(connectionProperties)
       }
 
     if (schemaOutputDirectory.getOrNull() != null) {
