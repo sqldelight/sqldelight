@@ -124,13 +124,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       if (!environment.dialect.isSqlite) return
       parameters.workingDirectory.get().asFile.deleteRecursively()
 
-      val connectionPropertiesMap = parameters.connectionProperties.get()
-      val connectionProperties = Properties()
-      connectionPropertiesMap.forEach { (key, value) ->
-        connectionProperties[key] = value
-      }
-      ServiceLoader.load(MigrationVerificationDriver::class.java).findFirst()
-      val catalog = createCurrentDb(connectionProperties)
+      ServiceLoader.load(VerifyMigrationDriver::class.java).findFirst()
+
+      val catalog = createCurrentDb(parameters.connectionProperties.toProperties())
 
       val databaseFiles = sourceFolders.asSequence()
         .findDatabaseFiles()
@@ -140,7 +136,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
 
       databaseFiles.forEach { dbFile ->
-        checkMigration(dbFile, catalog, connectionProperties)
+        checkMigration(dbFile, catalog, parameters.connectionProperties.toProperties())
       }
 
       checkForGaps()
@@ -210,6 +206,14 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
         lastMigrationVersion = actual
       }
+    }
+
+    private fun MapProperty<String, String>.toProperties(): Properties {
+      val connectionProperties = Properties()
+      get().forEach { (key, value) ->
+        connectionProperties[key] = value
+      }
+      return connectionProperties
     }
   }
 }
