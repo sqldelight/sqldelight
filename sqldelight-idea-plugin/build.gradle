@@ -82,7 +82,7 @@ repositories {
 dependencies {
   ksp libs.moshiCodegen
 
-  implementation project(':sqldelight-compiler')
+  implementation projects.sqldelightCompiler
 
   implementation libs.sqliteJdbc
   implementation(libs.bugsnag) {
@@ -93,7 +93,7 @@ dependencies {
 
   testImplementation libs.truth
   testImplementation libs.intellij.android
-  testImplementation project(':dialects:sqlite-3-18')
+  testImplementation projects.dialects.sqlite318
 }
 
 def getBugsnagKey() {

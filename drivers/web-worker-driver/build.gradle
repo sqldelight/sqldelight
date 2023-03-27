@@ -17,7 +17,7 @@ kotlin {
 }
 
 dependencies {
-    api project(':runtime')
+    api projects.runtime
     implementation libs.kotlin.coroutines.core
 
     testImplementation libs.kotlin.test.js
