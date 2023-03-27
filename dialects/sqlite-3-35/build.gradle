@@ -10,7 +10,7 @@ grammarKit {
 }
 
 dependencies {
-  api project(':dialects:sqlite-3-33')
+  api projects.dialects.sqlite333
 
   compileOnly libs.intellij.ideImpl
 
@@ -20,7 +20,6 @@ dependencies {
   testImplementation libs.kotlin.coroutines.core
   testImplementation libs.junit
   testImplementation libs.truth
-  testImplementation project(':sqldelight-compiler:dialect')
   testImplementation(libs.sqlPsiTestFixtures) {
     exclude group: "com.jetbrains.intellij.platform"
   }

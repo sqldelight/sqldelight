@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-  testImplementation project(':runtime')
-  testImplementation project(':drivers:sqlite-driver')
-  testImplementation project(':test-util')
+  testImplementation projects.runtime
+  testImplementation projects.drivers.sqliteDriver
+  testImplementation projects.testUtil
 
   testImplementation libs.sqlPsi
   testImplementation libs.truth

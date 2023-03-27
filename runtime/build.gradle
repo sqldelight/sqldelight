@@ -27,11 +27,6 @@ kotlin {
         implementation libs.stately.collections
       }
     }
-    jsTest {
-      dependencies {
-        implementation libs.kotlin.test.js
-      }
-    }
     nativeMain {
       dependencies {
         implementation libs.stately.concurrency

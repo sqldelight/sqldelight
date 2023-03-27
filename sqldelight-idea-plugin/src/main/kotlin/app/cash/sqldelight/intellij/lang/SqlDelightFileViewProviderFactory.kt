@@ -36,7 +36,6 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
@@ -77,7 +76,7 @@ private class SqlDelightFileViewProvider(
 
   private var filesGenerated = emptyList<VirtualFile>()
     set(value) {
-      (field - value).forEach { it.delete(this) }
+      (field - value.toSet()).forEach { it.delete(this) }
       field = value
     }
 
@@ -159,13 +158,11 @@ private class SqlDelightFileViewProvider(
     if (module.isDisposed) return emptyMap()
 
     var shouldGenerate = true
-    val annotationHolder = object : SqlAnnotationHolder {
-      override fun createErrorAnnotation(element: PsiElement, s: String) {
-        shouldGenerate = false
-      }
+    val annotationHolder = SqlAnnotationHolder { _, _ ->
+      shouldGenerate = false
     }
 
-    // File is mutable so create a copy that wont be mutated.
+    // File is mutable so create a copy that won't be mutated.
     val file = file.copy() as SqlDelightFile
 
     shouldGenerate = try {

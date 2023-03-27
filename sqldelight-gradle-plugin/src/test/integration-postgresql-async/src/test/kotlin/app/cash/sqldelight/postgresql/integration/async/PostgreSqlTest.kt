@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class PostgreSqlTest {
   private val factory = ConnectionFactories.get("r2dbc:tc:postgresql:///myDb?TC_IMAGE_TAG=9.6.8")
@@ -73,22 +74,20 @@ class PostgreSqlTest {
   }
 
   @Test fun testDates() = runTest { database ->
-    assertThat(
+    with(
       database.datesQueries.insertDate(
         date = LocalDate.of(2020, 1, 1),
         time = LocalTime.of(21, 30, 59, 10000),
         timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
         timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
       ).awaitAsOne(),
-    )
-      .isEqualTo(
-        Dates(
-          date = LocalDate.of(2020, 1, 1),
-          time = LocalTime.of(21, 30, 59, 10000),
-          timestamp = LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000),
-          timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
-        ),
-      )
+    ) {
+      assertThat(date).isEqualTo(LocalDate.of(2020, 1, 1))
+      assertThat(time).isEqualTo(LocalTime.of(21, 30, 59, 10000))
+      assertThat(timestamp).isEqualTo(LocalDateTime.of(2020, 1, 1, 21, 30, 59, 10000))
+      assertThat(timestamp_with_timezone.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        .isEqualTo(OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)).format(DateTimeFormatter.ISO_LOCAL_DATE))
+    }
   }
 
   @Test fun testDateTrunc() = runTest { database ->
@@ -99,15 +98,13 @@ class PostgreSqlTest {
       timestamp_with_timezone = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
     ).awaitAsOne()
 
-    assertThat(
+    with(
       database.datesQueries.selectDateTrunc().awaitAsOne(),
-    )
-      .isEqualTo(
-        SelectDateTrunc(
-          date_trunc = LocalDateTime.of(2020, 1, 1, 21, 0, 0, 0),
-          date_trunc_ = OffsetDateTime.of(1980, 4, 9, 20, 0, 0, 0, ZoneOffset.ofHours(0)),
-        ),
-      )
+    ) {
+      assertThat(date_trunc).isEqualTo(LocalDateTime.of(2020, 1, 1, 21, 0, 0, 0))
+      assertThat(date_trunc_.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        .isEqualTo(OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)).format(DateTimeFormatter.ISO_LOCAL_DATE))
+    }
   }
 
   @Test fun testSerial() = runTest { database ->

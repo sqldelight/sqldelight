@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-  api project(':sqldelight-compiler')
-  api project(':dialects:sqlite-3-18')
+  api projects.sqldelightCompiler
+  api projects.dialects.sqlite318
 
   implementation libs.sqlPsi
   implementation(libs.intellij.testFramework) {

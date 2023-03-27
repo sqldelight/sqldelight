@@ -26,6 +26,8 @@ gradleEnterprise {
 
 rootProject.name = 'sqldelight'
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include ':adapters:primitive-adapters'
 include ':dialects:hsql'
 include ':dialects:mysql'

@@ -21,13 +21,6 @@ class CompilationUnitTests {
         |apply plugin: 'org.jetbrains.kotlin.jvm'
         |apply plugin: 'app.cash.sqldelight'
         |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |  mavenCentral()
-        |}
-        |
         |sqldelight {
         |  databases {
         |    CommonDb {
@@ -66,13 +59,6 @@ class CompilationUnitTests {
         |
         |apply plugin: 'org.jetbrains.kotlin.jvm'
         |apply plugin: 'app.cash.sqldelight'
-        |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |  mavenCentral()
-        |}
         |
         |sqldelight {
         |  databases {
@@ -139,13 +125,6 @@ class CompilationUnitTests {
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'app.cash.sqldelight'
         |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |  mavenCentral()
-        |}
-        |
         |sqldelight {
         |  databases {
         |    CommonDb {
@@ -194,13 +173,6 @@ class CompilationUnitTests {
         |apply plugin: 'org.jetbrains.kotlin.multiplatform'
         |apply plugin: 'com.android.application'
         |apply plugin: 'app.cash.sqldelight'
-        |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |  mavenCentral()
-        |}
         |
         |sqldelight {
         |  databases {
@@ -274,13 +246,6 @@ class CompilationUnitTests {
         |apply plugin: 'com.android.application'
         |apply plugin: 'org.jetbrains.kotlin.android'
         |apply plugin: 'app.cash.sqldelight'
-        |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |  mavenCentral()
-        |}
         |
         |sqldelight {
         |  databases {

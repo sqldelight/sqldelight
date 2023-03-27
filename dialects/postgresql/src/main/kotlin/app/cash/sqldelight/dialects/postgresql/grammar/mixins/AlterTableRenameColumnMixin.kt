@@ -48,7 +48,7 @@ internal abstract class AlterTableRenameColumnMixin(
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnName,
-        s = "No column found to modify with name ${columnName.text}",
+        message = "No column found to modify with name ${columnName.text}",
       )
     }
   }
