@@ -33,7 +33,7 @@ kotlin {
     iosTest {
       dependencies {
         implementation project(':drivers:native-driver')
-        implementation libs.app.cash.paging.runtime
+        implementation libs.app.cash.paging.runtime.uikit
       }
     }
     jvmTest {
