@@ -10,15 +10,15 @@ fun SqlSchema.synchronous() = object : SqlSchema by this {
   override fun create(driver: SqlDriver) = QueryResult.Value(
     runBlocking {
       this@synchronous.create(driver).await()
-    }
+    },
   )
 
   override fun migrate(
     driver: SqlDriver,
     oldVersion: Int,
     newVersion: Int,
-    vararg callbacks: AfterVersion
+    vararg callbacks: AfterVersion,
   ) = QueryResult.Value(
-    runBlocking { this@synchronous.migrate(driver, oldVersion, newVersion, *callbacks).await() }
+    runBlocking { this@synchronous.migrate(driver, oldVersion, newVersion, *callbacks).await() },
   )
 }

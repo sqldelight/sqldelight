@@ -233,8 +233,8 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  // @Category(Instrumentation::class)
   @Test
-  //@Category(Instrumentation::class)
   fun `integration test multiplatform project with async generated code`() {
     val integrationRoot = File("src/test/integration-multiplatform-async")
 
