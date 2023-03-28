@@ -16,7 +16,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class WebWorkerTransacterTest {
-  private val schema = object : SqlSchema {
+  private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
     override val version = 1
     override fun create(driver: SqlDriver) = QueryResult.Unit
     override fun migrate(
@@ -24,7 +24,7 @@ class WebWorkerTransacterTest {
       oldVersion: Int,
       newVersion: Int,
       vararg callbacks: AfterVersion,
-    ): QueryResult<Unit> = QueryResult.Unit
+    ): QueryResult.Value<Unit> = QueryResult.Unit
   }
 
   private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) =

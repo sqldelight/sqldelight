@@ -44,7 +44,7 @@ class AndroidSqliteDriver private constructor(
    * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
    */
   @JvmOverloads constructor(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
@@ -182,7 +182,7 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlSchema,
+    private val schema: SqlSchema<QueryResult.Value<Unit>>,
     private vararg val callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
 
