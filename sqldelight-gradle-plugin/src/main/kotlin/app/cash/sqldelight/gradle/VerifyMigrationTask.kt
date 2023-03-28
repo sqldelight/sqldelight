@@ -53,7 +53,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @Input var verifyDefinitions: Boolean = true
 
-  @get:Internal abstract var driverInitializer: DriverInitializer
+  @get:Internal var driverInitializer: DriverInitializer? = null
 
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
@@ -122,7 +122,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       if (!environment.dialect.isSqlite) return
       parameters.workingDirectory.get().asFile.deleteRecursively()
 
-      parameters.driverInitializer.get().execute()
+      parameters.driverInitializer.orNull?.execute()
       val catalog = createCurrentDb()
 
       val databaseFiles = sourceFolders.asSequence()
