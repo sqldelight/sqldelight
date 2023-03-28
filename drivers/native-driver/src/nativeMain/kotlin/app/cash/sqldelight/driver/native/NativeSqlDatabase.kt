@@ -421,7 +421,8 @@ internal class ThreadConnection(
 
 private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
   if (this is QueryResult.AsyncValue) {
-    throw IllegalStateException("""
+    throw IllegalStateException(
+      """
           |The native driver is synchronous, but you configured SQLDelight to be asynchronous. This
           |will result in unexpected behavior since suspending functions would actually block. If
           |the generated code must be asynchronous (ie, because it is being used by another driver
@@ -429,6 +430,7 @@ private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
           |to this driver:
           |
           |NativeSqliteDriver(${schema::class.simpleName}.synchronous(), name, ...)
-        """.trimMargin())
+      """.trimMargin(),
+    )
   }
 }

@@ -6,15 +6,14 @@ import kotlin.test.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class DbTest : MultiPlatformTest() {
 
-    @Test
-    fun testDb() = runTest {
-        val driver = getTestSqlDriverFactory()
-        val db = SharedDatabase(driver)
-        db.invoke {
-            casesQueries
-                .all()
-                .executeAsList()
-        }
+  @Test
+  fun testDb() = runTest {
+    val driver = getTestSqlDriverFactory()
+    val db = SharedDatabase(driver)
+    db.invoke {
+      casesQueries
+        .all()
+        .executeAsList()
     }
-
+  }
 }
