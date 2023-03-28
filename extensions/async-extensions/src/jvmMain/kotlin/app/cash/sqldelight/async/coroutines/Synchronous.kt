@@ -6,7 +6,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import kotlinx.coroutines.runBlocking
 
-fun SqlSchema.synchronous() = object : SqlSchema by this {
+fun SqlSchema<QueryResult.AsyncValue<Unit>>.synchronous() = object : SqlSchema<QueryResult.Value<Unit>> {
+  override val version = this@synchronous.version
+
   override fun create(driver: SqlDriver) = QueryResult.Value(
     runBlocking {
       this@synchronous.create(driver).await()

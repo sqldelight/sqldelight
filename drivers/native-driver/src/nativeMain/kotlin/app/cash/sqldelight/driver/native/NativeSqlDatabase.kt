@@ -117,7 +117,7 @@ class NativeSqliteDriver(
    * @param onConfiguration Callback to hook into [DatabaseConfiguration] creation.
    */
   constructor(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     name: String,
     maxReaderConnections: Int = 1,
     onConfiguration: (DatabaseConfiguration) -> DatabaseConfiguration = { it },
@@ -126,14 +126,9 @@ class NativeSqliteDriver(
     configuration = DatabaseConfiguration(
       name = name,
       version = schema.version,
-      create = { connection ->
-        wrapConnection(connection) { schema.create(it).requireSynchronous(schema) }
-      },
+      create = { connection -> wrapConnection(connection) { schema.create(it) } },
       upgrade = { connection, oldVersion, newVersion ->
-        wrapConnection(connection) {
-          schema.migrate(it, oldVersion, newVersion, *callbacks)
-            .requireSynchronous(schema)
-        }
+        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion, *callbacks) }
       },
     ).let(onConfiguration),
     maxReaderConnections = maxReaderConnections,
@@ -262,7 +257,7 @@ class NativeSqliteDriver(
  * Helper function to create an in-memory driver. In-memory drivers have a single connection, so
  * concurrent access will be block
  */
-fun inMemoryDriver(schema: SqlSchema): NativeSqliteDriver = NativeSqliteDriver(
+fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>): NativeSqliteDriver = NativeSqliteDriver(
   DatabaseConfiguration(
     name = null,
     inMemory = true,
@@ -416,20 +411,5 @@ internal class ThreadConnection(
       }
       return QueryResult.Unit
     }
-  }
-}
-
-private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
-  if (this is QueryResult.AsyncValue) {
-    throw IllegalStateException(
-      """
-          |The native driver is synchronous, but SQLDelight has been configured to be asynchronous. This
-          |will result in unexpected behavior as this driver does not fully support suspending query execution.
-          |If you have intentionally enabled asynchronous code generaion (e.g. for multiplatform support),
-          |you can convert this schema into a synchronous schema to pass into the driver:
-          |
-          |NativeSqliteDriver(${schema::class.simpleName}.synchronous(), name, ...)
-      """.trimMargin(),
-    )
   }
 }

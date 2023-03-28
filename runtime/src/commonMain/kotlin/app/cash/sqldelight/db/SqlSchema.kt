@@ -18,7 +18,7 @@ package app.cash.sqldelight.db
 /**
  * API for creating and migrating a SQL database.
  */
-interface SqlSchema {
+interface SqlSchema<T: QueryResult<Unit>> {
   /**
    * The version of this schema.
    */
@@ -27,14 +27,14 @@ interface SqlSchema {
   /**
    * Use [driver] to create the schema from scratch. Assumes no existing database state.
    */
-  fun create(driver: SqlDriver): QueryResult<Unit>
+  fun create(driver: SqlDriver): T
 
   /**
    * Use [driver] to migrate from schema [oldVersion] to [newVersion].
    * Each of the [callbacks] are executed during the migration whenever the upgrade to the version specified by
    * [AfterVersion.afterVersion] has been completed.
    */
-  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int, vararg callbacks: AfterVersion): QueryResult<Unit>
+  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int, vararg callbacks: AfterVersion): T
 }
 
 /**

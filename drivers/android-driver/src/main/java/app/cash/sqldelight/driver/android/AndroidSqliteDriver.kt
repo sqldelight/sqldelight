@@ -44,7 +44,7 @@ class AndroidSqliteDriver private constructor(
    * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
    */
   @JvmOverloads constructor(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
@@ -182,13 +182,12 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlSchema,
+    private val schema: SqlSchema<QueryResult.Value<Unit>>,
     private vararg val callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
-        .requireSynchronous(schema)
     }
 
     override fun onUpgrade(
@@ -201,20 +200,7 @@ class AndroidSqliteDriver private constructor(
         oldVersion,
         newVersion,
         *callbacks,
-      ).requireSynchronous(schema)
-    }
-
-    private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
-      check(this !is QueryResult.AsyncValue) {
-        """
-        |The Android driver is synchronous, but SQLDelight has been configured to be asynchronous. This
-        |will result in unexpected behavior as this driver does not fully support suspending query execution.
-        |If you have intentionally enabled asynchronous code generaion (e.g. for multiplatform support),
-        |you can convert this schema into a synchronous schema to pass into the driver:
-        |
-        |AndroidSqliteDriver(${schema::class.simpleName}.synchronous(), context, ...)
-        """.trimMargin()
-      }
+      )
     }
   }
 }
