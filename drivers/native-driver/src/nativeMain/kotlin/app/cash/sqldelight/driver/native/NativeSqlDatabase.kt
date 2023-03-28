@@ -423,11 +423,10 @@ private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
   if (this is QueryResult.AsyncValue) {
     throw IllegalStateException(
       """
-          |The native driver is synchronous, but you configured SQLDelight to be asynchronous. This
-          |will result in unexpected behavior since suspending functions would actually block. If
-          |the generated code must be asynchronous (ie, because it is being used by another driver
-          |which must be asynchronous), you can get around this error by passing a synchronous schema
-          |to this driver:
+          |The native driver is synchronous, but SQLDelight has been configured to be asynchronous. This
+          |will result in unexpected behavior as this driver does not fully support suspending query execution.
+          |If you have intentionally enabled asynchronous code generaion (e.g. for multiplatform support), 
+          |you can convert this schema into a synchronous schema to pass into the driver:
           |
           |NativeSqliteDriver(${schema::class.simpleName}.synchronous(), name, ...)
       """.trimMargin(),
