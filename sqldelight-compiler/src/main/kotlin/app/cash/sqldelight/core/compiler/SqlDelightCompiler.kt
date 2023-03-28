@@ -28,6 +28,7 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiElement
@@ -135,6 +136,8 @@ object SqlDelightCompiler {
           .writeQueryInterfaces(file, output)
         return@forEach
       }
+
+      if (statement is SqlCreateVirtualTableStmt) return@forEach
 
       val fileSpec = FileSpec.builder(packageName, allocateName(query.tableName))
         .apply {
