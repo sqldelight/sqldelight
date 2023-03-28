@@ -23,6 +23,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 import java.io.File
+import java.nio.file.Files
 
 @RunWith(Parameterized::class)
 class GradleVersionsTest(private val gradleVersion: String) {
@@ -47,7 +48,13 @@ class GradleVersionsTest(private val gradleVersion: String) {
       .forwardOutput()
       .withGradleVersion(gradleVersion)
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "compileKotlin", "--stacktrace")
+      .withArguments("clean", "compileKotlin", "--stacktrace").apply {
+        // Don't cache all Gradle versions on CI, this will break GH actions size limit.
+        if (System.getenv("CI") == "true") {
+          val tmp = Files.createTempDirectory("gradleVersionTest")
+          withArguments(arguments + "-Dgradle.user.home=$tmp")
+        }
+      }
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
