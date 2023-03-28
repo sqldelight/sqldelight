@@ -15,7 +15,7 @@ jobs:
   publish_archives:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-18.04]
+        os: [macOS-latest, windows-latest, ubuntu-22.04]
 
     runs-on: ${{matrix.os}}
     if: github.repository == 'cashapp/sqldelight'
