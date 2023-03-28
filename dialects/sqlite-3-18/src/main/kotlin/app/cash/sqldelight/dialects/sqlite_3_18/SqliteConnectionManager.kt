@@ -3,6 +3,8 @@ package app.cash.sqldelight.dialects.sqlite_3_18
 import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.openapi.project.Project
+import org.sqlite.SQLiteDataSource
+import java.io.*
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException

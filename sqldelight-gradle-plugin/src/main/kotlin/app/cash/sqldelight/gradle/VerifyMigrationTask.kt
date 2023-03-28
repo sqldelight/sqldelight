@@ -9,6 +9,8 @@ import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqlite.migrations.CatalogDatabase
+import app.cash.sqlite.migrations.CatalogDatabase.Companion.fromFile
+import app.cash.sqlite.migrations.CatalogDatabase.Companion.withInitStatements
 import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
 import org.gradle.api.file.DirectoryProperty
@@ -119,9 +121,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       val catalog = createCurrentDb()
 
       val databaseFiles = sourceFolders.asSequence()
-        .findDatabaseFiles()
+        .findDatabaseFiles().toList()
 
-      check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
+      check(!parameters.verifyMigrations.get() || databaseFiles.isNotEmpty()) {
         "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
       }
 
@@ -143,7 +145,10 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
-      return CatalogDatabase.withInitStatements(initStatements)
+      return with(environment.dialect.connectionManager) {
+        requireNotNull(this) { "Dialect does not provide an connectionManager." }
+        withInitStatements(initStatements)
+      }
     }
 
     private fun checkMigration(dbFile: File, currentDb: CatalogDatabase) {
@@ -182,7 +187,10 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
           )
         }
       }
-      return CatalogDatabase.fromFile(copy.absolutePath, initStatements).also { copy.delete() }
+      return with(environment.dialect.connectionManager) {
+        requireNotNull(this) { "Dialect does not provide an connectionManager." }
+        fromFile(copy.absolutePath, initStatements).also { copy.delete() }
+      }
     }
 
     private fun checkForGaps() {

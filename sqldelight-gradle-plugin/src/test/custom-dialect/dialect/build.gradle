@@ -5,4 +5,5 @@ plugins {
 dependencies {
     api "app.cash.sqldelight:sqlite-3-18-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
     compileOnly libs.intellij.coreImpl
+    compileOnly libs.sqliteJdbc
 }

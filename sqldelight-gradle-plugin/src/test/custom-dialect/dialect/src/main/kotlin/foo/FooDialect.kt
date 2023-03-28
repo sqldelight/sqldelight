@@ -1,20 +1,31 @@
 package foo
 
-import app.cash.sqldelight.dialect.api.DialectType
-import app.cash.sqldelight.dialect.api.IntermediateType
-import app.cash.sqldelight.dialect.api.SqlDelightDialect
-import app.cash.sqldelight.dialect.api.TypeResolver
-import app.cash.sqldelight.dialect.api.encapsulatingType
-import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
-import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTypeResolver
+import app.cash.sqldelight.dialect.api.*
+import app.cash.sqldelight.dialects.sqlite_3_18.*
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.TypeName
+import org.sqlite.*
+import java.io.*
+import java.sql.*
 
 class FooDialect : SqlDelightDialect by SqliteDialect() {
+  override val connectionManager: ConnectionManager = object: ConnectionManager by SqliteConnectionManager() {
+    override fun getConnection(connectionProperties: ConnectionManager.ConnectionProperties): Connection {
+      return SQLiteDataSource().apply {
+        url = connectionProperties.serializedProperties
+        setLoadExtension(true)
+        val projectRoot = System.getenv("projectRoot")
+        val ext = File(projectRoot, "build/sqlitetokenizer/libsqlite-fts5-synonym-tokenizer.dylib")
+        connection.prepareStatement("SELECT load_extension('${ext.absolutePath}', 'sqlite3_fts5_synonym_tokenizer_init');")
+          .execute()
+      }.connection
+    }
+  }
+  
   override fun typeResolver(parentResolver: TypeResolver) = CustomResolver(parentResolver)
 
   class CustomResolver(private val parentResolver: TypeResolver) : TypeResolver by SqliteTypeResolver(parentResolver) {

@@ -12,6 +12,8 @@ dependencies {
   compileOnly libs.schemaCrawler.tools
   compileOnly libs.schemaCrawler.sqlite
 
+  implementation projects.sqldelightCompiler.dialect
+
   implementation libs.sqlPsi
 }
 

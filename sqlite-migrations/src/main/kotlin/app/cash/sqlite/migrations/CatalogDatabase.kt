@@ -1,5 +1,6 @@
 package app.cash.sqlite.migrations
 
+import app.cash.sqldelight.dialect.api.ConnectionManager
 import schemacrawler.schema.Catalog
 import schemacrawler.schemacrawler.LimitOptionsBuilder
 import schemacrawler.schemacrawler.LoadOptionsBuilder
@@ -7,8 +8,6 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder
 import schemacrawler.tools.utility.SchemaCrawlerUtility
 import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
 
 class CatalogDatabase private constructor(
   internal val catalog: Catalog,
@@ -28,21 +27,13 @@ class CatalogDatabase private constructor(
           .toOptions(),
       )
 
-    fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
+    fun ConnectionManager.withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
       return fromFile("", initStatements)
     }
 
-    fun fromFile(path: String, initStatements: List<InitStatement>): CatalogDatabase {
-      return createConnection(path).init(initStatements).use {
+    fun ConnectionManager.fromFile(path: String, initStatements: List<InitStatement>): CatalogDatabase {
+      return getConnection(ConnectionManager.ConnectionProperties("path", path)).init(initStatements).use {
         CatalogDatabase(SchemaCrawlerUtility.getCatalog(it, schemaCrawlerOptions))
-      }
-    }
-
-    private fun createConnection(path: String): Connection {
-      return try {
-        DriverManager.getConnection("jdbc:sqlite:$path")
-      } catch (e: SQLException) {
-        DriverManager.getConnection("jdbc:sqlite:$path")
       }
     }
 
