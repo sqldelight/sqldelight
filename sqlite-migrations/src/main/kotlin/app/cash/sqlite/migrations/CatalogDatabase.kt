@@ -9,7 +9,6 @@ import schemacrawler.tools.utility.SchemaCrawlerUtility
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.Properties
 
 class CatalogDatabase private constructor(
   internal val catalog: Catalog,

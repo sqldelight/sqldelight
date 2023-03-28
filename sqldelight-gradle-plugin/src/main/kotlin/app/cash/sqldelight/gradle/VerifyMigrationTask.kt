@@ -167,7 +167,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
       check(diffReport.isEmpty()) {
         "Error migrating from ${dbFile.name}, fresh database looks" +
-                " different from migration database:\n$diffReport"
+          " different from migration database:\n$diffReport"
       }
     }
 
