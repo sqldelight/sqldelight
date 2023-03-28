@@ -1,0 +1,9 @@
+CREATE TABLE some_table (
+  id INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM some_table;
+
+selectById:
+SELECT * FROM some_table WHERE id = ?;
