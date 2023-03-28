@@ -205,18 +205,16 @@ class AndroidSqliteDriver private constructor(
     }
 
     private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
-      if (this is QueryResult.AsyncValue) {
-        throw IllegalStateException(
-          """
-          |The android driver is synchronous, but you configured SQLDelight to be asynchronous. This
-          |will result in unexpected behavior since suspending functions would actually block. If
-          |the generated code must be asynchronous (ie, because it is being used by another driver
-          |which must be asynchronous), you can get around this error by passing a synchronous schema
-          |to this driver:
-          |
-          |AndroidSqliteDriver(${schema::class.simpleName}.synchronous(), context, ...)
-          """.trimMargin(),
-        )
+      check (this !is QueryResult.AsyncValue) {
+        """
+        |The android driver is synchronous, but you configured SQLDelight to be asynchronous. This
+        |will result in unexpected behavior since suspending functions would actually block. If
+        |the generated code must be asynchronous (ie, because it is being used by another driver
+        |which must be asynchronous), you can get around this error by passing a synchronous schema
+        |to this driver:
+        |
+        |AndroidSqliteDriver(${schema::class.simpleName}.synchronous(), context, ...)
+        """.trimMargin()
       }
     }
   }
