@@ -234,6 +234,19 @@ class IntegrationTest {
   }
 
   @Test
+  //@Category(Instrumentation::class)
+  fun `integration test multiplatform project with async generated code`() {
+    val integrationRoot = File("src/test/integration-multiplatform-async")
+
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(integrationRoot)
+      .withArguments("clean", "test", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
   @Category(Instrumentation::class)
   fun `integration test ios target of a multiplatform project`() {
     val integrationRoot = File("src/test/integration-multiplatform")
