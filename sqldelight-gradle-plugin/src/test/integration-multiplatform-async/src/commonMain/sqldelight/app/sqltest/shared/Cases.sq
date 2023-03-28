@@ -1,0 +1,32 @@
+CREATE TABLE cases (
+    caseId TEXT NOT NULL,
+    caseUploadDate INTEGER,
+    caseStartDate INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (caseId)
+);
+
+all:
+SELECT *
+FROM cases
+LEFT OUTER JOIN images
+ON cases.caseId=images.caseId
+LEFT OUTER JOIN failed_uploads
+ON cases.caseId=failed_uploads.caseId;
+
+byId:
+SELECT *
+FROM cases
+LEFT OUTER JOIN images
+ON cases.caseId=images.caseId
+LEFT OUTER JOIN failed_uploads
+ON cases.caseId=failed_uploads.caseId
+WHERE cases.caseId = ?;
+
+insert:
+INSERT INTO cases
+VALUES ?;
+
+update:
+UPDATE cases
+SET caseUploadDate = ?
+WHERE caseId = ?;

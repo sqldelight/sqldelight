@@ -1,0 +1,19 @@
+CREATE TABLE failed_uploads (
+    uploadId TEXT NOT NULL,
+    caseId TEXT NOT NULL,
+    failedUploadTime INTEGER NOT NULL,
+    PRIMARY KEY (uploadId)
+);
+
+all:
+SELECT *
+FROM failed_uploads;
+
+byId:
+SELECT *
+FROM failed_uploads
+WHERE caseId = ?;
+
+insert:
+INSERT INTO failed_uploads
+VALUES (?, ?, ?);

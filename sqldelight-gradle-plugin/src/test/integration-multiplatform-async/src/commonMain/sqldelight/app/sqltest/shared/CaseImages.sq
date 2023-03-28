@@ -1,0 +1,29 @@
+CREATE TABLE images (
+    imageId TEXT NOT NULL,
+    caseId TEXT NOT NULL,
+    imageData BLOB NOT NULL,
+    PRIMARY KEY (imageId)
+);
+
+all:
+SELECT *
+FROM images;
+
+byId:
+SELECT *
+FROM images
+WHERE caseId = ?;
+
+insert:
+INSERT INTO images
+VALUES (?, ?, ?);
+
+update:
+UPDATE images
+SET imageId = ?, imageData = ?
+WHERE caseId = ?;
+
+delete:
+DELETE
+FROM images
+WHERE imageId = ?;
