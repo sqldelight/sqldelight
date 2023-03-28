@@ -29,28 +29,21 @@ class CatalogDatabase private constructor(
           .toOptions(),
       )
 
-    fun withInitStatements(
-      initStatements: List<InitStatement>,
-      connectionProperties: Properties,
-    ): CatalogDatabase {
-      return fromFile("", initStatements, connectionProperties)
+    fun withInitStatements(initStatements: List<InitStatement>): CatalogDatabase {
+      return fromFile("", initStatements)
     }
 
-    fun fromFile(
-      path: String,
-      initStatements: List<InitStatement>,
-      connectionProperties: Properties,
-    ): CatalogDatabase {
-      return createConnection(path, connectionProperties).init(initStatements).use {
+    fun fromFile(path: String, initStatements: List<InitStatement>): CatalogDatabase {
+      return createConnection(path).init(initStatements).use {
         CatalogDatabase(SchemaCrawlerUtility.getCatalog(it, schemaCrawlerOptions))
       }
     }
 
-    private fun createConnection(path: String, connectionProperties: Properties): Connection {
+    private fun createConnection(path: String): Connection {
       return try {
-        DriverManager.getConnection("jdbc:sqlite:$path", connectionProperties)
+        DriverManager.getConnection("jdbc:sqlite:$path")
       } catch (e: SQLException) {
-        DriverManager.getConnection("jdbc:sqlite:$path", connectionProperties)
+        DriverManager.getConnection("jdbc:sqlite:$path")
       }
     }
 
