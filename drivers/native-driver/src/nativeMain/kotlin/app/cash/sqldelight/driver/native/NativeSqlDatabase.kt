@@ -424,7 +424,7 @@ private fun QueryResult<*>.requireSynchronous(schema: SqlSchema) {
     throw IllegalStateException("""
           |The native driver is synchronous, but you configured SQLDelight to be asynchronous. This
           |will result in unexpected behavior since suspending functions would actually block. If
-          |the generated code must be synchronous (ie, because it is being used by another driver
+          |the generated code must be asynchronous (ie, because it is being used by another driver
           |which must be asynchronous), you can get around this error by passing a synchronous schema
           |to this driver:
           |
