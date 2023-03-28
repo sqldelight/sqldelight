@@ -59,6 +59,8 @@ private class TestDatabaseImpl(
           |)
           """.trimMargin(), 0)
       driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
+      driver.execute(null, "CREATE VIRTUAL TABLE myftstable USING fts5(something, nice)", 0)
+      driver.execute(null, "CREATE VIRTUAL TABLE myftstable2 USING fts5(something, nice)", 0)
       driver.execute(null, """
           |INSERT INTO player
           |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),

@@ -40,6 +40,7 @@ import app.cash.sqldelight.dialect.api.SelectQueryable
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
@@ -123,7 +124,8 @@ data class NamedQuery(
   /**
    * @return true if this query needs its own interface generated.
    */
-  internal fun needsInterface() = needsWrapper() && pureTable == null
+  internal fun needsInterface() = needsWrapper() &&
+    (pureTable == null || pureTable?.parent is SqlCreateVirtualTableStmt)
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
