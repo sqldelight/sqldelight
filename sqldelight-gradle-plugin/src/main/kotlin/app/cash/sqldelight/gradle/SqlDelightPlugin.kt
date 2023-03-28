@@ -46,7 +46,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
   override fun apply(project: Project) {
     require(GradleVersion.current() >= GradleVersion.version(MIN_GRADLE_VERSION)) {
-      "SQLDelight requires Gradle version 7.0 or greater"
+      "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
