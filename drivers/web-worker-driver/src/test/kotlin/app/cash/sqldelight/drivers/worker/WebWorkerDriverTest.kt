@@ -5,6 +5,7 @@ import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitQuery
 import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.QueryResult.AsyncValue
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -25,10 +26,10 @@ typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WebWorkerDriverTest {
-  private val schema = object : SqlSchema {
+  private val schema = object : SqlSchema<AsyncValue<Unit>> {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.AsyncValue {
+    override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       driver.execute(
         0,
         """

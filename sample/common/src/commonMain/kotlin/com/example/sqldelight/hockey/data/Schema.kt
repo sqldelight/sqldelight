@@ -27,8 +27,8 @@ fun createQueryWrapper(driver: SqlDriver): HockeyDb {
   )
 }
 
-object Schema : SqlSchema by HockeyDb.Schema {
-  override fun create(driver: SqlDriver): QueryResult<Unit> {
+object Schema : SqlSchema<QueryResult.Value<Unit>> by HockeyDb.Schema {
+  override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
     HockeyDb.Schema.create(driver)
 
     // Seed data time!

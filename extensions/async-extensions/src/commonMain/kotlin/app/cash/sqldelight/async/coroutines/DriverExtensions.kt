@@ -20,6 +20,6 @@ suspend fun SqlDriver.await(
   binders: (SqlPreparedStatement.() -> Unit)? = null,
 ): Long = execute(identifier, sql, parameters, binders).await()
 
-suspend fun SqlSchema.awaitCreate(driver: SqlDriver) = create(driver).await()
+suspend fun SqlSchema<*>.awaitCreate(driver: SqlDriver) = create(driver).await()
 
-suspend fun SqlSchema.awaitMigrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = migrate(driver, oldVersion, newVersion).await()
+suspend fun SqlSchema<*>.awaitMigrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = migrate(driver, oldVersion, newVersion).await()

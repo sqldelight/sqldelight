@@ -66,7 +66,7 @@ class AsyncQueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.AsyncValue<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(
@@ -82,11 +82,12 @@ class AsyncQueriesTypeTest {
       |) : SuspendingTransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.AsyncValue {
+      |    public override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> =
+      |        QueryResult.AsyncValue {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
@@ -106,7 +107,7 @@ class AsyncQueriesTypeTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.AsyncValue {
+      |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       |    }
       |  }
       |}

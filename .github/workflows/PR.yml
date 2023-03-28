@@ -15,7 +15,7 @@ jobs:
         # for a log of why this is needed, see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
         #
         # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
-        os: [ macOS-latest, ubuntu-18.04 ]
+        os: [ macOS-latest, ubuntu-22.04 ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest

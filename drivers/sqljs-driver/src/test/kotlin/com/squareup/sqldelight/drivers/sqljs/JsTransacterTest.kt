@@ -18,7 +18,7 @@ import kotlin.test.assertTrue
 
 class JsTransacterTest {
 
-  private val schema = object : SqlSchema {
+  private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
     override val version = 1
     override fun create(driver: SqlDriver) = QueryResult.Unit
     override fun migrate(
