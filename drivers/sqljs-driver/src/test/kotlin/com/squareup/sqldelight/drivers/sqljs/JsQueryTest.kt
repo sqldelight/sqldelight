@@ -26,10 +26,10 @@ class JsQueryTest {
     )
   }
 
-  private val schema = object : SqlSchema {
+  private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver): QueryResult<Unit> {
+    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       driver.execute(
         null,
         """
@@ -48,7 +48,7 @@ class JsQueryTest {
       oldVersion: Int,
       newVersion: Int,
       vararg callbacks: AfterVersion,
-    ): QueryResult<Unit> {
+    ): QueryResult.Value<Unit> {
       // No-op.
       return QueryResult.Unit
     }

@@ -21,8 +21,8 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.inMemoryDriver
 
-private fun defaultSchema(): SqlSchema {
-  return object : SqlSchema {
+private fun defaultSchema(): SqlSchema<QueryResult.Value<Unit>> {
+  return object : SqlSchema<QueryResult.Value<Unit>> {
     override val version: Int = 1
     override fun create(driver: SqlDriver) = QueryResult.Unit
     override fun migrate(

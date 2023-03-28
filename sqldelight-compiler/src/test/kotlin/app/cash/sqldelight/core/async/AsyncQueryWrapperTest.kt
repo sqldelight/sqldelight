@@ -65,7 +65,7 @@ class AsyncQueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.AsyncValue<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -74,11 +74,12 @@ class AsyncQueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : SuspendingTransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
         |    public override val version: Int
         |      get() = 3
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.AsyncValue {
+        |    public override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> =
+        |        QueryResult.AsyncValue {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -92,7 +93,7 @@ class AsyncQueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> = QueryResult.AsyncValue {
+        |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
         |            |CREATE TABLE test (
@@ -113,7 +114,7 @@ class AsyncQueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.AsyncValue {
+        |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
         |      var lastVersion = oldVersion
         |
         |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
