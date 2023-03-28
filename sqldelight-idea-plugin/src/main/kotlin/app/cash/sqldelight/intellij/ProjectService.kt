@@ -29,6 +29,7 @@ import app.cash.sqldelight.intellij.run.window.SqlDelightToolWindowFactory
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.SqlParserUtil
+import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
 import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.ProjectUtil
 import com.intellij.ide.projectView.ProjectView
@@ -146,7 +147,13 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     with(ApplicationManager.getApplication()) {
       invokeLater {
         runWriteAction {
-          SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+          try {
+            SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+          } catch (e: InvalidElementDetectedException) {
+            // Since this is an IDE step, it's possible it happens during some element invalidation.
+            // In those cases its okay to ignore this time and wait until the next attempt at
+            // codegen.
+          }
         }
       }
     }
