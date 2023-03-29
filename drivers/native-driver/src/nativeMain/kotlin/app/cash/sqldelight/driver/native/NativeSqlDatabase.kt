@@ -117,7 +117,7 @@ class NativeSqliteDriver(
    * @param onConfiguration Callback to hook into [DatabaseConfiguration] creation.
    */
   constructor(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     name: String,
     maxReaderConnections: Int = 1,
     onConfiguration: (DatabaseConfiguration) -> DatabaseConfiguration = { it },
@@ -126,9 +126,7 @@ class NativeSqliteDriver(
     configuration = DatabaseConfiguration(
       name = name,
       version = schema.version,
-      create = { connection ->
-        wrapConnection(connection) { schema.create(it) }
-      },
+      create = { connection -> wrapConnection(connection) { schema.create(it) } },
       upgrade = { connection, oldVersion, newVersion ->
         wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion, *callbacks) }
       },
@@ -259,7 +257,7 @@ class NativeSqliteDriver(
  * Helper function to create an in-memory driver. In-memory drivers have a single connection, so
  * concurrent access will be block
  */
-fun inMemoryDriver(schema: SqlSchema): NativeSqliteDriver = NativeSqliteDriver(
+fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>): NativeSqliteDriver = NativeSqliteDriver(
   DatabaseConfiguration(
     name = null,
     inMemory = true,

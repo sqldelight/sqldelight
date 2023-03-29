@@ -22,13 +22,13 @@ import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
-import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
 import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.UNIT_RESULT_TYPE
+import app.cash.sqldelight.core.lang.VALUE_RESULT_TYPE
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.queriesType
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
@@ -102,7 +102,14 @@ internal class DatabaseGenerator(
       .addType(
         TypeSpec.companionObjectBuilder()
           .addProperty(
-            PropertySpec.builder("Schema", DATABASE_SCHEMA_TYPE)
+            PropertySpec.builder(
+              "Schema",
+              DATABASE_SCHEMA_TYPE.parameterizedBy(
+                (if (generateAsync) ASYNC_RESULT_TYPE else VALUE_RESULT_TYPE).parameterizedBy(
+                  Unit::class.asTypeName(),
+                ),
+              ),
+            )
               .getter(
                 FunSpec.getterBuilder()
                   .addStatement("return %T::class.schema", type)
@@ -152,7 +159,10 @@ internal class DatabaseGenerator(
     // fun create(driver: SqlDriver)
     val createFunction = FunSpec.builder("create")
       .addModifiers(OVERRIDE)
-      .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+      .returns(
+        (if (generateAsync) ASYNC_RESULT_TYPE else VALUE_RESULT_TYPE)
+          .parameterizedBy(Unit::class.asTypeName()),
+      )
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
 
     val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
@@ -160,7 +170,10 @@ internal class DatabaseGenerator(
 
     val migrateFunction = FunSpec.builder("migrateInternal")
       .addModifiers(PRIVATE)
-      .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+      .returns(
+        (if (generateAsync) ASYNC_RESULT_TYPE else VALUE_RESULT_TYPE)
+          .parameterizedBy(Unit::class.asTypeName()),
+      )
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
       .addParameter(oldVersion)
       .addParameter(newVersion)
@@ -253,7 +266,12 @@ internal class DatabaseGenerator(
     return typeSpec
       .addType(
         TypeSpec.objectBuilder("Schema")
-          .addSuperinterface(DATABASE_SCHEMA_TYPE)
+          .addSuperinterface(
+            DATABASE_SCHEMA_TYPE.parameterizedBy(
+              (if (generateAsync) ASYNC_RESULT_TYPE else VALUE_RESULT_TYPE)
+                .parameterizedBy(Unit::class.asTypeName()),
+            ),
+          )
           .addFunction(createFunction.build())
           .apply { if (hasMigrations) addFunction(migrateFunction.build()) }
           .addFunction(migrateImplementation(hasMigrations))
@@ -276,7 +294,10 @@ internal class DatabaseGenerator(
 
     val migrateFunction = FunSpec.builder("migrate")
       .addModifiers(OVERRIDE)
-      .returns(QUERY_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+      .returns(
+        (if (generateAsync) ASYNC_RESULT_TYPE else VALUE_RESULT_TYPE)
+          .parameterizedBy(Unit::class.asTypeName()),
+      )
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
       .addParameter(oldVersion)
       .addParameter(newVersion)

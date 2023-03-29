@@ -53,7 +53,7 @@ abstract class BaseConcurrencyTest {
   }
 
   fun setupDatabase(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     dbType: DbType,
     configBase: DatabaseConfiguration,
     maxReaderConnections: Int = 4,
@@ -111,10 +111,10 @@ abstract class BaseConcurrencyTest {
     configBase: DatabaseConfiguration = DatabaseConfiguration(name = null, version = 1, create = {}),
   ): SqlDriver {
     return setupDatabase(
-      schema = object : SqlSchema {
+      schema = object : SqlSchema<QueryResult.Value<Unit>> {
         override val version: Int = 1
 
-        override fun create(driver: SqlDriver): QueryResult<Unit> {
+        override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
           driver.execute(
             null,
             """

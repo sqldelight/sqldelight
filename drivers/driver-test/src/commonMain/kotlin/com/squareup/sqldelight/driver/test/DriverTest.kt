@@ -20,10 +20,10 @@ import kotlin.test.assertTrue
 
 abstract class DriverTest {
   protected lateinit var driver: SqlDriver
-  protected val schema = object : SqlSchema {
+  protected val schema = object : SqlSchema<QueryResult.Value<Unit>> {
     override val version: Int = 1
 
-    override fun create(driver: SqlDriver): QueryResult<Unit> {
+    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       driver.execute(
         0,
         """
@@ -59,7 +59,7 @@ abstract class DriverTest {
   }
   private var transacter = AtomicReference<Transacter?>(null)
 
-  abstract fun setupDatabase(schema: SqlSchema): SqlDriver
+  abstract fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver
 
   private fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection

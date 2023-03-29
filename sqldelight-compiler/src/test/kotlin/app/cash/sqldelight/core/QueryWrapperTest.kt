@@ -45,7 +45,7 @@ class QueryWrapperTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -54,11 +54,11 @@ class QueryWrapperTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test_table(
       |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -77,7 +77,7 @@ class QueryWrapperTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.Unit
+      |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -128,7 +128,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(
@@ -145,11 +145,11 @@ class QueryWrapperTest {
         |  public override val testQueries: TestQueries = TestQueries(driver, test_tableAdapter,
         |      test_table2Adapter)
         |
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test_table(
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -170,7 +170,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -212,7 +212,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -221,11 +221,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -244,7 +244,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -306,7 +306,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -315,11 +315,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY,
@@ -340,7 +340,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -392,7 +392,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -401,11 +401,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -437,7 +437,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -476,7 +476,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -485,11 +485,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW A AS
         |          |SELECT 1
@@ -507,7 +507,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -551,7 +551,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -560,11 +560,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value TEXT
@@ -586,7 +586,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |
@@ -647,7 +647,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -656,11 +656,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 3
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -675,7 +675,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> {
+        |    ): QueryResult.Value<Unit> {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
         |            |CREATE TABLE test (
@@ -697,7 +697,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> {
+        |    ): QueryResult.Value<Unit> {
         |      var lastVersion = oldVersion
         |
         |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
@@ -763,7 +763,7 @@ class QueryWrapperTest {
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -774,11 +774,11 @@ class QueryWrapperTest {
         |) : TransacterImpl(driver), TestDatabase {
         |  public override val queryQueries: QueryQueries = QueryQueries(driver)
         |
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, "PRAGMA journal_mode=wal", 0)
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
@@ -792,7 +792,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
-        |    ): QueryResult<Unit> {
+        |    ): QueryResult.Value<Unit> {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, "PRAGMA journal_mode=wal", 0)
         |        driver.execute(null, ""${'"'}
@@ -809,7 +809,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> {
+        |    ): QueryResult.Value<Unit> {
         |      var lastVersion = oldVersion
         |
         |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
@@ -876,7 +876,7 @@ class QueryWrapperTest {
         |import kotlin.reflect.KClass
         |import kotlin.text.buildString
         |
-        |internal val KClass<TestDatabase>.schema: SqlSchema
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
         |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -885,11 +885,11 @@ class QueryWrapperTest {
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
         |) : TransacterImpl(driver), TestDatabase {
-        |  public object Schema : SqlSchema {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    public override val version: Int
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE class_ability_test (
         |          |  id TEXT PRIMARY KEY NOT NULL,
@@ -926,7 +926,7 @@ class QueryWrapperTest {
         |      oldVersion: Int,
         |      newVersion: Int,
         |      vararg callbacks: AfterVersion,
-        |    ): QueryResult<Unit> = QueryResult.Unit
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
         |}
         |

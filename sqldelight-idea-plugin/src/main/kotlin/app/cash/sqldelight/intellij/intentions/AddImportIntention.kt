@@ -125,7 +125,7 @@ internal class AddImportIntention(
   }
 
   override fun showHint(editor: Editor): Boolean {
-    if (element.reference?.resolve() != null) {
+    if (element.reference?.resolve() != null && element.isValid) {
       return false
     }
 

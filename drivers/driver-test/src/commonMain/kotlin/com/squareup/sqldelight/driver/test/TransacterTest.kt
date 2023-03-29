@@ -16,19 +16,19 @@ abstract class TransacterTest {
   protected lateinit var transacter: TransacterImpl
   private lateinit var driver: SqlDriver
 
-  abstract fun setupDatabase(schema: SqlSchema): SqlDriver
+  abstract fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver
 
   @BeforeTest fun setup() {
     val driver = setupDatabase(
-      object : SqlSchema {
+      object : SqlSchema<QueryResult.Value<Unit>> {
         override val version = 1
-        override fun create(driver: SqlDriver): QueryResult<Unit> = QueryResult.Unit
+        override fun create(driver: SqlDriver): QueryResult.Value<Unit> = QueryResult.Unit
         override fun migrate(
           driver: SqlDriver,
           oldVersion: Int,
           newVersion: Int,
           vararg callbacks: AfterVersion,
-        ): QueryResult<Unit> = QueryResult.Unit
+        ): QueryResult.Value<Unit> = QueryResult.Unit
       },
     )
     transacter = object : TransacterImpl(driver) {}
