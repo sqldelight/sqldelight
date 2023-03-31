@@ -87,6 +87,6 @@ apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 afterEvaluate {
   tasks.named('compileKotlin') { dependsOn('pluginVersion') }
-  tasks.named('dokkaHtml') { dependsOn('pluginVersion') }
+  tasks.named('dokkaHtmlPartial') { dependsOn('pluginVersion') }
   tasks.named('javaSourcesJar') { dependsOn('pluginVersion') }
 }
