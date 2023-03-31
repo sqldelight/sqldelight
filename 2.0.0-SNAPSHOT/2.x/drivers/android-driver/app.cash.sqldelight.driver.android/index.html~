@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":drivers:android-driver:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,26 +49,28 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="android-driver::app.cash.sqldelight.driver.android////PointingToDeclaration//1288973086">
+<div class="main-content" data-page-type="package" id="content" pageids="android-driver::app.cash.sqldelight.driver.android////PointingToDeclaration//1288973086">
   <div class="breadcrumbs"><a href="../index.html">android-driver</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.driver.android</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="-1808627973%2FClasslikes%2F1288973086" anchor-label="AndroidSqliteDriver" id="-1808627973%2FClasslikes%2F1288973086" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release"></a>
-        <div class="table-row" data-filterable-current=":drivers:android-driver:dokkaHtmlPartial/release" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-android-sqlite-driver/index.html"><span>Android</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1808627973%2FClasslikes%2F1288973086" anchor-label="AndroidSqliteDriver" id="-1808627973%2FClasslikes%2F1288973086" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drivers:android-driver:dokkaHtmlPartial/release" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-android-sqlite-driver/index.html"><span>Android</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1808627973%2FClasslikes%2F1288973086"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-android-sqlite-driver/index.html">AndroidSqliteDriver</a> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-android-sqlite-driver/index.html">AndroidSqliteDriver</a> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -79,6 +84,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

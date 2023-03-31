@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":drivers:jdbc-driver:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,151 +49,144 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="jdbc-driver::app.cash.sqldelight.driver.jdbc/ConnectionManager///PointingToDeclaration//2094730479">
+<div class="main-content" data-page-type="classlike" id="content" pageids="jdbc-driver::app.cash.sqldelight.driver.jdbc/ConnectionManager///PointingToDeclaration//2094730479">
   <div class="breadcrumbs"><a href="../../index.html">jdbc-driver</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.driver.jdbc</a><span class="delimiter">/</span><span class="current">ConnectionManager</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Connection</span><wbr><span><span>Manager</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">ConnectionManager</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">ConnectionManager</a></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-jdbc-driver/index.html">JdbcDriver</a></div></span></div><div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="-1115502887%2FClasslikes%2F2094730479" anchor-label="Transaction" id="-1115502887%2FClasslikes%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-transaction/index.html"><span><span>Transaction</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1115502887%2FClasslikes%2F2094730479" anchor-label="Transaction" id="-1115502887%2FClasslikes%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-transaction/index.html"><span><span>Transaction</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1115502887%2FClasslikes%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-transaction/index.html">Transaction</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">enclosingTransaction<span class="token operator">: </span><a href="-transaction/index.html">ConnectionManager.Transaction</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">connectionManager<span class="token operator">: </span><a href="index.html">ConnectionManager</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>connection<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a></span></span><span class="token punctuation">)</span> : <a href="../../../../runtime/app.cash.sqldelight/-transacter/-transaction/index.html">Transacter.Transaction</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-transaction/index.html">Transaction</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">enclosingTransaction<span class="token operator">: </span><a href="-transaction/index.html">ConnectionManager.Transaction</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">connectionManager<span class="token operator">: </span><a href="index.html">ConnectionManager</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>connection<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a></span></span><span class="token punctuation">)</span> : <a href="../../../../runtime/app.cash.sqldelight/-transacter/-transaction/index.html">Transacter.Transaction</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="">Functions</h2>
-      <div class="table" data-togglable="Functions"><a data-name="-1688098171%2FFunctions%2F2094730479" anchor-label="beginTransaction" id="-1688098171%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="begin-transaction.html"><span>begin</span><wbr><span><span>Transaction</span></span></a></div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1688098171%2FFunctions%2F2094730479" anchor-label="beginTransaction" id="-1688098171%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="begin-transaction.html"><span>begin</span><wbr><span><span>Transaction</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1688098171%2FFunctions%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a><span class="token punctuation">.</span><a href="begin-transaction.html"><span class="token function">beginTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a><span class="token punctuation">.</span><a href="begin-transaction.html"><span class="token function">beginTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-447913172%2FFunctions%2F2094730479" anchor-label="close" id="-447913172%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="close.html"><span><span>close</span></span></a></div>
+          <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="close.html"><span><span>close</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-447913172%2FFunctions%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1817761238%2FFunctions%2F2094730479" anchor-label="closeConnection" id="-1817761238%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="close-connection.html"><span>close</span><wbr><span><span>Connection</span></span></a></div>
+          <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="close-connection.html"><span>close</span><wbr><span><span>Connection</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1817761238%2FFunctions%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="close-connection.html"><span class="token function">closeConnection</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">connection<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a></span></span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="close-connection.html"><span class="token function">closeConnection</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">connection<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-727668781%2FFunctions%2F2094730479" anchor-label="endTransaction" id="-727668781%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="end-transaction.html"><span>end</span><wbr><span><span>Transaction</span></span></a></div>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="end-transaction.html"><span>end</span><wbr><span><span>Transaction</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-727668781%2FFunctions%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a><span class="token punctuation">.</span><a href="end-transaction.html"><span class="token function">endTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a><span class="token punctuation">.</span><a href="end-transaction.html"><span class="token function">endTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1848171824%2FFunctions%2F2094730479" anchor-label="getConnection" id="-1848171824%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="get-connection.html"><span>get</span><wbr><span><span>Connection</span></span></a></div>
+          <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-connection.html"><span>get</span><wbr><span><span>Connection</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1848171824%2FFunctions%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-connection.html"><span class="token function">getConnection</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-connection.html"><span class="token function">getConnection</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-47241156%2FFunctions%2F2094730479" anchor-label="rollbackTransaction" id="-47241156%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="rollback-transaction.html"><span>rollback</span><wbr><span><span>Transaction</span></span></a></div>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="rollback-transaction.html"><span>rollback</span><wbr><span><span>Transaction</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-47241156%2FFunctions%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a><span class="token punctuation">.</span><a href="rollback-transaction.html"><span class="token function">rollbackTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html">Connection</a><span class="token punctuation">.</span><a href="rollback-transaction.html"><span class="token function">rollbackTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="">Properties</h2>
-      <div class="table" data-togglable="Properties"><a data-name="-1996557370%2FProperties%2F2094730479" anchor-label="transaction" id="-1996557370%2FProperties%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="transaction.html"><span><span>transaction</span></span></a></div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1996557370%2FProperties%2F2094730479" anchor-label="transaction" id="-1996557370%2FProperties%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="transaction.html"><span><span>transaction</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1996557370%2FProperties%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><a data-name="-1996557370%2FProperties%2F2094730479" anchor-label="transaction" id="-1996557370%2FProperties%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="transaction.html">transaction</a><span class="token operator">: </span><a href="-transaction/index.html">ConnectionManager.Transaction</a><span class="token operator">?</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="transaction.html">transaction</a><span class="token operator">: </span><a href="-transaction/index.html">ConnectionManager.Transaction</a><span class="token operator">?</span></div></div></div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <h2 class="">Inheritors</h2>
-      <div class="table" data-togglable="Inheritors"><a data-name="865465831%2FInheritors%2F2094730479" anchor-label="JdbcDriver" id="865465831%2FInheritors%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="../-jdbc-driver/index.html">JdbcDriver</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="865465831%2FInheritors%2F2094730479"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div></div>
           </div>
         </div>
       </div>
@@ -202,6 +198,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

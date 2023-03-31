@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqldelight-compiler:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,7 +49,7 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.psi/SqlDelightVisitor/visitStmtIdentifier/#app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier/PointingToDeclaration//1896744885">
+<div class="main-content" data-page-type="member" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.psi/SqlDelightVisitor/visitStmtIdentifier/#app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier/PointingToDeclaration//1896744885">
   <div class="breadcrumbs"><a href="../../index.html">sqldelight-compiler</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.core.psi</a><span class="delimiter">/</span><a href="index.html">SqlDelightVisitor</a><span class="delimiter">/</span><span class="current">visitStmtIdentifier</span></div>
   <div class="cover ">
     <h1 class="cover"><span>visit</span><wbr><span>Stmt</span><wbr><span><span>Identifier</span></span></h1>
@@ -58,6 +61,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

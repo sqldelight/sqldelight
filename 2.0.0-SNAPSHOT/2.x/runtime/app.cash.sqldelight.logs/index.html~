@@ -49,41 +49,43 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="runtime::app.cash.sqldelight.logs////PointingToDeclaration//-2112917107">
+<div class="main-content" data-page-type="package" id="content" pageids="runtime::app.cash.sqldelight.logs////PointingToDeclaration//-2112917107">
   <div class="breadcrumbs"><a href="../index.html">runtime</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.logs</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="-15493568%2FClasslikes%2F-2112917107" anchor-label="LogSqliteDriver" id="-15493568%2FClasslikes%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-log-sqlite-driver/index.html"><span>Log</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-15493568%2FClasslikes%2F-2112917107" anchor-label="LogSqliteDriver" id="-15493568%2FClasslikes%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-log-sqlite-driver/index.html"><span>Log</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-15493568%2FClasslikes%2F-2112917107"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-log-sqlite-driver/index.html">LogSqliteDriver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sqlDriver<span class="token operator">: </span><a href="../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span> : <a href="../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-log-sqlite-driver/index.html">LogSqliteDriver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sqlDriver<span class="token operator">: </span><a href="../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span> : <a href="../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-519364787%2FClasslikes%2F-2112917107" anchor-label="StatementParameterInterceptor" id="-519364787%2FClasslikes%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-statement-parameter-interceptor/index.html"><span>Statement</span><wbr><span>Parameter</span><wbr><span><span>Interceptor</span></span></a></div>
+          <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-statement-parameter-interceptor/index.html"><span>Statement</span><wbr><span>Parameter</span><wbr><span><span>Interceptor</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-519364787%2FClasslikes%2F-2112917107"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-statement-parameter-interceptor/index.html">StatementParameterInterceptor</a> : <a href="../app.cash.sqldelight.db/-sql-prepared-statement/index.html">SqlPreparedStatement</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-statement-parameter-interceptor/index.html">StatementParameterInterceptor</a> : <a href="../app.cash.sqldelight.db/-sql-prepared-statement/index.html">SqlPreparedStatement</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -97,6 +99,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

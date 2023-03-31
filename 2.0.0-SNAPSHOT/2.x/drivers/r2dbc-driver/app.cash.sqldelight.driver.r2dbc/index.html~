@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":drivers:r2dbc-driver:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,56 +49,58 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="r2dbc-driver::app.cash.sqldelight.driver.r2dbc////PointingToDeclaration//-597983287">
+<div class="main-content" data-page-type="package" id="content" pageids="r2dbc-driver::app.cash.sqldelight.driver.r2dbc////PointingToDeclaration//-597983287">
   <div class="breadcrumbs"><a href="../index.html">r2dbc-driver</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.driver.r2dbc</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="-93440307%2FClasslikes%2F-597983287" anchor-label="R2dbcCursor" id="-93440307%2FClasslikes%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-r2dbc-cursor/index.html"><span>R2dbc</span><wbr><span><span>Cursor</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-93440307%2FClasslikes%2F-597983287" anchor-label="R2dbcCursor" id="-93440307%2FClasslikes%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r2dbc-cursor/index.html"><span>R2dbc</span><wbr><span><span>Cursor</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-93440307%2FClasslikes%2F-597983287"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-r2dbc-cursor/index.html">R2dbcCursor</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>rowSet<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-cursor/index.html">SqlCursor</a></div><div class="brief "><p class="paragraph">TODO: Write a better async cursor API</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-r2dbc-cursor/index.html">R2dbcCursor</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>rowSet<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-cursor/index.html">SqlCursor</a></div><div class="brief "><p class="paragraph">TODO: Write a better async cursor API</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="785015355%2FClasslikes%2F-597983287" anchor-label="R2dbcDriver" id="785015355%2FClasslikes%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-r2dbc-driver/index.html"><span>R2dbc</span><wbr><span><span>Driver</span></span></a></div>
+          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r2dbc-driver/index.html"><span>R2dbc</span><wbr><span><span>Driver</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="785015355%2FClasslikes%2F-597983287"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-r2dbc-driver/index.html">R2dbcDriver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>connection<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Connection///PointingToDeclaration/">Connection</span></span></span><span class="token punctuation">)</span> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-r2dbc-driver/index.html">R2dbcDriver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>connection<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Connection///PointingToDeclaration/">Connection</span></span></span><span class="token punctuation">)</span> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="336158285%2FClasslikes%2F-597983287" anchor-label="R2dbcPreparedStatement" id="336158285%2FClasslikes%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-r2dbc-prepared-statement/index.html"><span>R2dbc</span><wbr><span>Prepared</span><wbr><span><span>Statement</span></span></a></div>
+          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r2dbc-prepared-statement/index.html"><span>R2dbc</span><wbr><span>Prepared</span><wbr><span><span>Statement</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="336158285%2FClasslikes%2F-597983287"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-r2dbc-prepared-statement/index.html">R2dbcPreparedStatement</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></span></span><span class="token punctuation">)</span> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-prepared-statement/index.html">SqlPreparedStatement</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-r2dbc-prepared-statement/index.html">R2dbcPreparedStatement</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></span></span><span class="token punctuation">)</span> : <a href="../../../runtime/app.cash.sqldelight.db/-sql-prepared-statement/index.html">SqlPreparedStatement</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -109,6 +114,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

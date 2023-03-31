@@ -49,7 +49,7 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="native-driver::app.cash.sqldelight.driver.native/ConnectionWrapper/executeQuery/#kotlin.Int?#kotlin.String#kotlin.Function1[app.cash.sqldelight.db.SqlCursor,TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Function1[app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration//-1060125994">
+<div class="main-content" data-page-type="member" id="content" pageids="native-driver::app.cash.sqldelight.driver.native/ConnectionWrapper/executeQuery/#kotlin.Int?#kotlin.String#kotlin.Function1[app.cash.sqldelight.db.SqlCursor,TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Function1[app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration//-1060125994">
   <div class="breadcrumbs"><a href="../../index.html">native-driver</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.driver.native</a><span class="delimiter">/</span><a href="index.html">ConnectionWrapper</a><span class="delimiter">/</span><span class="current">executeQuery</span></div>
   <div class="cover ">
     <h1 class="cover"><span>execute</span><wbr><span><span>Query</span></span></h1>
@@ -63,6 +63,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

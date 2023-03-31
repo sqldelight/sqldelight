@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqldelight-compiler:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,71 +49,73 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.compiler.model////PointingToDeclaration//1896744885">
+<div class="main-content" data-page-type="package" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.compiler.model////PointingToDeclaration//1896744885">
   <div class="breadcrumbs"><a href="../index.html">sqldelight-compiler</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.core.compiler.model</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="107353887%2FClasslikes%2F1896744885" anchor-label="BindableQuery" id="107353887%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-bindable-query/index.html"><span>Bindable</span><wbr><span><span>Query</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="107353887%2FClasslikes%2F1896744885" anchor-label="BindableQuery" id="107353887%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-bindable-query/index.html"><span>Bindable</span><wbr><span><span>Query</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="107353887%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-bindable-query/index.html">BindableQuery</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">identifier<span class="token operator">: </span><a href="../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html">StmtIdentifierMixin</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span></span></span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-bindable-query/index.html">BindableQuery</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">identifier<span class="token operator">: </span><a href="../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html">StmtIdentifierMixin</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1799402518%2FClasslikes%2F1896744885" anchor-label="NamedExecute" id="1799402518%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-named-execute/index.html"><span>Named</span><wbr><span><span>Execute</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-named-execute/index.html"><span>Named</span><wbr><span><span>Execute</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1799402518%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-named-execute/index.html">NamedExecute</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">identifier<span class="token operator">: </span><a href="../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html">StmtIdentifierMixin</a><span class="token punctuation">, </span></span><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span></span></span><span class="token punctuation">)</span> : <a href="-bindable-query/index.html">BindableQuery</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-named-execute/index.html">NamedExecute</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">identifier<span class="token operator">: </span><a href="../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html">StmtIdentifierMixin</a><span class="token punctuation">, </span></span><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span></span></span><span class="token punctuation">)</span> : <a href="-bindable-query/index.html">BindableQuery</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="774470921%2FClasslikes%2F1896744885" anchor-label="NamedMutator" id="774470921%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-named-mutator/index.html"><span>Named</span><wbr><span><span>Mutator</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-named-mutator/index.html"><span>Named</span><wbr><span><span>Mutator</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="774470921%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="-named-mutator/index.html">NamedMutator</a> : <a href="-named-execute/index.html">NamedExecute</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="-named-mutator/index.html">NamedMutator</a> : <a href="-named-execute/index.html">NamedExecute</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-110736221%2FClasslikes%2F1896744885" anchor-label="NamedQuery" id="-110736221%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-named-query/index.html"><span>Named</span><wbr><span><span>Query</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-named-query/index.html"><span>Named</span><wbr><span><span>Query</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-110736221%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-named-query/index.html">NamedQuery</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>queryable<span class="token operator">: </span><a href="../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-query-with-results/index.html">QueryWithResults</a><span class="token punctuation">, </span></span><span class="parameter ">statementIdentifier<span class="token operator">: </span><a href="../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html">StmtIdentifierMixin</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="-bindable-query/index.html">BindableQuery</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-named-query/index.html">NamedQuery</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>queryable<span class="token operator">: </span><a href="../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-query-with-results/index.html">QueryWithResults</a><span class="token punctuation">, </span></span><span class="parameter ">statementIdentifier<span class="token operator">: </span><a href="../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html">StmtIdentifierMixin</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="-bindable-query/index.html">BindableQuery</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -124,6 +129,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

@@ -1,5 +1,6 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:app.cash.sqldelight.async.coroutines//synchronous/app.cash.sqldelight.db.SqlSchema[app.cash.sqldelight.db.QueryResult.AsyncValue[kotlin.Unit]]#/PointingToDeclaration/async-extensions/app.cash.sqldelight.async.coroutines/[native]synchronous.html
 $dokka.location:app.cash.sqldelight.driver.native.util////PointingToDeclaration/native-driver/app.cash.sqldelight.driver.native.util.html
 $dokka.location:app.cash.sqldelight.internal////PointingToDeclaration/runtime/app.cash.sqldelight.internal.html
 module:runtime
@@ -8,6 +9,7 @@ app.cash.sqldelight.db
 app.cash.sqldelight.internal
 app.cash.sqldelight.logs
 module:sqldelight-compiler
+app.cash.sqldelight
 app.cash.sqldelight.core
 app.cash.sqldelight.core.compiler
 app.cash.sqldelight.core.compiler.model

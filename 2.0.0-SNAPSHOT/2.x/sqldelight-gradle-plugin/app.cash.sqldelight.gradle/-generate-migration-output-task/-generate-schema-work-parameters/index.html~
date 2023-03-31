@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,87 +49,89 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
+<div class="main-content" data-page-type="classlike" id="content" pageids="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
   <div class="breadcrumbs"><a href="../../../index.html">sqldelight-gradle-plugin</a><span class="delimiter">/</span><a href="../../index.html">app.cash.sqldelight.gradle</a><span class="delimiter">/</span><a href="../index.html">GenerateMigrationOutputTask</a><span class="delimiter">/</span><span class="current">GenerateSchemaWorkParameters</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Generate</span><wbr><span>Schema</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></h1>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">GenerateSchemaWorkParameters</a> : <span data-unresolved-link="org.gradle.workers/WorkParameters///PointingToDeclaration/">WorkParameters</span></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Properties</h2>
-      <div class="table" data-togglable="Properties"><a data-name="1149013910%2FProperties%2F1141795349" anchor-label="compilationUnit" id="1149013910%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="compilation-unit.html"><span>compilation</span><wbr><span><span>Unit</span></span></a></div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1149013910%2FProperties%2F1141795349" anchor-label="compilationUnit" id="1149013910%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="compilation-unit.html"><span>compilation</span><wbr><span><span>Unit</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1149013910%2FProperties%2F1141795349"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><a data-name="1149013910%2FProperties%2F1141795349" anchor-label="compilationUnit" id="1149013910%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="compilation-unit.html">compilationUnit</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-compilation-unit/index.html">SqlDelightCompilationUnit</a><span class="token operator">&gt;</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="compilation-unit.html">compilationUnit</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-compilation-unit/index.html">SqlDelightCompilationUnit</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1771188460%2FProperties%2F1141795349" anchor-label="migrationExtension" id="1771188460%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="migration-extension.html"><span>migration</span><wbr><span><span>Extension</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="migration-extension.html"><span>migration</span><wbr><span><span>Extension</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1771188460%2FProperties%2F1141795349"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><a data-name="1771188460%2FProperties%2F1141795349" anchor-label="migrationExtension" id="1771188460%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="migration-extension.html">migrationExtension</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="migration-extension.html">migrationExtension</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1083118758%2FProperties%2F1141795349" anchor-label="moduleName" id="1083118758%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="module-name.html"><span>module</span><wbr><span><span>Name</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="module-name.html"><span>module</span><wbr><span><span>Name</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1083118758%2FProperties%2F1141795349"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><a data-name="1083118758%2FProperties%2F1141795349" anchor-label="moduleName" id="1083118758%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="module-name.html">moduleName</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="module-name.html">moduleName</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-36750671%2FProperties%2F1141795349" anchor-label="outputDirectory" id="-36750671%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="output-directory.html"><span>output</span><wbr><span><span>Directory</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="output-directory.html"><span>output</span><wbr><span><span>Directory</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-36750671%2FProperties%2F1141795349"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><a data-name="-36750671%2FProperties%2F1141795349" anchor-label="outputDirectory" id="-36750671%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="output-directory.html">outputDirectory</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.file/DirectoryProperty///PointingToDeclaration/">DirectoryProperty</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="output-directory.html">outputDirectory</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.file/DirectoryProperty///PointingToDeclaration/">DirectoryProperty</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1509023242%2FProperties%2F1141795349" anchor-label="properties" id="1509023242%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="properties.html"><span><span>properties</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sqldelight-gradle-plugin:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="properties.html"><span><span>properties</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1509023242%2FProperties%2F1141795349"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><a data-name="1509023242%2FProperties%2F1141795349" anchor-label="properties" id="1509023242%2FProperties%2F1141795349" data-filterable-set=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="properties.html">properties</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-properties/index.html">SqlDelightDatabaseProperties</a><span class="token operator">&gt;</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="properties.html">properties</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-properties/index.html">SqlDelightDatabaseProperties</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -140,6 +145,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

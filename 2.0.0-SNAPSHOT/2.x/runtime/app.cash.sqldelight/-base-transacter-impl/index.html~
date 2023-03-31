@@ -49,53 +49,31 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="runtime::app.cash.sqldelight/BaseTransacterImpl///PointingToDeclaration//-2112917107">
+<div class="main-content" data-page-type="classlike" id="content" pageids="runtime::app.cash.sqldelight/BaseTransacterImpl///PointingToDeclaration//-2112917107">
   <div class="breadcrumbs"><a href="../../index.html">runtime</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight</a><span class="delimiter">/</span><span class="current">BaseTransacterImpl</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Base</span><wbr><span>Transacter</span><wbr><span><span>Impl</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">BaseTransacterImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></span></span><span class="token punctuation">)</span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">BaseTransacterImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></span></span><span class="token punctuation">)</span></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-transacter-impl/index.html">TransacterImpl</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-suspending-transacter-impl/index.html">SuspendingTransacterImpl</a></div></span></div><div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="tabbedcontent">Constructors</h2>
-      <div class="table" data-togglable="Constructors"><a data-name="830048329%2FConstructors%2F-2112917107" anchor-label="BaseTransacterImpl" id="830048329%2FConstructors%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue TabbedContent">
-            <div class=""><span class="inline-flex">
-                <div><a href="-base-transacter-impl.html"><span>Base</span><wbr><span>Transacter</span><wbr><span><span>Impl</span></span></a></div>
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="830048329%2FConstructors%2F-2112917107" anchor-label="BaseTransacterImpl" id="830048329%2FConstructors%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-base-transacter-impl.html"><span>Base</span><wbr><span>Transacter</span><wbr><span><span>Impl</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="830048329%2FConstructors%2F-2112917107"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-base-transacter-impl.html"><span class="token function">BaseTransacterImpl</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></span></span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">driver<span class="token operator">: </span><a href="../../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <h2 class="">Inheritors</h2>
-      <div class="table" data-togglable="Inheritors"><a data-name="38266752%2FInheritors%2F-2112917107" anchor-label="TransacterImpl" id="38266752%2FInheritors%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="../-transacter-impl/index.html">TransacterImpl</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="38266752%2FInheritors%2F-2112917107"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div></div>
-          </div>
-        </div>
-<a data-name="-900078854%2FInheritors%2F-2112917107" anchor-label="SuspendingTransacterImpl" id="-900078854%2FInheritors%2F-2112917107" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"></a>
-        <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="../-suspending-transacter-impl/index.html">SuspendingTransacterImpl</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-900078854%2FInheritors%2F-2112917107"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div></div>
           </div>
         </div>
       </div>
@@ -107,6 +85,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

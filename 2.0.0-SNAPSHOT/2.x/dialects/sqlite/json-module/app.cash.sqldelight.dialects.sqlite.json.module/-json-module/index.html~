@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:sqlite:json-module:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,59 +49,63 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="json-module::app.cash.sqldelight.dialects.sqlite.json.module/JsonModule///PointingToDeclaration//560951306">
+<div class="main-content" data-page-type="classlike" id="content" pageids="json-module::app.cash.sqldelight.dialects.sqlite.json.module/JsonModule///PointingToDeclaration//560951306">
   <div class="breadcrumbs"><a href="../../index.html">json-module</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.sqlite.json.module</a><span class="delimiter">/</span><span class="current">JsonModule</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Json</span><wbr><span><span>Module</span></span></h1>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">JsonModule</a> : <a href="../../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-sql-delight-module/index.html">SqlDelightModule</a></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="tabbedcontent">Constructors</h2>
-      <div class="table" data-togglable="Constructors"><a data-name="-1374696507%2FConstructors%2F560951306" anchor-label="JsonModule" id="-1374696507%2FConstructors%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue TabbedContent">
-            <div class=""><span class="inline-flex">
-                <div><a href="-json-module.html"><span>Json</span><wbr><span><span>Module</span></span></a></div>
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-1374696507%2FConstructors%2F560951306" anchor-label="JsonModule" id="-1374696507%2FConstructors%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-json-module.html"><span>Json</span><wbr><span><span>Module</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1374696507%2FConstructors%2F560951306"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-json-module.html"><span class="token function">JsonModule</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="">Functions</h2>
-      <div class="table" data-togglable="Functions"><a data-name="-2048346300%2FFunctions%2F560951306" anchor-label="setup" id="-2048346300%2FFunctions%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="setup.html"><span><span>setup</span></span></a></div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-2048346300%2FFunctions%2F560951306" anchor-label="setup" id="-2048346300%2FFunctions%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="setup.html"><span><span>setup</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2048346300%2FFunctions%2F560951306"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="setup.html"><span class="token function">setup</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="setup.html"><span class="token function">setup</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="428535524%2FFunctions%2F560951306" anchor-label="typeResolver" id="428535524%2FFunctions%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="type-resolver.html"><span>type</span><wbr><span><span>Resolver</span></span></a></div>
+          <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type-resolver.html"><span>type</span><wbr><span><span>Resolver</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="428535524%2FFunctions%2F560951306"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="type-resolver.html"><span class="token function">typeResolver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="type-resolver.html"><span class="token function">typeResolver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -112,6 +119,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

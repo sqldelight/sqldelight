@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqldelight-compiler:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,12 +49,12 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightEnvironment/SqlDelightEnvironment/#app.cash.sqldelight.core.SqlDelightDatabaseProperties#app.cash.sqldelight.core.SqlDelightCompilationUnit#kotlin.Boolean#app.cash.sqldelight.dialect.api.SqlDelightDialect#kotlin.String#kotlin.collections.List[java.io.File]#kotlin.collections.List[java.io.File]/PointingToDeclaration//1896744885">
+<div class="main-content" data-page-type="member" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightEnvironment/SqlDelightEnvironment/#app.cash.sqldelight.core.SqlDelightDatabaseProperties#app.cash.sqldelight.core.SqlDelightCompilationUnit#kotlin.Boolean#app.cash.sqldelight.dialect.api.SqlDelightDialect#kotlin.String#kotlin.collections.List[java.io.File]#kotlin.collections.List[java.io.File]/PointingToDeclaration//1896744885">
   <div class="breadcrumbs"><a href="../../index.html">sqldelight-compiler</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.core</a><span class="delimiter">/</span><a href="index.html">SqlDelightEnvironment</a><span class="delimiter">/</span><span class="current">SqlDelightEnvironment</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Environment</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-sql-delight-environment.html"><span class="token function">SqlDelightEnvironment</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">properties<span class="token operator">: </span><a href="../-sql-delight-database-properties/index.html">SqlDelightDatabaseProperties</a><span class="token punctuation">, </span></span><span class="parameter ">compilationUnit<span class="token operator">: </span><a href="../-sql-delight-compilation-unit/index.html">SqlDelightCompilationUnit</a><span class="token punctuation">, </span></span><span class="parameter ">verifyMigrations<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">dialect<span class="token operator">: </span><a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-sql-delight-dialect/index.html">SqlDelightDialect</a><span class="token punctuation">, </span></span><span class="parameter ">moduleName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">sourceFolders<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a><span class="token operator">&gt;</span><span class="token operator"> = </span>compilationUnit.sourceFolders
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">properties<span class="token operator">: </span><a href="../-sql-delight-database-properties/index.html">SqlDelightDatabaseProperties</a><span class="token punctuation">, </span></span><span class="parameter ">compilationUnit<span class="token operator">: </span><a href="../-sql-delight-compilation-unit/index.html">SqlDelightCompilationUnit</a><span class="token punctuation">, </span></span><span class="parameter ">verifyMigrations<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">dialect<span class="token operator">: </span><a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-sql-delight-dialect/index.html">SqlDelightDialect</a><span class="token punctuation">, </span></span><span class="parameter ">moduleName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">sourceFolders<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a><span class="token operator">&gt;</span><span class="token operator"> = </span>compilationUnit.sourceFolders
     .filter { it.folder.exists() &amp;&amp; !it.dependency }
     .map { it.folder }<span class="token punctuation">, </span></span><span class="parameter ">dependencyFolders<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a><span class="token operator">&gt;</span><span class="token operator"> = </span>compilationUnit.sourceFolders
     .filter { it.folder.exists() &amp;&amp; it.dependency }
@@ -62,6 +65,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

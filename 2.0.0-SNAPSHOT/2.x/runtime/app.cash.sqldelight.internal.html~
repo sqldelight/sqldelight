@@ -51,7 +51,7 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="runtime::app.cash.sqldelight.internal////PointingToDeclaration//848708935">
+<div class="main-content" data-page-type="package" id="content" pageids="runtime::app.cash.sqldelight.internal////PointingToDeclaration//848708935">
   <div class="breadcrumbs"><a href="index.html">runtime</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.internal</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -66,6 +66,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

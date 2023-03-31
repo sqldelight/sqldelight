@@ -37,6 +37,9 @@
     <div>2.0.0-SNAPSHOT
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqldelight-compiler:dokkaHtmlPartial/main">jvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -46,26 +49,28 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.lang.validation////PointingToDeclaration//1896744885">
+<div class="main-content" data-page-type="package" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.lang.validation////PointingToDeclaration//1896744885">
   <div class="breadcrumbs"><a href="../index.html">sqldelight-compiler</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.core.lang.validation</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="450594339%2FClasslikes%2F1896744885" anchor-label="OptimisticLockValidator" id="450594339%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-        <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-optimistic-lock-validator/index.html"><span>Optimistic</span><wbr><span>Lock</span><wbr><span><span>Validator</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="450594339%2FClasslikes%2F1896744885" anchor-label="OptimisticLockValidator" id="450594339%2FClasslikes%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-optimistic-lock-validator/index.html"><span>Optimistic</span><wbr><span>Lock</span><wbr><span><span>Validator</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="450594339%2FClasslikes%2F1896744885"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-optimistic-lock-validator/index.html">OptimisticLockValidator</a> : <span data-unresolved-link="com.intellij.lang.annotation/Annotator///PointingToDeclaration/">Annotator</span>, <span data-unresolved-link="com.alecstrong.sql.psi.core/SqlCompilerAnnotator///PointingToDeclaration/">SqlCompilerAnnotator</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-optimistic-lock-validator/index.html">OptimisticLockValidator</a> : <span data-unresolved-link="com.intellij.lang.annotation/Annotator///PointingToDeclaration/">Annotator</span>, <span data-unresolved-link="com.alecstrong.sql.psi.core/SqlCompilerAnnotator///PointingToDeclaration/">SqlCompilerAnnotator</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -79,6 +84,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 

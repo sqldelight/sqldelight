@@ -51,7 +51,7 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageids="runtime::app.cash.sqldelight.db//use/TypeParam(bounds=[app.cash.sqldelight.db.Closeable?])#kotlin.Function1[TypeParam(bounds=[app.cash.sqldelight.db.Closeable?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration//-49974223">
+<div class="main-content" data-page-type="member" id="content" pageids="runtime::app.cash.sqldelight.db//use/TypeParam(bounds=[app.cash.sqldelight.db.Closeable?])#kotlin.Function1[TypeParam(bounds=[app.cash.sqldelight.db.Closeable?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration//-49974223">
   <div class="breadcrumbs"><a href="../index.html">runtime</a><span class="delimiter">/</span><a href="index.html">app.cash.sqldelight.db</a><span class="delimiter">/</span><span class="current">use</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>use</span></span></h1>
@@ -65,6 +65,6 @@
       </div>
     </div>
 </div>
-
-</body></html>
+</body>
+</html>
 
