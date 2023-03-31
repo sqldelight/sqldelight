@@ -48,6 +48,8 @@ jobs:
         run: .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Build mkdocs
+        env:
+          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
         run: |
           pip3 install --no-deps -r .github/workflows/requirements.txt
           mkdocs build
