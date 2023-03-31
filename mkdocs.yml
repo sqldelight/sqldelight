@@ -228,6 +228,6 @@ plugins:
 
 extra:
   versions:
-    sqldelight: '2.0.0-alpha05'
+    sqldelight: !ENV [SQLDELIGHT_VERSION, 'local-development']
   version:
     provider: mike
