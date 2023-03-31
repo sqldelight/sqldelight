@@ -46,6 +46,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/android_sqlite/foreign_keys/</loc>
+         <lastmod>2023-03-31</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/android_sqlite/gradle/</loc>
          <lastmod>2023-03-31</lastmod>
          <changefreq>daily</changefreq>
@@ -426,6 +431,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_sqlite/foreign_keys/</loc>
+         <lastmod>2023-03-31</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_sqlite/gradle/</loc>
          <lastmod>2023-03-31</lastmod>
          <changefreq>daily</changefreq>
@@ -481,6 +491,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/multiplatform_sqlite/foreign_keys/</loc>
+         <lastmod>2023-03-31</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/multiplatform_sqlite/gradle/</loc>
          <lastmod>2023-03-31</lastmod>
          <changefreq>daily</changefreq>
@@ -532,6 +547,11 @@
     </url>
     <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/native_sqlite/custom_projections/</loc>
+         <lastmod>2023-03-31</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/native_sqlite/foreign_keys/</loc>
          <lastmod>2023-03-31</lastmod>
          <changefreq>daily</changefreq>
     </url>

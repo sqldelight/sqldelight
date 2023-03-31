@@ -18,7 +18,7 @@
         <link rel="prev" href="../code_of_conduct/">
       
       
-        <link rel="next" href="custom_projections/">
+        <link rel="next" href="foreign_keys/">
       
       <link rel="icon" href="../images/icon-cashapp.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.5">
@@ -556,9 +556,40 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Getting Started
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-version-support" class="md-nav__link">
+    SQLite Version Support
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -591,6 +622,20 @@
           SQL
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -1022,6 +1067,20 @@
           SQL
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiplatform_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -2119,6 +2178,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../native_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../native_sqlite/custom_projections/" class="md-nav__link">
         Type Projections
       </a>
@@ -2431,6 +2504,20 @@
           SQL
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jvm_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -3105,6 +3192,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-version-support" class="md-nav__link">
+    SQLite Version Support
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3135,7 +3237,7 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">plugins</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s">&quot;2.0.0-alpha05&quot;</span>
+<span class="w">  </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s">&quot;local-development&quot;</span>
 <span class="p">}</span>
 
 <span class="n">repositories</span><span class="w"> </span><span class="p">{</span>
@@ -3154,7 +3256,7 @@
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s2">&quot;2.0.0-alpha05&quot;</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight&quot;</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="s2">&quot;local-development&quot;</span>
 <span class="o">}</span>
 
 <span class="n">repositories</span><span class="w"> </span><span class="o">{</span>
@@ -3191,13 +3293,13 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:android-driver:2.0.0-alpha05&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:android-driver:local-development&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:android-driver:2.0.0-alpha05&quot;</span>
+<span class="w">  </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:android-driver:local-development&quot;</span>
 <span class="o">}</span>
 </code></pre></div>
 </div>
@@ -3239,6 +3341,10 @@ your files, in order to find and edit SQLDelight files.</p>
 <span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
 </code></pre></div>
 <p>And that's it! Check out the other pages on the sidebar for other functionality.</p>
+<h2 id="sqlite-version-support">SQLite Version Support<a class="headerlink" href="#sqlite-version-support" title="Permanent link">&para;</a></h2>
+<p>The SQLDelight Gradle plugin will automatically select the SQLite dialect version based on your project's 
+<code>minSdkVersion</code> setting. <a href="https://developer.android.com/reference/android/database/sqlite/package-summary">See here</a> for 
+the list of supported SQLite versions on each Android SDK level.</p>
 
 
 

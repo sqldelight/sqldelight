@@ -643,6 +643,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../android_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../android_sqlite/custom_projections/" class="md-nav__link">
         Type Projections
       </a>
@@ -1067,6 +1081,20 @@
           SQL
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiplatform_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -2164,6 +2192,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../native_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../native_sqlite/custom_projections/" class="md-nav__link">
         Type Projections
       </a>
@@ -2476,6 +2518,20 @@
           SQL
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jvm_sqlite/foreign_keys/" class="md-nav__link">
+        Foreign Keys
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -3210,13 +3266,13 @@ For a full list of new features and other changes, see the <a href="../changelog
 <h2 id="new-package-name-and-artifact-group">New Package Name and Artifact Group<a class="headerlink" href="#new-package-name-and-artifact-group" title="Permanent link">&para;</a></h2>
 <p>All instances of <code>com.squareup.sqldelight</code> need to be replaced with <code>app.cash.sqldelight</code>.</p>
 <div class="highlight"><span class="filename">Gradle Dependencies</span><pre><span></span><code><span class="w">plugins {</span>
-<span class="gd">-  id(&quot;com.squareup.sqldelight&quot;) version &quot;2.0.0-alpha05&quot;</span>
-<span class="gi">+  id(&quot;app.cash.sqldelight&quot;) version &quot;2.0.0-alpha05&quot;</span>
+<span class="gd">-  id(&quot;com.squareup.sqldelight&quot;) version &quot;local-development&quot;</span>
+<span class="gi">+  id(&quot;app.cash.sqldelight&quot;) version &quot;local-development&quot;</span>
 <span class="w">}</span>
 
 <span class="w">dependencies {</span>
-<span class="gd">-  implementation(&quot;com.squareup.sqldelight:sqlite-driver:2.0.0-alpha05&quot;)</span>
-<span class="gi">+  implementation(&quot;app.cash.sqldelight:sqlite-driver:2.0.0-alpha05&quot;)</span>
+<span class="gd">-  implementation(&quot;com.squareup.sqldelight:sqlite-driver:local-development&quot;)</span>
+<span class="gi">+  implementation(&quot;app.cash.sqldelight:sqlite-driver:local-development&quot;)</span>
 <span class="w">}</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">In Code</span><pre><span></span><code><span class="gd">-import com.squareup.sqldelight.db.SqlDriver</span>
@@ -3268,7 +3324,7 @@ For a full list of new features and other changes, see the <a href="../changelog
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">create</span><span class="o">(</span><span class="s2">&quot;MyDatabase&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s2">&quot;com.example&quot;</span><span class="o">)</span>
-<span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:2.0.0-alpha05&quot;</span><span class="o">)</span>
+<span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:local-development&quot;</span><span class="o">)</span>
 
 <span class="w">      </span><span class="c1">// Version catalogs also work!</span>
 <span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="n">libs</span><span class="o">.</span><span class="na">sqldelight</span><span class="o">.</span><span class="na">dialects</span><span class="o">.</span><span class="na">mysql</span><span class="o">)</span>
@@ -3282,7 +3338,7 @@ For a full list of new features and other changes, see the <a href="../changelog
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
-<span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:2.0.0-alpha05&quot;</span>
+<span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:local-development&quot;</span>
 
 <span class="w">      </span><span class="c1">// Version catalogs also work!</span>
 <span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="n">libs</span><span class="o">.</span><span class="na">sqldelight</span><span class="o">.</span><span class="na">dialects</span><span class="o">.</span><span class="na">mysql</span>
@@ -3307,7 +3363,7 @@ For a full list of new features and other changes, see the <a href="../changelog
 <span class="w"> </span> good INTEGER <mark class="critic">As Boolean</mark>
 <span class="w">);</span>
 </code></pre></div>
-<p>Some previously supported types now require an adapter. Adapters for primitive types are available in the <code>app.cash.sqldelight:primitive-adapters:2.0.0-alpha05</code> artifact.
+<p>Some previously supported types now require an adapter. Adapters for primitive types are available in the <code>app.cash.sqldelight:primitive-adapters:local-development</code> artifact.
 e.g. The <code>IntColumnAdapter</code> for doing <code>INTEGER As kotlin.Int</code> conversions.</p>
 </li>
 <li>
