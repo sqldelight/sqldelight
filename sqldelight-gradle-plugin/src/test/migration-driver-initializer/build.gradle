@@ -1,0 +1,31 @@
+import app.cash.sqldelight.gradle.VerifyMigrationTask
+import app.cash.sqldelight.gradle.DriverInitializerImpl
+
+buildscript {
+  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'app.cash.sqldelight'
+
+sqldelight {
+  databases {
+    Database {
+      packageName = "com.example"
+      verifyMigrations = true
+    }
+  }
+}
+
+dependencies {
+  implementation libs.junit
+}
+
+tasks.whenTaskAdded {
+  if (it.name == "verifyMainDatabaseMigration") {
+    def task = it as VerifyMigrationTask
+    task.configure {
+      it.driverInitializer = new DriverInitializerImpl()
+    }
+  }
+}

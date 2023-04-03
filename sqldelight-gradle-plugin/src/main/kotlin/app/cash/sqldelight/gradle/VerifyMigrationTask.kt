@@ -214,3 +214,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 interface DriverInitializer : Serializable {
   fun execute()
 }
+
+class DriverInitializerImpl: DriverInitializer {
+  override fun execute() {
+    println("DriverInitializerImpl executed!")
+  }
+}
