@@ -25,7 +25,7 @@ tasks.whenTaskAdded {
   if (it.name == "verifyMainDatabaseMigration") {
     def task = it as VerifyMigrationTask
     task.configure {
-      it.driverInitializer = new DriverInitImpl()
+      it.driverInitializer = new DriverInitializerImpl()
     }
   }
 }
