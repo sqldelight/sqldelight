@@ -1,5 +1,5 @@
 import app.cash.sqldelight.gradle.VerifyMigrationTask
-import app.cash.sqldelight.gradle.DriverInitializerImpl
+import app.cash.sqldelight.gradle.DriverInitializer
 
 buildscript {
   apply from: "${projectDir.absolutePath}/../buildscript.gradle"
@@ -25,7 +25,14 @@ tasks.whenTaskAdded {
   if (it.name == "verifyMainDatabaseMigration") {
     def task = it as VerifyMigrationTask
     task.configure {
-      it.driverInitializer = new DriverInitializerImpl()
+      it.driverInitializer = new DriverInitImpl()
     }
+  }
+}
+
+class DriverInitializerImpl implements DriverInitializer {
+  @Override
+  void execute() {
+    println "DriverInitializerImpl executed!"
   }
 }
