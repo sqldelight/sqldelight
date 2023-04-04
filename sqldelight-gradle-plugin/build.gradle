@@ -51,7 +51,7 @@ dependencies {
   implementation libs.schemaCrawler.sqlite
 
   implementation projects.sqliteMigrations
-  implementation projects.sqldelightCompiler
+  api projects.sqldelightCompiler
   // Only shade the minimum IntelliJ libs.
   shade libs.intellij.core
   // Analysis has no dependencies.
