@@ -69,4 +69,4 @@ jobs:
         run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} latest
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=true
+  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
