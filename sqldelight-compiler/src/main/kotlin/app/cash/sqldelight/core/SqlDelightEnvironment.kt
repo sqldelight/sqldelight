@@ -37,6 +37,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
+import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.vfs.VirtualFile
@@ -80,9 +81,10 @@ class SqlDelightEnvironment(
   init {
     project.registerService(SqlDelightProjectService::class.java, this)
 
+    @Suppress("UnresolvedPluginConfigReference")
     CoreApplicationEnvironment.registerExtensionPoint(
       module.extensionArea,
-      ModuleExtension.EP_NAME,
+      ExtensionPointName.create("com.intellij.moduleExtension"),
       ModuleExtension::class.java,
     )
 

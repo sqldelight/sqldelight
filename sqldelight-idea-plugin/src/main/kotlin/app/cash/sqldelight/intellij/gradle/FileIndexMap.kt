@@ -189,9 +189,14 @@ internal class FileIndexMap {
 
       // Add the new one in.
       try {
-        pluginClassLoader.classPath.reset(newClasspath)
-      } catch (e: NoSuchMethodError) {
-        // classPath.reset is hidden in newer versions of IntelliJ, set files reflectively.
+        // older IntelliJ versions have a reset method that takes a list of files.
+        ClassPath::class.java.getDeclaredMethod("reset", List::class.java).let { method ->
+          method.isAccessible = true
+          method.invoke(pluginClassLoader.classPath, newClasspath)
+          method.isAccessible = false
+        }
+      } catch (e: NoSuchMethodException) {
+        // in newer versions of IntelliJ, call both argless reset and set files reflectively.
         ClassPath::class.java.getDeclaredMethod("reset").let { method ->
           method.isAccessible = true
           method.invoke(pluginClassLoader.classPath)

@@ -5,7 +5,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
-import app.cash.sqldelight.intellij.usages.KotlinFindUsagesHandlerFactory
+import app.cash.sqldelight.intellij.usages.ReflectiveKotlinFindUsagesFactory
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
@@ -43,7 +43,7 @@ class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
 private class SqlDelightIdentifierHandler(
   private val element: PsiElement,
 ) : FindUsagesHandler(element) {
-  private val factory = KotlinFindUsagesHandlerFactory(element.project)
+  private val factory = ReflectiveKotlinFindUsagesFactory(element.project)
   private val kotlinHandlers = when (element) {
     is StmtIdentifierMixin -> element.generatedMethods()
     is SqlColumnName -> element.generatedProperties()
@@ -66,7 +66,7 @@ private class SqlDelightIdentifierHandler(
   ): Boolean {
     val generatedFiles = element.generatedVirtualFiles()
     val ignoringFileProcessor = Processor<UsageInfo> { t ->
-      if (t is KotlinReferenceUsageInfo && t.virtualFile in generatedFiles) {
+      if (factory.isKotlinReferenceUsageInfo(t) && t.virtualFile in generatedFiles) {
         return@Processor true
       }
       processor.process(t)
