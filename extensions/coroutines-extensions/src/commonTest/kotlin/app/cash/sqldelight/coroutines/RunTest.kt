@@ -18,4 +18,8 @@ package app.cash.sqldelight.coroutines
 
 import kotlinx.coroutines.CoroutineScope
 
-expect fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit)
+fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = kotlinx.coroutines.test.runTest {
+  val db = setupDb()
+  body(db)
+  db.close()
+}
