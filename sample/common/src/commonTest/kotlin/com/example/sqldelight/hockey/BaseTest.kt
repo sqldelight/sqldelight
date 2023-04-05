@@ -1,31 +1,27 @@
 package com.example.sqldelight.hockey
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-
-open class BaseTest {
-  @BeforeTest
-  fun initDb() {
-    createDriver()
-  }
-
-  @AfterTest
-  fun closeDb() {
-    closeDriver()
-  }
-}
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 
 /**
  * Init driver for each platform. Should *always* be called to setup test
  */
-expect fun createDriver()
+expect suspend fun createDriver()
 
 /**
  * Close driver for each platform. Should *always* be called to tear down test
  */
-expect fun closeDriver()
+expect suspend fun closeDriver()
 
 /**
  * Platform specific access to HockeyDb
  */
-expect fun BaseTest.getDb(): HockeyDb
+expect fun getDb(): HockeyDb
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun testing(block: suspend CoroutineScope.(HockeyDb) -> Unit) = runTest {
+  createDriver()
+  block(getDb())
+  closeDriver()  
+}

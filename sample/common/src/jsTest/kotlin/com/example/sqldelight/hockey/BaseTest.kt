@@ -3,16 +3,16 @@ package com.example.sqldelight.hockey
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Schema
-import kotlin.js.Promise
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.await
 
-lateinit var dbPromise: Promise<Unit>
-
-actual fun createDriver() {
-  dbPromise = initSqlDriver(Schema).then { Db.dbSetup(it) }
+actual suspend fun createDriver() = coroutineScope {
+  val driver = initSqlDriver(Schema).await()
+  Db.dbSetup(driver)
 }
 
-actual fun closeDriver() {
-  dbPromise.then { Db.dbClear() }
+actual suspend fun closeDriver() = coroutineScope {
+  Db.dbClear()
 }
 
-actual fun BaseTest.getDb(): HockeyDb = Db.instance
+actual fun getDb(): HockeyDb = Db.instance
