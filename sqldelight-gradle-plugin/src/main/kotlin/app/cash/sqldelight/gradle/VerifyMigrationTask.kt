@@ -54,7 +54,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @Input var verifyDefinitions: Boolean = true
 
-  @get:Input abstract val connectionProperties: MapProperty<String, String>
+  @get:Input abstract val driverProperties: MapProperty<String, String>
 
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
@@ -73,7 +73,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         it.verifyMigrations.set(verifyMigrations)
         it.compilationUnit.set(compilationUnit)
         it.verifyDefinitions.set(verifyDefinitions)
-        it.connectionProperties.set(connectionProperties.get())
+        it.driverProperties.set(driverProperties.get())
       }
       workQueue.await()
     }.onSuccess {
@@ -98,7 +98,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
     val verifyDefinitions: Property<Boolean>
-    val connectionProperties: MapProperty<String, String>
+    val driverProperties: MapProperty<String, String>
   }
 
   abstract class VerifyMigrationAction : WorkAction<VerifyMigrationWorkParameters> {
@@ -120,11 +120,13 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     }
 
     override fun execute() {
-      ServiceLoader.load(DriverInitializer::class.java).firstOrNull()?.execute(parameters.properties.get())
+      ServiceLoader.load(DriverInitializer::class.java).firstOrNull()?.execute(
+        parameters.properties.get(),
+        parameters.driverProperties.toProperties(),
+      )
       if (!environment.dialect.isSqlite) return
       parameters.workingDirectory.get().asFile.deleteRecursively()
-      val connectionProperties = parameters.connectionProperties.toProperties()
-      val catalog = createCurrentDb(connectionProperties)
+      val catalog = createCurrentDb()
 
       val databaseFiles = sourceFolders.asSequence()
         .findDatabaseFiles()
@@ -134,13 +136,13 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
 
       databaseFiles.forEach { dbFile ->
-        checkMigration(dbFile, catalog, connectionProperties)
+        checkMigration(dbFile, catalog)
       }
 
       checkForGaps()
     }
 
-    private fun createCurrentDb(properties: Properties): CatalogDatabase {
+    private fun createCurrentDb(): CatalogDatabase {
       val sourceFiles = ArrayList<SqlDelightQueriesFile>()
       environment.forSourceFiles { file ->
         if (file is SqlDelightQueriesFile) sourceFiles.add(file)
@@ -151,15 +153,14 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
-      return CatalogDatabase.withInitStatements(initStatements, properties)
+      return CatalogDatabase.withInitStatements(initStatements)
     }
 
     private fun checkMigration(
       dbFile: File,
       currentDb: CatalogDatabase,
-      connectionProperties: Properties,
     ) {
-      val actualCatalog = createActualDb(dbFile, connectionProperties)
+      val actualCatalog = createActualDb(dbFile)
       val databaseComparator = ObjectDifferDatabaseComparator(
         ignoreDefinitions = !parameters.verifyDefinitions.get(),
         circularReferenceExceptionLogger = {
@@ -176,7 +177,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
     }
 
-    private fun createActualDb(dbFile: File, connectionProperties: Properties): CatalogDatabase {
+    private fun createActualDb(dbFile: File): CatalogDatabase {
       val version = dbFile.nameWithoutExtension.toInt()
       val copy = dbFile.copyTo(File(parameters.workingDirectory.get().asFile, dbFile.name))
       val initStatements = ArrayList<CatalogDatabase.InitStatement>()
@@ -194,11 +195,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
           )
         }
       }
-      return CatalogDatabase.fromFile(
-        copy.absolutePath,
-        initStatements,
-        connectionProperties
-      ).also { copy.delete() }
+      return CatalogDatabase.fromFile(copy.absolutePath, initStatements).also { copy.delete() }
     }
 
     private fun checkForGaps() {
@@ -229,5 +226,5 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
  * running migration verification task.
  */
 interface DriverInitializer {
-  fun execute(properties: SqlDelightDatabaseProperties)
+  fun execute(properties: SqlDelightDatabaseProperties, driverProperties: Properties)
 }
