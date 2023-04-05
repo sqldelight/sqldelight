@@ -22,6 +22,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.ui.EditorNotifications
+import com.intellij.util.lang.ClassPath
 import com.intellij.util.lang.UrlClassLoader
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
 import org.jetbrains.plugins.gradle.settings.DistributionType
@@ -135,6 +136,8 @@ internal class FileIndexMap {
         EditorNotifications.getInstance(module.project).updateAllNotifications()
       } catch (externalException: ExternalSystemException) {
         // It's a gradle error, ignore and let the user fix when they try and build the project
+        Timber.i("sqldelight model gen failed")
+        Timber.i(externalException)
 
         FileIndexingNotification.getInstance(project).unconfiguredReason =
           FileIndexingNotification.UnconfiguredReason.Incompatible(
@@ -161,22 +164,50 @@ internal class FileIndexMap {
       val pluginClassLoader = pluginClassLoader as UrlClassLoader
 
       // We need to remove the last loaded dialect as well as add our new one.
-      val files = UrlClassLoader::class.java.getDeclaredField("files").let { field ->
-        field.isAccessible = true
-        val result = field.get(pluginClassLoader) as MutableList<Path>
-        field.isAccessible = false
-        return@let result
+      val files = try {
+        UrlClassLoader::class.java.getDeclaredField("files").let { field ->
+          field.isAccessible = true
+          val result = field.get(pluginClassLoader) as List<Path>
+          field.isAccessible = false
+          return@let result
+        }
+      } catch (e: NoSuchFieldException) {
+        // This is a newer version of IntelliJ that doesn't have the files field on UrlClassLoader,
+        // reflect on Classpath instead.
+        ClassPath::class.java.getDeclaredField("files").let { field ->
+          field.isAccessible = true
+          val result = (field.get(pluginClassLoader.classPath) as Array<Path>).toList()
+          field.isAccessible = false
+          return@let result
+        }
       }
 
-      // Remove the last loaded dialect.
-      previouslyAddedDialect?.let {
-        files.removeAll(it)
-      }
+      // Filter out the last loaded dialect.
+      val filtered = files.filter { it != previouslyAddedDialect }
+      val newClasspath = filtered + dialectPath
       previouslyAddedDialect = dialectPath
 
       // Add the new one in.
-      files.addAll(dialectPath)
-      pluginClassLoader.classPath.reset(files)
+      try {
+        // older IntelliJ versions have a reset method that takes a list of files.
+        ClassPath::class.java.getDeclaredMethod("reset", List::class.java).let { method ->
+          method.isAccessible = true
+          method.invoke(pluginClassLoader.classPath, newClasspath)
+          method.isAccessible = false
+        }
+      } catch (e: NoSuchMethodException) {
+        // in newer versions of IntelliJ, call both argless reset and set files reflectively.
+        ClassPath::class.java.getDeclaredMethod("reset").let { method ->
+          method.isAccessible = true
+          method.invoke(pluginClassLoader.classPath)
+          method.isAccessible = false
+        }
+        ClassPath::class.java.getDeclaredField("files").let { field ->
+          field.isAccessible = true
+          field.set(pluginClassLoader.classPath, newClasspath.toTypedArray())
+          field.isAccessible = false
+        }
+      }
 
       return shouldInvalidate
     }

@@ -42,6 +42,7 @@ tasks.named('runPluginVerifier') {
       "IC-2022.1.4", // AS: Electric Eel (2022.1.1) RC 1
       "IC-2022.2.4", // IC
       "IC-2022.3.1", // IC
+      "IC-2023.1",   // IC
   ]
 
   def customFailureLevel = FailureLevel.ALL
