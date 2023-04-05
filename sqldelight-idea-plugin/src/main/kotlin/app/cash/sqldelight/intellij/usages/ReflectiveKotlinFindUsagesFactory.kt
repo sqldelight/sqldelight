@@ -30,6 +30,7 @@ class ReflectiveKotlinFindUsagesFactory private constructor(
   companion object {
     // IC 2023.1 or later
     private const val kotlinUsagePackage = "org.jetbrains.kotlin.idea.base.searching.usages"
+
     // older than IC 2023.1
     private const val legacyKotlinUsagePackage = "org.jetbrains.kotlin.idea.findUsages"
 
