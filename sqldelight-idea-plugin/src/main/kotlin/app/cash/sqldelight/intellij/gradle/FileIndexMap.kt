@@ -101,8 +101,6 @@ internal class FileIndexMap {
                 ?: ExternalSystemJdkUtil.getAvailableJdk(project).second.homePath
               )?.let { File(it) }
 
-            Timber.i("Using JAVA_HOME at %s", javaHome?.absolutePath)
-
             val properties =
               connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
 
