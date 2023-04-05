@@ -38,9 +38,9 @@ class MigrationTest {
 
   @Test fun `driver initializer is executed`() {
     val output = GradleRunner.create()
-            .withCommonConfiguration(File("src/test/migration-driver-initializer"))
-            .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
-            .build()
+      .withCommonConfiguration(File("src/test/migration-driver-initializer"))
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
 
     assertThat(output.output).contains("DriverInitializerImpl executed!")
     assertThat(output.output).contains("BUILD SUCCESSFUL")
