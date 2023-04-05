@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 import java.lang.reflect.Method
 
 class ReflectiveKotlinFindUsagesFactory(
-  private val wrapped: FindUsagesHandlerFactory
+  private val wrapped: FindUsagesHandlerFactory,
 ) : KotlinFindUsagesHandlerFactory {
   private val findFunctionOptionsMethod: Method = wrapped.javaClass.getMethod("getFindFunctionOptions")
   private val findPropertyOptionsMethod: Method = wrapped.javaClass.getMethod("getFindPropertyOptions")
