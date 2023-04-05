@@ -23,5 +23,5 @@ expect fun getDb(): HockeyDb
 fun testing(block: suspend CoroutineScope.(HockeyDb) -> Unit) = runTest {
   createDriver()
   block(getDb())
-  closeDriver()  
+  closeDriver()
 }
