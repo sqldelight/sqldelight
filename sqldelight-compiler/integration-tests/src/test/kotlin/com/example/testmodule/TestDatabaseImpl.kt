@@ -15,7 +15,7 @@ import kotlin.Int
 import kotlin.Unit
 import kotlin.reflect.KClass
 
-internal val KClass<TestDatabase>.schema: SqlSchema
+internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
   get() = TestDatabaseImpl.Schema
 
 internal fun KClass<TestDatabase>.newInstance(
@@ -35,11 +35,11 @@ private class TestDatabaseImpl(
 
   public override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
 
-  public object Schema : SqlSchema {
+  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
     public override val version: Int
       get() = 1
 
-    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
       driver.execute(null, """
           |CREATE TABLE player (
@@ -59,6 +59,8 @@ private class TestDatabaseImpl(
           |)
           """.trimMargin(), 0)
       driver.execute(null, "INSERT INTO `group` VALUES (1), (2), (3)", 0)
+      driver.execute(null, "CREATE VIRTUAL TABLE myftstable USING fts5(something, nice)", 0)
+      driver.execute(null, "CREATE VIRTUAL TABLE myftstable2 USING fts5(something, nice)", 0)
       driver.execute(null, """
           |INSERT INTO player
           |VALUES ('Ryan Getzlaf', 15, 'Anaheim Ducks', 'RIGHT'),
@@ -77,6 +79,6 @@ private class TestDatabaseImpl(
       oldVersion: Int,
       newVersion: Int,
       vararg callbacks: AfterVersion,
-    ): QueryResult<Unit> = QueryResult.Unit
+    ): QueryResult.Value<Unit> = QueryResult.Unit
   }
 }

@@ -31,7 +31,6 @@ A sibling module that adapts primitives for your convenience.
 
 The following adapters exist:
 
-- `BooleanColumnAdapter` — Retrieves `kotlin.Boolean` for an SQL type implicitly stored as `kotlin.Long`
 - `FloatColumnAdapter` — Retrieves `kotlin.Float` for an SQL type implicitly stored as `kotlin.Double`
 - `IntColumnAdapter` — Retrieves `kotlin.Int` for an SQL type implicitly stored as `kotlin.Long`
 - `ShortColumnAdapter` — Retrieves `kotlin.Short` for an SQL type implicitly stored as `kotlin.Long`

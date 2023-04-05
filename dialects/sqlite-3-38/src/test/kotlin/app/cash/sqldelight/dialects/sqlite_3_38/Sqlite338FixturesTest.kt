@@ -10,6 +10,8 @@ import java.io.File
 class Sqlite338FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
   override val replaceRules = arrayOf(
     "ORDER or WHERE expected" to "ORDER, WHERE or WINDOW expected",
+    "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
+      to "'(', ')', ',', '.', <binary like operator real>, <json binary operator real>, BETWEEN or IN expected, got ','",
   )
 
   override fun setupDialect() {

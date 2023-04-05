@@ -1,6 +1,7 @@
 package com.squareup.sqldelight.android
 
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
@@ -17,7 +18,7 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class AndroidDriverTest : DriverTest() {
-  override fun setupDatabase(schema: SqlSchema): SqlDriver {
+  override fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver {
     return AndroidSqliteDriver(schema, getApplicationContext())
   }
 

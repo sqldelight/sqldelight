@@ -14,7 +14,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api projects.runtime
 
         implementation libs.kotlin.test
         implementation libs.stately.concurrency

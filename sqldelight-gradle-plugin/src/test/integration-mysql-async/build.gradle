@@ -15,18 +15,11 @@ sqldelight {
   }
 }
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-}
-
 dependencies {
   implementation libs.mysqlJdbc
   implementation libs.testContainers.mysql
   implementation libs.testContainers.r2dbc
-  implementation "org.mariadb:r2dbc-mariadb:1.1.3"
+  implementation "org.mariadb:r2dbc-mariadb:1.1.4"
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth

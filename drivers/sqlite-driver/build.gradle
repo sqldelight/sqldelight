@@ -8,11 +8,11 @@ plugins {
 archivesBaseName = 'sqldelight-sqlite-driver'
 
 dependencies {
-  api project(':drivers:jdbc-driver')
+  api projects.drivers.jdbcDriver
 
   implementation libs.sqliteJdbc
 
-  testImplementation project(':drivers:driver-test')
+  testImplementation projects.drivers.driverTest
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

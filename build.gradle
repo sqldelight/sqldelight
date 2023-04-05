@@ -13,7 +13,6 @@ plugins {
   alias(libs.plugins.kotlin.multiplatform) apply false
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlin.android) apply false
-  alias(libs.plugins.kotlin.js) apply false
   alias(libs.plugins.ksp) apply false
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.library) apply false
@@ -94,4 +93,7 @@ tasks.named("dokkaHtmlMultiModule") {
       "customStyleSheets": ["${file("docs/css/logo-styles.css")}"]
     }
   """])
+
+  // https://github.com/Kotlin/dokka/issues/2954
+  dependsOn(":sqldelight-compiler:dokkaHtmlMultiModule")
 }

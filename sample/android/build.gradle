@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-  implementation project(':common')
+  implementation projects.common
 
   implementation libs.androidx.recyclerView
 

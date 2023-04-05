@@ -12,7 +12,7 @@
                   "com.jetbrains.intellij.platform:project-model", "com.jetbrains.intellij.android:android-adt-ui-model",
                   "com.jetbrains.intellij.platform:analysis-impl", "com.jetbrains.intellij.platform:lang",
                   "com.jetbrains.intellij.platform:ide-impl", "com.jetbrains.intellij.platform:core",
-                  "com.jetbrains.intellij.platform:util-ex",
+                  "com.jetbrains.intellij.platform:util-ex", "us.fatehi:schemacrawler-sqlite", "us.fatehi:schemacrawler-tools", "com.vanniktech.maven.publish"
                 ],
   "ignorePaths": [
     ".github/workflows/requirements.txt"

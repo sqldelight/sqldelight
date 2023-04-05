@@ -8,14 +8,6 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'app.cash.sqldelight'
 apply plugin: 'com.android.library'
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-  google()
-}
-
 android {
   namespace "app.cash.sqldelight.integration"
 

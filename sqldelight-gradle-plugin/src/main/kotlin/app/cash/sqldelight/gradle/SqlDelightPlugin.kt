@@ -33,6 +33,8 @@ import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
+internal const val MIN_GRADLE_VERSION = "7.0"
+
 abstract class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)
   private val kotlin = AtomicBoolean(false)
@@ -43,8 +45,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   private lateinit var extension: SqlDelightExtension
 
   override fun apply(project: Project) {
-    require(GradleVersion.current() >= GradleVersion.version("7.0")) {
-      "SQLDelight requires Gradle version 7.0 or greater"
+    require(GradleVersion.current() >= GradleVersion.version(MIN_GRADLE_VERSION)) {
+      "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)

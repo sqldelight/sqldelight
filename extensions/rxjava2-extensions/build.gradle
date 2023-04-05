@@ -8,10 +8,10 @@ plugins {
 archivesBaseName = 'sqldelight-rxjava2-extensions'
 
 dependencies {
-  implementation project(':runtime')
+  implementation projects.runtime
   implementation libs.rxJava2
 
-  testImplementation project(':drivers:sqlite-driver')
+  testImplementation projects.drivers.sqliteDriver
   testImplementation libs.junit
   testImplementation libs.truth
 }

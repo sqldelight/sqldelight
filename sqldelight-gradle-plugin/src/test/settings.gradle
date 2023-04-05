@@ -16,4 +16,14 @@ dependencyResolutionManagement {
                     .versionRef(version("sqldelightVersion", sqldelightVersion))
         }
     }
+
+    repositories {
+        maven {
+            url "file://${rootDir}/../../../../build/localMaven"
+        }
+        mavenCentral()
+        google()
+        maven { url "https://www.jetbrains.com/intellij-repository/releases" }
+        maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    }
 }

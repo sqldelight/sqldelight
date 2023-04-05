@@ -76,6 +76,11 @@ interface SqlDelightFileIndex {
    */
   fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean = true): Collection<PsiDirectory>
 
+  /**
+   * @return The source roots of sqldelight files.
+   */
+  fun sourceFolders(includeDependencies: Boolean): List<List<SqlDelightSourceFolder>> = emptyList()
+
   companion object {
     fun getInstance(module: Module) = SqlDelightProjectService.getInstance(module.project).fileIndex(module)
 
