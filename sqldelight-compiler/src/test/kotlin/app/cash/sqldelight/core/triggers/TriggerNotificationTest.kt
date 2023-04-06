@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.triggers
 import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -47,14 +48,14 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(id: kotlin.Long?, value_: kotlin.String?): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, id)
       |        bindString(1, value_)
       |      }
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
@@ -100,13 +101,13 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(id: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |DELETE FROM data
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, id)
       |      }
-      |  notifyQueries(-1854133518) { emit ->
+      |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")
       |  }
       |}
@@ -152,7 +153,7 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
@@ -160,7 +161,7 @@ class TriggerNotificationTest {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
-      |  notifyQueries(-1854133518) { emit ->
+      |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")
       |  }
       |}
@@ -206,7 +207,7 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
@@ -214,7 +215,7 @@ class TriggerNotificationTest {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
@@ -261,7 +262,7 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
@@ -269,7 +270,7 @@ class TriggerNotificationTest {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
@@ -316,7 +317,7 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
@@ -324,7 +325,7 @@ class TriggerNotificationTest {
       |        bindString(0, value_)
       |        bindLong(1, id)
       |      }
-      |  notifyQueries(-1854133518) { emit ->
+      |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")
       |  }
       |}
@@ -370,14 +371,14 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, id)
       |        bindString(1, value)
       |      }
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
@@ -424,14 +425,14 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, id)
       |        bindString(1, value)
       |      }
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
@@ -482,8 +483,8 @@ class TriggerNotificationTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteAllFoos(): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM foo""${'"'}, 0)
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM foo""${'"'}, 0)
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("bar")
       |    emit("foo")
       |  }

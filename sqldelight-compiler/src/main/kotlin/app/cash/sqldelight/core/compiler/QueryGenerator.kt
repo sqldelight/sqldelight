@@ -272,7 +272,7 @@ abstract class QueryGenerator(
       }
     }
 
-    val statementId = if (needsFreshStatement) "null" else "$id"
+    val statementId = if (needsFreshStatement) CodeBlock.of("null") else CodeBlock.of("%L", id)
 
     if (isNamedQuery) {
       val execute = if (query.statement is SqlDelightStmtClojureStmtList) {
@@ -281,17 +281,20 @@ abstract class QueryGenerator(
         "return $DRIVER_NAME.executeQuery"
       }
       result.addStatement(
-        "$execute($statementId, %P, $MAPPER_NAME, %L)$binder",
+        "$execute(%L, %P, $MAPPER_NAME, %L)$binder",
+        statementId,
         *arguments.toTypedArray(),
       )
     } else if (optimisticLock != null) {
       result.addStatement(
-        "val result = $DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        "val result = $DRIVER_NAME.execute(%L, %P, %L)$binder",
+        statementId,
         *arguments.toTypedArray(),
       )
     } else {
       result.addStatement(
-        "$DRIVER_NAME.execute($statementId, %P, %L)$binder",
+        "$DRIVER_NAME.execute(%L, %P, %L)$binder",
+        statementId,
         *arguments.toTypedArray(),
       )
     }

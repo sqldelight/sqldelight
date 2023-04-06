@@ -58,7 +58,7 @@ public class TeamQueries(
   }
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> =
-      Query(397134288, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+      Query(397_134_288, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -85,7 +85,7 @@ public class TeamQueries(
     }
 
     public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(1839882838, """
+        driver.executeQuery(1_839_882_838, """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?

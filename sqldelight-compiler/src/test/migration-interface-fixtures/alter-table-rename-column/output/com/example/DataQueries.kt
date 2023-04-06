@@ -10,7 +10,7 @@ public class DataQueries(
   private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun insertWhole(test: Test): Unit {
-    driver.execute(-2118611703, """
+    driver.execute(-2_118_611_703, """
         |INSERT INTO test
         |VALUES (?, ?)
         """.trimMargin(), 2) {
@@ -18,7 +18,7 @@ public class DataQueries(
           bindString(0, test.third)
           bindString(1, test.second?.let { testAdapter.secondAdapter.encode(it) })
         }
-    notifyQueries(-2118611703) { emit ->
+    notifyQueries(-2_118_611_703) { emit ->
       emit("test")
     }
   }
