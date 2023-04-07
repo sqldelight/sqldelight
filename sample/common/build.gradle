@@ -26,6 +26,7 @@ kotlin {
   }
   sourceSets.commonTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation libs.kotlin.coroutines.test
   }
 
   // Configure jvm.
@@ -38,19 +39,15 @@ kotlin {
   // Configure web.
   js {
     useCommonJs()
-    browser {
-      testTask {
-        useMocha {
-          timeout = "5s"
-        }
-      }
-    }
+    browser()
   }
   sourceSets.jsMain.dependencies {
     implementation npm('dateformat', '3.0.3')
   }
   sourceSets.jsTest.dependencies {
     implementation "app.cash.sqldelight:sqljs-driver"
+    implementation npm('sql.js', libs.versions.sqljs.get())
+    implementation devNpm("copy-webpack-plugin", "9.1.0")
   }
 
   // Configure iOS.

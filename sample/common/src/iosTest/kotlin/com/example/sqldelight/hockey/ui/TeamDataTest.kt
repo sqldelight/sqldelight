@@ -1,12 +1,12 @@
 package com.example.sqldelight.hockey.ui
 
-import com.example.sqldelight.hockey.BaseTest
+import com.example.sqldelight.hockey.testing
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class TeamDataTest : BaseTest() {
+class TeamDataTest {
   @Test
-  fun someData() {
+  fun someData() = testing {
     assertTrue(TeamData.teams().isNotEmpty())
   }
 }

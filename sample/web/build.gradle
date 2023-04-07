@@ -6,11 +6,6 @@ kotlin {
   js {
     browser {
       binaries.executable()
-      testTask {
-        useMocha {
-          timeout = "5s"
-        }
-      }
     }
   }
 
