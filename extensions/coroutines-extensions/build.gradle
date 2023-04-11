@@ -52,14 +52,14 @@ kotlin {
   }
   configure([targets.linuxX64]) {
     binaries.configureEach {
-      linkerOpts += ["-L$rootDir/libs".toString(), "-lsqlite3"]
+      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
     }
   }
 
   // mingwX86 target is not supported by kotlinx.coroutines, see https://github.com/Kotlin/kotlinx.coroutines/issues/2157
   configure([targets.mingwX64]) {
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs".toString(), "-lsqlite3"]
+      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
     }
   }
 }
