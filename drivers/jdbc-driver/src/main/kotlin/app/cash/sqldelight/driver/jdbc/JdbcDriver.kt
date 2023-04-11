@@ -61,8 +61,11 @@ interface ConnectionManager {
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       if (enclosingTransaction == null) {
-        if (successful) connectionManager.apply { connection.endTransaction() }
-        else connectionManager.apply { connection.rollbackTransaction() }
+        if (successful) {
+          connectionManager.apply { connection.endTransaction() }
+        } else {
+          connectionManager.apply { connection.rollbackTransaction() }
+        }
       }
       connectionManager.transaction = enclosingTransaction
       return QueryResult.Unit

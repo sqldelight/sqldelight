@@ -33,7 +33,7 @@ internal class ArgumentsInputDialogImpl(
         row("${parameter.name}:") {
           textField(parameter::value, {
             _result.add(parameter.copy(value = it))
-          },)
+          })
         }
       }
     }

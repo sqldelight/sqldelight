@@ -14,8 +14,9 @@ internal class PostgresConnectionManager : ConnectionManager {
     prefilledProperties: ConnectionProperties?,
   ): ConnectionProperties? {
     val dialog =
-      if (prefilledProperties == null) PostgresConnectionDialog(project)
-      else {
+      if (prefilledProperties == null) {
+        PostgresConnectionDialog(project)
+      } else {
         val properties = adapter.fromJson(prefilledProperties.serializedProperties)!!
         PostgresConnectionDialog(
           project = project,

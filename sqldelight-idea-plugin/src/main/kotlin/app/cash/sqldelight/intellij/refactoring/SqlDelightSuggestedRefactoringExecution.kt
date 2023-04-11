@@ -124,8 +124,11 @@ internal class SqlDelightSuggestedRefactoringExecution {
       val matchingDefinition = newList.find { new ->
         new.type == old.type && new.additionalData == old.additionalData
       }
-      if (matchingDefinition != null) old.name to matchingDefinition.name
-      else null
+      if (matchingDefinition != null) {
+        old.name to matchingDefinition.name
+      } else {
+        null
+      }
     }
   }
 

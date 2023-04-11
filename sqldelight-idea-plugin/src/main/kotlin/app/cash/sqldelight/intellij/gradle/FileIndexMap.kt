@@ -108,7 +108,9 @@ internal class FileIndexMap {
             return@execute properties.mapValues { (_, value) ->
               val compatibility = if (value == null) {
                 Incompatible("The IDE and Gradle versions of SQLDelight are incompatible, please update the lower version.")
-              } else GradleCompatibility.validate(value)
+              } else {
+                GradleCompatibility.validate(value)
+              }
 
               if (compatibility is Incompatible) {
                 FileIndexingNotification.getInstance(project).unconfiguredReason =

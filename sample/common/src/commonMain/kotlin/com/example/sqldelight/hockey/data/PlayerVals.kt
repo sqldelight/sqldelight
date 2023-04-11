@@ -3,7 +3,7 @@ package com.example.sqldelight.hockey.data
 interface PlayerVals {
   enum class Shoots {
     RIGHT,
-    LEFT
+    LEFT,
   }
 
   enum class Position {
@@ -11,6 +11,6 @@ interface PlayerVals {
     RIGHT_WING,
     CENTER,
     DEFENSE,
-    GOALIE
+    GOALIE,
   }
 }

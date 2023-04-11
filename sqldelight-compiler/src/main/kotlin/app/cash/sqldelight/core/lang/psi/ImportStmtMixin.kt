@@ -18,9 +18,9 @@ abstract class ImportStmtMixin(
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     if ((parent as SqlDelightImportStmtList).importStmtList
-      .filterIsInstance<ImportStmtMixin>()
-      .filter { it != this }
-      .any { it.type() == type() }
+        .filterIsInstance<ImportStmtMixin>()
+        .filter { it != this }
+        .any { it.type() == type() }
     ) {
       annotationHolder.createErrorAnnotation(this, "Multiple imports for type ${type()}")
     }

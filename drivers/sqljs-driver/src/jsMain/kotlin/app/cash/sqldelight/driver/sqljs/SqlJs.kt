@@ -1,6 +1,7 @@
 @file:JsModule("sql.js")
 @file:JsNonModule
 @file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "EXTERNAL_DELEGATION")
+
 package app.cash.sqldelight.driver.sqljs
 
 import org.khronos.webgl.Uint8Array

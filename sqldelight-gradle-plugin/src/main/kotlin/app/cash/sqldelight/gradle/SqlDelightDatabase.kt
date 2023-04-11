@@ -132,8 +132,9 @@ abstract class SqlDelightDatabase @Inject constructor(
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
 
-    if (!addedDialect) throw GradleException(
-      """
+    if (!addedDialect) {
+      throw GradleException(
+        """
       A dialect is needed for SQLDelight. For example for sqlite:
 
       sqldelight {
@@ -141,8 +142,9 @@ abstract class SqlDelightDatabase @Inject constructor(
           dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
         }
       }
-      """.trimIndent(),
-    )
+        """.trimIndent(),
+      )
+    }
 
     try {
       return SqlDelightDatabasePropertiesImpl(
@@ -328,6 +330,9 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   private val Source.outputDir get() =
-    if (sources.size > 1) File(generatedSourcesDirectory, name)
-    else generatedSourcesDirectory
+    if (sources.size > 1) {
+      File(generatedSourcesDirectory, name)
+    } else {
+      generatedSourcesDirectory
+    }
 }

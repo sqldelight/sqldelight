@@ -13,6 +13,6 @@ class KotlinClass {
   }
 
   enum class InnerClass {
-    VAL
+    VAL,
   }
 }

@@ -328,10 +328,12 @@ class SqlDelightEnvironment(
 
       for (sourceFolder in sourceFolders(file)) {
         val path = file.parent!!.relativePathUnder(sourceFolder)
-        if (path != null) return path.joinToString(separator = ".") {
-          SqlDelightFileIndex.sanitizeDirectoryName(
-            it,
-          )
+        if (path != null) {
+          return path.joinToString(separator = ".") {
+            SqlDelightFileIndex.sanitizeDirectoryName(
+              it,
+            )
+          }
         }
       }
 
