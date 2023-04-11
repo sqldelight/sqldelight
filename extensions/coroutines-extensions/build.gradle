@@ -52,8 +52,7 @@ kotlin {
   }
   configure([targets.linuxX64]) {
     binaries.configureEach {
-      linkerOpts += ['-lsqlite3', "-L/usr/lib/x86_64-linux-gnu", "-L/usr/lib", "-L/usr/lib64"]
-      linkerOpts += ["--allow-shlib-undefined"]
+      linkerOpts += ["-L$rootDir/libs", "-lsqlite3"]
     }
   }
 
