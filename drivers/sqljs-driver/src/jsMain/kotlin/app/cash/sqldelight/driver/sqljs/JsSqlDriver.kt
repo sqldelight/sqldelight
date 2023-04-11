@@ -130,8 +130,11 @@ private class JsSqlCursor(private val statement: Statement) : SqlCursor {
 
   override fun getBoolean(index: Int): Boolean? {
     val double = (statement.get()[index] as? Double)
-    return if (double == null) null
-    else double.toLong() == 1L
+    return if (double == null) {
+      null
+    } else {
+      double.toLong() == 1L
+    }
   }
 
   fun close() { statement.freemem() }

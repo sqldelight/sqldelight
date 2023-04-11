@@ -14,8 +14,9 @@ internal class MySqlConnectionManager : ConnectionManager {
     prefilledProperties: ConnectionProperties?,
   ): ConnectionProperties? {
     val dialog =
-      if (prefilledProperties == null) MySqlConnectionDialog(project)
-      else {
+      if (prefilledProperties == null) {
+        MySqlConnectionDialog(project)
+      } else {
         val properties = adapter.fromJson(prefilledProperties.serializedProperties)!!
         MySqlConnectionDialog(
           project = project,

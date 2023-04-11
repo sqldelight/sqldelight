@@ -12,8 +12,11 @@ internal fun MySqlPlacementClause?.placeInQuery(
   replace: QueryColumn? = null,
 ): List<QueryColumn> {
   if (this == null) {
-    return if (replace == null) columns + column
-    else columns.map { if (it == replace) column else it }
+    return if (replace == null) {
+      columns + column
+    } else {
+      columns.map { if (it == replace) column else it }
+    }
   }
 
   return if (columnName != null) {
@@ -22,10 +25,12 @@ internal fun MySqlPlacementClause?.placeInQuery(
       if (replace != null) remove(replace)
 
       val index = indexOfFirst { (it.element as SqlColumnName).textMatches(columnName!!) }
-      if (index == -1) throw AnnotationException(
-        msg = "Unable to replace $replace with $column after $columnName in $columns",
-        element = this@placeInQuery,
-      )
+      if (index == -1) {
+        throw AnnotationException(
+          msg = "Unable to replace $replace with $column after $columnName in $columns",
+          element = this@placeInQuery,
+        )
+      }
       add(index + 1, column)
     }
   } else {

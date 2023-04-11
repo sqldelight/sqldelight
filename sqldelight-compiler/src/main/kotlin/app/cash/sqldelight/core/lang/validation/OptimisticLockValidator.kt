@@ -83,11 +83,11 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
 
     // Confirm the statement has SET lock = :arg + 1
     if (!(
-      setter.expr is SqlBinaryAddExpr &&
-        setter.expr.node.getChildren(null).any { it.text == "+" } &&
-        (setter.expr as SqlBinaryExpr).getExprList()[0] is SqlBindExpr &&
-        (setter.expr as SqlBinaryExpr).getExprList()[1].textMatches("1")
-      )
+        setter.expr is SqlBinaryAddExpr &&
+          setter.expr.node.getChildren(null).any { it.text == "+" } &&
+          (setter.expr as SqlBinaryExpr).getExprList()[0] is SqlBindExpr &&
+          (setter.expr as SqlBinaryExpr).getExprList()[1].textMatches("1")
+        )
     ) {
       displayError(
         element,
@@ -122,10 +122,10 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
 
     // Confirms the statement has WHERE lock = :arg
     if (whereExpression.findChildrenOfType<SqlBinaryEqualityExpr>().none {
-      (it.node.getChildren(null).any { it.text == "=" || it.text == "==" }) &&
-        (it.getExprList()[0] as? SqlColumnExpr)?.columnName?.textMatches(lock.columnName.name) == true &&
-        (it.getExprList()[1] is SqlBindExpr)
-    }
+        (it.node.getChildren(null).any { it.text == "=" || it.text == "==" }) &&
+          (it.getExprList()[0] as? SqlColumnExpr)?.columnName?.textMatches(lock.columnName.name) == true &&
+          (it.getExprList()[1] is SqlBindExpr)
+      }
     ) {
       displayError(
         element,

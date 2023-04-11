@@ -135,8 +135,11 @@ internal class ConnectionListPanel(
       connectionOptions.getKeys().indexOf(selectedOption)
     }
     if (list.selectedIndex != newSelection) {
-      if (newSelection == null) list.clearSelection()
-      else list.selectedIndex = newSelection
+      if (newSelection == null) {
+        list.clearSelection()
+      } else {
+        list.selectedIndex = newSelection
+      }
     }
 
     // Other content panes should reflect the changes made in this one.

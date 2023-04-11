@@ -31,7 +31,8 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import java.io.File
 import java.sql.DriverManager
-import java.util.*
+import java.util.Properties
+import java.util.ServiceLoader
 import kotlin.collections.ArrayList
 
 @CacheableTask

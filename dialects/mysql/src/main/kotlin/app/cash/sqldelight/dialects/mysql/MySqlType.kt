@@ -41,7 +41,7 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
   DATE(ClassName("java.time", "LocalDate")),
   TIME(ClassName("java.time", "LocalTime")),
   DATETIME(ClassName("java.time", "LocalDateTime")),
-  TIMESTAMP(ClassName("java.time", "OffsetDateTime"))
+  TIMESTAMP(ClassName("java.time", "OffsetDateTime")),
   ;
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {

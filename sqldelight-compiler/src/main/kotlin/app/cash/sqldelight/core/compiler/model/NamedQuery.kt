@@ -61,8 +61,11 @@ data class NamedQuery(
    * by the generated api.
    */
   val resultColumns: List<IntermediateType> by lazy {
-    if (queryable is SelectQueryable) resultColumns(queryable.select)
-    else queryable.select.typesExposed(LinkedHashSet())
+    if (queryable is SelectQueryable) {
+      resultColumns(queryable.select)
+    } else {
+      queryable.select.typesExposed(LinkedHashSet())
+    }
   }
 
   private fun resultColumns(select: SqlCompoundSelectStmt): List<IntermediateType> {
@@ -86,8 +89,11 @@ data class NamedQuery(
    * the types to be exposed by the generated api.
    */
   internal val resultColumnRequiredAdapters: List<PropertySpec> by lazy {
-    if (queryable is SelectQueryable) resultColumnRequiredAdapters(queryable.select)
-    else queryable.select.typesExposed(LinkedHashSet()).mapNotNull { it.parentAdapter() }
+    if (queryable is SelectQueryable) {
+      resultColumnRequiredAdapters(queryable.select)
+    } else {
+      queryable.select.typesExposed(LinkedHashSet()).mapNotNull { it.parentAdapter() }
+    }
   }
 
   private fun resultColumnRequiredAdapters(select: SqlCompoundSelectStmt): List<PropertySpec> {
@@ -112,9 +118,9 @@ data class NamedQuery(
     }
     var packageName = queryable.select.sqFile().packageName!!
     if (queryable.select.sqFile().parent?.files
-      ?.filterIsInstance<SqlDelightQueriesFile>()?.flatMap { it.namedQueries }
-      ?.filter { it.needsInterface() && it != this }
-      ?.any { it.name == name } == true
+        ?.filterIsInstance<SqlDelightQueriesFile>()?.flatMap { it.namedQueries }
+        ?.filter { it.needsInterface() && it != this }
+        ?.any { it.name == name } == true
     ) {
       packageName = "$packageName.${queryable.select.sqFile().virtualFile!!.nameWithoutExtension.decapitalize()}"
     }

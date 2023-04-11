@@ -52,8 +52,11 @@ class AddOptimisticLockIntention(
     }
 
     val queryStart =
-      if (whereClause == null) setterStart
-      else whereClause.textOffset + whereClause.textLength
+      if (whereClause == null) {
+        setterStart
+      } else {
+        whereClause.textOffset + whereClause.textLength
+      }
 
     PsiDocumentManager.getInstance(project).commitAllDocuments()
     WriteCommandAction.writeCommandAction(project).run<ReadOnlyModificationException> {

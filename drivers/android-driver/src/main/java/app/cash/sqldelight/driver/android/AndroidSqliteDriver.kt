@@ -231,8 +231,11 @@ private class AndroidPreparedStatement(
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    if (boolean == null) statement.bindNull(index + 1)
-    else statement.bindLong(index + 1, if (boolean) 1L else 0L)
+    if (boolean == null) {
+      statement.bindNull(index + 1)
+    } else {
+      statement.bindLong(index + 1, if (boolean) 1L else 0L)
+    }
   }
 
   override fun <R> executeQuery(mapper: (SqlCursor) -> R): R = throw UnsupportedOperationException()
@@ -271,8 +274,11 @@ private class AndroidQuery(
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     binds[index] = {
-      if (boolean == null) it.bindNull(index + 1)
-      else it.bindLong(index + 1, if (boolean) 1L else 0L)
+      if (boolean == null) {
+        it.bindNull(index + 1)
+      } else {
+        it.bindLong(index + 1, if (boolean) 1L else 0L)
+      }
     }
   }
 

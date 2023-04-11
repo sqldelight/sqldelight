@@ -73,7 +73,9 @@ internal abstract class ColumnTypeMixin(
       val columnIndex = it.columnNameList.map { it.name }.indexOf(columnName.name)
       if (columnIndex != -1) {
         it.foreignKeyClause?.columnNameList?.get(columnIndex)
-      } else null
+      } else {
+        null
+      }
     }?.singleOrNull()
 
     val columnConstraint = columnConstraintList.mapNotNull {
@@ -100,9 +102,9 @@ internal abstract class ColumnTypeMixin(
       )
     }
     if (columnConstraintList.none {
-      (it.node.findChildByType(SqlTypes.NOT) != null && it.node.findChildByType(SqlTypes.NULL) != null) ||
-        it.node.findChildByType(SqlTypes.PRIMARY) != null
-    }
+        (it.node.findChildByType(SqlTypes.NOT) != null && it.node.findChildByType(SqlTypes.NULL) != null) ||
+          it.node.findChildByType(SqlTypes.PRIMARY) != null
+      }
     ) {
       type = type.asNullable()
     }
