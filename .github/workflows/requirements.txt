@@ -51,7 +51,7 @@ packaging==23.0
     # via mkdocs
 pygments==2.14.0
     # via mkdocs-material
-pymdown-extensions==9.10
+pymdown-extensions==9.11
     # via mkdocs-material
 python-dateutil==2.8.2
     # via
