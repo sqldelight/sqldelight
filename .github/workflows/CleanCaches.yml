@@ -1,8 +1,5 @@
 name: Cleanup Caches
 on:
-  pull_request:
-    types:
-      - closed
   workflow_dispatch:
 
 jobs:
@@ -10,19 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
-    
+
     steps:
       - name: Cleanup
         run: |
           gh extension install actions/gh-actions-cache
-
-          echo "Fetching list of cache key"
-          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
-
+          echo "Fetching list of cache key for $BRANCH"
+          cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
           ## Setting this to not fail the workflow while deleting cache keys. 
           set +e
           echo "Deleting caches..."
-          for cacheKey in $cacheKeysForPR
+          for cacheKey in $cacheKeys
           do
               gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
           done
