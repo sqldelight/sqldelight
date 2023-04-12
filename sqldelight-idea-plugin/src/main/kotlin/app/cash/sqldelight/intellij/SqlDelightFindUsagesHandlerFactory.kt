@@ -5,10 +5,8 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
-import app.cash.sqldelight.core.psi.SqlDelightStmtList
 import app.cash.sqldelight.intellij.usages.ReflectiveKotlinFindUsagesFactory
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
-import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.find.findUsages.FindUsagesOptions
@@ -21,17 +19,14 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.parentOfType
 import com.intellij.usageView.UsageInfo
 import com.intellij.util.Processor
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
 import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.psiUtil.getNextSiblingIgnoringWhitespaceAndComments
-import org.jetbrains.kotlin.psi.psiUtil.getValueParameters
 
-internal class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
+class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
   override fun canFindUsages(element: PsiElement): Boolean {
     val module = ModuleUtil.findModuleForPsiElement(element) ?: return false
     val isConfigured = SqlDelightFileIndex.getInstance(module).isConfigured
@@ -44,7 +39,7 @@ internal class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
   ): FindUsagesHandler = SqlDelightIdentifierHandler(element)
 }
 
-internal class SqlDelightIdentifierHandler(
+private class SqlDelightIdentifierHandler(
   private val element: PsiElement,
 ) : FindUsagesHandler(element) {
   private val factory = ReflectiveKotlinFindUsagesFactory(element.project)
@@ -133,19 +128,7 @@ internal fun PsiElement.generatedKtFiles(): List<KtFile> {
 }
 
 internal fun SqlColumnName.generatedProperties(): Collection<KtNamedDeclaration> {
-  val identifierList = parentOfType<SqlDelightStmtList>()?.stmtIdentifierList.orEmpty()
-  val namedStmts = identifierList.associateBy { it.getNextSiblingIgnoringWhitespaceAndComments() as? SqlStmt }
-  val stmtsWithColumn = namedStmts.keys.filterNotNull()
-    .filter { stmt ->
-      PsiTreeUtil.findChildrenOfType(stmt, SqlColumnName::class.java).any { it.textMatches(name) }
-    }
-
-  val generatedMethodParameters = stmtsWithColumn.mapNotNull { namedStmts[it] as? StmtIdentifierMixin }
-    .flatMap { it.generatedMethods() }
-    .flatMap { it.getValueParameters() }
-    .filter { it.name == name }
-
-  return generatedMethodParameters + generatedKtFiles()
+  return generatedKtFiles()
     .flatMap { it.declarations.filterIsInstance<KtClass>() }
     .filter(KtClass::isData)
     .flatMap(KtClass::getPrimaryConstructorParameters)
