@@ -2,50 +2,45 @@ package com.squareup.sqldelight.drivers.sqljs
 
 import app.cash.sqldelight.driver.sqljs.Database
 import app.cash.sqldelight.driver.sqljs.initDb
-import kotlin.js.Promise
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.await
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+@ExperimentalCoroutinesApi
 class SqlJsTest {
 
-  lateinit var dbPromise: Promise<Database>
-
-  @BeforeTest
-  fun setup() {
-    dbPromise = initDb().then { db ->
-      db.run(
-        """
-              |CREATE TABLE test (
-              |  id INTEGER PRIMARY KEY,
-              |  value TEXT
-              |);
-        """.trimMargin(),
-      )
-      db.run(
-        """
-              |CREATE TABLE nullability_test (
-              |  id INTEGER PRIMARY KEY,
-              |  integer_value INTEGER,
-              |  text_value TEXT,
-              |  blob_value BLOB,
-              |  real_value REAL
-              |);
-        """.trimMargin(),
-      )
-    }
+  private fun testing(action: suspend CoroutineScope.(Database) -> Unit) = runTest {
+    val db = initDb().await()
+    db.run(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT
+      |);
+      """.trimMargin(),
+    )
+    db.run(
+      """
+      |CREATE TABLE nullability_test (
+      |  id INTEGER PRIMARY KEY,
+      |  integer_value INTEGER,
+      |  text_value TEXT,
+      |  blob_value BLOB,
+      |  real_value REAL
+      |);
+      """.trimMargin(),
+    )
+    action(db)
+    db.close()
   }
 
-  @AfterTest
-  fun tearDown() {
-    dbPromise.then { it.close() }
-  }
-
-  @Test fun insert_can_run_multiple_times() = dbPromise.then { db ->
+  @Test fun insert_can_run_multiple_times() = testing { db ->
 
     val insert = "INSERT INTO test VALUES (?, ?);"
     val query = "SELECT * FROM test"
@@ -126,7 +121,7 @@ class SqlJsTest {
     }
   }
 
-  @Test fun query_can_run_multiple_times() = dbPromise.then { db ->
+  @Test fun query_can_run_multiple_times() = testing { db ->
 
     val insert = "INSERT INTO test VALUES (?, ?);"
     val changes = "SELECT changes()"
@@ -164,7 +159,7 @@ class SqlJsTest {
     }
   }
 
-  @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = dbPromise.then { db ->
+  @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = testing { db ->
 
     val insert = "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);"
     val changes = "SELECT changes()"

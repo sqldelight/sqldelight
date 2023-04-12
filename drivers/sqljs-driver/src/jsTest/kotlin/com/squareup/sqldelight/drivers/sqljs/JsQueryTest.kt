@@ -8,9 +8,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import co.touchlab.stately.concurrency.AtomicInt
-import kotlin.js.Promise
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.await
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -54,22 +54,14 @@ class JsQueryTest {
     }
   }
 
-  private lateinit var driverPromise: Promise<SqlDriver>
-
-  @BeforeTest
-  fun setup() {
-    driverPromise = initSqlDriver().then {
-      schema.create(it)
-      it
-    }
+  private fun testing(action: suspend CoroutineScope.(SqlDriver) -> Unit) = runTest {
+    val driver = initSqlDriver().await()
+    schema.create(driver)
+    action(driver)
+    driver.close()
   }
 
-  @AfterTest
-  fun tearDown() {
-    driverPromise.then { it.close() }
-  }
-
-  @Test fun executeAsOne() = driverPromise.then { driver ->
+  @Test fun executeAsOne() = testing { driver ->
 
     val data1 = TestData(1, "val1")
     driver.insertTestData(data1)
@@ -77,7 +69,7 @@ class JsQueryTest {
     assertEquals(data1, driver.testDataQuery().executeAsOne())
   }
 
-  @Test fun executeAsOneTwoTimes() = driverPromise.then { driver ->
+  @Test fun executeAsOneTwoTimes() = testing { driver ->
 
     val data1 = TestData(1, "val1")
     driver.insertTestData(data1)
@@ -87,13 +79,13 @@ class JsQueryTest {
     assertEquals(query.executeAsOne(), query.executeAsOne())
   }
 
-  @Test fun executeAsOneThrowsNpeForNoRows() = driverPromise.then { driver ->
+  @Test fun executeAsOneThrowsNpeForNoRows() = testing { driver ->
     assertFailsWith<NullPointerException> {
       driver.testDataQuery().executeAsOne()
     }
   }
 
-  @Test fun executeAsOneThrowsIllegalStateExceptionForManyRows() = driverPromise.then { driver ->
+  @Test fun executeAsOneThrowsIllegalStateExceptionForManyRows() = testing { driver ->
     assertFailsWith<IllegalStateException> {
       driver.insertTestData(TestData(1, "val1"))
       driver.insertTestData(TestData(2, "val2"))
@@ -102,7 +94,7 @@ class JsQueryTest {
     }
   }
 
-  @Test fun executeAsOneOrNull() = driverPromise.then { driver ->
+  @Test fun executeAsOneOrNull() = testing { driver ->
 
     val data1 = TestData(1, "val1")
     driver.insertTestData(data1)
@@ -111,11 +103,11 @@ class JsQueryTest {
     assertEquals(data1, query.executeAsOneOrNull())
   }
 
-  @Test fun executeAsOneOrNullReturnsNullForNoRows() = driverPromise.then { driver ->
+  @Test fun executeAsOneOrNullReturnsNullForNoRows() = testing { driver ->
     assertNull(driver.testDataQuery().executeAsOneOrNull())
   }
 
-  @Test fun executeAsOneOrNullThrowsIllegalStateExceptionForManyRows() = driverPromise.then { driver ->
+  @Test fun executeAsOneOrNullThrowsIllegalStateExceptionForManyRows() = testing { driver ->
     assertFailsWith<IllegalStateException> {
       driver.insertTestData(TestData(1, "val1"))
       driver.insertTestData(TestData(2, "val2"))
@@ -124,7 +116,7 @@ class JsQueryTest {
     }
   }
 
-  @Test fun executeAsList() = driverPromise.then { driver ->
+  @Test fun executeAsList() = testing { driver ->
 
     val data1 = TestData(1, "val1")
     val data2 = TestData(2, "val2")
@@ -135,11 +127,11 @@ class JsQueryTest {
     assertEquals(listOf(data1, data2), driver.testDataQuery().executeAsList())
   }
 
-  @Test fun executeAsListForNoRows() = driverPromise.then { driver ->
+  @Test fun executeAsListForNoRows() = testing { driver ->
     assertTrue(driver.testDataQuery().executeAsList().isEmpty())
   }
 
-  @Test fun notifyDataChangedNotifiesListeners() = driverPromise.then { driver ->
+  @Test fun notifyDataChangedNotifiesListeners() = testing { driver ->
 
     val notifies = AtomicInt(0)
     val query = driver.testDataQuery()
@@ -156,7 +148,7 @@ class JsQueryTest {
     assertEquals(1, notifies.get())
   }
 
-  @Test fun removeListenerActuallyRemovesListener() = driverPromise.then { driver ->
+  @Test fun removeListenerActuallyRemovesListener() = testing { driver ->
 
     val notifies = AtomicInt(0)
     val query = driver.testDataQuery()
