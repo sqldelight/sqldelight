@@ -202,6 +202,14 @@
         enabledByDefault="true"
         language="SqlDelight"
         level="WARNING"
+        implementationClass="app.cash.sqldelight.intellij.inspections.MissingWhereInspection"
+        displayName="Missing where clause on DELETE or UPDATE statement"
+        groupName="Declaration redundancy"/>
+
+    <localInspection
+        enabledByDefault="true"
+        language="SqlDelight"
+        level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.SchemaNeedsMigrationInspection"
         displayName="Schema needs migration inspection"
         groupName="Migrations"/>
