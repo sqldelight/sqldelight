@@ -2,17 +2,16 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
-
-kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-rxjava2-extensions'
 
 dependencies {
-  implementation project(':runtime')
+  implementation projects.runtime
   implementation libs.rxJava2
 
-  testImplementation project(':drivers:sqlite-driver')
+  testImplementation projects.drivers.sqliteDriver
   testImplementation libs.junit
   testImplementation libs.truth
 }

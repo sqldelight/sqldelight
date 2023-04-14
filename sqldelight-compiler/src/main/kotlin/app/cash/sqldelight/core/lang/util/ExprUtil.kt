@@ -221,10 +221,10 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   is SqlBinaryExpr -> {
     if (childOfType(
         TokenSet.create(
-            SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
-            SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
-            SqlTypes.LT, SqlTypes.LTE,
-          ),
+          SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
+          SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
+          SqlTypes.LT, SqlTypes.LTE,
+        ),
       ) != null
     ) {
       IntermediateType(PrimitiveType.BOOLEAN)

@@ -30,7 +30,8 @@ internal enum class HsqlType(override val javaType: TypeName) : DialectType {
     override fun decode(value: CodeBlock) = CodeBlock.of("%L == 1L", value)
 
     override fun encode(value: CodeBlock) = CodeBlock.of("if (%L) 1L else 0L", value)
-  };
+  },
+  ;
 
   override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()

@@ -1,19 +1,15 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
-
-kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-r2dbc-driver'
 
 dependencies {
-  api project(':runtime')
+  api projects.runtime
   implementation libs.r2dbc
-  implementation libs.kotlin.coroutines.core
   implementation libs.kotlin.coroutines.reactive
 }
 

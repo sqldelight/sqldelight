@@ -18,6 +18,7 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.SqlDelightSourceFolder
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.intellij.util.isAncestorOf
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -76,22 +77,20 @@ class FileIndex(
     file: VirtualFile,
     includeDependencies: Boolean,
   ): Collection<VirtualFile> {
-    return properties.compilationUnits.map {
-      it.sourceFolders
-        .filter { includeDependencies || !it.dependency }
-        .mapNotNull { sourceFolder -> sourceFolder.folder.localVirtualFile() }
-    }.fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
-      if (sourceSet.any { it.isAncestorOf(file) }) {
-        // File is in this source set.
-        if (currentSources.isEmpty()) {
-          return@fold sourceSet
-        } else {
-          // File also in another source set! The files available sources is the intersection.
-          return@fold currentSources.intersect(sourceSet)
+    return sourceFolders(includeDependencies)
+      .map { sourceFolders -> sourceFolders.mapNotNull { sourceFolder -> sourceFolder.folder.localVirtualFile() } }
+      .fold(emptySet()) { currentSources: Collection<VirtualFile>, sourceSet ->
+        if (sourceSet.any { it.isAncestorOf(file) }) {
+          // File is in this source set.
+          if (currentSources.isEmpty()) {
+            return@fold sourceSet
+          } else {
+            // File also in another source set! The files available sources is the intersection.
+            return@fold currentSources.intersect(sourceSet)
+          }
         }
+        return@fold currentSources
       }
-      return@fold currentSources
-    }
   }
 
   override fun sourceFolders(
@@ -100,6 +99,12 @@ class FileIndex(
   ): Collection<PsiDirectory> {
     return sourceFolders(file.virtualFile!!, includeDependencies)
       .map { PsiManager.getInstance(file.project).findDirectory(it)!! }
+  }
+
+  override fun sourceFolders(includeDependencies: Boolean): List<List<SqlDelightSourceFolder>> {
+    return properties.compilationUnits.map {
+      it.sourceFolders.filter { includeDependencies || !it.dependency }
+    }
   }
 
   private fun File.localVirtualFile() = contentRoot.findFileByRelativePath(

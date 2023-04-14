@@ -3,7 +3,10 @@ plugins {
   alias(libs.plugins.kotlin.android)
 }
 
-kotlin.jvmToolchain(8)
+kotlin.jvmToolchain {
+  languageVersion.set(JavaLanguageVersion.of(8))
+  vendor.set(JvmVendorSpec.AZUL)
+}
 
 android {
   compileSdk libs.versions.compileSdk.get() as int
@@ -41,7 +44,7 @@ android {
 }
 
 dependencies {
-  implementation project(':common')
+  implementation projects.common
 
   implementation libs.androidx.recyclerView
 

@@ -37,13 +37,13 @@ internal abstract class AlterTableModifyColumnMixin(
     super.annotate(annotationHolder)
 
     if (tablesAvailable(this)
-      .filter { it.tableName.textMatches(alterStmt.tableName) }
-      .flatMap { it.query.columns }
-      .none { (it.element as? SqlColumnName)?.textMatches(columnDef.columnName) == true }
+        .filter { it.tableName.textMatches(alterStmt.tableName) }
+        .flatMap { it.query.columns }
+        .none { (it.element as? SqlColumnName)?.textMatches(columnDef.columnName) == true }
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnDef.columnName,
-        s = "No column found to modify with name ${columnDef.columnName.text}",
+        message = "No column found to modify with name ${columnDef.columnName.text}",
       )
     }
   }

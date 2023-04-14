@@ -4,6 +4,7 @@ import app.cash.sqldelight.dialects.sqlite_3_35.grammar.psi.SqliteAlterTableDrop
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCompositeElement
 import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
@@ -44,7 +45,7 @@ internal abstract class AlterTableDropColumnMixin(
     if (columns.size == 1) {
       annotationHolder.createErrorAnnotation(
         element = columnName,
-        s = "Cannot drop column \"${columnName.text}\": no other columns exist",
+        message = "Cannot drop column \"${columnName.text}\": no other columns exist",
       )
     } else {
       val constraints = columnsToDrop
@@ -54,12 +55,12 @@ internal abstract class AlterTableDropColumnMixin(
       if (constraints.any { it.hasPrimaryKey() }) {
         annotationHolder.createErrorAnnotation(
           element = columnName,
-          s = "Cannot drop PRIMARY KEY column \"${columnName.text}\"",
+          message = "Cannot drop PRIMARY KEY column \"${columnName.text}\"",
         )
       } else if (constraints.any { it.isUnique() }) {
         annotationHolder.createErrorAnnotation(
           element = columnName,
-          s = "Cannot drop UNIQUE column \"${columnName.text}\"",
+          message = "Cannot drop UNIQUE column \"${columnName.text}\"",
         )
       } else {
         containingFile
@@ -68,12 +69,15 @@ internal abstract class AlterTableDropColumnMixin(
             index.tableName?.textMatches(alterStmt.tableName) == true
           }
           .find { index ->
-            index.indexedColumnList.any { it.columnName?.textMatches(columnName) == true }
+            index.indexedColumnList.any {
+              val expr = it.expr
+              if (expr is SqlColumnExpr) expr.columnName.textMatches(columnName) else false
+            }
           }
           ?.let { indexForColumnToDrop ->
             annotationHolder.createErrorAnnotation(
               element = columnName,
-              s = "Cannot drop indexed column \"${columnName.text}\" (\"${indexForColumnToDrop.indexName.text}\")",
+              message = "Cannot drop indexed column \"${columnName.text}\" (\"${indexForColumnToDrop.indexName.text}\")",
             )
           }
       }

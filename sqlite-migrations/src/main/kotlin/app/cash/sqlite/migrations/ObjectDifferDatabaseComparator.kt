@@ -50,7 +50,7 @@ class ObjectDifferDatabaseComparator(
           } else if (base == null || base !is String) {
             node.state = ADDED
           } else if (working.normalizeDefinition()
-            .equals(base.normalizeDefinition(), ignoreCase = true)
+              .equals(base.normalizeDefinition(), ignoreCase = true)
           ) {
             node.state = UNTOUCHED
           } else {

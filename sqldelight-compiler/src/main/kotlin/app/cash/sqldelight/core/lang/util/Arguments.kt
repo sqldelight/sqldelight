@@ -100,7 +100,9 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       } else if (argument.isCondition()) {
         val validOtherCondition = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr && it.isCondition() }
         return validOtherCondition?.type() ?: IntermediateType(PrimitiveType.BOOLEAN)
-      } else IntermediateType(PrimitiveType.BOOLEAN)
+      } else {
+        IntermediateType(PrimitiveType.BOOLEAN)
+      }
     }
     is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
@@ -170,9 +172,12 @@ private fun SqlSelectStmt.argumentType(result: SqlResultColumn): IntermediateTyp
       // Check if this is part of an inner expression of a resulit column.
       val parentResult = PsiTreeUtil.getParentOfType(parentRule, SqlResultColumn::class.java)
 
-      if (parentResult == null) NamedQuery("temp", SelectQueryable(compoundSelect, compoundSelect))
-        .resultColumns[resultColumnList.indexOf(result)]
-      else (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
+      if (parentResult == null) {
+        NamedQuery("temp", SelectQueryable(compoundSelect, compoundSelect))
+          .resultColumns[resultColumnList.indexOf(result)]
+      } else {
+        (parentResult.parent as SqlSelectStmt).argumentType(parentResult)
+      }
     }
   }
 }

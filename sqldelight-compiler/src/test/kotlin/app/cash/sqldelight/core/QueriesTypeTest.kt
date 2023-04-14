@@ -64,7 +64,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(
@@ -80,11 +80,11 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
@@ -105,7 +105,7 @@ class QueriesTypeTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.Unit
+      |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -254,7 +254,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
@@ -266,11 +266,11 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
@@ -285,7 +285,7 @@ class QueriesTypeTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.Unit
+      |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -354,7 +354,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -363,11 +363,11 @@ class QueriesTypeTest {
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id TEXT PRIMARY KEY,
@@ -382,7 +382,7 @@ class QueriesTypeTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.Unit
+      |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -433,7 +433,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver, data_Adapter: Data_.Adapter):
@@ -445,11 +445,11 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE data USING fts5(
       |          |  id,
@@ -464,7 +464,7 @@ class QueriesTypeTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.Unit
+      |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
       |}
       |
@@ -591,7 +591,7 @@ class QueriesTypeTest {
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
-      |internal val KClass<TestDatabase>.schema: SqlSchema
+      |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
       |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
@@ -602,11 +602,11 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver), TestDatabase {
       |  public override val searchQueries: SearchQueries = SearchQueries(driver)
       |
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE VIRTUAL TABLE search USING fts3(
       |          |  id INTEGER PRIMARY KEY,
@@ -621,7 +621,7 @@ class QueriesTypeTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> = QueryResult.Unit
+      |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
       |}
       |

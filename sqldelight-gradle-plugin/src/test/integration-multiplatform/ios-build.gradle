@@ -5,13 +5,6 @@ buildscript {
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'app.cash.sqldelight'
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-}
-
 sqldelight {
   databases {
     QueryWrapper {
@@ -44,4 +37,12 @@ kotlin {
       }
     }
   }
+}
+
+// https://youtrack.jetbrains.com/issue/KT-55751
+configurations {
+  def myAttribute = Attribute.of("dummy.attribute", String)
+
+  debugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
+  releaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
 }

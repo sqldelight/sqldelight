@@ -22,12 +22,11 @@ kotlin {
   
   // Configure common.
   sourceSets.commonMain.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation 'app.cash.sqldelight:primitive-adapters'
   }
   sourceSets.commonTest.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-test-common'
-    implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+    implementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation libs.kotlin.coroutines.test
   }
 
   // Configure jvm.
@@ -40,22 +39,15 @@ kotlin {
   // Configure web.
   js {
     useCommonJs()
-    browser {
-      testTask {
-        useMocha {
-          timeout = "5s"
-        }
-      }
-    }
+    browser()
   }
   sourceSets.jsMain.dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
     implementation npm('dateformat', '3.0.3')
   }
   sourceSets.jsTest.dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-test-js"
-    implementation libs.kotlin.coroutines.core
     implementation "app.cash.sqldelight:sqljs-driver"
+    implementation npm('sql.js', libs.versions.sqljs.get())
+    implementation devNpm("copy-webpack-plugin", "9.1.0")
   }
 
   // Configure iOS.
@@ -73,6 +65,14 @@ kotlin {
     summary = "Common core for SQLDelight sample."
     homepage = "https://github.com/cashapp/sqldelight/tree/master/sample/common"
   }
+}
+
+// https://youtrack.jetbrains.com/issue/KT-55751
+configurations {
+  def myAttribute = Attribute.of("dummy.attribute", String)
+
+  podDebugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
+  podReleaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
 }
 
 afterEvaluate {

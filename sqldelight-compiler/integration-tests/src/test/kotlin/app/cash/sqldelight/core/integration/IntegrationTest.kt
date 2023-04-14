@@ -138,6 +138,14 @@ class IntegrationTest {
         |selectAll:
         |SELECT `index` FROM `group`;
         |
+        |CREATE VIRTUAL TABLE myftstable USING fts5(something, nice);
+        |
+        |CREATE VIRTUAL TABLE myftstable2 USING fts5(something TEXT, nice TEXT);
+        |
+        |selectFromTable2:
+        |SELECT *
+        |FROM myftstable2;
+        |
       """.trimMargin(),
       temporaryFolder,
       "Group.sq",

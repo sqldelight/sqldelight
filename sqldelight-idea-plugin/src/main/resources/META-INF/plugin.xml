@@ -55,6 +55,9 @@
     <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
     <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
 
+    <treeStructureProvider
+        implementation="app.cash.sqldelight.intellij.SqlDelightTreeStructureProvider"/>
+
     <annotator language="SqlDelight"
         implementationClass="com.alecstrong.sql.psi.core.SqlAnnotator"/>
     <annotator language="SqlDelight"
@@ -69,6 +72,7 @@
         implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
     <completion.contributor language="SqlDelightMigration"
         implementationClass="app.cash.sqldelight.intellij.lang.completion.SqlDelightKeywordCompletionContributor"/>
+    <createDirectoryCompletionContributor implementation="app.cash.sqldelight.intellij.SqlDelightDirectoryCompletionContributor"/>
     <editorNotificationProvider
         implementation="app.cash.sqldelight.intellij.notifications.FileIndexingNotification" />
     <gotoDeclarationHandler

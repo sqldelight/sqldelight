@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 buildscript {
   apply from: "${projectDir.absolutePath}/../buildscript.gradle"
 }
@@ -5,14 +7,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'app.cash.sqldelight'
-
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-  google()
-}
 
 dependencies {
   implementation libs.sqliteJdbc
@@ -45,4 +39,8 @@ android {
   packagingOptions {
     exclude 'LICENSE.txt'
   }
+}
+
+tasks.withType(KotlinCompilationTask.class).configureEach {
+  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
 }

@@ -3,9 +3,8 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
-
-kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-android-driver'
 
@@ -34,23 +33,15 @@ android {
 }
 
 dependencies {
-  // workaround for https://youtrack.jetbrains.com/issue/KT-27059
-  api "${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}"
+  api projects.runtime
   api libs.androidx.sqlite
 
   implementation libs.androidx.sqliteFramework
 
-  testImplementation project(':drivers:driver-test')
+  testImplementation projects.drivers.driverTest
   testImplementation libs.junit
   testImplementation libs.androidx.test.core
   testImplementation libs.robolectric
-}
-
-// workaround for https://youtrack.jetbrains.com/issue/KT-27059
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute module("${project.property("GROUP")}:runtime-jvm:${project.property("VERSION_NAME")}") using project(':runtime')
-    }
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

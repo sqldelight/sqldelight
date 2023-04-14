@@ -5,13 +5,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'app.cash.sqldelight'
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-}
-
 android {
   compileSdk libs.versions.compileSdk.get() as int
 

@@ -5,13 +5,6 @@ buildscript {
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'app.cash.sqldelight'
 
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-}
-
 sqldelight {
   databases {
     QueryWrapper {
@@ -24,6 +17,5 @@ sqldelight {
 dependencies {
   implementation libs.sqliteJdbc
   implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
-  implementation "org.xerial:sqlite-jdbc:3.40.0.0"
   implementation libs.truth
 }

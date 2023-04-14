@@ -13,7 +13,6 @@ plugins {
   alias(libs.plugins.kotlin.multiplatform) apply false
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlin.android) apply false
-  alias(libs.plugins.kotlin.js) apply false
   alias(libs.plugins.ksp) apply false
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.library) apply false
@@ -28,9 +27,9 @@ spotless {
     targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*"
     ktlint(libs.versions.ktlint.get()).editorConfigOverride([
       "indent_size": "2",
-       "disabled_rules": "package-name",
-       "ij_kotlin_allow_trailing_comma": "true",
-       "ij_kotlin_allow_trailing_comma_on_call_site": "true",
+      "ktlint_standard_package-name": "disabled",
+      "ij_kotlin_allow_trailing_comma": "true",
+      "ij_kotlin_allow_trailing_comma_on_call_site": "true",
     ])
     trimTrailingWhitespace()
     endWithNewline()
@@ -94,4 +93,7 @@ tasks.named("dokkaHtmlMultiModule") {
       "customStyleSheets": ["${file("docs/css/logo-styles.css")}"]
     }
   """])
+
+  // https://github.com/Kotlin/dokka/issues/2954
+  dependsOn(":sqldelight-compiler:dokkaHtmlMultiModule")
 }

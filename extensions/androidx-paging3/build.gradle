@@ -2,11 +2,10 @@ plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
 
 archivesBaseName = 'sqldelight-androidx-paging3'
-
-kotlin.jvmToolchain(8)
 
 kotlin {
   ios()
@@ -18,7 +17,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api projects.runtime
         api libs.app.cash.paging.common
         implementation libs.kotlin.coroutines.core
       }
@@ -32,19 +31,19 @@ kotlin {
     }
     iosTest {
       dependencies {
-        implementation project(':drivers:native-driver')
-        implementation libs.app.cash.paging.runtime
+        implementation projects.drivers.nativeDriver
+        implementation libs.app.cash.paging.runtime.uikit
       }
     }
     jvmTest {
       dependencies {
-        implementation project(':drivers:sqlite-driver')
+        implementation projects.drivers.sqliteDriver
         implementation libs.androidx.paging3.runtime
       }
     }
     jsTest {
       dependencies {
-        implementation project(':drivers:sqljs-driver')
+        implementation projects.drivers.sqljsDriver
       }
     }
   }

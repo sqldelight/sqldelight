@@ -3,16 +3,15 @@ plugins {
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 grammarKit {
   intellijRelease.set(libs.versions.idea)
 }
 
-kotlin.jvmToolchain(11)
-
 dependencies {
-  api project(':sqldelight-compiler:dialect')
+  api projects.sqldelightCompiler.dialect
 
   compileOnly libs.intellij.ideImpl
 
@@ -22,7 +21,6 @@ dependencies {
   testImplementation libs.kotlin.coroutines.core
   testImplementation libs.junit
   testImplementation libs.truth
-  testImplementation project(':sqldelight-compiler:dialect')
   testImplementation(libs.sqlPsiTestFixtures) {
     exclude group: "com.jetbrains.intellij.platform"
   }

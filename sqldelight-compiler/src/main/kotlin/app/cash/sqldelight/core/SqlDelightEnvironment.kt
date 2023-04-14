@@ -23,6 +23,7 @@ import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
+import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
@@ -30,13 +31,13 @@ import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
-import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
+import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.roots.ModuleExtension
 import com.intellij.openapi.vfs.VirtualFile
@@ -45,12 +46,14 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 import java.util.StringTokenizer
 import kotlin.math.log10
+import kotlin.reflect.KClass
 import kotlin.system.measureTimeMillis
 
 /**
@@ -69,7 +72,7 @@ class SqlDelightEnvironment(
   private val dependencyFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && it.dependency }
     .map { it.folder },
-) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders, emptyList(), SqlDelightLanguage),
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
@@ -78,9 +81,10 @@ class SqlDelightEnvironment(
   init {
     project.registerService(SqlDelightProjectService::class.java, this)
 
+    @Suppress("UnresolvedPluginConfigReference")
     CoreApplicationEnvironment.registerExtensionPoint(
       module.extensionArea,
-      ModuleExtension.EP_NAME,
+      ExtensionPointName.create("com.intellij.moduleExtension"),
       ModuleExtension::class.java,
     )
 
@@ -106,8 +110,16 @@ class SqlDelightEnvironment(
 
   override fun clearIndex() = throw UnsupportedOperationException()
 
-  override fun forSourceFiles(action: (SqlFileBase) -> Unit) {
-    super.forSourceFiles {
+  @JvmName("forSqlFileBases")
+  fun forSourceFiles(action: (SqlFileBase) -> Unit) {
+    forSourceFiles<SqlFileBase>(action)
+  }
+
+  override fun <T : PsiFile> forSourceFiles(
+    klass: KClass<T>,
+    action: (T) -> Unit,
+  ) {
+    super.forSourceFiles(klass) {
       if (it.fileType != MigrationFileType ||
         verifyMigrations ||
         properties.deriveSchemaFromMigrations
@@ -124,15 +136,12 @@ class SqlDelightEnvironment(
     val errors = sortedMapOf<Int, MutableList<String>>()
     val extraAnnotators = listOf(OptimisticLockValidator())
     annotate(
-      object : SqlAnnotationHolder {
-        override fun createErrorAnnotation(element: PsiElement, s: String) {
-          val key = element.sqFile().order ?: Integer.MAX_VALUE
-          errors.putIfAbsent(key, ArrayList())
-          errors[key]!!.add(errorMessage(element, s))
-        }
-      },
       extraAnnotators,
-    )
+    ) { element, message ->
+      val key = element.sqFile().order ?: Integer.MAX_VALUE
+      errors.putIfAbsent(key, ArrayList())
+      errors[key]!!.add(errorMessage(element, message))
+    }
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
     val writer = writer@{ fileName: String ->
@@ -319,10 +328,12 @@ class SqlDelightEnvironment(
 
       for (sourceFolder in sourceFolders(file)) {
         val path = file.parent!!.relativePathUnder(sourceFolder)
-        if (path != null) return path.joinToString(separator = ".") {
-          SqlDelightFileIndex.sanitizeDirectoryName(
-            it,
-          )
+        if (path != null) {
+          return path.joinToString(separator = ".") {
+            SqlDelightFileIndex.sanitizeDirectoryName(
+              it,
+            )
+          }
         }
       }
 

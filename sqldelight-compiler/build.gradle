@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
 }
 
 tasks.named('test') {
@@ -15,8 +16,6 @@ tasks.named('test') {
   }
 }
 
-kotlin.jvmToolchain(11)
-
 sourceSets {
   main.java.srcDir "gen"
 }
@@ -27,7 +26,7 @@ grammarKit {
 
 dependencies {
   api libs.sqlPsi
-  api(project(':sqldelight-compiler:dialect'))
+  api projects.sqldelightCompiler.dialect
 
   implementation libs.kotlinPoet
   implementation libs.jgrapht
@@ -43,17 +42,17 @@ dependencies {
   testImplementation libs.kotlin.coroutines.core
   testImplementation libs.kotlin.test.junit
   testImplementation libs.truth
-  testImplementation project(':test-util')
-  testImplementation project(':dialects:hsql')
-  testImplementation project(':dialects:mysql')
-  testImplementation project(':dialects:postgresql')
-  testImplementation project(':dialects:sqlite-3-18')
-  testImplementation project(':dialects:sqlite-3-24')
-  testImplementation project(':dialects:sqlite-3-25')
-  testImplementation project(':dialects:sqlite-3-30')
-  testImplementation project(':dialects:sqlite-3-33')
-  testImplementation project(':dialects:sqlite-3-35')
-  testImplementation project(':dialects:sqlite-3-38')
+  testImplementation projects.testUtil
+  testImplementation projects.dialects.hsql
+  testImplementation projects.dialects.mysql
+  testImplementation projects.dialects.postgresql
+  testImplementation projects.dialects.sqlite318
+  testImplementation projects.dialects.sqlite324
+  testImplementation projects.dialects.sqlite325
+  testImplementation projects.dialects.sqlite330
+  testImplementation projects.dialects.sqlite333
+  testImplementation projects.dialects.sqlite335
+  testImplementation projects.dialects.sqlite338
 }
 
 tasks.register('pluginVersion') {
@@ -71,13 +70,14 @@ tasks.register('pluginVersion') {
   inputs.property 'version', version
   outputs.dir outputDir
 
+  def versionFile = file("$outputDir/app.cash.sqldelight/Version.kt")
+
   doLast {
-    def versionFile = file("$outputDir/app.cash.sqldelight/Version.kt")
     versionFile.parentFile.mkdirs()
     versionFile.text = """// Generated file. Do not edit!
 package app.cash.sqldelight
 
-val VERSION = "${project.version}"
+val VERSION = "${version}"
 val GIT_SHA = "${getGitHash}"
 """
   }
@@ -88,5 +88,6 @@ apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 afterEvaluate {
   tasks.named('compileKotlin') { dependsOn('pluginVersion') }
   tasks.named('dokkaHtml') { dependsOn('pluginVersion') }
+  tasks.named('dokkaHtmlPartial') { dependsOn('pluginVersion') }
   tasks.named('javaSourcesJar') { dependsOn('pluginVersion') }
 }

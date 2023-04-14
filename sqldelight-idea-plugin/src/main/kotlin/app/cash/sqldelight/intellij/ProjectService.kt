@@ -29,8 +29,10 @@ import app.cash.sqldelight.intellij.run.window.SqlDelightToolWindowFactory
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.SqlParserUtil
+import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
 import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.ProjectUtil
+import com.intellij.ide.projectView.ProjectView
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
@@ -50,9 +52,11 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
+import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.reflect.jvm.jvmName
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
@@ -71,6 +75,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     }
 
     if (!ApplicationManager.getApplication().isUnitTestMode) {
+      val currentProjectViewPane = ProjectView.getInstance(project).currentProjectViewPane
       project.messageBus.connect()
         .subscribe(
           VirtualFileManager.VFS_CHANGES,
@@ -85,10 +90,34 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
                   event.file?.let { generateDatabaseOnSync(it) }
                 }
               }
+              events.mapNotNull { it.file }
+                .filter { it.findConfiguredFileIndex() != null }
+                .forEach { virtualFile ->
+                  val index = requireNotNull(virtualFile.findConfiguredFileIndex())
+                  val filePath = try {
+                    virtualFile.toNioPath().toAbsolutePath()
+                  } catch (exception: UnsupportedOperationException) {
+                    Paths.get("").toAbsolutePath()
+                  }
+                  val sourceFolder = index.sourceFolders(true)
+                    .flatten()
+                    .firstOrNull { sourceFolder ->
+                      filePath.startsWith(sourceFolder.folder.toPath())
+                    }
+                  if (sourceFolder != null) {
+                    currentProjectViewPane?.updateFromRoot(true)
+                  }
+                }
             }
           },
         )
     }
+  }
+
+  private fun VirtualFile.findConfiguredFileIndex(): SqlDelightFileIndex? {
+    val module = getModule(project) ?: return null
+    val fileIndex = SqlDelightFileIndex.getInstance(module)
+    return fileIndex.takeIf { it.isConfigured }
   }
 
   override fun dispose() {
@@ -118,7 +147,13 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     with(ApplicationManager.getApplication()) {
       invokeLater {
         runWriteAction {
-          SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+          try {
+            SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+          } catch (e: InvalidElementDetectedException) {
+            // Since this is an IDE step, it's possible it happens during some element invalidation.
+            // In those cases its okay to ignore this time and wait until the next attempt at
+            // codegen.
+          }
         }
       }
     }

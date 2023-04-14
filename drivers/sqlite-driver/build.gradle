@@ -2,18 +2,17 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
 }
-
-kotlin.jvmToolchain(8)
 
 archivesBaseName = 'sqldelight-sqlite-driver'
 
 dependencies {
-  api project(':drivers:jdbc-driver')
+  api projects.drivers.jdbcDriver
 
   implementation libs.sqliteJdbc
 
-  testImplementation project(':drivers:driver-test')
+  testImplementation projects.drivers.driverTest
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

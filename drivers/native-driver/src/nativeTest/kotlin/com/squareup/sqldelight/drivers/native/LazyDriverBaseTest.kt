@@ -40,11 +40,11 @@ abstract class LazyDriverBaseTest {
     driver.close()
   }
 
-  protected fun defaultSchema(): SqlSchema {
-    return object : SqlSchema {
+  protected fun defaultSchema(): SqlSchema<QueryResult.Value<Unit>> {
+    return object : SqlSchema<QueryResult.Value<Unit>> {
       override val version: Int = 1
 
-      override fun create(driver: SqlDriver): QueryResult<Unit> {
+      override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         driver.execute(
           20,
           """
@@ -86,7 +86,7 @@ abstract class LazyDriverBaseTest {
   }
 
   private fun setupDatabase(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     config: DatabaseConfiguration = defaultConfiguration(schema),
   ): NativeSqliteDriver {
     deleteDatabase(config.name!!)
@@ -95,7 +95,7 @@ abstract class LazyDriverBaseTest {
     return NativeSqliteDriver(manager!!)
   }
 
-  protected fun defaultConfiguration(schema: SqlSchema): DatabaseConfiguration {
+  protected fun defaultConfiguration(schema: SqlSchema<QueryResult.Value<Unit>>): DatabaseConfiguration {
     return DatabaseConfiguration(
       name = "testdb",
       version = 1,

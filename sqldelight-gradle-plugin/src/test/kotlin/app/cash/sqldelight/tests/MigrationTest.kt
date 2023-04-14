@@ -36,6 +36,16 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun `driver initializer is executed`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-driver-initializer"))
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("DriverInitializerImpl executed!")
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun `failing migration errors properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-failure"))
@@ -251,11 +261,11 @@ class MigrationTest {
       |) : TransacterImpl(driver), Database {
       |  public override val testQueries: TestQueries = TestQueries(driver)
       |
-      |  public object Schema : SqlSchema {
+      |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    public override val version: Int
       |      get() = 2
       |
-      |    public override fun create(driver: SqlDriver): QueryResult<Unit> {
+      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test (
       |          |  value TEXT NOT NULL,
@@ -282,7 +292,7 @@ class MigrationTest {
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,
-      |    ): QueryResult<Unit> {
+      |    ): QueryResult.Value<Unit> {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
       |        driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
@@ -307,7 +317,7 @@ class MigrationTest {
       |      oldVersion: Int,
       |      newVersion: Int,
       |      vararg callbacks: AfterVersion,
-      |    ): QueryResult<Unit> {
+      |    ): QueryResult.Value<Unit> {
       |      var lastVersion = oldVersion
       |
       |      callbacks.filter { it.afterVersion in oldVersion until newVersion }

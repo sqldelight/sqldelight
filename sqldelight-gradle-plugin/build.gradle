@@ -7,9 +7,8 @@ plugins {
   alias(libs.plugins.dokka)
   id("java-gradle-plugin")
   id("jvm-test-suite")
+  id("app.cash.sqldelight.toolchain.compiler")
 }
-
-kotlin.jvmToolchain(11)
 
 testing {
   suites {
@@ -51,10 +50,10 @@ dependencies {
   implementation libs.schemaCrawler.tools
   implementation libs.schemaCrawler.sqlite
 
-  implementation project(':sqlite-migrations')
-  implementation project(':sqldelight-compiler')
+  implementation projects.sqliteMigrations
+  api projects.sqldelightCompiler
   // Only shade the minimum IntelliJ libs.
-  shade(libs.intellij.core)
+  shade libs.intellij.core
   // Analysis has no dependencies.
   shade libs.intellij.analysis
   shade (libs.intellij.lang) {

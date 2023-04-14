@@ -27,7 +27,6 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 
@@ -47,8 +46,7 @@ internal class SqlDelightClassNameElementAnnotator : Annotator {
     } else {
       val project = element.project
       val sqlDelightFile = element.containingFile as SqlDelightFile
-      val module = ModuleUtil.findModuleForFile(sqlDelightFile) ?: return
-      val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, false)
+      val scope = GlobalSearchScope.allScope(project)
       val outerClassElement = element.firstChild
       val outerClassName = outerClassElement.text
       val classes = PsiClassSearchHelper.getClassesByShortName(outerClassName, project, scope)

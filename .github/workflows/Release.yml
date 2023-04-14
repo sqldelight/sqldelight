@@ -15,16 +15,18 @@ jobs:
   publish_archives:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-18.04]
+        os: [macOS-latest, windows-latest, ubuntu-22.04]
 
     runs-on: ${{matrix.os}}
     if: github.repository == 'cashapp/sqldelight'
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: actions/setup-java@v3.9.0
+        uses: actions/setup-java@v3.11.0
         with:
           distribution: 'zulu'
           java-version: 17
@@ -58,12 +60,14 @@ jobs:
   publish_plugin:
     runs-on: ubuntu-latest
     if: github.repository == 'cashapp/sqldelight'
+    permissions:
+      contents: read
     needs: publish_archives
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: actions/setup-java@v3.9.0
+        uses: actions/setup-java@v3.11.0
         with:
           distribution: 'zulu'
           java-version: 17
@@ -79,4 +83,4 @@ jobs:
         run: ./gradlew publishPlugin --stacktrace --no-parallel
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=true
+  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true

@@ -28,7 +28,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        api project(':runtime')
+        api projects.runtime
       }
     }
     commonTest {
@@ -46,7 +46,7 @@ kotlin {
     nativeTest {
       dependsOn(commonTest)
       dependencies {
-        implementation project(':drivers:driver-test')
+        implementation projects.drivers.driverTest
       }
     }
     nativeLinuxLikeMain {

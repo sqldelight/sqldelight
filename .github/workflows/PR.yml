@@ -15,7 +15,7 @@ jobs:
         # for a log of why this is needed, see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
         #
         # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
-        os: [ macOS-latest, ubuntu-18.04 ]
+        os: [ macOS-latest, ubuntu-22.04 ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
@@ -24,12 +24,14 @@ jobs:
             job: gradle-plugin-tests
 
     runs-on: ${{matrix.os}}
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: actions/setup-java@v3.9.0
+        uses: actions/setup-java@v3.11.0
         with:
           distribution: 'zulu'
           java-version: 17
@@ -85,7 +87,7 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build --stacktrace
+          arguments: kotlinUpgradeYarnLock build --stacktrace
           build-root-directory: sample
 
       - name: Bundle the build report
@@ -105,4 +107,4 @@ jobs:
           report_paths: '**/build/test-results/test/TEST-*.xml'
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=true
+  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true

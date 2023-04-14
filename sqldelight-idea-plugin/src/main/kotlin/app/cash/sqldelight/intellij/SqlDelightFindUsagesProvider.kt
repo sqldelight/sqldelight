@@ -27,14 +27,15 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
       is SqlCteTableName -> "common table"
       is SqlViewName -> "view"
       is SqlNewTableName -> "renamed table"
-      else -> throw IllegalArgumentException("Unexpected type $element")
+      else -> element.node.elementType.toString()
     }
   }
 
   override fun canFindUsagesFor(element: PsiElement): Boolean {
     return when (element) {
       is StmtIdentifierMixin, is SqlTableName, is SqlColumnName, is SqlTableAlias,
-      is SqlColumnAlias, is SqlViewName, is SqlCteTableName, is SqlNewTableName, -> true
+      is SqlColumnAlias, is SqlViewName, is SqlCteTableName, is SqlNewTableName,
+      -> true
       else -> false
     }
   }

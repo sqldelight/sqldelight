@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 buildscript {
   apply from: "${projectDir.absolutePath}/../buildscript.gradle"
 }
@@ -5,14 +7,6 @@ buildscript {
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'app.cash.sqldelight'
 apply plugin: 'com.android.library'
-
-repositories {
-  maven {
-    url "file://${projectDir.absolutePath}/../../../../build/localMaven"
-  }
-  mavenCentral()
-  google()
-}
 
 android {
   namespace "app.cash.sqldelight.integration"
@@ -64,4 +58,8 @@ kotlin {
       }
     }
   }
+}
+
+tasks.withType(KotlinCompilationTask.class).configureEach {
+  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
 }

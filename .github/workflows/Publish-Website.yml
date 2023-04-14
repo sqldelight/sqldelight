@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/configure-pages@v3  
       - name: Set up JDK 17
-        uses: actions/setup-java@v3.9.0
+        uses: actions/setup-java@v3.11.0
         with:
           distribution: 'zulu'
           java-version: 17
@@ -48,6 +48,8 @@ jobs:
         run: .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Build mkdocs
+        env:
+          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
         run: |
           pip3 install --no-deps -r .github/workflows/requirements.txt
           mkdocs build
@@ -67,4 +69,4 @@ jobs:
         run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} latest
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=true
+  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true

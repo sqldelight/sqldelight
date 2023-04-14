@@ -58,13 +58,6 @@ class PropertiesFileTest {
         |apply plugin: 'app.cash.sqldelight'
         |apply plugin: 'com.android.library'
         |
-        |repositories {
-        |  maven {
-        |    url "file://${"$"}{rootDir}/../../../../build/localMaven"
-        |  }
-        |  mavenCentral()
-        |}
-        |
         |archivesBaseName = 'Test'
         |
         |android {

@@ -44,7 +44,7 @@ class AndroidSqliteDriver private constructor(
    * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
    */
   @JvmOverloads constructor(
-    schema: SqlSchema,
+    schema: SqlSchema<QueryResult.Value<Unit>>,
     context: Context,
     name: String? = null,
     factory: SupportSQLiteOpenHelper.Factory = FrameworkSQLiteOpenHelperFactory(),
@@ -182,7 +182,7 @@ class AndroidSqliteDriver private constructor(
   }
 
   open class Callback(
-    private val schema: SqlSchema,
+    private val schema: SqlSchema<QueryResult.Value<Unit>>,
     private vararg val callbacks: AfterVersion,
   ) : SupportSQLiteOpenHelper.Callback(schema.version) {
 
@@ -231,8 +231,11 @@ private class AndroidPreparedStatement(
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
-    if (boolean == null) statement.bindNull(index + 1)
-    else statement.bindLong(index + 1, if (boolean) 1L else 0L)
+    if (boolean == null) {
+      statement.bindNull(index + 1)
+    } else {
+      statement.bindLong(index + 1, if (boolean) 1L else 0L)
+    }
   }
 
   override fun <R> executeQuery(mapper: (SqlCursor) -> R): R = throw UnsupportedOperationException()
@@ -247,9 +250,9 @@ private class AndroidPreparedStatement(
 }
 
 private class AndroidQuery(
-  private val sql: String,
+  override val sql: String,
   private val database: SupportSQLiteDatabase,
-  private val argCount: Int,
+  override val argCount: Int,
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds = MutableList<((SupportSQLiteProgram) -> Unit)?>(argCount) { null }
 
@@ -271,8 +274,11 @@ private class AndroidQuery(
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
     binds[index] = {
-      if (boolean == null) it.bindNull(index + 1)
-      else it.bindLong(index + 1, if (boolean) 1L else 0L)
+      if (boolean == null) {
+        it.bindNull(index + 1)
+      } else {
+        it.bindLong(index + 1, if (boolean) 1L else 0L)
+      }
     }
   }
 
@@ -289,11 +295,7 @@ private class AndroidQuery(
     }
   }
 
-  override fun getSql() = sql
-
   override fun toString() = sql
-
-  override fun getArgCount() = argCount
 
   override fun close() { }
 }

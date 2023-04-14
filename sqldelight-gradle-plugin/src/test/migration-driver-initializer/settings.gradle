@@ -1,0 +1,5 @@
+apply from: "../settings.gradle"
+
+rootProject.name = 'sqldelight-migrations'
+
+include(":driverInit")

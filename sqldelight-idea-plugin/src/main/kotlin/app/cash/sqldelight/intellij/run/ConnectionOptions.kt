@@ -12,8 +12,11 @@ internal class ConnectionOptions(val project: Project) {
 
   private fun <T> withCurrentDialect(action: DialectConnections.() -> T): T {
     val currentOptions =
-      if (storedOptions.isEmpty()) StoredOptions()
-      else adapter.fromJson(storedOptions)!!
+      if (storedOptions.isEmpty()) {
+        StoredOptions()
+      } else {
+        adapter.fromJson(storedOptions)!!
+      }
 
     val dialectKey = SqlDelightProjectService.getInstance(project).dialect::class.qualifiedName
       ?: throw IllegalStateException("SqlDelightDialect subclass must be fully qualified.")

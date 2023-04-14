@@ -8,6 +8,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.QueryWithResults
+import app.cash.sqldelight.dialect.api.ReturningQueryable
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.BIG_INT
@@ -18,7 +19,7 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtL
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
-import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -94,33 +95,15 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   override fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults? {
     sqlStmt.insertStmt?.let { insert ->
       check(insert is PostgreSqlInsertStmt)
-      insert.returningClause?.let {
-        return object : QueryWithResults {
-          override var statement: SqlAnnotatedElement = insert
-          override val select = it
-          override val pureTable = insert.tableName
-        }
-      }
+      insert.returningClause?.let { return ReturningQueryable(insert, it, insert.tableName) }
     }
     sqlStmt.updateStmtLimited?.let { update ->
       check(update is PostgreSqlUpdateStmtLimited)
-      update.returningClause?.let {
-        return object : QueryWithResults {
-          override var statement: SqlAnnotatedElement = update
-          override val select = it
-          override val pureTable = update.qualifiedTableName.tableName
-        }
-      }
+      update.returningClause?.let { return ReturningQueryable(update, it, update.qualifiedTableName.tableName) }
     }
     sqlStmt.deleteStmtLimited?.let { delete ->
       check(delete is PostgreSqlDeleteStmtLimited)
-      delete.returningClause?.let {
-        return object : QueryWithResults {
-          override var statement: SqlAnnotatedElement = delete
-          override val select = it
-          override val pureTable = delete.qualifiedTableName?.tableName
-        }
-      }
+      delete.returningClause?.let { return ReturningQueryable(delete, it, delete.qualifiedTableName?.tableName) }
     }
     return parentResolver.queryWithResults(sqlStmt)
   }
@@ -130,7 +113,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     val columnDef = intermediateType.column ?: return intermediateType
     val tableDef = columnDef.parent as? SqlCreateTableStmt ?: return intermediateType
     tableDef.tableConstraintList.forEach {
-      if (columnDef.columnName.name in it.indexedColumnList.mapNotNull { it.columnName?.name }) {
+      if (columnDef.columnName.name in it.indexedColumnList.mapNotNull {
+          val expr = it.expr
+          if (expr is SqlColumnExpr) expr.columnName.name else null
+        }
+      ) {
         return intermediateType.asNonNullable()
       }
     }

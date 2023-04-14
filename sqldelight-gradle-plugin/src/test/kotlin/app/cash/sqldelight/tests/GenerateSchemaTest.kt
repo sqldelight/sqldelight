@@ -76,6 +76,7 @@ class GenerateSchemaTest {
     val fixtureRoot = File("src/test/schema-file-android")
     val schemaFile = File(fixtureRoot, "src/main/sqldelight/databases/1.db")
     if (schemaFile.exists()) schemaFile.delete()
+    schemaFile.deleteOnExit()
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)

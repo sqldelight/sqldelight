@@ -14,6 +14,17 @@ dependencyResolutionManagement {
 
             library("sqldelight", "app.cash.sqldelight", "gradle-plugin")
                     .versionRef(version("sqldelightVersion", sqldelightVersion))
+            plugin("sqldelight", "app.cash.sqldelight").versionRef(version("sqldelightVersion", sqldelightVersion))
         }
+    }
+
+    repositories {
+        maven {
+            url "file://${rootDir}/../../../../build/localMaven"
+        }
+        mavenCentral()
+        google()
+        maven { url "https://www.jetbrains.com/intellij-repository/releases" }
+        maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
     }
 }

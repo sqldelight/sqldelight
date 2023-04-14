@@ -1,26 +1,23 @@
 plugins {
-  alias(libs.plugins.kotlin.js)
+  alias(libs.plugins.kotlin.multiplatform)
 }
 
 kotlin {
   js {
     browser {
       binaries.executable()
-      testTask {
-        useMocha {
-          timeout = "5s"
-        }
+    }
+  }
+
+  sourceSets {
+    jsMain {
+      dependencies {
+        implementation projects.common
+        implementation "app.cash.sqldelight:sqljs-driver"
+        implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.8.0"
+        implementation devNpm("copy-webpack-plugin", "9.1.0")
+        implementation npm("sql.js", "1.6.2")
       }
     }
   }
-}
-
-dependencies {
-  implementation project(':common')
-  implementation "app.cash.sqldelight:sqljs-driver"
-  implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.8.0"
-  implementation devNpm("copy-webpack-plugin", "9.1.0")
-  implementation npm("sql.js", "1.6.2")
-
-  testImplementation 'org.jetbrains.kotlin:kotlin-test-js'
 }

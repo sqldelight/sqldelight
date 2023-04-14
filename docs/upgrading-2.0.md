@@ -137,3 +137,9 @@ dependencies {
         .asFlow()
     +   .mapToList({++Dispatchers.IO++})
     ```
+* Some driver methods like [`execute()`](../2.x/runtime/app.cash.sqldelight.db/-sql-driver/execute), [`executeQuery()`](../2.x/runtime/app.cash.sqldelight.db/-sql-driver/execute-query), `newTransaction()`, and `endTransaction()` now return a [`QueryResult`](../2.x/runtime/app.cash.sqldelight.db/-query-result) object. Use [`QueryResult.value`](../2.x/runtime/app.cash.sqldelight.db/-query-result/value) to access the returned value.
+    ```diff
+    -driver.executeQuery(null, "PRAGMA user_version", { /*...*/ })
+    +driver.executeQuery(null, "PRAGMA user_version", { /*...*/ }){++.value++}
+    ```
+    This change enables driver implementations to be based on non-blocking APIs where the returned value can be accessed using the suspending [`QueryResult.await()`](../2.x/runtime/app.cash.sqldelight.db/-query-result/await) method.

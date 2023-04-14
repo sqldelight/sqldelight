@@ -81,8 +81,8 @@ class PgInsertReturningTest {
 
     assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
       """
-        |public fun insertReturn(data_: com.example.Data_): app.cash.sqldelight.ExecutableQuery<com.example.Data_> = insertReturn(data_) { data__, id ->
-        |  com.example.Data_(
+        |public fun insertReturn(data_: com.example.Data_): app.cash.sqldelight.ExecutableQuery<com.example.InsertReturn> = insertReturn(data_) { data__, id ->
+        |  com.example.InsertReturn(
         |    data__,
         |    id
         |  )
