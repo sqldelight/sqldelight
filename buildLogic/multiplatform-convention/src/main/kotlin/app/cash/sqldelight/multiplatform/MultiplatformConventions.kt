@@ -27,11 +27,6 @@ class MultiplatformConventions : Plugin<Project> {
         }
 
         if (it is KotlinJsTarget) {
-          it.nodejs {
-            testTask {
-              enabled = false
-            }
-          }
           it.browser {
             testTask {
               useKarma {
