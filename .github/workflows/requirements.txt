@@ -47,9 +47,9 @@ mkdocs-material-extensions==1.1.1
     # via
     #   -r requirements.in
     #   mkdocs-material
-packaging==23.0
+packaging==23.1
     # via mkdocs
-pygments==2.14.0
+pygments==2.15.0
     # via mkdocs-material
 pymdown-extensions==9.11
     # via mkdocs-material
