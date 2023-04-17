@@ -3290,7 +3290,7 @@
 <span class="w">  </span><span class="kd">expect</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span>
 <span class="p">}</span>
 
-<span class="kd">fun</span><span class="w"> </span><span class="nf">createDatabase</span><span class="p">(</span><span class="n">driverFactory</span><span class="p">):</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">createDatabase</span><span class="p">(</span><span class="n">driverFactory</span><span class="p">:</span><span class="w"> </span><span class="n">DriverFactory</span><span class="p">):</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driverFactory</span><span class="p">.</span><span class="na">createDriver</span><span class="p">()</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
 
