@@ -3265,15 +3265,15 @@
 For a full list of new features and other changes, see the <a href="../changelog">changelog</a>.</p>
 <h2 id="new-package-name-and-artifact-group">New Package Name and Artifact Group<a class="headerlink" href="#new-package-name-and-artifact-group" title="Permanent link">&para;</a></h2>
 <p>All instances of <code>com.squareup.sqldelight</code> need to be replaced with <code>app.cash.sqldelight</code>.</p>
-<div class="highlight"><span class="filename">Gradle Dependencies</span><pre><span></span><code><span class="w">plugins {</span>
+<div class="highlight"><span class="filename">Gradle Dependencies</span><pre><span></span><code>plugins {
 <span class="gd">-  id(&quot;com.squareup.sqldelight&quot;) version &quot;local-development&quot;</span>
 <span class="gi">+  id(&quot;app.cash.sqldelight&quot;) version &quot;local-development&quot;</span>
-<span class="w">}</span>
+}
 
-<span class="w">dependencies {</span>
+dependencies {
 <span class="gd">-  implementation(&quot;com.squareup.sqldelight:sqlite-driver:local-development&quot;)</span>
 <span class="gi">+  implementation(&quot;app.cash.sqldelight:sqlite-driver:local-development&quot;)</span>
-<span class="w">}</span>
+}
 </code></pre></div>
 <div class="highlight"><span class="filename">In Code</span><pre><span></span><code><span class="gd">-import com.squareup.sqldelight.db.SqlDriver</span>
 <span class="gi">+import app.cash.sqldelight.db.SqlDriver</span>
@@ -3358,17 +3358,17 @@ For a full list of new features and other changes, see the <a href="../changelog
 <p>Primitive types must now be imported into <code>.sq</code> and <code>.sqm</code> files.</p>
 <div class="highlight"><pre><span></span><code><span class="gi">+<ins class="critic">import kotlin.Boolean</ins></span>
 
-<span class="w">CREATE TABLE HockeyPlayer (</span>
+CREATE TABLE HockeyPlayer (
 <span class="w"> </span> name TEXT NOT NULL,
 <span class="w"> </span> good INTEGER <mark class="critic">As Boolean</mark>
-<span class="w">);</span>
+);
 </code></pre></div>
 <p>Some previously supported types now require an adapter. Adapters for primitive types are available in the <code>app.cash.sqldelight:primitive-adapters:local-development</code> artifact.
 e.g. The <code>IntColumnAdapter</code> for doing <code>INTEGER As kotlin.Int</code> conversions.</p>
 </li>
 <li>
 <p>The <code>AfterVersionWithDriver</code> type was removed in favour of <a href="../2.x/runtime/app.cash.sqldelight.db/-after-version"><code>AfterVersion</code></a> which now always includes the driver, and the <code>migrateWithCallbacks</code> extension function was removed in favour of the main <a href="../2.x/runtime/app.cash.sqldelight.db/-sql-schema/#-775472427%2FFunctions%2F-2112917107"><code>migrate</code></a> method that now accepts callbacks.</p>
-<div class="highlight"><pre><span></span><code><span class="w">Database.Schema.<ins class="critic">migrate</ins><del class="critic">WithCallbacks</del>(</span>
+<div class="highlight"><pre><span></span><code>Database.Schema.<ins class="critic">migrate</ins><del class="critic">WithCallbacks</del>(
 <span class="w"> </span> driver = driver,
 <span class="w"> </span> oldVersion = 1,
 <span class="w"> </span> newVersion = Database.Schema.version,
@@ -3378,7 +3378,7 @@ e.g. The <code>IntColumnAdapter</code> for doing <code>INTEGER As kotlin.Int</co
 <span class="gi">+  <ins class="critic">AfterVersion(3) { driver -&gt;</ins></span>
 <span class="gi">+  <ins class="critic">  driver.execute(null, &quot;INSERT INTO test (value) VALUES(&#39;hello&#39;)&quot;, 0)</ins></span>
 <span class="gi">+  <ins class="critic">}</ins></span>
-<span class="w">)</span>
+)
 </code></pre></div>
 </li>
 <li>
@@ -3391,7 +3391,7 @@ e.g. The <code>IntColumnAdapter</code> for doing <code>INTEGER As kotlin.Int</co
 <p>The <a href="../2.x/extensions/androidx-paging3/app.cash.sqldelight.paging3/">paging3 extension API</a> has changed to only allow int types for the count.</p>
 </li>
 <li>The <a href="../2.x/extensions/coroutines-extensions/app.cash.sqldelight.coroutines/">coroutines extension API</a> now requires a dispatcher to be explicitly passed in.
-    <div class="highlight"><pre><span></span><code><span class="w">val players: Flow&lt;List&lt;HockeyPlayer&gt;&gt; =</span>
+    <div class="highlight"><pre><span></span><code>val players: Flow&lt;List&lt;HockeyPlayer&gt;&gt; =
 <span class="w"> </span> playerQueries.selectAll()
 <span class="w"> </span>   .asFlow()
 <span class="gi">+   .mapToList(<ins class="critic">Dispatchers.IO</ins>)</span>
