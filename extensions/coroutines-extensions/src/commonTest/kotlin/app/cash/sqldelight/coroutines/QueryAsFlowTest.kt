@@ -5,12 +5,12 @@ import app.cash.sqldelight.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import app.cash.sqldelight.coroutines.Employee.Companion.USERNAME
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.turbine.test
-import co.touchlab.stately.concurrency.AtomicInt
-import co.touchlab.stately.concurrency.value
-import kotlinx.coroutines.*
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -103,8 +103,8 @@ class QueryAsFlowTest : DbTest {
     }
   }
 
-  private class StopException: Exception()
-  
+  private class StopException : Exception()
+
   @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
       .asFlow()
@@ -122,7 +122,6 @@ class QueryAsFlowTest : DbTest {
             throw StopException()
           }
         } catch (_: StopException) {
-          
         }
         value
       }
