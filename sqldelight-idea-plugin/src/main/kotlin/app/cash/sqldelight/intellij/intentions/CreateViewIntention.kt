@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.intentions
 
+import app.cash.sqldelight.core.lang.psi.StmtIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
@@ -16,6 +17,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import org.jetbrains.kotlin.psi.psiUtil.endOffset
+import org.jetbrains.kotlin.psi.psiUtil.getPrevSiblingIgnoringWhitespaceAndComments
 import org.jetbrains.kotlin.psi.psiUtil.startOffset
 
 internal class CreateViewIntention : BaseElementAtCaretIntentionAction() {
@@ -38,11 +40,18 @@ internal class CreateViewIntention : BaseElementAtCaretIntentionAction() {
 
     val selectStmt = element.parentOfType<SqlCompoundSelectStmt>(true) ?: return
     val stmtList = selectStmt.parentOfType<SqlStmtList>() ?: return
-    val container = stmtList.stmtList.firstOrNull { PsiTreeUtil.isAncestor(it, selectStmt, true) } ?: return
+    val container = stmtList.stmtList.firstOrNull {
+      PsiTreeUtil.isAncestor(it, selectStmt, true)
+    } ?: return
 
     val semi = PsiTreeUtil.findSiblingForward(container, SqlTypes.SEMI, false, null) ?: return
+    val psiElement = container.getPrevSiblingIgnoringWhitespaceAndComments()
 
-    val containerStart = container.startOffset
+    val containerStart = if (psiElement is StmtIdentifier) {
+      psiElement.startOffset
+    } else {
+      container.startOffset
+    }
     val containerEnd = semi.endOffset
     val text = editor.document.getDocumentTextFragment(containerStart, containerEnd)
     val offset = selectStmt.startOffset - containerStart
@@ -53,22 +62,21 @@ internal class CreateViewIntention : BaseElementAtCaretIntentionAction() {
       editor.document.deleteString(containerStart, containerEnd)
 
       val template = templateManager.createTemplate("", "")
+      val expression = TextExpression("some_view")
+
+      template.addTextSegment("CREATE VIEW ")
+      template.addVariable("NAME", expression, true)
+      template.addTextSegment(" AS ${selectStmt.text};\n\n")
+
       template.addTextSegment(text.substring(0, offset))
       template.addTextSegment("SELECT * FROM ")
-      val expression = TextExpression("some_view")
       template.addVariableSegment("NAME")
-      template.addSelectionStartVariable()
       template.addTextSegment(text.substring(selectStmt.endOffset - containerStart))
-
-      template.addTextSegment("\n\nCREATE VIEW ")
-      template.addVariable("NAME", expression, true)
-      template.addTextSegment(" AS ${selectStmt.text};")
-
       templateManager.startTemplate(editor, template)
     }
   }
 
   private fun Document.getDocumentTextFragment(startOffset: Int, endOffset: Int): String {
-    return charsSequence.subSequence(startOffset, endOffset).toString();
+    return charsSequence.subSequence(startOffset, endOffset).toString()
   }
 }

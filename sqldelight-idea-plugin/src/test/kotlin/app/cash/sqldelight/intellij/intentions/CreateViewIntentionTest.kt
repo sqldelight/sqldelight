@@ -2,9 +2,7 @@ package app.cash.sqldelight.intellij.intentions
 
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.intellij.SqlDelightFixtureTestCase
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
-import junit.framework.TestCase
 
 class CreateViewIntentionTest : SqlDelightFixtureTestCase() {
 
@@ -55,11 +53,11 @@ class CreateViewIntentionTest : SqlDelightFixtureTestCase() {
     myFixture.configureByText(
       SqlDelightFileType,
       CREATE_TABLE + """
+        |select:
         |SELECT column_1
         |FROM table_1
         |WHERE column_1 = (
-        |   SELECT co<caret>lumn_2
-        |   FROM table_2
+        |   SELECT co<caret>lumn_2 FROM table_2
         |);
       """.trimMargin(),
     )
@@ -73,14 +71,14 @@ class CreateViewIntentionTest : SqlDelightFixtureTestCase() {
 
     myFixture.checkResult(
       CREATE_TABLE + """
+        |CREATE VIEW some_view AS SELECT column_2 FROM table_2;
+        |
+        |select:
         |SELECT column_1
         |FROM table_1
         |WHERE column_1 = (
         |   SELECT * FROM some_view
         |);
-        |
-        |CREATE VIEW some_view AS SELECT column_2
-        |   FROM table_2;
       """.trimMargin(),
     )
   }
