@@ -27,13 +27,6 @@ class MultiplatformConventions : Plugin<Project> {
         }
 
         if (it is KotlinJsTarget) {
-          it.nodejs {
-            testTask {
-              useMocha {
-                timeout = "5s"
-              }
-            }
-          }
           it.browser {
             testTask {
               useKarma {

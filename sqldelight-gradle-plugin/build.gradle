@@ -112,6 +112,8 @@ tasks.named('test') {
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
+      ":extensions:coroutines-extensions:publishAllPublicationsToInstallLocallyRepository",
   )
   if (HostManager.hostIsMac) {
     dependsOn(

@@ -5,10 +5,10 @@ import app.cash.sqldelight.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import app.cash.sqldelight.coroutines.Employee.Companion.USERNAME
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.turbine.test
-import co.touchlab.stately.concurrency.AtomicInt
-import co.touchlab.stately.concurrency.value
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import kotlin.test.Test
@@ -103,6 +103,8 @@ class QueryAsFlowTest : DbTest {
     }
   }
 
+  private class StopException : Exception()
+
   @Test fun queryCanBeCollectedMoreThanOnce() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES WHERE $USERNAME = 'john'", MAPPER)
       .asFlow()
@@ -110,20 +112,23 @@ class QueryAsFlowTest : DbTest {
 
     val employee = Employee("john", "John Johnson")
 
-    val timesCancelled = AtomicInt(0)
-    repeat(5) {
-      launch {
-        flow.test {
-          assertEquals(employee, awaitItem())
-          cancel()
-          timesCancelled.incrementAndGet()
+    val jobs = (0..5).map { repeat ->
+      async {
+        var value: Int? = null
+        try {
+          flow.collect {
+            assertEquals(employee, it)
+            value = repeat
+            throw StopException()
+          }
+        } catch (_: StopException) {
         }
+        value
       }
     }
 
     db.employee(employee)
-    while (timesCancelled.value != 5) {
-      yield()
-    }
+    val result = jobs.awaitAll()
+    assertEquals(setOf(0, 1, 2, 3, 4, 5), result.toSet())
   }
 }

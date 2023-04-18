@@ -81,7 +81,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.linuxMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-lsqlite3", "-L/usr/lib/x86_64-linux-gnu", "-L/usr/lib", "-L/usr/lib64"]
+      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
     }
   }
 
@@ -89,7 +89,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs", "-lsqlite3"]
+      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
     }
   }
 
@@ -97,7 +97,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys32\\mingw32\\lib", "-L$rootDir\\libs", "-lsqlite3"]
+      linkerOpts += ["-Lc:\\msys32\\mingw32\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
     }
   }
 

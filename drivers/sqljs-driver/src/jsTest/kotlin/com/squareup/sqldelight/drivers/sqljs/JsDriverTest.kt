@@ -7,18 +7,26 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
-import kotlin.js.Promise
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.await
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+@ExperimentalCoroutinesApi
 class JsDriverTest {
 
-  private lateinit var driverPromise: Promise<SqlDriver>
+  private fun testing(action: suspend CoroutineScope.(SqlDriver) -> Unit) = runTest {
+    val driver = initSqlDriver().await()
+    schema.create(driver)
+    action(driver)
+    driver.close()
+  }
+
   private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
     override val version: Int = 1
 
@@ -60,20 +68,7 @@ class JsDriverTest {
     }
   }
 
-  @BeforeTest
-  fun setup() {
-    driverPromise = initSqlDriver().then {
-      schema.create(it)
-      it
-    }
-  }
-
-  @AfterTest
-  fun tearDown() {
-    driverPromise.then { it.close() }
-  }
-
-  @Test fun insert_can_run_multiple_times() = driverPromise.then { driver ->
+  @Test fun insert_can_run_multiple_times() = testing { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
@@ -130,7 +125,7 @@ class JsDriverTest {
     }
   }
 
-  @Test fun query_can_run_multiple_times() = driverPromise.then { driver ->
+  @Test fun query_can_run_multiple_times() = testing { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
@@ -177,7 +172,7 @@ class JsDriverTest {
     )
   }
 
-  @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = driverPromise.then { driver ->
+  @Test fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = testing { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
@@ -206,7 +201,7 @@ class JsDriverTest {
     driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }
 
-  @Test fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = driverPromise.then { driver ->
+  @Test fun types_are_correctly_converted_from_JS_to_Kotlin_and_back() = testing { driver ->
 
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)
