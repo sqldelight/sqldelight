@@ -43,12 +43,7 @@ jobs:
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         run: |
-          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test -x jsBrowserTest
-      - name: Run browser tests
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
-        # not parallel, otherwise nodejs/browser tests fail.
-        run: |
-          ./gradlew jsBrowserTest --no-parallel
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest
