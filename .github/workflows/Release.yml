@@ -32,9 +32,11 @@ jobs:
           java-version: 17
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
 
       - name: Assemble in parallel
-        run: ./gradlew assemble
+        run: ./gradlew assemble dokkaHtml
       - name: Publish the macOS artifacts
         if: matrix.os == 'macOS-latest'
         env:
@@ -73,9 +75,11 @@ jobs:
           java-version: 17
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
 
       - name: Assemble in parallel
-        run: ./gradlew assemble
+        run: ./gradlew assemble dokkaHtml
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
