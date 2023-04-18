@@ -2,7 +2,9 @@ package app.cash.sqldelight.intellij.intentions
 
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.intellij.SqlDelightFixtureTestCase
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
+import junit.framework.TestCase
 
 class CreateViewIntentionTest : SqlDelightFixtureTestCase() {
 

@@ -69,6 +69,6 @@ internal class CreateViewIntention : BaseElementAtCaretIntentionAction() {
   }
 
   private fun Document.getDocumentTextFragment(startOffset: Int, endOffset: Int): String {
-    return charsSequence.subSequence(startOffset, endOffset).toString()
+    return charsSequence.subSequence(startOffset, endOffset).toString();
   }
 }
