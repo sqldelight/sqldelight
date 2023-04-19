@@ -84,7 +84,7 @@ class SqlDelightClassCompletionContributor : JavaClassNameCompletionContributor(
     prefixMatcher: PrefixMatcher,
     scope: GlobalSearchScope,
   ): List<KtClassOrObject> {
-    val index = KotlinFullClassNameIndex.getInstance()
+    val index = KotlinFullClassNameIndex
     return index.getAllKeys(project)
       .filter { fqName ->
         ProgressManager.checkCanceled()

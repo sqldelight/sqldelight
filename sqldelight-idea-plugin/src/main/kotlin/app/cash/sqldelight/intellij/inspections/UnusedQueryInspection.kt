@@ -18,6 +18,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -33,11 +34,12 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
     session: LocalInspectionToolSession,
   ) = ensureReady(session.file) {
     val fileName = "${sqlDelightFile.virtualFile?.queriesName}.kt"
-    val generatedFile = FilenameIndex.getFilesByName(
-      sqlDelightFile.project,
-      fileName,
-      GlobalSearchScope.moduleScope(module),
-    ).firstOrNull() as KtFile? ?: return PsiElementVisitor.EMPTY_VISITOR
+
+    val virtualFile = FilenameIndex.getVirtualFilesByName(fileName, GlobalSearchScope.moduleScope(module))
+      .firstOrNull() ?: return PsiElementVisitor.EMPTY_VISITOR
+    val generatedFile = PsiManager.getInstance(sqlDelightFile.project).findFile(virtualFile) as KtFile?
+      ?: return PsiElementVisitor.EMPTY_VISITOR
+
     val allMethods = generatedFile.classes.firstOrNull()?.methods
 
     if (allMethods == null) {

@@ -10,28 +10,29 @@ import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotificationProvider
 import com.intellij.ui.EditorNotifications
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 import java.awt.Color
+import java.util.function.Function
+import javax.swing.JComponent
 
 class FileIndexingNotification(
   private val project: Project,
-) : EditorNotifications.Provider<EditorNotificationPanel>(), DumbAware {
+) : DumbAware, EditorNotificationProvider {
   internal var unconfiguredReason: UnconfiguredReason = GradleSyncing
     set(value) {
       field = value
       EditorNotifications.getInstance(project).updateAllNotifications()
     }
 
-  private val KEY = Key.create<EditorNotificationPanel>("app.cash.sqldelight.indexing")
+  override fun collectNotificationData(project: Project, file: VirtualFile): Function<in FileEditor, out JComponent?> {
+    return Function { createNotificationPanel(file, project) }
+  }
 
-  override fun getKey() = KEY
-
-  override fun createNotificationPanel(file: VirtualFile, fileEditor: FileEditor, project: Project): EditorNotificationPanel? {
+  private fun createNotificationPanel(file: VirtualFile, project: Project): EditorNotificationPanel? {
     if (file.fileType != SqlDelightFileType && file.fileType != MigrationFileType) return null
 
     val service = SqlDelightProjectService.getInstance(project)

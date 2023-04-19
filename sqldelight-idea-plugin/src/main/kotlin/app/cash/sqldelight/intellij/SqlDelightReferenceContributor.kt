@@ -61,8 +61,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       }
       val project = element.project
       val scope = GlobalSearchScope.allScope(project)
-      val classNameIndex = KotlinFullClassNameIndex.getInstance()
-      val ktClass = { classNameIndex[qName, project, scope].firstOrNull() }
+      val ktClass = { KotlinFullClassNameIndex[qName, project, scope].firstOrNull() }
       val typeAliasFqNameIndex = getKotlinTopLevelTypeAliasFqNameIndex()
       val typeAlias = { typeAliasFqNameIndex[qName, project, scope].firstOrNull() }
       val javaPsiFacade = JavaPsiFacade.getInstance(project)
