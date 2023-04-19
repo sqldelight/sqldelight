@@ -7,9 +7,7 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
-import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.lang.parameterInfo.CreateParameterInfoContext
-import com.intellij.lang.parameterInfo.ParameterInfoContext
 import com.intellij.lang.parameterInfo.ParameterInfoHandlerWithTabActionSupport
 import com.intellij.lang.parameterInfo.ParameterInfoUIContext
 import com.intellij.lang.parameterInfo.ParameterInfoUtils
@@ -19,17 +17,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 
 class SqlDelightParameterInfoHandler : ParameterInfoHandlerWithTabActionSupport<SqlValuesExpression, List<String>, SqlBindExpr> {
-
-  override fun couldShowInLookup(): Boolean {
-    return false
-  }
-
-  override fun getParametersForLookup(
-    item: LookupElement,
-    context: ParameterInfoContext,
-  ): Array<Any> {
-    return emptyArray()
-  }
 
   override fun findElementForParameterInfo(context: CreateParameterInfoContext): SqlValuesExpression? {
     val element = context.file.findElementAt(context.offset)

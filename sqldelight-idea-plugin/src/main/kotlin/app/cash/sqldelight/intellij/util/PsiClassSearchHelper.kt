@@ -14,8 +14,7 @@ import javax.swing.Icon
 internal object PsiClassSearchHelper {
 
   fun getClassesByShortName(shortName: String, project: Project, scope: GlobalSearchScope): List<ImportableType> {
-    val kotlinClasses = KotlinClassShortNameIndex.getInstance()
-      .get(shortName, project, scope)
+    val kotlinClasses = KotlinClassShortNameIndex.get(shortName, project, scope)
       .map(::KotlinType)
       .sortedBy { it.qualifiedName }
 
