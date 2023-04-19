@@ -133,17 +133,19 @@ private class SqlDelightFileViewProvider(
     // Alert other files that rely on tables in this file to synchronize.
     threadPool.schedule(
       {
-        ReadAction.nonBlocking {
-          file.findChildrenOfType<TableElement>().forEach { queryable ->
-            val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
-              .mapNotNull { it.element.containingFile as? SqlDelightFile }
-              .distinct()
+        ReadAction.nonBlocking(
+          Callable {
+            file.findChildrenOfType<TableElement>().forEach { queryable ->
+              val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
+                .mapNotNull { it.element.containingFile as? SqlDelightFile }
+                .distinct()
 
-            affectedFiles.forEach {
-              (it.viewProvider as? SqlDelightFileViewProvider)?.contentsSynchronized(false)
+              affectedFiles.forEach {
+                (it.viewProvider as? SqlDelightFileViewProvider)?.contentsSynchronized(false)
+              }
             }
-          }
-        }.expireWhen(thisCondition)
+          },
+        ).expireWhen(thisCondition)
           .submit(NonUrgentExecutor.getInstance())
       },
       1,
