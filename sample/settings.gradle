@@ -65,6 +65,7 @@ includeBuild('..') {
     substitute module("app.cash.sqldelight:gradle-plugin") using project(":sqldelight-gradle-plugin")
     substitute module("app.cash.sqldelight:sqlite-3-18-dialect") using project(":dialects:sqlite-3-18")
     substitute module("app.cash.sqldelight:compiler-env") using project(":sqldelight-compiler:environment")
+    substitute module("app.cash.sqldelight:migration-env") using project(":sqlite-migrations:environment")
     substitute module("app.cash.sqldelight:async-extensions") using project(":extensions:async-extensions")
   }
 }
