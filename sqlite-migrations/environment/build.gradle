@@ -20,6 +20,7 @@ tasks.named("jar", Jar) {
 
 tasks.named("shadowJar") {
   archiveClassifier.set("")
+  configurations = [project.configurations.shadow]
 }
 
 configurations {
