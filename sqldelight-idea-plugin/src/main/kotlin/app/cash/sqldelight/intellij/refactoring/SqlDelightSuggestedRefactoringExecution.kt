@@ -2,7 +2,6 @@ package app.cash.sqldelight.intellij.refactoring
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
-import app.cash.sqldelight.core.lang.MIGRATION_EXTENSION
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.SqlDelightFile
@@ -167,7 +166,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   }
 
   private fun Project.createMigrationFile(migration: String, version: Int): MigrationFile {
-    val fileName = "$version.${MIGRATION_EXTENSION}"
+    val fileName = "$version.${app.cash.sqldelight.core.lang.MIGRATION_EXTENSION}"
     return PsiFileFactory.getInstance(this)
       .createFileFromText(fileName, MigrationFileType, migration) as MigrationFile
   }

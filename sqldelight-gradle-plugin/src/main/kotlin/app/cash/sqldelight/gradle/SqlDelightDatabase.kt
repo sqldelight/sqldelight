@@ -2,10 +2,8 @@ package app.cash.sqldelight.gradle
 
 import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.capitalize
-import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MIGRATION_EXTENSION
 import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
-import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.kotlin.sources
 import app.cash.sqldelight.gradle.squash.MigrationSquashTask
@@ -13,8 +11,8 @@ import groovy.lang.GroovyObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.FileCollection
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
@@ -223,7 +221,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
         it.outputDirectory = source.outputDir
         it.source(sourceFiles)
-        it.include("**${File.separatorChar}*.${SQLDELIGHT_EXTENSION}")
+        it.include("**${File.separatorChar}*.$SQLDELIGHT_EXTENSION")
         it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"

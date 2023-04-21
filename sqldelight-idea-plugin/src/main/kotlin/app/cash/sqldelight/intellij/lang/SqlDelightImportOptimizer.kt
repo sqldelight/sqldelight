@@ -1,6 +1,5 @@
 package app.cash.sqldelight.intellij.lang
 
-import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
@@ -32,7 +31,7 @@ class SqlDelightImportOptimizer : ImportOptimizer {
       .joinToString("\n")
     val factory = PsiFileFactory.getInstance(file.project)
     val dummyFile = factory.createFileFromText(
-      "_Dummy_.${SQLDELIGHT_EXTENSION}",
+      "_Dummy_.${app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION}",
       SqlDelightFileType,
       remainingImports,
     )
