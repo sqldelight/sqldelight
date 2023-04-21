@@ -287,7 +287,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations.get()
-        it.classpath.setFrom(configuration, intellijEnv)
+        it.classpath.setFrom(configuration, intellijEnv, migrationEnv)
       }
     }
     project.tasks.named("check").configure {
