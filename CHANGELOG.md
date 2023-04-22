@@ -287,6 +287,14 @@ The currently supported dialects are `mysql-dialect`, `postgresql-dialect`, `hsq
 - [Compiler] Emit annotations on properties instead of types (#2798 by [Alexander Perfilyev][aperfilyev])
 - [Compiler] Sort arguments before passing to a Query subtype (#2379 by [Alexander Perfilyev][aperfilyev])
 
+## [1.5.5] - 2023-01-20
+
+This is a compatibility release for Kotlin 1.8 and IntelliJ 2021+, supporting JDK 17.
+
+## [1.5.4] - 2022-10-06
+
+This is a compatibility update for Kotlin 1.7.20 and AGP 7.3.0.
+
 ## [1.5.3] - 2021-11-23
 ### Added
 - [JDBC Driver] Open JdbcDriver for 3rd party driver implementations (#2672 by [Philip Wedemann][hfhbd])
