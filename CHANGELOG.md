@@ -26,6 +26,14 @@
 - [Compiler] Fix SelectQueryGenerator to support bind expression without parenthesis (by [Doogie Min][bellatoris])
 - [Compiler] Fix duplicate generation of ${name}Indexes variables when using transactions (by [Andreas Sacher][sachera])
 
+## [1.5.5] - 2023-01-20
+
+This is a compatibility release for Kotlin 1.8 and IntelliJ 2021+, supporting JDK 17.
+
+## [1.5.4] - 2022-10-06
+
+This is a compatibility update for Kotlin 1.7.20 and AGP 7.3.0.
+
 ## [2.0.0-alpha04] - 2022-10-03
 
 ### Breaking Changes
@@ -286,14 +294,6 @@ The currently supported dialects are `mysql-dialect`, `postgresql-dialect`, `hsq
 - [Compiler] Fix packageName for migration adapter (by [Philip Wedemann][hfhbd])
 - [Compiler] Emit annotations on properties instead of types (#2798 by [Alexander Perfilyev][aperfilyev])
 - [Compiler] Sort arguments before passing to a Query subtype (#2379 by [Alexander Perfilyev][aperfilyev])
-
-## [1.5.5] - 2023-01-20
-
-This is a compatibility release for Kotlin 1.8 and IntelliJ 2021+, supporting JDK 17.
-
-## [1.5.4] - 2022-10-06
-
-This is a compatibility update for Kotlin 1.7.20 and AGP 7.3.0.
 
 ## [1.5.3] - 2021-11-23
 ### Added
