@@ -272,7 +272,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations.get()
-        it.classpath.setFrom(configuration, intellijEnv, migrationEnv)
+        it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 
     if (schemaOutputDirectory.getOrNull() != null) {
@@ -287,7 +287,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
         it.properties = getProperties()
         it.verifyMigrations = verifyMigrations.get()
-        it.classpath.setFrom(configuration, intellijEnv, migrationEnv)
+        it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
     }
     project.tasks.named("check").configure {
@@ -312,7 +312,7 @@ abstract class SqlDelightDatabase @Inject constructor(
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
       it.properties = getProperties()
-      it.classpath.setFrom(configuration, intellijEnv)
+      it.classpath.setFrom(intellijEnv, configuration)
     }
   }
 
@@ -328,7 +328,7 @@ abstract class SqlDelightDatabase @Inject constructor(
       it.group = SqlDelightPlugin.GROUP
       it.description = "Squash migrations into a single file for ${source.name} $name."
       it.properties = getProperties()
-      it.classpath.setFrom(configuration, intellijEnv)
+      it.classpath.setFrom(intellijEnv, configuration)
     }
   }
 
