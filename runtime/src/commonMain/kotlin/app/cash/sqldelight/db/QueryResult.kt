@@ -1,5 +1,7 @@
 package app.cash.sqldelight.db
 
+import kotlin.jvm.JvmInline
+
 /**
  * The returned [value] is the result of a database query or other database operation.
  *
@@ -24,11 +26,13 @@ sealed interface QueryResult<T> {
 
   suspend fun await(): T
 
-  data class Value<T>(override val value: T) : QueryResult<T> {
+  @JvmInline
+  value class Value<T>(override val value: T) : QueryResult<T> {
     override suspend fun await() = value
   }
 
-  class AsyncValue<T>(private inline val getter: suspend () -> T) : QueryResult<T> {
+  @JvmInline
+  value class AsyncValue<T>(private inline val getter: suspend () -> T) : QueryResult<T> {
     override suspend fun await() = getter()
   }
 
