@@ -49,7 +49,7 @@ mkdocs-material-extensions==1.1.1
     #   mkdocs-material
 packaging==23.1
     # via mkdocs
-pygments==2.15.0
+pygments==2.15.1
     # via mkdocs-material
 pymdown-extensions==9.11
     # via mkdocs-material
@@ -72,7 +72,7 @@ requests==2.28.2
     # via mkdocs-material
 six==1.16.0
     # via python-dateutil
-termcolor==2.2.0
+termcolor==2.3.0
     # via mkdocs-macros-plugin
 urllib3==1.26.15
     # via requests
