@@ -2,8 +2,12 @@ package app.cash.sqldelight.intellij.lang.completion
 
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.SqlDelightLanguage
+import app.cash.sqldelight.core.lang.util.findChildOfType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmtList
+import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler
 import com.intellij.codeInsight.completion.CompletionContributor
@@ -12,7 +16,9 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.CompletionType
+import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.icons.AllIcons
 import com.intellij.lang.ASTNode
 import com.intellij.lang.PsiBuilder
 import com.intellij.lang.parser.GeneratedParserUtilBase
@@ -25,12 +31,50 @@ import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.source.tree.TreeUtil
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 
 class SqlDelightKeywordCompletionContributor : CompletionContributor() {
 
   init {
     extend(CompletionType.BASIC, psiElement(), SqliteCompletionProvider())
+    extend(CompletionType.BASIC, psiElement().afterLeaf(psiElement(SqlTypes.JOIN)), JoinClauseCompletionProvider())
+  }
+
+  class JoinClauseCompletionProvider : CompletionProvider<CompletionParameters>() {
+    override fun addCompletions(
+      parameters: CompletionParameters,
+      context: ProcessingContext,
+      result: CompletionResultSet,
+    ) {
+      val stmt = parameters.position.parentOfType<SqlCompoundSelectStmt>() ?: return
+      val tableName = stmt.findChildOfType<SqlTableName>() ?: return
+      val createTableStmt =
+        tableName.reference?.resolve()?.parentOfType<SqlCreateTableStmt>() ?: return
+      val tableConstraints = createTableStmt.tableConstraintList
+
+      for (constraint in tableConstraints) {
+        val columnNameList = constraint.columnNameList
+        val foreignKeyClause = constraint.foreignKeyClause ?: continue
+        val foreignTable = foreignKeyClause.foreignTable
+        val foreignColumNameList = foreignKeyClause.columnNameList
+
+        val columnExpr = columnNameList.zip(foreignColumNameList)
+          .joinToString(separator = " AND ") { (first, second) ->
+            "${tableName.name}.${first.name} = ${foreignTable.name}.${second.name}"
+          }
+
+        val lookupElement = PrioritizedLookupElement.withPriority(
+          LookupElementBuilder.create("${foreignTable.name} ON $columnExpr")
+            .withIcon(AllIcons.Nodes.DataTables)
+            .withInsertHandler(AddSpaceInsertHandler.INSTANCE),
+          1000.0,
+        )
+        result
+          .caseInsensitive()
+          .addElement(lookupElement)
+      }
+    }
   }
 
   class SqliteCompletionProvider : CompletionProvider<CompletionParameters>() {
