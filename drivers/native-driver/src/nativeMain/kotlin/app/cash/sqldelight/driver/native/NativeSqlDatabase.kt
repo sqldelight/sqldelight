@@ -63,14 +63,12 @@ sealed class ConnectionWrapper : SqlDriver {
   final override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ): QueryResult<R> = QueryResult.Value(
-    accessStatement(true, identifier, sql, binders) { statement ->
-      mapper(SqliterSqlCursor(statement.query()))
-    },
-  )
+  ): QueryResult<R> = accessStatement(true, identifier, sql, binders) { statement ->
+    mapper(SqliterSqlCursor(statement.query()))
+  }
 }
 
 /**

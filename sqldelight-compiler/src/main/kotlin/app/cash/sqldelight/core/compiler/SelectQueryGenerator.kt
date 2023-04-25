@@ -305,9 +305,11 @@ class SelectQueryGenerator(
 
     val genericResultType = TypeVariableName("R")
     val createStatementFunction = FunSpec.builder(EXECUTE_METHOD)
-      .addModifiers(OVERRIDE)
+      .addModifiers(
+        OVERRIDE,
+      )
       .addTypeVariable(genericResultType)
-      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(CURSOR_TYPE), returnType = genericResultType))
+      .addParameter(MAPPER_NAME, LambdaTypeName.get(parameters = arrayOf(CURSOR_TYPE), returnType = QUERY_RESULT_TYPE.parameterizedBy(genericResultType)))
       .returns(QUERY_RESULT_TYPE.parameterizedBy(genericResultType))
       .addCode(executeBlock())
 

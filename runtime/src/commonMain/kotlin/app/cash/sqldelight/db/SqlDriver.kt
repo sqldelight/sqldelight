@@ -40,7 +40,7 @@ interface SqlDriver : Closeable {
   fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)? = null,
   ): QueryResult<R>

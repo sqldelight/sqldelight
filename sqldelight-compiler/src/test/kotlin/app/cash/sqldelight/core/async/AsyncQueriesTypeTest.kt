@@ -201,7 +201,7 @@ class AsyncQueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data

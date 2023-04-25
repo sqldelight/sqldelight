@@ -94,7 +94,7 @@ private class SimpleQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType,
 ) : Query<RowType>(mapper) {
-  override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
+  override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
     return driver.executeQuery(identifier, query, mapper, 0, null)
   }
 
@@ -117,7 +117,7 @@ private class SimpleExecutableQuery<out RowType : Any>(
   private val query: String,
   mapper: (SqlCursor) -> RowType,
 ) : ExecutableQuery<RowType>(mapper) {
-  override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
+  override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
     return driver.executeQuery(identifier, query, mapper, 0, null)
   }
 
@@ -166,15 +166,15 @@ abstract class ExecutableQuery<out RowType : Any>(
    *
    * The cursor is closed automatically after the block returns.
    */
-  abstract fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R>
+  abstract fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R>
 
   /**
    * @return The result set of the underlying SQL statement as a list of [RowType].
    */
   fun executeAsList(): List<RowType> = execute { cursor ->
     val result = mutableListOf<RowType>()
-    while (cursor.next()) result.add(mapper(cursor))
-    result
+    while (cursor.next().value) result.add(mapper(cursor))
+    QueryResult.Value(result)
   }.value
 
   /**
@@ -196,9 +196,9 @@ abstract class ExecutableQuery<out RowType : Any>(
    * @throws IllegalStateException if when executed this query has multiple rows in its result set.
    */
   fun executeAsOneOrNull(): RowType? = execute { cursor ->
-    if (!cursor.next()) return@execute null
+    if (!cursor.next().value) return@execute QueryResult.Value(null)
     val value = mapper(cursor)
-    check(!cursor.next()) { "ResultSet returned more than 1 row for $this" }
-    value
+    check(!cursor.next().value) { "ResultSet returned more than 1 row for $this" }
+    QueryResult.Value(value)
   }.value
 }

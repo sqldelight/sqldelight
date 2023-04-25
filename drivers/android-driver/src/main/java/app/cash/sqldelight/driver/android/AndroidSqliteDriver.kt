@@ -141,7 +141,7 @@ class AndroidSqliteDriver private constructor(
     createStatement: () -> AndroidStatement,
     binders: (SqlPreparedStatement.() -> Unit)?,
     result: AndroidStatement.() -> T,
-  ): QueryResult<T> {
+  ): QueryResult.Value<T> {
     var statement: AndroidStatement? = null
     if (identifier != null) {
       statement = statements.remove(identifier)
@@ -171,10 +171,10 @@ class AndroidSqliteDriver private constructor(
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
+  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }.value
 
   override fun close() {
     statements.evictAll()
@@ -303,7 +303,7 @@ private class AndroidQuery(
 private class AndroidCursor(
   private val cursor: Cursor,
 ) : SqlCursor {
-  override fun next() = cursor.moveToNext()
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(cursor.moveToNext())
   override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)
   override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
   override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)

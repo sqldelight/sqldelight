@@ -26,7 +26,7 @@ interface SqlCursor {
    * @return true if the cursor successfully moved to a new row, false if there was no row to
    *   iterate to.
    */
-  fun next(): Boolean
+  fun next(): QueryResult<Boolean>
 
   /**
    * @return The string or null value of column [index] for the current row of the result set.

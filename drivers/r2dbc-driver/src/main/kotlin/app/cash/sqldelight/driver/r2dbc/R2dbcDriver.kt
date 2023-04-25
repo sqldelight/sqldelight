@@ -17,7 +17,7 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
@@ -32,7 +32,7 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
         List(rowMetadata.columnMetadatas.size) { index -> row.get(index) }
       }.asFlow().toList()
 
-      return@AsyncValue mapper(R2dbcCursor(rowSet))
+      return@AsyncValue mapper(R2dbcCursor(rowSet)).await()
     }
   }
 
@@ -157,7 +157,7 @@ class R2dbcCursor(val rowSet: List<List<Any?>>) : SqlCursor {
   var row = -1
     private set
 
-  override fun next(): Boolean = ++row < rowSet.size
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(++row < rowSet.size)
 
   override fun getString(index: Int): String? = rowSet[row][index] as String?
 

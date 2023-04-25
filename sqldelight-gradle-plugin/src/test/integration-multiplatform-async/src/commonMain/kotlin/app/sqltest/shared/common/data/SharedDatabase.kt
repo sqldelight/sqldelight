@@ -4,6 +4,7 @@ import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitMigrate
 import app.cash.sqldelight.async.coroutines.awaitQuery
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.sqltest.shared.SqlTestDb
 import kotlinx.coroutines.sync.Mutex
@@ -50,7 +51,7 @@ class SharedDatabase(private val driverFactory: DriverFactory) {
         identifier = null,
         sql = "PRAGMA $versionPragma",
         mapper = { cursor ->
-          if (cursor.next()) {
+          if (cursor.next().await()) {
             cursor.getLong(0)?.toInt()
           } else {
             null
@@ -78,11 +79,7 @@ class SharedDatabase(private val driverFactory: DriverFactory) {
         identifier = null,
         sql = "PRAGMA $versionPragma",
         mapper = { cursor ->
-          if (cursor.next()) {
-            cursor.getLong(0)?.toInt()
-          } else {
-            null
-          }
+          QueryResult.Value(if (cursor.next().value) cursor.getLong(0)?.toInt() else null)
         },
         parameters = 0,
       ).await() ?: 0
