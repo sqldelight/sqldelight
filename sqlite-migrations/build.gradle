@@ -15,3 +15,7 @@ dependencies {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+tasks.named('dokkaHtmlMultiModule') {
+  it.enabled = false
+}
