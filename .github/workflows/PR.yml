@@ -33,6 +33,8 @@ jobs:
           java-version: 17
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
 
       - name: Run spotless
         run: ./gradlew spotlessCheck
