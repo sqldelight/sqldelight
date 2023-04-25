@@ -1,5 +1,6 @@
 package app.cash.sqldelight.async.coroutines
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
@@ -8,10 +9,10 @@ import app.cash.sqldelight.db.SqlSchema
 suspend fun <R> SqlDriver.awaitQuery(
   identifier: Int?,
   sql: String,
-  mapper: (SqlCursor) -> R,
+  mapper: suspend (SqlCursor) -> R,
   parameters: Int,
   binders: (SqlPreparedStatement.() -> Unit)? = null,
-): R = executeQuery<R>(identifier, sql, mapper, parameters, binders).await()
+): R = executeQuery<R>(identifier, sql, { QueryResult.AsyncValue { mapper(it) } }, parameters, binders).await()
 
 suspend fun SqlDriver.await(
   identifier: Int?,

@@ -31,6 +31,7 @@ import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -518,7 +519,7 @@ class OffsetQueryPagingSourceTest : DbTest {
       TestItem(cursor.getLong(0)!!)
     },
   ) {
-    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
       bindLong(0, limit)
       bindLong(1, offset)
     }

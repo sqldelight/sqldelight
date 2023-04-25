@@ -20,7 +20,7 @@ abstract class BaseConcurrencyTest {
     return myDriver.executeQuery(
       0,
       "SELECT count(*) FROM test",
-      { it.next(); it.getLong(0)!! },
+      { it.next(); QueryResult.Value(it.getLong(0)!!) },
       0,
     ).value
   }

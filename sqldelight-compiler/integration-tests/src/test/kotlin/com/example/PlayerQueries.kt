@@ -208,7 +208,7 @@ public class PlayerQueries(
     public val shoots: Shoots,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         transactionWithResult {
       driver.execute(-452007405, """
           |INSERT INTO player
@@ -241,7 +241,7 @@ public class PlayerQueries(
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(null, """
     |SELECT *
     |FROM player
@@ -265,7 +265,7 @@ public class PlayerQueries(
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
+    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
           |SELECT *

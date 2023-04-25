@@ -1,6 +1,7 @@
 package app.cash.sqldelight.rx2
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.rx2.Employee.Companion.SELECT_EMPLOYEES
 import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_EMPLOYEE
@@ -13,7 +14,7 @@ class QueryObservableTest {
     val error = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ throw AssertionError("Must not be called") }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R) = throw error
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = throw error
       override fun addListener(listener: Listener) = throw error
       override fun removeListener(listener: Listener) = throw error
     }
@@ -42,7 +43,7 @@ class QueryObservableTest {
     val queriesWithListeners = mutableListOf<Query.Listener>()
 
     val query = object : Query<Any>({ throw AssertionError("Must not be called") }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R) = error("Must not be called")
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = error("Must not be called")
       override fun addListener(listener: Listener) = error("Must not be called")
       override fun removeListener(listener: Listener) = error("Must not be called")
     }

@@ -1,5 +1,6 @@
 package com.example.db
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.example.db.Database.Companion.Schema
@@ -49,9 +50,9 @@ class DbHelper(
 
   private var version: Int
     get() {
-      fun mapper(cursor: SqlCursor): Int {
-        check(cursor.next())
-        return cursor.getLong(0)!!.toInt()
+      fun mapper(cursor: SqlCursor): QueryResult.Value<Int> {
+        check(cursor.next().value)
+        return QueryResult.Value(cursor.getLong(0)!!.toInt())
       }
       return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, 0, null).value
     }

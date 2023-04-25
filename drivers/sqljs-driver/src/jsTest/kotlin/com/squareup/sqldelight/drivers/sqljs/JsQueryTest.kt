@@ -173,7 +173,7 @@ class JsQueryTest {
 
   private fun SqlDriver.testDataQuery(): Query<TestData> {
     return object : Query<TestData>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
         return executeQuery(0, "SELECT * FROM test", mapper, 0, null)
       }
 

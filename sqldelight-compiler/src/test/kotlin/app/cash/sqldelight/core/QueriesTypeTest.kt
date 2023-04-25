@@ -198,7 +198,7 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -532,7 +532,7 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id}, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -688,7 +688,7 @@ class QueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("search"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${offsets.id}, ""${'"'}
       |    |SELECT id, offsets(search)
       |    |FROM search

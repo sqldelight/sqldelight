@@ -829,7 +829,7 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("song"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(null,
       |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
       |        1) {
@@ -928,7 +928,7 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("userEntity"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${result.compiledFile.namedQueries[0].id}, ""${'"'}
       |    |WITH inserted_ids AS (
       |    |  INSERT INTO userEntity(slack_user_id)
@@ -1042,7 +1042,7 @@ class InterfaceGeneration {
       |      driver.removeListener(listener, arrayOf("item"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${query.id}, ""${'"'}
       |    |WITH RECURSIVE
       |    |descendants AS (

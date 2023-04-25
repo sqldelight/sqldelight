@@ -31,7 +31,7 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
         return db.executeQuery(null, query, mapper, 0)
       }
 
@@ -143,7 +143,7 @@ data class Employee(val username: String, val name: String) {
   }
 }
 
-private fun getLong(cursor: SqlCursor): Long {
-  check(cursor.next())
-  return cursor.getLong(0)!!
+private fun getLong(cursor: SqlCursor): QueryResult<Long> {
+  check(cursor.next().value)
+  return QueryResult.Value(cursor.getLong(0)!!)
 }
