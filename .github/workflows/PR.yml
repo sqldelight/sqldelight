@@ -43,8 +43,6 @@ jobs:
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
-        env:
-          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
 
       - name: Run spotless
         run: ./gradlew spotlessCheck
