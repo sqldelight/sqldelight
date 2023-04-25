@@ -37,7 +37,7 @@ jobs:
       - name: Run spotless
         run: ./gradlew spotlessCheck
       - name: Assemble parallel
-        run: ./gradlew assemble
+        run: ./gradlew assemble dokkaHtml
 
       # Linux tests
       - name: Run gradle tests
