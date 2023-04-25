@@ -33,7 +33,7 @@ class TestDb(
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
     return object : Query<T>(mapper) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> {
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
         return db.executeQuery(null, query, mapper, 0, null)
       }
 
@@ -71,9 +71,9 @@ class TestDb(
     notify(TABLE_EMPLOYEE)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
     return transactionWithResult {
-      val mapper: (SqlCursor) -> Long = {
+      val mapper: (SqlCursor) -> QueryResult<Long> = {
         it.next()
-        it.getLong(0)!!
+        QueryResult.Value(it.getLong(0)!!)
       }
       db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0).value
     }
@@ -98,9 +98,9 @@ class TestDb(
     notify(TABLE_MANAGER)
     // last_insert_rowid is connection-specific, so run it in the transaction thread/connection
     return transactionWithResult {
-      val mapper: (SqlCursor) -> Long = {
+      val mapper: (SqlCursor) -> QueryResult<Long> = {
         it.next()
-        it.getLong(0)!!
+        QueryResult.Value(it.getLong(0)!!)
       }
       db.executeQuery(2, "SELECT last_insert_rowid()", mapper, 0).value
     }

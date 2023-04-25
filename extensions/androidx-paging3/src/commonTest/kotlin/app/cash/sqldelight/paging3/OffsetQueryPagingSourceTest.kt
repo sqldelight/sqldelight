@@ -518,7 +518,7 @@ class OffsetQueryPagingSourceTest : DbTest {
       TestItem(cursor.getLong(0)!!)
     },
   ) {
-    override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = driver.executeQuery(20, "SELECT id FROM TestItem LIMIT ? OFFSET ?", mapper, 2) {
       bindLong(0, limit)
       bindLong(1, offset)
     }
