@@ -2092,7 +2092,7 @@
      <a href="../extensions/async-extensions/app.cash.sqldelight.async.coroutines/await-migrate.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon function"></span><span class="nav-link-child"><span>await</span><wbr><span><span>Migrate()</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="async-extensions-nav-submenu-0-8" pageid="async-extensions::app.cash.sqldelight.async.coroutines//awaitQuery/app.cash.sqldelight.db.SqlDriver#kotlin.Int?#kotlin.String#kotlin.Function1[app.cash.sqldelight.db.SqlCursor,TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Function1[app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration//-410779366">
+   <div class="sideMenuPart" id="async-extensions-nav-submenu-0-8" pageid="async-extensions::app.cash.sqldelight.async.coroutines//awaitQuery/app.cash.sqldelight.db.SqlDriver#kotlin.Int?#kotlin.String#kotlin.coroutines.SuspendFunction1[app.cash.sqldelight.db.SqlCursor,TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Function1[app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit]?/PointingToDeclaration//-410779366">
     <div class="overview">
      <a href="../extensions/async-extensions/app.cash.sqldelight.async.coroutines/await-query.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon function"></span><span class="nav-link-child"><span>await</span><wbr><span><span>Query()</span></span></span></span></a>
     </div>
