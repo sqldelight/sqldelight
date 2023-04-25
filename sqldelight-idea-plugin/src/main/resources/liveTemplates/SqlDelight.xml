@@ -68,4 +68,12 @@
       <option name="SQLDELIGHT" value="true" />
     </context>
   </template>
+  <template name="view" value="CREATE VIEW $view$ AS SELECT * FROM $table$$END$;"
+      description="new view definition" toReformat="false" toShortenFQNames="true">
+    <variable name="view" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="table" expression="complete()" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="SQLDELIGHT" value="true"/>
+    </context>
+  </template>
 </templateSet>

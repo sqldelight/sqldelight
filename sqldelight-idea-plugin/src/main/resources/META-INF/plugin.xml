@@ -139,6 +139,10 @@
       <className>app.cash.sqldelight.intellij.intentions.QualifyColumnNameIntention</className>
       <category>SQLDelight</category>
     </intentionAction>
+    <intentionAction>
+      <className>app.cash.sqldelight.intellij.intentions.CreateViewIntention</className>
+      <category>SQLDelight</category>
+    </intentionAction>
 
     <copyPastePostProcessor
         implementation="app.cash.sqldelight.intellij.SqlDelightCopyPasteProcessor"/>
