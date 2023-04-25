@@ -13,6 +13,7 @@ import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
@@ -65,22 +66,16 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @TaskAction
   fun verifyMigrations() {
-    runCatching {
-      val workQueue = workQueue()
-      workQueue.submit(VerifyMigrationAction::class.java) {
-        it.workingDirectory.set(workingDirectory)
-        it.projectName.set(projectName)
-        it.properties.set(properties)
-        it.verifyMigrations.set(verifyMigrations)
-        it.compilationUnit.set(compilationUnit)
-        it.verifyDefinitions.set(verifyDefinitions)
-        it.driverProperties.set(driverProperties.get())
-      }
-      workQueue.await()
-    }.onSuccess {
-      getDummyOutputFile().createNewFile()
-    }.onFailure {
-      throw it
+    val workQueue = workQueue()
+    workQueue.submit(VerifyMigrationAction::class.java) {
+      it.workingDirectory.set(workingDirectory)
+      it.projectName.set(projectName)
+      it.properties.set(properties)
+      it.verifyMigrations.set(verifyMigrations)
+      it.compilationUnit.set(compilationUnit)
+      it.verifyDefinitions.set(verifyDefinitions)
+      it.driverProperties.set(driverProperties.get())
+      it.outputFile.set(getDummyOutputFile())
     }
   }
 
@@ -100,6 +95,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     val verifyMigrations: Property<Boolean>
     val verifyDefinitions: Property<Boolean>
     val driverProperties: MapProperty<String, String>
+    val outputFile: RegularFileProperty
   }
 
   abstract class VerifyMigrationAction : WorkAction<VerifyMigrationWorkParameters> {
@@ -141,6 +137,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
 
       checkForGaps()
+      parameters.outputFile.get().asFile.createNewFile()
     }
 
     private fun createCurrentDb(): CatalogDatabase {

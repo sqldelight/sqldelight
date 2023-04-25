@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.shadow)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("java-gradle-plugin")
@@ -35,53 +34,20 @@ gradlePlugin {
   testSourceSets(sourceSets.test, sourceSets.dockerTest, sourceSets.grammarkitTest)
 }
 
-configurations {
-  shade
-}
-configurations.compileOnly.extendsFrom(configurations.shade)
 
 dependencies {
-  api(libs.sqlPsi) {
-    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+  api projects.sqldelightCompiler
+  compileOnly(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
   }
-
-  implementation libs.sqliteJdbc
-  implementation libs.objectDiff
-  implementation libs.schemaCrawler.tools
-  implementation libs.schemaCrawler.sqlite
 
   implementation projects.sqliteMigrations
-  api projects.sqldelightCompiler
-  // Only shade the minimum IntelliJ libs.
-  shade libs.intellij.core
-  // Analysis has no dependencies.
-  shade libs.intellij.analysis
-  shade (libs.intellij.lang) {
-    transitive = false
-  }
-  shade(libs.intellij.coreImpl) {
-    transitive = false
-  }
-  shade(libs.intellij.projectModel) {
-    transitive = false
-  }
-  shade(libs.intellij.projectModelImpl) {
-    transitive = false
-  }
-  shade(libs.intellij.analysisImpl) {
-    transitive = false
-  }
-  shade(libs.intellij.testFramework) {
-    transitive = false
-  }
-  shade(libs.intellij.langImpl) {
-    transitive = false
+  compileOnly(projects.sqliteMigrations.environment) {
+    targetConfiguration = "shadow"
   }
 
   implementation libs.kotlin.plugin
   compileOnly libs.android.plugin
-
-  implementation libs.jna
 
   testImplementation libs.junit
   testImplementation libs.truth
@@ -114,6 +80,8 @@ tasks.named('test') {
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
       ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
       ":extensions:coroutines-extensions:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
   )
   if (HostManager.hostIsMac) {
     dependsOn(
@@ -155,6 +123,8 @@ tasks.named('dockerTest') {
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
       ":drivers:r2dbc-driver:publishAllPublicationsToInstallLocallyRepository",
       ":extensions:async-extensions:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
   )
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
@@ -170,6 +140,8 @@ tasks.named("grammarkitTest") {
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
   )
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(17)
@@ -179,36 +151,6 @@ tasks.named("grammarkitTest") {
 
 tasks.named('validatePlugins') {
   enableStricterValidation = true
-}
-
-tasks.named("shadowJar") {
-  archiveClassifier.set("")
-  configurations = [project.configurations.shade]
-
-  minimize {
-    exclude(dependency(libs.intellij.testFramework.get()))
-    exclude(dependency(libs.intellij.langImpl.get()))
-  }
-
-  include '*.jar'
-  include '**/*.class'
-  include 'META-INF/gradle-plugins/*'
-  include "misc/*.properties"
-  include 'messages/*.properties'
-  include "org/intellij/**"
-  include "com/intellij/**"
-  include "org/picocontainer/**"
-  include "it/unimi/**"
-  include "org/jdom/**"
-  include "com/github/benmanes/**"
-
-  exclude '/groovy**'
-  exclude '/kotlin/**'
-}
-
-artifacts {
-  runtimeOnly(tasks.named('shadowJar'))
-  archives(tasks.named('shadowJar'))
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

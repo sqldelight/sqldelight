@@ -7,12 +7,11 @@ plugins {
 
 dependencies {
   // These dependencies will not be shadowed by sqldelight-gradle-plugin
-  compileOnly libs.sqliteJdbc
-  compileOnly libs.objectDiff
-  compileOnly libs.schemaCrawler.tools
-  compileOnly libs.schemaCrawler.sqlite
+  compileOnly(projects.sqliteMigrations.environment) {
+    targetConfiguration = "shadow"
+  }
 
-  implementation libs.sqlPsi
+  compileOnly libs.sqlPsi
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

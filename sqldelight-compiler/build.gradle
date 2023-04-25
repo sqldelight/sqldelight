@@ -25,21 +25,21 @@ grammarKit {
 }
 
 dependencies {
-  api libs.sqlPsi
   api projects.sqldelightCompiler.dialect
 
-  implementation libs.kotlinPoet
   implementation libs.jgrapht
 
   compileOnly libs.sqliteJdbc
-  compileOnly libs.intellij.testFramework
+  compileOnly(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
+  }
 
   testImplementation libs.burst
   testImplementation libs.sqliteJdbc
-  testImplementation (libs.intellij.testFramework) {
-    exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-core"
+  testImplementation(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
   }
-  testImplementation libs.kotlin.coroutines.core
+
   testImplementation libs.kotlin.test.junit
   testImplementation libs.truth
   testImplementation projects.testUtil

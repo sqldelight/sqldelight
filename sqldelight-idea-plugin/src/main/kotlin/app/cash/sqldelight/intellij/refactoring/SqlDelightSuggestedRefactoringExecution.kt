@@ -166,7 +166,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
   }
 
   private fun Project.createMigrationFile(migration: String, version: Int): MigrationFile {
-    val fileName = "$version.${MigrationFileType.EXTENSION}"
+    val fileName = "$version.${app.cash.sqldelight.core.lang.MIGRATION_EXTENSION}"
     return PsiFileFactory.getInstance(this)
       .createFileFromText(fileName, MigrationFileType, migration) as MigrationFile
   }

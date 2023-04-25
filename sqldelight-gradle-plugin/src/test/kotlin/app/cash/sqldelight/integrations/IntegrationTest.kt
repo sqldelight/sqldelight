@@ -241,6 +241,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
       .withArguments("clean", "test", "--stacktrace")
+      .withDebug(true)
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

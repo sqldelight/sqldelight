@@ -31,7 +31,7 @@ class SqlDelightImportOptimizer : ImportOptimizer {
       .joinToString("\n")
     val factory = PsiFileFactory.getInstance(file.project)
     val dummyFile = factory.createFileFromText(
-      "_Dummy_.${SqlDelightFileType.EXTENSION}",
+      "_Dummy_.${app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION}",
       SqlDelightFileType,
       remainingImports,
     )

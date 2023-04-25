@@ -15,7 +15,6 @@ data class SqlDelightPropertiesFileImpl(
   override val dialectJars: Collection<File>,
   override val minimumSupportedVersion: String,
   override val currentVersion: String,
-  override val moduleJars: Collection<File> = emptySet(),
 ) : SqlDelightPropertiesFile
 
 data class SqlDelightDatabasePropertiesImpl(

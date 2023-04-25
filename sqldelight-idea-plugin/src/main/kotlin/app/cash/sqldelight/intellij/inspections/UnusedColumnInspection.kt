@@ -110,7 +110,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
           |)
         """.trimMargin()
         val dummyFile = factory.createFileFromText(
-          "_Dummy_.${SqlDelightFileType.EXTENSION}",
+          "_Dummy_.${app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION}",
           SqlDelightFileType,
           createTableStmt,
         )
