@@ -50,7 +50,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
         val psiManager = PsiManager.getInstance(project)
 
         FileTypeIndex.getFiles(SqlDelightFileType, GlobalSearchScope.allScope(project)).asSequence()
-          .mapNotNull { vFile -> psiManager.findFile(vFile) as SqlDelightQueriesFile? }
+          .mapNotNull { vFile -> psiManager.findFile(vFile) as? SqlDelightQueriesFile }
           .flatMap { file -> file.namedQueries }
           .flatMap { it.resultColumns.mapNotNull { it.column } }
           .forEach { column ->
