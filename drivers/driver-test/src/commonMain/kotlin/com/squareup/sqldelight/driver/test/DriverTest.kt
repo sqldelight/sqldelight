@@ -64,9 +64,9 @@ abstract class DriverTest {
   private fun changes(): Long? {
     // wrap in a transaction to ensure read happens on transaction thread/connection
     return transacter.value!!.transactionWithResult {
-      val mapper: (SqlCursor) -> Long? = {
+      val mapper: (SqlCursor) -> QueryResult<Long?> = {
         it.next()
-        it.getLong(0)
+        QueryResult.Value(it.getLong(0))
       }
       driver.executeQuery(null, "SELECT changes()", mapper, 0).value
     }
@@ -87,12 +87,13 @@ abstract class DriverTest {
     val insert = { binders: SqlPreparedStatement.() -> Unit ->
       driver.execute(2, "INSERT INTO test VALUES (?, ?);", 2, binders)
     }
-    fun query(mapper: (SqlCursor) -> Unit) {
+    fun query(mapper: (SqlCursor) -> QueryResult<Unit>) {
       driver.executeQuery(3, "SELECT * FROM test", mapper, 0)
     }
 
     query {
-      assertFalse(it.next())
+      assertFalse(it.next().value)
+      QueryResult.Unit
     }
 
     insert {
@@ -101,16 +102,18 @@ abstract class DriverTest {
     }
 
     query {
-      assertTrue(it.next())
-      assertFalse(it.next())
+      assertTrue(it.next().value)
+      assertFalse(it.next().value)
+      QueryResult.Unit
     }
 
     assertEquals(1, changes())
 
     query {
-      assertTrue(it.next())
+      assertTrue(it.next().value)
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
+      QueryResult.Unit
     }
 
     insert {
@@ -120,19 +123,21 @@ abstract class DriverTest {
     assertEquals(1, changes())
 
     query {
-      assertTrue(it.next())
+      assertTrue(it.next().value)
       assertEquals(1, it.getLong(0))
       assertEquals("Alec", it.getString(1))
-      assertTrue(it.next())
+      assertTrue(it.next().value)
       assertEquals(2, it.getLong(0))
       assertEquals("Jake", it.getString(1))
+      QueryResult.Unit
     }
 
     driver.execute(5, "DELETE FROM test", 0)
     assertEquals(2, changes())
 
     query {
-      assertFalse(it.next())
+      assertFalse(it.next().value)
+      QueryResult.Unit
     }
   }
 
@@ -153,7 +158,7 @@ abstract class DriverTest {
     }
     assertEquals(1, changes())
 
-    fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> Unit) {
+    fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> QueryResult<Unit>) {
       driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
     }
 
@@ -162,9 +167,10 @@ abstract class DriverTest {
         bindString(0, "Jake")
       },
       mapper = {
-        assertTrue(it.next())
+        assertTrue(it.next().value)
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
+        QueryResult.Unit
       },
     )
 
@@ -174,9 +180,10 @@ abstract class DriverTest {
         bindString(0, "Jake")
       },
       mapper = {
-        assertTrue(it.next())
+        assertTrue(it.next().value)
         assertEquals(2, it.getLong(0))
         assertEquals("Jake", it.getString(1))
+        QueryResult.Unit
       },
     )
   }
@@ -194,13 +201,14 @@ abstract class DriverTest {
     }
     assertEquals(1, changes())
 
-    val mapper: (SqlCursor) -> Unit = {
-      assertTrue(it.next())
+    val mapper: (SqlCursor) -> QueryResult<Unit> = {
+      assertTrue(it.next().value)
       assertEquals(1, it.getLong(0))
       assertNull(it.getLong(1))
       assertNull(it.getString(2))
       assertNull(it.getBytes(3))
       assertNull(it.getDouble(4))
+      QueryResult.Unit
     }
     driver.executeQuery(8, "SELECT * FROM nullability_test", mapper, 0)
   }

@@ -174,7 +174,7 @@ class AndroidSqliteDriver private constructor(
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }.value
+  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
 
   override fun close() {
     statements.evictAll()
@@ -207,7 +207,7 @@ class AndroidSqliteDriver private constructor(
 
 internal interface AndroidStatement : SqlPreparedStatement {
   fun execute(): Long
-  fun <R> executeQuery(mapper: (SqlCursor) -> R): R
+  fun <R> executeQuery(mapper: (SqlCursor) -> QueryResult<R>): R
   fun close()
 }
 
@@ -238,7 +238,7 @@ private class AndroidPreparedStatement(
     }
   }
 
-  override fun <R> executeQuery(mapper: (SqlCursor) -> R): R = throw UnsupportedOperationException()
+  override fun <R> executeQuery(mapper: (SqlCursor) -> QueryResult<R>): R = throw UnsupportedOperationException()
 
   override fun execute(): Long {
     return statement.executeUpdateDelete().toLong()
@@ -284,9 +284,9 @@ private class AndroidQuery(
 
   override fun execute() = throw UnsupportedOperationException()
 
-  override fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
+  override fun <R> executeQuery(mapper: (SqlCursor) -> QueryResult<R>): R {
     return database.query(this)
-      .use { cursor -> mapper(AndroidCursor(cursor)) }
+      .use { cursor -> mapper(AndroidCursor(cursor)).value }
   }
 
   override fun bindTo(statement: SupportSQLiteProgram) {
