@@ -11,7 +11,7 @@ suspend fun <T : Any> ExecutableQuery<T>.awaitAsList(): List<T> = execute { curs
   if (first is QueryResult.AsyncValue) {
     QueryResult.AsyncValue {
       if (first.await()) result.add(mapper(cursor)) else return@AsyncValue result
-      while (cursor.next().value) result.add(mapper(cursor))
+      while (cursor.next().await()) result.add(mapper(cursor))
       result
     }
   } else {
@@ -34,7 +34,7 @@ suspend fun <T : Any> ExecutableQuery<T>.awaitAsOneOrNull(): T? = execute { curs
     QueryResult.AsyncValue {
       if (!next.await()) return@AsyncValue null
       val value = mapper(cursor)
-      check(!cursor.next().value) { "ResultSet returned more than 1 row for $this" }
+      check(!cursor.next().await()) { "ResultSet returned more than 1 row for $this" }
       value
     }
   } else {
