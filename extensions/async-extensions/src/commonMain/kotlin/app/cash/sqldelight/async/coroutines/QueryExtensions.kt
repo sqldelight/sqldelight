@@ -4,10 +4,20 @@ import app.cash.sqldelight.ExecutableQuery
 import app.cash.sqldelight.db.QueryResult
 
 suspend fun <T : Any> ExecutableQuery<T>.awaitAsList(): List<T> = execute { cursor ->
-  QueryResult.AsyncValue {
-    val result = mutableListOf<T>()
-    while (cursor.next().await()) result.add(mapper(cursor))
-    result
+  val first = cursor.next()
+  val result = mutableListOf<T>()
+
+  // If the cursor isn't async, we want to preserve the blocking semantics and execute it synchronously
+  if (first is QueryResult.AsyncValue) {
+    QueryResult.AsyncValue {
+      if (first.await()) result.add(mapper(cursor)) else return@AsyncValue result
+      while (cursor.next().value) result.add(mapper(cursor))
+      result
+    }
+  } else {
+    if (first.value) result.add(mapper(cursor)) else return@execute QueryResult.Value(result)
+    while (cursor.next().value) result.add(mapper(cursor))
+    QueryResult.Value(result)
   }
 }.await()
 
@@ -17,10 +27,20 @@ suspend fun <T : Any> ExecutableQuery<T>.awaitAsOne(): T {
 }
 
 suspend fun <T : Any> ExecutableQuery<T>.awaitAsOneOrNull(): T? = execute { cursor ->
-  QueryResult.AsyncValue {
-    if (!cursor.next().await()) return@AsyncValue null
+  val next = cursor.next()
+
+  // If the cursor isn't async, we want to preserve the blocking semantics and execute it synchronously
+  if (next is QueryResult.AsyncValue) {
+    QueryResult.AsyncValue {
+      if (!next.await()) return@AsyncValue null
+      val value = mapper(cursor)
+      check(!cursor.next().value) { "ResultSet returned more than 1 row for $this" }
+      value
+    }
+  } else {
+    if (!next.value) return@execute QueryResult.Value(null)
     val value = mapper(cursor)
-    check(!cursor.next().await()) { "ResultSet returned more than 1 row for $this" }
-    value
+    check(!cursor.next().value) { "ResultSet returned more than 1 row for $this" }
+    QueryResult.Value(value)
   }
 }.await()
