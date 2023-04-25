@@ -7,6 +7,7 @@ import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.reactive.awaitSingle
 import org.junit.Assert
 import org.junit.Test
@@ -22,10 +23,15 @@ class PostgreSqlTest {
 
   private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
     val connection = factory.create().awaitSingle()
-    val driver = R2dbcDriver(connection)
+    val awaitClose = CompletableDeferred<Unit>()
+    val driver = R2dbcDriver(connection) {
+      awaitClose.complete(Unit)
+    }
     val db = MyDatabase(driver)
     MyDatabase.Schema.awaitCreate(driver)
     block(db)
+    driver.close()
+    awaitClose.await()
   }
 
   @Test fun simpleSelectWithNullPrimitive() = runTest { database ->
@@ -44,8 +50,13 @@ class PostgreSqlTest {
 
   @Test fun getConnection() = kotlinx.coroutines.test.runTest {
     val connection = factory.create().awaitSingle()
-    val driver = R2dbcDriver(connection)
+    val awaitClose = CompletableDeferred<Unit>()
+    val driver = R2dbcDriver(connection) {
+      awaitClose.complete(Unit)
+    }
     assertThat(driver.connection).isEqualTo(connection)
+    driver.close()
+    awaitClose.await()
   }
 
   @Test fun booleanSelect() = runTest { database ->
