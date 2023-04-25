@@ -2,7 +2,6 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.shadow)
   alias(libs.plugins.publish)
-  alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.compiler")
 }
 
