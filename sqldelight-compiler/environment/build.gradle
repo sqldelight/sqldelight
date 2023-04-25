@@ -55,8 +55,6 @@ dependencies {
   shadow(libs.intellij.utilEx) {
     transitive = false
   }
-
-  shadow(libs.jna)
 }
 
 tasks.named("jar") {
@@ -69,19 +67,45 @@ tasks.named("shadowJar") {
   archiveClassifier.set("")
   configurations = [project.configurations.shadow]
 
+  /**
+   Before minimizing
+   Total dependencies size:                                              66,93 Mb
+
+   lang-impl-222.4459.24.jar                                         19.057,84 kb
+   ide-impl-222.4459.24.jar                                          18.642,82 kb
+   intellij-deps-fastutil-8.5.8-11.jar                                3.945,56 kb
+   ide-222.4459.24.jar                                                3.860,40 kb
+   util-222.4459.24.jar                                               2.385,63 kb
+   
+   After minimizing: 43 MB, mostly due to minimizing ide-impl
+  */ 
   minimize {
+    // Needed for MockProject and MockModule.
     exclude(dependency(libs.intellij.testFramework.get()))
+    
+    // Needed for general utils like PsiTreeUtil.
     exclude(dependency(libs.intellij.util.get()))
+    
+    // Base intellij platform.
     exclude(dependency(libs.intellij.core.get()))
     exclude(dependency(libs.intellij.coreImpl.get()))
+    
+    // Base required language support.
     exclude(dependency(libs.intellij.lang.get()))
     exclude(dependency(libs.intellij.langImpl.get()))
+    
+    // Base required analysis support, like resolve references.
     exclude(dependency(libs.intellij.analysis.get()))
     exclude(dependency(libs.intellij.analysisImpl.get()))
+    
+    // Needed for resolving files and the file index.
     exclude(dependency(libs.intellij.projectModel.get()))
     exclude(dependency(libs.intellij.projectModelImpl.get()))
-    // Don't minimize coroutines support 
+
+    // Don't minimize coroutines support.
     exclude(dependency(libs.intellij.utilEx.get()))
+    
+    // Needed for Icon support.
     exclude(dependency(libs.intellij.utilUi.get()))
   }
 
@@ -100,10 +124,15 @@ tasks.named("shadowJar") {
   exclude '/kotlin/**'
 }
 
+// Remove useless and bloated dependencies not require to run the sqldelight compiler.
 configurations.shadow {
   exclude(group: "com.jetbrains.rd")
   exclude(group: "com.github.jetbrains", module: "jetCheck")
   exclude(group: "com.jetbrains.intellij.platform", module: "wsl-impl")
+  exclude(group: "com.jetbrains.intellij.platform", module: "util-xml-dom")
+  exclude(group: "com.jetbrains.intellij.platform", module: "util-text-matching")
+  exclude(group: "com.jetbrains.intellij.platform", module: "util-diff")
+  exclude(group: "com.fasterxml", module: "aalto-xml")
   exclude(group: "com.jetbrains.infra")
   exclude(group: "org.roaringbitmap")
   exclude(group: "ai.grazie.spell")
