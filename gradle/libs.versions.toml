@@ -65,8 +65,6 @@ intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.
 intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "idea" }
 intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
 
-jna = { module = "net.java.dev.jna:jna", version = "5.13.0" }
-
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.10" }
