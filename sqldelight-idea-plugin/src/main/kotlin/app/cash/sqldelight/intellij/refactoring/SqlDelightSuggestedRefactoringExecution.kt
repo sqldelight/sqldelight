@@ -162,7 +162,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
         writeToFile(declarationPointer, migrationFile, migration)
       }
       .createPopup()
-      .showInFocusCenter()
+      .showCenteredInCurrentWindow(project)
   }
 
   private fun Project.createMigrationFile(migration: String, version: Int): MigrationFile {
