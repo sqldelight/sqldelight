@@ -2657,71 +2657,81 @@
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-database-file-view-provider-factory/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Database</span><wbr><span>File</span><wbr><span>View</span><wbr><span>Provider</span><wbr><span><span>Factory</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-3" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationFile///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-3" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang//MIGRATION_EXTENSION/#/PointingToDeclaration//1896744885">
+    <div class="overview">
+     <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-m-i-g-r-a-t-i-o-n_-e-x-t-e-n-s-i-o-n.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon val"></span><span class="nav-link-child"><span><span>MIGRATION_EXTENSION</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-4" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationFile///PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-migration-file/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Migration</span><wbr><span><span>File</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-4" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationFileType///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-5" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationFileType///PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-migration-file-type/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span>Migration</span><wbr><span>File</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-5" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationLanguage///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-6" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationLanguage///PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-migration-language/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span>Migration</span><wbr><span><span>Language</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-6" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationParserDefinition///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-7" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationParserDefinition///PointingToDeclaration//1896744885">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-compiler-nav-submenu-4-6&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-migration-parser-definition/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Migration</span><wbr><span>Parser</span><wbr><span><span>Definition</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-compiler-nav-submenu-4-7&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-migration-parser-definition/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Migration</span><wbr><span>Parser</span><wbr><span><span>Definition</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-6-0" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationParserDefinition.Companion///PointingToDeclaration//1896744885">
+    <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-7-0" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/MigrationParserDefinition.Companion///PointingToDeclaration//1896744885">
      <div class="overview">
       <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-migration-parser-definition/-companion/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span><span>Companion</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-7" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang//QUERIES_SUFFIX_NAME/#/PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-8" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang//QUERIES_SUFFIX_NAME/#/PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-q-u-e-r-i-e-s_-s-u-f-f-i-x_-n-a-m-e.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon val"></span><span class="nav-link-child"><span><span>QUERIES_SUFFIX_NAME</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-8" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang//queriesName/com.intellij.openapi.vfs.VirtualFile#/PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-9" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang//queriesName/com.intellij.openapi.vfs.VirtualFile#/PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/queries-name.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon val"></span><span class="nav-link-child"><span>queries</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-9" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightFile///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-10" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang//SQLDELIGHT_EXTENSION/#/PointingToDeclaration//1896744885">
+    <div class="overview">
+     <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-s-q-l-d-e-l-i-g-h-t_-e-x-t-e-n-s-i-o-n.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon val"></span><span class="nav-link-child"><span><span>SQLDELIGHT_EXTENSION</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-11" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightFile///PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-file/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>File</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-10" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightFileType///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-12" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightFileType///PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-file-type/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>File</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-11" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightLanguage///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-13" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightLanguage///PointingToDeclaration//1896744885">
     <div class="overview">
      <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-language/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Language</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-12" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightParserDefinition///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-14" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightParserDefinition///PointingToDeclaration//1896744885">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-compiler-nav-submenu-4-12&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-parser-definition/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Parser</span><wbr><span><span>Definition</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-compiler-nav-submenu-4-14&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-parser-definition/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Parser</span><wbr><span><span>Definition</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-12-0" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightParserDefinition.Companion///PointingToDeclaration//1896744885">
+    <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-14-0" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightParserDefinition.Companion///PointingToDeclaration//1896744885">
      <div class="overview">
       <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-parser-definition/-companion/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon object"></span><span class="nav-link-child"><span><span>Companion</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-13" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightQueriesFile///PointingToDeclaration//1896744885">
+   <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-15" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightQueriesFile///PointingToDeclaration//1896744885">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-compiler-nav-submenu-4-13&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Queries</span><wbr><span><span>File</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-compiler-nav-submenu-4-15&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Queries</span><wbr><span><span>File</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-13-0" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightQueriesFile.LabeledStatement///PointingToDeclaration//1896744885">
+    <div class="sideMenuPart" id="sqldelight-compiler-nav-submenu-4-15-0" pageid="sqldelight-compiler::app.cash.sqldelight.core.lang/SqlDelightQueriesFile.LabeledStatement///PointingToDeclaration//1896744885">
      <div class="overview">
       <a href="sqldelight-compiler/app.cash.sqldelight.core.lang/-sql-delight-queries-file/-labeled-statement/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Labeled</span><wbr><span><span>Statement</span></span></span></span></a>
      </div>
