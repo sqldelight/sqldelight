@@ -226,7 +226,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
         it.verifyMigrations = verifyMigrations.get()
-        it.classpath.setFrom(intellijEnv, configuration)
+        it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 
       val outputDirectoryProvider: Provider<File> = task.map { it.outputDirectory!! }

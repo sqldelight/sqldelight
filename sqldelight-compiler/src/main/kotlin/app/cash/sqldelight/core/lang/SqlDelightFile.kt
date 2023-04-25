@@ -80,7 +80,7 @@ abstract class SqlDelightFile(
     val manager = PsiManager.getInstance(project)
     var result: SqlFileBase? = null
     val folders = SqlDelightFileIndex.getInstance(module).sourceFolders(virtualFile ?: return null)
-    folders.forEach { dir ->
+    for (dir in folders) {
       VfsUtilCore.iterateChildrenRecursively(
         dir,
         { it.isDirectory || it.fileType == DatabaseFileType },
@@ -90,11 +90,10 @@ abstract class SqlDelightFile(
           val vFile = (manager.findViewProvider(file) as? DatabaseFileViewProvider)?.getSchemaFile()
             ?: return@iterateChildrenRecursively true
 
-          manager.findFile(vFile)?.let { psiFile ->
-            if (psiFile is SqlFileBase) {
-              result = psiFile
-              return@iterateChildrenRecursively false
-            }
+          val psiFile = manager.findFile(vFile)
+          if (psiFile != null && psiFile is SqlFileBase) {
+            result = psiFile
+            return@iterateChildrenRecursively false
           }
 
           return@iterateChildrenRecursively true
