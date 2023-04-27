@@ -15,8 +15,8 @@ private fun JdbcSqliteDriver.setVersion(version: Int) {
 }
 
 /**
- * Uses this driver to create or migrate schema from current `PRAGMA user_version`.
- * Sets new `PRAGMA user_version` to migrated [schema] version
+ * Uses this driver to create or migrate schema from current PRAGMA `user_version`.
+ * After that updates PRAGMA `user_version` to migrated [schema] version.
  * Each of the [callbacks] are executed during the migration whenever the upgrade to the version specified by
  * [AfterVersion.afterVersion] has been completed.
  */
