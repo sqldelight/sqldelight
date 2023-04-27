@@ -24,11 +24,12 @@ fun JdbcSqliteDriver(
 
     if (version == 0) {
         schema.create(driver).value
-    } else {
+        driver.setVersion(schema.version)
+    } else if (version < schema.version) {
         schema.migrate(driver, version, schema.version, *callbacks).value
+        driver.setVersion(schema.version)
     }
 
-    driver.setVersion(schema.version)
     return driver
 }
 
