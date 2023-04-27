@@ -8,6 +8,7 @@
   psiClassPrefix = "PostgreSql"
 
   parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
@@ -29,6 +30,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FALSE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
@@ -65,6 +67,7 @@ overrides ::= type_name
   | column_constraint
   | string_literal
   | bind_parameter
+  | table_constraint
   | with_clause_auxiliary_stmt
   | delete_stmt_limited
   | insert_stmt
@@ -114,6 +117,14 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
+  override = true
+}
+table_constraint ::= [ CONSTRAINT {identifier} ] (
+  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableConstraint"
   override = true
 }
 
@@ -213,6 +224,7 @@ alter_table_rules ::= (
   | {alter_table_rename_table}
   | alter_table_rename_column
   | alter_table_drop_column
+  | alter_table_add_constraint
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
@@ -237,6 +249,8 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableDropColumnMixin"
   pin = 1
 }
+
+alter_table_add_constraint ::= ADD table_constraint
 
 compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | COMMA ) {limiting_term} ] [ FOR UPDATE [ 'SKIP' 'LOCKED' ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
