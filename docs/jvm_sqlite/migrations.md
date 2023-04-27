@@ -1,6 +1,7 @@
 {% include 'common/migrations.md' %}
 
-If you are using an `JdbcSqliteDriver` you can pass the schema and callbacks in during the driver's creation:
+If you are using an `JdbcSqliteDriver` you can pass the schema and callbacks in during the driver's creation.
+It uses `PRAGMA user_version` to store current version of schema in database.
 
 ```kotlin
 val driver: SqlDriver = JdbcSqliteDriver(
