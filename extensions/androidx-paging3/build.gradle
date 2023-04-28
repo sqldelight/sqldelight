@@ -9,6 +9,7 @@ archivesBaseName = 'sqldelight-androidx-paging3'
 
 kotlin {
   ios()
+  iosSimulatorArm64()
   jvm()
   js {
     browser()
@@ -29,11 +30,19 @@ kotlin {
         implementation libs.stately.concurrency
       }
     }
+    iosMain {
+    }
     iosTest {
       dependencies {
         implementation projects.drivers.nativeDriver
         implementation libs.app.cash.paging.runtime.uikit
       }
+    }
+    iosSimulatorArm64Main {
+      dependsOn(iosMain)
+    }
+    iosSimulatorArm64Test {
+      dependsOn(iosTest)
     }
     jvmTest {
       dependencies {
@@ -48,7 +57,7 @@ kotlin {
     }
   }
 
-  configure([targets.iosX64, targets.iosArm64]) {
+  configure([targets.iosX64, targets.iosArm64, targets.iosSimulatorArm64]) {
     binaries.configureEach {
       linkerOpts += ["-lsqlite3"]
     }
