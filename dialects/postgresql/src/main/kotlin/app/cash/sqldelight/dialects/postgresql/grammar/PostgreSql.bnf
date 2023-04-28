@@ -121,6 +121,7 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
   ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableConstraintImpl"

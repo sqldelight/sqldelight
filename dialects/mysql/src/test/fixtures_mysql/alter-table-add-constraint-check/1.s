@@ -1,0 +1,6 @@
+CREATE TABLE t1 (
+  c1 int(11)
+);
+
+ALTER TABLE t1
+ ADD CONSTRAINT chk_c1 CHECK (c1 > 0);
