@@ -18,6 +18,8 @@ jobs:
             job: instrumentation
           - os: windows-latest
             job: gradle-plugin-tests
+          - os: ubuntu-latest
+            job: gradle-plugin-tests
 
     runs-on: ${{matrix.os}}
     permissions:
@@ -67,11 +69,11 @@ jobs:
 
       # Windows tests
       - name: Run windows tests
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-latest' && matrix.job == 'test'
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel
 
