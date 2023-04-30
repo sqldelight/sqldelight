@@ -250,5 +250,27 @@
         text="Delete By Primary Key">
       <add-to-group group-id="GenerateGroup"/>
     </action>
+    <action id="SQDelight.NewSelectQueryAction"
+            class="app.cash.sqldelight.intellij.actions.generatemenu.NewSelectQueryAction"
+            text="New Select Query">
+      <add-to-group group-id="GenerateGroup" anchor="first"/>
+    </action>
+    <action id="SQDelight.NewInsertIntoStatementAction"
+            class="app.cash.sqldelight.intellij.actions.generatemenu.NewInsertIntoStatementAction"
+            text="New Insert Statement">
+      <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="SQDelight.NewSelectQueryAction"/>
+    </action>
+    <action id="SQDelight.NewUpdateStatementAction"
+            class="app.cash.sqldelight.intellij.actions.generatemenu.NewUpdateStatementAction"
+            text="Update Statement">
+      <add-to-group group-id="GenerateGroup"
+                    anchor="after"
+                    relative-to-action="SQDelight.NewInsertIntoStatementAction"/>
+    </action>
+    <action id="SQDelight.NewDeleteStatementAction"
+            class="app.cash.sqldelight.intellij.actions.generatemenu.NewDeleteStatementAction"
+            text="Delete Statement">
+      <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="SQDelight.NewUpdateStatementAction"/>
+    </action>
   </actions>
 </idea-plugin>
