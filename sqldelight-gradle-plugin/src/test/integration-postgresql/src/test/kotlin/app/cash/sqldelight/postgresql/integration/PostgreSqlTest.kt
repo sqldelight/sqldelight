@@ -271,4 +271,12 @@ class PostgreSqlTest {
     val uuid: UUID = database.uuidsQueries.randomUuid().executeAsOne()
     assertThat(uuid).isNotNull()
   }
+
+  @Test fun lengthFunction() {
+    database.charactersQueries.insertCharacter("abcdef", null)
+    val name = database.charactersQueries.selectNameLength().executeAsOne()
+    assertThat(name).isEqualTo(6)
+    val desc = database.charactersQueries.selectDescriptionLength().executeAsOne()
+    assertThat(desc.length).isNull()
+  }
 }
