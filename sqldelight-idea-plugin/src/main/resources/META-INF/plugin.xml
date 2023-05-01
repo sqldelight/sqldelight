@@ -230,26 +230,6 @@
         class="app.cash.sqldelight.intellij.actions.file.SqlDelightCreateFileAction">
       <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
     </action>
-    <action id="SQDelight.GenerateSelectAllQuery" class="app.cash.sqldelight.intellij.actions.GenerateSelectAllQueryAction"
-        text="Select All">
-      <add-to-group group-id="GenerateGroup"/>
-    </action>
-    <action id="SQDelight.GenerateSelectByPrimaryKeyQuery" class="app.cash.sqldelight.intellij.actions.GenerateSelectByPrimaryKeyQueryAction"
-        text="Select By Primary Key">
-      <add-to-group group-id="GenerateGroup"/>
-    </action>
-    <action id="SQDelight.InsertInto" class="app.cash.sqldelight.intellij.actions.GenerateInsertIntoQueryAction"
-        text="Insert Into">
-      <add-to-group group-id="GenerateGroup"/>
-    </action>
-    <action id="SQDelight.UpdateByPrimaryKeyQuery" class="app.cash.sqldelight.intellij.actions.GenerateUpdateByPrimaryKeyQueryAction"
-        text="Update By Primary Key">
-      <add-to-group group-id="GenerateGroup"/>
-    </action>
-    <action id="SQDelight.DeleteByPrimaryKeyQuery" class="app.cash.sqldelight.intellij.actions.GenerateDeleteByPrimaryKeyQueryAction"
-        text="Delete By Primary Key">
-      <add-to-group group-id="GenerateGroup"/>
-    </action>
     <action id="SQDelight.NewSelectQueryAction"
             class="app.cash.sqldelight.intellij.actions.generatemenu.NewSelectQueryAction"
             text="New Select Query">
