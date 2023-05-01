@@ -7,7 +7,7 @@ insertCharacter:
   INSERT INTO characters (name, description) VALUES (:name, :description);
 
 selectNameLength:
-  SELECT LENGTH(name) FROM characters;
+  SELECT length(name) FROM characters;
 
 selectDescriptionLength:
-  SELECT LENGTH(description) FROM characters;
+  SELECT length(description) FROM characters;
