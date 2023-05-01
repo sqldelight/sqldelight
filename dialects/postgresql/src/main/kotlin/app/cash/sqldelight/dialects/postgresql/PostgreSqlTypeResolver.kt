@@ -89,9 +89,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
-    "length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
-    "character_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
-    "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+    "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
   }
 
