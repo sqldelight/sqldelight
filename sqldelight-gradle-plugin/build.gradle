@@ -54,7 +54,7 @@ dependencies {
   testImplementation libs.testParameterInjector
 }
 
-tasks.named('test') {
+tasks.named('test', Test) {
   // The integration tests require local installations of artifacts.
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
@@ -109,7 +109,7 @@ tasks.named('check') {
   dependsOn(testing.suites.dockerTest, testing.suites.grammarkitTest)
 }
 
-tasks.named('dockerTest') {
+tasks.named('dockerTest', Test) {
   if (project.hasProperty("Instrumentation")) enabled = false
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
@@ -129,7 +129,7 @@ tasks.named('dockerTest') {
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 
-tasks.named("grammarkitTest") {
+tasks.named("grammarkitTest", Test) {
   dependsOn(
       ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
@@ -143,9 +143,9 @@ tasks.named("grammarkitTest") {
       ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
       ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
   )
-  javaLauncher = javaToolchains.launcherFor {
+  javaLauncher.set(javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(17)
-  }
+  })
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 

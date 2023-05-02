@@ -47,6 +47,7 @@ class DialectIntegrationTests {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-postgresql-async"))
       .withArguments("clean", "check", "--stacktrace")
+      .forwardOutput()
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
