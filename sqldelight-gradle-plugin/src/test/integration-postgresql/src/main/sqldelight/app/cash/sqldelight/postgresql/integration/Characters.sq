@@ -11,6 +11,3 @@ selectNameLength:
 
 selectDescriptionLength:
   SELECT length(description) FROM characters;
-
-selectLength:
-  SELECT length(?);
