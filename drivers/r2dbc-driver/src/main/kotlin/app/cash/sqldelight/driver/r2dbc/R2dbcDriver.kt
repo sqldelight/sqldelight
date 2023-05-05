@@ -12,8 +12,16 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 
-class R2dbcDriver(val connection: Connection) : SqlDriver {
+class R2dbcDriver(
+  val connection: Connection,
+  /**
+   * This callback is called after [close]. It either contains an error or null, representing a successful close.
+   */
+  val closed: (Throwable?) -> Unit,
+) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
@@ -78,8 +86,26 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) = Unit
 
   override fun close() {
-    // TODO: Somehow await this async operation
-    connection.close()
+    // Normally, this is just a Mono, so it completes directly without onNext.
+    // But the standard allows any publisher, so we should request unlimited items
+    // and wait until the close call is finally completed.
+    connection.close().subscribe(object : Subscriber<Void> {
+      override fun onSubscribe(sub: Subscription) {
+        sub.request(Long.MAX_VALUE)
+      }
+
+      override fun onError(error: Throwable) {
+        closed(error)
+      }
+
+      override fun onComplete() {
+        closed(null)
+      }
+
+      override fun onNext(t: Void) {
+        // Do nothing, we wait until completion.
+      }
+    })
   }
 
   private inner class Transaction(
