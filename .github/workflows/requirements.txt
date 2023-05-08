@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-certifi==2022.12.7
+certifi==2023.5.7
     # via requests
 charset-normalizer==3.1.0
     # via requests
@@ -66,15 +66,15 @@ pyyaml==6.0
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2023.3.23
+regex==2023.5.5
     # via mkdocs-material
-requests==2.29.0
+requests==2.30.0
     # via mkdocs-material
 six==1.16.0
     # via python-dateutil
 termcolor==2.3.0
     # via mkdocs-macros-plugin
-urllib3==1.26.15
+urllib3==2.0.2
     # via requests
 verspec==0.1.0
     # via mike
