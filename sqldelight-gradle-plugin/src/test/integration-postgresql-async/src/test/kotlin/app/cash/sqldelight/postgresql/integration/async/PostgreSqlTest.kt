@@ -32,6 +32,7 @@ class PostgreSqlTest {
       val connectionFactory = ConnectionFactories.get(PostgreSQLR2DBCDatabaseContainer.getOptions(it))
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
+        val awaitClose = CompletableDeferred<Unit>()
         val driver = R2dbcDriver(connection) {
           if (it == null) {
             awaitClose.complete(Unit)
@@ -71,6 +72,7 @@ class PostgreSqlTest {
       val connectionFactory = ConnectionFactories.get(PostgreSQLR2DBCDatabaseContainer.getOptions(it))
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
+        val awaitClose = CompletableDeferred<Unit>()
         val driver = R2dbcDriver(connection) {
           if (it == null) {
             awaitClose.complete(Unit)
