@@ -19,6 +19,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
@@ -40,6 +41,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -47,6 +49,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
@@ -68,6 +71,7 @@ overrides ::= type_name
   | string_literal
   | bind_parameter
   | table_constraint
+  | default_constraint
   | with_clause_auxiliary_stmt
   | delete_stmt_limited
   | insert_stmt
@@ -84,13 +88,26 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   UNIQUE {conflict_clause} |
   {check_constraint} |
   generated_clause |
-  {default_constraint} |
+  default_constraint |
   COLLATE {collation_name} |
   {foreign_key_clause}
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlColumnConstraintImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlColumnConstraint"
   override = true
+}
+
+current_timestamp_with_optional_interval ::= ( CURRENT_TIMESTAMP | 'NOW()' | interval_expression ) [ [ PLUS | MINUS ] interval_expression ] *
+default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
+  current_timestamp_with_optional_interval |
+  {signed_number} |
+  {literal_value} |
+  LP <<expr '-1'>> RP
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlDefaultConstraint"
+  override = true
+  pin = 2
 }
 
 type_name ::= (
@@ -159,6 +176,8 @@ boolean_data_type ::= 'BOOLEAN' | 'BOOL'
 json_data_type ::= 'JSON' | 'JSONB'
 
 blob_data_type ::= 'BYTEA'
+
+interval_expression ::= 'INTERVAL' string_literal
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
