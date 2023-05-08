@@ -128,6 +128,11 @@ class R2dbcDriver(
   }
 }
 
+/**
+ * Creates and returns a [R2dbcDriver] with the given [connection].
+ * 
+ * The scope waits until the driver is closed [R2dbcDriver.close].
+ */
 fun CoroutineScope.R2dbcDriver(
   connection: Connection,
 ): R2dbcDriver {
