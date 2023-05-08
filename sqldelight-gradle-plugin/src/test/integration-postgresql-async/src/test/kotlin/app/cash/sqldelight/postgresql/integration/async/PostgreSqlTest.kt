@@ -63,7 +63,7 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun getConnection(): TestResult {
+  @Test fun getConnectionUsingCoroutineOverload(): TestResult {
     val container = PostgreSQLContainer("postgres:9.6.8").apply {
       withDatabaseName("myDb")
     }
@@ -72,17 +72,9 @@ class PostgreSqlTest {
       val connectionFactory = ConnectionFactories.get(PostgreSQLR2DBCDatabaseContainer.getOptions(it))
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
-        val awaitClose = CompletableDeferred<Unit>()
-        val driver = R2dbcDriver(connection) {
-          if (it == null) {
-            awaitClose.complete(Unit)
-          } else {
-            awaitClose.completeExceptionally(it)
-          }
-        }
+        val driver = R2dbcDriver(connection)
         assertThat(driver.connection).isEqualTo(connection)
         driver.close()
-        awaitClose.join()
       }
     }
   }

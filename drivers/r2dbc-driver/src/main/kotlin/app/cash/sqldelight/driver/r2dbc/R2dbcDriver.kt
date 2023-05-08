@@ -8,7 +8,10 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
@@ -20,7 +23,7 @@ class R2dbcDriver(
   /**
    * This callback is called after [close]. It either contains an error or null, representing a successful close.
    */
-  val closed: (Throwable?) -> Unit,
+  val closed: (Throwable?) -> Unit = { },
 ) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
@@ -123,6 +126,23 @@ class R2dbcDriver(
       transaction = enclosingTransaction
     }
   }
+}
+
+fun CoroutineScope.R2dbcDriver(
+  connection: Connection,
+): R2dbcDriver {
+  val completed = Job()
+  val driver = R2dbcDriver(connection) {
+    if (it == null) {
+      completed.complete()
+    } else {
+      completed.completeExceptionally(it)
+    }
+  }
+  launch {
+    completed.join()
+  }
+  return driver
 }
 
 // R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
