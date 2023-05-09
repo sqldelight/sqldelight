@@ -51,11 +51,9 @@ class MultiplatformConventions : Plugin<Project> {
       }
 
       iosX64()
-      iosArm32()
       iosArm64()
       tvosX64()
       tvosArm64()
-      watchosX86()
       watchosX64()
       watchosArm32()
       watchosArm64()
