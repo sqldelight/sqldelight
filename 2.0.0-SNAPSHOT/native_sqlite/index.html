@@ -3334,10 +3334,7 @@
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NativeSqliteDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="kotlinnative-memory-models">Kotlin/Native Memory Models<a class="headerlink" href="#kotlinnative-memory-models" title="Permanent link">&para;</a></h3>
-<p>The SQLDelight native driver is compatible with both the original strict memory model and the updated
-memory model. However, it is optimized for the new memory model, and as most of the official Jetbrains
-libraries will be gradually dropping support for the strict memory model, support for the strict
-memory model may be deprecated or removed in future releases.</p>
+<p>The SQLDelight native driver supports the updated memory model only since 2.0.0.</p>
 <p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
 <div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
