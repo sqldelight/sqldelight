@@ -16,11 +16,6 @@ sqldelight {
 kotlin {
   targetFromPreset(presets.jvm, 'jvm')
   js(IR) { }
-  targetFromPreset(presets.iosArm32, 'iosArm32') {
-    binaries {
-      framework()
-    }
-  }
   targetFromPreset(presets.iosArm64, 'iosArm64') {
     binaries {
       framework()
