@@ -91,7 +91,6 @@ tasks.named('test') {
         ":runtime:publishIosX64PublicationToInstallLocallyRepository",
         ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
         ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
-        ":runtime:publishIosArm32PublicationToInstallLocallyRepository",
         ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
     )
   }
