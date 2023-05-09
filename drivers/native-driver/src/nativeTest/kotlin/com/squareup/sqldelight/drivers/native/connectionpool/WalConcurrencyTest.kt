@@ -132,7 +132,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
     }
 
-    val future = worker.execute(TransferMode.SAFE, { block.maybeFreeze() }) { it() }
+    val future = worker.execute(TransferMode.SAFE, { block }) { it() }
 
     // Transaction with write started but sleeping
     waitFor { transactionStarted.value > 0 }
@@ -161,7 +161,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
     }
 
-    val future = worker.execute(TransferMode.SAFE, { block.maybeFreeze() }) { it() }
+    val future = worker.execute(TransferMode.SAFE, { block }) { it() }
 
     // When we get here, first transaction has run a write command, and is sleeping
     waitFor { transactionStarted.value > 0 }
