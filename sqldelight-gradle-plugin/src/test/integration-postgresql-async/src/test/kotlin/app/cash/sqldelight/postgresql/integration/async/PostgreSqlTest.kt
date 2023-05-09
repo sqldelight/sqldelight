@@ -7,6 +7,7 @@ import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.test.TestResult
 import org.junit.Assert
@@ -31,11 +32,19 @@ class PostgreSqlTest {
       val connectionFactory = ConnectionFactories.get(PostgreSQLR2DBCDatabaseContainer.getOptions(it))
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
-        val driver = R2dbcDriver(connection)
+        val awaitClose = CompletableDeferred<Unit>()
+        val driver = R2dbcDriver(connection) {
+          if (it == null) {
+            awaitClose.complete(Unit)
+          } else {
+            awaitClose.completeExceptionally(it)
+          }
+        }
         val db = MyDatabase(driver)
         MyDatabase.Schema.awaitCreate(driver)
         block(db)
         driver.close()
+        awaitClose.join()
       }
     }
   }
@@ -54,7 +63,7 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun getConnection(): TestResult {
+  @Test fun getConnectionUsingCoroutineOverload(): TestResult {
     val container = PostgreSQLContainer("postgres:9.6.8").apply {
       withDatabaseName("myDb")
     }
@@ -63,9 +72,9 @@ class PostgreSqlTest {
       val connectionFactory = ConnectionFactories.get(PostgreSQLR2DBCDatabaseContainer.getOptions(it))
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
-        val driver = R2dbcDriver(connection)
-        assertThat(driver.connection).isEqualTo(connection)
-        driver.close()
+        R2dbcDriver(connection).use { driver ->
+          assertThat(driver.connection).isEqualTo(connection)
+        }
       }
     }
   }
