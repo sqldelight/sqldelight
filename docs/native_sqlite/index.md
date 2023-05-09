@@ -29,10 +29,7 @@ val driver: SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")
 
 ### Kotlin/Native Memory Models
 
-The SQLDelight native driver is compatible with both the original strict memory model and the updated
-memory model. However, it is optimized for the new memory model, and as most of the official Jetbrains
-libraries will be gradually dropping support for the strict memory model, support for the strict
-memory model may be deprecated or removed in future releases.
+The SQLDelight native driver supports the updated memory model only since 2.0.0.
 
 {% include 'common/index_queries.md' %}
 

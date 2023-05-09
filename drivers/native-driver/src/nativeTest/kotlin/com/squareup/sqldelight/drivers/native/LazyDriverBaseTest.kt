@@ -6,7 +6,6 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
-import app.cash.sqldelight.driver.native.util.maybeFreeze
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
@@ -26,11 +25,7 @@ abstract class LazyDriverBaseTest {
   }
 
   protected val transacter: TransacterImpl
-    get() {
-      val t = transacterInternal
-      t.maybeFreeze()
-      return t
-    }
+    get() = transacterInternal
 
   @BeforeTest fun setup() {
     driver = setupDatabase(schema = defaultSchema())
