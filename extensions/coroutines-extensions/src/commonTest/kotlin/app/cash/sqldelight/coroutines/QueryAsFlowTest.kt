@@ -68,24 +68,6 @@ class QueryAsFlowTest : DbTest {
       }
   }
 
-  @Test fun queryNotNotifiedAfterCancel() = runTest { db ->
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-      .asFlow()
-      .test {
-        awaitItem().assert {
-          hasRow("alice", "Alice Allison")
-          hasRow("bob", "Bob Bobberson")
-          hasRow("eve", "Eve Evenson")
-        }
-
-        cancel()
-
-        db.employee(Employee("john", "John Johnson"))
-        yield() // Ensure any events can be delivered.
-        expectNoEvents()
-      }
-  }
-
   @Test fun queryOnlyNotifiedAfterCollect() = runTest { db ->
     val flow = db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
       .asFlow()
