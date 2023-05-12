@@ -4,14 +4,11 @@ import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
-import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.PrimitiveType
-import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
-import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.asClassName
 import org.junit.Rule
@@ -386,21 +383,6 @@ class BindArgsTest {
       assertThat(args[2].dialectType).isEqualTo(PrimitiveType.TEXT)
       assertThat(args[2].javaType).isEqualTo(String::class.asClassName())
       assertThat(args[2].name).isEqualTo("last_name")
-    }
-  }
-
-  @Test
-  fun `Result Column is PostgreSql interval type`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      SELECT INTERVAL '1 day';
-      """.trimMargin(),
-      tempFolder,
-      dialect = PostgreSqlDialect(),
-    )
-
-    file.findChildrenOfType<SqlResultColumn>().map { it.type() }.let { args ->
-      println(args)
     }
   }
 
