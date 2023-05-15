@@ -18,7 +18,7 @@ INSERT INTO hockeyPlayer (player_number, full_name)
 VALUES (15, 'Ryan Getzlaf');
 ```
 
-From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Generating the `Database` file does not happen during normal 'sync gradle' tasks, and you must run 'make module' or 'make project' with Android Studio to generate the correct Database file.
+From this, SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Generating the `Database` file happens during the 'generateSqlDelightInterface' gradle task. This task runs during the 'make project'/'make module' build task, or automatically if you have the SQLDelight IDE plugin.
 
 Accessing the generated database also requires a driver, which SQLDelight provides implementations of:
 
