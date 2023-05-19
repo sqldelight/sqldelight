@@ -118,7 +118,6 @@ class AsyncQueriesTypeTest {
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
     Truth.assertThat(result.compilerOutput).containsKey(dataQueries)
-    println(insert.id.withUnderscores)
     Truth.assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
       |package com.example
