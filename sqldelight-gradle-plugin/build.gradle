@@ -98,6 +98,9 @@ tasks.named('test') {
     )
   }
   useJUnit()
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 
@@ -106,7 +109,6 @@ tasks.named('check') {
 }
 
 tasks.named('dockerTest') {
-  if (project.hasProperty("Instrumentation")) enabled = false
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
