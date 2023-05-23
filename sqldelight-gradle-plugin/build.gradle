@@ -107,8 +107,8 @@ tasks.named('test') {
   if (System.getenv("CI")) {
     reports.html.required = false
     reports.junitXml.required = false
-  }  
-  maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+  }
+  maxParallelForks = Runtime.runtime.availableProcessors()
 }
 
 tasks.named('check') {
