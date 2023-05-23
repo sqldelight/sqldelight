@@ -13,5 +13,8 @@ RETURNING *;
 selectDateTrunc:
 SELECT date_trunc('hour', timestamp), date_trunc('hour', timestamp_with_timezone) FROM dates;
 
+selectDatePart:
+SELECT date_part('hour', timestamp), date_part('hour', timestamp_with_timezone) FROM dates;
+
 selectNow:
 SELECT NOW();
