@@ -7,12 +7,12 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 abstract class ToolchainConventions(private val jdkVersion: Int) : Plugin<Project> {
-    override fun apply(project: Project) {
-        project.kotlinExtension.jvmToolchain { spec ->
-            spec.languageVersion.set(JavaLanguageVersion.of(jdkVersion))
-            spec.vendor.set(JvmVendorSpec.AZUL)
-        }
+  override fun apply(project: Project) {
+    project.kotlinExtension.jvmToolchain { spec ->
+      spec.languageVersion.set(JavaLanguageVersion.of(jdkVersion))
+      spec.vendor.set(JvmVendorSpec.AZUL)
     }
+  }
 }
 
 // Controls the minimum JDK version required to use the SQLDelight runtime
