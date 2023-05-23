@@ -109,7 +109,6 @@ tasks.named('test') {
     reports.html.required = false
     reports.junitXml.required = false
   }
-  maxParallelForks = Runtime.runtime.availableProcessors()
 }
 
 tasks.named('check') {
