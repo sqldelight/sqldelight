@@ -3272,13 +3272,13 @@ For a full list of new features and other changes, see the <a href="../changelog
 <h2 id="new-package-name-and-artifact-group">New Package Name and Artifact Group<a class="headerlink" href="#new-package-name-and-artifact-group" title="Permanent link">&para;</a></h2>
 <p>All instances of <code>com.squareup.sqldelight</code> need to be replaced with <code>app.cash.sqldelight</code>.</p>
 <div class="highlight"><span class="filename">Gradle Dependencies</span><pre><span></span><code>plugins {
-<span class="gd">-  id(&quot;com.squareup.sqldelight&quot;) version &quot;local-development&quot;</span>
-<span class="gi">+  id(&quot;app.cash.sqldelight&quot;) version &quot;local-development&quot;</span>
+<span class="gd">-  id(&quot;com.squareup.sqldelight&quot;) version &quot;2.0.0-SNAPSHOT&quot;</span>
+<span class="gi">+  id(&quot;app.cash.sqldelight&quot;) version &quot;2.0.0-SNAPSHOT&quot;</span>
 }
 
 dependencies {
-<span class="gd">-  implementation(&quot;com.squareup.sqldelight:sqlite-driver:local-development&quot;)</span>
-<span class="gi">+  implementation(&quot;app.cash.sqldelight:sqlite-driver:local-development&quot;)</span>
+<span class="gd">-  implementation(&quot;com.squareup.sqldelight:sqlite-driver:2.0.0-SNAPSHOT&quot;)</span>
+<span class="gi">+  implementation(&quot;app.cash.sqldelight:sqlite-driver:2.0.0-SNAPSHOT&quot;)</span>
 }
 </code></pre></div>
 <div class="highlight"><span class="filename">In Code</span><pre><span></span><code><span class="gd">-import com.squareup.sqldelight.db.SqlDriver</span>
@@ -3330,7 +3330,7 @@ dependencies {
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">create</span><span class="o">(</span><span class="s2">&quot;MyDatabase&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s2">&quot;com.example&quot;</span><span class="o">)</span>
-<span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:local-development&quot;</span><span class="o">)</span>
+<span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:2.0.0-SNAPSHOT&quot;</span><span class="o">)</span>
 
 <span class="w">      </span><span class="c1">// Version catalogs also work!</span>
 <span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="n">libs</span><span class="o">.</span><span class="na">sqldelight</span><span class="o">.</span><span class="na">dialects</span><span class="o">.</span><span class="na">mysql</span><span class="o">)</span>
@@ -3344,7 +3344,7 @@ dependencies {
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
-<span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:local-development&quot;</span>
+<span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:mysql-dialect:2.0.0-SNAPSHOT&quot;</span>
 
 <span class="w">      </span><span class="c1">// Version catalogs also work!</span>
 <span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="n">libs</span><span class="o">.</span><span class="na">sqldelight</span><span class="o">.</span><span class="na">dialects</span><span class="o">.</span><span class="na">mysql</span>
@@ -3369,7 +3369,7 @@ CREATE TABLE HockeyPlayer (
 <span class="w"> </span> good INTEGER <mark class="critic">As Boolean</mark>
 );
 </code></pre></div>
-<p>Some previously supported types now require an adapter. Adapters for primitive types are available in the <code>app.cash.sqldelight:primitive-adapters:local-development</code> artifact.
+<p>Some previously supported types now require an adapter. Adapters for primitive types are available in the <code>app.cash.sqldelight:primitive-adapters:2.0.0-SNAPSHOT</code> artifact.
 e.g. The <code>IntColumnAdapter</code> for doing <code>INTEGER As kotlin.Int</code> conversions.</p>
 </li>
 <li>
