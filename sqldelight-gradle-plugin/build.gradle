@@ -103,6 +103,12 @@ tasks.named('test') {
     languageVersion = JavaLanguageVersion.of(17)
   }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
+  
+  if (System.getenv("CI")) {
+    reports.html.required = false
+    reports.junitXml.required = false
+  }  
+  maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
 
 tasks.named('check') {
