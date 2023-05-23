@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.konan.target.HostManager
+import app.cash.sqldelight.toolchain.ToolchainConventions
 
 plugins {
   alias(libs.plugins.kotlin.jvm)
