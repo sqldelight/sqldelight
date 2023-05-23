@@ -5,7 +5,7 @@ SQLDelight 2.0 makes some breaking changes to the gradle plugin and runtime APIs
 This page lists those breaking changes and their new 2.0 equivalents. 
 For a full list of new features and other changes, see the [changelog](../changelog).
 
-The Gradle plugin (`app.cash.sqldelight`) version `2.0` isn't compatible with older versions `1.x` of the IntelliJ plugin.
+SQLDelight 2.0 is not compatible with older (1.x) versions of the IntelliJ plugin. Make sure to also update the IntelliJ plugin. 
 You have to update the IntelliJ plugin by adding an IntelliJ repository in the IntelliJ plugins settings, either use [alpha versions](https://plugins.jetbrains.com/plugins/alpha/com.squareup.sqldelight) or [snapshots of the master branch](https://plugins.jetbrains.com/plugins/eap/com.squareup.sqldelight).
 
 
