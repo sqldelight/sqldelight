@@ -9,7 +9,7 @@ CREATE TABLE person (
   last_name TEXT,
   is_cool INTEGER AS Boolean NOT NULL,
   friends BLOB AS List<Person> DEFAULT NULL,
-  shhh_its_secret TEXT AS @Redacted String NOT NULL
+  shhh_its_secret TEXT AS @Redacted kotlin.String NOT NULL
 );
 
 -- Requires no additional type
