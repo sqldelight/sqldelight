@@ -284,7 +284,10 @@ alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 | (SET | DROP) NOT NULL
 | SET DEFAULT <<expr '-1'>> | DROP DEFAULT | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
 | SET GENERATED (ALWAYS | BY DEFAULT )
-)
+) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAlterColumnMixin"
+  pin = 1
+}
 
 compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | COMMA ) {limiting_term} ] [ FOR UPDATE [ 'SKIP' 'LOCKED' ] ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
