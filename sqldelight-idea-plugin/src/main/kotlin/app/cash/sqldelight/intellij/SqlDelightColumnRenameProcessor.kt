@@ -30,9 +30,12 @@ class SqlDelightColumnRenameProcessor : RenamePsiElementProcessor() {
     val readActionProcessor = ReadActionProcessor.wrapInReadAction(collectProcessor)
     val findUsagesHandler = findUsagesHandlerFactory.createFindUsagesHandler(element, false)
     findUsagesHandler.processElementUsages(
-      /* element = */ element,
-      /* processor = */ readActionProcessor,
-      /* options = */ FindUsagesOptions(element.project).apply {
+      /* element = */
+      element,
+      /* processor = */
+      readActionProcessor,
+      /* options = */
+      FindUsagesOptions(element.project).apply {
         isUsages = true
         isSearchForTextOccurrences = false
       },

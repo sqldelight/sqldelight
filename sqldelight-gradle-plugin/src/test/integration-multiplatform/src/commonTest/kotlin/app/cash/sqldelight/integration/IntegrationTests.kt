@@ -16,7 +16,7 @@ class IntegrationTests {
   private lateinit var nullableTypesQueries: NullableTypesQueries
   private lateinit var bigTableQueries: BigTableQueries
 
-  private object listAdapter : ColumnAdapter<List<String>, String> {
+  private object ListAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
     override fun encode(value: List<String>): String = value.joinToString(",")
   }
@@ -24,7 +24,7 @@ class IntegrationTests {
   @BeforeTest fun before() {
     val database = createSqlDatabase()
 
-    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
+    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(ListAdapter))
     queryWrapper.freeze()
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
