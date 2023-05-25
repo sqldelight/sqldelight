@@ -1,0 +1,13 @@
+CREATE TABLE characters (
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(255)
+);
+
+insertCharacter:
+  INSERT INTO characters (name, description) VALUES (:name, :description);
+
+selectNameCharLength:
+  SELECT char_length(name) FROM characters;
+
+selectDescriptionCharLength:
+  SELECT char_length(description) FROM characters;

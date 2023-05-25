@@ -31,6 +31,7 @@ class GradlePluginCombinationTests {
         |}
         |
         |android {
+        |  namespace 'com.example.namespace'
         |  compileSdk libs.versions.compileSdk.get() as int
         |}
         |

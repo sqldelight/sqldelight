@@ -75,15 +75,16 @@ jobs:
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel
 
-      # iOS tests
+      # android tests
       - name: Run instrumentation tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           arch: x86_64
-          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
+          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace
 
+      # ios tests
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace

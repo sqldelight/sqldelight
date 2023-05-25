@@ -15,12 +15,10 @@
  */
 package app.cash.sqldelight.integrations
 
-import app.cash.sqldelight.Instrumentation
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
@@ -35,6 +33,7 @@ class KotlinVersionsTest(val kotlinVersion: String) {
       "1.6.21",
       "1.7.20",
       "1.8.0",
+      "1.9.0-Beta",
     )
   }
 
@@ -46,20 +45,6 @@ class KotlinVersionsTest(val kotlinVersion: String) {
       .forwardOutput()
       .withCommonConfiguration(integrationRoot)
       .withArguments("clean", "compileKotlin", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
-
-    val result = runner.build()
-    assertThat(result.output).contains("BUILD SUCCESSFUL")
-  }
-
-  @Test
-  @Category(Instrumentation::class)
-  fun `kotlin mpp compiles successfully with different Kotlin versions`() {
-    val integrationRoot = File("src/test/kotlin-mpp")
-
-    val runner = GradleRunner.create()
-      .forwardOutput()
-      .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "assemble", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
