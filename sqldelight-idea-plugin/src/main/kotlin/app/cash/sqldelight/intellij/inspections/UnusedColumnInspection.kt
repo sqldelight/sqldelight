@@ -50,7 +50,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
         val psiManager = PsiManager.getInstance(project)
 
         FileTypeIndex.getFiles(SqlDelightFileType, GlobalSearchScope.allScope(project)).asSequence()
-          .mapNotNull { vFile -> psiManager.findFile(vFile) as SqlDelightQueriesFile? }
+          .mapNotNull { vFile -> psiManager.findFile(vFile) as? SqlDelightQueriesFile }
           .flatMap { file -> file.namedQueries }
           .flatMap { it.resultColumns.mapNotNull { it.column } }
           .forEach { column ->
@@ -110,7 +110,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
           |)
         """.trimMargin()
         val dummyFile = factory.createFileFromText(
-          "_Dummy_.${SqlDelightFileType.EXTENSION}",
+          "_Dummy_.${app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION}",
           SqlDelightFileType,
           createTableStmt,
         )

@@ -1,0 +1,10 @@
+CREATE TABLE example (
+  id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+selectAll:
+SELECT id, name FROM example;
+
+selectById:
+SELECT id, name FROM example WHERE id = ?;

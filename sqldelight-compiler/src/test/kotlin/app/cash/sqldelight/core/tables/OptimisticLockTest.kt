@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.tables
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -102,7 +103,7 @@ class OptimisticLockTest {
       |  version: com.example.Test.Version,
       |  id: com.example.Test.Id,
       |): kotlin.Unit {
-      |  val result = driver.execute(${mutator.id}, ""${'"'}
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET
       |      |  text = ?,
@@ -118,7 +119,7 @@ class OptimisticLockTest {
       |        bindLong(3, version.version.toLong())
       |      }
       |  if (result.value == 0L) throw app.cash.sqldelight.db.OptimisticLockException("UPDATE on test failed because optimistic lock version did not match")
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
       |}

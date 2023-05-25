@@ -1,0 +1,33 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.publish)
+  id("app.cash.sqldelight.toolchain.compiler")
+}
+
+dependencies {
+  shadow libs.sqliteJdbc
+  shadow libs.objectDiff
+  shadow libs.schemaCrawler.tools
+  shadow libs.schemaCrawler.sqlite
+}
+
+tasks.named("jar", Jar) {
+  // shadowjar overwrites the normal jar, this overlapping outputs are not cacheable.
+  // and we don't need the non shaded jar.
+  enabled = false
+}
+
+tasks.named("shadowJar") {
+  archiveClassifier.set("")
+  configurations = [project.configurations.shadow]
+}
+
+configurations {
+  [apiElements, runtimeElements].each {
+    it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+    it.outgoing.artifact(shadowJar)
+  }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

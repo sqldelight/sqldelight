@@ -3,7 +3,7 @@
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
-  <idea-version since-build="221"/>
+  <idea-version since-build="222.4459.24"/>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
@@ -81,7 +81,10 @@
         implementation="app.cash.sqldelight.intellij.SqlDelightFindUsagesHandlerFactory"/>
     <renamePsiElementProcessor
         implementation="app.cash.sqldelight.intellij.SqlDelightRenameProcessor"/>
+    <renamePsiElementProcessor
+        implementation="app.cash.sqldelight.intellij.SqlDelightColumnRenameProcessor"/>
     <psi.referenceContributor
+        language="SqlDelight"
         implementation="app.cash.sqldelight.intellij.SqlDelightReferenceContributor"/>
 
     <lang.findUsagesProvider
@@ -134,6 +137,10 @@
     </intentionAction>
     <intentionAction>
       <className>app.cash.sqldelight.intellij.intentions.QualifyColumnNameIntention</className>
+      <category>SQLDelight</category>
+    </intentionAction>
+    <intentionAction>
+      <className>app.cash.sqldelight.intellij.intentions.CreateViewIntention</className>
       <category>SQLDelight</category>
     </intentionAction>
 

@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.dialects.intType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -39,7 +40,7 @@ class AsyncSelectQueryTypeTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id}, driver, "Test.sq", "insertReturning", ""${'"'}
+      |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "insertReturning", ""${'"'}
       ||INSERT INTO data
       ||VALUES ('sup', 'dude')
       ||RETURNING *
@@ -139,7 +140,7 @@ class AsyncSelectQueryTypeTest {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id}, ""${'"'}
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
       |  |SELECT *
       |  |FROM data
       |  |WHERE id = ?
@@ -184,20 +185,20 @@ class AsyncSelectQueryTypeTest {
       """
       |public suspend fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
       |  transaction {
-      |    driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          bindLong(0, value)
       |        }.await()
-      |    driver.execute(${query.idForIndex(1)}, ""${'"'}
+      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          bindLong(0, value)
       |        }.await()
       |  }
-      |  notifyQueries(-609468782) { emit ->
+      |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
       |}
@@ -238,15 +239,15 @@ class AsyncSelectQueryTypeTest {
       |  public val value_: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = app.cash.sqldelight.db.QueryResult.AsyncValue {
+      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = app.cash.sqldelight.db.QueryResult.AsyncValue {
       |    transactionWithResult {
-      |      driver.execute(${query.idForIndex(0)}, ""${'"'}
+      |      driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
       |          |INSERT INTO data (value)
       |          |  VALUES (?)
       |          ""${'"'}.trimMargin(), 1) {
       |            bindLong(0, value_)
       |          }.await()
-      |      driver.executeQuery(${query.idForIndex(1)}, ""${'"'}
+      |      driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |          |SELECT value
       |          |  FROM data
       |          |  WHERE id = last_insert_rowid()

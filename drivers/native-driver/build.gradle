@@ -8,16 +8,13 @@ plugins {
 
 kotlin {
   iosX64()
-  iosArm32()
   iosArm64()
   tvosX64()
   tvosArm64()
-  watchosX86()
   watchosX64()
   watchosArm32()
   watchosArm64()
   macosX64()
-  mingwX86()
   mingwX64()
   linuxX64()
   macosArm64()
@@ -58,9 +55,6 @@ kotlin {
     mingwMain {
       dependsOn(nativeMain)
     }
-    mingwX86Main {
-      dependsOn(mingwMain)
-    }
     mingwX64Main {
       dependsOn(mingwMain)
     }
@@ -69,7 +63,7 @@ kotlin {
     }
   }
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
+  configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeDarwinMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
@@ -81,7 +75,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.linuxMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-lsqlite3", "-L/usr/lib/x86_64-linux-gnu", "-L/usr/lib", "-L/usr/lib64"]
+      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
     }
   }
 
@@ -89,15 +83,7 @@ kotlin {
     sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
     sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs", "-lsqlite3"]
-    }
-  }
-
-  configure([targets.mingwX86]) {
-    sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
-    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
-    binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys32\\mingw32\\lib", "-L$rootDir\\libs", "-lsqlite3"]
+      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
     }
   }
 

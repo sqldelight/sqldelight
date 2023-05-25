@@ -1,8 +1,8 @@
 [versions]
-kotlin = "1.8.20"
+kotlin = "1.8.21"
 dokka = "1.8.10"
-kotlinCoroutines = "1.6.4"
-idea = "221.6008.13" # Electric Eel (2022.1.1) RC 1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+kotlinCoroutines = "1.7.1"
+idea = "222.4459.24" # Flamingo | 2022.2.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.3.1"
 schemaCrawler = "16.19.2"
 stately = "1.2.5"
@@ -12,11 +12,11 @@ sqljs = "1.6.2"
 paging-mpp = "3.1.1-0.2.0"
 paging3 = "3.1.1"
 ktlint = "0.48.2"
-agp = "7.4.2"
+agp = "8.0.2"
 compileSdk = "33"
 minSdk = "16"
 sqlPsi = "0.4.3"
-testContainers = "1.18.0"
+testContainers = "1.18.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -37,19 +37,21 @@ androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.3.0" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
-kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.12.0" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.13.2" }
 junit = { module = "junit:junit", version = "4.13.2" }
-jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.1" }
+jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.2" }
 truth = { module = "com.google.truth:truth", version = "1.1.3" }
-turbine = { module = "app.cash.turbine:turbine", version = "0.12.1" }
+turbine = { module = "app.cash.turbine:turbine", version = "0.13.0" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.6.4" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.6.0" }
-moshi = { module = "com.squareup.moshi:moshi", version = "1.14.0" }
-moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version = "1.14.0" }
+moshi = { module = "com.squareup.moshi:moshi", version = "1.15.0" }
+moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version = "1.15.0" }
 
 intellij-core = { module = "com.jetbrains.intellij.platform:core", version.ref = "idea" }
 intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
-intellij-core-ui = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "idea" }
+intellij-coreUi = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "idea" }
+intellij-ide = { module = "com.jetbrains.intellij.platform:ide", version.ref = "idea" }
+intellij-ideCore = { module = "com.jetbrains.intellij.platform:ide-core", version.ref = "idea" }
 intellij-ideImpl = { module = "com.jetbrains.intellij.platform:ide-impl", version.ref = "idea" }
 intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
 intellij-lang = { module = "com.jetbrains.intellij.platform:lang", version.ref = "idea" }
@@ -60,17 +62,17 @@ intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-mod
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
 intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.ref = "idea" }
-
-jna = { module = "net.java.dev.jna:jna", version = "5.13.0" }
+intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "idea" }
+intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
 sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version.ref = "sqlPsi" }
-robolectric = { module = "org.robolectric:robolectric", version = "4.10" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.10.3" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.6" }
-sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.41.2.1" }
+sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.42.0.0" }
 postgresJdbc = { module = "org.postgresql:postgresql", version = "42.6.0" }
-mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.32" }
+mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.33" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
 schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref = "schemaCrawler" }
@@ -83,7 +85,7 @@ stately-collections = { module = "co.touchlab:stately-collections", version.ref 
 
 testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
-testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.11" }
+testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.12" }
 
 r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
 testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
@@ -105,7 +107,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 intellij = { id = "org.jetbrains.intellij", version = "1.13.3" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.12" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
-spotless = { id = "com.diffplug.spotless", version = "6.18.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
-ksp = { id = "com.google.devtools.ksp", version = "1.8.20-1.0.10" }
+ksp = { id = "com.google.devtools.ksp", version = "1.8.21-1.0.11" }

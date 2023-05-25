@@ -6,6 +6,7 @@ import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import org.junit.Rule
@@ -39,13 +40,13 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(customTextValue: kotlin.String?): kotlin.Unit {
-      |  driver.execute(${insert.id}, ""${'"'}
+      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
       |        ${dialect.binderCheck}bindString(0, customTextValue)
       |      }
-      |  notifyQueries(${insert.id}) { emit ->
+      |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
       |}
@@ -75,14 +76,14 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(id: kotlin.Long?, value_: kotlin.collections.List?): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, id)
       |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
-      |  notifyQueries(1642410240) { emit ->
+      |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
       |}
@@ -112,8 +113,8 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun deleteData(): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}DELETE FROM data""${'"'}, 0)
-      |  notifyQueries(${mutator.id}) { emit ->
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM data""${'"'}, 0)
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
       |}
@@ -143,14 +144,14 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(data_: com.example.Data_): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, data_.id)
       |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
-      |  notifyQueries(1642410240) { emit ->
+      |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
       |}
@@ -189,7 +190,7 @@ class MutatorQueryFunctionTest {
       |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
       |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
-      |  notifyQueries(380313360) { emit ->
+      |  notifyQueries(380_313_360) { emit ->
       |    emit("data")
       |  }
       |}
@@ -219,7 +220,7 @@ class MutatorQueryFunctionTest {
     assertThat(nullAsUnknownGenerator.function().toString()).isEqualTo(
       """
       |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): kotlin.Unit {
-      |  driver.execute(${nullAsUnknownUpdate.id}, ""${'"'}
+      |  driver.execute(${nullAsUnknownUpdate.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE value = ?
@@ -227,7 +228,7 @@ class MutatorQueryFunctionTest {
       |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
       |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
-      |  notifyQueries(380313360) { emit ->
+      |  notifyQueries(380_313_360) { emit ->
       |    emit("data")
       |  }
       |}
@@ -257,14 +258,14 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(data_: com.example.Data_): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, data_.id)
       |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
-      |  notifyQueries(1642410240) { emit ->
+      |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
       |}
@@ -294,13 +295,13 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(data_: com.example.Data_): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, data_.id)
       |      }
-      |  notifyQueries(1642410240) { emit ->
+      |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
       |}
@@ -330,13 +331,13 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertData(id: kotlin.Long?): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, id)
       |      }
-      |  notifyQueries(1642410240) { emit ->
+      |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
       |}
@@ -378,7 +379,7 @@ class MutatorQueryFunctionTest {
       |          bindLong(index + 1, id_)
       |        }
       |      }
-      |  notifyQueries(${update.id}) { emit ->
+      |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
       |}
@@ -410,7 +411,7 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun updateWithInnerSelect(some_column: kotlin.Long?): kotlin.Unit {
-      |  driver.execute(${update.id}, ""${'"'}
+      |  driver.execute(${update.id.withUnderscores}, ""${'"'}
       |      |UPDATE some_table
       |      |SET some_column = (
       |      |  SELECT CASE WHEN ? IS NULL THEN some_column ELSE ? END
@@ -420,7 +421,7 @@ class MutatorQueryFunctionTest {
       |        bindLong(0, some_column)
       |        bindLong(1, some_column)
       |      }
-      |  notifyQueries(${update.id}) { emit ->
+      |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("some_table")
       |  }
       |}
@@ -462,7 +463,7 @@ class MutatorQueryFunctionTest {
       |  c: kotlin.collections.List<kotlin.String>?,
       |  d: kotlin.collections.List<kotlin.String>?,
       |): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE paymentHistoryConfig
       |      |SET a = ?,
       |      |    b = ?,
@@ -474,7 +475,7 @@ class MutatorQueryFunctionTest {
       |        bindBytes(2, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
       |        bindBytes(3, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
       |      }
-      |  notifyQueries(-1559802298) { emit ->
+      |  notifyQueries(-1_559_802_298) { emit ->
       |    emit("paymentHistoryConfig")
       |  }
       |}
@@ -513,7 +514,7 @@ class MutatorQueryFunctionTest {
       |  c: kotlin.collections.List<kotlin.String>?,
       |  d: kotlin.collections.List<kotlin.String>?,
       |): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE paymentHistoryConfig
       |      |SET (a, b, c, d) = (?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 4) {
@@ -522,7 +523,7 @@ class MutatorQueryFunctionTest {
       |        bindBytes(2, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
       |        bindBytes(3, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
       |      }
-      |  notifyQueries(-1559802298) { emit ->
+      |  notifyQueries(-1_559_802_298) { emit ->
       |    emit("paymentHistoryConfig")
       |  }
       |}
@@ -552,14 +553,14 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertNullableType(nullableTypes: com.example.NullableTypes): kotlin.Unit {
-      |  driver.execute(${insert.id}, ""${'"'}
+      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO nullableTypes
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindString(0, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
       |        bindString(1, nullableTypes.val2)
       |      }
-      |  notifyQueries(-871418479) { emit ->
+      |  notifyQueries(-871_418_479) { emit ->
       |    emit("nullableTypes")
       |  }
       |}
@@ -595,7 +596,7 @@ class MutatorQueryFunctionTest {
       |  name: kotlin.String,
       |  description: kotlin.String,
       |): kotlin.Unit {
-      |  driver.execute(${insert.id}, ""${'"'}
+      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT OR REPLACE
       |      |INTO category (rowid, id, name, description)
       |      |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
@@ -605,7 +606,7 @@ class MutatorQueryFunctionTest {
       |        bindString(2, name)
       |        bindString(3, description)
       |      }
-      |  notifyQueries(-368176582) { emit ->
+      |  notifyQueries(-368_176_582) { emit ->
       |    emit("category")
       |  }
       |}
@@ -638,13 +639,13 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
     |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): kotlin.Unit {
-    |  driver.execute(${mutator.id}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
+    |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
     |        val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
     |        bindString(0, id)
     |        bindString(1, data__)
     |        bindString(2, data__)
     |      }
-    |  notifyQueries(${mutator.id}) { emit ->
+    |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
     |    emit("example")
     |  }
     |}
@@ -675,14 +676,14 @@ class MutatorQueryFunctionTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
       |public fun insertAnnotation(annotation_: com.example.Annotation_): kotlin.Unit {
-      |  driver.execute(${mutator.id}, ""${'"'}
+      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO annotation
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, annotation_.id)
       |        bindString(1, annotation_.name)
       |      }
-      |  notifyQueries(1295352605) { emit ->
+      |  notifyQueries(1_295_352_605) { emit ->
       |    emit("annotation")
       |  }
       |}

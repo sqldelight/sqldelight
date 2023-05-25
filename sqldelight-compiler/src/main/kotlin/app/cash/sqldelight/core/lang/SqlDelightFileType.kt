@@ -18,14 +18,15 @@ package app.cash.sqldelight.core.lang
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileTypes.LanguageFileType
 
+const val SQLDELIGHT_EXTENSION = "sq"
+
 object SqlDelightFileType : LanguageFileType(SqlDelightLanguage) {
   private val ICON = AllIcons.Providers.Sqlite
 
-  const val EXTENSION = "sq"
   const val FOLDER_NAME = "sqldelight"
 
   override fun getName() = "SqlDelight"
   override fun getDescription() = "SqlDelight"
-  override fun getDefaultExtension() = EXTENSION
+  override fun getDefaultExtension() = SQLDELIGHT_EXTENSION
   override fun getIcon() = ICON
 }

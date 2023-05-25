@@ -1,19 +1,10 @@
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
 }
 
 kotlin {
   js {
-    nodejs {
-      testTask {
-        useMocha {
-          timeout = "5s"
-        }
-        filter.excludeTestsMatching("*JsWorker*")
-      }
-    }
     browser {
       testTask {
         useKarma {
@@ -43,5 +34,3 @@ kotlin {
     }
   }
 }
-
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

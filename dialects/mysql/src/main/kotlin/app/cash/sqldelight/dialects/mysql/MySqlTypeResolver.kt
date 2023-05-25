@@ -69,6 +69,7 @@ class MySqlTypeResolver(
     "to_seconds" -> IntermediateType(INTEGER)
     "json_arrayagg" -> IntermediateType(TEXT)
     "date_add", "date_sub" -> IntermediateType(TEXT)
+    "char_length", "character_length" -> IntermediateType(INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
   }
 

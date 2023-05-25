@@ -23,7 +23,6 @@ val MINIMUM_SUPPORTED_VERSION = "2.0.0"
 interface SqlDelightPropertiesFile : Serializable {
   val databases: List<SqlDelightDatabaseProperties>
   val dialectJars: Collection<File>
-  val moduleJars: Collection<File>
   val minimumSupportedVersion: String
   val currentVersion: String
 }

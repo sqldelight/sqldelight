@@ -8,16 +8,27 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 
-class R2dbcDriver(val connection: Connection) : SqlDriver {
+class R2dbcDriver(
+  val connection: Connection,
+  /**
+   * This callback is called after [close]. It either contains an error or null, representing a successful close.
+   */
+  val closed: (Throwable?) -> Unit = { },
+) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
@@ -32,7 +43,7 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
         List(rowMetadata.columnMetadatas.size) { index -> row.get(index) }
       }.asFlow().toList()
 
-      return@AsyncValue mapper(R2dbcCursor(rowSet))
+      return@AsyncValue mapper(R2dbcCursor(rowSet)).await()
     }
   }
 
@@ -78,8 +89,26 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
   override fun notifyListeners(queryKeys: Array<String>) = Unit
 
   override fun close() {
-    // TODO: Somehow await this async operation
-    connection.close()
+    // Normally, this is just a Mono, so it completes directly without onNext.
+    // But the standard allows any publisher, so we should request unlimited items
+    // and wait until the close call is finally completed.
+    connection.close().subscribe(object : Subscriber<Void> {
+      override fun onSubscribe(sub: Subscription) {
+        sub.request(Long.MAX_VALUE)
+      }
+
+      override fun onError(error: Throwable) {
+        closed(error)
+      }
+
+      override fun onComplete() {
+        closed(null)
+      }
+
+      override fun onNext(t: Void) {
+        // Do nothing, we wait until completion.
+      }
+    })
   }
 
   private inner class Transaction(
@@ -97,6 +126,28 @@ class R2dbcDriver(val connection: Connection) : SqlDriver {
       transaction = enclosingTransaction
     }
   }
+}
+
+/**
+ * Creates and returns a [R2dbcDriver] with the given [connection].
+ *
+ * The scope waits until the driver is closed [R2dbcDriver.close].
+ */
+fun CoroutineScope.R2dbcDriver(
+  connection: Connection,
+): R2dbcDriver {
+  val completed = Job()
+  val driver = R2dbcDriver(connection) {
+    if (it == null) {
+      completed.complete()
+    } else {
+      completed.completeExceptionally(it)
+    }
+  }
+  launch {
+    completed.join()
+  }
+  return driver
 }
 
 // R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
@@ -157,7 +208,7 @@ class R2dbcCursor(val rowSet: List<List<Any?>>) : SqlCursor {
   var row = -1
     private set
 
-  override fun next(): Boolean = ++row < rowSet.size
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(++row < rowSet.size)
 
   override fun getString(index: Int): String? = rowSet[row][index] as String?
 

@@ -2,6 +2,7 @@ package app.cash.sqldelight.intellij.inspections
 
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.MigrationFile
+import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.psi.parameterValue
 import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.intellij.refactoring.SqlDelightSignatureBuilder
@@ -29,6 +30,8 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
   ) = ensureReady(holder.file) {
     object : SqlVisitor() {
       override fun visitCreateTableStmt(createTable: SqlCreateTableStmt) = ignoreInvalidElements {
+        if (sqlDelightFile !is SqlDelightQueriesFile) return
+
         val dbFile = sqlDelightFile.findDbFile() ?: return
         val topMigrationFile = fileIndex.sourceFolders(sqlDelightFile).asSequence()
           .flatMap { it.migrationFiles() }

@@ -9,8 +9,9 @@ dependencies {
   api libs.sqlPsi
   api libs.kotlinPoet
 
-  compileOnly libs.intellij.coreImpl
-  compileOnly libs.intellij.utilEx
+  compileOnly(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
+  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
