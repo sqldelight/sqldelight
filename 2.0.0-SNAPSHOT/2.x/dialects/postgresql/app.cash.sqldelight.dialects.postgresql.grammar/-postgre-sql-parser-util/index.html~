@@ -735,6 +735,21 @@
               </div>
             </div>
           </div>
+<a data-name="-249564760%2FFunctions%2F-128169639" anchor-label="literalValueExt" id="-249564760%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="literal-value-ext.html"><span>literal</span><wbr><span>Value</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-249564760%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="literal-value-ext.html"><span class="token function">literalValueExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">literal_value<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1917244761%2FFunctions%2F-128169639" anchor-label="numericDataTypeExt" id="1917244761%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1650,6 +1665,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="jsonb_binary_operator.html">jsonb_binary_operator</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1468495516%2FProperties%2F-128169639" anchor-label="literal_value" id="1468495516%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="literal_value.html"><span><span>literal_value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1468495516%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="literal_value.html">literal_value</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>

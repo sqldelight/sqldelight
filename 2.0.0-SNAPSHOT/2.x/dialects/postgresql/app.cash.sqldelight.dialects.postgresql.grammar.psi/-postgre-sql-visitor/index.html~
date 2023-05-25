@@ -859,6 +859,21 @@
               </div>
             </div>
           </div>
+<a data-name="2004774672%2FFunctions%2F-128169639" anchor-label="visitLiteralValue" id="2004774672%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-literal-value.html"><span>visit</span><wbr><span>Literal</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2004774672%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="visit-literal-value.html"><span class="token function">visitLiteralValue</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-literal-value/index.html">PostgreSqlLiteralValue</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1217280870%2FFunctions%2F-128169639" anchor-label="visitNumericDataType" id="1217280870%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1170,6 +1185,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="visit-sql-insert-stmt.html"><span class="token function">visitSqlInsertStmt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlInsertStmt///PointingToDeclaration/">SqlInsertStmt</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-957129953%2FFunctions%2F-128169639" anchor-label="visitSqlLiteralValue" id="-957129953%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-sql-literal-value.html"><span>visit</span><wbr><span>Sql</span><wbr><span>Literal</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-957129953%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="visit-sql-literal-value.html"><span class="token function">visitSqlLiteralValue</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlLiteralValue///PointingToDeclaration/">SqlLiteralValue</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>

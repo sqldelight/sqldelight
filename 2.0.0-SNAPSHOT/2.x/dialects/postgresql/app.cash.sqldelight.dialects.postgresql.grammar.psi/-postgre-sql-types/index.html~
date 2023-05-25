@@ -709,6 +709,36 @@
               </div>
             </div>
           </div>
+<a data-name="849693629%2FProperties%2F-128169639" anchor-label="CURRENT_DATE" id="849693629%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-u-r-r-e-n-t_-d-a-t-e.html"><span><span>CURRENT_DATE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="849693629%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="-c-u-r-r-e-n-t_-d-a-t-e.html">CURRENT_DATE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1124836994%2FProperties%2F-128169639" anchor-label="CURRENT_TIME" id="-1124836994%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e.html"><span><span>CURRENT_TIME</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1124836994%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="-c-u-r-r-e-n-t_-t-i-m-e.html">CURRENT_TIME</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="2068635737%2FProperties%2F-128169639" anchor-label="CURRENT_TIMESTAMP" id="2068635737%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1245,6 +1275,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="-l-i-m-i-t.html">LIMIT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-374604952%2FProperties%2F-128169639" anchor-label="LITERAL_VALUE" id="-374604952%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-l-i-t-e-r-a-l_-v-a-l-u-e.html"><span><span>LITERAL_VALUE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-374604952%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="-l-i-t-e-r-a-l_-v-a-l-u-e.html">LITERAL_VALUE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
