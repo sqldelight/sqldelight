@@ -3181,7 +3181,8 @@
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
 <span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Ryan Getzlaf&#39;</span><span class="p">);</span>
 </code></pre></div>
-<p>From this SQLDelight will generate a <code>Database</code> Kotlin class with an associated <code>Schema</code> object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:</p>
+<p>From this, SQLDelight will generate a <code>Database</code> Kotlin class with an associated <code>Schema</code> object that can be used to create your database and run your statements on it. Generating the <code>Database</code> file happens during the 'generateSqlDelightInterface' gradle task. This task runs during the 'make project'/'make module' build task, or automatically if you have the SQLDelight IDE plugin.</p>
+<p>Accessing the generated database also requires a driver, which SQLDelight provides implementations of:</p>
 
 
 
