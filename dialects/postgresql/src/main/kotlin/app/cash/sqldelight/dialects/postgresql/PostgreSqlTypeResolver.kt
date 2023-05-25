@@ -21,7 +21,9 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.squareup.kotlinpoet.CodeBlock
@@ -124,5 +126,21 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
 
     return parentResolver.simplifyType(intermediateType)
+  }
+
+  override fun resolvedType(expr: SqlExpr): IntermediateType {
+    return expr.postgreSqlType()
+  }
+
+  private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
+    is SqlLiteralExpr -> when {
+      literalValue.text == "CURRENT_DATE" -> IntermediateType(PostgreSqlType.DATE)
+      literalValue.text == "CURRENT_TIME" -> IntermediateType(PostgreSqlType.TIME)
+      literalValue.text == "CURRENT_TIMESTAMP" -> IntermediateType(PostgreSqlType.TIMESTAMP)
+      literalValue.text.startsWith("INTERVAL") -> IntermediateType(PostgreSqlType.INTERVAL)
+      else -> parentResolver.resolvedType(this)
+    }
+
+    else -> parentResolver.resolvedType(this)
   }
 }

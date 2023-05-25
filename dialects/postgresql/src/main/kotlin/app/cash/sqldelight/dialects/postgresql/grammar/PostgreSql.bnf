@@ -19,6 +19,8 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_DATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
@@ -195,6 +197,19 @@ delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ W
 string_literal ::= string {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.StringLiteralMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlStringLiteral"
+  override = true
+}
+
+literal_value ::= ( {numeric_literal}
+                  | string_literal
+                  | {blob_literal}
+                  | NULL
+                  | CURRENT_TIME
+                  | CURRENT_DATE
+                  | CURRENT_TIMESTAMP
+                  | interval_expression ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
 }
 

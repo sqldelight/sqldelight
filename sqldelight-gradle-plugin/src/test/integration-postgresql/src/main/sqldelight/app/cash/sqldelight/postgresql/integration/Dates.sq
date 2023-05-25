@@ -15,3 +15,6 @@ SELECT date_trunc('hour', timestamp), date_trunc('hour', timestamp_with_timezone
 
 selectNow:
 SELECT NOW();
+
+selectInterval:
+SELECT INTERVAL '1 day';
