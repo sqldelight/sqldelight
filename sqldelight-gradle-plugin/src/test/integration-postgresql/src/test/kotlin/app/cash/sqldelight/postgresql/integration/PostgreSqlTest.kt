@@ -224,6 +224,12 @@ class PostgreSqlTest {
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
   }
 
+  @Test fun interval() {
+    val interval = database.datesQueries.selectInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(1)
+  }
+
   @Test fun successfulOptimisticLock() {
     with(database.withLockQueries) {
       val row = insertText("sup").executeAsOne()

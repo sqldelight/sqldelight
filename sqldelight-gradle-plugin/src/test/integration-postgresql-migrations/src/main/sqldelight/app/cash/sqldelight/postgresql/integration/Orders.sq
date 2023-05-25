@@ -1,0 +1,7 @@
+insert:
+INSERT INTO Orders(sku, quantity, price)
+VALUES ?;
+
+selectAll:
+SELECT *
+FROM Orders;
