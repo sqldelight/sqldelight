@@ -229,8 +229,9 @@ class SelectQueryGenerator(
       val tablesObserved = query.tablesObserved
       if (tablesObserved.isNullOrEmpty()) {
         function.addCode(
-          "return %T(${query.id}, $DRIVER_NAME, %S, %S, %S)%L",
+          "return %T(%L, $DRIVER_NAME, %S, %S, %S)%L",
           QUERY_TYPE,
+          query.id,
           query.statement.containingFile.name,
           query.name,
           query.statement.rawSqlText(),
@@ -238,8 +239,9 @@ class SelectQueryGenerator(
         )
       } else {
         function.addCode(
-          "return %T(${query.id}, %L, $DRIVER_NAME, %S, %S, %S)%L",
+          "return %T(%L, %L, $DRIVER_NAME, %S, %S, %S)%L",
           QUERY_TYPE,
+          query.id,
           queryKeys(tablesObserved),
           query.statement.containingFile.name,
           query.name,

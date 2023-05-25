@@ -13,7 +13,7 @@ public class DataQueries(
   private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
   public fun <T : Any> migrationSelect(mapper: (first: String, second: List<Int>?) -> T): Query<T> =
-      Query(-561113227, arrayOf("new_test"), driver, "Data.sq", "migrationSelect", """
+      Query(-561_113_227, arrayOf("new_test"), driver, "Data.sq", "migrationSelect", """
   |SELECT *
   |FROM new_test
   """.trimMargin()) { cursor ->

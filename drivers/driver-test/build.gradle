@@ -9,8 +9,6 @@ sourceSets {
 }
 
 kotlin {
-  mingwX86()
-
   sourceSets {
     commonMain {
       dependencies {

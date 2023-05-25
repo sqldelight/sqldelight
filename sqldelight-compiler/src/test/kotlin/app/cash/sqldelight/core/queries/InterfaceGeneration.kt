@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Rule
@@ -904,14 +905,14 @@ class InterfaceGeneration {
       |  }
       |
       |  public fun insertSubscription(user_id2: Int): Unit {
-      |    driver.execute(${result.compiledFile.namedMutators[0].id}, ""${'"'}
+      |    driver.execute(${result.compiledFile.namedMutators[0].id.withUnderscores}, ""${'"'}
       |        |INSERT INTO subscriptionEntity(user_id2)
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          check(this is JdbcPreparedStatement)
       |          bindLong(0, user_id2.toLong())
       |        }
-      |    notifyQueries(${result.compiledFile.namedMutators[0].id}) { emit ->
+      |    notifyQueries(${result.compiledFile.namedMutators[0].id.withUnderscores}) { emit ->
       |      emit("subscriptionEntity")
       |    }
       |  }
@@ -929,7 +930,7 @@ class InterfaceGeneration {
       |    }
       |
       |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(${result.compiledFile.namedQueries[0].id}, ""${'"'}
+      |        driver.executeQuery(${result.compiledFile.namedQueries[0].id.withUnderscores}, ""${'"'}
       |    |WITH inserted_ids AS (
       |    |  INSERT INTO userEntity(slack_user_id)
       |    |  VALUES (?)
@@ -1043,7 +1044,7 @@ class InterfaceGeneration {
       |    }
       |
       |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(${query.id}, ""${'"'}
+      |        driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
       |    |WITH RECURSIVE
       |    |descendants AS (
       |    |    SELECT id, parent_id

@@ -55,14 +55,9 @@ jobs:
         id: version
 
       - name: Prep mkdocs
-        run: .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
-
-      - name: Build mkdocs
-        env:
-          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
         run: |
           pip3 install --no-deps -r .github/workflows/requirements.txt
-          mkdocs build
+          .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Configure git for mike
         run: |
@@ -71,10 +66,14 @@ jobs:
           git fetch origin gh-pages --depth=1
 
       - name: Deploy SNAPSHOT Docs with mike 🗿
+        env:
+          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
         if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
         run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} snapshot
 
       - name: Deploy Docs with mike 🚀
+        env:
+          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
         if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
         run: mike deploy -u --push ${{ steps.version.outputs.VERSION_NAME }} latest
 

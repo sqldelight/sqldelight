@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.konan.target.HostManager
+import app.cash.sqldelight.toolchain.ToolchainConventions
 
 plugins {
   alias(libs.plugins.kotlin.jvm)
@@ -17,11 +18,15 @@ testing {
     grammarkitTest(JvmTestSuite) {
       useJUnit()
     }
+    instrumentationTest(JvmTestSuite) {
+      useJUnit()
+    }
   }
 }
 
 configurations.dockerTestImplementation.extendsFrom(configurations.testImplementation)
 configurations.grammarkitTestImplementation.extendsFrom(configurations.testImplementation)
+configurations.instrumentationTestImplementation.extendsFrom(configurations.testImplementation)
 
 gradlePlugin {
   plugins {
@@ -31,7 +36,7 @@ gradlePlugin {
     }
   }
 
-  testSourceSets(sourceSets.test, sourceSets.dockerTest, sourceSets.grammarkitTest)
+  testSourceSets(sourceSets.test, sourceSets.dockerTest, sourceSets.grammarkitTest, sourceSets.instrumentationTest)
 }
 
 
@@ -91,18 +96,19 @@ tasks.named('test') {
         ":runtime:publishIosX64PublicationToInstallLocallyRepository",
         ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
         ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
-        ":runtime:publishIosArm32PublicationToInstallLocallyRepository",
         ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
     )
   }
-  useJUnit {
-    if (project.hasProperty("Instrumentation")) {
-      includeCategories 'app.cash.sqldelight.Instrumentation'
-    } else {
-      excludeCategories 'app.cash.sqldelight.Instrumentation'
-    }
+  useJUnit()
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(ToolchainConventions.BUILD_JDK)
   }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
+  
+  if (System.getenv("CI")) {
+    reports.html.required = false
+    reports.junitXml.required = false
+  }
 }
 
 tasks.named('check') {
@@ -110,7 +116,6 @@ tasks.named('check') {
 }
 
 tasks.named('dockerTest') {
-  if (project.hasProperty("Instrumentation")) enabled = false
   dependsOn(
       ":dialects:mysql:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:postgresql:publishAllPublicationsToInstallLocallyRepository",
@@ -145,6 +150,39 @@ tasks.named("grammarkitTest") {
   )
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(17)
+  }
+  environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
+}
+
+tasks.named("instrumentationTest") {
+  dependsOn(
+      ":drivers:android-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-18:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
+      ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:publishJvmPublicationToInstallLocallyRepository",
+      ":runtime:publishJsPublicationToInstallLocallyRepository",
+      ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
+      ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
+      ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
+  )
+  if (HostManager.hostIsMac) {
+    dependsOn(
+      ":drivers:native-driver:publishIosX64PublicationToInstallLocallyRepository",
+      ":drivers:native-driver:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+      ":drivers:native-driver:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
+      ":runtime:publishIosX64PublicationToInstallLocallyRepository",
+      ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+      ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
+      ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
+    )
+  }
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(ToolchainConventions.BUILD_JDK)
   }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }

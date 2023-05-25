@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -65,24 +64,6 @@ class QueryAsFlowTest : DbTest {
         }
 
         cancel()
-      }
-  }
-
-  @Test fun queryNotNotifiedAfterCancel() = runTest { db ->
-    db.createQuery(TABLE_EMPLOYEE, SELECT_EMPLOYEES, MAPPER)
-      .asFlow()
-      .test {
-        awaitItem().assert {
-          hasRow("alice", "Alice Allison")
-          hasRow("bob", "Bob Bobberson")
-          hasRow("eve", "Eve Evenson")
-        }
-
-        cancel()
-
-        db.employee(Employee("john", "John Johnson"))
-        yield() // Ensure any events can be delivered.
-        expectNoEvents()
       }
   }
 

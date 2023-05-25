@@ -1,5 +1,6 @@
 package app.cash.sqldelight.toolchain
 
+import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -9,7 +10,6 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.android.build.gradle.BaseExtension as AndroidBaseExtension
 
 abstract class ToolchainConventions(private val targetJdkVersion: String) : Plugin<Project> {
   override fun apply(project: Project) {
@@ -29,7 +29,7 @@ abstract class ToolchainConventions(private val targetJdkVersion: String) : Plug
       targetCompatibility = JavaVersion.toVersion(targetJdkVersion)
     }
 
-    project.extensions.findByType(AndroidBaseExtension::class.java)?.compileOptions?.apply {
+    project.extensions.findByType(CommonExtension::class.java)?.compileOptions?.apply {
       sourceCompatibility = JavaVersion.toVersion(targetJdkVersion)
       targetCompatibility = JavaVersion.toVersion(targetJdkVersion)
     }

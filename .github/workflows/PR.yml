@@ -57,7 +57,7 @@ jobs:
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
-        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest
 
       - name: Run the IntelliJ plugin
@@ -77,15 +77,16 @@ jobs:
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel
 
-      # iOS tests
+      # android tests
       - name: Run instrumentation tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           arch: x86_64
-          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:build --stacktrace -PInstrumentation
+          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace
 
+      # ios tests
       - name: Run ios tests
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace
