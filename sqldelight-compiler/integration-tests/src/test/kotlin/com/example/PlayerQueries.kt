@@ -59,7 +59,8 @@ public class PlayerQueries(
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ) -> T): Query<T> = Query(-1634440035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
+  ) -> T): Query<T> = Query(-1_634_440_035, arrayOf("player"), driver, "Player.sq", "allPlayers",
+      """
   |SELECT *
   |FROM player
   """.trimMargin()) { cursor ->
@@ -128,8 +129,8 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> = Query(106890351,
-      driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
+  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> =
+      Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )
@@ -142,7 +143,7 @@ public class PlayerQueries(
   }
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> =
-      Query(-976770036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+      Query(-976_770_036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -162,7 +163,7 @@ public class PlayerQueries(
     team: Team.Name?,
     shoots: Shoots,
   ): Unit {
-    driver.execute(-1595716666, """
+    driver.execute(-1_595_716_666, """
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
@@ -171,7 +172,7 @@ public class PlayerQueries(
           bindString(2, team?.let { it.name })
           bindString(3, playerAdapter.shootsAdapter.encode(shoots))
         }
-    notifyQueries(-1595716666) { emit ->
+    notifyQueries(-1_595_716_666) { emit ->
       emit("player")
     }
   }
@@ -188,17 +189,17 @@ public class PlayerQueries(
             bindLong(index + 1, number_)
           }
         }
-    notifyQueries(-636585613) { emit ->
+    notifyQueries(-636_585_613) { emit ->
       emit("player")
     }
   }
 
   public fun foreignKeysOn(): Unit {
-    driver.execute(-1596558949, """PRAGMA foreign_keys = 1""", 0)
+    driver.execute(-1_596_558_949, """PRAGMA foreign_keys = 1""", 0)
   }
 
   public fun foreignKeysOff(): Unit {
-    driver.execute(2046279987, """PRAGMA foreign_keys = 0""", 0)
+    driver.execute(2_046_279_987, """PRAGMA foreign_keys = 0""", 0)
   }
 
   private inner class InsertAndReturnQuery<out T : Any>(
@@ -210,7 +211,7 @@ public class PlayerQueries(
   ) : ExecutableQuery<T>(mapper) {
     public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         transactionWithResult {
-      driver.execute(-452007405, """
+      driver.execute(-452_007_405, """
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
           """.trimMargin(), 4) {
@@ -219,7 +220,7 @@ public class PlayerQueries(
             bindString(2, team?.let { it.name })
             bindString(3, playerAdapter.shootsAdapter.encode(shoots))
           }
-      driver.executeQuery(-452007404, """
+      driver.executeQuery(-452_007_404, """
           |SELECT *
           |  FROM player
           |  WHERE player.rowid = last_insert_rowid()

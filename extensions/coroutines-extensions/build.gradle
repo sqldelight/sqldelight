@@ -45,7 +45,7 @@ kotlin {
     }
   }
 
-  configure([targets.iosX64, targets.iosArm32, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX86, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
+  configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
     binaries.configureEach {
       linkerOpts += ['-lsqlite3']
     }
@@ -56,7 +56,6 @@ kotlin {
     }
   }
 
-  // mingwX86 target is not supported by kotlinx.coroutines, see https://github.com/Kotlin/kotlinx.coroutines/issues/2157
   configure([targets.mingwX64]) {
     binaries.configureEach {
       linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]

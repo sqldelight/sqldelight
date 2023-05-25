@@ -113,8 +113,8 @@ class InterfaceGeneration {
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()
       assertWithMessage(expectedFile.name)
-        .that(expectedFile.readText().withInvariantLineSeparators())
-        .isEqualTo(actualOutput.toString())
+        .that(actualOutput.toString())
+        .isEqualTo(expectedFile.readText().withInvariantLineSeparators())
     }
   }
 }

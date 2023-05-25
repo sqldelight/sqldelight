@@ -136,7 +136,6 @@ class CompilationUnitTests {
         |kotlin {
         |  targetFromPreset(presets.jvm, 'jvm')
         |  targetFromPreset(presets.js, 'js')
-        |  targetFromPreset(presets.iosArm32, 'iosArm32')
         |  targetFromPreset(presets.iosArm64, 'iosArm64')
         |  targetFromPreset(presets.iosX64, 'iosX64')
         |  targetFromPreset(presets.macosX64, 'macosX64')

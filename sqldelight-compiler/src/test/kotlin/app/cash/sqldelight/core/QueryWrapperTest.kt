@@ -900,7 +900,7 @@ class QueryWrapperTest {
         |          |  url TEXT NOT NULL
         |          |)
         |          ""${'"'}.trimMargin(), 0)
-        |      driver.execute(null, buildString(75360) {
+        |      driver.execute(null, buildString(75_360) {
         |          append(""${'"'}
         |          |INSERT INTO class_ability_test(id, class_id, name, level_id, special, url)
         |          |VALUES

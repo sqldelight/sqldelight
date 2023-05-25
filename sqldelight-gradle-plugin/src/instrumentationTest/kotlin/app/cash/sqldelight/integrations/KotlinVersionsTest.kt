@@ -33,18 +33,17 @@ class KotlinVersionsTest(val kotlinVersion: String) {
       "1.6.21",
       "1.7.20",
       "1.8.0",
-      "1.9.0-Beta",
     )
   }
 
   @Test
-  fun `integration jvm compiles successfully with different Kotlin versions`() {
-    val integrationRoot = File("src/test/integration")
+  fun `kotlin mpp compiles successfully with different Kotlin versions`() {
+    val integrationRoot = File("src/test/kotlin-mpp")
 
     val runner = GradleRunner.create()
       .forwardOutput()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "compileKotlin", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
+      .withArguments("clean", "assemble", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

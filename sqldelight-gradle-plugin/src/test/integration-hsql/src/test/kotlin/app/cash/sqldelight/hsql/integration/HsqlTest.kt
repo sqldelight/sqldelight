@@ -10,7 +10,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 class HsqlTest {
-  val conn = DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb")
+  val conn = DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb;shutdown=true")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -40,5 +40,13 @@ class HsqlTest {
           id_bigger_than_ten = false,
         ),
       )
+  }
+
+  @Test fun charLengthFunctionReturnsCharacterCount() {
+    database.charactersQueries.insertCharacter("abcdef", null)
+    val length = database.charactersQueries.selectNameCharLength().executeAsOne()
+    assertThat(length).isEqualTo(6)
+    val nullLength = database.charactersQueries.selectDescriptionCharLength().executeAsOne()
+    assertThat(nullLength.char_length).isNull()
   }
 }

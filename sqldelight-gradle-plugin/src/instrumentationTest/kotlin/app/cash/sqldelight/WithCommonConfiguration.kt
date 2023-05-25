@@ -11,5 +11,8 @@ internal fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunn
       |
     """.trimMargin(),
   )
+  File(projectRoot, "local.properties").apply {
+    if (!exists()) writeText("sdk.dir=${androidHome()}\n")
+  }
   return withProjectDir(projectRoot)
 }

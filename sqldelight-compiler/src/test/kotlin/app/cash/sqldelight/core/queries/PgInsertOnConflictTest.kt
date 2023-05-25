@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.queries
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +36,7 @@ class PgInsertOnConflictTest {
     assertThat(generator.function().toString()).isEqualTo(
       """
             |public fun upsertCols(id: kotlin.Int?, c1: kotlin.String?): kotlin.Unit {
-            |  driver.execute(${insert.id}, ""${'"'}
+            |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?
@@ -45,7 +46,7 @@ class PgInsertOnConflictTest {
             |        bindString(1, c1)
             |        bindString(2, c1)
             |      }
-            |  notifyQueries(${insert.id}) { emit ->
+            |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
             |  }
             |}
@@ -85,7 +86,7 @@ class PgInsertOnConflictTest {
             |  c2: kotlin.String?,
             |  c3: kotlin.String?,
             |): kotlin.Unit {
-            |  driver.execute(${insert.id}, ""${'"'}
+            |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?
@@ -98,7 +99,7 @@ class PgInsertOnConflictTest {
             |        bindString(4, c1)
             |        bindString(5, c2)
             |      }
-            |  notifyQueries(${insert.id}) { emit ->
+            |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
             |  }
             |}
@@ -138,7 +139,7 @@ class PgInsertOnConflictTest {
             |  c2: kotlin.String?,
             |  c3: kotlin.String?,
             |): kotlin.Unit {
-            |  driver.execute(${insert.id}, ""${'"'}
+            |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?, col3 = ?
@@ -152,7 +153,7 @@ class PgInsertOnConflictTest {
             |        bindString(5, c2)
             |        bindString(6, c3)
             |      }
-            |  notifyQueries(${insert.id}) { emit ->
+            |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
             |  }
             |}

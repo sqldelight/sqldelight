@@ -60,7 +60,18 @@ CREATE TABLE all_types(
 
   some_bytea BYTEA,
 
-  some_int2_array INT2[]
+  some_int2_array INT2[],
+
+  some_interval_a INTERVAL DEFAULT INTERVAL '5 days',
+
+  some_interval_b INTERVAL NOT NULL DEFAULT INTERVAL '5 days',
+
+  some_interval_c TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL '7 days',
+
+  some_interval_d TIMESTAMP NOT NULL DEFAULT NOW() - INTERVAL '5 days',
+
+  some_interval_e INTERVAL DEFAULT INTERVAL '3h' + INTERVAL '20m'
+
 );
 
 SELECT * FROM all_types

@@ -45,6 +45,7 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
     "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
     "max" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
     "min" -> encapsulatingType(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, HsqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "length", "char_length", "character_length" -> IntermediateType(BIG_INT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
   }
 }

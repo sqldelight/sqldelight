@@ -6,25 +6,35 @@ import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.reactive.awaitSingle
 import org.junit.Test
 import org.testcontainers.containers.MySQLContainer
 
 class MySqlTest {
-  private fun runTest(block: suspend (MyDatabase) -> Unit) = kotlinx.coroutines.test.runTest {
-    MySQLContainer("mysql:8.0").use { mySqlJdbcContainer ->
-      mySqlJdbcContainer.start()
-      val factory = with(mySqlJdbcContainer) {
-        val mariaDBUrl =
-          "r2dbc:mariadb://$username:$password@$host:$firstMappedPort/$databaseName?sslMode=TRUST&tinyInt1isBit=false"
-        ConnectionFactories.get(mariaDBUrl)
-      }
+  private fun runTest(block: suspend (MyDatabase) -> Unit) = MySQLContainer("mysql:8.0").use { mySqlJdbcContainer ->
+    mySqlJdbcContainer.start()
+    val factory = with(mySqlJdbcContainer) {
+      val mariaDBUrl =
+        "r2dbc:mariadb://$username:$password@$host:$firstMappedPort/$databaseName?sslMode=TRUST&tinyInt1isBit=false"
+      ConnectionFactories.get(mariaDBUrl)
+    }
 
+    kotlinx.coroutines.test.runTest {
       val connection = factory.create().awaitSingle()
-      val driver = R2dbcDriver(connection)
+      val awaitClose = CompletableDeferred<Unit>()
+      val driver = R2dbcDriver(connection) {
+        if (it == null) {
+          awaitClose.complete(Unit)
+        } else {
+          awaitClose.completeExceptionally(it)
+        }
+      }
 
       val db = MyDatabase(driver).also { MyDatabase.Schema.awaitCreate(driver) }
       block(db)
+      driver.close()
+      awaitClose.join()
     }
   }
 
