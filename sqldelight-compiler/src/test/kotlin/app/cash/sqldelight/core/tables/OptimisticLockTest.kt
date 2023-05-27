@@ -102,7 +102,7 @@ class OptimisticLockTest {
       |  text: kotlin.String,
       |  version: com.example.Test.Version,
       |  id: com.example.Test.Id,
-      |): kotlin.Unit {
+      |) {
       |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET

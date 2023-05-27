@@ -260,13 +260,13 @@ class MigrationTest {
       |private class DatabaseImpl(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), Database {
-      |  public override val testQueries: TestQueries = TestQueries(driver)
+      |  override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    public override val version: Int
+      |    override val version: Int
       |      get() = 2
       |
-      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+      |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test (
       |          |  value TEXT NOT NULL,
@@ -313,7 +313,7 @@ class MigrationTest {
       |      return QueryResult.Unit
       |    }
       |
-      |    public override fun migrate(
+      |    override fun migrate(
       |      driver: SqlDriver,
       |      oldVersion: Int,
       |      newVersion: Int,

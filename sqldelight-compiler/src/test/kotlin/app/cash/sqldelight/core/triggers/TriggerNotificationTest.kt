@@ -47,7 +47,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Long?, value_: kotlin.String?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Long?, value_: kotlin.String?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -100,7 +100,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(id: kotlin.Long) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |DELETE FROM data
       |      |WHERE id = ?
@@ -152,7 +152,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
@@ -206,7 +206,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
@@ -261,7 +261,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
@@ -316,7 +316,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): kotlin.Unit {
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
@@ -370,7 +370,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
+      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
@@ -424,7 +424,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): kotlin.Unit {
+      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
@@ -482,7 +482,7 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteAllFoos(): kotlin.Unit {
+      |public fun deleteAllFoos() {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM foo""${'"'}, 0)
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("bar")

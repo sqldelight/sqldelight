@@ -35,7 +35,7 @@ class PgInsertOnConflictTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-            |public fun upsertCols(id: kotlin.Int?, c1: kotlin.String?): kotlin.Unit {
+            |public fun upsertCols(id: kotlin.Int?, c1: kotlin.String?) {
             |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?)
@@ -85,7 +85,7 @@ class PgInsertOnConflictTest {
             |  c1: kotlin.String?,
             |  c2: kotlin.String?,
             |  c3: kotlin.String?,
-            |): kotlin.Unit {
+            |) {
             |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
@@ -138,7 +138,7 @@ class PgInsertOnConflictTest {
             |  c1: kotlin.String?,
             |  c2: kotlin.String?,
             |  c3: kotlin.String?,
-            |): kotlin.Unit {
+            |) {
             |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)

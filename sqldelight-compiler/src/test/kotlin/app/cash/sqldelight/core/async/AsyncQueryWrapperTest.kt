@@ -75,11 +75,10 @@ class AsyncQueryWrapperTest {
         |  driver: SqlDriver,
         |) : SuspendingTransacterImpl(driver), TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
-        |    public override val version: Int
+        |    override val version: Int
         |      get() = 3
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> =
-        |        QueryResult.AsyncValue {
+        |    override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -109,7 +108,7 @@ class AsyncQueryWrapperTest {
         |      }
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
         |      oldVersion: Int,
         |      newVersion: Int,
