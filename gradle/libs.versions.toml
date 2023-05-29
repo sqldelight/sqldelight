@@ -111,3 +111,4 @@ spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 ksp = { id = "com.google.devtools.ksp", version = "1.8.21-1.0.11" }
+binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.13.1" }
