@@ -3,13 +3,12 @@ package com.example
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
-import kotlin.Unit
 
 public class DataQueries(
   driver: SqlDriver,
   private val testAdapter: Test.Adapter,
 ) : TransacterImpl(driver) {
-  public fun insertWhole(test: Test): Unit {
+  public fun insertWhole(test: Test) {
     driver.execute(-2_118_611_703, """
         |INSERT INTO test
         |VALUES (?, ?)

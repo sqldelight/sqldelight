@@ -11,7 +11,6 @@ import com.example.team.SelectStuff
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
-import kotlin.Unit
 
 public class TeamQueries(
   driver: SqlDriver,
@@ -76,15 +75,15 @@ public class TeamQueries(
     public val coach: String,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
-    public override fun addListener(listener: Query.Listener): Unit {
+    override fun addListener(listener: Query.Listener) {
       driver.addListener(listener, arrayOf("team"))
     }
 
-    public override fun removeListener(listener: Query.Listener): Unit {
+    override fun removeListener(listener: Query.Listener) {
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(1_839_882_838, """
     |SELECT name, captain
     |FROM team
@@ -93,22 +92,22 @@ public class TeamQueries(
       bindString(0, coach)
     }
 
-    public override fun toString(): String = "Team.sq:teamForCoach"
+    override fun toString(): String = "Team.sq:teamForCoach"
   }
 
   private inner class ForInnerTypeQuery<out T : Any>(
     public val inner_type: Shoots.Type?,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
-    public override fun addListener(listener: Query.Listener): Unit {
+    override fun addListener(listener: Query.Listener) {
       driver.addListener(listener, arrayOf("team"))
     }
 
-    public override fun removeListener(listener: Query.Listener): Unit {
+    override fun removeListener(listener: Query.Listener) {
       driver.removeListener(listener, arrayOf("team"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(null, """
     |SELECT *
     |FROM team
@@ -117,6 +116,6 @@ public class TeamQueries(
       bindString(0, inner_type?.let { teamAdapter.inner_typeAdapter.encode(it) })
     }
 
-    public override fun toString(): String = "Team.sq:forInnerType"
+    override fun toString(): String = "Team.sq:forInnerType"
   }
 }

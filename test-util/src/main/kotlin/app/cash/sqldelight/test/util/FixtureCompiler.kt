@@ -60,6 +60,7 @@ object FixtureCompiler {
     val srcRootDir = temporaryFolder.fixtureRoot().apply { mkdirs() }
     val fixtureSrcDir = File(srcRootDir, "com/example").apply { mkdirs() }
     File(fixtureSrcDir, fileName).apply {
+      parentFile.mkdirs()
       createNewFile()
       writeText(sql)
     }

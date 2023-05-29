@@ -296,15 +296,15 @@ class SelectQueryFunctionTest {
       |  public val bad: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
       |    driver.addListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
       |    driver.removeListener(listener, arrayOf("data"))
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
       |    val goodIndexes = createArguments(count = good.size)
       |    val badIndexes = createArguments(count = bad.size)
       |    return driver.executeQuery(null, ""${'"'}
@@ -321,7 +321,7 @@ class SelectQueryFunctionTest {
       |        }
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -385,15 +385,15 @@ class SelectQueryFunctionTest {
       |  public val name: kotlin.String,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
       |    driver.addListener(listener, arrayOf("person"))
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
       |    driver.removeListener(listener, arrayOf("person"))
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
       |  |SELECT *
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
@@ -402,7 +402,7 @@ class SelectQueryFunctionTest {
       |    bindString(1, name)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"
+      |  override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"
       |}
       |
       """.trimMargin(),

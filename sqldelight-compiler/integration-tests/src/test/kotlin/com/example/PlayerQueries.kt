@@ -12,7 +12,6 @@ import java.lang.Void
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
-import kotlin.Unit
 import kotlin.collections.Collection
 
 public class PlayerQueries(
@@ -162,7 +161,7 @@ public class PlayerQueries(
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ): Unit {
+  ) {
     driver.execute(-1_595_716_666, """
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
@@ -177,7 +176,7 @@ public class PlayerQueries(
     }
   }
 
-  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>): Unit {
+  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>) {
     val numberIndexes = createArguments(count = number.size)
     driver.execute(null, """
         |UPDATE player
@@ -194,11 +193,11 @@ public class PlayerQueries(
     }
   }
 
-  public fun foreignKeysOn(): Unit {
+  public fun foreignKeysOn() {
     driver.execute(-1_596_558_949, """PRAGMA foreign_keys = 1""", 0)
   }
 
-  public fun foreignKeysOff(): Unit {
+  public fun foreignKeysOff() {
     driver.execute(2_046_279_987, """PRAGMA foreign_keys = 0""", 0)
   }
 
@@ -209,7 +208,7 @@ public class PlayerQueries(
     public val shoots: Shoots,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         transactionWithResult {
       driver.execute(-452_007_405, """
           |INSERT INTO player
@@ -227,22 +226,22 @@ public class PlayerQueries(
           """.trimMargin(), mapper, 0)
     }
 
-    public override fun toString(): String = "Player.sq:insertAndReturn"
+    override fun toString(): String = "Player.sq:insertAndReturn"
   }
 
   private inner class PlayersForTeamQuery<out T : Any>(
     public val team: Team.Name?,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
-    public override fun addListener(listener: Query.Listener): Unit {
+    override fun addListener(listener: Query.Listener) {
       driver.addListener(listener, arrayOf("player"))
     }
 
-    public override fun removeListener(listener: Query.Listener): Unit {
+    override fun removeListener(listener: Query.Listener) {
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(null, """
     |SELECT *
     |FROM player
@@ -251,22 +250,22 @@ public class PlayerQueries(
       bindString(0, team?.let { it.name })
     }
 
-    public override fun toString(): String = "Player.sq:playersForTeam"
+    override fun toString(): String = "Player.sq:playersForTeam"
   }
 
   private inner class PlayersForNumbersQuery<out T : Any>(
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
-    public override fun addListener(listener: Query.Listener): Unit {
+    override fun addListener(listener: Query.Listener) {
       driver.addListener(listener, arrayOf("player"))
     }
 
-    public override fun removeListener(listener: Query.Listener): Unit {
+    override fun removeListener(listener: Query.Listener) {
       driver.removeListener(listener, arrayOf("player"))
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
           |SELECT *
@@ -279,6 +278,6 @@ public class PlayerQueries(
           }
     }
 
-    public override fun toString(): String = "Player.sq:playersForNumbers"
+    override fun toString(): String = "Player.sq:playersForNumbers"
   }
 }
