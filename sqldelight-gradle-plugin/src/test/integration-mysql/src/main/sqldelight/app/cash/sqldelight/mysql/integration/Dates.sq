@@ -11,3 +11,6 @@ INSERT INTO dates VALUES (?, ?, ?, ?, ?);
 
 SELECT * FROM dates LIMIT 1;
 }
+
+selectMaxTimestamp:
+SELECT max(timestamp) FROM dates LIMIT 1;
