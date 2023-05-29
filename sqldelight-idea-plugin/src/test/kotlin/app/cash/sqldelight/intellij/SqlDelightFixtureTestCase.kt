@@ -53,7 +53,7 @@ abstract class SqlDelightFixtureTestCase : LightJavaCodeInsightFixtureTestCase()
     override val deriveSchemaFromMigrations = false
 
     override fun outputDirectory(file: SqlDelightFile) = outputDirectories()
-    override fun outputDirectories() = listOf("")
+    override fun outputDirectories() = listOf("build")
 
     override fun sourceFolders(
       file: SqlDelightFile,

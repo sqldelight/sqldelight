@@ -1,5 +1,6 @@
 package app.cash.sqldelight.driver.native
 
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import co.touchlab.sqliter.Cursor
 import co.touchlab.sqliter.getBytesOrNull
@@ -25,5 +26,5 @@ internal class SqliterSqlCursor(private val cursor: Cursor) : SqlCursor {
     return (cursor.getLongOrNull(index) ?: return null) == 1L
   }
 
-  override fun next(): Boolean = cursor.next()
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(cursor.next())
 }

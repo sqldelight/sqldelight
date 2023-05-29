@@ -77,17 +77,23 @@ internal class FileIndexMap {
     private val module: Module,
     private val projectPath: String,
   ) : Task.Backgroundable(
-    /* project = */ module.project,
-    /* title = */ "Importing ${module.name} SQLDelight",
+    /* project = */
+    module.project,
+    /* title = */
+    "Importing ${module.name} SQLDelight",
   ) {
     override fun run(indicator: ProgressIndicator) {
       FileIndexingNotification.getInstance(module.project).unconfiguredReason = Syncing
 
       val executionSettings = GradleExecutionSettings(
-        /* gradleHome = */ null,
-        /* serviceDirectory = */ null,
-        /* distributionType = */ DistributionType.DEFAULT_WRAPPED,
-        /* isOfflineWork = */ false,
+        /* gradleHome = */
+        null,
+        /* serviceDirectory = */
+        null,
+        /* distributionType = */
+        DistributionType.DEFAULT_WRAPPED,
+        /* isOfflineWork = */
+        false,
       )
       try {
         fileIndices.putAll(
@@ -120,7 +126,7 @@ internal class FileIndexMap {
 
               val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
               val shouldInvalidate = pluginDescriptor.addDialect(
-                (value!!.dialectJars + value.moduleJars).map { it.toURI() },
+                value!!.dialectJars.map { it.toURI() },
               )
 
               val database = value.databases.first()

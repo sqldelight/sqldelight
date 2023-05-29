@@ -16,6 +16,7 @@
 package app.cash.sqldelight.coroutines
 
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -24,7 +25,7 @@ fun <T : Any> Query<T>.assert(body: QueryAssert.() -> Unit) {
   execute { cursor ->
     QueryAssert(cursor).apply(body)
     val remainingRows = mutableListOf<String>()
-    while (cursor.next()) {
+    while (cursor.next().value) {
       remainingRows += buildString {
         try {
           for (i in 0..Int.MAX_VALUE) {
@@ -39,6 +40,7 @@ fun <T : Any> Query<T>.assert(body: QueryAssert.() -> Unit) {
       }
     }
     assertEquals(emptyList<String>(), remainingRows, "remaining cursor rows")
+    QueryResult.Unit
   }
 }
 
@@ -48,7 +50,7 @@ class QueryAssert(private val cursor: SqlCursor) {
   fun hasRow(vararg values: String) {
     row += 1
 
-    assertTrue(cursor.next(), "row $row does not exist")
+    assertTrue(cursor.next().value, "row $row does not exist")
     for (i in values.indices) {
       assertEquals(values[i], cursor.getString(i), "row $row column '$i'")
     }

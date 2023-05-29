@@ -6,11 +6,10 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.intellij.refactoring.suggested.SuggestedRefactoringSupport
 import com.intellij.refactoring.suggested.SuggestedRefactoringSupport.ParameterAdditionalData
 
-fun QueryColumn.parameterValue(): SuggestedRefactoringSupport.Parameter? = element.type().let { type ->
-  val column = type.column ?: return null
+fun QueryColumn.parameterValue(): SuggestedRefactoringSupport.Parameter? = element.type().column?.let { column ->
   SuggestedRefactoringSupport.Parameter(
-    id = type.name,
-    name = type.name,
+    id = column.columnName.name,
+    name = column.columnName.name,
     type = column.columnType.typeName.text,
     additionalData = column.columnConstraintList.takeIf { it.isNotEmpty() }?.let { list ->
       ColumnConstraints((list.filter { it.text.isNotBlank() }.joinToString(" ") { it.text.trim() }))

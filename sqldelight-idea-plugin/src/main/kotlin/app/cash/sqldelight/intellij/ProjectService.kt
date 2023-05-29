@@ -46,7 +46,6 @@ import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
-import com.intellij.openapi.wm.RegisterToolWindowTask
 import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
@@ -176,15 +175,12 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
         val connectionManager = dialect.connectionManager
         if (connectionManager != null) {
-          ToolWindowManager.getInstance(project).registerToolWindow(
-            RegisterToolWindowTask(
-              id = "SqlDelight",
-              anchor = ToolWindowAnchor.BOTTOM,
-              contentFactory = SqlDelightToolWindowFactory(connectionManager),
-              canCloseContent = true,
-              icon = dialect.icon,
-            ),
-          ).apply {
+          ToolWindowManager.getInstance(project).registerToolWindow(id = "SqlDelight") {
+            anchor = ToolWindowAnchor.BOTTOM
+            contentFactory = SqlDelightToolWindowFactory(connectionManager)
+            canCloseContent = true
+            icon = dialect.icon
+          }.apply {
             show()
             hide()
           }

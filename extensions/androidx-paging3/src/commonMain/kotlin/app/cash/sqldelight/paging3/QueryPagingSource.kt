@@ -19,6 +19,7 @@ import app.cash.paging.PagingConfig
 import app.cash.paging.PagingSource
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import kotlin.coroutines.CoroutineContext
 import kotlin.jvm.JvmName
@@ -97,7 +98,7 @@ fun <RowType : Any> QueryPagingSource(
 
 private fun Query<Long>.toInt(): Query<Int> =
   object : Query<Int>({ cursor -> mapper(cursor).toInt() }) {
-    override fun <R> execute(mapper: (SqlCursor) -> R) = this@toInt.execute(mapper)
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = this@toInt.execute(mapper)
     override fun addListener(listener: Listener) = this@toInt.addListener(listener)
     override fun removeListener(listener: Listener) = this@toInt.removeListener(listener)
   }

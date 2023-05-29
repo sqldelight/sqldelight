@@ -22,6 +22,7 @@ import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -143,7 +144,7 @@ class KeyedQueryPagingSourceTest : DbTest {
     """.trimMargin()
 
     return object : Query<Long>({ cursor -> cursor.getLong(0)!! }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 3, sql = sql, mapper = mapper, parameters = 2) {
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = driver.executeQuery(identifier = 3, sql = sql, mapper = mapper, parameters = 2) {
         bindLong(0, limit)
         bindLong(1, anchor)
       }
@@ -163,7 +164,7 @@ class KeyedQueryPagingSourceTest : DbTest {
     return object : Query<Long>(
       { cursor -> cursor.getLong(0)!! },
     ) {
-      override fun <R> execute(mapper: (SqlCursor) -> R) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameters = 2) {
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>) = driver.executeQuery(identifier = 2, sql = sql, mapper = mapper, parameters = 2) {
         bindLong(0, beginInclusive)
         bindLong(1, endExclusive)
       }

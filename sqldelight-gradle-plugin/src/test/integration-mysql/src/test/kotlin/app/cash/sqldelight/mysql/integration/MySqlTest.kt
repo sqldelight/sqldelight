@@ -22,6 +22,7 @@ class MySqlTest {
   lateinit var connection: Connection
   lateinit var dogQueries: DogQueries
   lateinit var datesQueries: DatesQueries
+  lateinit var charactersQueries: CharactersQueries
   lateinit var driver: JdbcDriver
 
   @Before
@@ -39,6 +40,7 @@ class MySqlTest {
     MyDatabase.Schema.create(driver)
     dogQueries = database.dogQueries
     datesQueries = database.datesQueries
+    charactersQueries = database.charactersQueries
   }
 
   @After
@@ -121,6 +123,22 @@ class MySqlTest {
         driver.execute(null, "CREATE TABLE throw_test(some Text)", 0, null)
       }
     }
+  }
+
+  @Test fun lengthFunctionReturnsByteCount() {
+    charactersQueries.insertCharacter("海豚", null)
+    val length = charactersQueries.selectNameLength().executeAsOne()
+    assertThat(length).isEqualTo(6)
+    val nullLength = charactersQueries.selectDescriptionLength().executeAsOne()
+    assertThat(nullLength.length).isNull()
+  }
+
+  @Test fun charLengthFunctionReturnsCharacterCount() {
+    charactersQueries.insertCharacter("海豚", null)
+    val length = charactersQueries.selectNameCharLength().executeAsOne()
+    assertThat(length).isEqualTo(2)
+    val nullLength = charactersQueries.selectDescriptionCharLength().executeAsOne()
+    assertThat(nullLength.char_length).isNull()
   }
 
   private class ExpectedException : Exception()

@@ -48,7 +48,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -101,7 +101,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -173,7 +173,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -225,7 +225,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }
@@ -288,7 +288,7 @@ class MappingTest : DbTest {
     val expected = IllegalStateException("test exception")
 
     val query = object : Query<Any>({ fail() }) {
-      override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> = throw expected
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = throw expected
       override fun addListener(listener: Listener) = Unit
       override fun removeListener(listener: Listener) = Unit
     }

@@ -22,7 +22,7 @@ class IntegrationTests {
   private lateinit var varargsQueries: VarargsQueries
   private lateinit var groupedStatementQueries: GroupedStatementQueries
 
-  private object listAdapter : ColumnAdapter<List<String>, String> {
+  private object ListAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
     override fun encode(value: List<String>): String = value.joinToString(",")
   }
@@ -31,7 +31,7 @@ class IntegrationTests {
     val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     QueryWrapper.Schema.create(database)
 
-    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
+    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(ListAdapter))
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
     nullableTypesQueries = queryWrapper.nullableTypesQueries

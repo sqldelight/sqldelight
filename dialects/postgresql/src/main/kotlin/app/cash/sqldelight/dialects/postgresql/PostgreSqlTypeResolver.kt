@@ -21,7 +21,9 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.squareup.kotlinpoet.CodeBlock
@@ -80,15 +82,17 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.lowercase()) {
-    "greatest" -> encapsulatingType(exprList, PrimitiveType.INTEGER, REAL, TEXT, BLOB)
+    "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "coalesce", "ifnull" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
     "max" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
     "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL).asNullable()
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
+    "date_part" -> IntermediateType(REAL)
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
+    "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
   }
 
@@ -123,5 +127,21 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
 
     return parentResolver.simplifyType(intermediateType)
+  }
+
+  override fun resolvedType(expr: SqlExpr): IntermediateType {
+    return expr.postgreSqlType()
+  }
+
+  private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
+    is SqlLiteralExpr -> when {
+      literalValue.text == "CURRENT_DATE" -> IntermediateType(PostgreSqlType.DATE)
+      literalValue.text == "CURRENT_TIME" -> IntermediateType(PostgreSqlType.TIME)
+      literalValue.text == "CURRENT_TIMESTAMP" -> IntermediateType(PostgreSqlType.TIMESTAMP)
+      literalValue.text.startsWith("INTERVAL") -> IntermediateType(PostgreSqlType.INTERVAL)
+      else -> parentResolver.resolvedType(this)
+    }
+
+    else -> parentResolver.resolvedType(this)
   }
 }

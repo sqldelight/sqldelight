@@ -34,7 +34,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
   private var messageCounter = 0
   private var transaction: Transacter.Transaction? = null
 
-  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (SqlCursor) -> R, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<R> {
+  override fun <R> executeQuery(identifier: Int?, sql: String, mapper: (SqlCursor) -> QueryResult<R>, parameters: Int, binders: (SqlPreparedStatement.() -> Unit)?): QueryResult<R> {
     val bound = JsWorkerSqlPreparedStatement()
     binders?.invoke(bound)
 
@@ -44,7 +44,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
         this.params = bound.parameters.toTypedArray()
       }
 
-      return@AsyncValue mapper(JsWorkerSqlCursor(checkWorkerResults(response.results)))
+      return@AsyncValue mapper(JsWorkerSqlCursor(checkWorkerResults(response.results))).await()
     }
   }
 
@@ -168,7 +168,7 @@ private external interface RequestBuilder {
 internal class JsWorkerSqlCursor(private val values: Array<Array<dynamic>>) : SqlCursor {
   private var currentRow = -1
 
-  override fun next(): Boolean = ++currentRow < values.size
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(++currentRow < values.size)
 
   override fun getString(index: Int): String? = values[currentRow][index].unsafeCast<String?>()
 

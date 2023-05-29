@@ -18,7 +18,9 @@ INSERT INTO hockeyPlayer (player_number, full_name)
 VALUES (15, 'Ryan Getzlaf');
 ```
 
-From this SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Doing this also requires a driver, which SQLDelight provides implementations of:
+From this, SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Generating the `Database` file happens during the 'generateSqlDelightInterface' gradle task. This task runs during the 'make project'/'make module' build task, or automatically if you have the SQLDelight IDE plugin.
+
+Accessing the generated database also requires a driver, which SQLDelight provides implementations of:
 
 === "Kotlin"
     ```kotlin
@@ -61,11 +63,13 @@ From this SQLDelight will generate a `Database` Kotlin class with an associated 
 
 ```kotlin
 // in src/commonMain/kotlin
+import com.example.Database
+
 expect class DriverFactory {
-  expect fun createDriver(): SqlDriver
+  fun createDriver(): SqlDriver
 }
 
-fun createDatabase(driverFactory): Database {
+fun createDatabase(driverFactory: DriverFactory): Database {
   val driver = driverFactory.createDriver()
   val database = Database(driver)
 

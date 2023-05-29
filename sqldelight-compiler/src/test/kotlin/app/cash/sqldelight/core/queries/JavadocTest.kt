@@ -9,6 +9,7 @@ import app.cash.sqldelight.core.dialects.cursorCheck
 import app.cash.sqldelight.core.dialects.intKotlinType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.kotlinpoet.INT
@@ -210,7 +211,7 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public fun <T : kotlin.Any> selectAll(mapper: (_id: $int, value_: kotlin.String) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-585795480, arrayOf("test"), driver, "Test.sq", "selectAll", ""${'"'}
+      |public fun <T : kotlin.Any> selectAll(mapper: (_id: $int, value_: kotlin.String) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-585_795_480, arrayOf("test"), driver, "Test.sq", "selectAll", ""${'"'}
       ||SELECT *
       ||FROM test
       |""${'"'}.trimMargin()) { cursor ->
@@ -280,13 +281,13 @@ class JavadocTest {
       | * Insert new value.
       | */
       |public fun insertValue(value_: kotlin.String): kotlin.Unit {
-      |  driver.execute(${insert.id}, ""${'"'}
+      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO test(value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
       |        ${testDialect.binderCheck}bindString(0, value_)
       |      }
-      |  notifyQueries(${insert.id}) { emit ->
+      |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
       |}
@@ -319,7 +320,7 @@ class JavadocTest {
       | * Update value by id.
       | */
       |public fun updateById(value_: kotlin.String, _id: kotlin.Long): kotlin.Unit {
-      |  driver.execute(${update.id}, ""${'"'}
+      |  driver.execute(${update.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET value = ?
       |      |WHERE _id = ?
@@ -327,7 +328,7 @@ class JavadocTest {
       |        bindString(0, value_)
       |        bindLong(1, _id)
       |      }
-      |  notifyQueries(${update.id}) { emit ->
+      |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
       |}
@@ -359,8 +360,8 @@ class JavadocTest {
       | * Delete all.
       | */
       |public fun deleteAll(): kotlin.Unit {
-      |  driver.execute(${delete.id}, ""${'"'}DELETE FROM test""${'"'}, 0)
-      |  notifyQueries(${delete.id}) { emit ->
+      |  driver.execute(${delete.id.withUnderscores}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |  notifyQueries(${delete.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
       |}

@@ -30,7 +30,7 @@ internal class SqlDelightSuppressInspectionQuickFix(toolId: String) :
     val anchor = container.stmtIdentifier ?: container
     val parent = container.parent
     parent.addBefore(comment, anchor)
-    val psiParserFacade = PsiParserFacade.SERVICE.getInstance(project)
+    val psiParserFacade = PsiParserFacade.getInstance(project)
     val newLine = psiParserFacade.createWhiteSpaceFromText("\n")
     parent.addBefore(newLine, anchor)
   }

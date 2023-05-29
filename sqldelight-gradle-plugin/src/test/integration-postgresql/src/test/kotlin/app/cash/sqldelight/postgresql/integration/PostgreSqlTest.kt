@@ -181,7 +181,7 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun testDateTrunc() {
+  @Test fun testDateFunctions() {
     database.datesQueries.insertDate(
       date = LocalDate.of(2020, 1, 1),
       time = LocalTime.of(21, 30, 59, 10000),
@@ -196,6 +196,16 @@ class PostgreSqlTest {
         SelectDateTrunc(
           date_trunc = LocalDateTime.of(2020, 1, 1, 21, 0, 0, 0),
           date_trunc_ = OffsetDateTime.of(1980, 4, 9, 20, 0, 0, 0, ZoneOffset.ofHours(0)),
+        ),
+      )
+
+    assertThat(
+      database.datesQueries.selectDatePart().executeAsOne(),
+    )
+      .isEqualTo(
+        SelectDatePart(
+          date_part = 21.0,
+          date_part_ = 20.0,
         ),
       )
   }
@@ -222,6 +232,12 @@ class PostgreSqlTest {
     val now = database.datesQueries.selectNow().executeAsOne()
     assertThat(now).isNotNull()
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
+  }
+
+  @Test fun interval() {
+    val interval = database.datesQueries.selectInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(1)
   }
 
   @Test fun successfulOptimisticLock() {
@@ -270,5 +286,13 @@ class PostgreSqlTest {
   @Test fun genRandomUuid() {
     val uuid: UUID = database.uuidsQueries.randomUuid().executeAsOne()
     assertThat(uuid).isNotNull()
+  }
+
+  @Test fun lengthFunction() {
+    database.charactersQueries.insertCharacter("abcdef", null)
+    val name = database.charactersQueries.selectNameLength().executeAsOne()
+    assertThat(name).isEqualTo(6)
+    val desc = database.charactersQueries.selectDescriptionLength().executeAsOne()
+    assertThat(desc.length).isNull()
   }
 }

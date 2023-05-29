@@ -19,3 +19,8 @@ publishing {
         }
     }
 }
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    setPreserveFileTimestamps false
+    setReproducibleFileOrder true
+}

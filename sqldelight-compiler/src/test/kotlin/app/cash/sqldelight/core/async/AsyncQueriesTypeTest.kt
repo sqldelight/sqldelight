@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.async
 
 import app.cash.sqldelight.test.util.FixtureCompiler
+import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth
 import org.junit.Rule
 import org.junit.Test
@@ -157,7 +158,7 @@ class AsyncQueriesTypeTest {
       |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
       |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) {
       |        "Adapter types are expected to be identical." }
-      |    return Query(424911250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
+      |    return Query(424_911_250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
       |    |SELECT id, value FROM data
       |    |UNION
       |    |SELECT id, value FROM other
@@ -177,14 +178,14 @@ class AsyncQueriesTypeTest {
       |  }
       |
       |  public suspend fun insertData(id: Long?, value_: List?): Unit {
-      |    driver.execute(${insert.id}, ""${'"'}
+      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
       |          bindLong(0, id)
       |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }.await()
-      |    notifyQueries(${insert.id}) { emit ->
+      |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
       |  }
@@ -201,8 +202,8 @@ class AsyncQueriesTypeTest {
       |      driver.removeListener(listener, arrayOf("data"))
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> R): QueryResult<R> =
-      |        driver.executeQuery(${select.id}, ""${'"'}
+      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+      |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
       |    |SELECT *
       |    |FROM data
       |    |WHERE id = ?

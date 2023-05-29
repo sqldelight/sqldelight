@@ -8,7 +8,9 @@
   psiClassPrefix = "PostgreSql"
 
   parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
@@ -18,6 +20,9 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_DATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIME"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
@@ -29,6 +34,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FALSE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
@@ -38,6 +44,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -45,6 +52,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
@@ -56,6 +64,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
@@ -65,6 +74,8 @@ overrides ::= type_name
   | column_constraint
   | string_literal
   | bind_parameter
+  | table_constraint
+  | default_constraint
   | with_clause_auxiliary_stmt
   | delete_stmt_limited
   | insert_stmt
@@ -81,13 +92,26 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   UNIQUE {conflict_clause} |
   {check_constraint} |
   generated_clause |
-  {default_constraint} |
+  default_constraint |
   COLLATE {collation_name} |
   {foreign_key_clause}
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlColumnConstraintImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlColumnConstraint"
   override = true
+}
+
+current_timestamp_with_optional_interval ::= ( CURRENT_TIMESTAMP | 'NOW()' | interval_expression ) [ [ PLUS | MINUS ] interval_expression ] *
+default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
+  current_timestamp_with_optional_interval |
+  {signed_number} |
+  {literal_value} |
+  LP <<expr '-1'>> RP
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlDefaultConstraint"
+  override = true
+  pin = 2
 }
 
 type_name ::= (
@@ -114,6 +138,15 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.BindParameterMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBindParameterImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
+  override = true
+}
+table_constraint ::= [ CONSTRAINT {identifier} ] (
+  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  {check_constraint} |
+  FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
+) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableConstraintImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableConstraint"
   override = true
 }
 
@@ -148,6 +181,8 @@ json_data_type ::= 'JSON' | 'JSONB'
 
 blob_data_type ::= 'BYTEA'
 
+interval_expression ::= 'INTERVAL' string_literal
+
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlWithClauseAuxiliaryStmt"
@@ -164,6 +199,19 @@ delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ W
 string_literal ::= string {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.StringLiteralMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlStringLiteral"
+  override = true
+}
+
+literal_value ::= ( {numeric_literal}
+                  | string_literal
+                  | {blob_literal}
+                  | NULL
+                  | CURRENT_TIME
+                  | CURRENT_DATE
+                  | CURRENT_TIMESTAMP
+                  | interval_expression ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
 }
 
@@ -213,6 +261,8 @@ alter_table_rules ::= (
   | {alter_table_rename_table}
   | alter_table_rename_column
   | alter_table_drop_column
+  | alter_table_add_constraint
+  | alter_table_alter_column
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
@@ -235,6 +285,22 @@ alter_table_column_alias ::= id | string {
 
 alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableDropColumnMixin"
+  pin = 1
+}
+
+alter_table_add_constraint ::= ADD table_constraint
+
+type_clause ::= 'TYPE'
+
+data_clause ::= 'DATA'
+
+alter_table_alter_column ::= ALTER [COLUMN] {column_name}
+( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
+| (SET | DROP) NOT NULL
+| SET DEFAULT <<expr '-1'>> | DROP DEFAULT | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
+| SET GENERATED (ALWAYS | BY DEFAULT )
+) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAlterColumnMixin"
   pin = 1
 }
 

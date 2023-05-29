@@ -50,7 +50,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
@@ -60,7 +60,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
     }
 
     return try {
-      QueryResult.Value(mapper(cursor))
+      mapper(cursor)
     } finally {
       cursor.close()
     }
@@ -120,7 +120,7 @@ class JsSqlDriver(private val db: Database) : SqlDriver {
 }
 
 private class JsSqlCursor(private val statement: Statement) : SqlCursor {
-  override fun next(): Boolean = statement.step()
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(statement.step())
   override fun getString(index: Int): String? = statement.get()[index]
   override fun getLong(index: Int): Long? = (statement.get()[index] as? Double)?.toLong()
   override fun getBytes(index: Int): ByteArray? = (statement.get()[index] as? Uint8Array)?.let {

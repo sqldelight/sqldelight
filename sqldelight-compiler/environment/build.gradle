@@ -1,0 +1,151 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.publish)
+  id("app.cash.sqldelight.toolchain.compiler")
+}
+
+dependencies {
+  shadow(libs.intellij.core) {
+    transitive = true
+  }
+  shadow(libs.intellij.analysis) {
+    // Only shade the minimum IntelliJ libs.
+    transitive = false
+  }
+  shadow(libs.intellij.lang) {
+    transitive = false
+  }
+  shadow(libs.intellij.coreImpl) {
+    transitive = false
+  }
+  shadow(libs.intellij.coreUi) {
+    transitive = false
+  }
+  shadow(libs.intellij.projectModel) {
+    transitive = false
+  }
+  shadow(libs.intellij.projectModelImpl) {
+    transitive = false
+  }
+  shadow(libs.intellij.analysisImpl) {
+    transitive = false
+  }
+  shadow(libs.intellij.testFramework) {
+    transitive = false
+  }
+  shadow(libs.intellij.langImpl) {
+    transitive = false
+  }
+  shadow(libs.intellij.ide) {
+    transitive = false
+  }
+  shadow(libs.intellij.ideCore) {
+    transitive = false
+  }
+  shadow(libs.intellij.ideImpl) {
+    transitive = false
+  }
+  shadow(libs.intellij.util) {
+    transitive = false
+  }
+  shadow(libs.intellij.utilUi) {
+    transitive = false
+  }
+  shadow(libs.intellij.utilEx) {
+    transitive = false
+  }
+}
+
+tasks.named("jar") {
+  // shadowjar overwrites the normal jar, this overlapping outputs are not cacheable.
+  // and we don't need the non shaded jar.
+  enabled = false
+}
+
+tasks.named("shadowJar") {
+  archiveClassifier.set("")
+  configurations = [project.configurations.shadow]
+
+  /**
+   Before minimizing
+   Total dependencies size:                                              66,93 Mb
+
+   lang-impl-222.4459.24.jar                                         19.057,84 kb
+   ide-impl-222.4459.24.jar                                          18.642,82 kb
+   intellij-deps-fastutil-8.5.8-11.jar                                3.945,56 kb
+   ide-222.4459.24.jar                                                3.860,40 kb
+   util-222.4459.24.jar                                               2.385,63 kb
+   
+   After minimizing: 43 MB, mostly due to minimizing ide-impl
+  */ 
+  minimize {
+    // Needed for MockProject and MockModule.
+    exclude(dependency(libs.intellij.testFramework.get()))
+    
+    // Needed for general utils like PsiTreeUtil.
+    exclude(dependency(libs.intellij.util.get()))
+    
+    // Base intellij platform.
+    exclude(dependency(libs.intellij.core.get()))
+    exclude(dependency(libs.intellij.coreImpl.get()))
+    
+    // Base required language support.
+    exclude(dependency(libs.intellij.lang.get()))
+    exclude(dependency(libs.intellij.langImpl.get()))
+    
+    // Base required analysis support, like resolve references.
+    exclude(dependency(libs.intellij.analysis.get()))
+    exclude(dependency(libs.intellij.analysisImpl.get()))
+    
+    // Needed for resolving files and the file index.
+    exclude(dependency(libs.intellij.projectModel.get()))
+    exclude(dependency(libs.intellij.projectModelImpl.get()))
+
+    // Don't minimize coroutines support.
+    exclude(dependency(libs.intellij.utilEx.get()))
+    
+    // Needed for Icon support.
+    exclude(dependency(libs.intellij.utilUi.get()))
+  }
+
+  include '*.jar'
+  include '**/*.class'
+  include "misc/*.properties"
+  include 'messages/*.properties'
+  include "org/intellij/**"
+  include "com/intellij/**"
+  include "org/picocontainer/**"
+  include "it/unimi/**"
+  include "org/jdom/**"
+  include "com/github/benmanes/**"
+  include "kotlinx/**"
+
+  exclude '/kotlin/**'
+}
+
+// Remove useless and bloated dependencies not require to run the sqldelight compiler.
+configurations.shadow {
+  exclude(group: "com.jetbrains.rd")
+  exclude(group: "com.github.jetbrains", module: "jetCheck")
+  exclude(group: "com.jetbrains.intellij.platform", module: "wsl-impl")
+  exclude(group: "com.jetbrains.intellij.platform", module: "util-xml-dom")
+  exclude(group: "com.jetbrains.intellij.platform", module: "util-text-matching")
+  exclude(group: "com.jetbrains.intellij.platform", module: "util-diff")
+  exclude(group: "com.fasterxml", module: "aalto-xml")
+  exclude(group: "com.jetbrains.infra")
+  exclude(group: "org.roaringbitmap")
+  exclude(group: "ai.grazie.spell")
+  exclude(group: "ai.grazie.model")
+  exclude(group: "ai.grazie.utils")
+  exclude(group: "ai.grazie.nlp")
+}
+
+configurations {
+  [apiElements, runtimeElements].each {
+    it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+    it.outgoing.artifact(shadowJar)
+  }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

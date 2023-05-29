@@ -141,17 +141,15 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
   override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<R> {
     val (connection, onClose) = connectionAndClose()
     try {
-      return QueryResult.Value(
-        JdbcPreparedStatement(connection.prepareStatement(sql))
-          .apply { if (binders != null) this.binders() }
-          .executeQuery(mapper),
-      )
+      return JdbcPreparedStatement(connection.prepareStatement(sql))
+        .apply { if (binders != null) this.binders() }
+        .executeQuery(mapper)
     } finally {
       onClose()
     }
@@ -310,5 +308,5 @@ class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
     converter(index + 1).takeUnless { resultSet.wasNull() }
 
-  override fun next() = resultSet.next()
+  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(resultSet.next())
 }

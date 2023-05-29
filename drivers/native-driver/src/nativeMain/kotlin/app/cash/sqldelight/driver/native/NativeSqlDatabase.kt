@@ -9,8 +9,6 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.native.util.BasicMutableMap
-import app.cash.sqldelight.driver.native.util.basicMutableMap
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
@@ -19,7 +17,6 @@ import co.touchlab.sqliter.createDatabaseManager
 import co.touchlab.sqliter.withStatement
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value
-import kotlin.native.concurrent.ensureNeverFrozen
 
 sealed class ConnectionWrapper : SqlDriver {
   internal abstract fun <R> accessConnection(
@@ -63,14 +60,12 @@ sealed class ConnectionWrapper : SqlDriver {
   final override fun <R> executeQuery(
     identifier: Int?,
     sql: String,
-    mapper: (SqlCursor) -> R,
+    mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ): QueryResult<R> = QueryResult.Value(
-    accessStatement(true, identifier, sql, binders) { statement ->
-      mapper(SqliterSqlCursor(statement.query()))
-    },
-  )
+  ): QueryResult<R> = accessStatement(true, identifier, sql, binders) { statement ->
+    mapper(SqliterSqlCursor(statement.query()))
+  }
 }
 
 /**
@@ -141,7 +136,7 @@ class NativeSqliteDriver(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
-  private val listeners = basicMutableMap<String, BasicMutableMap<Query.Listener, Unit>>()
+  private val listeners = mutableMapOf<String, MutableMap<Query.Listener, Unit>>()
 
   init {
     if (databaseManager.configuration.inMemory) {
@@ -179,7 +174,7 @@ class NativeSqliteDriver(
 
   override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
     queryKeys.forEach {
-      listeners.getOrPut(it) { basicMutableMap() }.put(listener, Unit)
+      listeners.getOrPut(it) { mutableMapOf() }.put(listener, Unit)
     }
   }
 
@@ -340,7 +335,7 @@ internal class ThreadConnection(
   internal val closed: Boolean
     get() = connection.closed
 
-  internal val statementCache = basicMutableMap<Int, Statement>()
+  internal val statementCache = mutableMapOf<Int, Statement>()
 
   fun useStatement(identifier: Int?, sql: String): Statement {
     return if (identifier != null) {
@@ -377,7 +372,7 @@ internal class ThreadConnection(
    * the underlying connection.
    */
   internal fun cleanUp() {
-    statementCache.cleanUp {
+    statementCache.values.forEach { it: Statement ->
       it.finalizeStatement()
     }
   }
@@ -390,9 +385,6 @@ internal class ThreadConnection(
   private inner class Transaction(
     override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
-    init {
-      ensureNeverFrozen()
-    }
 
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
       transaction.value = enclosingTransaction

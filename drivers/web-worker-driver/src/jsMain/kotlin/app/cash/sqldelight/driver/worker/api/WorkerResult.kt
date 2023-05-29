@@ -10,5 +10,5 @@ internal external interface WorkerResult {
    *
    * If the query returns no rows, then this should be an empty array.
    */
-  var values: Array<Array<dynamic /* Number | String | Boolean | Uint8Array | Nothing? */>>
+  var values: Array<Array<dynamic>>
 }
