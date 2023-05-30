@@ -54,7 +54,9 @@ fun TypeResolver.encapsulatingType(
   nullableIfAny: Boolean,
   vararg typeOrder: DialectType,
 ): IntermediateType {
-  val types = exprList.map { resolvedType(it) }
+  val types = exprList.map { resolvedType(it) }.distinct()
+  if (types.size == 1) return types[0]
+
   val sqlTypes = types.map { it.dialectType }
 
   if (PrimitiveType.ARGUMENT in sqlTypes) {
