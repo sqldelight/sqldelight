@@ -54,6 +54,7 @@ internal class FileSubject private constructor(
 
   companion object {
     private val FILE_SUBJECT_FACTORY = Factory<FileSubject, File> { metadata, actual ->
+      requireNotNull(actual)
       FileSubject(metadata, actual)
     }
 
