@@ -98,4 +98,4 @@ jobs:
           build-root-directory: sample
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.parallel=false -Dorg.gradle.caching=true
+  GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
