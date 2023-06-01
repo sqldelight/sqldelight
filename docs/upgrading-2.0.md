@@ -34,7 +34,7 @@ dependencies {
     === "Kotlin"
         ```kotlin 
         sqldelight {
-          database { // (1)!
+          databases { // (1)!
             create("Database") {
               packageName.set("com.example") // (2)!
             }
@@ -47,7 +47,7 @@ dependencies {
     === "Groovy"
         ```kotlin
         sqldelight {
-          database { // (1)!
+          databases { // (1)!
             Database {
               packageName = "com.example"
             }
