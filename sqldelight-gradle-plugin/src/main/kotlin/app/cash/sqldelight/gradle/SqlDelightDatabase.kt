@@ -135,7 +135,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
-    val packageName = requireNotNull(packageName.getOrNull()) { "property packageName for $name database must be provided" }
+    require(packageName.isPresent) { "property packageName for $name database must be provided" }
 
     check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
     recursionGuard = true
@@ -156,7 +156,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
     try {
       return SqlDelightDatabasePropertiesImpl(
-        packageName = packageName,
+        packageName = packageName.get(),
         compilationUnits = sources.map { source ->
           SqlDelightCompilationUnitImpl(
             name = source.name,
@@ -250,7 +250,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         addSquashTask(sourceFiles, source)
       }
 
-      if (migrationOutputDirectory.getOrNull() != null) {
+      if (migrationOutputDirectory.isPresent) {
         addMigrationOutputTasks(sourceFiles, source)
       }
     }
@@ -275,7 +275,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 
-    if (schemaOutputDirectory.getOrNull() != null) {
+    if (schemaOutputDirectory.isPresent) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
         it.projectName.set(project.name)
         it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
