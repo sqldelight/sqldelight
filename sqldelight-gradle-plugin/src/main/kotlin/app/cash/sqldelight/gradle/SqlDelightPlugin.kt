@@ -51,17 +51,12 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
 
-    val androidPluginHandler = { _: Plugin<*> ->
+    project.plugins.withId("com.android.base") {
       android.set(true)
       project.afterEvaluate {
         project.setupSqlDelightTasks(afterAndroid = true)
       }
     }
-    project.plugins.withId("com.android.application", androidPluginHandler)
-    project.plugins.withId("com.android.library", androidPluginHandler)
-    project.plugins.withId("com.android.instantapp", androidPluginHandler)
-    project.plugins.withId("com.android.feature", androidPluginHandler)
-    project.plugins.withId("com.android.dynamic-feature", androidPluginHandler)
 
     val kotlinPluginHandler = { _: Plugin<*> -> kotlin.set(true) }
     project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
