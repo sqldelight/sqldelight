@@ -2,7 +2,29 @@
 
 {% include 'common/index_gradle_database.md' %}
 
-Put your SQL statements in a `.sq` file under `src/commonMain/sqldelight`. Typically the first statement in the SQL file creates a table.
+If you are using SQLDelight in single platform mode (e.g. Desktop), add following snippet to `build.gradle`.
+And create folder `src/commonMain/sqldelight`.
+
+=== "Kotlin"
+    ```kotlin
+    kotlin {
+      sourceSets {
+        val commonMain by getting
+      }
+    }
+    ```
+=== "Groovy"
+    ```groovy
+    kotlin {
+      sourceSets {
+        commonMain
+      }
+    }
+    ```
+
+Put your SQL statements in a `.sq` file under `src/commonMain/sqldelight`.  
+If there's no commonMain folder, just create it.
+Typically the first statement in the SQL file creates a table.
 
 ```sql
 -- src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq
