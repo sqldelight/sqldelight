@@ -30,7 +30,7 @@ import java.util.ServiceLoader
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
-  var outputDirectory: File? = null
+  abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
 
@@ -38,7 +38,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @TaskAction
   fun generateSchemaFile() {

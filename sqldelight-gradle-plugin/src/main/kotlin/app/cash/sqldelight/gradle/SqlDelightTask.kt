@@ -40,13 +40,12 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
 import java.util.ServiceLoader
 
 @CacheableTask
 abstract class SqlDelightTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
-  var outputDirectory: File? = null
+  abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
 
@@ -54,7 +53,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @TaskAction
   fun generateSqlDelightFiles() {

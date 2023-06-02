@@ -40,15 +40,15 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @get:Internal abstract var workingDirectory: File
+  @get:Internal abstract val workingDirectory: DirectoryProperty
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input abstract val verifyMigrations: Property<Boolean>
 
-  @Input var verifyDefinitions: Boolean = true
+  @get:Input abstract val verifyDefinitions: Property<Boolean>
 
   @get:Input abstract val driverProperties: MapProperty<String, String>
 
@@ -68,7 +68,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)
-      it.driverProperties.set(driverProperties.get())
+      it.driverProperties.set(driverProperties)
       it.outputFile.set(getDummyOutputFile())
     }
   }
