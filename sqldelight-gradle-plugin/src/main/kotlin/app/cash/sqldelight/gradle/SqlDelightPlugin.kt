@@ -122,12 +122,10 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     extension.run {
       if (databases.isEmpty() && android.get() && !isMultiplatform) {
         // Default to a database for android named "Database" to keep things simple.
-        databases.add(
-          objects.newInstance(SqlDelightDatabase::class.java, project, "Database").apply {
-            packageName.set(project.packageName())
-            project.sqliteVersion()?.let(::dialect)
-          },
-        )
+        databases.create("Database") { database ->
+          database.packageName.set(project.packageName())
+          project.sqliteVersion()?.let(database::dialect)
+        }
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
       }
