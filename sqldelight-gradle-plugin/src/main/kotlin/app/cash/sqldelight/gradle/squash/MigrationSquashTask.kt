@@ -30,9 +30,9 @@ import java.util.ServiceLoader
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
   @Input val projectName: Property<String> = project.objects.property(String::class.java)
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
 
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @TaskAction
   fun generateSquashedMigrationFile() {
