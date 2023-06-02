@@ -26,7 +26,7 @@ import java.util.ServiceLoader
 @CacheableTask
 abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
   @get:OutputDirectory
-  var outputDirectory: File? = null
+  abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
 
@@ -34,7 +34,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @get:Input abstract var migrationOutputExtension: String
+  @get:Input abstract val migrationOutputExtension: Property<String>
 
   @TaskAction
   fun generateSchemaFile() {
