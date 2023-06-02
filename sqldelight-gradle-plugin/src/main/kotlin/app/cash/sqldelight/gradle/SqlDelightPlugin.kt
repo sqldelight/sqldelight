@@ -21,6 +21,7 @@ import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.android.packageName
 import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
+import com.android.build.gradle.api.AndroidBasePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
@@ -51,17 +52,12 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
 
-    val androidPluginHandler = { _: Plugin<*> ->
+    project.plugins.withType(AndroidBasePlugin::class.java) {
       android.set(true)
       project.afterEvaluate {
         project.setupSqlDelightTasks(afterAndroid = true)
       }
     }
-    project.plugins.withId("com.android.application", androidPluginHandler)
-    project.plugins.withId("com.android.library", androidPluginHandler)
-    project.plugins.withId("com.android.instantapp", androidPluginHandler)
-    project.plugins.withId("com.android.feature", androidPluginHandler)
-    project.plugins.withId("com.android.dynamic-feature", androidPluginHandler)
 
     val kotlinPluginHandler = { _: Plugin<*> -> kotlin.set(true) }
     project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
