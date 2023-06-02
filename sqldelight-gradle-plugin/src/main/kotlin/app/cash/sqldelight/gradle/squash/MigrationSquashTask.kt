@@ -28,7 +28,7 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Input abstract val projectName: Property<String>
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
 
