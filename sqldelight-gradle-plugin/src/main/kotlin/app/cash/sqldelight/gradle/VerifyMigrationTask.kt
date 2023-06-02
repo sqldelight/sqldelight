@@ -1,6 +1,5 @@
 package app.cash.sqldelight.gradle
 
-import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -38,11 +37,6 @@ import kotlin.collections.ArrayList
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
-  @Suppress("unused")
-  // Required to invalidate the task on version updates.
-  @Input
-  val pluginVersion = VERSION
-
   @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
