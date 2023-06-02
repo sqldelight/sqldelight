@@ -28,9 +28,7 @@ import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -87,7 +85,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
-    val isJsOnly = if (isMultiplatform) false else project.plugins.hasPlugin("org.jetbrains.kotlin.js")
 
     val needsAsyncRuntime = extension.databases.any { it.generateAsync.get() }
     val runtimeDependencies = buildList {
@@ -96,25 +93,10 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     // Add the runtime dependency.
-    when {
-      isMultiplatform -> {
-        val sourceSets =
-          project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
-        val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
-        project.configurations.getByName(sourceSet.apiConfigurationName)
-          .dependencies.addAll(runtimeDependencies)
-      }
-      isJsOnly -> {
-        val sourceSets =
-          project.extensions.getByType(KotlinJsProjectExtension::class.java).sourceSets
-        val sourceSet = (sourceSets.getByName("main") as DefaultKotlinSourceSet)
-        project.configurations.getByName(sourceSet.apiConfigurationName)
-          .dependencies.addAll(runtimeDependencies)
-      }
-      else -> {
-        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
-      }
-    }
+    val sourceSetName = if (isMultiplatform) "commonMain" else "main"
+    val sourceSetApiConfigName =
+      project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
+    project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
 
     if (extension.linkSqlite.getOrElse(true)) {
       project.linkSqlite()
