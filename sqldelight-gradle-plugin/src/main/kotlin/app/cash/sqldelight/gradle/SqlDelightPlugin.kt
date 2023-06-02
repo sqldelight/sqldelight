@@ -131,7 +131,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
 
       databases.forEach { database ->
-        if (database.packageName.getOrNull() == null && android.get() && !isMultiplatform) {
+        if (!database.packageName.isPresent && android.get() && !isMultiplatform) {
           database.packageName.set(project.packageName())
         }
         if (!database.addedDialect && android.get() && !isMultiplatform) {
