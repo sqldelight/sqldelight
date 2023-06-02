@@ -28,6 +28,7 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
+import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
@@ -59,12 +60,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
     }
 
-    val kotlinPluginHandler = { _: Plugin<*> -> kotlin.set(true) }
-    project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
-    project.plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
-    project.plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
-    project.plugins.withId("org.jetbrains.kotlin.js", kotlinPluginHandler)
-    project.plugins.withId("kotlin2js", kotlinPluginHandler)
+    project.plugins.withType(KotlinBasePlugin::class.java) {
+      kotlin.set(true)
+    }
 
     project.afterEvaluate {
       project.setupSqlDelightTasks(afterAndroid = false)
