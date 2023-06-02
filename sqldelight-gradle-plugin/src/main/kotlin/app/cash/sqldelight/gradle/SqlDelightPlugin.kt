@@ -46,7 +46,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
-    val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
+    val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java).apply {
+      linkSqlite.convention(true)
+    }
 
     project.plugins.withType(AndroidBasePlugin::class.java) {
       android.set(true)
@@ -96,7 +98,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
     project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
 
-    if (extension.linkSqlite.getOrElse(true)) {
+    if (extension.linkSqlite.get()) {
       project.linkSqlite()
     }
 
