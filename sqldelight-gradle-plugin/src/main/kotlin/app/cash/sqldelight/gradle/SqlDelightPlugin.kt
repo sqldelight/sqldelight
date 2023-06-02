@@ -63,6 +63,16 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       kotlin.set(true)
     }
 
+    project.tasks.register("generateSqlDelightInterface") {
+      it.group = GROUP
+      it.description = "Aggregation task which runs every interface generation task for every given source"
+    }
+
+    project.tasks.register("verifySqlDelightMigration") {
+      it.group = GROUP
+      it.description = "Aggregation task which runs every migration task for every given source"
+    }
+
     project.afterEvaluate {
       project.setupSqlDelightTasks(afterAndroid = false)
     }
@@ -121,16 +131,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         )
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
-      }
-
-      project.tasks.register("generateSqlDelightInterface") {
-        it.group = GROUP
-        it.description = "Aggregation task which runs every interface generation task for every given source"
-      }
-
-      project.tasks.register("verifySqlDelightMigration") {
-        it.group = GROUP
-        it.description = "Aggregation task which runs every migration task for every given source"
       }
 
       databases.forEach { database ->
