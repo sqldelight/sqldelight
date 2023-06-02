@@ -24,7 +24,6 @@ import app.cash.sqldelight.gradle.kotlin.linkSqlite
 import com.android.build.gradle.api.AndroidBasePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
@@ -91,7 +90,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     val isJsOnly = if (isMultiplatform) false else project.plugins.hasPlugin("org.jetbrains.kotlin.js")
 
     val needsAsyncRuntime = extension.databases.any { it.generateAsync.get() }
-    val runtimeDependencies = mutableListOf<Dependency>().apply {
+    val runtimeDependencies = buildList {
       add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
       if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION"))
     }
