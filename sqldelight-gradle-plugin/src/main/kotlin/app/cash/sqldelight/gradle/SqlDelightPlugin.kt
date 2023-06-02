@@ -40,19 +40,17 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   @get:Inject
   abstract val registry: ToolingModelBuilderRegistry
 
-  private lateinit var extension: SqlDelightExtension
-
   override fun apply(project: Project) {
     require(GradleVersion.current() >= GradleVersion.version(MIN_GRADLE_VERSION)) {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
-    extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
+    val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
 
     project.plugins.withId("com.android.base") {
       android.set(true)
       project.afterEvaluate {
-        project.setupSqlDelightTasks(afterAndroid = true)
+        project.setupSqlDelightTasks(afterAndroid = true, extension)
       }
     }
 
@@ -71,11 +69,11 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     project.afterEvaluate {
-      project.setupSqlDelightTasks(afterAndroid = false)
+      project.setupSqlDelightTasks(afterAndroid = false, extension)
     }
   }
 
-  private fun Project.setupSqlDelightTasks(afterAndroid: Boolean) {
+  private fun Project.setupSqlDelightTasks(afterAndroid: Boolean, extension: SqlDelightExtension) {
     if (android.get() && !afterAndroid) return
 
     check(kotlin.get()) {
