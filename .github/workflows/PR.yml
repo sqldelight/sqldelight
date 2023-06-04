@@ -47,16 +47,20 @@ jobs:
       - name: Run spotless
         run: ./gradlew spotlessCheck
       - name: Assemble parallel
-        run: ./gradlew assemble dokkaHtml sourceJar sourceDebugJar sourceReleaseJar
+        run: ./gradlew assemble dokkaHtml javaDocDebugJar javaDocReleaseJar sourceJar sourceDebugJar sourceReleaseJar
 
       # Linux tests
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
-      - name: Run gradle plugin tests
+      - name: Run gradle plugin tests without Docker
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
-        run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest
+        run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --profile -x dockerTest
+
+      - name: Run gradle plugin tests with Docker
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
+        run: ./gradlew :sqldelight-gradle-plugin:dockerTest
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
