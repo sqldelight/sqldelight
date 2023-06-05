@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">SqliteJsonVisitor</a> : <span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -71,6 +71,25 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="882731243%2FProperties%2F560951306" anchor-label="EMPTY_VISITOR" id="882731243%2FProperties%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#882731243%2FProperties%2F560951306"><span><span>EMPTY_VISITOR</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="882731243%2FProperties%2F560951306"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#882731243%2FProperties%2F560951306">EMPTY_VISITOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -315,25 +334,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#1356965038%2FFunctions%2F560951306"><span class="token function">visitWhiteSpace</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">space<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiWhiteSpace///PointingToDeclaration/">PsiWhiteSpace</span></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="882731243%2FProperties%2F560951306" anchor-label="EMPTY_VISITOR" id="882731243%2FProperties%2F560951306" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite:json-module:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite:json-module:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#882731243%2FProperties%2F560951306"><span><span>EMPTY_VISITOR</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="882731243%2FProperties%2F560951306"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite:json-module:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#882731243%2FProperties%2F560951306">EMPTY_VISITOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
                 </div>
               </div>
             </div>

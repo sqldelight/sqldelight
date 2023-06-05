@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">Callback</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">schema<span class="token operator">: </span><a href="../../../../../runtime/app.cash.sqldelight.db/-sql-schema/index.html">SqlSchema</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../../../runtime/app.cash.sqldelight.db/-query-result/-value/index.html">QueryResult.Value</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">callbacks<span class="token operator">: </span><a href="../../../../../runtime/app.cash.sqldelight.db/-after-version/index.html">AfterVersion</a></span></span><span class="token punctuation">)</span> : <a href="https://developer.android.com/reference/kotlin/androidx/sqlite/db/SupportSQLiteOpenHelper.Callback.html">SupportSQLiteOpenHelper.Callback</a></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -71,6 +71,25 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">schema<span class="token operator">: </span><a href="../../../../../runtime/app.cash.sqldelight.db/-sql-schema/index.html">SqlSchema</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../../../runtime/app.cash.sqldelight.db/-query-result/-value/index.html">QueryResult.Value</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>callbacks<span class="token operator">: </span><a href="../../../../../runtime/app.cash.sqldelight.db/-after-version/index.html">AfterVersion</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1441805440%2FProperties%2F1288973086" anchor-label="version" id="1441805440%2FProperties%2F1288973086" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drivers:android-driver:dokkaHtmlPartial/release" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1441805440%2FProperties%2F1288973086"><span><span>version</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1441805440%2FProperties%2F1288973086"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#1441805440%2FProperties%2F1288973086">version</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -165,25 +184,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-upgrade.html"><span class="token function">onUpgrade</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">db<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/sqlite/db/SupportSQLiteDatabase.html">SupportSQLiteDatabase</a><span class="token punctuation">, </span></span><span class="parameter ">oldVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">newVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1441805440%2FProperties%2F1288973086" anchor-label="version" id="1441805440%2FProperties%2F1288973086" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":drivers:android-driver:dokkaHtmlPartial/release" data-filterable-set=":drivers:android-driver:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1441805440%2FProperties%2F1288973086"><span><span>version</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1441805440%2FProperties%2F1288973086"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:android-driver:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#1441805440%2FProperties%2F1288973086">version</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
                 </div>
               </div>
             </div>

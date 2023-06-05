@@ -166,8 +166,8 @@
               </div>
             </div>
           </div>
-<a data-name="427896482%2FFunctions%2F-1043631958" anchor-label="synchronous" id="427896482%2FFunctions%2F-1043631958" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/jvmMain :extensions:async-extensions:dokkaHtmlPartial/nativeMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":extensions:async-extensions:dokkaHtmlPartial/jvmMain :extensions:async-extensions:dokkaHtmlPartial/nativeMain" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/jvmMain :extensions:async-extensions:dokkaHtmlPartial/nativeMain">
+<a data-name="427896482%2FFunctions%2F-1043631958" anchor-label="synchronous" id="427896482%2FFunctions%2F-1043631958" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/jvmMain,:extensions:async-extensions:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":extensions:async-extensions:dokkaHtmlPartial/jvmMain,:extensions:async-extensions:dokkaHtmlPartial/nativeMain" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/jvmMain,:extensions:async-extensions:dokkaHtmlPartial/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../../../extensions/async-extensions/app.cash.sqldelight.async.coroutines/[native]synchronous.html"><span><span>synchronous</span></span></a></div>

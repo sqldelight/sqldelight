@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MySqlTypeResolver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span> : <a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>

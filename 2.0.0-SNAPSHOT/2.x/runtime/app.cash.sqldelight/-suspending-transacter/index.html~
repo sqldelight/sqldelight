@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">SuspendingTransacter</a> : <a href="../-transacter-base/index.html">TransacterBase</a></div><p class="paragraph">A transaction-aware <a href="../../app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a> wrapper which can begin a <a href="../-transacter/-transaction/index.html">Transaction</a> on the current connection.</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-suspending-transacter-impl/index.html">SuspendingTransacterImpl</a></div></span></div><div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>

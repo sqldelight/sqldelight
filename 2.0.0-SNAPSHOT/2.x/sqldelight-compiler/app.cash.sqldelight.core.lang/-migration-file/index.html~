@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MigrationFile</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">viewProvider<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/FileViewProvider///PointingToDeclaration/">FileViewProvider</span></span></span><span class="token punctuation">)</span> : <a href="../-sql-delight-file/index.html">SqlDelightFile</a></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -71,6 +71,115 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">viewProvider<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/FileViewProvider///PointingToDeclaration/">FileViewProvider</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-585232448%2FProperties%2F1896744885" anchor-label="generatedDirectories" id="-585232448%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-sql-delight-file/generated-directories.html"><span>generated</span><wbr><span><span>Directories</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-585232448%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-sql-delight-file/generated-directories.html">generatedDirectories</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1652641872%2FProperties%2F1896744885" anchor-label="module" id="1652641872%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-sql-delight-file/module.html"><span><span>module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1652641872%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-sql-delight-file/module.html">module</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.module/Module///PointingToDeclaration/">Module</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1839324447%2FProperties%2F1896744885" anchor-label="order" id="1839324447%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="order.html"><span><span>order</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1839324447%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="order.html">order</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1637895644%2FProperties%2F1896744885" anchor-label="packageName" id="1637895644%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="package-name.html"><span>package</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1637895644%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="package-name.html">packageName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-712653736%2FProperties%2F1896744885" anchor-label="range" id="-712653736%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../app.cash.sqldelight.core.lang.util/range.html"><span><span>range</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-712653736%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="../../app.cash.sqldelight.core.lang.util/range.html">range</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-int-range/index.html">IntRange</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1636234884%2FProperties%2F1896744885" anchor-label="sqlStmtList" id="1636234884%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-sql-delight-queries-file/index.html#1636234884%2FProperties%2F1896744885"><span>sql</span><wbr><span>Stmt</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1636234884%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-sql-delight-queries-file/index.html#1636234884%2FProperties%2F1896744885">sqlStmtList</a><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlStmtList///PointingToDeclaration/">SqlStmtList</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-948487467%2FProperties%2F1896744885" anchor-label="version" id="-948487467%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="version.html"><span><span>version</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-948487467%2FProperties%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="version.html">version</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -2160,115 +2269,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.core.lang.psi/-stmt-identifier-mixin/index.html#-1039696372%2FFunctions%2F1896744885"><span class="token function">weakCompareAndSetVolatile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><span data-unresolved-link="com.intellij.util.keyFMap/KeyFMap///PointingToDeclaration/">KeyFMap</span><span class="token punctuation">, </span></span><span class="parameter ">p1<span class="token operator">: </span><span data-unresolved-link="com.intellij.util.keyFMap/KeyFMap///PointingToDeclaration/">KeyFMap</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-585232448%2FProperties%2F1896744885" anchor-label="generatedDirectories" id="-585232448%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-sql-delight-file/generated-directories.html"><span>generated</span><wbr><span><span>Directories</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-585232448%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-sql-delight-file/generated-directories.html">generatedDirectories</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1652641872%2FProperties%2F1896744885" anchor-label="module" id="1652641872%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-sql-delight-file/module.html"><span><span>module</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1652641872%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-sql-delight-file/module.html">module</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.module/Module///PointingToDeclaration/">Module</span><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1839324447%2FProperties%2F1896744885" anchor-label="order" id="1839324447%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="order.html"><span><span>order</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1839324447%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="order.html">order</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1637895644%2FProperties%2F1896744885" anchor-label="packageName" id="1637895644%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="package-name.html"><span>package</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1637895644%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="package-name.html">packageName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-712653736%2FProperties%2F1896744885" anchor-label="range" id="-712653736%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.core.lang.util/range.html"><span><span>range</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-712653736%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="../../app.cash.sqldelight.core.lang.util/range.html">range</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-int-range/index.html">IntRange</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1636234884%2FProperties%2F1896744885" anchor-label="sqlStmtList" id="1636234884%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-sql-delight-queries-file/index.html#1636234884%2FProperties%2F1896744885"><span>sql</span><wbr><span>Stmt</span><wbr><span><span>List</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1636234884%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-sql-delight-queries-file/index.html#1636234884%2FProperties%2F1896744885">sqlStmtList</a><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlStmtList///PointingToDeclaration/">SqlStmtList</span><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-948487467%2FProperties%2F1896744885" anchor-label="version" id="-948487467%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="version.html"><span><span>version</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-948487467%2FProperties%2F1896744885"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="version.html">version</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
                 </div>
               </div>
             </div>

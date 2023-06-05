@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">HsqlVisitor</a> : <span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -71,6 +71,25 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="882731243%2FProperties%2F1188588423" anchor-label="EMPTY_VISITOR" id="882731243%2FProperties%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#882731243%2FProperties%2F1188588423"><span><span>EMPTY_VISITOR</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="882731243%2FProperties%2F1188588423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#882731243%2FProperties%2F1188588423">EMPTY_VISITOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -900,25 +919,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="visit-window-name.html"><span class="token function">visitWindowName</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-hsql-window-name/index.html">HsqlWindowName</a></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="882731243%2FProperties%2F1188588423" anchor-label="EMPTY_VISITOR" id="882731243%2FProperties%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#882731243%2FProperties%2F1188588423"><span><span>EMPTY_VISITOR</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="882731243%2FProperties%2F1188588423"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#882731243%2FProperties%2F1188588423">EMPTY_VISITOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
                 </div>
               </div>
             </div>

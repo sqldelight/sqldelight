@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">MySqlCurrentTimestampWithOptionalNumberImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-current-timestamp-with-optional-number/index.html">MySqlCurrentTimestampWithOptionalNumber</a></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
@@ -71,6 +71,130 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">node<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1700929631%2FProperties%2F666177779" anchor-label="ARRAY_FACTORY" id="1700929631%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#1700929631%2FProperties%2F666177779"><span><span>ARRAY_FACTORY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1700929631%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#1700929631%2FProperties%2F666177779">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="702897020%2FProperties%2F666177779" anchor-label="EMPTY_ARRAY" id="702897020%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#702897020%2FProperties%2F666177779"><span><span>EMPTY_ARRAY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702897020%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#702897020%2FProperties%2F666177779">EMPTY_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="473062387%2FProperties%2F666177779" anchor-label="EMPTY_NAVIGATABLE_ARRAY" id="473062387%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#473062387%2FProperties%2F666177779"><span><span>EMPTY_NAVIGATABLE_ARRAY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="473062387%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#473062387%2FProperties%2F666177779">EMPTY_NAVIGATABLE_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.pom/Navigatable///PointingToDeclaration/">Navigatable</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1221368392%2FProperties%2F666177779" anchor-label="EMPTY_NAVIGATABLE_ELEMENT_ARRAY" id="1221368392%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#1221368392%2FProperties%2F666177779"><span><span>EMPTY_NAVIGATABLE_ELEMENT_ARRAY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1221368392%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#1221368392%2FProperties%2F666177779">EMPTY_NAVIGATABLE_ELEMENT_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/NavigatablePsiElement///PointingToDeclaration/">NavigatablePsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="720083342%2FProperties%2F666177779" anchor-label="EMPTY_NAVIGATION_ITEM_ARRAY" id="720083342%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#720083342%2FProperties%2F666177779"><span><span>EMPTY_NAVIGATION_ITEM_ARRAY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="720083342%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#720083342%2FProperties%2F666177779">EMPTY_NAVIGATION_ITEM_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.navigation/NavigationItem///PointingToDeclaration/">NavigationItem</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-825235524%2FProperties%2F666177779" anchor-label="FLAGS_LOCKED" id="-825235524%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#-825235524%2FProperties%2F666177779"><span><span>FLAGS_LOCKED</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-825235524%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#-825235524%2FProperties%2F666177779">FLAGS_LOCKED</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2048</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="904140966%2FProperties%2F666177779" anchor-label="ICON_FLAG_READ_STATUS" id="904140966%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#904140966%2FProperties%2F666177779"><span><span>ICON_FLAG_READ_STATUS</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="904140966%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#904140966%2FProperties%2F666177779">ICON_FLAG_READ_STATUS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1410006311%2FProperties%2F666177779" anchor-label="ICON_FLAG_VISIBILITY" id="1410006311%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-my-sql-enum-set-type-impl/index.html#1410006311%2FProperties%2F666177779"><span><span>ICON_FLAG_VISIBILITY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1410006311%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#1410006311%2FProperties%2F666177779">ICON_FLAG_VISIBILITY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -1605,130 +1729,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-my-sql-enum-set-type-impl/index.html#-846218348%2FFunctions%2F666177779"><span class="token function">weakCompareAndSetVolatile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">expectedValue<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html">V</a><span class="token punctuation">, </span></span><span class="parameter ">newValue<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html">V</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1700929631%2FProperties%2F666177779" anchor-label="ARRAY_FACTORY" id="1700929631%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#1700929631%2FProperties%2F666177779"><span><span>ARRAY_FACTORY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1700929631%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#1700929631%2FProperties%2F666177779">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="702897020%2FProperties%2F666177779" anchor-label="EMPTY_ARRAY" id="702897020%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#702897020%2FProperties%2F666177779"><span><span>EMPTY_ARRAY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702897020%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#702897020%2FProperties%2F666177779">EMPTY_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="473062387%2FProperties%2F666177779" anchor-label="EMPTY_NAVIGATABLE_ARRAY" id="473062387%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#473062387%2FProperties%2F666177779"><span><span>EMPTY_NAVIGATABLE_ARRAY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="473062387%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#473062387%2FProperties%2F666177779">EMPTY_NAVIGATABLE_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.pom/Navigatable///PointingToDeclaration/">Navigatable</span><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1221368392%2FProperties%2F666177779" anchor-label="EMPTY_NAVIGATABLE_ELEMENT_ARRAY" id="1221368392%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#1221368392%2FProperties%2F666177779"><span><span>EMPTY_NAVIGATABLE_ELEMENT_ARRAY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1221368392%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#1221368392%2FProperties%2F666177779">EMPTY_NAVIGATABLE_ELEMENT_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/NavigatablePsiElement///PointingToDeclaration/">NavigatablePsiElement</span><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="720083342%2FProperties%2F666177779" anchor-label="EMPTY_NAVIGATION_ITEM_ARRAY" id="720083342%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#720083342%2FProperties%2F666177779"><span><span>EMPTY_NAVIGATION_ITEM_ARRAY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="720083342%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#720083342%2FProperties%2F666177779">EMPTY_NAVIGATION_ITEM_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.navigation/NavigationItem///PointingToDeclaration/">NavigationItem</span><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-825235524%2FProperties%2F666177779" anchor-label="FLAGS_LOCKED" id="-825235524%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#-825235524%2FProperties%2F666177779"><span><span>FLAGS_LOCKED</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-825235524%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#-825235524%2FProperties%2F666177779">FLAGS_LOCKED</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2048</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="904140966%2FProperties%2F666177779" anchor-label="ICON_FLAG_READ_STATUS" id="904140966%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#904140966%2FProperties%2F666177779"><span><span>ICON_FLAG_READ_STATUS</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="904140966%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#904140966%2FProperties%2F666177779">ICON_FLAG_READ_STATUS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1410006311%2FProperties%2F666177779" anchor-label="ICON_FLAG_VISIBILITY" id="1410006311%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-my-sql-enum-set-type-impl/index.html#1410006311%2FProperties%2F666177779"><span><span>ICON_FLAG_VISIBILITY</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1410006311%2FProperties%2F666177779"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-my-sql-enum-set-type-impl/index.html#1410006311%2FProperties%2F666177779">ICON_FLAG_VISIBILITY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
                 </div>
               </div>
             </div>

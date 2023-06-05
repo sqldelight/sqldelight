@@ -57,8 +57,8 @@
     <h1 class="cover"><span><span>async-extensions</span></span></h1>
   </div>
   <h2 class="">Packages</h2>
-  <div class="table"><a data-name="493184520%2FPackages%2F96901468" anchor-label="app.cash.sqldelight.async.coroutines" id="493184520%2FPackages%2F96901468" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/commonMain :extensions:async-extensions:dokkaHtmlPartial/jvmMain :extensions:async-extensions:dokkaHtmlPartial/nativeMain"></a>
-    <div class="table-row" data-filterable-current=":extensions:async-extensions:dokkaHtmlPartial/commonMain :extensions:async-extensions:dokkaHtmlPartial/jvmMain :extensions:async-extensions:dokkaHtmlPartial/nativeMain" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/commonMain :extensions:async-extensions:dokkaHtmlPartial/jvmMain :extensions:async-extensions:dokkaHtmlPartial/nativeMain">
+  <div class="table"><a data-name="493184520%2FPackages%2F96901468" anchor-label="app.cash.sqldelight.async.coroutines" id="493184520%2FPackages%2F96901468" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/commonMain,:extensions:async-extensions:dokkaHtmlPartial/jvmMain,:extensions:async-extensions:dokkaHtmlPartial/nativeMain"></a>
+    <div class="table-row" data-filterable-current=":extensions:async-extensions:dokkaHtmlPartial/commonMain,:extensions:async-extensions:dokkaHtmlPartial/jvmMain,:extensions:async-extensions:dokkaHtmlPartial/nativeMain" data-filterable-set=":extensions:async-extensions:dokkaHtmlPartial/commonMain,:extensions:async-extensions:dokkaHtmlPartial/jvmMain,:extensions:async-extensions:dokkaHtmlPartial/nativeMain">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">

@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">QueriesTypeGenerator</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">module<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.module/Module///PointingToDeclaration/">Module</span><span class="token punctuation">, </span></span><span class="parameter ">file<span class="token operator">: </span><a href="../../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a><span class="token punctuation">, </span></span><span class="parameter ">dialect<span class="token operator">: </span><a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-sql-delight-dialect/index.html">SqlDelightDialect</a></span></span><span class="token punctuation">)</span></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>

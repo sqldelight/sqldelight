@@ -56,7 +56,7 @@
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">JsSqlDriver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">db<span class="token operator">: </span><a href="../-database/index.html">Database</a></span></span><span class="token punctuation">)</span> : <a href="../../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a></div></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>

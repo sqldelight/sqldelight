@@ -241,6 +241,25 @@
           </div>
         </div>
       </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1487854048%2FProperties%2F1080447656" anchor-label="initSqlJs" id="-1487854048%2FProperties%2F1080447656" data-filterable-set=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain" data-filterable-set=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-sql-js.html"><span>init</span><wbr><span>Sql</span><wbr><span><span>Js</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1487854048%2FProperties%2F1080447656"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">val </span><a href="init-sql-js.html">initSqlJs</a><span class="token operator">: </span><a href="-init-sql-js-static/index.html">InitSqlJsStatic</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
         <div class="table"><a data-name="745455981%2FFunctions%2F1080447656" anchor-label="createInstance" id="745455981%2FFunctions%2F1080447656" data-filterable-set=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"></a>
@@ -344,25 +363,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.js/-promise/index.html">Promise</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="with-schema.html"><span class="token function">withSchema</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">schema<span class="token operator">: </span><a href="../../../runtime/app.cash.sqldelight.db/-sql-schema/index.html">SqlSchema</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight.db/-query-result/-value/index.html">QueryResult.Value</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.js/-promise/index.html">Promise</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight.db/-sql-driver/index.html">SqlDriver</a><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-1487854048%2FProperties%2F1080447656" anchor-label="initSqlJs" id="-1487854048%2FProperties%2F1080447656" data-filterable-set=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain" data-filterable-set=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="init-sql-js.html"><span>init</span><wbr><span>Sql</span><wbr><span><span>Js</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1487854048%2FProperties%2F1080447656"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:sqljs-driver:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">val </span><a href="init-sql-js.html">initSqlJs</a><span class="token operator">: </span><a href="-init-sql-js-static/index.html">InitSqlJsStatic</a></div></div></div>
                 </div>
               </div>
             </div>
