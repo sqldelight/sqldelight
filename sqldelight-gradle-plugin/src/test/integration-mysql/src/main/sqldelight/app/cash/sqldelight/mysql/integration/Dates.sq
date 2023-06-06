@@ -11,3 +11,17 @@ INSERT INTO dates VALUES (?, ?, ?, ?, ?);
 
 SELECT * FROM dates LIMIT 1;
 }
+
+minDates:
+SELECT min(time), min(date), min(datetime), min(timestamp), min(year) FROM dates;
+
+maxDates:
+SELECT max(time), max(date), max(datetime), max(timestamp), max(year) FROM dates;
+
+CREATE TABLE dates_lowercase(
+  time time NOT NULL,
+  date date NOT NULL,
+  datetime datetime NOT NULL,
+  timestamp timestamp NOT NULL,
+  year year NOT NULL
+);
