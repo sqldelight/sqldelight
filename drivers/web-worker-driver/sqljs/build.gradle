@@ -1,10 +1,15 @@
-{
+def packageJson = tasks.register("writePackageJson") {
+  outputs.file("package.json")
+
+  doLast {
+    file("package.json")
+      .write("""{
   "name": "@cashapp/sqldelight-sqljs-worker",
-  "version": "2.0.0-rc01",
+  "version": "${rootProject.version}",
   "description": "A SQL.js implementation of SQLDelight's web-worker-driver",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \\"Error: no test specified\\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -24,4 +29,11 @@
   "peerDependencies": {
     "sql.js": "^1.8.0"
   }
+}
+""")
+  }
+}
+
+rootProject.tasks.named("kotlinNpmInstall").configure {
+  dependsOn(packageJson)
 }
