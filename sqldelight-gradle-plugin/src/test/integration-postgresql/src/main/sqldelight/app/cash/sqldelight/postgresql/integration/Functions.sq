@@ -1,0 +1,22 @@
+CREATE TABLE myTable(
+  foo REAL NOT NULL,
+  bar NUMERIC NOT NULL
+);
+
+selectPercentile:
+SELECT percentile_disc(.5) WITHIN GROUP (ORDER BY foo) AS P5
+FROM myTable;
+
+selectStats:
+SELECT
+corr(foo, bar),
+stddev(foo),
+regr_count(foo, bar)
+FROM myTable
+GROUP BY foo, bar;
+
+CREATE TABLE items_sold(
+  make TEXT NOT NULL,
+  model TEXT NOT NULL,
+  sales INTEGER NOT NULL
+);

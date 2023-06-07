@@ -312,4 +312,12 @@ class PostgreSqlTest {
     val desc = database.charactersQueries.selectDescriptionLength().executeAsOne()
     assertThat(desc.length).isNull()
   }
+
+  @Test fun functions() {
+    database.charactersQueries.insertCharacter("abcdef", null)
+    val name = database.charactersQueries.selectNameLength().executeAsOne()
+    assertThat(name).isEqualTo(6)
+    val desc = database.charactersQueries.selectDescriptionLength().executeAsOne()
+    assertThat(desc.length).isNull()
+  }
 }
