@@ -1,8 +1,12 @@
 CREATE TABLE test (
   id INTEGER PRIMARY KEY,
-  value INTEGER
+  value INTEGER,
+  value2 INTEGER
 );
 
 INSERT INTO test
-VALUES (1,2)
-ON DUPLICATE KEY UPDATE value = VALUES(value);
+(id, value, value2)
+VALUES (1, 2, 3)
+ON DUPLICATE KEY UPDATE
+value = VALUES(value),
+value2 = value2 + 1;
