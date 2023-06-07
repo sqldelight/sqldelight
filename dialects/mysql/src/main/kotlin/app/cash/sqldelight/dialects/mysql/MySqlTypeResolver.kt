@@ -63,7 +63,8 @@ class MySqlTypeResolver(
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
     "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(exprList,
+    "max" -> encapsulatingType(
+      exprList,
       TINY_INT,
       SMALL_INT,
       MySqlType.INTEGER,
@@ -77,7 +78,8 @@ class MySqlTypeResolver(
       TEXT,
       BLOB,
     ).asNullable()
-    "min" -> encapsulatingType(exprList,
+    "min" -> encapsulatingType(
+      exprList,
       BLOB,
       TEXT,
       MySqlType.TIME,
