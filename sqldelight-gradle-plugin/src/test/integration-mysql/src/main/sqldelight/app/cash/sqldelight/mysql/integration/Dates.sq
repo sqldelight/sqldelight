@@ -13,10 +13,20 @@ SELECT * FROM dates LIMIT 1;
 }
 
 minDates:
-SELECT min(time), min(date), min(datetime), min(timestamp), min(year) FROM dates;
+SELECT MIN(time) AS minTime,
+  MIN(date) AS minDate,
+  MIN(datetime) AS minDatetime,
+  MIN(timestamp) AS minTimestamp,
+  MIN(year) AS minYear
+FROM dates;
 
 maxDates:
-SELECT max(time), max(date), max(datetime), max(timestamp), max(year) FROM dates;
+SELECT MAX(time) AS maxTime,
+  MAX(date) AS maxDate,
+  MAX(datetime) AS maxDatetime,
+  MAX(timestamp) AS maxTimestamp,
+  MAX(year) AS maxYear
+FROM dates;
 
 CREATE TABLE dates_lowercase(
   time time NOT NULL,

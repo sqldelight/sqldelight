@@ -89,7 +89,7 @@ class MySqlTypeResolver(
       INTEGER,
       MySqlType.INTEGER,
       BIG_INT,
-      REAL
+      REAL,
     ).asNullable()
     "unix_timestamp" -> IntermediateType(TEXT)
     "to_seconds" -> IntermediateType(INTEGER)
