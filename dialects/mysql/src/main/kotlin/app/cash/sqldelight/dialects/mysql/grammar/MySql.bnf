@@ -305,7 +305,7 @@ insert_stmt ::= [ {with_clause} ] ( INSERT | REPLACE ) [ 'LOW_PRIORITY' | 'DELAY
   pin = 7
 }
 
-assignment_value ::= VALUES LP {column_name} RP | { <<expr '-1'>> | DEFAULT}
+assignment_value ::= VALUES LP {column_name} RP | <<expr '-1'>> | DEFAULT
 
 assignment ::= {column_name} EQ assignment_value
 
