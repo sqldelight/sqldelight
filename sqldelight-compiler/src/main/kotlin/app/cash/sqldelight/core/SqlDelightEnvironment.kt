@@ -23,7 +23,6 @@ import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
-import app.cash.sqldelight.core.lang.SqlDelightLanguage
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
@@ -72,7 +71,7 @@ class SqlDelightEnvironment(
   private val dependencyFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && it.dependency }
     .map { it.folder },
-) : SqlCoreEnvironment(sourceFolders, dependencyFolders, emptyList(), SqlDelightLanguage),
+) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)

@@ -9,6 +9,9 @@ dependencyResolutionManagement {
   repositories {
     mavenCentral()
     google()
+    maven {
+      url "file://${settingsDir.absolutePath}/../build/localMaven"
+    }
   }
 
   versionCatalogs {

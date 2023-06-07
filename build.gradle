@@ -47,6 +47,9 @@ allprojects {
     // Repo for Ktor eap builds used by IntelliJ. Some builds use a eap version. 
     // When a new version of Intellij switched to a stable Ktor version, this repo can be removed. 
     maven { url "https://maven.pkg.jetbrains.space/public/p/ktor/eap" }
+    maven {
+      url "file://${rootProject.projectDir.absolutePath}/build/localMaven"
+    }
   }
 
   tasks.withType(Test).configureEach {
