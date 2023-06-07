@@ -18,6 +18,8 @@ jobs:
             job: instrumentation
           - os: windows-latest
             job: gradle-plugin-tests
+          - os: ubuntu-latest
+            job: gradle-plugin-tests
 
     runs-on: ${{matrix.os}}
     permissions:
