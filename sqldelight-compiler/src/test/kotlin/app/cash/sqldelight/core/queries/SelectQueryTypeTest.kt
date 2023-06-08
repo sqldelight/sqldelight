@@ -138,11 +138,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
@@ -215,11 +215,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
@@ -264,11 +264,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
@@ -318,11 +318,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
@@ -375,11 +375,11 @@ class SelectQueryTypeTest {
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.addListener(listener, arrayOf("socialFeedItem"))
+       |    driver.addListener("socialFeedItem", listener = listener)
        |  }
        |
        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.removeListener(listener, arrayOf("socialFeedItem"))
+       |    driver.removeListener("socialFeedItem", listener = listener)
        |  }
        |
        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
@@ -418,11 +418,11 @@ class SelectQueryTypeTest {
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.addListener(listener, arrayOf("socialFeedItem"))
+       |    driver.addListener("socialFeedItem", listener = listener)
        |  }
        |
        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.removeListener(listener, arrayOf("socialFeedItem"))
+       |    driver.removeListener("socialFeedItem", listener = listener)
        |  }
        |
        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id.withUnderscores}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
@@ -466,11 +466,11 @@ class SelectQueryTypeTest {
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.addListener(listener, arrayOf("Friend"))
+       |    driver.addListener("Friend", listener = listener)
        |  }
        |
        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.removeListener(listener, arrayOf("Friend"))
+       |    driver.removeListener("Friend", listener = listener)
        |  }
        |
        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
@@ -517,11 +517,11 @@ class SelectQueryTypeTest {
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.addListener(listener, arrayOf("Friend"))
+       |    driver.addListener("Friend", listener = listener)
        |  }
        |
        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-       |    driver.removeListener(listener, arrayOf("Friend"))
+       |    driver.removeListener("Friend", listener = listener)
        |  }
        |
        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
@@ -577,11 +577,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
@@ -645,11 +645,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
@@ -704,11 +704,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
@@ -755,11 +755,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
@@ -810,11 +810,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
@@ -879,11 +879,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
@@ -937,11 +937,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
@@ -992,11 +992,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
@@ -1060,11 +1060,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
@@ -1109,11 +1109,11 @@ class SelectQueryTypeTest {
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.addListener(listener, arrayOf("data"))
+      |    driver.addListener("data", listener = listener)
       |  }
       |
       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
@@ -1713,11 +1713,11 @@ class SelectQueryTypeTest {
         |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
         |) : app.cash.sqldelight.Query<T>(mapper) {
         |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
-        |    driver.addListener(listener, arrayOf("ComboData", "ComboData2"))
+        |    driver.addListener("ComboData", "ComboData2", listener = listener)
         |  }
         |
         |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
-        |    driver.removeListener(listener, arrayOf("ComboData", "ComboData2"))
+        |    driver.removeListener("ComboData", "ComboData2", listener = listener)
         |  }
         |
         |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {

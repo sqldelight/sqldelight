@@ -81,7 +81,7 @@ class AndroidSqliteDriver private constructor(
 
   private val listeners = linkedMapOf<String, MutableSet<Query.Listener>>()
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     synchronized(listeners) {
       queryKeys.forEach {
         listeners.getOrPut(it, { linkedSetOf() }).add(listener)
@@ -89,7 +89,7 @@ class AndroidSqliteDriver private constructor(
     }
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     synchronized(listeners) {
       queryKeys.forEach {
         listeners[it]?.remove(listener)
@@ -97,7 +97,7 @@ class AndroidSqliteDriver private constructor(
     }
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     val listenersToNotify = linkedSetOf<Query.Listener>()
     synchronized(listeners) {
       queryKeys.forEach { listeners[it]?.let(listenersToNotify::addAll) }

@@ -67,19 +67,19 @@ class LogSqliteDriver(
     sqlDriver.close()
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     logger("BEGIN $listener LISTENING TO [${queryKeys.joinToString()}]")
-    sqlDriver.addListener(listener, queryKeys)
+    sqlDriver.addListener(queryKeys = queryKeys, listener)
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     logger("END $listener LISTENING TO [${queryKeys.joinToString()}]")
-    sqlDriver.removeListener(listener, queryKeys)
+    sqlDriver.removeListener(queryKeys = queryKeys, listener)
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     logger("NOTIFYING LISTENERS OF [${queryKeys.joinToString()}]")
-    sqlDriver.notifyListeners(queryKeys)
+    sqlDriver.notifyListeners(queryKeys = queryKeys)
   }
 
   private fun logParameters(binders: (SqlPreparedStatement.() -> Unit)?) {

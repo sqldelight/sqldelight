@@ -135,16 +135,12 @@ class JsQueryTest {
 
     val notifies = AtomicInt(0)
     val query = driver.testDataQuery()
-    val listener = object : Query.Listener {
-      override fun queryResultsChanged() {
-        notifies.incrementAndGet()
-      }
-    }
+    val listener = Query.Listener { notifies.incrementAndGet() }
 
     query.addListener(listener)
     assertEquals(0, notifies.get())
 
-    driver.notifyListeners(arrayOf("test"))
+    driver.notifyListeners("test")
     assertEquals(1, notifies.get())
   }
 
@@ -152,15 +148,11 @@ class JsQueryTest {
 
     val notifies = AtomicInt(0)
     val query = driver.testDataQuery()
-    val listener = object : Query.Listener {
-      override fun queryResultsChanged() {
-        notifies.incrementAndGet()
-      }
-    }
+    val listener = Query.Listener { notifies.incrementAndGet() }
 
     query.addListener(listener)
     query.removeListener(listener)
-    driver.notifyListeners(arrayOf("test"))
+    driver.notifyListeners("test")
     assertEquals(0, notifies.get())
   }
 
@@ -178,11 +170,11 @@ class JsQueryTest {
       }
 
       override fun addListener(listener: Listener) {
-        addListener(listener, arrayOf("test"))
+        addListener("test", listener = listener)
       }
 
       override fun removeListener(listener: Listener) {
-        removeListener(listener, arrayOf("test"))
+        removeListener("test", listener = listener)
       }
     }
   }

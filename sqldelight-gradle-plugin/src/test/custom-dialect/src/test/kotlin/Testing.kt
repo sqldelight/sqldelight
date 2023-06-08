@@ -10,9 +10,9 @@ class Testing {
   val fakeDriver = object : JdbcDriver() {
     override fun getConnection() = TODO()
     override fun closeConnection(connection: Connection) = Unit
-    override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun notifyListeners(queryKeys: Array<String>) = Unit
+    override fun addListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+    override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+    override fun notifyListeners(vararg queryKeys: String) = Unit
   }
 
   @Test fun customFunctionReturnsDuration() {
