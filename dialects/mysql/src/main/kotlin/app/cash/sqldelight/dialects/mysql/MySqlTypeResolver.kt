@@ -63,8 +63,36 @@ class MySqlTypeResolver(
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
     "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, MySqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "max" -> encapsulatingType(
+      exprList,
+      TINY_INT,
+      SMALL_INT,
+      MySqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      MySqlType.TIMESTAMP,
+      MySqlType.DATE,
+      MySqlType.DATETIME,
+      MySqlType.TIME,
+      TEXT,
+      BLOB,
+    ).asNullable()
+    "min" -> encapsulatingType(
+      exprList,
+      BLOB,
+      TEXT,
+      MySqlType.TIME,
+      MySqlType.DATETIME,
+      MySqlType.DATE,
+      MySqlType.TIMESTAMP,
+      TINY_INT,
+      SMALL_INT,
+      INTEGER,
+      MySqlType.INTEGER,
+      BIG_INT,
+      REAL,
+    ).asNullable()
     "unix_timestamp" -> IntermediateType(TEXT)
     "to_seconds" -> IntermediateType(INTEGER)
     "json_arrayagg" -> IntermediateType(TEXT)
@@ -80,7 +108,7 @@ class MySqlTypeResolver(
         approximateNumericDataType != null -> REAL
         binaryDataType != null -> BLOB
         dateDataType != null -> {
-          when (dateDataType!!.firstChild.text) {
+          when (dateDataType!!.firstChild.text.uppercase()) {
             "DATE" -> MySqlType.DATE
             "TIME" -> MySqlType.TIME
             "DATETIME" -> MySqlType.DATETIME

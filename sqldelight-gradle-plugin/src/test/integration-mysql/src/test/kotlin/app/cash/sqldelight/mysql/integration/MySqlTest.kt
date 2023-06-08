@@ -108,6 +108,41 @@ class MySqlTest {
   }
 
   @Test
+  fun testDatesMinMax() {
+    datesQueries.insertDate(
+      date = LocalDate.of(2020, 1, 1),
+      time = LocalTime.of(21, 30, 59),
+      datetime = LocalDateTime.of(2020, 1, 1, 21, 30, 59),
+      timestamp = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+      year = "2022",
+    ).executeAsOne()
+
+    with(
+      datesQueries.minDates().executeAsOne(),
+    ) {
+      assertThat(minDate).isEqualTo(LocalDate.of(2020, 1, 1))
+      assertThat(minTime).isEqualTo(LocalTime.of(21, 30, 59))
+      assertThat(minDatetime).isEqualTo(LocalDateTime.of(2020, 1, 1, 21, 30, 59))
+
+      assertThat(minTimestamp?.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        .isEqualTo(OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)).format(DateTimeFormatter.ISO_LOCAL_DATE))
+      assertThat(minYear).isEqualTo("2022-01-01")
+    }
+
+    with(
+      datesQueries.maxDates().executeAsOne(),
+    ) {
+      assertThat(maxDate).isEqualTo(LocalDate.of(2020, 1, 1))
+      assertThat(maxTime).isEqualTo(LocalTime.of(21, 30, 59))
+      assertThat(maxDatetime).isEqualTo(LocalDateTime.of(2020, 1, 1, 21, 30, 59))
+
+      assertThat(maxTimestamp?.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        .isEqualTo(OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)).format(DateTimeFormatter.ISO_LOCAL_DATE))
+      assertThat(maxYear).isEqualTo("2022-01-01")
+    }
+  }
+
+  @Test
   fun transactionCrashRollsBack() {
     val transacter = SqlDriverTransacter(driver)
 
