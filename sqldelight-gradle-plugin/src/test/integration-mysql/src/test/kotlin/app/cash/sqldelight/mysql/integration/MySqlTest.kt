@@ -23,6 +23,7 @@ class MySqlTest {
   lateinit var dogQueries: DogQueries
   lateinit var datesQueries: DatesQueries
   lateinit var charactersQueries: CharactersQueries
+  lateinit var numbersQueries: NumbersQueries
   lateinit var driver: JdbcDriver
 
   @Before
@@ -41,6 +42,7 @@ class MySqlTest {
     dogQueries = database.dogQueries
     datesQueries = database.datesQueries
     charactersQueries = database.charactersQueries
+    numbersQueries = database.numbersQueries
   }
 
   @After
@@ -139,6 +141,141 @@ class MySqlTest {
       assertThat(maxTimestamp?.format(DateTimeFormatter.ISO_LOCAL_DATE))
         .isEqualTo(OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)).format(DateTimeFormatter.ISO_LOCAL_DATE))
       assertThat(maxYear).isEqualTo("2022-01-01")
+    }
+  }
+
+  @Test
+  fun testIntsMinMaxSum() {
+    with(
+      numbersQueries.sumInts().executeAsOne(),
+    ) {
+      assertThat(sumTiny).isNull()
+      assertThat(sumSmall).isNull()
+      assertThat(sumInt).isNull()
+      assertThat(sumBig).isNull()
+    }
+
+    with(
+      numbersQueries.minInts().executeAsOne(),
+    ) {
+      assertThat(minTiny).isNull()
+      assertThat(minSmall).isNull()
+      assertThat(minInt).isNull()
+      assertThat(minBig).isNull()
+    }
+
+    with(
+      numbersQueries.maxInts().executeAsOne(),
+    ) {
+      assertThat(maxTiny).isNull()
+      assertThat(maxSmall).isNull()
+      assertThat(maxInt).isNull()
+      assertThat(maxBig).isNull()
+    }
+
+    numbersQueries.insertInts(
+      tinyint = 1,
+      smallint = 1,
+      integer = 1,
+      bigint = 1,
+    )
+    numbersQueries.insertInts(
+      tinyint = 2,
+      smallint = 2,
+      integer = 2,
+      bigint = 2,
+    )
+
+    with(
+      numbersQueries.sumInts().executeAsOne(),
+    ) {
+      assertThat(sumTiny).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumSmall).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumInt).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumBig).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumTiny).isEqualTo(3)
+      assertThat(sumSmall).isEqualTo(3)
+      assertThat(sumInt).isEqualTo(3)
+      assertThat(sumBig).isEqualTo(3)
+    }
+
+    with(
+      numbersQueries.minInts().executeAsOne(),
+    ) {
+      assertThat(minTiny).isEqualTo(1)
+      assertThat(minSmall).isEqualTo(1)
+      assertThat(minInt).isEqualTo(1)
+      assertThat(minBig).isEqualTo(1)
+    }
+
+    with(
+      numbersQueries.maxInts().executeAsOne(),
+    ) {
+      assertThat(maxTiny).isEqualTo(2)
+      assertThat(maxSmall).isEqualTo(2)
+      assertThat(maxInt).isEqualTo(2)
+      assertThat(maxBig).isEqualTo(2)
+    }
+  }
+
+  @Test
+  fun testMultiplySmallerIntsBecomeLongs() {
+    numbersQueries.insertInts(
+      tinyint = 1,
+      smallint = 1,
+      integer = 1,
+      bigint = Long.MAX_VALUE,
+    )
+
+    with(
+      numbersQueries.multiplyWithBigInts().executeAsOne(),
+    ) {
+      assertThat(tiny).isEqualTo(Long.MAX_VALUE)
+      assertThat(small).isEqualTo(Long.MAX_VALUE)
+      assertThat(integer).isEqualTo(Long.MAX_VALUE)
+    }
+  }
+
+  @Test
+  fun testFloat() {
+    with(
+      numbersQueries.sumMinMaxFloat().executeAsOne(),
+    ) {
+      assertThat(sumFloat).isNull()
+      assertThat(minFloat).isNull()
+      assertThat(maxFloat).isNull()
+    }
+
+    numbersQueries.insertFloats(
+      float = 1.5,
+    )
+
+    with(
+      numbersQueries.sumMinMaxFloat().executeAsOne(),
+    ) {
+      assertThat(sumFloat).isEqualTo(1.5)
+      assertThat(minFloat).isEqualTo(1.5)
+      assertThat(maxFloat).isEqualTo(1.5)
+    }
+  }
+
+  @Test
+  fun testMultiplyFloatInt() {
+    numbersQueries.insertInts(
+      tinyint = 3,
+      smallint = 3,
+      integer = 3,
+      bigint = 3,
+    )
+
+    numbersQueries.insertFloats(
+      float = 1.5,
+    )
+
+    with(
+      numbersQueries.multiplyFloatInt().executeAsOne(),
+    ) {
+      assertThat(mul).isEqualTo(4.5)
     }
   }
 
