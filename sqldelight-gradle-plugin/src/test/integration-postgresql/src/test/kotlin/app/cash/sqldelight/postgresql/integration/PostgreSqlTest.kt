@@ -210,6 +210,23 @@ class PostgreSqlTest {
       )
   }
 
+  @Test fun testMinMaxTimeStamps() {
+    database.datesQueries.insertDate(
+      date = LocalDate.of(2022, 1, 1),
+      time = LocalTime.of(11, 30, 59, 10000),
+      timestamp = LocalDateTime.of(2029, 1, 1, 21, 30, 59, 10000),
+      timestamp_with_timezone = OffsetDateTime.of(1970, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+    ).executeAsOne()
+
+    database.datesQueries.selectMax().executeAsOne().let {
+      assertThat(it.max).isEqualTo(LocalDateTime.of(2029, 1, 1, 21, 30, 59, 10000))
+    }
+
+    database.datesQueries.selectMin().executeAsOne().let {
+      assertThat(it.min).isEqualTo(OffsetDateTime.of(1970, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)))
+    }
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {
