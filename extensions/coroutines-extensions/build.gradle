@@ -8,6 +8,22 @@ plugins {
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
+  targetHierarchy.default {
+    it.group("testableNative") {
+      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
+      it.withIos()
+      it.withTvos()
+      it.withMacos()
+      it.withWatchosArm32()
+      it.withWatchosArm64()
+      it.withWatchosX64()
+      it.withWatchosSimulatorArm64()
+
+      it.withLinuxX64()
+      it.withMingw()
+    }
+  }
+
   sourceSets {
     commonMain {
       dependencies {
@@ -21,13 +37,13 @@ kotlin {
         implementation libs.kotlin.coroutines.test
         implementation libs.kotlin.test
         implementation libs.turbine
-        implementation libs.stately.concurrency
       }
     }
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
         implementation projects.drivers.sqliteDriver
+        implementation libs.stately.concurrency
       }
       languageSettings {
         optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
@@ -36,11 +52,13 @@ kotlin {
     jsTest {
       dependencies {
         implementation projects.drivers.sqljsDriver
+        implementation libs.stately.concurrency
       }
     }
-    nativeTest {
+    testableNativeTest {
       dependencies {
         implementation projects.drivers.nativeDriver
+        implementation libs.stately.concurrency
       }
     }
   }

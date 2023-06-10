@@ -38,7 +38,7 @@ class MultiplatformConventions : Plugin<Project> {
       iosX64()
 
       // tier 2
-      // linuxArm64()
+      linuxArm64()
       watchosSimulatorArm64()
       watchosX64()
       watchosArm32()
@@ -49,12 +49,12 @@ class MultiplatformConventions : Plugin<Project> {
       iosArm64()
 
       // tier 3
-      // androidNativeArm32()
-      // androidNativeArm64()
-      // androidNativeX86()
-      // androidNativeX64()
+      androidNativeArm32()
+      androidNativeArm64()
+      androidNativeX86()
+      androidNativeX64()
       mingwX64()
-      // watchosDeviceArm64()
+      watchosDeviceArm64()
 
       // linking fails for the linux test build if not built on a linux host
       // ensure the tests and linking for them is only done on linux hosts

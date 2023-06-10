@@ -1,5 +1,5 @@
 plugins {
-  id("app.cash.sqldelight.multiplatform")
+  alias(libs.plugins.kotlin.multiplatform)
   id("app.cash.sqldelight.toolchain.runtime")
 }
 
@@ -9,6 +9,28 @@ sourceSets {
 }
 
 kotlin {
+  jvm()
+
+  js {
+    browser()
+  }
+
+  // same targets as in `native-driver`
+  iosX64()
+  iosArm64()
+  tvosX64()
+  tvosArm64()
+  watchosX64()
+  watchosArm32()
+  watchosArm64()
+  macosX64()
+  mingwX64()
+  linuxX64()
+  macosArm64()
+  iosSimulatorArm64()
+  watchosSimulatorArm64()
+  tvosSimulatorArm64()
+
   sourceSets {
     commonMain {
       dependencies {

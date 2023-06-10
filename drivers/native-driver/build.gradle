@@ -26,7 +26,14 @@ kotlin {
     target.group("native") {
       it.group("nativeLinuxLike") {
         it.withLinux()
-        it.withApple()
+        // no withApple: https://github.com/cashapp/sqldelight/issues/4257
+        it.withIos()
+        it.withTvos()
+        it.withMacos()
+        it.withWatchosArm32()
+        it.withWatchosArm64()
+        it.withWatchosX64()
+        it.withWatchosSimulatorArm64()
       }
     }
   }
