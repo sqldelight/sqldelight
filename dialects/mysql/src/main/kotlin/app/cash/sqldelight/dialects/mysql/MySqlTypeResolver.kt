@@ -14,10 +14,16 @@ import app.cash.sqldelight.dialects.mysql.MySqlType.SMALL_INT
 import app.cash.sqldelight.dialects.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlExtensionExpr
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryMultExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
+import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 
 class MySqlTypeResolver(
@@ -32,6 +38,31 @@ class MySqlTypeResolver(
         TEXT,
         BLOB,
       )
+      is SqlBinaryExpr -> {
+        if (expr.childOfType(
+            TokenSet.create(
+              SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
+              SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
+              SqlTypes.LT, SqlTypes.LTE,
+            ),
+          ) != null
+        ) {
+          IntermediateType(PrimitiveType.BOOLEAN)
+        } else {
+          encapsulatingType(
+            exprList = expr.getExprList(),
+            nullableIfAny = (expr is SqlBinaryAddExpr || expr is SqlBinaryMultExpr || expr is SqlBinaryPipeExpr),
+            TINY_INT,
+            SMALL_INT,
+            MySqlType.INTEGER,
+            INTEGER,
+            BIG_INT,
+            REAL,
+            TEXT,
+            BLOB,
+          )
+        }
+      }
       else -> parentResolver.resolvedType(expr)
     }
   }
@@ -93,6 +124,14 @@ class MySqlTypeResolver(
       BIG_INT,
       REAL,
     ).asNullable()
+    "sum" -> {
+      val type = resolvedType(exprList.single())
+      if (type.dialectType == REAL) {
+        IntermediateType(REAL).asNullable()
+      } else {
+        IntermediateType(INTEGER).asNullable()
+      }
+    }
     "unix_timestamp" -> IntermediateType(TEXT)
     "to_seconds" -> IntermediateType(INTEGER)
     "json_arrayagg" -> IntermediateType(TEXT)
@@ -135,4 +174,8 @@ class MySqlTypeResolver(
       },
     )
   }
+}
+
+private fun PsiElement.childOfType(types: TokenSet): PsiElement? {
+  return node.findChildByType(types)?.psi
 }
