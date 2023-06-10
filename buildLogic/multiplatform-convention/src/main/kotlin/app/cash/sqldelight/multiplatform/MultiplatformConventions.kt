@@ -27,7 +27,6 @@ class MultiplatformConventions : Plugin<Project> {
           it.kotlinOptions {
             moduleKind = "umd"
             sourceMap = true
-            sourceMapEmbedSources = null
           }
         }
       }
