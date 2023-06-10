@@ -35,7 +35,7 @@ kotlin {
         implementation libs.stately.concurrency
       }
     }
-    nativeTest{
+    nativeTest {
       dependencies {
         implementation libs.stately.collections
       }
