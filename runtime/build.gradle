@@ -30,13 +30,9 @@ kotlin {
         implementation libs.stately.collections
       }
     }
-    nativeMain {
+    nativeTest {
       dependencies {
         implementation libs.stately.concurrency
-      }
-    }
-    nativeTest{
-      dependencies {
         implementation libs.stately.collections
       }
     }
