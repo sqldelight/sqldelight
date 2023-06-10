@@ -35,43 +35,36 @@ kotlin {
     commonMain {
       dependencies {
         api projects.runtime
+        api libs.stately.concurrency
+        api libs.sqliter
       }
     }
     commonTest {
       dependencies {
         implementation libs.kotlin.test
         implementation libs.testhelp
+        implementation projects.drivers.driverTest
       }
     }
-    nativeMain {
-      dependencies {
-                api libs.sqliter
-            }
-        }
-        nativeTest {
-            dependencies {
-                implementation projects.drivers.driverTest
-            }
-        }
-    }
+  }
 
-    configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
-        binaries.configureEach {
-            linkerOpts += ["-lsqlite3"]
-        }
+  configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
+    binaries.configureEach {
+      linkerOpts += ["-lsqlite3"]
     }
+  }
 
-    configure([targets.linuxX64]) {
-        binaries.configureEach {
-            linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
-        }
+  configure([targets.linuxX64]) {
+    binaries.configureEach {
+      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
     }
+  }
 
-    configure([targets.mingwX64]) {
-        binaries.configureEach {
-            linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
-        }
+  configure([targets.mingwX64]) {
+    binaries.configureEach {
+      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
     }
+  }
 }
 
 //linking fails for the linux test build if not built on a linux host
