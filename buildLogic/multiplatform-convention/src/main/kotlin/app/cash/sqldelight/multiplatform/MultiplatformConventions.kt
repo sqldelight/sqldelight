@@ -26,7 +26,6 @@ class MultiplatformConventions : Plugin<Project> {
         compilations.configureEach {
           it.kotlinOptions {
             moduleKind = "umd"
-            sourceMap = true
           }
         }
       }
