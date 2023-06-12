@@ -13,7 +13,6 @@ on:
 
 jobs:
   build:
-    # Ensure this matrix matches the one in PR.yml
     strategy:
       matrix:
         # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579

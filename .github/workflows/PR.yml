@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     strategy:
+      # Ensure any changes to the matrix are also made in PR-skip.yml
       matrix:
         # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
         os: [ macOS-latest, ubuntu-latest ]
