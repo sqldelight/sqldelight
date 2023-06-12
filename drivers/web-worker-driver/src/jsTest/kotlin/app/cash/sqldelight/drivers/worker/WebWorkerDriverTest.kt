@@ -65,7 +65,7 @@ class WebWorkerDriverTest {
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
     @Suppress("UnsafeCastFromDynamic")
-    val driver = WebWorkerDriver(Worker(js("""new URL("./sqljs.worker.js", import.meta.url)""")))
+    val driver = WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))
       .also { schema.awaitCreate(it) }
     block(driver)
     driver.close()
