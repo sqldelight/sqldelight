@@ -2,6 +2,7 @@ name: Test
 
 on:
   pull_request:
+    # Ensure paths-ignore match paths in PR-skip.yml
     paths-ignore:
       - 'docs/**'
       - '*.md'
