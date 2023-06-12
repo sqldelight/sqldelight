@@ -74,7 +74,7 @@ six==1.16.0
     # via python-dateutil
 termcolor==2.3.0
     # via mkdocs-macros-plugin
-urllib3==2.0.2
+urllib3==2.0.3
     # via requests
 verspec==0.1.0
     # via mike
