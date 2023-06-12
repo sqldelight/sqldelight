@@ -13,6 +13,20 @@ on:
 
 jobs:
   build:
+    # Ensure this matrix matches the one in PR.yml
+    strategy:
+      matrix:
+        # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
+        os: [ macOS-latest, ubuntu-latest ]
+        job: [ instrumentation, test, gradle-plugin-tests ]
+        exclude:
+          - os: windows-latest
+            job: instrumentation
+          - os: windows-latest
+            job: gradle-plugin-tests
+          - os: ubuntu-latest
+            job: gradle-plugin-tests
+    # We don't actually need to run on `{{matrix.os}}` for this to work
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No build required"'
