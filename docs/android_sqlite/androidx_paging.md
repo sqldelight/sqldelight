@@ -15,7 +15,7 @@ To use SQLDelight with [Android's Paging 3 Library](https://developer.android.co
     }
     ```
 
-SQLDelight offers two methods for paging data -- offset based paging and keyset paging.
+SQLDelight offers two methods for paging data — offset based paging and keyset paging.
 
 ## Offset Based Paging
 
@@ -48,7 +48,7 @@ By default, queries are performed on `Dispatchers.IO` if no context is specified
 
 Offset paging is simple and easy to maintain. Unfortunately it performs poorly on large datasets. The `OFFSET` clause of a SQL statement really just drops already executed rows in a SQL query. Therefore, as the number to `OFFSET` grows, so does the amount of time it takes to execute your query. To overcome this, SQLDelight offers a "keyset paging" implementation of `PagingSource`. Rather than querying an entire dataset and inefficiently dropping the first `OFFSET` elements, keyset paging operates using a unique column to restrict the bounds of your queries. This performs better at the expense of higher developer maintenance. 
 
-The `queryProvider` callback that this paging source accepts has two parameters -- a `beginInclusive` non-null unique `Key` as well as an `endExclusive` nullable unique `Key?`. An example of the core paging query is shown below. 
+The `queryProvider` callback that this paging source accepts has two parameters — a `beginInclusive` non-null unique `Key` as well as an `endExclusive` nullable unique `Key?`. An example of the core paging query is shown below. 
 
 ```sql
 keyedQuery:
