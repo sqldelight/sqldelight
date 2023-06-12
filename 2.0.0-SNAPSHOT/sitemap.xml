@@ -106,6 +106,21 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/common/androidx_paging/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/common/androidx_paging_multiplatform/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/common/androidx_paging_usage/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/common/coroutines-multiplatform/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
@@ -226,6 +241,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/js_sqlite/androidx_paging/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/js_sqlite/coroutines/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
@@ -286,6 +306,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_h2/androidx_paging/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_h2/custom_projections/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
@@ -327,6 +352,11 @@
     </url>
     <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_mysql/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_mysql/androidx_paging/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -376,6 +406,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_postgresql/androidx_paging/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_postgresql/custom_projections/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
@@ -417,6 +452,11 @@
     </url>
     <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_sqlite/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/jvm_sqlite/androidx_paging/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -481,6 +521,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/multiplatform_sqlite/androidx_paging/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/multiplatform_sqlite/coroutines/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
@@ -537,6 +582,11 @@
     </url>
     <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/native_sqlite/</loc>
+         <lastmod>2023-06-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/native_sqlite/androidx_paging/</loc>
          <lastmod>2023-06-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
