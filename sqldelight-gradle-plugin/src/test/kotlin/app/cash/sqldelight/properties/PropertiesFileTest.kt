@@ -26,7 +26,7 @@ class PropertiesFileTest {
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
-      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
+      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database/main"))
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
       )
@@ -95,7 +95,7 @@ class PropertiesFileTest {
           sourceFolders = listOf(
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false),
           ),
-          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
+          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase/commonMain"),
         ),
       )
     }

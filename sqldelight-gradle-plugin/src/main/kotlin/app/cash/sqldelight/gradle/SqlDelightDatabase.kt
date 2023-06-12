@@ -332,10 +332,5 @@ abstract class SqlDelightDatabase @Inject constructor(
     }
   }
 
-  private val Source.outputDir get() =
-    if (sources.size > 1) {
-      File(generatedSourcesDirectory, name)
-    } else {
-      generatedSourcesDirectory
-    }
+  private val Source.outputDir get() = File(generatedSourcesDirectory, name)
 }

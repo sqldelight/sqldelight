@@ -41,6 +41,12 @@ android {
   }
 }
 
+androidComponents {
+  beforeVariants(selector().withBuildType("release")) {
+    enable = project.properties["debugOnly"] != "true"
+  }
+}
+
 tasks.withType(KotlinCompilationTask.class).configureEach {
   compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
 }
