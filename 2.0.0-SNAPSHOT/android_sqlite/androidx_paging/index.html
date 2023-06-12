@@ -3271,7 +3271,7 @@
 </div>
 </div>
 </div>
-<p>SQLDelight offers two methods for paging data -- offset based paging and keyset paging.</p>
+<p>SQLDelight offers two methods for paging data — offset based paging and keyset paging.</p>
 <h2 id="offset-based-paging">Offset Based Paging<a class="headerlink" href="#offset-based-paging" title="Permanent link">&para;</a></h2>
 <p>Offset paging achieves paged results using <code>OFFSET</code> and <code>LIMIT</code> clauses. Creating a <code>PagingSource</code> that performs offset based paging requires a count query as well as the paged query.</p>
 <div class="highlight"><pre><span></span><code><span class="n">countPlayers</span><span class="p">:</span>
@@ -3294,7 +3294,7 @@
 <p>By default, queries are performed on <code>Dispatchers.IO</code> if no context is specified. Consumers expecting to use RxJava's <code>Scheduler</code> to perform queries should use the <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/io.reactivex.-scheduler/as-coroutine-dispatcher.html"><code>Scheduler.asCoroutineDispatcher</code></a> extension function.</p>
 <h2 id="keyset-paging">Keyset Paging<a class="headerlink" href="#keyset-paging" title="Permanent link">&para;</a></h2>
 <p>Offset paging is simple and easy to maintain. Unfortunately it performs poorly on large datasets. The <code>OFFSET</code> clause of a SQL statement really just drops already executed rows in a SQL query. Therefore, as the number to <code>OFFSET</code> grows, so does the amount of time it takes to execute your query. To overcome this, SQLDelight offers a "keyset paging" implementation of <code>PagingSource</code>. Rather than querying an entire dataset and inefficiently dropping the first <code>OFFSET</code> elements, keyset paging operates using a unique column to restrict the bounds of your queries. This performs better at the expense of higher developer maintenance. </p>
-<p>The <code>queryProvider</code> callback that this paging source accepts has two parameters -- a <code>beginInclusive</code> non-null unique <code>Key</code> as well as an <code>endExclusive</code> nullable unique <code>Key?</code>. An example of the core paging query is shown below. </p>
+<p>The <code>queryProvider</code> callback that this paging source accepts has two parameters — a <code>beginInclusive</code> non-null unique <code>Key</code> as well as an <code>endExclusive</code> nullable unique <code>Key?</code>. An example of the core paging query is shown below. </p>
 <div class="highlight"><pre><span></span><code><span class="n">keyedQuery</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">:</span><span class="n">beginInclusive</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">:</span><span class="n">endExclusive</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="p">:</span><span class="n">endExclusive</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span>
