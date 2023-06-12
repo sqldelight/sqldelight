@@ -23,7 +23,7 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@cashapp/sqldelight-sqljs-worker@file:../../drivers/web-worker-driver/sqljs":
+"@cashapp/sqldelight-sqljs-worker@file:../../drivers/web-worker-driver/sqljs/build/packages/js":
   version "2.0.0-SNAPSHOT"
 
 "@colors/colors@1.5.0":

@@ -1,39 +1,42 @@
-def packageJson = tasks.register("writePackageJson") {
-  outputs.file("package.json")
+import dev.petuska.npm.publish.extension.domain.NpmDependency
 
-  doLast {
-    file("package.json")
-      .write("""{
-  "name": "@cashapp/sqldelight-sqljs-worker",
-  "version": "${rootProject.version}",
-  "description": "A SQL.js implementation of SQLDelight's web-worker-driver",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \\"Error: no test specified\\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cashapp/sqldelight.git"
-  },
-  "keywords": [
-    "sqljs",
-    "sqldelight",
-    "sql"
-  ],
-  "author": "",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/cashapp/sqldelight/issues"
-  },
-  "homepage": "https://github.com/cashapp/sqldelight#readme",
-  "peerDependencies": {
-    "sql.js": "^1.8.0"
-  }
+plugins {
+  alias(libs.plugins.npmPublish)
 }
-""")
+
+npmPublish {
+  organization.set("cashapp")
+  packages {
+    register("js") {
+      packageName.set("sqldelight-sqljs-worker")
+      files {
+        from("sqljs.worker.js")
+      }
+
+      packageJson {
+        license.set("Apache-2.0")
+        repository {
+          type.set("git")
+          url.set("git+https://github.com/cashapp/sqldelight.git")
+        }
+        description.set("A SQL.js implementation of SQLDelight's web-worker-driver")
+        keywords.set(["sqljs", "sqldelight", "sql"])
+        bugs {
+          url.set("https://github.com/cashapp/sqldelight/issues")
+        }
+        homepage.set("https://github.com/cashapp/sqldelight#readme")
+      }
+
+      it.dependencies {
+        register("sql.js") {
+          version.set("^1.8.0")
+          type.set(NpmDependency.Type.PEER)
+        }
+      }
+    }
   }
 }
 
 rootProject.tasks.named("kotlinNpmInstall").configure {
-  dependsOn(packageJson)
+  dependsOn(tasks.named("assembleJsPackage"))
 }
