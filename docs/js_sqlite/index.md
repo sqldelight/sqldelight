@@ -1,4 +1,11 @@
-# Getting started on Kotlin JS with SQLDelight
+---
+async: true
+---
+# Getting started with SQLDelight on Kotlin/JS
+
+!!! warning
+    The synchronous `sqljs-driver` (pre-2.0) has been replaced with the asynchronous `web-worker-driver`.
+    This requires configuring the `generateAsync` setting in your Gradle configuration.
 
 {% include 'common/index_gradle_database.md' %}
 
@@ -8,8 +15,7 @@
     ```kotlin
     kotlin {
       sourceSets.jsMain.dependencies {
-        implementation("app.cash.sqldelight:sqljs-driver:{{ versions.sqldelight }}")
-        implementation(npm("sql.js", "1.6.2"))
+        implementation("app.cash.sqldelight:web-worker-driver:{{ versions.sqldelight }}")
         implementation(devNpm("copy-webpack-plugin", "9.1.0"))
       }
     }
@@ -18,64 +24,57 @@
     ```groovy
     kotlin {
       sourceSets.jsMain.dependencies {
-        implementation "app.cash.sqldelight:sqljs-driver:{{ versions.sqldelight }}"
-        implementation npm("sql.js", "1.6.2")  
+        implementation "app.cash.sqldelight:web-worker-driver:{{ versions.sqldelight }}"
         implementation devNpm("copy-webpack-plugin", "9.1.0")
       }
     }
     ```
-Unlike on other platforms, the SqlJs driver can not be instantiated directly.
-The driver must be loaded asynchronously by calling the `initSqlDriver` function which returns a `Promise<SqlDriver>`.
+
+The web worker driver allows SQLDelight to communicate with a SQL implementation that is running in
+a [Web Worker]. This allows all database operations to happen in a background process.
+
+!!! info
+    The web worker driver is only compatible with browser targets. 
+
+## Configuring a Web Worker
+
+SQLDelight's web worker driver isn't tied to a specific implementation of a worker. Instead the
+driver communicates with the worker using a standardized set of messages. SQLDelight provides an
+implementation of a worker that uses [SQL.js].
+
+See the [SQL.js Worker] page for details on setting it up for your project, or the [Custom Workers] 
+page for details on implementing your own.
+
+## Using a Web Worker
+
+When creating an instance of a web worker driver, you must pass a reference to the web worker that
+will be used to handle all SQL operations. The `Worker` constructor accepts `URL` object that references
+the worker script.
+
+Webpack has special support for referencing a worker script from an installed NPM package by passing
+`import.meta.url` as a second argument to the `URL` constructor. Webpack will automatically bundle
+the worker script from the referenced NPM package at build time. The example below shows a Worker
+being created from SQLDelight's [SQL.js Worker].
+
 ```kotlin
-// As a Promise
-val promise: Promise<SqlDriver> = initSqlDriver(Database.Schema)
-promise.then { driver -> /* ... */ }
-
-// In a coroutine
-suspend fun createDriver() {
-    val driver: SqlDriver = initSqlDriver(Database.Schema).await()
-    /* ... */
-}
+val driver = WebWorkerDriver(
+  Worker(
+    js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")
+  )
+)
 ```
 
-If building for browsers, some [additional webpack configuration](https://kotlinlang.org/docs/js-project-setup.html#webpack-configuration-file) is also required.
-```js
-// project/webpack.config.d/fs.js
-config.resolve = {
-    fallback: {
-        fs: false,
-        path: false,
-        crypto: false,
-    }
-};
+!!! warning
+    In order for Webpack to correctly resolve this URL while bundling, you must construct the `URL` 
+    object entirely within a `js()` block as shown above with the `import.meta.url` argument.
 
-// project/webpack.config.d/wasm.js
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-config.plugins.push(
-    new CopyWebpackPlugin({
-        patterns: [
-            '../../node_modules/sql.js/dist/sql-wasm.wasm'
-        ]
-    })
-);
+From here, you can use the driver like any other SQLDelight driver.
 
-```
-
-For [browser testing](https://kotlinlang.org/docs/js-project-setup.html#test-task) with Karma, some similar configuration is required.
-```js
-// project/karma.config.d/wasm.js
-const path = require("path");
-const abs = path.resolve("../../node_modules/sql.js/dist/sql-wasm.wasm")
-
-config.files.push({
-    pattern: abs,
-    served: true,
-    watched: false,
-    included: false,
-    nocache: false,
-});
-
-config.proxies["/sql-wasm.wasm"] = `/absolute${abs}`
-```
+## Using Queries
 
 {% include 'common/index_queries.md' %}
+
+[Web Worker]: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+[SQL.js]: https://github.com/sql-js/sql.js/
+[SQL.js Worker]: sqljs_worker.md
+[Custom Workers]: custom_worker.md

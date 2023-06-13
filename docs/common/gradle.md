@@ -76,28 +76,26 @@ A collection of folders that the plugin will look in for your `.sq` and `.sqm` f
 Defaults to `src/[prefix]main/sqldelight` with prefix depending on the applied kotlin plugin eg common for multiplatform.
 
 === "Kotlin"
-```kotlin
-srcDirs.setFrom("src/main/sqldelight")
-```
+    ```kotlin
+    srcDirs.setFrom("src/main/sqldelight")
+    ```
 === "Groovy"
-```groovy
-srcDirs = ['src/main/sqldelight']
-```
+    ```groovy
+    srcDirs = ['src/main/sqldelight']
+    ```
 
-----
-
-### `srcDirs(vararg objects: Any)`
+#### `srcDirs(vararg objects: Any)`
 
 A collection of objects that the plugin will look in for your `.sq` and `.sqm` files.
 
 === "Kotlin"
-```kotlin
-srcDirs("src/main/sqldelight", "main/sqldelight")
-```
+    ```kotlin
+    srcDirs("src/main/sqldelight", "main/sqldelight")
+    ```
 === "Groovy"
-```groovy
-srcDirs('src/main/sqldelight', 'main/sqldelight')
-```
+    ```groovy
+    srcDirs('src/main/sqldelight', 'main/sqldelight')
+    ```
 
 ----
 

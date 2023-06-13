@@ -24,7 +24,7 @@ First, configure gradle to use migrations to assemble the schema:
       databases {
         create("Database") {
           ...
-          sourceFolders.set(listOf("sqldelight"))
+          srcDirs("sqldelight")
           deriveSchemaFromMigrations.set(true)
         }
       }
@@ -36,7 +36,7 @@ First, configure gradle to use migrations to assemble the schema:
       databases {
         Database {
           ...
-          sourceFolders = ["sqldelight"]
+          srcDirs "sqldelight"
           deriveSchemaFromMigrations = true
         }
       }
