@@ -53,12 +53,10 @@ kotlin {
     }
     jsTest {
       dependencies {
-        def sqljsPackage = file("sqljs/build/packages/js")
-        sqljsPackage.mkdirs()
-
+        implementation libs.stately.concurrency
         implementation projects.drivers.webWorkerDriver
         implementation npm("sql.js", libs.versions.sqljs.get())
-        implementation npm("@cashapp/sqldelight-sqljs-worker", sqljsPackage)
+        implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
       }
     }
     testableNativeTest {
