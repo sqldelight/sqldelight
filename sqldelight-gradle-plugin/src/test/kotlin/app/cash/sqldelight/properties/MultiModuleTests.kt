@@ -28,7 +28,7 @@ class MultiModuleTests {
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
-      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
+      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database/main"))
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
         SqlDelightSourceFolderImpl(File(fixtureRoot, "../ProjectB/src/main/sqldelight"), true),
@@ -165,7 +165,7 @@ class MultiModuleTests {
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../middleB/src/main/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/Database"),
+        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/Database/main"),
       ),
     )
   }
