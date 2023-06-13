@@ -160,7 +160,9 @@ nav:
   - 'SQLite (JS)':
       - 'Getting Started': js_sqlite/index.md
       - 'Multiplatform': js_sqlite/multiplatform.md
-      - 'Web Workers': js_sqlite/worker.md
+      - 'Web Workers':
+          - SQL.js Worker: js_sqlite/sqljs_worker.md
+          - Custom Workers: js_sqlite/custom_worker.md
       - 'SQL':
           - 'Type Projections': js_sqlite/custom_projections.md
           - 'Arguments': js_sqlite/query_arguments.md

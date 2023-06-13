@@ -1,4 +1,4 @@
-# Getting started on Kotlin Native with SQLDelight
+# Getting started with SQLDelight on Kotlin/Native
 
 {% include 'common/index_gradle_database.md' %}
 
