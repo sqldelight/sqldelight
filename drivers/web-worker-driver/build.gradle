@@ -40,3 +40,7 @@ kotlin {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+tasks.named("dokkaHtmlMultiModule") {
+ dependsOn(rootProject.tasks.named("dokkaHtmlMultiModule"))
+}
