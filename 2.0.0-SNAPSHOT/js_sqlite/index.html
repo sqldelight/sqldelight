@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started-on-kotlin-js-with-sqldelight" class="md-skip">
+        <a href="#getting-started-with-sqldelight-on-kotlinjs" class="md-skip">
           Skip to content
         </a>
       
@@ -3005,9 +3005,54 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Getting Started
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-a-web-worker" class="md-nav__link">
+    Configuring a Web Worker
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-a-web-worker" class="md-nav__link">
+    Using a Web Worker
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-queries" class="md-nav__link">
+    Using Queries
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -3033,10 +3078,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+          Web Workers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9_3">
+          <span class="md-nav__icon md-icon"></span>
+          Web Workers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="worker/" class="md-nav__link">
-        Web Workers
+      <a href="sqljs_worker/" class="md-nav__link">
+        SQL.js Worker
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="custom_worker/" class="md-nav__link">
+        Custom Workers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -3367,6 +3460,35 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-a-web-worker" class="md-nav__link">
+    Configuring a Web Worker
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-a-web-worker" class="md-nav__link">
+    Using a Web Worker
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-queries" class="md-nav__link">
+    Using Queries
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3391,8 +3513,14 @@
   
 
 
-<h1 id="getting-started-on-kotlin-js-with-sqldelight">Getting started on Kotlin JS with SQLDelight<a class="headerlink" href="#getting-started-on-kotlin-js-with-sqldelight" title="Permanent link">&para;</a></h1>
-<p>First apply the gradle plugin in your project.</p>
+<h1 id="getting-started-with-sqldelight-on-kotlinjs">Getting started with SQLDelight on Kotlin/JS<a class="headerlink" href="#getting-started-with-sqldelight-on-kotlinjs" title="Permanent link">&para;</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The synchronous <code>sqljs-driver</code> (pre-2.0) has been replaced with the asynchronous <code>web-worker-driver</code>.
+This requires configuring the <code>generateAsync</code> setting in your Gradle configuration.</p>
+</div>
+<p>First apply the gradle plugin in your project. Make sure to set <code>generateAsync</code> to 
+<code>true</code> when creating your database. </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3409,6 +3537,7 @@
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">generateAsync</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -3428,6 +3557,7 @@
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
 <span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">      </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
@@ -3455,8 +3585,7 @@
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">kotlin</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">sourceSets</span><span class="p">.</span><span class="na">jsMain</span><span class="p">.</span><span class="na">dependencies</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:sqljs-driver:2.0.0-SNAPSHOT&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="n">npm</span><span class="p">(</span><span class="s">&quot;sql.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.6.2&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:web-worker-driver:2.0.0-SNAPSHOT&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="n">devNpm</span><span class="p">(</span><span class="s">&quot;copy-webpack-plugin&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;9.1.0&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -3465,8 +3594,7 @@
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">kotlin</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="n">sourceSets</span><span class="o">.</span><span class="na">jsMain</span><span class="o">.</span><span class="na">dependencies</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:sqljs-driver:2.0.0-SNAPSHOT&quot;</span>
-<span class="w">    </span><span class="n">implementation</span><span class="w"> </span><span class="n">npm</span><span class="o">(</span><span class="s2">&quot;sql.js&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;1.6.2&quot;</span><span class="o">)</span><span class="w">  </span>
+<span class="w">    </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:web-worker-driver:2.0.0-SNAPSHOT&quot;</span>
 <span class="w">    </span><span class="n">implementation</span><span class="w"> </span><span class="n">devNpm</span><span class="o">(</span><span class="s2">&quot;copy-webpack-plugin&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;9.1.0&quot;</span><span class="o">)</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
@@ -3474,53 +3602,39 @@
 </div>
 </div>
 </div>
-<p>Unlike on other platforms, the SqlJs driver can not be instantiated directly.
-The driver must be loaded asynchronously by calling the <code>initSqlDriver</code> function which returns a <code>Promise&lt;SqlDriver&gt;</code>.
-<div class="highlight"><pre><span></span><code><span class="c1">// As a Promise</span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">promise</span><span class="p">:</span><span class="w"> </span><span class="n">Promise</span><span class="o">&lt;</span><span class="n">SqlDriver</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">initSqlDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span>
-<span class="n">promise</span><span class="p">.</span><span class="na">then</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
-
-<span class="c1">// In a coroutine</span>
-<span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">initSqlDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">).</span><span class="na">await</span><span class="p">()</span>
-<span class="w">    </span><span class="cm">/* ... */</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<p>If building for browsers, some <a href="https://kotlinlang.org/docs/js-project-setup.html#webpack-configuration-file">additional webpack configuration</a> is also required.
-<div class="highlight"><pre><span></span><code><span class="c1">// project/webpack.config.d/fs.js</span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">resolve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">fallback</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">fs</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">crypto</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// project/webpack.config.d/wasm.js</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;copy-webpack-plugin&#39;</span><span class="p">);</span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
-<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="p">({</span>
-<span class="w">        </span><span class="nx">patterns</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/sql-wasm.wasm&#39;</span>
-<span class="w">        </span><span class="p">]</span>
-<span class="w">    </span><span class="p">})</span>
-<span class="p">);</span>
-</code></pre></div></p>
-<p>For <a href="https://kotlinlang.org/docs/js-project-setup.html#test-task">browser testing</a> with Karma, some similar configuration is required.
-<div class="highlight"><pre><span></span><code><span class="c1">// project/karma.config.d/wasm.js</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">abs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&quot;../../node_modules/sql.js/dist/sql-wasm.wasm&quot;</span><span class="p">)</span>
-
-<span class="nx">config</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">abs</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="p">});</span>
-
-<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/sql-wasm.wasm&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">abs</span><span class="si">}</span><span class="sb">`</span>
-</code></pre></div></p>
+<p>The web worker driver allows SQLDelight to communicate with a SQL implementation that is running in
+a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Worker</a>. This allows all database operations to happen in a background process.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The web worker driver is only compatible with browser targets. </p>
+</div>
+<h2 id="configuring-a-web-worker">Configuring a Web Worker<a class="headerlink" href="#configuring-a-web-worker" title="Permanent link">&para;</a></h2>
+<p>SQLDelight's web worker driver isn't tied to a specific implementation of a worker. Instead the
+driver communicates with the worker using a standardized set of messages. SQLDelight provides an
+implementation of a worker that uses <a href="https://github.com/sql-js/sql.js/">SQL.js</a>.</p>
+<p>See the <a href="sqljs_worker/">SQL.js Worker</a> page for details on setting it up for your project, or the <a href="custom_worker/">Custom Workers</a> 
+page for details on implementing your own.</p>
+<h2 id="using-a-web-worker">Using a Web Worker<a class="headerlink" href="#using-a-web-worker" title="Permanent link">&para;</a></h2>
+<p>When creating an instance of a web worker driver, you must pass a reference to the web worker that
+will be used to handle all SQL operations. The <code>Worker</code> constructor accepts <code>URL</code> object that references
+the worker script.</p>
+<p>Webpack has special support for referencing a worker script from an installed NPM package by passing
+<code>import.meta.url</code> as a second argument to the <code>URL</code> constructor. Webpack will automatically bundle
+the worker script from the referenced NPM package at build time. The example below shows a Worker
+being created from SQLDelight's <a href="sqljs_worker/">SQL.js Worker</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebWorkerDriver</span><span class="p">(</span>
+<span class="w">  </span><span class="n">Worker</span><span class="p">(</span>
+<span class="w">    </span><span class="n">js</span><span class="p">(</span><span class="s">&quot;&quot;&quot;new URL(&quot;@cashapp/sqldelight-sqljs-worker/sqljs.worker.js&quot;, import.meta.url)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In order for Webpack to correctly resolve this URL while bundling, you must construct the <code>URL</code> 
+object entirely within a <code>js()</code> block as shown above with the <code>import.meta.url</code> argument.</p>
+</div>
+<p>From here, you can use the driver like any other SQLDelight driver.</p>
+<h2 id="using-queries">Using Queries<a class="headerlink" href="#using-queries" title="Permanent link">&para;</a></h2>
 <p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
 <div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>

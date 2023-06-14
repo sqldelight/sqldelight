@@ -3015,10 +3015,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+          Web Workers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9_3">
+          <span class="md-nav__icon md-icon"></span>
+          Web Workers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../../js_sqlite/worker/" class="md-nav__link">
-        Web Workers
+      <a href="../../js_sqlite/sqljs_worker/" class="md-nav__link">
+        SQL.js Worker
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../js_sqlite/custom_worker/" class="md-nav__link">
+        Custom Workers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -3434,7 +3482,7 @@ In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> fil
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="p">...</span>
-<span class="w">      </span><span class="n">sourceFolders</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;sqldelight&quot;</span><span class="p">))</span>
+<span class="w">      </span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&quot;sqldelight&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="n">deriveSchemaFromMigrations</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
@@ -3446,7 +3494,7 @@ In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> fil
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
 <span class="w">      </span><span class="o">...</span>
-<span class="w">      </span><span class="n">sourceFolders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;sqldelight&quot;</span><span class="o">]</span>
+<span class="w">      </span><span class="n">srcDirs</span><span class="w"> </span><span class="s2">&quot;sqldelight&quot;</span>
 <span class="w">      </span><span class="n">deriveSchemaFromMigrations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>

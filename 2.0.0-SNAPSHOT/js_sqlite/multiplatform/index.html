@@ -18,7 +18,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../worker/">
+        <link rel="next" href="../sqljs_worker/">
       
       <link rel="icon" href="../../images/icon-cashapp.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#multiplatform-setup-with-the-sqljs-driver" class="md-skip">
+        <a href="#multiplatform-setup-with-the-web-worker-driver" class="md-skip">
           Skip to content
         </a>
       
@@ -3019,9 +3019,40 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Multiplatform
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Multiplatform
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-drivers" class="md-nav__link">
+    Creating Drivers
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -3033,10 +3064,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+          Web Workers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9_3">
+          <span class="md-nav__icon md-icon"></span>
+          Web Workers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../worker/" class="md-nav__link">
-        Web Workers
+      <a href="../sqljs_worker/" class="md-nav__link">
+        SQL.js Worker
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_worker/" class="md-nav__link">
+        Custom Workers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -3367,6 +3446,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-drivers" class="md-nav__link">
+    Creating Drivers
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3391,8 +3485,9 @@
   
 
 
-<h1 id="multiplatform-setup-with-the-sqljs-driver">Multiplatform setup with the SqlJs Driver<a class="headerlink" href="#multiplatform-setup-with-the-sqljs-driver" title="Permanent link">&para;</a></h1>
-<p>First apply the gradle plugin in your project.</p>
+<h1 id="multiplatform-setup-with-the-web-worker-driver">Multiplatform setup with the Web Worker Driver<a class="headerlink" href="#multiplatform-setup-with-the-web-worker-driver" title="Permanent link">&para;</a></h1>
+<p>First apply the gradle plugin in your project. Make sure to set <code>generateAsync</code> to 
+<code>true</code> when creating your database. </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3409,6 +3504,7 @@
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">generateAsync</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -3428,6 +3524,7 @@
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
 <span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">      </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
@@ -3473,56 +3570,58 @@
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Because the SqlJs driver must be initialized asynchronously, the drivers for other platforms must be initialized in a compatible way to be usable in a common source set.</p>
-<p>The drivers can be initialized in a coroutine, and a higher-order function can be used to ensure that the driver is initialized before executing a block of code that requires the database:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// in src/commonMain/kotlin</span>
-<span class="kd">expect</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">.</span><span class="na">Schema</span><span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span>
-
-<span class="kd">class</span><span class="w"> </span><span class="nc">SharedDatabase</span><span class="p">(</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">driverProvider</span><span class="p">:</span><span class="w"> </span><span class="n">suspend</span><span class="w"> </span><span class="p">(</span><span class="n">SqlDriver</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">SqlDriver</span>
-<span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">database</span><span class="p">:</span><span class="w"> </span><span class="n">Database? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
-
-<span class="w">    </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">initDatabase</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">database</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driverProvider</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">).</span><span class="na">createDatabase</span><span class="p">()</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">operator</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="n">block</span><span class="p">:</span><span class="w"> </span><span class="n">suspend</span><span class="w"> </span><span class="p">(</span><span class="n">Database</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">R</span><span class="p">):</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">initDatabase</span><span class="p">()</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">block</span><span class="p">(</span><span class="n">database</span><span class="o">!!</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">.</span><span class="nf">createDatabase</span><span class="p">():</span><span class="w"> </span><span class="n">Database</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">val</span><span class="w"> </span><span class="nv">sharedDb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SharedDatabase</span><span class="p">(</span><span class="o">::</span><span class="n">createTestDbDriver</span><span class="p">)</span>
-<span class="kd">class</span><span class="w"> </span><span class="nc">DataRepository</span><span class="p">(</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">withDatabase</span><span class="p">:</span><span class="w"> </span><span class="n">SharedDatabase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sharedDb</span>
-<span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">getData</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">withDatabase</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">database</span><span class="w"> </span><span class="o">-&gt;</span>
-<span class="w">        </span><span class="cm">/* Do something with the database */</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// in src/jsMain/kotlin</span>
-<span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">.</span><span class="na">Schema</span><span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">initSqlDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">).</span><span class="na">await</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="c1">// in src/nativeMain/kotlin</span>
-<span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">.</span><span class="na">Schema</span><span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">NativeSqliteDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="c1">// in src/jvmMain/kotlin</span>
-<span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">.</span><span class="na">Schema</span><span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">).</span><span class="na">also</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="o">-&gt;</span>
-<span class="w">        </span><span class="n">schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
+<h2 id="creating-drivers">Creating Drivers<a class="headerlink" href="#creating-drivers" title="Permanent link">&para;</a></h2>
+<p>First set up a way to create a driver in your common code. This can be done using <code>expect</code>/<code>actual</code>,
+or simply with a common interface a platform-specific implementations of the interface.</p>
+<p><div class="highlight"><span class="filename">src/commonMain/kotlin</span><pre><span></span><code><span class="kd">expect</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span>
+<span class="w">  </span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlSchema</span><span class="o">&lt;</span><span class="n">QueryResult</span><span class="p">.</span><span class="na">AsyncValue</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;&gt;</span>
+<span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span>
+</code></pre></div>
+The <code>SqlSchema</code> interface contains a generic <code>QueryResult</code> type argument which is used to differentiate
+schema code that is generated with the <code>generateAsync</code> configuration option set to <code>true</code>.
+Some drivers rely on synchronous behaviours when creating or migrating the schema, so to use an
+asynchronous schema you can use the <a href="../../2.x/extensions/async-extensions/app.cash.sqldelight.async.coroutines/#427896482%2FFunctions%2F-1043631958"><code>synchronous()</code></a> extension method to adapt it for use with synchronous drivers. </p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">src/jsMain/kotlin</label><label for="__tabbed_2_2">src/jvmMain/kotlin</label><label for="__tabbed_2_3">src/androidMain/kotlin</label><label for="__tabbed_2_4">src/nativeMain/kotlin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span>
+<span class="w">  </span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlSchema</span><span class="o">&lt;</span><span class="n">QueryResult</span><span class="p">.</span><span class="na">AsyncValue</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;&gt;</span>
+<span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">WebWorkerDriver</span><span class="p">(</span>
+<span class="w">    </span><span class="n">Worker</span><span class="p">(</span>
+<span class="w">      </span><span class="n">js</span><span class="p">(</span><span class="s">&quot;&quot;&quot;new URL(&quot;@cashapp/sqldelight-sqljs-worker/sqljs.worker.js&quot;, import.meta.url)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">).</span><span class="na">also</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="nb">it</span><span class="p">).</span><span class="na">await</span><span class="p">()</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span>
+<span class="w">  </span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlSchema</span><span class="o">&lt;</span><span class="n">QueryResult</span><span class="p">.</span><span class="na">AsyncValue</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;&gt;</span>
+<span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">also</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="nb">it</span><span class="p">).</span><span class="na">await</span><span class="p">()</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span>
+<span class="w">  </span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlSchema</span><span class="o">&lt;</span><span class="n">QueryResult</span><span class="p">.</span><span class="na">AsyncValue</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;&gt;</span>
+<span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">.</span><span class="na">synchronous</span><span class="p">(),</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideDbDriver</span><span class="p">(</span>
+<span class="w">  </span><span class="n">schema</span><span class="p">:</span><span class="w"> </span><span class="n">SqlSchema</span><span class="o">&lt;</span><span class="n">QueryResult</span><span class="p">.</span><span class="na">AsyncValue</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;&gt;</span>
+<span class="p">):</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">NativeSqliteDriver</span><span class="p">(</span><span class="n">schema</span><span class="p">.</span><span class="na">synchronous</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 
 
 

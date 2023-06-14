@@ -2562,12 +2562,18 @@
     srcDirs
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="srcDirs">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#srcdirsvararg-objects-any" class="md-nav__link">
     srcDirs(vararg objects: Any)
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3174,10 +3180,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+          Web Workers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9_3">
+          <span class="md-nav__icon md-icon"></span>
+          Web Workers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../../js_sqlite/worker/" class="md-nav__link">
-        Web Workers
+      <a href="../../js_sqlite/sqljs_worker/" class="md-nav__link">
+        SQL.js Worker
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../js_sqlite/custom_worker/" class="md-nav__link">
+        Custom Workers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -3561,12 +3615,18 @@
     srcDirs
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="srcDirs">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#srcdirsvararg-objects-any" class="md-nav__link">
     srcDirs(vararg objects: Any)
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3724,37 +3784,32 @@
 <p>Type: <code>ConfigurableFileCollection</code></p>
 <p>A collection of folders that the plugin will look in for your <code>.sq</code> and <code>.sqm</code> files.</p>
 <p>Defaults to <code>src/[prefix]main/sqldelight</code> with prefix depending on the applied kotlin plugin eg common for multiplatform.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Kotlin</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Kotlin</label><label for="__tabbed_4_2">Groovy</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">srcDirs</span><span class="p">.</span><span class="na">setFrom</span><span class="p">(</span><span class="s">&quot;src/main/sqldelight&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Groovy</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
 </div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">srcDirs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s1">&#39;src/main/sqldelight&#39;</span><span class="o">]</span>
 </code></pre></div>
-<hr />
-<h3 id="srcdirsvararg-objects-any"><code>srcDirs(vararg objects: Any)</code><a class="headerlink" href="#srcdirsvararg-objects-any" title="Permanent link">&para;</a></h3>
+</div>
+</div>
+</div>
+<h4 id="srcdirsvararg-objects-any"><code>srcDirs(vararg objects: Any)</code><a class="headerlink" href="#srcdirsvararg-objects-any" title="Permanent link">&para;</a></h4>
 <p>A collection of objects that the plugin will look in for your <code>.sq</code> and <code>.sqm</code> files.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Kotlin</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Kotlin</label><label for="__tabbed_5_2">Groovy</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">srcDirs</span><span class="p">(</span><span class="s">&quot;src/main/sqldelight&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;main/sqldelight&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="tabbed-set tabbed-alternate" data-tabs="7:1"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Groovy</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
 </div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">srcDirs</span><span class="o">(</span><span class="s1">&#39;src/main/sqldelight&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;main/sqldelight&#39;</span><span class="o">)</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="schemaoutputdirectory"><code>schemaOutputDirectory</code><a class="headerlink" href="#schemaoutputdirectory" title="Permanent link">&para;</a></h3>
 <p>Type: <code>DirectoryProperty</code></p>
@@ -3762,7 +3817,7 @@
 These files are used to verify that migrations yield a database with the latest schema.</p>
 <p>Defaults to <code>null</code>.<br />
 If <code>null</code>, the migration verification tasks will not be created.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Kotlin</label><label for="__tabbed_8_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Kotlin</label><label for="__tabbed_6_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">schemaOutputDirectory</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">file</span><span class="p">(</span><span class="s">&quot;src/main/sqldelight/databases&quot;</span><span class="p">))</span>
@@ -3778,7 +3833,7 @@ If <code>null</code>, the migration verification tasks will not be created.</p>
 <h3 id="dependency"><code>dependency</code><a class="headerlink" href="#dependency" title="Permanent link">&para;</a></h3>
 <p>Type: <code>Project</code></p>
 <p>Optionally specify schema dependencies on other gradle projects <a href="#schema-dependencies">(see below)</a>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Kotlin</label><label for="__tabbed_9_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Kotlin</label><label for="__tabbed_7_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dependency</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="s">&quot;:other-project&quot;</span><span class="p">))</span>
@@ -3811,7 +3866,7 @@ Otherwise defaults to SQLite 3.18.</p>
 <li>SQLite 3.35: <code>sqlite-3-35-dialect</code></li>
 <li>SQLite 3.38: <code>sqlite-3-38-dialect</code></li>
 </ul>
-<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Kotlin</label><label for="__tabbed_10_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Kotlin</label><label for="__tabbed_8_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dialect</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:sqlite-3-24-dialect:2.0.0-SNAPSHOT&quot;</span><span class="p">)</span>
@@ -3828,7 +3883,7 @@ Otherwise defaults to SQLite 3.18.</p>
 <p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, migration files will fail during the build process if there are any errors in them.</p>
 <p>Defaults to <code>false</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Kotlin</label><label for="__tabbed_11_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Kotlin</label><label for="__tabbed_9_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">verifyMigrations</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
@@ -3845,7 +3900,7 @@ Otherwise defaults to SQLite 3.18.</p>
 <p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, SQLDelight will not replace an equality comparison with a nullable typed value when using <code>IS</code>.</p>
 <p>Defaults to <code>false</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Kotlin</label><label for="__tabbed_12_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Kotlin</label><label for="__tabbed_10_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">treatNullAsUnknownForEquality</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
@@ -3862,7 +3917,7 @@ Otherwise defaults to SQLite 3.18.</p>
 <p>Type: <code>Property&lt;Boolean&gt;</code></p>
 <p>If set to true, SQLDelight will generate suspending query methods for us with asynchronous drivers.</p>
 <p>Defaults to <code>false</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Kotlin</label><label for="__tabbed_13_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Kotlin</label><label for="__tabbed_11_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">generateAsync</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
@@ -3880,7 +3935,7 @@ Otherwise defaults to SQLite 3.18.</p>
 <p>If set to true, the schema for your database will be derived from your <code>.sqm</code> files as if each migration had been applied.
 If false, your schema is defined in <code>.sq</code> files.</p>
 <p>Defaults to <code>false</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Kotlin</label><label for="__tabbed_14_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Kotlin</label><label for="__tabbed_12_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">deriveSchemaFromMigrations</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
@@ -3894,7 +3949,7 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 </div>
 <h2 id="schema-dependencies">Schema Dependencies<a class="headerlink" href="#schema-dependencies" title="Permanent link">&para;</a></h2>
 <p>You can specify schema dependencies on another module:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Kotlin</label><label for="__tabbed_15_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Kotlin</label><label for="__tabbed_13_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle.kts</span>
@@ -3927,7 +3982,7 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 <p>This looks for <code>MyDatabase</code> in <code>ProjectB</code> and includes it's schema when compiling. For this to work,
 ProjectB must have a database with the same name (<code>MyDatabase</code> in this case) but generate in a
 different package, so here is what <code>ProjectB</code>'s gradle might look like:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Kotlin</label><label for="__tabbed_16_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Kotlin</label><label for="__tabbed_14_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle.kts</span>

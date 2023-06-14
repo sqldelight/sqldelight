@@ -12,10 +12,10 @@
         <meta name="author" content="Square, Inc.">
       
       
-        <link rel="canonical" href="https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/js_sqlite/worker/">
+        <link rel="canonical" href="https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/js_sqlite/custom_worker/">
       
       
-        <link rel="prev" href="../multiplatform/">
+        <link rel="prev" href="../sqljs_worker/">
       
       
         <link rel="next" href="../custom_projections/">
@@ -25,7 +25,7 @@
     
     
       
-        <title>Web Workers - SQLDelight</title>
+        <title>Custom Workers - SQLDelight</title>
       
     
     
@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#running-in-a-web-worker" class="md-skip">
+        <a href="#implementing-a-custom-worker" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Web Workers
+              Custom Workers
             
           </span>
         </div>
@@ -3025,6 +3025,49 @@
     
   
   
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+          Web Workers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_9_3">
+          <span class="md-nav__icon md-icon"></span>
+          Web Workers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sqljs_worker/" class="md-nav__link">
+        SQL.js Worker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -3034,12 +3077,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Web Workers
+          Custom Workers
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Web Workers
+        Custom Workers
       </a>
       
         
@@ -3058,15 +3101,69 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#custom-workers" class="md-nav__link">
-    Custom Workers
+  <a href="#incoming-messages" class="md-nav__link">
+    Incoming Messages
   </a>
+  
+    <nav class="md-nav" aria-label="Incoming Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exec" class="md-nav__link">
+    exec
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#begin_transaction" class="md-nav__link">
+    begin_transaction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end_transaction" class="md-nav__link">
+    end_transaction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback_transaction" class="md-nav__link">
+    rollback_transaction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    Testing
+  <a href="#responding-to-messages" class="md-nav__link">
+    Responding to Messages
+  </a>
+  
+    <nav class="md-nav" aria-label="Responding to Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-results-property" class="md-nav__link">
+    The results Property
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
   </a>
   
 </li>
@@ -3075,6 +3172,13 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -3412,15 +3516,69 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#custom-workers" class="md-nav__link">
-    Custom Workers
+  <a href="#incoming-messages" class="md-nav__link">
+    Incoming Messages
   </a>
+  
+    <nav class="md-nav" aria-label="Incoming Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exec" class="md-nav__link">
+    exec
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#begin_transaction" class="md-nav__link">
+    begin_transaction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end_transaction" class="md-nav__link">
+    end_transaction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback_transaction" class="md-nav__link">
+    rollback_transaction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    Testing
+  <a href="#responding-to-messages" class="md-nav__link">
+    Responding to Messages
+  </a>
+  
+    <nav class="md-nav" aria-label="Responding to Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-results-property" class="md-nav__link">
+    The results Property
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
   </a>
   
 </li>
@@ -3444,80 +3602,88 @@
     
       
     
-    <a href="https://github.com/cashapp/sqldelight/raw/master/docs/js_sqlite/worker.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/cashapp/sqldelight/raw/master/docs/js_sqlite/custom_worker.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
   
 
 
-<h1 id="running-in-a-web-worker">Running in a Web Worker<a class="headerlink" href="#running-in-a-web-worker" title="Permanent link">&para;</a></h1>
-<p>To use the SqlJs driver with sql.js running in a web worker, first update your gradle configuration
-to generate asynchronous SQLDelight interfaces.</p>
-<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
-<span class="w">      </span><span class="n">generateAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
-<p>The web worker driver only works with browser targets.
-In addition to the base webpack configuration needed for the SqlJs driver, the web worker script must also be copied.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// project/webpack.config.d/wasm.js</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;copy-webpack-plugin&#39;</span><span class="p">);</span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
-<span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">CopyWebpackPlugin</span><span class="p">({</span>
-<span class="w">        </span><span class="nx">patterns</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/sql-wasm.wasm&#39;</span><span class="p">,</span>
-<span class="w">            </span><span class="s1">&#39;../../node_modules/sql.js/dist/worker.sql-wasm.js&#39;</span>
-<span class="w">        </span><span class="p">]</span>
-<span class="w">    </span><span class="p">})</span>
-<span class="p">);</span>
-</code></pre></div>
-<p>The function to initialize the driver is a <code>suspend</code> function and must be called within a coroutine.
-Since this driver is asynchronous, all query functions are also <code>suspend</code> functions.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setupDb</span><span class="p">():</span><span class="w"> </span><span class="n">AsyncSqlDriver</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">initAsyncSqlDriver</span><span class="p">(</span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span>
+<h1 id="implementing-a-custom-worker">Implementing a Custom Worker<a class="headerlink" href="#implementing-a-custom-worker" title="Permanent link">&para;</a></h1>
+<p>A SQLDelight web worker is script that can accept incoming messages from the web worker driver, 
+execute some SQL operations using the incoming message, and then respond accordingly with any query
+results.</p>
+<p>Web workers are most easily implemented in plain JavaScript as they are relatively short and simple
+scripts.</p>
+<h2 id="incoming-messages">Incoming Messages<a class="headerlink" href="#incoming-messages" title="Permanent link">&para;</a></h2>
+<p>The web worker driver message format allows SQLDelight to communicate with a worker implementation
+in a generic way that isn't tied to a specific SQL dialect or implementation. Every message contains
+an <code>action</code> property that specifies one of four actions.</p>
+<h3 id="exec"><code>exec</code><a class="headerlink" href="#exec" title="Permanent link">&para;</a></h3>
+<p>This action indicates that the worker should execute some SQL statement attached to the message and
+respond with the result of the SQL query. The message will contain a <code>sql</code> property containing the
+SQL statement to execute, along with a <code>params</code> array that contains the parameters that are to be
+bound to the statement.</p>
+<p>Example message:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exec&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT column_a, column_b FROM some_table WHERE column_a = ?;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
 <span class="p">}</span>
-
-<span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">getData</span><span class="p">(</span><span class="n">database</span><span class="p">:</span><span class="w"> </span><span class="n">Database</span><span class="p">):</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">MyData</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">myDataQueries</span><span class="p">.</span><span class="na">getAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">()</span>
+</code></pre></div></p>
+<h3 id="begin_transaction"><code>begin_transaction</code><a class="headerlink" href="#begin_transaction" title="Permanent link">&para;</a></h3>
+<p>Tells the worker that it should begin a transaction.</p>
+<p>Example message:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;begin_transaction&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="end_transaction"><code>end_transaction</code><a class="headerlink" href="#end_transaction" title="Permanent link">&para;</a></h3>
+<p>Tells the worker that it should end the current transaction.</p>
+<p>Example message:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;end_transaction&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="rollback_transaction"><code>rollback_transaction</code><a class="headerlink" href="#rollback_transaction" title="Permanent link">&para;</a></h3>
+<p>Tells the worker to rollback the current transaction.</p>
+<p>Example message:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rollback_transaction&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h2 id="responding-to-messages">Responding to Messages<a class="headerlink" href="#responding-to-messages" title="Permanent link">&para;</a></h2>
+<p>Every incoming message contains an <code>id</code> property which is a unique integer for that message.
+When responding to a message, the worker implementation must include this <code>id</code> value in the response
+message. This is used by the web worker driver to correctly handle the response.</p>
+<h3 id="the-results-property">The <code>results</code> Property<a class="headerlink" href="#the-results-property" title="Permanent link">&para;</a></h3>
+<p>A response message should also contain a <code>results</code> property. This is used to communicate the results
+of some SQL execution, particularly for the result set of a query. The <code>results</code> property should be
+an array representing the <em>rows</em> of results, where each entry is an array representing the <em>columns</em>
+in the result set.</p>
+<p>For example, a response to the <code>exec</code> message above could be:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;this is the content of column_b&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;this is a different row&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="custom-workers">Custom Workers<a class="headerlink" href="#custom-workers" title="Permanent link">&para;</a></h2>
-<p>By default, the js worker driver will load a web worker from <code>/worker.sql-wasm.js</code> (the additional file copied in the webpack config).
-The driver supports loading custom workers, or workers located at a different path by providing the URL to the <code>initAsyncSqlDriver()</code> function.</p>
-<div class="highlight"><pre><span></span><code><span class="n">initAsyncSqlDriver</span><span class="p">(</span><span class="n">workerPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/path/to/my/worker.js&quot;</span><span class="p">)</span>
+<p>For a SQL statement that does not return a result set, the <code>results</code> value should contain a single row/column with a number representing the number of rows that were affected by the execution of the statement.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Custom workers must be able to receive and process messages sent by the driver that are defined in the <a href="1.x/sqljs-driver/app.cash.sqldelight.app.cash.sqldelight.driver.sqljs.worker/-worker-message/"><code>WorkerMessage</code></a> interface.
-The driver expects a responding message to be sent that matches the <a href="1.x/sqljs-driver/app.cash.sqldelight.app.cash.sqldelight.driver.sqljs.worker/-worker-data/"><code>WorkerData</code></a> interface.</p>
-<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
-<p>To run karma tests with the web worker, the karma config must be updated to copy and proxy the worker script file in addition to the WebAssembly file.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// project/karma.config.d/wasm.js</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&quot;../../node_modules/sql.js/dist/&quot;</span><span class="p">)</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">wasm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dist</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sql-wasm.wasm&quot;</span><span class="p">)</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">worker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">dist</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;worker.sql-wasm.js&quot;</span><span class="p">)</span>
-
-<span class="nx">config</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">wasm</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="p">},</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="nx">worker</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">served</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">watched</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">included</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">nocache</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="p">});</span>
-
-<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/sql-wasm.wasm&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">wasm</span><span class="si">}</span><span class="sb">`</span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;/worker.sql-wasm.js&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/absolute</span><span class="si">${</span><span class="nx">worker</span><span class="si">}</span><span class="sb">`</span>
-</code></pre></div>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/cashapp/sqldelight/blob/master/drivers/web-worker-driver/sqljs/sqljs.worker.js">SQLDelight's SQL.js Worker</a></li>
+</ul>
 
 
 

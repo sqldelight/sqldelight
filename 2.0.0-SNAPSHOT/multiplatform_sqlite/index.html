@@ -1007,9 +1007,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Getting Started
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-drivers" class="md-nav__link">
+    Creating Drivers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-queries" class="md-nav__link">
+    Using Queries
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -3033,10 +3071,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+          Web Workers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9_3">
+          <span class="md-nav__icon md-icon"></span>
+          Web Workers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../js_sqlite/worker/" class="md-nav__link">
-        Web Workers
+      <a href="../js_sqlite/sqljs_worker/" class="md-nav__link">
+        SQL.js Worker
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../js_sqlite/custom_worker/" class="md-nav__link">
+        Custom Workers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -3367,6 +3453,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-drivers" class="md-nav__link">
+    Creating Drivers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-queries" class="md-nav__link">
+    Using Queries
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3392,7 +3500,7 @@
 
 
 <h1 id="getting-started-with-multiplatform">Getting Started with Multiplatform<a class="headerlink" href="#getting-started-with-multiplatform" title="Permanent link">&para;</a></h1>
-<p>First apply the gradle plugin in your project.</p>
+<p>First apply the gradle plugin in your project.  </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3492,8 +3600,9 @@
 </div>
 </div>
 </div>
-<div class="highlight"><pre><span></span><code><span class="c1">// in src/commonMain/kotlin</span>
-<span class="k">import</span><span class="w"> </span><span class="nn">com.example.Database</span>
+<h2 id="creating-drivers">Creating Drivers<a class="headerlink" href="#creating-drivers" title="Permanent link">&para;</a></h2>
+<p>Create a factory class or method to obtain a <code>SqlDriver</code> instance in your common code. </p>
+<div class="highlight"><span class="filename">src/commonMain/kotlin</span><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">com.example.Database</span>
 
 <span class="kd">expect</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span>
@@ -3505,23 +3614,28 @@
 
 <span class="w">  </span><span class="c1">// Do more work with the database (see below).</span>
 <span class="p">}</span>
-
-<span class="c1">// in src/androidMain/kotlin</span>
-<span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="p">(</span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</code></pre></div>
+<p>Then implement this for each target platform:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">src/androidMain/kotlin</label><label for="__tabbed_3_2">src/nativeMain/kotlin</label><label for="__tabbed_3_3">src/jvmMain/kotlin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="p">(</span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">actual</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span><span class="w"> </span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-
-<span class="c1">// in src/nativeMain/kotlin</span>
-<span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">actual</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">NativeSqliteDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-
-<span class="c1">// in src/jvmMain/kotlin</span>
-<span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">actual</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">)</span>
 <span class="w">    </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
@@ -3529,7 +3643,11 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>For use with the SqlJs driver, <a href="../js_sqlite/multiplatform">see here</a>.</p>
+</div>
+</div>
+</div>
+<p>For use with Kotlin/JS, <a href="../js_sqlite/multiplatform">see here</a>.</p>
+<h2 id="using-queries">Using Queries<a class="headerlink" href="#using-queries" title="Permanent link">&para;</a></h2>
 <p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
 <div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
