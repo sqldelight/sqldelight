@@ -2,6 +2,7 @@ import dev.petuska.npm.publish.extension.domain.NpmDependency
 
 plugins {
   alias(libs.plugins.npmPublish)
+  alias(libs.plugins.dokka)
 }
 
 npmPublish {
@@ -39,4 +40,9 @@ npmPublish {
 
 rootProject.tasks.named("kotlinNpmInstall").configure {
   dependsOn(tasks.named("assembleJsPackage"))
+}
+
+// Dokka forces us to apply the plugin to this module even though there's no code
+tasks.named("dokkaHtmlPartial") {
+  enabled = false
 }
