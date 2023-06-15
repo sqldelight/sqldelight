@@ -1,5 +1,6 @@
 package app.cash.sqldelight.gradle
 
+import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -37,18 +38,23 @@ import kotlin.collections.ArrayList
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
+
   @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @get:Internal abstract val workingDirectory: DirectoryProperty
+  @get:Internal abstract var workingDirectory: File
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @get:Input abstract val verifyMigrations: Property<Boolean>
+  @Input var verifyMigrations: Boolean = false
 
-  @get:Input abstract val verifyDefinitions: Property<Boolean>
+  @Input var verifyDefinitions: Boolean = true
 
   @get:Input abstract val driverProperties: MapProperty<String, String>
 
@@ -68,7 +74,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)
-      it.driverProperties.set(driverProperties)
+      it.driverProperties.set(driverProperties.get())
       it.outputFile.set(getDummyOutputFile())
     }
   }

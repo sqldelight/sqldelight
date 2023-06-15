@@ -21,14 +21,15 @@ import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.android.packageName
 import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
-import com.android.build.gradle.api.AndroidBasePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
-import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -41,42 +42,40 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   @get:Inject
   abstract val registry: ToolingModelBuilderRegistry
 
+  private lateinit var extension: SqlDelightExtension
+
   override fun apply(project: Project) {
     require(GradleVersion.current() >= GradleVersion.version(MIN_GRADLE_VERSION)) {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
-    val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java).apply {
-      linkSqlite.convention(true)
-    }
+    extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java)
 
-    project.plugins.withType(AndroidBasePlugin::class.java) {
+    val androidPluginHandler = { _: Plugin<*> ->
       android.set(true)
       project.afterEvaluate {
-        project.setupSqlDelightTasks(afterAndroid = true, extension)
+        project.setupSqlDelightTasks(afterAndroid = true)
       }
     }
+    project.plugins.withId("com.android.application", androidPluginHandler)
+    project.plugins.withId("com.android.library", androidPluginHandler)
+    project.plugins.withId("com.android.instantapp", androidPluginHandler)
+    project.plugins.withId("com.android.feature", androidPluginHandler)
+    project.plugins.withId("com.android.dynamic-feature", androidPluginHandler)
 
-    project.plugins.withType(KotlinBasePlugin::class.java) {
-      kotlin.set(true)
-    }
-
-    project.tasks.register("generateSqlDelightInterface") {
-      it.group = GROUP
-      it.description = "Aggregation task which runs every interface generation task for every given source"
-    }
-
-    project.tasks.register("verifySqlDelightMigration") {
-      it.group = GROUP
-      it.description = "Aggregation task which runs every migration task for every given source"
-    }
+    val kotlinPluginHandler = { _: Plugin<*> -> kotlin.set(true) }
+    project.plugins.withId("org.jetbrains.kotlin.multiplatform", kotlinPluginHandler)
+    project.plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
+    project.plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
+    project.plugins.withId("org.jetbrains.kotlin.js", kotlinPluginHandler)
+    project.plugins.withId("kotlin2js", kotlinPluginHandler)
 
     project.afterEvaluate {
-      project.setupSqlDelightTasks(afterAndroid = false, extension)
+      project.setupSqlDelightTasks(afterAndroid = false)
     }
   }
 
-  private fun Project.setupSqlDelightTasks(afterAndroid: Boolean, extension: SqlDelightExtension) {
+  private fun Project.setupSqlDelightTasks(afterAndroid: Boolean) {
     if (android.get() && !afterAndroid) return
 
     check(kotlin.get()) {
@@ -85,36 +84,64 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     val isMultiplatform = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+    val isJsOnly = if (isMultiplatform) false else project.plugins.hasPlugin("org.jetbrains.kotlin.js")
 
     val needsAsyncRuntime = extension.databases.any { it.generateAsync.get() }
-    val runtimeDependencies = buildList {
+    val runtimeDependencies = mutableListOf<Dependency>().apply {
       add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
       if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION"))
     }
 
     // Add the runtime dependency.
-    val sourceSetName = if (isMultiplatform) "commonMain" else "main"
-    val sourceSetApiConfigName =
-      project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
-    project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
+    when {
+      isMultiplatform -> {
+        val sourceSets =
+          project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
+        val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
+        project.configurations.getByName(sourceSet.apiConfigurationName)
+          .dependencies.addAll(runtimeDependencies)
+      }
+      isJsOnly -> {
+        val sourceSets =
+          project.extensions.getByType(KotlinJsProjectExtension::class.java).sourceSets
+        val sourceSet = (sourceSets.getByName("main") as DefaultKotlinSourceSet)
+        project.configurations.getByName(sourceSet.apiConfigurationName)
+          .dependencies.addAll(runtimeDependencies)
+      }
+      else -> {
+        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
+      }
+    }
 
-    if (extension.linkSqlite.get()) {
+    if (extension.linkSqlite.getOrElse(true)) {
       project.linkSqlite()
     }
 
     extension.run {
       if (databases.isEmpty() && android.get() && !isMultiplatform) {
         // Default to a database for android named "Database" to keep things simple.
-        databases.create("Database") { database ->
-          database.packageName.set(project.packageName())
-          project.sqliteVersion()?.let(database::dialect)
-        }
+        databases.add(
+          objects.newInstance(SqlDelightDatabase::class.java, project, "Database").apply {
+            packageName.set(project.packageName())
+            project.sqliteVersion()?.let(::dialect)
+          },
+        )
       } else if (databases.isEmpty()) {
         logger.warn("SQLDelight Gradle plugin was applied but there are no databases set up.")
       }
 
+      project.tasks.register("generateSqlDelightInterface") {
+        it.group = GROUP
+        it.description = "Aggregation task which runs every interface generation task for every given source"
+      }
+
+      project.tasks.register("verifySqlDelightMigration") {
+        it.group = GROUP
+        it.description = "Aggregation task which runs every migration task for every given source"
+      }
+
       databases.forEach { database ->
-        if (!database.packageName.isPresent && android.get() && !isMultiplatform) {
+        if (database.packageName.getOrNull() == null && android.get() && !isMultiplatform) {
           database.packageName.set(project.packageName())
         }
         if (!database.addedDialect && android.get() && !isMultiplatform) {

@@ -1,5 +1,6 @@
 package app.cash.sqldelight.gradle.squash
 
+import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -28,11 +29,16 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
-  @get:Input abstract val projectName: Property<String>
+  @Suppress("unused")
+  // Required to invalidate the task on version updates.
+  @Input
+  val pluginVersion = VERSION
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @Input val projectName: Property<String> = project.objects.property(String::class.java)
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
+
+  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
 
   @TaskAction
   fun generateSquashedMigrationFile() {
