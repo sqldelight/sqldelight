@@ -21,3 +21,9 @@ SELECT NOW();
 
 selectInterval:
 SELECT INTERVAL '1 day';
+
+selectMax:
+SELECT max(timestamp) FROM dates;
+
+selectMin:
+SELECT min(timestamp_with_timezone) FROM dates;

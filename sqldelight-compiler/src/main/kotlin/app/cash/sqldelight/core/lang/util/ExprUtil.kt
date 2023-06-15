@@ -22,6 +22,7 @@ import app.cash.sqldelight.dialect.api.PragmaWithResults
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
@@ -138,8 +139,8 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     "iif" -> exprList[1].type()
     "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
     "nullif" -> exprList[0].type().asNullable()
-    "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
+    "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB, BOOLEAN).asNullable()
+    "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL, BOOLEAN).asNullable()
     else -> null
   }
 
