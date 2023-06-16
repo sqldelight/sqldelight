@@ -1,9 +1,7 @@
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'app.cash.sqldelight'
 
 android {
   compileSdk libs.versions.compileSdk.get() as int

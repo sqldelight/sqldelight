@@ -1,5 +1,7 @@
-apply plugin: 'kotlin'
-apply plugin: 'app.cash.sqldelight'
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
+}
 
 sqldelight {
   databases {

@@ -20,7 +20,18 @@ internal class TemporaryFixture : AutoCloseable {
     val settings = File(fixtureRoot, "settings.gradle")
     if (!settings.exists()) {
       settings.createNewFile()
-      settings.writeText("apply from: \"../settings.gradle\"")
+      settings.writeText(
+        """
+        |pluginManagement {
+        |  includeBuild("build-logic-tests")
+        |}
+        |
+        |plugins {
+        |  id("sqldelightTests")
+        |}
+        |
+        """.trimMargin(),
+      )
     }
   }
 

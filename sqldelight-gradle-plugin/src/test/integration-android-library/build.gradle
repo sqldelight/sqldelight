@@ -1,12 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'app.cash.sqldelight'
 
 dependencies {
   implementation libs.androidx.sqlite
