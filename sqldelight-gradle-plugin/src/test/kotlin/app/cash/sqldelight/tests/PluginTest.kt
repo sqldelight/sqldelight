@@ -144,21 +144,6 @@ class PluginTest {
   }
 
   @Test
-  fun `The generate task is a dependency of multiplatform ios target with 1-3-20 DSL`() {
-    val fixtureRoot = File("src/test/kotlin-mpp-1.3.20")
-    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
-    buildDir.delete()
-
-    val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "compileKotlinIos", "--stacktrace")
-      .forwardOutput()
-      .build()
-    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
-    assertThat(buildDir.exists()).isTrue()
-  }
-
-  @Test
   fun `The generate task is a dependency of multiplatform link ios task`() {
     val fixtureRoot = File("src/test/kotlin-mpp")
     val buildDir = File(fixtureRoot, "build/generated/sqldelight")
