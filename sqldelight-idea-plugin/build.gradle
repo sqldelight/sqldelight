@@ -77,9 +77,6 @@ sourceSets {
 
 repositories {
   maven { url = uri("https://repo.gradle.org/gradle/libs-releases") }
-  maven {
-    url "file://${projectDir.absolutePath}/../build/localMaven"
-  }
 }
 
 dependencies {
