@@ -23,7 +23,7 @@ internal class TemporaryFixture : AutoCloseable {
       settings.writeText(
         """
         |pluginManagement {
-        |  includeBuild("build-logic-tests")
+        |  includeBuild("../build-logic-tests")
         |}
         |
         |plugins {
