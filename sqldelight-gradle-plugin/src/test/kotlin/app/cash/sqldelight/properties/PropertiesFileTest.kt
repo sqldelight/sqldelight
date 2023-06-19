@@ -50,13 +50,11 @@ class PropertiesFileTest {
     withTemporaryFixture {
       gradleFile(
         """|
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.sqldelight)
+        |  alias(libs.plugins.android.library)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'app.cash.sqldelight'
-        |apply plugin: 'com.android.library'
         |
         |archivesBaseName = 'Test'
         |
