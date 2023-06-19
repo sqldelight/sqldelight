@@ -13,7 +13,7 @@ class GradlePluginCombinationTests {
         |  alias(libs.plugins.kotlin.multiplatform)
         |  alias(libs.plugins.android.application)
         |  alias(libs.plugins.sqldelight)
-        |  id("org.jetbrains.kotlin.android.extensions")
+        |  alias(libs.plugins.kotlin.android.extensions)
         |}
         |
         |sqldelight {
