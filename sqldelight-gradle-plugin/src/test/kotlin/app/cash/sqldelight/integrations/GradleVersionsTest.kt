@@ -34,7 +34,7 @@ class GradleVersionsTest(private val gradleVersion: String) {
       // MIN_GRADLE_VERSION,
       // We use version catalogs in tests too but this feature is only stable since 7.4.
       // Test MIN_GRADLE_VERSION too if MIN_GRADLE_VERSION is higher than 7.4.
-      "7.4",
+      "7.4.2",
       "7.6.1",
       "8.0.2",
     )
