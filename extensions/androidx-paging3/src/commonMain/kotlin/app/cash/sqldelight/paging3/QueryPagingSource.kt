@@ -18,7 +18,7 @@ package app.cash.sqldelight.paging3
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingSource
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.TransacterBase
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import kotlin.coroutines.CoroutineContext
@@ -63,7 +63,7 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
 @JvmName("QueryPagingSourceInt")
 fun <RowType : Any> QueryPagingSource(
   countQuery: Query<Int>,
-  transacter: Transacter,
+  transacter: TransacterBase,
   context: CoroutineContext,
   queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
 ): PagingSource<Int, RowType> = OffsetQueryPagingSource(
@@ -86,7 +86,7 @@ fun <RowType : Any> QueryPagingSource(
 @JvmName("QueryPagingSourceLong")
 fun <RowType : Any> QueryPagingSource(
   countQuery: Query<Long>,
-  transacter: Transacter,
+  transacter: TransacterBase,
   context: CoroutineContext,
   queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
 ): PagingSource<Int, RowType> = OffsetQueryPagingSource(
@@ -165,7 +165,7 @@ private fun Query<Long>.toInt(): Query<Int> =
  */
 @Suppress("FunctionName")
 fun <Key : Any, RowType : Any> QueryPagingSource(
-  transacter: Transacter,
+  transacter: TransacterBase,
   context: CoroutineContext,
   pageBoundariesProvider: (anchor: Key?, limit: Long) -> Query<Key>,
   queryProvider: (beginInclusive: Key, endExclusive: Key?) -> Query<RowType>,
