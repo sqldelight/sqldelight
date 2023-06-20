@@ -2132,7 +2132,7 @@
    <div class="overview">
     <span class="navButton" onclick="document.getElementById(&quot;androidx-paging3-nav-submenu-0&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../extensions/androidx-paging3/app.cash.sqldelight.paging3/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>paging3</span></a>
    </div>
-   <div class="sideMenuPart" id="androidx-paging3-nav-submenu-0-0" pageid="androidx-paging3::app.cash.sqldelight.paging3//QueryPagingSource/#app.cash.sqldelight.Query[kotlin.Int]#app.cash.sqldelight.Transacter#kotlin.coroutines.CoroutineContext#kotlin.Function2[kotlin.Int,kotlin.Int,app.cash.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]/PointingToDeclaration//898882972">
+   <div class="sideMenuPart" id="androidx-paging3-nav-submenu-0-0" pageid="androidx-paging3::app.cash.sqldelight.paging3//QueryPagingSource/#app.cash.sqldelight.Query[kotlin.Int]#app.cash.sqldelight.TransacterBase#kotlin.coroutines.CoroutineContext#kotlin.Function2[kotlin.Int,kotlin.Int,app.cash.sqldelight.Query[TypeParam(bounds=[kotlin.Any])]]/PointingToDeclaration//898882972">
     <div class="overview">
      <a href="../extensions/androidx-paging3/app.cash.sqldelight.paging3/-query-paging-source.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon function"></span><span class="nav-link-child"><span>Query</span><wbr><span>Paging</span><wbr><span><span>Source()</span></span></span></span></a>
     </div>
