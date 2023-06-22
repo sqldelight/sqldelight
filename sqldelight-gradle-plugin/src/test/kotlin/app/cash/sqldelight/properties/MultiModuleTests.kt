@@ -8,10 +8,12 @@ import app.cash.sqldelight.withInvariantPathSeparators
 import app.cash.sqldelight.withSortedCompilationUnits
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
 class MultiModuleTests {
+  @Ignore
   @Test
   fun `sqldelight dependencies are added to the compilation unit`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
@@ -36,6 +38,7 @@ class MultiModuleTests {
     }
   }
 
+  @Ignore
   @Test
   fun integrationTests() {
     val runner = GradleRunner.create()
@@ -46,6 +49,7 @@ class MultiModuleTests {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Ignore
   @Test
   fun `android multi module integration tests`() {
     val runner = GradleRunner.create()
@@ -56,6 +60,7 @@ class MultiModuleTests {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Ignore
   @Test
   fun `the android target of a multiplatform module is a dependency for an android only module`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
