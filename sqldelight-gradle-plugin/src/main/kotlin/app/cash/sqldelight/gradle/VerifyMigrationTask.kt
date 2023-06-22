@@ -191,7 +191,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     }
 
     private fun checkForGaps() {
-      var lastMigrationVersion: Int? = null
+      var lastMigrationVersion: Long? = null
       environment.forMigrationFiles {
         val actual = it.version
         val expected = lastMigrationVersion?.plus(1) ?: actual

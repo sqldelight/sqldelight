@@ -230,7 +230,7 @@ internal class DatabaseGenerator(
         }
     }
 
-    var maxVersion = 1
+    var maxVersion = 1L
     val hasMigrations = sourceFolders.flatMap { it.migrationFiles() }.isNotEmpty()
 
     sourceFolders.flatMap { it.migrationFiles() }

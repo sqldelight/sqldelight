@@ -86,7 +86,7 @@ abstract class MigrationSquashTask : SqlDelightWorkerTask() {
       var newMigrations = fileFromText("")
 
       // Generate the new files.
-      var topVersion = 0
+      var topVersion = 0L
       lateinit var migrationDirectory: File
       environment.forMigrationFiles { migrationFile ->
         if (migrationFile.version > topVersion) {
