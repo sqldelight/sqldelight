@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
@@ -50,19 +51,33 @@ kotlin {
 
   configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
     binaries.configureEach {
-      linkerOpts += ["-lsqlite3"]
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-lsqlite3"]
+      }
     }
   }
 
   configure([targets.linuxX64]) {
-    binaries.configureEach {
-      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
+    compilations.configureEach {
+      if (name == "test") {
+        cinterops {
+          sqlite {
+            // use sqlite3 amalgamation on linux tests to prevent linking issues on new linux distros with dependency libraries which are to recent (for example glibc)
+            // see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
+            defFile = new File("$rootDir/libs/linux/cinterop/sqlite3.def")
+          }
+        }
+      }
     }
   }
 
   configure([targets.mingwX64]) {
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      }
     }
   }
 }

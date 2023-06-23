@@ -94,10 +94,15 @@ kotlin {
   }
 
   configure([targets.linuxX64]) {
-    binaries.configureEach {
-      // we only need to link sqlite for the test binaries
-      if (outputKind == NativeOutputKind.TEST) {
-        linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
+    compilations.configureEach {
+      if (name == "test") {
+        cinterops {
+          sqlite {
+            // use sqlite3 amalgamation on linux tests to prevent linking issues on new linux distros with dependency libraries which are to recent (for example glibc)
+            // see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
+            defFile = new File("$rootDir/libs/linux/cinterop/sqlite3.def")
+          }
+        }
       }
     }
   }
