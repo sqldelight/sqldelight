@@ -1,0 +1,22 @@
+{
+  "description": "A SQL.js implementation of SQLDelight's web-worker-driver",
+  "homepage": "https://github.com/cashapp/sqldelight#readme",
+  "license": "Apache-2.0",
+  "keywords": [
+    "sqljs",
+    "sqldelight",
+    "sql"
+  ],
+  "bugs": {
+    "url": "https://github.com/cashapp/sqldelight/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cashapp/sqldelight.git"
+  },
+  "version": "0.0.0",
+  "name": "@cashapp/sqldelight-sqljs-worker",
+  "peerDependencies": {
+    "sql.js": "^1.8.0"
+  }
+}
