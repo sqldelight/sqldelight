@@ -13,7 +13,7 @@ class Sqlite318FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
   }
 
   override val replaceRules: Array<Pair<String, String>> = arrayOf(
-    " INT NOT NULL" to " INTEGER NOT NULL"
+    " INT NOT NULL" to " INTEGER NOT NULL",
   )
 
   companion object {
