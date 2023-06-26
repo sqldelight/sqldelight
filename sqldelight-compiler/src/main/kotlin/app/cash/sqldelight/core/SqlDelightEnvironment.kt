@@ -132,12 +132,12 @@ class SqlDelightEnvironment(
    * Run the SQLDelight compiler and return the error or success status.
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
-    val errors = sortedMapOf<Int, MutableList<String>>()
+    val errors = sortedMapOf<Long, MutableList<String>>()
     val extraAnnotators = listOf(OptimisticLockValidator())
     annotate(
       extraAnnotators,
     ) { element, message ->
-      val key = element.sqFile().order ?: Integer.MAX_VALUE
+      val key = element.sqFile().order ?: Long.MAX_VALUE
       errors.putIfAbsent(key, ArrayList())
       errors[key]!!.add(errorMessage(element, message))
     }
