@@ -61,7 +61,7 @@ class AsyncQueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -75,7 +75,7 @@ class AsyncQueryWrapperTest {
         |  driver: SqlDriver,
         |) : SuspendingTransacterImpl(driver), TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
-        |    override val version: Int
+        |    override val version: Long
         |      get() = 3
         |
         |    override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
@@ -90,8 +90,8 @@ class AsyncQueryWrapperTest {
         |
         |    private fun migrateInternal(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
@@ -110,8 +110,8 @@ class AsyncQueryWrapperTest {
         |
         |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
         |      var lastVersion = oldVersion

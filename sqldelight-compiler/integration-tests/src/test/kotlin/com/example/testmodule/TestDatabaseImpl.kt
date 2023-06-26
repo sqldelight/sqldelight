@@ -11,7 +11,7 @@ import com.example.PlayerQueries
 import com.example.Team
 import com.example.TeamQueries
 import com.example.TestDatabase
-import kotlin.Int
+import kotlin.Long
 import kotlin.Unit
 import kotlin.reflect.KClass
 
@@ -36,7 +36,7 @@ private class TestDatabaseImpl(
   override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
 
   public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-    override val version: Int
+    override val version: Long
       get() = 1
 
     override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -76,8 +76,8 @@ private class TestDatabaseImpl(
 
     override fun migrate(
       driver: SqlDriver,
-      oldVersion: Int,
-      newVersion: Int,
+      oldVersion: Long,
+      newVersion: Long,
       vararg callbacks: AfterVersion,
     ): QueryResult.Value<Unit> = QueryResult.Unit
   }

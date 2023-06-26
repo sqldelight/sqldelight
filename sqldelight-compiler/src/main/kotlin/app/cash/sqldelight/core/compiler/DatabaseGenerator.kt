@@ -40,11 +40,11 @@ import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.KModifier.VARARG
+import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -165,8 +165,8 @@ internal class DatabaseGenerator(
       )
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
 
-    val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
-    val newVersion = ParameterSpec.builder("newVersion", INT).build()
+    val oldVersion = ParameterSpec.builder("oldVersion", LONG).build()
+    val newVersion = ParameterSpec.builder("newVersion", LONG).build()
 
     val migrateFunction = FunSpec.builder("migrateInternal")
       .addModifiers(PRIVATE)
@@ -276,8 +276,8 @@ internal class DatabaseGenerator(
           .apply { if (hasMigrations) addFunction(migrateFunction.build()) }
           .addFunction(migrateImplementation(hasMigrations))
           .addProperty(
-            PropertySpec.builder("version", INT, OVERRIDE)
-              .getter(FunSpec.getterBuilder().addStatement("return $maxVersion").build())
+            PropertySpec.builder("version", LONG, OVERRIDE)
+              .getter(FunSpec.getterBuilder().addStatement("return %L", maxVersion).build())
               .build(),
           )
           .build(),
@@ -288,8 +288,8 @@ internal class DatabaseGenerator(
   }
 
   private fun migrateImplementation(hasMigrations: Boolean): FunSpec {
-    val oldVersion = ParameterSpec.builder("oldVersion", INT).build()
-    val newVersion = ParameterSpec.builder("newVersion", INT).build()
+    val oldVersion = ParameterSpec.builder("oldVersion", LONG).build()
+    val newVersion = ParameterSpec.builder("newVersion", LONG).build()
     val callbacks = ParameterSpec.builder("callbacks", AFTER_VERSION_TYPE).addModifiers(VARARG).build()
 
     val migrateFunction = FunSpec.builder("migrate")

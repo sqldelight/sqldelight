@@ -62,7 +62,7 @@ class QueriesTypeTest {
       |import com.example.Data_
       |import com.example.Other
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -83,7 +83,7 @@ class QueriesTypeTest {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
       |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -104,8 +104,8 @@ class QueriesTypeTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
@@ -251,7 +251,7 @@ class QueriesTypeTest {
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -268,7 +268,7 @@ class QueriesTypeTest {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
       |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -283,8 +283,8 @@ class QueriesTypeTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
@@ -350,7 +350,7 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -364,7 +364,7 @@ class QueriesTypeTest {
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), TestDatabase {
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
       |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -379,8 +379,8 @@ class QueriesTypeTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
@@ -429,7 +429,7 @@ class QueriesTypeTest {
       |import com.example.DataQueries
       |import com.example.Data_
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -446,7 +446,7 @@ class QueriesTypeTest {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
       |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -461,8 +461,8 @@ class QueriesTypeTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
@@ -586,7 +586,7 @@ class QueriesTypeTest {
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.SearchQueries
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -602,7 +602,7 @@ class QueriesTypeTest {
       |  override val searchQueries: SearchQueries = SearchQueries(driver)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
       |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -617,8 +617,8 @@ class QueriesTypeTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }

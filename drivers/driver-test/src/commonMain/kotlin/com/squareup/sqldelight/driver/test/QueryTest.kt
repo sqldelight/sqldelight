@@ -29,7 +29,7 @@ abstract class QueryTest {
   @BeforeTest fun setup() {
     driver = setupDatabase(
       schema = object : SqlSchema<QueryResult.Value<Unit>> {
-        override val version: Int = 1
+        override val version: Long = 1
 
         override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
           driver.execute(
@@ -47,8 +47,8 @@ abstract class QueryTest {
 
         override fun migrate(
           driver: SqlDriver,
-          oldVersion: Int,
-          newVersion: Int,
+          oldVersion: Long,
+          newVersion: Long,
           vararg callbacks: AfterVersion,
         ): QueryResult.Value<Unit> {
           // No-op.
