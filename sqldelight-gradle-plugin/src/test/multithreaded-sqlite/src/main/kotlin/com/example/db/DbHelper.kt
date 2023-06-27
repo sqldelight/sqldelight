@@ -24,7 +24,7 @@ class DbHelper(
       this.journalMode = journalMode
     }
     val currentVer = version
-    if (currentVer == 0) {
+    if (currentVer == 0L) {
       Schema.create(driver)
       version = Schema.version
       this.foreignKeys = foreignKeys

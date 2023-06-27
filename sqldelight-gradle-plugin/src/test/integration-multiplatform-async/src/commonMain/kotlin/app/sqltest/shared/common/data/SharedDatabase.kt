@@ -62,7 +62,7 @@ class SharedDatabase(private val driverFactory: DriverFactory) {
 
       println("Old version: $oldVersion \n")
 
-      if (oldVersion == 0) {
+      if (oldVersion == 0L) {
         SqlTestDb.Schema.awaitCreate(driver)
         println("Created SCHEMA \n")
         driver.await(null, "PRAGMA $versionPragma = $newVersion", 0)
@@ -84,7 +84,7 @@ class SharedDatabase(private val driverFactory: DriverFactory) {
         parameters = 0,
       ).await() ?: 0L
 
-      if (oldVersion == 0) {
+      if (oldVersion == 0L) {
         SqlTestDb.Schema.create(driver).await()
         driver.await(null, "PRAGMA $versionPragma = $newVersion", 0)
       } else if (oldVersion < newVersion) {
