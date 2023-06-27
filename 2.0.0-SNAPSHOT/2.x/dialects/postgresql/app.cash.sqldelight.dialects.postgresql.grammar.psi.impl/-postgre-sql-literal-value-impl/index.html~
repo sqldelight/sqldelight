@@ -94,21 +94,6 @@
               </div>
             </div>
           </div>
-<a data-name="1104620912%2FProperties%2F-128169639" anchor-label="Companion" id="1104620912%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1104620912%2FProperties%2F-128169639"><span><span>Companion</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1104620912%2FProperties%2F-128169639"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#1104620912%2FProperties%2F-128169639">Companion</a><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi.mixins/LiteralValueMixin.Companion///PointingToDeclaration/">LiteralValueMixin.Companion</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
 <a data-name="702897020%2FProperties%2F-128169639" anchor-label="EMPTY_ARRAY" id="702897020%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -368,17 +353,17 @@
               </div>
             </div>
           </div>
-<a data-name="-1849593011%2FFunctions%2F-128169639" anchor-label="annotate" id="-1849593011%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+<a data-name="-1426295415%2FFunctions%2F-128169639" anchor-label="annotate" id="-1426295415%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-1849593011%2FFunctions%2F-128169639"><span><span>annotate</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1849593011%2FFunctions%2F-128169639"></span>
+                  <div><a href="../-postgre-sql-conflict-update-impl/index.html#-1426295415%2FFunctions%2F-128169639"><span><span>annotate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1426295415%2FFunctions%2F-128169639"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-1849593011%2FFunctions%2F-128169639"><span class="token function">annotate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">annotationHolder<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core/SqlAnnotationHolder///PointingToDeclaration/">SqlAnnotationHolder</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-postgre-sql-conflict-update-impl/index.html#-1426295415%2FFunctions%2F-128169639"><span class="token function">annotate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">annotationHolder<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core/SqlAnnotationHolder///PointingToDeclaration/">SqlAnnotationHolder</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
