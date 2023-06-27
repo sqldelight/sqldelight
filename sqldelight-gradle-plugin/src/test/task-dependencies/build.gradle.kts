@@ -1,13 +1,11 @@
 import app.cash.sqldelight.gradle.SqlDelightExtension
 
-buildscript {
-  apply(from = "${projectDir.absolutePath}/../buildscript.gradle")
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
 }
 
-apply(plugin = "org.jetbrains.kotlin.jvm")
-apply(plugin = "app.cash.sqldelight")
-
-configure<SqlDelightExtension> {
+sqldelight {
   databases {
     create("Database") {
       packageName.set("com.example")

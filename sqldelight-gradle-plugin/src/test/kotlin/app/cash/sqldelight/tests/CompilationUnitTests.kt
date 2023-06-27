@@ -14,12 +14,10 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.jvm)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.jvm'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -53,12 +51,10 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.jvm)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.jvm'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -118,12 +114,10 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -165,13 +159,11 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.android.application)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'com.android.application'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -239,13 +231,11 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.android.application)
+        |  alias(libs.plugins.kotlin.android)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'com.android.application'
-        |apply plugin: 'org.jetbrains.kotlin.android'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
