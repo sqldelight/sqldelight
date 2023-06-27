@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>app.cash.sqldelight.paging3</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../index.html">
+<span>SQLDelight</span>            </a>    </div>
+    <div>2.0.0-rc02
+    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":extensions:androidx-paging3:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" data-page-type="package" id="content" pageids="androidx-paging3::app.cash.sqldelight.paging3////PointingToDeclaration//898882972">
+  <div class="breadcrumbs"><a href="../index.html">androidx-paging3</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.paging3</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1910538500%2FFunctions%2F898882972" anchor-label="QueryPagingSource" id="-1910538500%2FFunctions%2F898882972" data-filterable-set=":extensions:androidx-paging3:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":extensions:androidx-paging3:dokkaHtmlPartial/commonMain" data-filterable-set=":extensions:androidx-paging3:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-query-paging-source.html"><span>Query</span><wbr><span>Paging</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1910538500%2FFunctions%2F898882972"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":extensions:androidx-paging3:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"QueryPagingSourceInt"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="-query-paging-source.html"><span class="token function">QueryPagingSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">countQuery<span class="token operator">: </span><a href="../../../runtime/app.cash.sqldelight/-query/index.html">Query</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">transacter<span class="token operator">: </span><a href="../../../runtime/app.cash.sqldelight/-transacter-base/index.html">TransacterBase</a><span class="token punctuation">, </span></span><span class="parameter ">context<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/index.html">CoroutineContext</a><span class="token punctuation">, </span></span><span class="parameter ">queryProvider<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span><span class="token keyword"></span>offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight/-query/index.html">Query</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="app.cash.paging/PagingSource///PointingToDeclaration/">PagingSource</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Create a <span data-unresolved-link="app.cash.paging/PagingSource///PointingToDeclaration/">PagingSource</span> that pages through results according to queries generated by <a href="-query-paging-source.html">queryProvider</a>. Queries returned by <a href="-query-paging-source.html">queryProvider</a> should expect to do SQL offset/limit based paging. For that reason, <a href="-query-paging-source.html">countQuery</a> is required to calculate pages and page offsets.</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"QueryPagingSourceLong"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="-query-paging-source.html"><span class="token function">QueryPagingSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">countQuery<span class="token operator">: </span><a href="../../../runtime/app.cash.sqldelight/-query/index.html">Query</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">transacter<span class="token operator">: </span><a href="../../../runtime/app.cash.sqldelight/-transacter-base/index.html">TransacterBase</a><span class="token punctuation">, </span></span><span class="parameter ">context<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/index.html">CoroutineContext</a><span class="token punctuation">, </span></span><span class="parameter ">queryProvider<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span><span class="token keyword"></span>offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight/-query/index.html">Query</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="app.cash.paging/PagingSource///PointingToDeclaration/">PagingSource</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Variant of <a href="../../../extensions/androidx-paging3/app.cash.sqldelight.paging3/-query-paging-source/index.html">QueryPagingSource</a> that accepts a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a> instead of an <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> for <a href="-query-paging-source.html">countQuery</a> and <a href="-query-paging-source.html">queryProvider</a>.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">Key</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="-query-paging-source.html"><span class="token function">QueryPagingSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transacter<span class="token operator">: </span><a href="../../../runtime/app.cash.sqldelight/-transacter-base/index.html">TransacterBase</a><span class="token punctuation">, </span></span><span class="parameter ">context<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/index.html">CoroutineContext</a><span class="token punctuation">, </span></span><span class="parameter ">pageBoundariesProvider<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>anchor<span class="token operator">: </span><a href="-query-paging-source.html">Key</a><span class="token operator">?</span><span class="token punctuation">, </span><span class="token keyword"></span>limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight/-query/index.html">Query</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">Key</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">queryProvider<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>beginInclusive<span class="token operator">: </span><a href="-query-paging-source.html">Key</a><span class="token punctuation">, </span><span class="token keyword"></span>endExclusive<span class="token operator">: </span><a href="-query-paging-source.html">Key</a><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../../runtime/app.cash.sqldelight/-query/index.html">Query</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="app.cash.paging/PagingSource///PointingToDeclaration/">PagingSource</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-query-paging-source.html">Key</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="-query-paging-source.html">RowType</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Create a <span data-unresolved-link="app.cash.paging/PagingSource///PointingToDeclaration/">PagingSource</span> that pages through results according to queries generated by <a href="-query-paging-source.html">queryProvider</a>. Queries returned by <a href="-query-paging-source.html">queryProvider</a> should expected to do keyset paging. For that reason, queries should be arranged by an non-ambigious <code class="lang-kotlin">ORDER BY</code> clause. <a href="-query-paging-source.html">Key</a> must be a unique clause that rows are ordered by. For performance reasons, an index should be present on <a href="-query-paging-source.html">Key</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+
