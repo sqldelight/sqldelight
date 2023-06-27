@@ -65,19 +65,19 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     }
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     queryKeys.forEach {
       listeners.getOrPut(it) { mutableSetOf() }.add(listener)
     }
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     queryKeys.forEach {
       listeners[it]?.remove(listener)
     }
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     queryKeys.flatMap { listeners[it].orEmpty() }
       .distinct()
       .forEach(Query.Listener::queryResultsChanged)

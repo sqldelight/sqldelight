@@ -192,11 +192,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("data"))
+      |      driver.addListener("data", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("data"))
+      |      driver.removeListener("data", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -524,11 +524,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("data"))
+      |      driver.addListener("data", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("data"))
+      |      driver.removeListener("data", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -679,11 +679,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("search"))
+      |      driver.addListener("search", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("search"))
+      |      driver.removeListener("search", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -803,11 +803,11 @@ class QueriesTypeTest {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("soupBase", "soup"))
+      |      driver.addListener("soupBase", "soup", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("soupBase", "soup"))
+      |      driver.removeListener("soupBase", "soup", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =

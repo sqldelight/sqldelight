@@ -541,8 +541,8 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
       bindLong(1, offset)
     }
 
-    override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("TestItem"))
-    override fun removeListener(listener: Listener) = driver.removeListener(listener, arrayOf("TestItem"))
+    override fun addListener(listener: Listener) = driver.addListener("TestItem", listener = listener)
+    override fun removeListener(listener: Listener) = driver.removeListener("TestItem", listener = listener)
   }
 
   private fun countQuery() = Query(

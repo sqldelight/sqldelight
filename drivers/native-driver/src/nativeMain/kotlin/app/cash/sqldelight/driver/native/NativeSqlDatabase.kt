@@ -172,19 +172,19 @@ class NativeSqliteDriver(
     }
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     queryKeys.forEach {
       listeners.getOrPut(it) { mutableMapOf() }.put(listener, Unit)
     }
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     queryKeys.forEach {
       listeners.get(it)?.remove(listener)
     }
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     val listenersToNotify = mutableSetOf<Query.Listener>()
     queryKeys.forEach { key -> listeners.get(key)?.let { listenersToNotify.addAll(it.keys) } }
     listenersToNotify.forEach(Query.Listener::queryResultsChanged)
@@ -303,15 +303,15 @@ internal class SqliterWrappedConnection(
     block: ThreadConnection.() -> R,
   ): R = threadConnection.block()
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     // No-op
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     // No-op
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     // No-op
   }
 
