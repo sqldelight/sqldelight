@@ -25,9 +25,12 @@ kotlin {
 
     jsTest {
       dependencies {
+        def sqljsPackage = file("sqljs/build/packages/js")
+        sqljsPackage.mkdirs()
+
         implementation libs.kotlin.test.js
         implementation npm("sql.js", libs.versions.sqljs.get())
-        implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
+        implementation npm("@cashapp/sqldelight-sqljs-worker", sqljsPackage)
         implementation devNpm("copy-webpack-plugin", "9.1.0")
         implementation libs.kotlin.coroutines.test
         implementation project(":extensions:async-extensions")

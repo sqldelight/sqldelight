@@ -76,11 +76,11 @@ public class TeamQueries(
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     override fun addListener(listener: Query.Listener) {
-      driver.addListener(listener, arrayOf("team"))
+      driver.addListener("team", listener = listener)
     }
 
     override fun removeListener(listener: Query.Listener) {
-      driver.removeListener(listener, arrayOf("team"))
+      driver.removeListener("team", listener = listener)
     }
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -100,11 +100,11 @@ public class TeamQueries(
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     override fun addListener(listener: Query.Listener) {
-      driver.addListener(listener, arrayOf("team"))
+      driver.addListener("team", listener = listener)
     }
 
     override fun removeListener(listener: Query.Listener) {
-      driver.removeListener(listener, arrayOf("team"))
+      driver.removeListener("team", listener = listener)
     }
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =

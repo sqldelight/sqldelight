@@ -234,11 +234,11 @@ public class PlayerQueries(
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     override fun addListener(listener: Query.Listener) {
-      driver.addListener(listener, arrayOf("player"))
+      driver.addListener("player", listener = listener)
     }
 
     override fun removeListener(listener: Query.Listener) {
-      driver.removeListener(listener, arrayOf("player"))
+      driver.removeListener("player", listener = listener)
     }
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -258,11 +258,11 @@ public class PlayerQueries(
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
     override fun addListener(listener: Query.Listener) {
-      driver.addListener(listener, arrayOf("player"))
+      driver.addListener("player", listener = listener)
     }
 
     override fun removeListener(listener: Query.Listener) {
-      driver.removeListener(listener, arrayOf("player"))
+      driver.removeListener("player", listener = listener)
     }
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {

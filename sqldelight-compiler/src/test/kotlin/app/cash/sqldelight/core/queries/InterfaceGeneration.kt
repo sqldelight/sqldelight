@@ -822,11 +822,11 @@ class InterfaceGeneration {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("song"))
+      |      driver.addListener("song", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("song"))
+      |      driver.removeListener("song", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -920,11 +920,11 @@ class InterfaceGeneration {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("userEntity"))
+      |      driver.addListener("userEntity", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("userEntity"))
+      |      driver.removeListener("userEntity", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
@@ -1033,11 +1033,11 @@ class InterfaceGeneration {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("item"))
+      |      driver.addListener("item", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("item"))
+      |      driver.removeListener("item", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =

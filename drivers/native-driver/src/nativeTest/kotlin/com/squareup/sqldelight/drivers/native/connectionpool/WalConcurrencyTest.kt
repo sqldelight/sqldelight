@@ -107,11 +107,11 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
 
       override fun addListener(listener: Listener) {
-        driver.addListener(listener, arrayOf("test"))
+        driver.addListener("test", listener = listener)
       }
 
       override fun removeListener(listener: Listener) {
-        driver.removeListener(listener, arrayOf("test"))
+        driver.removeListener("test", listener = listener)
       }
     }
   }

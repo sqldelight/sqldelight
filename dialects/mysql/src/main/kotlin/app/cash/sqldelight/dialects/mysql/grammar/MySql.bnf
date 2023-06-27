@@ -31,12 +31,14 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LOCK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -311,7 +313,7 @@ assignment ::= {column_name} EQ assignment_value
 
 assignment_list ::= assignment ( COMMA assignment ) *
 
-compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} [ ( OFFSET | COMMA ) {limiting_term} ] ] [ FOR ( UPDATE | 'SHARE') ] {
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} [ ( OFFSET | COMMA ) {limiting_term} ] ] [ ( LOCK IN 'SHARE' 'MODE' ) | FOR ( UPDATE | 'SHARE') ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true

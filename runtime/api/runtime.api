@@ -185,13 +185,13 @@ public abstract interface class app/cash/sqldelight/db/SqlCursor {
 }
 
 public abstract interface class app/cash/sqldelight/db/SqlDriver : java/io/Closeable {
-	public abstract fun addListener (Lapp/cash/sqldelight/Query$Listener;[Ljava/lang/String;)V
+	public abstract fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 	public abstract fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
 	public abstract fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public abstract fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public abstract fun newTransaction ()Lapp/cash/sqldelight/db/QueryResult;
 	public abstract fun notifyListeners ([Ljava/lang/String;)V
-	public abstract fun removeListener (Lapp/cash/sqldelight/Query$Listener;[Ljava/lang/String;)V
+	public abstract fun removeListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 }
 
 public final class app/cash/sqldelight/db/SqlDriver$DefaultImpls {
@@ -215,14 +215,14 @@ public abstract interface class app/cash/sqldelight/db/SqlSchema {
 
 public final class app/cash/sqldelight/logs/LogSqliteDriver : app/cash/sqldelight/db/SqlDriver {
 	public fun <init> (Lapp/cash/sqldelight/db/SqlDriver;Lkotlin/jvm/functions/Function1;)V
-	public fun addListener (Lapp/cash/sqldelight/Query$Listener;[Ljava/lang/String;)V
+	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 	public fun close ()V
 	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
 	public fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public fun newTransaction ()Lapp/cash/sqldelight/db/QueryResult;
 	public fun notifyListeners ([Ljava/lang/String;)V
-	public fun removeListener (Lapp/cash/sqldelight/Query$Listener;[Ljava/lang/String;)V
+	public fun removeListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 }
 
 public final class app/cash/sqldelight/logs/StatementParameterInterceptor : app/cash/sqldelight/db/SqlPreparedStatement {

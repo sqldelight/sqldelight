@@ -343,14 +343,14 @@ class SelectQueryGenerator(
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
+            .addStatement("driver.addListener(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}, listener = listener)")
             .build(),
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
+            .addStatement("driver.removeListener(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}, listener = listener)")
             .build(),
         )
     }

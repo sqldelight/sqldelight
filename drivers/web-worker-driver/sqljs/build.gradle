@@ -1,22 +1,48 @@
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
+import dev.petuska.npm.publish.extension.domain.NpmDependency
 
-def packageJsonTask = tasks.register("writePackageJson") {
-  def tmpLocation = layout.buildDirectory.file("tmp/package.json")
-  outputs.file(tmpLocation)
+plugins {
+  alias(libs.plugins.npmPublish)
+  alias(libs.plugins.dokka)
+}
 
-  doLast {
-    def content = new String(Files.readAllBytes(file("package.json").toPath()), StandardCharsets.UTF_8)
-    content = content.replace("0.0.0", "${rootProject.version}")
-    Files.write(tmpLocation.get().asFile.toPath(), content.getBytes(StandardCharsets.UTF_8))
+npmPublish {
+  organization.set("cashapp")
+  packages {
+    register("js") {
+      packageName.set("sqldelight-sqljs-worker")
+      files {
+        from("sqljs.worker.js")
+      }
+
+      packageJson {
+        license.set("Apache-2.0")
+        repository {
+          type.set("git")
+          url.set("git+https://github.com/cashapp/sqldelight.git")
+        }
+        description.set("A SQL.js implementation of SQLDelight's web-worker-driver")
+        keywords.set(["sqljs", "sqldelight", "sql"])
+        bugs {
+          url.set("https://github.com/cashapp/sqldelight/issues")
+        }
+        homepage.set("https://github.com/cashapp/sqldelight#readme")
+      }
+
+      it.dependencies {
+        register("sql.js") {
+          version.set("^1.8.0")
+          type.set(NpmDependency.Type.PEER)
+        }
+      }
+    }
   }
 }
 
-tasks.register("assemblePackage", Copy) {
-  from packageJsonTask.map {it.outputs.files }
-  from "sqljs.worker.js"
-  from rootProject.file("LICENSE.txt")
-  from rootProject.file("README.md")
+rootProject.tasks.named("kotlinNpmInstall").configure {
+  dependsOn(tasks.named("assembleJsPackage"))
+}
 
-  into layout.buildDirectory.file("package")
+// Dokka forces us to apply the plugin to this module even though there's no code
+tasks.named("dokkaHtmlPartial") {
+  enabled = false
 }

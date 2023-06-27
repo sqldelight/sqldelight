@@ -27,7 +27,7 @@ import app.cash.sqldelight.db.SqlDriver
 @Suppress("FunctionName") // Emulating a constructor.
 fun <RowType : Any> Query(
   identifier: Int,
-  queryKeys: Array<String>,
+  queryKeys: Array<out String>,
   driver: SqlDriver,
   query: String,
   mapper: (SqlCursor) -> RowType,
@@ -43,7 +43,7 @@ fun <RowType : Any> Query(
 @Suppress("FunctionName") // Emulating a constructor.
 fun <RowType : Any> Query(
   identifier: Int,
-  queryKeys: Array<String>,
+  queryKeys: Array<out String>,
   driver: SqlDriver,
   fileName: String,
   label: String,
@@ -87,7 +87,7 @@ fun <RowType : Any> Query(
 
 private class SimpleQuery<out RowType : Any>(
   private val identifier: Int,
-  private val queryKeys: Array<String>,
+  private val queryKeys: Array<out String>,
   private val driver: SqlDriver,
   private val fileName: String,
   private val label: String,
@@ -101,11 +101,11 @@ private class SimpleQuery<out RowType : Any>(
   override fun toString() = "$fileName:$label"
 
   override fun addListener(listener: Listener) {
-    driver.addListener(listener, queryKeys)
+    driver.addListener(queryKeys = queryKeys, listener)
   }
 
   override fun removeListener(listener: Listener) {
-    driver.removeListener(listener, queryKeys)
+    driver.removeListener(queryKeys = queryKeys, listener)
   }
 }
 

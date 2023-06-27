@@ -193,11 +193,11 @@ class AsyncQueriesTypeTest {
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
       |    override fun addListener(listener: Query.Listener) {
-      |      driver.addListener(listener, arrayOf("data"))
+      |      driver.addListener("data", listener = listener)
       |    }
       |
       |    override fun removeListener(listener: Query.Listener) {
-      |      driver.removeListener(listener, arrayOf("data"))
+      |      driver.removeListener("data", listener = listener)
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
