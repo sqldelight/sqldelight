@@ -48,11 +48,11 @@ class DbHelper(
     JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db", Properties())
   }
 
-  private var version: Int
+  private var version: Long
     get() {
-      fun mapper(cursor: SqlCursor): QueryResult.Value<Int> {
+      fun mapper(cursor: SqlCursor): QueryResult.Value<Long> {
         check(cursor.next().value)
-        return QueryResult.Value(cursor.getLong(0)!!.toInt())
+        return QueryResult.Value(cursor.getLong(0)!!)
       }
       return driver.executeQuery(null, "PRAGMA user_version;", ::mapper, 0, null).value
     }

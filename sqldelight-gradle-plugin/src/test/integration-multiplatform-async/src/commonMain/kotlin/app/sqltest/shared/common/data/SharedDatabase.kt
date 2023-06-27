@@ -52,13 +52,13 @@ class SharedDatabase(private val driverFactory: DriverFactory) {
         sql = "PRAGMA $versionPragma",
         mapper = { cursor ->
           if (cursor.next().await()) {
-            cursor.getLong(0)?.toInt()
+            cursor.getLong(0)
           } else {
             null
           }
         },
         parameters = 0,
-      ) ?: 0
+      ) ?: 0L
 
       println("Old version: $oldVersion \n")
 
@@ -79,10 +79,10 @@ class SharedDatabase(private val driverFactory: DriverFactory) {
         identifier = null,
         sql = "PRAGMA $versionPragma",
         mapper = { cursor ->
-          QueryResult.Value(if (cursor.next().value) cursor.getLong(0)?.toInt() else null)
+          QueryResult.Value(if (cursor.next().value) cursor.getLong(0) else null)
         },
         parameters = 0,
-      ).await() ?: 0
+      ).await() ?: 0L
 
       if (oldVersion == 0) {
         SqlTestDb.Schema.create(driver).await()
