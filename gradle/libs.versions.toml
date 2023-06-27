@@ -9,7 +9,7 @@ stately = "1.2.5"
 sqliter = "1.2.3"
 testhelp = "0.6.5"
 sqljs = "1.8.0"
-paging-mpp = "3.1.1-0.2.0"
+paging-mpp = "3.1.1-0.3.0"
 paging3 = "3.1.1"
 ktlint = "0.49.1"
 agp = "8.0.2"
@@ -40,8 +40,8 @@ android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp
 kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.14.2" }
 junit = { module = "junit:junit", version = "4.13.2" }
 jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.2" }
-truth = { module = "com.google.truth:truth", version = "1.1.4" }
-turbine = { module = "app.cash.turbine:turbine", version = "0.13.0" }
+truth = { module = "com.google.truth:truth", version = "1.1.5" }
+turbine = { module = "app.cash.turbine:turbine", version = "1.0.0" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.7.0" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.6.0" }
 moshi = { module = "com.squareup.moshi:moshi", version = "1.15.0" }
@@ -106,7 +106,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-android-extensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.14.1" }
+intellij = { id = "org.jetbrains.intellij", version = "1.14.2" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.12" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
@@ -114,4 +114,3 @@ changelog = { id = "org.jetbrains.changelog", version = "2.1.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 ksp = { id = "com.google.devtools.ksp", version = "1.8.22-1.0.11" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.13.2" }
-npmPublish = { id = "dev.petuska.npm.publish", version = "3.3.1" }

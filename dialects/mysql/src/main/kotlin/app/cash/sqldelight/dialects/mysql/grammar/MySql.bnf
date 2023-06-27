@@ -85,7 +85,7 @@ type_name ::= (
   date_data_type |
   binary_data_type |
   json_data_type
-) [ LP {signed_number} RP [ 'unsigned' ] | LP {signed_number} COMMA {signed_number} RP ] |
+) [ LP {signed_number} RP | LP {signed_number} COMMA {signed_number} RP ] [ 'unsigned' ] |
 character_type |
 enum_set_type
 {
