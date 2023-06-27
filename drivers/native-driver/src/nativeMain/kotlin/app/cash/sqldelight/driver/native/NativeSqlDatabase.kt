@@ -120,10 +120,10 @@ class NativeSqliteDriver(
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
-      version = schema.version,
+      version = if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
       create = { connection -> wrapConnection(connection) { schema.create(it) } },
       upgrade = { connection, oldVersion, newVersion ->
-        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion, *callbacks) }
+        wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(), newVersion.toLong(), *callbacks) }
       },
     ).let(onConfiguration),
     maxReaderConnections = maxReaderConnections,
@@ -256,12 +256,12 @@ fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>): NativeSqliteDriv
   DatabaseConfiguration(
     name = null,
     inMemory = true,
-    version = schema.version,
+    version = if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
     create = { connection ->
       wrapConnection(connection) { schema.create(it) }
     },
     upgrade = { connection, oldVersion, newVersion ->
-      wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+      wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(), newVersion.toLong()) }
     },
   ),
 )

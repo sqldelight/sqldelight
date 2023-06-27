@@ -12,6 +12,10 @@ class Sqlite318FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
     SqliteDialect().setup()
   }
 
+  override val replaceRules: Array<Pair<String, String>> = arrayOf(
+    " INT NOT NULL" to " INTEGER NOT NULL",
+  )
+
   companion object {
     private val fixtures = arrayOf("src/test/fixtures_upsert_not_supported", "src/test/fixtures_sqlite_3_18")
 

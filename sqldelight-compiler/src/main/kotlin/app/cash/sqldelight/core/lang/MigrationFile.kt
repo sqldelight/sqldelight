@@ -7,9 +7,9 @@ import com.intellij.psi.FileViewProvider
 class MigrationFile(
   viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
-  val version: Int by lazy {
+  val version: Long by lazy {
     name.substringBeforeLast(".$MIGRATION_EXTENSION")
-      .filter { it in '0'..'9' }.toIntOrNull() ?: 0
+      .filter { it in '0'..'9' }.toLongOrNull() ?: 0
   }
 
   internal fun sqlStatements() = sqlStmtList!!.stmtList

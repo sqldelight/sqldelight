@@ -63,7 +63,7 @@ class AsyncQueriesTypeTest {
       |import com.example.Data_
       |import com.example.Other
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -84,7 +84,7 @@ class AsyncQueriesTypeTest {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
       |    override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
@@ -104,8 +104,8 @@ class AsyncQueriesTypeTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       |    }

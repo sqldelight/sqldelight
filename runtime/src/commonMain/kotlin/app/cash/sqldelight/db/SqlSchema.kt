@@ -31,7 +31,7 @@ interface SqlSchema<T : QueryResult<Unit>> {
   /**
    * The version of this schema.
    */
-  val version: Int
+  val version: Long
 
   /**
    * Use [driver] to create the schema from scratch. Assumes no existing database state.
@@ -43,7 +43,7 @@ interface SqlSchema<T : QueryResult<Unit>> {
    * Each of the [callbacks] are executed during the migration whenever the upgrade to the version specified by
    * [AfterVersion.afterVersion] has been completed.
    */
-  fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int, vararg callbacks: AfterVersion): T
+  fun migrate(driver: SqlDriver, oldVersion: Long, newVersion: Long, vararg callbacks: AfterVersion): T
 }
 
 /**
@@ -51,6 +51,6 @@ interface SqlSchema<T : QueryResult<Unit>> {
  * has finished migrating to [afterVersion].
  */
 class AfterVersion(
-  val afterVersion: Int,
+  val afterVersion: Long,
   val block: (SqlDriver) -> Unit,
 )
