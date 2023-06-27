@@ -92,7 +92,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "date_part" -> IntermediateType(REAL)
-    "percentile_disc" -> IntermediateType(REAL)
+    "percentile_disc" -> IntermediateType(REAL).asNullable()
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
     "corr", "covar_pop", "covar_samp", "regr_avgx", "regr_avgy", "regr_intercept",
     "regr_r2", "regr_slope", "regr_sxx", "regr_sxy", "regr_syy",
@@ -100,11 +100,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "stddev", "stddev_pop", "stddev_samp", "variance",
     "var_pop", "var_samp",
     -> if (resolvedType(exprList[0]).dialectType == REAL) {
-      IntermediateType(REAL)
+      IntermediateType(REAL).asNullable()
     } else IntermediateType(
       PostgreSqlType.NUMERIC,
     ).asNullable()
-    "regr_count" -> IntermediateType(BIG_INT)
+    "regr_count" -> IntermediateType(BIG_INT).asNullable()
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
     "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null

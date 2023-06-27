@@ -313,11 +313,17 @@ class PostgreSqlTest {
     assertThat(desc.length).isNull()
   }
 
-  @Test fun functions() {
-    database.charactersQueries.insertCharacter("abcdef", null)
-    val name = database.charactersQueries.selectNameLength().executeAsOne()
-    assertThat(name).isEqualTo(6)
-    val desc = database.charactersQueries.selectDescriptionLength().executeAsOne()
-    assertThat(desc.length).isNull()
+  @Test fun statFunctions() {
+    val percentile: SelectPercentile = database.functionsQueries.selectPercentile().executeAsOne()
+    val result: Double? = 2.0
+    assertThat(percentile).isEqualTo(SelectPercentile(result))
+    val stats: List<SelectStats> = database.functionsQueries.selectStats().executeAsList()
+    assertThat(stats).isEqualTo(
+      listOf(
+        SelectStats(null, null, 1),
+        SelectStats(null, null, 1),
+        SelectStats(null, null, 1),
+      )
+    )
   }
 }

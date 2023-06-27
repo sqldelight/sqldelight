@@ -318,7 +318,7 @@ extension_expr ::= json_expression | boolean_literal | boolean_not_expression | 
 }
 
 window_function_expr ::= {function_expr} 'WITHIN' GROUP LP ORDER BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP {
-  mixing = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin"
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin"
 }
 
 boolean_not_expression ::= NOT (boolean_literal | {column_name})
