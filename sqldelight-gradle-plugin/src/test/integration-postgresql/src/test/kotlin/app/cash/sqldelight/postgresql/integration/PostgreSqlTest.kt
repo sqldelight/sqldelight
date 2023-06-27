@@ -323,7 +323,7 @@ class PostgreSqlTest {
         SelectStats(null, null, 1),
         SelectStats(null, null, 1),
         SelectStats(null, null, 1),
-      )
+      ),
     )
   }
 }
