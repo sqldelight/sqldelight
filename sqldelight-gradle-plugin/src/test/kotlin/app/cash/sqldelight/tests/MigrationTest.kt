@@ -263,7 +263,7 @@ class MigrationTest {
       |  override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    override val version: Int
+      |    override val version: Long
       |      get() = 2
       |
       |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
@@ -291,8 +291,8 @@ class MigrationTest {
       |
       |    private fun migrateInternal(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |    ): QueryResult.Value<Unit> {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
@@ -315,8 +315,8 @@ class MigrationTest {
       |
       |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> {
       |      var lastVersion = oldVersion

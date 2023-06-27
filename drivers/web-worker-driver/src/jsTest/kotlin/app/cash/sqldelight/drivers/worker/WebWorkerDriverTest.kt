@@ -27,7 +27,7 @@ typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 @OptIn(ExperimentalCoroutinesApi::class)
 class WebWorkerDriverTest {
   private val schema = object : SqlSchema<AsyncValue<Unit>> {
-    override val version: Int = 1
+    override val version: Long = 1
 
     override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       driver.execute(
@@ -57,8 +57,8 @@ class WebWorkerDriverTest {
 
     override fun migrate(
       driver: SqlDriver,
-      oldVersion: Int,
-      newVersion: Int,
+      oldVersion: Long,
+      newVersion: Long,
       vararg callbacks: AfterVersion,
     ) = QueryResult.AsyncValue {}
   }

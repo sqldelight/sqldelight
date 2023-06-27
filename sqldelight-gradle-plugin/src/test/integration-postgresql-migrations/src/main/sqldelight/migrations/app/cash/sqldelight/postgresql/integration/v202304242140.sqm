@@ -1,0 +1,4 @@
+CREATE TABLE foo (
+	id INT NOT NULL,
+	PRIMARY KEY (id)
+);

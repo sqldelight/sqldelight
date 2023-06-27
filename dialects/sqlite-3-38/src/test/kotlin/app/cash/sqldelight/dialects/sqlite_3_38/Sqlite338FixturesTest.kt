@@ -12,6 +12,7 @@ class Sqlite338FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
     "ORDER or WHERE expected" to "ORDER, WHERE or WINDOW expected",
     "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
       to "'(', ')', ',', '.', <binary like operator real>, <json binary operator real>, BETWEEN or IN expected, got ','",
+    " INT NOT NULL" to " INTEGER NOT NULL",
   )
 
   override fun setupDialect() {

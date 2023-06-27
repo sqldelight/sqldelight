@@ -83,7 +83,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
         dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
 
-      var maxVersion = 1
+      var maxVersion = 1L
       environment.forMigrationFiles { migrationFile ->
         maxVersion = maxOf(maxVersion, migrationFile.version + 1)
       }
