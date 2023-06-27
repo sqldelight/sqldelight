@@ -1,5 +1,27 @@
 # Change Log
 
+## [2.0.0-rc02] - 2023-06-27
+
+### Added
+- [MySQL Dialect] support lowercase date types and min and max on date types (#4243 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] support mysql types for binary expr and sum (#4254 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] support unsigned ints without display width (#4306 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] Support LOCK IN SHARED MODE
+- [PostgreSQL Dialect] Add boolean and Timestamp to min max (#4245 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgres: Add window function support (#4283 by [Philip Wedemann][hfhbd])
+- [Runtime] Add linuxArm64, androidNative and watchosDeviceArm targets to runtime (#4258 by [Philip Wedemann][hfhbd])
+- [Paging Extension] Add linux and mingw x64 target to the paging extension (#4280 by [Cedric Hippmann][chippman])
+
+### Changed
+- [Gradle Plugin] Add automatic dialect support for Android API 34 (#4251)
+- [Paging Extension] Add support for SuspendingTransacter in QueryPagingSource (#4292 by [Ilya Polenov][daio])
+- [Runtime] Improve addListener api (#4244 by [Philip Wedemann][hfhbd])
+- [Runtime] Use Long as migration version (#4297 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [Gradle Plugin] Use stable output path for generated source (#4269 by [Josh Friend][joshfriend])
+- [Gradle Plugin] Gradle tweaks (#4222 by [Matthew Haughton][3flex])
+
 ## [2.0.0-rc01] - 2023-05-29
 
 ### Added
@@ -937,3 +959,6 @@ Initial release.
   [davidwheeler123]: https://github.com/davidwheeler123
   [C2H6O]: https://github.com/C2H6O
   [griffio]: https://github.com/griffio
+  [shellderp]: https://github.com/shellderp
+  [joshfriend]: https://github.com/joshfriend
+  [daio]: https://github.com/daio
