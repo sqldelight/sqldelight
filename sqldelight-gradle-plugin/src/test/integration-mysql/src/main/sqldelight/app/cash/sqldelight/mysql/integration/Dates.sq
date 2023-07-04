@@ -35,3 +35,6 @@ CREATE TABLE dates_lowercase(
   timestamp timestamp NOT NULL,
   year year NOT NULL
 );
+
+ifTimestamp:
+SELECT IF(1, timestamp, timestamp) FROM dates;
