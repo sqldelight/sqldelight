@@ -37,3 +37,6 @@ SELECT sum(`float`) AS sumFloat, min(`float`) AS minFloat, max(`float`) AS maxFl
 
 multiplyFloatInt:
 SELECT `float`*`bigint` AS mul FROM floats, ints;
+
+ifBigInt:
+SELECT IF(1, `bigint`, `bigint`) FROM ints;

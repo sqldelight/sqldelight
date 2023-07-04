@@ -33,8 +33,16 @@ class MySqlTypeResolver(
     return when (expr) {
       is MySqlExtensionExpr -> encapsulatingType(
         PsiTreeUtil.findChildrenOfType(expr.ifExpr, SqlExpr::class.java).drop(1),
+        TINY_INT,
+        SMALL_INT,
+        MySqlType.INTEGER,
         INTEGER,
+        BIG_INT,
         REAL,
+        MySqlType.TIMESTAMP,
+        MySqlType.DATE,
+        MySqlType.DATETIME,
+        MySqlType.TIME,
         TEXT,
         BLOB,
       )
