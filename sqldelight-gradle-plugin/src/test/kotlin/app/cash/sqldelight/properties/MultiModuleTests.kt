@@ -5,7 +5,6 @@ import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.properties
 import app.cash.sqldelight.withCommonConfiguration
 import app.cash.sqldelight.withInvariantPathSeparators
-import app.cash.sqldelight.withSortedCompilationUnits
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Ignore
@@ -74,7 +73,7 @@ class MultiModuleTests {
     fixtureRoot = File(fixtureRoot, "AndroidProject")
 
     val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
-      .withSortedCompilationUnits()
+
     assertThat(properties.packageName).isEqualTo("com.sample.android")
     assertThat(properties.compilationUnits).containsExactly(
       SqlDelightCompilationUnitImpl(
@@ -159,7 +158,7 @@ class MultiModuleTests {
     fixtureRoot = File(fixtureRoot, "app")
 
     val properties = properties(fixtureRoot).databases.single().withInvariantPathSeparators()
-      .withSortedCompilationUnits()
+
     assertThat(properties.packageName).isEqualTo("com.example.app")
     assertThat(properties.compilationUnits).containsExactly(
       SqlDelightCompilationUnitImpl(
