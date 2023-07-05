@@ -9,6 +9,10 @@ import java.io.File
 
 @RunWith(Parameterized::class)
 class JsonModuleTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
+  override val replaceRules: Array<Pair<String, String>> = arrayOf(
+    " INT NOT NULL" to " INTEGER NOT NULL",
+  )
+
   override fun setupDialect() {
     SqliteDialect().setup()
     JsonModule().setup()

@@ -23,47 +23,47 @@ class AnsiSqlMigrationSquasher(
 
   override fun squish(
     statement: SqlStmt,
-    currentFile: SqlFileBase,
+    into: SqlFileBase,
   ): String {
     return when {
       statement.alterTableStmt != null -> {
-        statement.alterTableStmt!!.alterTableRulesList.fold(currentFile) { currentFile, rules ->
+        statement.alterTableStmt!!.alterTableRulesList.fold(into) { currentFile, rules ->
           createNewSqlFile(squasher.squish(rules, into = currentFile))
         }.text
       }
       statement.dropIndexStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.single {
+        val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.single {
           it.indexName.textMatches(statement.dropIndexStmt!!.indexName!!.text)
         }
-        currentFile.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
+        into.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
       statement.dropTableStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.single {
+        val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.single {
           it.tableName.textMatches(statement.dropTableStmt!!.tableName!!.text)
         }
-        val drops = currentFile.findChildrenOfType<SqlNamedElementImpl>()
+        val drops = into.findChildrenOfType<SqlNamedElementImpl>()
           .filter { it.reference?.resolve() == create.tableName }
           .mapNotNull {
             it.parentOfType<SchemaContributor>()
           }
-        drops.sortedByDescending { it.textRange.startOffset }.fold(currentFile.text) { fileText, element ->
+        drops.sortedByDescending { it.textRange.startOffset }.fold(into.text) { fileText, element ->
           fileText.replaceRange(element.textRange.startOffset..element.textRange.endOffset, "")
         }
       }
       statement.dropTriggerStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.single {
+        val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.single {
           it.triggerName.textMatches(statement.dropTriggerStmt!!.triggerName!!.text)
         }
-        currentFile.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
+        into.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
       statement.dropViewStmt != null -> {
-        val create = currentFile.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.single {
+        val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.single {
           it.viewName.textMatches(statement.dropViewStmt!!.viewName!!.text)
         }
-        currentFile.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
+        into.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
       else -> {
-        currentFile.text + statement.text + ";\n"
+        into.text + statement.text + ";\n"
       }
     }
   }

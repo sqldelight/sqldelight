@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
@@ -22,78 +23,78 @@ kotlin {
   watchosSimulatorArm64()
   tvosSimulatorArm64()
 
+  targetHierarchy.default { target ->
+    target.group("native") {
+      it.group("nativeLinuxLike") {
+        it.withLinux()
+        // no withApple: https://github.com/cashapp/sqldelight/issues/4257
+        it.withIos()
+        it.withTvos()
+        it.withMacos()
+        it.withWatchosArm32()
+        it.withWatchosArm64()
+        it.withWatchosX64()
+        it.withWatchosSimulatorArm64()
+      }
+    }
+  }
+
   sourceSets {
     commonMain {
       dependencies {
         api projects.runtime
+        api libs.stately.concurrency
+        api libs.sqliter
       }
     }
     commonTest {
       dependencies {
         implementation libs.kotlin.test
         implementation libs.testhelp
-      }
-    }
-    nativeMain {
-      dependsOn(commonMain)
-      dependencies {
-        api libs.sqliter
-      }
-    }
-    nativeTest {
-      dependsOn(commonTest)
-      dependencies {
         implementation projects.drivers.driverTest
       }
-    }
-    nativeLinuxLikeMain {
-      dependsOn(nativeMain)
-    }
-    nativeDarwinMain {
-      dependsOn(nativeLinuxLikeMain)
-    }
-    mingwMain {
-      dependsOn(nativeMain)
-    }
-    mingwX64Main {
-      dependsOn(mingwMain)
-    }
-    linuxMain {
-      dependsOn(nativeLinuxLikeMain)
     }
   }
 
   configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
-    sourceSets.getByName("${name}Main").dependsOn(sourceSets.nativeDarwinMain)
-    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-lsqlite3"]
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-lsqlite3"]
+      }
     }
   }
 
   configure([targets.linuxX64]) {
-    sourceSets.getByName("${name}Main").dependsOn(sourceSets.linuxMain)
-    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
-    binaries.configureEach {
-      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
+    compilations.configureEach {
+      if (name == "test") {
+        cinterops {
+          sqlite {
+            // use sqlite3 amalgamation on linux tests to prevent linking issues on new linux distros with dependency libraries which are to recent (for example glibc)
+            // see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
+            defFile = new File("$rootDir/libs/linux/cinterop/sqlite3.def")
+          }
+        }
+      }
     }
   }
 
   configure([targets.mingwX64]) {
-    sourceSets.getByName("${name}Main").dependsOn(sourceSets.mingwMain)
-    sourceSets.getByName("${name}Test").dependsOn(sourceSets.nativeTest)
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      }
     }
   }
-
-  //linking fails for the linux test build if not built on a linux host
-  //ensure the tests and linking for them is only done on linux hosts
-  tasks.named("linuxX64Test") { enabled = HostManager.hostIsLinux }
-  tasks.named("linkDebugTestLinuxX64") { enabled = HostManager.hostIsLinux }
-
-  tasks.named("mingwX64Test") { enabled = HostManager.hostIsMingw }
-  tasks.named("linkDebugTestMingwX64") { enabled = HostManager.hostIsMingw }
 }
+
+//linking fails for the linux test build if not built on a linux host
+//ensure the tests and linking for them is only done on linux hosts
+tasks.named("linuxX64Test") { enabled = HostManager.hostIsLinux }
+tasks.named("linkDebugTestLinuxX64") { enabled = HostManager.hostIsLinux }
+
+tasks.named("mingwX64Test") { enabled = HostManager.hostIsMingw }
+tasks.named("linkDebugTestMingwX64") { enabled = HostManager.hostIsMingw }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

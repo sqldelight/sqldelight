@@ -1,5 +1,78 @@
 # Change Log
 
+## [2.0.0-rc02] - 2023-06-27
+
+### Added
+- [MySQL Dialect] support lowercase date types and min and max on date types (#4243 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] support mysql types for binary expr and sum (#4254 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] support unsigned ints without display width (#4306 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] Support LOCK IN SHARED MODE
+- [PostgreSQL Dialect] Add boolean and Timestamp to min max (#4245 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgres: Add window function support (#4283 by [Philip Wedemann][hfhbd])
+- [Runtime] Add linuxArm64, androidNative and watchosDeviceArm targets to runtime (#4258 by [Philip Wedemann][hfhbd])
+- [Paging Extension] Add linux and mingw x64 target to the paging extension (#4280 by [Cedric Hippmann][chippman])
+
+### Changed
+- [Gradle Plugin] Add automatic dialect support for Android API 34 (#4251)
+- [Paging Extension] Add support for SuspendingTransacter in QueryPagingSource (#4292 by [Ilya Polenov][daio])
+- [Runtime] Improve addListener api (#4244 by [Philip Wedemann][hfhbd])
+- [Runtime] Use Long as migration version (#4297 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [Gradle Plugin] Use stable output path for generated source (#4269 by [Josh Friend][joshfriend])
+- [Gradle Plugin] Gradle tweaks (#4222 by [Matthew Haughton][3flex])
+
+## [2.0.0-rc01] - 2023-05-29
+
+### Added
+- [Paging] Add js browser target to paging extensions (#3843 by [Sean Proctor][sproctor])
+- [Paging] Add iosSimulatorArm64 target to androidx-paging3 extension (#4117)
+- [PostgreSQL Dialect] add support and test for gen_random_uuid() (#3855 by [David Wheeler][davidwheeler123])
+- [PostgreSQL Dialect] Alter table add constraint postgres (#4116 by [Griffio][griffio])
+- [PostgreSQL Dialect] Alter table add constraint check (#4120 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql character length functions (#4121 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql column default interval (#4142 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql interval column result (#4152 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql Alter Column (#4165 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSQL: Add date_part (#4198 by [Philip Wedemann][hfhbd])
+- [MySQL Dialect] Add sql char length functions (#4134 by [Griffio][griffio])
+- [IDE Plugin] Add sqldelight directory suggestions (#3976 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Compact middle packages in project tree (#3992 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add join clause completion (#4086 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Create view intention and live template (#4074 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Warn about missing WHERE inside DELETE or UPDATE (#4058 by [Alexander Perfilyev][aperfilyev])
+- [Gradle Plugin] Enable typesafe project accessors (#4005 by [Philip Wedemann][hfhbd])
+
+### Changed
+- [Gradle Plugin] Allow registering DriverInitializer for VerifyMigrationTask with ServiceLoader mechanism (#3986 by [Alex Doubov][C2H6O])
+- [Gradle Plugin] Create explicit compiler env (#4079 by [Philip Wedemann][hfhbd])
+- [JS Driver] Split web worker driver into separate artifact
+- [JS Driver] Don't expose JsWorkerSqlCursor (#3874 by [Philip Wedemann][hfhbd])
+- [JS Driver] Disable publication of the sqljs driver (#4108)
+- [Runtime] Enforce that synchronous drivers require a synchronous schema initializer (#4013)
+- [Runtime] Improve async support for Cursors (#4102)
+- [Runtime] Remove deprecated targets (#4149 by [Philip Wedemann][hfhbd])
+- [Runtime] Remove support for old MM (#4148 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [R2DBC Driver] R2DBC: Await closing the driver (#4139 by [Philip Wedemann][hfhbd])
+- [Compiler] Include PRAGMAs from migrations in database create(SqlDriver) (#3845 by [Marius Volkhart][MariusV])
+- [Compiler] Fix codegen for RETURNING clause (#3872 by [Marius Volkhart][MariusV])
+- [Compiler] Dont generate types for virtual tables (#4015)
+- [Gradle Plugin] Small Gradle plugin QoL improvements (#3930 by [Zac Sweers][zacsweers])
+- [IDE Plugin] Fix unresolved kotlin types (#3924 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix for expand wildcard intention to work with qualifier (#3979 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Use available jdk if java home is missing (#3925 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix find usages on package names (#4010)
+- [IDE Plugin] Dont show auto imports for invalid elements (#4008)
+- [IDE Plugin] Do not resolve if a dialect is missing (#4009)
+- [IDE Plugin] Ignore IDE runs of the compiler during an invalidated state (#4016)
+- [IDE Plugin] Add support for IntelliJ 2023.1 (#4037 by [Madis Pink][madisp])
+- [IDE Plugin] Rename named argument usage on column rename (#4027 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix add migration popup (#4105 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Disable SchemaNeedsMigrationInspection in migration files (#4106 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Use sql column name for migration generation instead of type name (#4112 by [Alexander Perfilyev][aperfilyev])
+
 ## [2.0.0-alpha05] - 2023-01-20
 
 ### Added
@@ -882,3 +955,10 @@ Initial release.
   [jeffdgr8]: https://github.com/jeffdgr8
   [bellatoris]: https://github.com/bellatoris
   [sachera]: https://github.com/sachera
+  [sproctor]: https://github.com/sproctor
+  [davidwheeler123]: https://github.com/davidwheeler123
+  [C2H6O]: https://github.com/C2H6O
+  [griffio]: https://github.com/griffio
+  [shellderp]: https://github.com/shellderp
+  [joshfriend]: https://github.com/joshfriend
+  [daio]: https://github.com/daio

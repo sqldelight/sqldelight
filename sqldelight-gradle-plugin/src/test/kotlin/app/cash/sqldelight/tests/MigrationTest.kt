@@ -253,20 +253,20 @@ class MigrationTest {
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
-    val generatedDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/com/example/sqldelightmigrations/DatabaseImpl.kt")
+    val generatedDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/main/com/example/sqldelightmigrations/DatabaseImpl.kt")
     assertThat(generatedDatabase.exists()).isTrue()
     assertThat(generatedDatabase.readText()).contains(
       """
       |private class DatabaseImpl(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver), Database {
-      |  public override val testQueries: TestQueries = TestQueries(driver)
+      |  override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    public override val version: Int
+      |    override val version: Long
       |      get() = 2
       |
-      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+      |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test (
       |          |  value TEXT NOT NULL,
@@ -291,8 +291,8 @@ class MigrationTest {
       |
       |    private fun migrateInternal(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |    ): QueryResult.Value<Unit> {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
@@ -313,10 +313,10 @@ class MigrationTest {
       |      return QueryResult.Unit
       |    }
       |
-      |    public override fun migrate(
+      |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> {
       |      var lastVersion = oldVersion

@@ -17,12 +17,12 @@ import kotlin.test.fail
 
 class WebWorkerTransacterTest {
   private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
-    override val version = 1
+    override val version = 1L
     override fun create(driver: SqlDriver) = QueryResult.Unit
     override fun migrate(
       driver: SqlDriver,
-      oldVersion: Int,
-      newVersion: Int,
+      oldVersion: Long,
+      newVersion: Long,
       vararg callbacks: AfterVersion,
     ): QueryResult.Value<Unit> = QueryResult.Unit
   }
@@ -30,7 +30,7 @@ class WebWorkerTransacterTest {
   private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) =
     kotlinx.coroutines.test.runTest {
       @Suppress("UnsafeCastFromDynamic")
-      val driver = WebWorkerDriver(Worker(js("""new URL("./sqljs.worker.js", import.meta.url)""")))
+      val driver = WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))
         .also { schema.awaitCreate(it) }
       val transacter = object : SuspendingTransacterImpl(driver) {}
       block(driver, transacter)

@@ -30,9 +30,10 @@ class KotlinVersionsTest(val kotlinVersion: String) {
     @Parameters(name = "{0}")
     @JvmStatic
     fun kotlinVersions() = listOf(
-      "1.6.21",
+      "1.7.0",
       "1.7.20",
       "1.8.0",
+      "1.8.20",
       "1.9.0-Beta",
     )
   }

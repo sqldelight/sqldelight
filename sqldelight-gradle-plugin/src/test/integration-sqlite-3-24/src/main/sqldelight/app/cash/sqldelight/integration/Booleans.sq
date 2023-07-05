@@ -1,0 +1,18 @@
+import kotlin.Boolean;
+
+CREATE TABLE withBoolean (
+  some_boolean_field INTEGER AS Boolean NOT NULL
+);
+
+insertBoolean:
+  INSERT INTO withBoolean (some_boolean_field) VALUES (:someBooleanField);
+
+selectMaxBoolean:
+SELECT
+max(some_boolean_field)
+FROM withBoolean;
+
+selectMinBoolean:
+SELECT
+min(some_boolean_field)
+FROM withBoolean;

@@ -792,7 +792,6 @@ class InterfaceGeneration {
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
-      |import kotlin.Unit
       |
       |public class SongQueries(
       |  driver: SqlDriver,
@@ -822,22 +821,22 @@ class InterfaceGeneration {
       |    public val album_id: Long?,
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
-      |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, arrayOf("song"))
+      |    override fun addListener(listener: Query.Listener) {
+      |      driver.addListener("song", listener = listener)
       |    }
       |
-      |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, arrayOf("song"))
+      |    override fun removeListener(listener: Query.Listener) {
+      |      driver.removeListener("song", listener = listener)
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(null,
       |        ""${'"'}SELECT * FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper,
       |        1) {
       |      bindLong(0, album_id)
       |    }
       |
-      |    public override fun toString(): String = "song.sq:selectSongsByAlbumId"
+      |    override fun toString(): String = "song.sq:selectSongsByAlbumId"
       |  }
       |}
       |
@@ -893,7 +892,6 @@ class InterfaceGeneration {
       |import kotlin.Any
       |import kotlin.Int
       |import kotlin.String
-      |import kotlin.Unit
       |
       |public class SubscriptionQueries(
       |  driver: SqlDriver,
@@ -904,7 +902,7 @@ class InterfaceGeneration {
       |    cursor.getLong(0)!!.toInt()
       |  }
       |
-      |  public fun insertSubscription(user_id2: Int): Unit {
+      |  public fun insertSubscription(user_id2: Int) {
       |    driver.execute(${result.compiledFile.namedMutators[0].id.withUnderscores}, ""${'"'}
       |        |INSERT INTO subscriptionEntity(user_id2)
       |        |VALUES (?)
@@ -921,15 +919,15 @@ class InterfaceGeneration {
       |    public val slack_user_id: String,
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
-      |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, arrayOf("userEntity"))
+      |    override fun addListener(listener: Query.Listener) {
+      |      driver.addListener("userEntity", listener = listener)
       |    }
       |
-      |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, arrayOf("userEntity"))
+      |    override fun removeListener(listener: Query.Listener) {
+      |      driver.removeListener("userEntity", listener = listener)
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${result.compiledFile.namedQueries[0].id.withUnderscores}, ""${'"'}
       |    |WITH inserted_ids AS (
       |    |  INSERT INTO userEntity(slack_user_id)
@@ -941,7 +939,7 @@ class InterfaceGeneration {
       |      bindString(0, slack_user_id)
       |    }
       |
-      |    public override fun toString(): String = "Subscription.sq:insertUser"
+      |    override fun toString(): String = "Subscription.sq:insertUser"
       |  }
       |}
       |
@@ -1010,7 +1008,6 @@ class InterfaceGeneration {
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
-      |import kotlin.Unit
       |
       |public class RecursiveQueries(
       |  driver: SqlDriver,
@@ -1035,15 +1032,15 @@ class InterfaceGeneration {
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
-      |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, arrayOf("item"))
+      |    override fun addListener(listener: Query.Listener) {
+      |      driver.addListener("item", listener = listener)
       |    }
       |
-      |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, arrayOf("item"))
+      |    override fun removeListener(listener: Query.Listener) {
+      |      driver.removeListener("item", listener = listener)
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
       |    |WITH RECURSIVE
       |    |descendants AS (
@@ -1061,7 +1058,7 @@ class InterfaceGeneration {
       |      bindLong(0, id)
       |    }
       |
-      |    public override fun toString(): String = "Recursive.sq:recursiveQuery"
+      |    override fun toString(): String = "Recursive.sq:recursiveQuery"
       |  }
       |}
       |

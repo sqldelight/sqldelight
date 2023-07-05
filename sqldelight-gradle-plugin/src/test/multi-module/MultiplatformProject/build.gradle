@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
-apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'com.android.library'
-apply plugin: 'app.cash.sqldelight'
+plugins {
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.sqldelight)
+}
 
 sqldelight {
   databases {

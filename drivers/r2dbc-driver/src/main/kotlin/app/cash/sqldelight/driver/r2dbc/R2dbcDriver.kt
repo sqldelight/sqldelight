@@ -84,9 +84,9 @@ class R2dbcDriver(
 
   override fun currentTransaction(): Transacter.Transaction? = transaction
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-  override fun notifyListeners(queryKeys: Array<String>) = Unit
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+  override fun notifyListeners(vararg queryKeys: String) = Unit
 
   override fun close() {
     // Normally, this is just a Mono, so it completes directly without onNext.

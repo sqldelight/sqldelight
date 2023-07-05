@@ -1,6 +1,5 @@
 package app.cash.sqldelight.gradle
 
-import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -26,13 +25,8 @@ import java.util.ServiceLoader
 
 @CacheableTask
 abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
-  @Suppress("unused")
-  // Required to invalidate the task on version updates.
-  @Input
-  val pluginVersion = VERSION
-
   @get:OutputDirectory
-  var outputDirectory: File? = null
+  abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
 
@@ -40,7 +34,7 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @get:Input abstract var migrationOutputExtension: String
+  @get:Input abstract val migrationOutputExtension: Property<String>
 
   @TaskAction
   fun generateSchemaFile() {

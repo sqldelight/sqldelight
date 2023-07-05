@@ -32,6 +32,7 @@ SQLDelight supports a variety of SQL dialects and platforms.
 [:octicons-arrow-right-24: __Native__ (iOS, macOS, Linux, Windows)](native_sqlite)  
 [:octicons-arrow-right-24: __JVM__](jvm_sqlite)  
 [:octicons-arrow-right-24: __JavaScript__ (Browser)](js_sqlite)  
+[:octicons-link-external-16: __JavaScript__ (Node)](https://github.com/wojta/sqldelight-node-sqlite3-driver)  
 [:octicons-arrow-right-24: __Multiplatform__](multiplatform_sqlite)  
 </div>
 <div class="cash-grid-item" markdown="1">

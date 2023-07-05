@@ -27,7 +27,7 @@ typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 @OptIn(ExperimentalCoroutinesApi::class)
 class WebWorkerDriverTest {
   private val schema = object : SqlSchema<AsyncValue<Unit>> {
-    override val version: Int = 1
+    override val version: Long = 1
 
     override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       driver.execute(
@@ -57,15 +57,15 @@ class WebWorkerDriverTest {
 
     override fun migrate(
       driver: SqlDriver,
-      oldVersion: Int,
-      newVersion: Int,
+      oldVersion: Long,
+      newVersion: Long,
       vararg callbacks: AfterVersion,
     ) = QueryResult.AsyncValue {}
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
     @Suppress("UnsafeCastFromDynamic")
-    val driver = WebWorkerDriver(Worker(js("""new URL("./sqljs.worker.js", import.meta.url)""")))
+    val driver = WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))
       .also { schema.awaitCreate(it) }
     block(driver)
     driver.close()

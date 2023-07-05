@@ -63,7 +63,7 @@ class AsyncQueriesTypeTest {
       |import com.example.Data_
       |import com.example.Other
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -81,14 +81,13 @@ class AsyncQueriesTypeTest {
       |  data_Adapter: Data_.Adapter,
       |  otherAdapter: Other.Adapter,
       |) : SuspendingTransacterImpl(driver), TestDatabase {
-      |  public override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
+      |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
-      |    public override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> =
-      |        QueryResult.AsyncValue {
+      |    override fun create(driver: SqlDriver): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE data (
       |          |  id INTEGER PRIMARY KEY,
@@ -103,10 +102,10 @@ class AsyncQueriesTypeTest {
       |          ""${'"'}.trimMargin(), 0).await()
       |    }
       |
-      |    public override fun migrate(
+      |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       |    }
@@ -130,7 +129,6 @@ class AsyncQueriesTypeTest {
       |import kotlin.Any
       |import kotlin.Long
       |import kotlin.String
-      |import kotlin.Unit
       |import kotlin.check
       |import kotlin.collections.List
       |import kotlin.collections.setOf
@@ -177,7 +175,7 @@ class AsyncQueriesTypeTest {
       |    )
       |  }
       |
-      |  public suspend fun insertData(id: Long?, value_: List?): Unit {
+      |  public suspend fun insertData(id: Long?, value_: List?) {
       |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
@@ -194,15 +192,15 @@ class AsyncQueriesTypeTest {
       |    public val id: Long,
       |    mapper: (SqlCursor) -> T,
       |  ) : Query<T>(mapper) {
-      |    public override fun addListener(listener: Query.Listener): Unit {
-      |      driver.addListener(listener, arrayOf("data"))
+      |    override fun addListener(listener: Query.Listener) {
+      |      driver.addListener("data", listener = listener)
       |    }
       |
-      |    public override fun removeListener(listener: Query.Listener): Unit {
-      |      driver.removeListener(listener, arrayOf("data"))
+      |    override fun removeListener(listener: Query.Listener) {
+      |      driver.removeListener("data", listener = listener)
       |    }
       |
-      |    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
       |    |SELECT *
       |    |FROM data
@@ -211,7 +209,7 @@ class AsyncQueriesTypeTest {
       |      bindLong(0, id)
       |    }
       |
-      |    public override fun toString(): String = "Data.sq:selectForId"
+      |    override fun toString(): String = "Data.sq:selectForId"
       |  }
       |}
       |

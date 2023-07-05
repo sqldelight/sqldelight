@@ -26,15 +26,15 @@ fun DataSource.asJdbcDriver() = object : JdbcDriver() {
     connection.close()
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     // No-op. JDBC Driver is not set up for observing queries by default.
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     // No-op. JDBC Driver is not set up for observing queries by default.
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     // No-op. JDBC Driver is not set up for observing queries by default.
   }
 }

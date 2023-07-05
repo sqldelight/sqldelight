@@ -38,7 +38,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -77,7 +77,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-    |public fun insertData(data_: com.example.Data_): kotlin.Unit {
+    |public fun insertData(data_: com.example.Data_) {
     |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
     |      |INSERT INTO data
     |      |VALUES (?, ?)
@@ -128,7 +128,7 @@ class MutatorQueryTypeTest {
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
       |  link: kotlin.String,
-      |): kotlin.Unit {
+      |) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE item
       |      |SET deprecated = ?,
@@ -176,7 +176,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -225,7 +225,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -283,7 +283,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -321,7 +321,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -370,7 +370,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(): kotlin.Unit {
+      |public fun deleteData() {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |DELETE FROM data
       |      |WHERE id = 1
@@ -411,7 +411,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(value_: kotlin.ByteArray): kotlin.Unit {
+      |public fun insertData(value_: kotlin.ByteArray) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |VALUES (?)
@@ -448,7 +448,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(value_: kotlin.Double): kotlin.Unit {
+      |public fun insertData(value_: kotlin.Double) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |VALUES (?)
@@ -527,7 +527,7 @@ class MutatorQueryTypeTest {
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
-      |): kotlin.Unit {
+      |) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -626,7 +626,7 @@ class MutatorQueryTypeTest {
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
-      |): kotlin.Unit {
+      |) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -709,7 +709,7 @@ class MutatorQueryTypeTest {
       |  bigint1: kotlin.Long?,
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
-      |): kotlin.Unit {
+      |) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -778,7 +778,7 @@ class MutatorQueryTypeTest {
       |  className: kotlin.String,
       |  deprecated: kotlin.Boolean,
       |  link: kotlin.String,
-      |): kotlin.Unit {
+      |) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT OR FAIL INTO item(packageName, className, deprecated, link) VALUES (?, ?, ?, ?)""${'"'}, 4) {
       |        bindString(0, packageName)
       |        bindString(1, className)
@@ -829,7 +829,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-    |public fun insertItem(content: kotlin.String?): kotlin.Unit {
+    |public fun insertItem(content: kotlin.String?) {
     |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
     |        bindString(0, content)
     |      }
@@ -883,7 +883,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-    |public fun updateFoobarSelected(selected: kotlin.Boolean, id: kotlin.Long): kotlin.Unit {
+    |public fun updateFoobarSelected(selected: kotlin.Boolean, id: kotlin.Long) {
     |  driver.execute(1_531_606_598, ""${'"'}UPDATE OR IGNORE foobar SET selected = ? WHERE id = ?""${'"'}, 2) {
     |        bindBoolean(0, selected)
     |        bindLong(1, id)
@@ -920,7 +920,7 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun delete(ids: kotlin.collections.Collection<Int>): kotlin.Unit {
+      |public fun delete(ids: kotlin.collections.Collection<Int>) {
       |  transaction {
       |    val idsIndexes = createArguments(count = ids.size)
       |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.size) {

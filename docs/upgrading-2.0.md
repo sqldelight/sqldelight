@@ -34,7 +34,7 @@ dependencies {
     === "Kotlin"
         ```kotlin 
         sqldelight {
-          database { // (1)!
+          databases { // (1)!
             create("Database") {
               packageName.set("com.example") // (2)!
             }
@@ -47,7 +47,7 @@ dependencies {
     === "Groovy"
         ```kotlin
         sqldelight {
-          database { // (1)!
+          databases { // (1)!
             Database {
               packageName = "com.example"
             }
@@ -95,11 +95,11 @@ dependencies {
 * Primitive types must now be imported into `.sq` and `.sqm` files.
 
     ```diff
-    +{++import kotlin.Boolean++}
+    +{++import kotlin.Boolean;++}
     
     CREATE TABLE HockeyPlayer (
       name TEXT NOT NULL,
-      good INTEGER {==As Boolean==}
+      good INTEGER {==AS Boolean==}
     );
     ```
 
@@ -143,3 +143,6 @@ dependencies {
     +driver.executeQuery(null, "PRAGMA user_version", { /*...*/ }){++.value++}
     ```
     This change enables driver implementations to be based on non-blocking APIs where the returned value can be accessed using the suspending [`QueryResult.await()`](../2.x/runtime/app.cash.sqldelight.db/-query-result/await) method.
+  * The [`next()`](../2.x/runtime/app.cash.sqldelight.db/-sql-cursor/next) method on the `SqlCursor` interface has also been changed to return a `QueryResult` to enable better cursor support for asynchronous drivers.
+* The [`SqlSchema`](../2.x/runtime/app.cash.sqldelight.db/-sql-schema) interface now has a generic `QueryResult` type parameter. This is used to distinguish schema runtimes that were generated for use with asynchronous drivers, which may not be directly compatible with synchronous drivers.
+  This is only relevant for projects that are simultaneously using synchronous and asynchronous drivers together, like in a multiplatform project that has a JS target. See "[Multiplatform setup with the Web Worker Driver](js_sqlite/multiplatform.md)" for more details.

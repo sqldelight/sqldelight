@@ -29,7 +29,7 @@ abstract class QueryTest {
   @BeforeTest fun setup() {
     driver = setupDatabase(
       schema = object : SqlSchema<QueryResult.Value<Unit>> {
-        override val version: Int = 1
+        override val version: Long = 1
 
         override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
           driver.execute(
@@ -47,8 +47,8 @@ abstract class QueryTest {
 
         override fun migrate(
           driver: SqlDriver,
-          oldVersion: Int,
-          newVersion: Int,
+          oldVersion: Long,
+          newVersion: Long,
           vararg callbacks: AfterVersion,
         ): QueryResult.Value<Unit> {
           // No-op.
@@ -137,31 +137,23 @@ abstract class QueryTest {
   @Test fun notifyDataChangedNotifiesListeners() {
     val notifies = AtomicInt(0)
     val query = testDataQuery()
-    val listener = object : Query.Listener {
-      override fun queryResultsChanged() {
-        notifies.incrementAndGet()
-      }
-    }
+    val listener = Query.Listener { notifies.incrementAndGet() }
 
     query.addListener(listener)
     assertEquals(0, notifies.get())
 
-    driver.notifyListeners(arrayOf("test"))
+    driver.notifyListeners("test")
     assertEquals(1, notifies.get())
   }
 
   @Test fun removeListenerActuallyRemovesListener() {
     val notifies = AtomicInt(0)
     val query = testDataQuery()
-    val listener = object : Query.Listener {
-      override fun queryResultsChanged() {
-        notifies.incrementAndGet()
-      }
-    }
+    val listener = Query.Listener { notifies.incrementAndGet() }
 
     query.addListener(listener)
     query.removeListener(listener)
-    driver.notifyListeners(arrayOf("test"))
+    driver.notifyListeners("test")
     assertEquals(0, notifies.get())
   }
 
@@ -179,11 +171,11 @@ abstract class QueryTest {
       }
 
       override fun addListener(listener: Listener) {
-        driver.addListener(listener, arrayOf("test"))
+        driver.addListener("test", listener = listener)
       }
 
       override fun removeListener(listener: Listener) {
-        driver.removeListener(listener, arrayOf("test"))
+        driver.removeListener("test", listener = listener)
       }
     }
   }

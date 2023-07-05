@@ -81,7 +81,7 @@ class AndroidSqliteDriver private constructor(
 
   private val listeners = linkedMapOf<String, MutableSet<Query.Listener>>()
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     synchronized(listeners) {
       queryKeys.forEach {
         listeners.getOrPut(it, { linkedSetOf() }).add(listener)
@@ -89,7 +89,7 @@ class AndroidSqliteDriver private constructor(
     }
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     synchronized(listeners) {
       queryKeys.forEach {
         listeners[it]?.remove(listener)
@@ -97,7 +97,7 @@ class AndroidSqliteDriver private constructor(
     }
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     val listenersToNotify = linkedSetOf<Query.Listener>()
     synchronized(listeners) {
       queryKeys.forEach { listeners[it]?.let(listenersToNotify::addAll) }
@@ -184,7 +184,9 @@ class AndroidSqliteDriver private constructor(
   open class Callback(
     private val schema: SqlSchema<QueryResult.Value<Unit>>,
     private vararg val callbacks: AfterVersion,
-  ) : SupportSQLiteOpenHelper.Callback(schema.version) {
+  ) : SupportSQLiteOpenHelper.Callback(
+    if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
+  ) {
 
     override fun onCreate(db: SupportSQLiteDatabase) {
       schema.create(AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1))
@@ -197,8 +199,8 @@ class AndroidSqliteDriver private constructor(
     ) {
       schema.migrate(
         AndroidSqliteDriver(openHelper = null, database = db, cacheSize = 1),
-        oldVersion,
-        newVersion,
+        oldVersion.toLong(),
+        newVersion.toLong(),
         *callbacks,
       )
     }

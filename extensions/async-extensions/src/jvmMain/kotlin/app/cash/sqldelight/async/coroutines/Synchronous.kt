@@ -17,8 +17,8 @@ fun SqlSchema<QueryResult.AsyncValue<Unit>>.synchronous() = object : SqlSchema<Q
 
   override fun migrate(
     driver: SqlDriver,
-    oldVersion: Int,
-    newVersion: Int,
+    oldVersion: Long,
+    newVersion: Long,
     vararg callbacks: AfterVersion,
   ) = QueryResult.Value(
     runBlocking { this@synchronous.migrate(driver, oldVersion, newVersion, *callbacks).await() },

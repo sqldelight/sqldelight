@@ -54,7 +54,7 @@ result_column ::= ( MULTIPLY
   implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
   override = true
 }
-select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [ HAVING <<expr '-1'>> ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true

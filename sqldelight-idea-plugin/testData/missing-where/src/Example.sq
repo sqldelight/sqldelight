@@ -1,0 +1,14 @@
+CREATE TABLE example (
+  id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+DELETE FROM example WHERE id = 1;
+
+DELETE FROM example;
+
+UPDATE example SET id = 1;
+
+DELETE FROM example WHERE id = ?;
+
+UPDATE example SET id = 1 WHERE id = ?;

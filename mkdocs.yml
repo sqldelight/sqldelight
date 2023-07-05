@@ -54,6 +54,7 @@ nav:
           - 'Grouping Statements': multiplatform_sqlite/grouping_statements.md
       - 'Extensions':
           - 'Coroutines': multiplatform_sqlite/coroutines.md
+          - 'AndroidX Paging': multiplatform_sqlite/androidx_paging.md
       - 'Migrations': multiplatform_sqlite/migrations.md
       - 'IntelliJ Plugin': multiplatform_sqlite/intellij_plugin.md
       - 'Gradle': multiplatform_sqlite/gradle.md
@@ -70,6 +71,8 @@ nav:
           - 'Types': jvm_mysql/types.md
           - 'Transactions': jvm_mysql/transactions.md
           - 'Grouping Statements': jvm_mysql/grouping_statements.md
+      - 'Extensions':
+          - 'AndroidX Paging': jvm_mysql/androidx_paging.md
       - 'Migrations': jvm_mysql/migrations.md
       - 'IntelliJ Plugin': jvm_mysql/intellij_plugin.md
       - 'Gradle': jvm_mysql/gradle.md
@@ -85,6 +88,8 @@ nav:
           - 'Types': jvm_postgresql/types.md
           - 'Transactions': jvm_postgresql/transactions.md
           - 'Grouping Statements': jvm_postgresql/grouping_statements.md
+      - 'Extensions':
+          - 'AndroidX Paging': jvm_postgresql/androidx_paging.md
       - 'Migrations': jvm_postgresql/migrations.md
       - 'IntelliJ Plugin': jvm_postgresql/intellij_plugin.md
       - 'Gradle': jvm_postgresql/gradle.md
@@ -100,6 +105,8 @@ nav:
           - 'Types': jvm_h2/types.md
           - 'Transactions': jvm_h2/transactions.md
           - 'Grouping Statements': jvm_h2/grouping_statements.md
+      - 'Extensions':
+          - 'AndroidX Paging': jvm_h2/androidx_paging.md
       - 'Migrations': jvm_h2/migrations.md
       - 'IntelliJ Plugin': jvm_h2/intellij_plugin.md
       - 'Gradle': jvm_h2/gradle.md
@@ -118,6 +125,7 @@ nav:
         - 'Grouping Statements': native_sqlite/grouping_statements.md
     - 'Extensions':
         - 'Coroutines': native_sqlite/coroutines.md
+        - 'AndroidX Paging': native_sqlite/androidx_paging.md
     - 'Migrations': native_sqlite/migrations.md
     - 'IntelliJ Plugin': native_sqlite/intellij_plugin.md
     - 'Gradle': native_sqlite/gradle.md
@@ -138,6 +146,7 @@ nav:
     - 'Extensions':
         - 'RxJava': jvm_sqlite/rxjava.md
         - 'Coroutines': jvm_sqlite/coroutines.md
+        - 'AndroidX Paging': jvm_sqlite/androidx_paging.md
     - 'Migrations': jvm_sqlite/migrations.md
     - 'IntelliJ Plugin': jvm_sqlite/intellij_plugin.md
     - 'Gradle': jvm_sqlite/gradle.md
@@ -151,7 +160,9 @@ nav:
   - 'SQLite (JS)':
       - 'Getting Started': js_sqlite/index.md
       - 'Multiplatform': js_sqlite/multiplatform.md
-      - 'Web Workers': js_sqlite/worker.md
+      - 'Web Workers':
+          - SQL.js Worker: js_sqlite/sqljs_worker.md
+          - Custom Workers: js_sqlite/custom_worker.md
       - 'SQL':
           - 'Type Projections': js_sqlite/custom_projections.md
           - 'Arguments': js_sqlite/query_arguments.md
@@ -160,6 +171,7 @@ nav:
           - 'Grouping Statements': js_sqlite/grouping_statements.md
       - 'Extensions':
           - 'Coroutines': js_sqlite/coroutines.md
+          - 'AndroidX Paging': js_sqlite/androidx_paging.md
       - 'Migrations': js_sqlite/migrations.md
       - 'IntelliJ Plugin': js_sqlite/intellij_plugin.md
       - 'Gradle': js_sqlite/gradle.md

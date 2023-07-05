@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement
 interface TypeResolver {
   /**
    * @param expr The expression to be resolved to a type.
-   * @return The type for [expr] for null if this resolver cannot solve.
+   * @return The resolved type
    */
   fun resolvedType(expr: SqlExpr): IntermediateType
 

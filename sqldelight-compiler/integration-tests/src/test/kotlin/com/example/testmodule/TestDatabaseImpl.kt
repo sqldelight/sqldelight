@@ -11,7 +11,7 @@ import com.example.PlayerQueries
 import com.example.Team
 import com.example.TeamQueries
 import com.example.TestDatabase
-import kotlin.Int
+import kotlin.Long
 import kotlin.Unit
 import kotlin.reflect.KClass
 
@@ -29,17 +29,17 @@ private class TestDatabaseImpl(
   playerAdapter: Player.Adapter,
   teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver), TestDatabase {
-  public override val groupQueries: GroupQueries = GroupQueries(driver)
+  override val groupQueries: GroupQueries = GroupQueries(driver)
 
-  public override val playerQueries: PlayerQueries = PlayerQueries(driver, playerAdapter)
+  override val playerQueries: PlayerQueries = PlayerQueries(driver, playerAdapter)
 
-  public override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
+  override val teamQueries: TeamQueries = TeamQueries(driver, teamAdapter)
 
   public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-    public override val version: Int
+    override val version: Long
       get() = 1
 
-    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       driver.execute(null, "CREATE TABLE `group` (`index` INTEGER PRIMARY KEY NOT NULL)", 0)
       driver.execute(null, """
           |CREATE TABLE player (
@@ -74,10 +74,10 @@ private class TestDatabaseImpl(
       return QueryResult.Unit
     }
 
-    public override fun migrate(
+    override fun migrate(
       driver: SqlDriver,
-      oldVersion: Int,
-      newVersion: Int,
+      oldVersion: Long,
+      newVersion: Long,
       vararg callbacks: AfterVersion,
     ): QueryResult.Value<Unit> = QueryResult.Unit
   }

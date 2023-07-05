@@ -2,13 +2,16 @@ name: Test
 
 on:
   pull_request:
+    # Ensure paths-ignore match paths in PR-skip.yml
     paths-ignore:
       - 'docs/**'
       - '*.md'
+      - 'mkdocs.yml'
 
 jobs:
   build:
     strategy:
+      # Ensure any changes to the matrix are also made in PR-skip.yml
       matrix:
         # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
         os: [ macOS-latest, ubuntu-latest ]
@@ -17,6 +20,8 @@ jobs:
           - os: windows-latest
             job: instrumentation
           - os: windows-latest
+            job: gradle-plugin-tests
+          - os: ubuntu-latest
             job: gradle-plugin-tests
 
     runs-on: ${{matrix.os}}
@@ -47,7 +52,7 @@ jobs:
       - name: Run spotless
         run: ./gradlew spotlessCheck
       - name: Assemble parallel
-        run: ./gradlew assemble dokkaHtml
+        run: ./gradlew assemble dokkaHtml sourceJar sourceDebugJar sourceReleaseJar
 
       # Linux tests
       - name: Run gradle tests
@@ -55,7 +60,7 @@ jobs:
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'gradle-plugin-tests'
+        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest
 
       - name: Run the IntelliJ plugin

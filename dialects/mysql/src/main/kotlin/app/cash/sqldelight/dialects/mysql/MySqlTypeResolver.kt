@@ -14,10 +14,16 @@ import app.cash.sqldelight.dialects.mysql.MySqlType.SMALL_INT
 import app.cash.sqldelight.dialects.mysql.MySqlType.TINY_INT
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlExtensionExpr
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryMultExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
+import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 
 class MySqlTypeResolver(
@@ -27,11 +33,44 @@ class MySqlTypeResolver(
     return when (expr) {
       is MySqlExtensionExpr -> encapsulatingType(
         PsiTreeUtil.findChildrenOfType(expr.ifExpr, SqlExpr::class.java).drop(1),
+        TINY_INT,
+        SMALL_INT,
+        MySqlType.INTEGER,
         INTEGER,
+        BIG_INT,
         REAL,
+        MySqlType.TIMESTAMP,
+        MySqlType.DATE,
+        MySqlType.DATETIME,
+        MySqlType.TIME,
         TEXT,
         BLOB,
       )
+      is SqlBinaryExpr -> {
+        if (expr.childOfType(
+            TokenSet.create(
+              SqlTypes.EQ, SqlTypes.EQ2, SqlTypes.NEQ,
+              SqlTypes.NEQ2, SqlTypes.AND, SqlTypes.OR, SqlTypes.GT, SqlTypes.GTE,
+              SqlTypes.LT, SqlTypes.LTE,
+            ),
+          ) != null
+        ) {
+          IntermediateType(PrimitiveType.BOOLEAN)
+        } else {
+          encapsulatingType(
+            exprList = expr.getExprList(),
+            nullableIfAny = (expr is SqlBinaryAddExpr || expr is SqlBinaryMultExpr || expr is SqlBinaryPipeExpr),
+            TINY_INT,
+            SMALL_INT,
+            MySqlType.INTEGER,
+            INTEGER,
+            BIG_INT,
+            REAL,
+            TEXT,
+            BLOB,
+          )
+        }
+      }
       else -> parentResolver.resolvedType(expr)
     }
   }
@@ -63,8 +102,44 @@ class MySqlTypeResolver(
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
     "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, MySqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "max" -> encapsulatingType(
+      exprList,
+      TINY_INT,
+      SMALL_INT,
+      MySqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      MySqlType.TIMESTAMP,
+      MySqlType.DATE,
+      MySqlType.DATETIME,
+      MySqlType.TIME,
+      TEXT,
+      BLOB,
+    ).asNullable()
+    "min" -> encapsulatingType(
+      exprList,
+      BLOB,
+      TEXT,
+      MySqlType.TIME,
+      MySqlType.DATETIME,
+      MySqlType.DATE,
+      MySqlType.TIMESTAMP,
+      TINY_INT,
+      SMALL_INT,
+      INTEGER,
+      MySqlType.INTEGER,
+      BIG_INT,
+      REAL,
+    ).asNullable()
+    "sum" -> {
+      val type = resolvedType(exprList.single())
+      if (type.dialectType == REAL) {
+        IntermediateType(REAL).asNullable()
+      } else {
+        IntermediateType(INTEGER).asNullable()
+      }
+    }
     "unix_timestamp" -> IntermediateType(TEXT)
     "to_seconds" -> IntermediateType(INTEGER)
     "json_arrayagg" -> IntermediateType(TEXT)
@@ -80,7 +155,7 @@ class MySqlTypeResolver(
         approximateNumericDataType != null -> REAL
         binaryDataType != null -> BLOB
         dateDataType != null -> {
-          when (dateDataType!!.firstChild.text) {
+          when (dateDataType!!.firstChild.text.uppercase()) {
             "DATE" -> MySqlType.DATE
             "TIME" -> MySqlType.TIME
             "DATETIME" -> MySqlType.DATETIME
@@ -107,4 +182,8 @@ class MySqlTypeResolver(
       },
     )
   }
+}
+
+private fun PsiElement.childOfType(types: TokenSet): PsiElement? {
+  return node.findChildByType(types)?.psi
 }

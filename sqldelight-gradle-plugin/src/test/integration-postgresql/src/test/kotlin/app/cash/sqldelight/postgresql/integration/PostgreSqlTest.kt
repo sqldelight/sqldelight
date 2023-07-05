@@ -23,9 +23,9 @@ class PostgreSqlTest {
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
-    override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun notifyListeners(queryKeys: Array<String>) = Unit
+    override fun addListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+    override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+    override fun notifyListeners(vararg queryKeys: String) = Unit
   }
   val database = MyDatabase(
     driver,
@@ -181,7 +181,7 @@ class PostgreSqlTest {
       )
   }
 
-  @Test fun testDateTrunc() {
+  @Test fun testDateFunctions() {
     database.datesQueries.insertDate(
       date = LocalDate.of(2020, 1, 1),
       time = LocalTime.of(21, 30, 59, 10000),
@@ -198,6 +198,33 @@ class PostgreSqlTest {
           date_trunc_ = OffsetDateTime.of(1980, 4, 9, 20, 0, 0, 0, ZoneOffset.ofHours(0)),
         ),
       )
+
+    assertThat(
+      database.datesQueries.selectDatePart().executeAsOne(),
+    )
+      .isEqualTo(
+        SelectDatePart(
+          date_part = 21.0,
+          date_part_ = 20.0,
+        ),
+      )
+  }
+
+  @Test fun testMinMaxTimeStamps() {
+    database.datesQueries.insertDate(
+      date = LocalDate.of(2022, 1, 1),
+      time = LocalTime.of(11, 30, 59, 10000),
+      timestamp = LocalDateTime.of(2029, 1, 1, 21, 30, 59, 10000),
+      timestamp_with_timezone = OffsetDateTime.of(1970, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+    ).executeAsOne()
+
+    database.datesQueries.selectMax().executeAsOne().let {
+      assertThat(it.max).isEqualTo(LocalDateTime.of(2029, 1, 1, 21, 30, 59, 10000))
+    }
+
+    database.datesQueries.selectMin().executeAsOne().let {
+      assertThat(it.min).isEqualTo(OffsetDateTime.of(1970, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)))
+    }
   }
 
   @Test fun testSerial() {
@@ -222,6 +249,12 @@ class PostgreSqlTest {
     val now = database.datesQueries.selectNow().executeAsOne()
     assertThat(now).isNotNull()
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
+  }
+
+  @Test fun interval() {
+    val interval = database.datesQueries.selectInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(1)
   }
 
   @Test fun successfulOptimisticLock() {
@@ -278,5 +311,19 @@ class PostgreSqlTest {
     assertThat(name).isEqualTo(6)
     val desc = database.charactersQueries.selectDescriptionLength().executeAsOne()
     assertThat(desc.length).isNull()
+  }
+
+  @Test fun statFunctions() {
+    val percentile: SelectPercentile = database.functionsQueries.selectPercentile().executeAsOne()
+    val result: Double? = 2.0
+    assertThat(percentile).isEqualTo(SelectPercentile(result))
+    val stats: List<SelectStats> = database.functionsQueries.selectStats().executeAsList()
+    assertThat(stats).isEqualTo(
+      listOf(
+        SelectStats(null, null, 1),
+        SelectStats(null, null, 1),
+        SelectStats(null, null, 1),
+      ),
+    )
   }
 }

@@ -120,10 +120,10 @@ class NativeSqliteDriver(
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,
-      version = schema.version,
+      version = if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
       create = { connection -> wrapConnection(connection) { schema.create(it) } },
       upgrade = { connection, oldVersion, newVersion ->
-        wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion, *callbacks) }
+        wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(), newVersion.toLong(), *callbacks) }
       },
     ).let(onConfiguration),
     maxReaderConnections = maxReaderConnections,
@@ -172,19 +172,19 @@ class NativeSqliteDriver(
     }
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     queryKeys.forEach {
       listeners.getOrPut(it) { mutableMapOf() }.put(listener, Unit)
     }
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     queryKeys.forEach {
       listeners.get(it)?.remove(listener)
     }
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     val listenersToNotify = mutableSetOf<Query.Listener>()
     queryKeys.forEach { key -> listeners.get(key)?.let { listenersToNotify.addAll(it.keys) } }
     listenersToNotify.forEach(Query.Listener::queryResultsChanged)
@@ -256,12 +256,12 @@ fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>): NativeSqliteDriv
   DatabaseConfiguration(
     name = null,
     inMemory = true,
-    version = schema.version,
+    version = if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
     create = { connection ->
       wrapConnection(connection) { schema.create(it) }
     },
     upgrade = { connection, oldVersion, newVersion ->
-      wrapConnection(connection) { schema.migrate(it, oldVersion, newVersion) }
+      wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(), newVersion.toLong()) }
     },
   ),
 )
@@ -303,15 +303,15 @@ internal class SqliterWrappedConnection(
     block: ThreadConnection.() -> R,
   ): R = threadConnection.block()
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     // No-op
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     // No-op
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     // No-op
   }
 

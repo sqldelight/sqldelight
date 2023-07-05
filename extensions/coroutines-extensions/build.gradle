@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
+
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
@@ -8,6 +10,22 @@ plugins {
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
+  targetHierarchy.default {
+    it.group("testableNative") {
+      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
+      it.withIos()
+      it.withTvos()
+      it.withMacos()
+      it.withWatchosArm32()
+      it.withWatchosArm64()
+      it.withWatchosX64()
+      it.withWatchosSimulatorArm64()
+
+      it.withLinuxX64()
+      it.withMingw()
+    }
+  }
+
   sourceSets {
     commonMain {
       dependencies {
@@ -21,13 +39,13 @@ kotlin {
         implementation libs.kotlin.coroutines.test
         implementation libs.kotlin.test
         implementation libs.turbine
-        implementation libs.stately.concurrency
       }
     }
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
         implementation projects.drivers.sqliteDriver
+        implementation libs.stately.concurrency
       }
       languageSettings {
         optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
@@ -36,29 +54,46 @@ kotlin {
     jsTest {
       dependencies {
         implementation projects.drivers.sqljsDriver
+        implementation libs.stately.concurrency
       }
     }
-    nativeTest {
+    testableNativeTest {
       dependencies {
         implementation projects.drivers.nativeDriver
+        implementation libs.stately.concurrency
       }
     }
   }
 
   configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
     binaries.configureEach {
-      linkerOpts += ['-lsqlite3']
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-lsqlite3"]
+      }
     }
   }
+
   configure([targets.linuxX64]) {
-    binaries.configureEach {
-      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
+    compilations.configureEach {
+      if (name == "test") {
+        cinterops {
+          sqlite {
+            // use sqlite3 amalgamation on linux tests to prevent linking issues on new linux distros with dependency libraries which are to recent (for example glibc)
+            // see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
+            defFile = new File("$rootDir/libs/linux/cinterop/sqlite3.def")
+          }
+        }
+      }
     }
   }
 
   configure([targets.mingwX64]) {
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      }
     }
   }
 }

@@ -29,7 +29,8 @@ import app.cash.paging.PagingSourceLoadResultInvalid
 import app.cash.paging.PagingSourceLoadResultPage
 import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.SuspendingTransacterImpl
+import app.cash.sqldelight.TransacterBase
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
@@ -47,16 +48,32 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
-class OffsetQueryPagingSourceTest : DbTest {
+class OffsetQueryPagingSourceTest : BaseOffsetQueryPagingSourceTest() {
+  override fun createTransacter(driver: SqlDriver): TransacterBase {
+    return object : TransacterImpl(driver) {}
+  }
+}
+
+@ExperimentalCoroutinesApi
+class OffsetQueryPagingSourceWithSuspendingTransacterTest : BaseOffsetQueryPagingSourceTest() {
+  override fun createTransacter(driver: SqlDriver): TransacterBase {
+    return object : SuspendingTransacterImpl(driver) {}
+  }
+}
+
+@ExperimentalCoroutinesApi
+abstract class BaseOffsetQueryPagingSourceTest : DbTest {
 
   private lateinit var driver: SqlDriver
-  private lateinit var transacter: Transacter
+  private lateinit var transacter: TransacterBase
   private lateinit var pagingSource: PagingSource<Int, TestItem>
+
+  abstract fun createTransacter(driver: SqlDriver): TransacterBase
 
   override suspend fun setup(driver: SqlDriver) {
     this.driver = driver
     driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
-    transacter = object : TransacterImpl(driver) {}
+    transacter = createTransacter(driver)
     pagingSource = QueryPagingSource(
       countQuery(),
       transacter,
@@ -524,8 +541,8 @@ class OffsetQueryPagingSourceTest : DbTest {
       bindLong(1, offset)
     }
 
-    override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("TestItem"))
-    override fun removeListener(listener: Listener) = driver.removeListener(listener, arrayOf("TestItem"))
+    override fun addListener(listener: Listener) = driver.addListener("TestItem", listener = listener)
+    override fun removeListener(listener: Listener) = driver.removeListener("TestItem", listener = listener)
   }
 
   private fun countQuery() = Query(

@@ -9,6 +9,7 @@ import org.junit.Test
 class IntegrationTests {
   private lateinit var queryWrapper: QueryWrapper
   private lateinit var personQueries: PersonQueries
+  private lateinit var booleansQueries: BooleansQueries
 
   @Before fun before() {
     val database = JdbcSqliteDriver(IN_MEMORY)
@@ -16,6 +17,7 @@ class IntegrationTests {
 
     queryWrapper = QueryWrapper(database)
     personQueries = queryWrapper.personQueries
+    booleansQueries = queryWrapper.booleansQueries
   }
 
   @Test fun upsertNoConflict() {
@@ -43,5 +45,18 @@ class IntegrationTests {
         Person(3, "James", "Mosley"),
         Person(4, "Bob", "Bob"),
       )
+  }
+
+  @Test fun aggregateBoolean() {
+    booleansQueries.insertBoolean(true)
+    booleansQueries.insertBoolean(false)
+
+    booleansQueries.selectMaxBoolean().executeAsOne().let {
+      assertThat(it.max).isTrue()
+    }
+
+    booleansQueries.selectMinBoolean().executeAsOne().let {
+      assertThat(it.min).isFalse()
+    }
   }
 }

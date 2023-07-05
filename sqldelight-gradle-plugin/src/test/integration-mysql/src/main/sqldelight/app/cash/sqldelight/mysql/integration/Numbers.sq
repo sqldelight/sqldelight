@@ -1,0 +1,42 @@
+CREATE TABLE ints (
+  `tinyint` TINYINT,
+  `smallint` SMALLINT,
+  `integer` INTEGER,
+  `bigint` BIGINT(20)
+);
+
+insertInts:
+INSERT INTO ints
+VALUES (?, ?, ?, ?);
+
+multiplyInts:
+SELECT `tinyint`*`tinyint`, `smallint`*`smallint`, `integer`*`integer`, `bigint`*`bigint` FROM ints;
+
+multiplyWithBigInts:
+SELECT `tinyint`*`bigint` AS tiny, `smallint`*`bigint` AS small, `integer`*`bigint` AS `integer` FROM ints;
+
+sumInts:
+SELECT sum(`tinyint`) AS sumTiny, sum(`smallint`) AS sumSmall, sum(`integer`) AS sumInt, sum(`bigint`) AS sumBig FROM ints;
+
+minInts:
+SELECT min(`tinyint`) AS minTiny, min(`smallint`) AS minSmall, min(`integer`) AS minInt, min(`bigint`) AS minBig FROM ints;
+
+maxInts:
+SELECT max(`tinyint`) AS maxTiny, max(`smallint`) AS maxSmall, max(`integer`) AS maxInt, max(`bigint`) AS maxBig FROM ints;
+
+CREATE TABLE floats (
+  `float` FLOAT
+);
+
+insertFloats:
+INSERT INTO floats
+VALUES (?);
+
+sumMinMaxFloat:
+SELECT sum(`float`) AS sumFloat, min(`float`) AS minFloat, max(`float`) AS maxFloat FROM floats;
+
+multiplyFloatInt:
+SELECT `float`*`bigint` AS mul FROM floats, ints;
+
+ifBigInt:
+SELECT IF(1, `bigint`, `bigint`) FROM ints;

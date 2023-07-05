@@ -4,6 +4,7 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAlterTableR
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
@@ -29,7 +30,7 @@ internal abstract class AlterTableRenameColumnMixin(
         val columns = lazyQuery.query.columns
         val column = QueryElement.QueryColumn(element = columnAlias)
         val replace = columns.singleOrNull {
-          (it.element as SqlColumnName).textMatches(columnName)
+          (it.element as NamedElement).textMatches(columnName)
         }
         lazyQuery.query.copy(
           columns = lazyQuery.query.columns.map { if (it == replace) column else it },

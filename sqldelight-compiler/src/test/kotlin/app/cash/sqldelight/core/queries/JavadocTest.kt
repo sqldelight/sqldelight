@@ -280,7 +280,7 @@ class JavadocTest {
       |/**
       | * Insert new value.
       | */
-      |public fun insertValue(value_: kotlin.String): kotlin.Unit {
+      |public fun insertValue(value_: kotlin.String) {
       |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO test(value)
       |      |VALUES (?)
@@ -319,7 +319,7 @@ class JavadocTest {
       |/**
       | * Update value by id.
       | */
-      |public fun updateById(value_: kotlin.String, _id: kotlin.Long): kotlin.Unit {
+      |public fun updateById(value_: kotlin.String, _id: kotlin.Long) {
       |  driver.execute(${update.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET value = ?
@@ -359,7 +359,7 @@ class JavadocTest {
       |/**
       | * Delete all.
       | */
-      |public fun deleteAll(): kotlin.Unit {
+      |public fun deleteAll() {
       |  driver.execute(${delete.id.withUnderscores}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |  notifyQueries(${delete.id.withUnderscores}) { emit ->
       |    emit("test")

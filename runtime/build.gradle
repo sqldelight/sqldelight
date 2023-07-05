@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
+  alias(libs.plugins.binaryCompatibilityValidator)
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
 }
@@ -10,7 +11,27 @@ sourceSets {
   main
 }
 
+apiValidation {
+  ignoredPackages += ["app.cash.sqldelight.internal"]
+}
+
 kotlin {
+  targetHierarchy.default {
+    it.group("testableNative") {
+      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
+      it.withIos()
+      it.withTvos()
+      it.withMacos()
+      it.withWatchosArm32()
+      it.withWatchosArm64()
+      it.withWatchosX64()
+      it.withWatchosSimulatorArm64()
+
+      it.withLinuxX64()
+      it.withMingw()
+    }
+  }
+
   sourceSets {
     commonMain {
     }
@@ -25,13 +46,9 @@ kotlin {
         implementation libs.stately.collections
       }
     }
-    nativeMain {
+    testableNativeTest {
       dependencies {
         implementation libs.stately.concurrency
-      }
-    }
-    nativeTest{
-      dependencies {
         implementation libs.stately.collections
       }
     }

@@ -15,13 +15,17 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.BIG_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.squareup.kotlinpoet.CodeBlock
@@ -80,14 +84,27 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.lowercase()) {
-    "greatest" -> encapsulatingType(exprList, PrimitiveType.INTEGER, REAL, TEXT, BLOB)
+    "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "coalesce", "ifnull" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "max" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
+    "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
+    "date_part" -> IntermediateType(REAL)
+    "percentile_disc" -> IntermediateType(REAL).asNullable()
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
+    "corr", "covar_pop", "covar_samp", "regr_avgx", "regr_avgy", "regr_intercept",
+    "regr_r2", "regr_slope", "regr_sxx", "regr_sxy", "regr_syy",
+    -> IntermediateType(REAL).asNullable()
+    "stddev", "stddev_pop", "stddev_samp", "variance",
+    "var_pop", "var_samp",
+    -> if (resolvedType(exprList[0]).dialectType == REAL) {
+      IntermediateType(REAL).asNullable()
+    } else IntermediateType(
+      PostgreSqlType.NUMERIC,
+    ).asNullable()
+    "regr_count" -> IntermediateType(BIG_INT).asNullable()
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
     "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
@@ -124,5 +141,28 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
 
     return parentResolver.simplifyType(intermediateType)
+  }
+
+  override fun resolvedType(expr: SqlExpr): IntermediateType {
+    return expr.postgreSqlType()
+  }
+
+  private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
+    is SqlLiteralExpr -> when {
+      literalValue.text == "CURRENT_DATE" -> IntermediateType(PostgreSqlType.DATE)
+      literalValue.text == "CURRENT_TIME" -> IntermediateType(PostgreSqlType.TIME)
+      literalValue.text == "CURRENT_TIMESTAMP" -> IntermediateType(PostgreSqlType.TIMESTAMP)
+      literalValue.text.startsWith("INTERVAL") -> IntermediateType(PostgreSqlType.INTERVAL)
+      else -> parentResolver.resolvedType(this)
+    }
+    is PostgreSqlExtensionExpr -> when {
+      windowFunctionExpr != null -> {
+        val windowFunctionExpr = windowFunctionExpr as WindowFunctionMixin
+        functionType(windowFunctionExpr.functionExpr)!!
+      }
+      else -> parentResolver.resolvedType(this)
+    }
+
+    else -> parentResolver.resolvedType(this)
   }
 }

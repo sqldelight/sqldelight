@@ -32,7 +32,7 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -76,7 +76,7 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
@@ -126,7 +126,7 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Unit {
+      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
