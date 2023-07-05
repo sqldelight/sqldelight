@@ -161,7 +161,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         compilationUnits = sources.map { source ->
           SqlDelightCompilationUnitImpl(
             name = source.name,
-            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
+            sourceFolders = sourceFolders(source),
             outputDirectoryFile = source.outputDir,
           )
         },
