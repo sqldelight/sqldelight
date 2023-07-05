@@ -1,7 +1,10 @@
 package app.cash.sqldelight.driver.jdbc.sqlite
 
-import app.cash.sqldelight.db.*
-import java.util.*
+import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlSchema
+import java.util.Properties
 
 /**
  * Constructs [JdbcSqliteDriver] and creates or migrates [schema] from current PRAGMA `user_version`.
@@ -14,32 +17,32 @@ import java.util.*
  * @see SqlSchema.migrate
  */
 fun JdbcSqliteDriver(
-    url: String,
-    properties: Properties = Properties(),
-    schema: SqlSchema<QueryResult.Value<Unit>>,
-    vararg callbacks: AfterVersion,
+  url: String,
+  properties: Properties = Properties(),
+  schema: SqlSchema<QueryResult.Value<Unit>>,
+  vararg callbacks: AfterVersion,
 ): JdbcSqliteDriver {
-    val driver = JdbcSqliteDriver(url, properties)
-    val version = driver.getVersion()
+  val driver = JdbcSqliteDriver(url, properties)
+  val version = driver.getVersion()
 
-    if (version == 0) {
-        schema.create(driver).value
-        driver.setVersion(schema.version)
-    } else if (version < schema.version) {
-        schema.migrate(driver, version, schema.version, *callbacks).value
-        driver.setVersion(schema.version)
-    }
+  if (version == 0L) {
+    schema.create(driver).value
+    driver.setVersion(schema.version)
+  } else if (version < schema.version) {
+    schema.migrate(driver, version, schema.version, *callbacks).value
+    driver.setVersion(schema.version)
+  }
 
-    return driver
+  return driver
 }
 
-private fun JdbcSqliteDriver.getVersion(): Int {
-    val mapper = { cursor: SqlCursor ->
-        QueryResult.Value(if (cursor.next().value) cursor.getLong(0)?.toInt() else null)
-    }
-    return executeQuery(null, "PRAGMA user_version", mapper, 0, null).value ?: 0
+private fun JdbcSqliteDriver.getVersion(): Long {
+  val mapper = { cursor: SqlCursor ->
+    QueryResult.Value(if (cursor.next().value) cursor.getLong(0) else null)
+  }
+  return executeQuery(null, "PRAGMA user_version", mapper, 0, null).value ?: 0L
 }
 
-private fun JdbcSqliteDriver.setVersion(version: Int) {
-    execute(null, "PRAGMA user_version = $version", 0, null).value
+private fun JdbcSqliteDriver.setVersion(version: Long) {
+  execute(null, "PRAGMA user_version = $version", 0, null).value
 }
