@@ -3610,11 +3610,11 @@ dependencies {
 <ul>
 <li>
 <p>Primitive types must now be imported into <code>.sq</code> and <code>.sqm</code> files.</p>
-<div class="highlight"><pre><span></span><code><span class="gi">+<ins class="critic">import kotlin.Boolean</ins></span>
+<div class="highlight"><pre><span></span><code><span class="gi">+<ins class="critic">import kotlin.Boolean;</ins></span>
 
 CREATE TABLE HockeyPlayer (
 <span class="w"> </span> name TEXT NOT NULL,
-<span class="w"> </span> good INTEGER <mark class="critic">As Boolean</mark>
+<span class="w"> </span> good INTEGER <mark class="critic">AS Boolean</mark>
 );
 </code></pre></div>
 <p>Some previously supported types now require an adapter. Adapters for primitive types are available in the <code>app.cash.sqldelight:primitive-adapters:2.0.0-SNAPSHOT</code> artifact.
