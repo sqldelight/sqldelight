@@ -95,11 +95,11 @@ dependencies {
 * Primitive types must now be imported into `.sq` and `.sqm` files.
 
     ```diff
-    +{++import kotlin.Boolean++}
+    +{++import kotlin.Boolean;++}
     
     CREATE TABLE HockeyPlayer (
       name TEXT NOT NULL,
-      good INTEGER {==As Boolean==}
+      good INTEGER {==AS Boolean==}
     );
     ```
 
