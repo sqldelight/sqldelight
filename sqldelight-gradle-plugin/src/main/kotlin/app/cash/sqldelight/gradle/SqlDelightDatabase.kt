@@ -104,7 +104,7 @@ abstract class SqlDelightDatabase @Inject constructor(
    */
   val treatNullAsUnknownForEquality: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
-  private val generatedSourcesDirectory= project.layout.buildDirectory.dir("generated/sqldelight/code/$name")
+  private val generatedSourcesDirectory = project.layout.buildDirectory.dir("generated/sqldelight/code/$name")
 
   private val sources by lazy { sources(project) }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
