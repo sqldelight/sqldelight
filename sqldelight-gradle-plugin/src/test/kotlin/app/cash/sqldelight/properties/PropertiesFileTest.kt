@@ -90,7 +90,7 @@ class PropertiesFileTest {
       assertThat(database.compilationUnits).containsExactly(
         SqlDelightCompilationUnitImpl(
           name = "commonMain",
-          sourceFolders = listOf(
+          sourceFolders = setOf(
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false),
           ),
           outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase/commonMain"),

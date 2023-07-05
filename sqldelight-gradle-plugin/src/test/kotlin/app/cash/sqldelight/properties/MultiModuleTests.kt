@@ -79,68 +79,68 @@ class MultiModuleTests {
     assertThat(properties.compilationUnits).containsExactly(
       SqlDelightCompilationUnitImpl(
         name = "minApi23Debug",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Debug/sqldelight"), false),
-        ).sortedBy { it.folder.absolutePath },
+        ),
         outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23Debug"),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi23Release",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Release/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
-        ).sortedBy { it.folder.absolutePath },
+        ),
         outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23Release"),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi23Sqldelight",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Sqldelight/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
-        ).sortedBy { it.folder.absolutePath },
+        ),
         outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23Sqldelight"),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi21Debug",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Debug/sqldelight"), false),
-        ).sortedBy { it.folder.absolutePath },
+        ),
         outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21Debug"),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi21Release",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Release/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
-        ).sortedBy { it.folder.absolutePath },
+        ),
         outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21Release"),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi21Sqldelight",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Sqldelight/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
-        ).sortedBy { it.folder.absolutePath },
+        ),
         outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21Sqldelight"),
       ),
     )
@@ -164,7 +164,7 @@ class MultiModuleTests {
     assertThat(properties.compilationUnits).containsExactly(
       SqlDelightCompilationUnitImpl(
         name = "main",
-        sourceFolders = listOf(
+        sourceFolders = setOf(
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../bottom/src/main/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../middleA/src/main/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../middleB/src/main/sqldelight"), true),

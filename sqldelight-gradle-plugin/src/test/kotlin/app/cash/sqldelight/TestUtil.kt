@@ -29,13 +29,13 @@ internal fun SqlDelightDatabasePropertiesImpl.withSortedCompilationUnits(): SqlD
 
 private fun SqlDelightCompilationUnitImpl.withInvariantPathSeparators(): SqlDelightCompilationUnitImpl {
   return copy(
-    sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() },
+    sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() }.toSet(),
     outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators()),
   )
 }
 
 private fun SqlDelightCompilationUnitImpl.withSortedSourceFolders(): SqlDelightCompilationUnitImpl {
-  return copy(sourceFolders = sourceFolders.sortedBy { it.folder.path })
+  return copy(sourceFolders = sourceFolders.sortedBy { it.folder.path }.toSet())
 }
 
 private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() =
