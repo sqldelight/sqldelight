@@ -20,12 +20,13 @@ fun JdbcSqliteDriver(
   url: String,
   properties: Properties = Properties(),
   schema: SqlSchema<QueryResult.Value<Unit>>,
+  migrateEmptySchema: Boolean = false,
   vararg callbacks: AfterVersion,
 ): JdbcSqliteDriver {
   val driver = JdbcSqliteDriver(url, properties)
   val version = driver.getVersion()
 
-  if (version == 0L) {
+  if (version == 0L && !migrateEmptySchema) {
     schema.create(driver).value
     driver.setVersion(schema.version)
   } else if (version < schema.version) {
