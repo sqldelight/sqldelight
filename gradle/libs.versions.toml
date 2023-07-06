@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.0-354"
+kotlin = "1.9.0"
 dokka = "1.8.20"
 kotlinCoroutines = "1.7.3"
 idea = "222.4459.24" # Flamingo | 2022.2.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
