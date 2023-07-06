@@ -22,7 +22,6 @@ app.cash.sqldelight.core.psi
 app.cash.sqldelight.core.psi.impl
 module:sqldelight-gradle-plugin
 app.cash.sqldelight.gradle
-app.cash.sqldelight.gradle.kotlin
 app.cash.sqldelight.gradle.squash
 module:sqlite-migrations
 app.cash.sqlite.migrations
