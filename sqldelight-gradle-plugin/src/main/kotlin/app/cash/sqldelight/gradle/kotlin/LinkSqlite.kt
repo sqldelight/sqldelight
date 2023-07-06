@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
-fun Project.linkSqlite() {
+internal fun Project.linkSqlite() {
   val extension = project.extensions.findByType(KotlinMultiplatformExtension::class.java) ?: return
   extension.targets
     .filterIsInstance<KotlinNativeTarget>()
