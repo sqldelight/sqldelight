@@ -60,7 +60,7 @@ internal class UnusedQueryInspection : LocalInspectionTool() {
       isSearchForTextOccurrences = false
     }
     val findUsagesHandler = findUsagesFactory.createFindUsagesHandler(stmtIdentifier, true)
-    findUsagesHandler.processElementUsages(stmtIdentifier, readActionProcessor, findUsagesOptions)
+    findUsagesHandler?.processElementUsages(stmtIdentifier, readActionProcessor, findUsagesOptions)
     return findFirstProcessor.isFound
   }
 
