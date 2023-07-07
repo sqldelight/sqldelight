@@ -1,37 +1,20 @@
-# Getting Started with Multiplatform
+# Getting Started with SQLite on Multiplatform
 
 {% include 'common/index_gradle_database.md' %}
 
-Put your SQL statements in a `.sq` file under `src/commonMain/sqldelight`. Typically the first statement in the SQL file creates a table.
+{% include 'common/index_schema.md' %}
 
-```sql
--- src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq
-
-CREATE TABLE hockeyPlayer (
-  player_number INTEGER NOT NULL,
-  full_name TEXT NOT NULL
-);
-
-CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
-
-INSERT INTO hockeyPlayer (player_number, full_name)
-VALUES (15, 'Ryan Getzlaf');
-```
-
-From this, SQLDelight will generate a `Database` Kotlin class with an associated `Schema` object that can be used to create your database and run your statements on it. Generating the `Database` file happens during the 'generateSqlDelightInterface' gradle task. This task runs during the 'make project'/'make module' build task, or automatically if you have the SQLDelight IDE plugin.
-
-Accessing the generated database also requires a driver, which SQLDelight provides implementations of:
+To use the generated database in your code, you must add a SQLDelight driver dependency to your project.
+Each target platform has its own driver implementation.
 
 === "Kotlin"
     ```kotlin
-    kotlin {
-      // The drivers needed will change depending on what platforms you target:
-    
+    kotlin { 
       sourceSets.androidMain.dependencies {
         implementation("app.cash.sqldelight:android-driver:{{ versions.sqldelight }}")
       }
     
-      // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+      // or iosMain, windowsMain, etc.
       sourceSets.nativeMain.dependencies {
         implementation("app.cash.sqldelight:native-driver:{{ versions.sqldelight }}")
       }
@@ -43,14 +26,12 @@ Accessing the generated database also requires a driver, which SQLDelight provid
     ```
 === "Groovy"
     ```groovy
-    kotlin {
-      // The drivers needed will change depending on what platforms you target:
-    
+    kotlin { 
       sourceSets.androidMain.dependencies {
         implementation "app.cash.sqldelight:android-driver:{{ versions.sqldelight }}"
       }
     
-      // or sourceSets.iosMain, sourceSets.windowsMain, etc.
+      // or iosMain, windowsMain, etc.
       sourceSets.nativeMain.dependencies {
         implementation "app.cash.sqldelight:native-driver:{{ versions.sqldelight }}"
       }
@@ -61,9 +42,9 @@ Accessing the generated database also requires a driver, which SQLDelight provid
     }
     ```
 
-## Creating Drivers
+## Constructing Driver Instances
 
-Create a factory class or method to obtain a `SqlDriver` instance in your common code. 
+Create a common factory class or method to obtain a `SqlDriver` instance. 
 
 ```kotlin title="src/commonMain/kotlin"
 import com.example.Database
@@ -110,7 +91,5 @@ Then implement this for each target platform:
     ```
 
 For use with Kotlin/JS, [see here](../js_sqlite/multiplatform).
-
-## Using Queries
 
 {% include 'common/index_queries.md' %}

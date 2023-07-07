@@ -1,13 +1,12 @@
 ---
 dialect: "app.cash.sqldelight:hsql-dialect"
+server: true
 ---
-# 👷‍♀️ IN DEVELOPMENT 
+# :material-test-tube: Getting Started with HSQL on JVM
 
-H2 is still incubating, and pieces of the dialect are missing. If you are using it
-and encounter parts of the dialect which are unsupported, please report at
-[sql-psi](https://github.com/AlecStrong/sql-psi)
-
-## Getting Started with H2
+!!! example "Experimental"
+    HSQL support is incubating, and pieces of the dialect are still missing. If you encounter parts 
+    of the dialect which are unsupported, please report it at [sql-psi](https://github.com/AlecStrong/sql-psi).
 
 {% include 'common/index_gradle_database.md' %}
 
