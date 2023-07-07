@@ -3,7 +3,7 @@ async: true
 ---
 # Getting started with SQLDelight on Kotlin/JS
 
-!!! warning
+!!! info
     The synchronous `sqljs-driver` (pre-2.0) has been replaced with the asynchronous `web-worker-driver`.
     This requires configuring the `generateAsync` setting in your Gradle configuration.
 

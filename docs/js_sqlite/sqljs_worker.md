@@ -1,6 +1,6 @@
 # SQL.js Web Worker
 
-!!! example
+!!! example "Experimental"
     The SQL.js worker is not yet being published to NPM. It can be built locally by running the
     `./gradlew :drivers:web-worker-driver:sqljs:assembleJsPackage`, and the assembled package can
     be then used as a local file dependency.

@@ -1,4 +1,4 @@
-First apply the gradle plugin in your project. {% if async %}Make sure to set `generateAsync` to 
+First apply the gradle plugin in your project{% if dialect %} and set your database's dialect accordingly{% endif %}. {% if async %}Make sure to set `generateAsync` to 
 `true` when creating your database.{% endif %} 
 
 === "Kotlin"
