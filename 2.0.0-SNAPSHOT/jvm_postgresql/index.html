@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started-with-postgresql" class="md-skip">
+        <a href="#getting-started-with-postgresql-on-jvm" class="md-skip">
           Skip to content
         </a>
       
@@ -1700,6 +1700,13 @@
         <li class="md-nav__item">
   <a href="#typesafe-sql" class="md-nav__link">
     Typesafe SQL
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-typesafe-queries" class="md-nav__link">
+    Defining Typesafe Queries
   </a>
   
 </li>
@@ -3487,6 +3494,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#defining-typesafe-queries" class="md-nav__link">
+    Defining Typesafe Queries
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3513,8 +3527,8 @@
   
 
 
-<h1 id="getting-started-with-postgresql">Getting Started with PostgreSQL<a class="headerlink" href="#getting-started-with-postgresql" title="Permanent link">&para;</a></h1>
-<p>First apply the gradle plugin in your project.  </p>
+<h1 id="getting-started-with-postgresql-on-jvm">Getting Started with PostgreSQL on JVM<a class="headerlink" href="#getting-started-with-postgresql-on-jvm" title="Permanent link">&para;</a></h1>
+<p>First apply the gradle plugin in your project and set your database's dialect accordingly.  </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3568,10 +3582,10 @@ progressively apply migrations over time to update your database's schema.</p>
 "<a href="#fresh-schema">Fresh Schema</a>", or by writing migration statements in <code>.sqm</code> files for a "<a href="#migration-schema">Migration Schema</a>".
 In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> files (<a href="#typesafe-sql">as shown here</a>).</p>
 <h2 id="fresh-schema">Fresh Schema<a class="headerlink" href="#fresh-schema" title="Permanent link">&para;</a></h2>
-<p>Put your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. Typically the first statement in the SQL file creates a table.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span>
-
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<p>Write your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. 
+Typically the first statement in the <code>.sq</code> file creates a table, but you can also create indexes
+or set up default content.</p>
+<div class="highlight"><span class="filename">src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 <span class="p">);</span>
@@ -3648,8 +3662,9 @@ connection managers.</p>
 </code></pre></div>
 <p>Regardless of if you specify the schema as fresh create table statements or through migrations,
 runtime SQL goes in <code>.sq</code> files.</p>
-<p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
+<h2 id="defining-typesafe-queries">Defining Typesafe Queries<a class="headerlink" href="#defining-typesafe-queries" title="Permanent link">&para;</a></h2>
+<p>SQLDelight will generate a typesafe function for any labeled SQL statement in a <code>.sq</code> file.</p>
+<div class="highlight"><span class="filename">src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 
@@ -3661,23 +3676,24 @@ runtime SQL goes in <code>.sq</code> files.</p>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
 <span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
-<p>Files with labeled statements in them will have a queries file generated from them that matches the <code>.sq</code> file name - putting the above sql into <code>Player.sq</code> generates <code>PlayerQueries.kt</code>. To get a reference to <code>PlayerQueries</code> you need to wrap the driver we made above:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// In reality the database and driver above should be created a single time</span>
-<span class="c1">// and passed around using your favourite dependency injection/service</span>
-<span class="c1">// locator/singleton pattern.</span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<p>A "Queries" object will be generated for each <code>.sq</code> file containing labeled statements.
+For example, a <code>PlayerQueries</code> object will be generated for the <code>Player.sq</code> file shown above.
+This object can be used to call the generated typesafe functions which will execute the actual SQL
+statements.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">fun</span><span class="w"> </span><span class="nf">doDatabaseThings</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">// [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span>
 
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span>
+<span class="w">  </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">// [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span>
 
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span>
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span>
-
-<span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span>
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>And that's it! Check out the other pages on the sidebar for other functionality.</p>
 

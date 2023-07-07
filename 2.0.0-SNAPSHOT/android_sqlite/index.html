@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started-on-android" class="md-skip">
+        <a href="#getting-started-with-sqlite-on-android" class="md-skip">
           Skip to content
         </a>
       
@@ -587,8 +587,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sqlite-version-support" class="md-nav__link">
-    SQLite Version Support
+  <a href="#defining-the-schema" class="md-nav__link">
+    Defining the Schema
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-typesafe-queries" class="md-nav__link">
+    Defining Typesafe Queries
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-versions" class="md-nav__link">
+    SQLite Versions
   </a>
   
 </li>
@@ -3453,8 +3467,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sqlite-version-support" class="md-nav__link">
-    SQLite Version Support
+  <a href="#defining-the-schema" class="md-nav__link">
+    Defining the Schema
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-typesafe-queries" class="md-nav__link">
+    Defining Typesafe Queries
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-versions" class="md-nav__link">
+    SQLite Versions
   </a>
   
 </li>
@@ -3485,7 +3513,7 @@
   
 
 
-<h1 id="getting-started-on-android">Getting Started on Android<a class="headerlink" href="#getting-started-on-android" title="Permanent link">&para;</a></h1>
+<h1 id="getting-started-with-sqlite-on-android">Getting Started with SQLite on Android<a class="headerlink" href="#getting-started-with-sqlite-on-android" title="Permanent link">&para;</a></h1>
 <p>First apply the gradle plugin in your project.  </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
@@ -3529,10 +3557,16 @@
 </div>
 </div>
 </div>
-<p>Put your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. Typically the first statement in the SQL file creates a table.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span>
-
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>It's recommended to switch Android Studio to use the "Project" view instead of the "Android" 
+view of your files, to make it easier to find and edit SQLDelight files.</p>
+</div>
+<h2 id="defining-the-schema">Defining the Schema<a class="headerlink" href="#defining-the-schema" title="Permanent link">&para;</a></h2>
+<p>Write your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. 
+Typically the first statement in the <code>.sq</code> file creates a table, but you can also create indexes
+or set up default content.</p>
+<div class="highlight"><span class="filename">src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 <span class="p">);</span>
@@ -3542,8 +3576,12 @@
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
 <span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Ryan Getzlaf&#39;</span><span class="p">);</span>
 </code></pre></div>
-<p>From this, SQLDelight will generate a <code>Database</code> Kotlin class with an associated <code>Schema</code> object that can be used to create your database and run your statements on it. Generating the <code>Database</code> file happens during the 'generateSqlDelightInterface' gradle task. This task runs during the 'make project'/'make module' build task, or automatically if you have the SQLDelight IDE plugin.</p>
-<p>Accessing the generated database also requires a driver, which SQLDelight provides implementations of:</p>
+<p>From these statements, SQLDelight will generate a <code>Database</code> class with an associated <code>Schema</code>
+object that can be used to create your database and execute statements on it. The <code>Database</code> class
+is generated by the <code>generateSqlDelightInterface</code> Gradle task which is run automatically by the
+SQLDelight IDE plugin when you edit a <code>.sq</code> file, and also as part of a normal Gradle build.</p>
+<p>To use the generated database in your code, you must add the SQLDelight Android driver dependency to 
+your project.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kotlin</label><label for="__tabbed_2_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3560,12 +3598,17 @@
 </div>
 </div>
 </div>
+<p>An instance of the driver can be constructed as shown below, and requires a reference to the generated <code>Schema</code> object.
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>It's recommended to switch Android Studio to use the "Project" view instead of the "Android" view of
-your files, in order to find and edit SQLDelight files.</p>
-<p>SQL statements inside a <code>.sq</code> file can be labeled to have a typesafe function generated for them available at runtime.</p>
-<div class="highlight"><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
+</code></pre></div></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The <code>AndroidSqliteDriver</code> will automatically create or migrate your schema when the driver is constructed.
+Migrations can also be executed manually if needed. See <a href="migrations#code-migrations">Code Migrations</a> for more</p>
+</div>
+<h2 id="defining-typesafe-queries">Defining Typesafe Queries<a class="headerlink" href="#defining-typesafe-queries" title="Permanent link">&para;</a></h2>
+<p>SQLDelight will generate a typesafe function for any labeled SQL statement in a <code>.sq</code> file.</p>
+<div class="highlight"><span class="filename">src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 
@@ -3577,28 +3620,29 @@ your files, in order to find and edit SQLDelight files.</p>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span><span class="n">player_number</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="p">)</span>
 <span class="k">VALUES</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
 </code></pre></div>
-<p>Files with labeled statements in them will have a queries file generated from them that matches the <code>.sq</code> file name - putting the above sql into <code>Player.sq</code> generates <code>PlayerQueries.kt</code>. To get a reference to <code>PlayerQueries</code> you need to wrap the driver we made above:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// In reality the database and driver above should be created a single time</span>
-<span class="c1">// and passed around using your favourite dependency injection/service</span>
-<span class="c1">// locator/singleton pattern.</span>
-<span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<p>A "Queries" object will be generated for each <code>.sq</code> file containing labeled statements.
+For example, a <code>PlayerQueries</code> object will be generated for the <code>Player.sq</code> file shown above.
+This object can be used to call the generated typesafe functions which will execute the actual SQL
+statements.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">fun</span><span class="w"> </span><span class="nf">doDatabaseThings</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span>
 
-<span class="kd">val</span><span class="w"> </span><span class="nv">playerQueries</span><span class="p">:</span><span class="w"> </span><span class="n">PlayerQueries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">// [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span>
 
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;)]</span>
+<span class="w">  </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">// [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span>
 
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">player_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Corey Perry&quot;</span><span class="p">)</span>
-<span class="n">println</span><span class="p">(</span><span class="n">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">())</span>
-<span class="c1">// Prints [HockeyPlayer(15, &quot;Ryan Getzlaf&quot;), HockeyPlayer(10, &quot;Corey Perry&quot;)]</span>
-
-<span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span>
-<span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HockeyPlayer</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ronald McDonald&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">playerQueries</span><span class="p">.</span><span class="na">insertFullPlayerObject</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>And that's it! Check out the other pages on the sidebar for other functionality.</p>
-<h2 id="sqlite-version-support">SQLite Version Support<a class="headerlink" href="#sqlite-version-support" title="Permanent link">&para;</a></h2>
-<p>The SQLDelight Gradle plugin will automatically select the SQLite dialect version based on your project's 
-<code>minSdkVersion</code> setting. <a href="https://developer.android.com/reference/android/database/sqlite/package-summary">See here</a> for 
+<h2 id="sqlite-versions">SQLite Versions<a class="headerlink" href="#sqlite-versions" title="Permanent link">&para;</a></h2>
+<p>For Android projects, the SQLDelight Gradle plugin will automatically select the SQLite dialect 
+version based on your project's <code>minSdkVersion</code> setting. <a href="https://developer.android.com/reference/android/database/sqlite/package-summary">See here</a> for 
 the list of supported SQLite versions on each Android SDK level.</p>
 
 
