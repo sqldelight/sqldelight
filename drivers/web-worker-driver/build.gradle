@@ -1,5 +1,5 @@
 plugins {
-  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.js)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
 }
@@ -14,26 +14,18 @@ kotlin {
       }
     }
   }
+} 
 
-  sourceSets {
-    jsMain {
-      dependencies {
-        api projects.runtime
-        implementation libs.kotlin.coroutines.core
-      }
-    }
+dependencies {
+  api projects.runtime
+  implementation libs.kotlin.coroutines.core
 
-    jsTest {
-      dependencies {
-        implementation libs.kotlin.test.js
-        implementation npm("sql.js", libs.versions.sqljs.get())
-        implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
-        implementation devNpm("copy-webpack-plugin", "9.1.0")
-        implementation libs.kotlin.coroutines.test
-        implementation project(":extensions:async-extensions")
-      }
-    }
-  }
+  testImplementation libs.kotlin.test.js
+  testImplementation npm("sql.js", libs.versions.sqljs.get())
+  testImplementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
+  testImplementation devNpm("copy-webpack-plugin", "9.1.0")
+  testImplementation libs.kotlin.coroutines.test
+  testImplementation project(":extensions:async-extensions")
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
