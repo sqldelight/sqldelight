@@ -8,7 +8,7 @@ CREATE TABLE some_types (
   some_long INTEGER,           -- Stored as INTEGER in db, retrieved as Long
   some_double REAL,            -- Stored as REAL in db, retrieved as Double
   some_string TEXT,            -- Stored as TEXT in db, retrieved as String
-  some_blob BLOB,              -- Stored as BLOB in db, retrieved as ByteArray
+  some_blob BLOB               -- Stored as BLOB in db, retrieved as ByteArray
 );
 ```
 
