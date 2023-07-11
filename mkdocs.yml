@@ -185,13 +185,14 @@ nav:
 theme:
   name: 'material'
   favicon: images/icon-cashapp.png
-  logo: images/icon-cashapp.png
+  logo: images/icon-sqldelight.png
+  custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
       media: "(prefers-color-scheme: light)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -199,8 +200,8 @@ theme:
     # Palette toggle for dark mode
     - scheme: slate
       media: "(prefers-color-scheme: dark)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -209,6 +210,7 @@ theme:
     - content.tabs.link
     - content.code.annotate
     - content.action.view
+    - announce.dismiss
 
 extra_css:
   - 'css/app.css'
