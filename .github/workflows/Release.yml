@@ -144,19 +144,19 @@ jobs:
 
       - name: Assemble NPM Packages
         run: ./gradlew :drivers:web-worker-driver:sqljs:assemblePackage
-      - name: Authenticate NPM
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm login --scope=@cashapp
 
       - name: Publish SNAPSHOT Packages
         working-directory: drivers/web-worker-driver/sqljs/build/package
         if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --tag snapshot
 
       - name: Publish Packages
         working-directory: drivers/web-worker-driver/sqljs/build/package
         if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish
 
 env:
