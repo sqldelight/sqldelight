@@ -39,7 +39,7 @@ mkdocs==1.4.3
     #   mike
     #   mkdocs-macros-plugin
     #   mkdocs-material
-mkdocs-macros-plugin==1.0.1
+mkdocs-macros-plugin==1.0.2
     # via -r requirements.in
 mkdocs-material==9.1.18
     # via -r requirements.in
