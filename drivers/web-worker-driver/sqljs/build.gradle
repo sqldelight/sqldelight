@@ -25,6 +25,7 @@ tasks.register("assemblePackage", Copy) {
   from "sqljs.worker.js"
   from rootProject.file("LICENSE.txt")
   from rootProject.file("README.md")
+  from rootProject.file(".npmrc")
 
   into layout.buildDirectory.file("package")
 }

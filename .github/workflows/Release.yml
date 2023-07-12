@@ -144,10 +144,6 @@ jobs:
 
       - name: Assemble NPM Packages
         run: ./gradlew :drivers:web-worker-driver:sqljs:assemblePackage
-      - name: Authenticate NPM
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm login --scope=@cashapp
 
       - name: Publish SNAPSHOT Packages
         working-directory: drivers/web-worker-driver/sqljs/build/package
@@ -161,3 +157,4 @@ jobs:
 
 env:
   GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
