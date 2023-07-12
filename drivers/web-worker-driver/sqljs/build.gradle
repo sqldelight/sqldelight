@@ -10,8 +10,12 @@ def packageJsonTask = tasks.register("writePackageJson") {
   outputs.file(tmpLocation)
 
   doLast {
+    def version = rootProject.version
+    if (version.contains("SNAPSHOT")) {
+      version = "${version}.${System.currentTimeMillis()}"
+    }
     def content = new String(Files.readAllBytes(file("package.json").toPath()), StandardCharsets.UTF_8)
-    content = content.replace("0.0.0", "${rootProject.version}")
+    content = content.replace("0.0.0", version)
     Files.write(tmpLocation.get().asFile.toPath(), content.getBytes(StandardCharsets.UTF_8))
   }
 }
