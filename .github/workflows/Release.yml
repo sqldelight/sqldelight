@@ -138,6 +138,9 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
+      - name: Setup .npmrc
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+
       - name: Get Version
         run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
         id: version

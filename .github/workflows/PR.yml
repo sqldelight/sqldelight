@@ -104,4 +104,3 @@ jobs:
 
 env:
   GRADLE_OPTS: -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
