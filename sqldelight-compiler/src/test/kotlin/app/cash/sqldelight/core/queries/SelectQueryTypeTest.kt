@@ -1784,7 +1784,7 @@ class SelectQueryTypeTest {
       |        |SELECT value
       |        |  FROM data
       |        |  WHERE id = last_insert_rowid()
-      |        ""${'"'}.trimMargin(), mapper, 0)
+      |        ""${'"'}.trimMargin(), mapper, 0).value
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:insertAndReturn"

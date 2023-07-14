@@ -272,6 +272,16 @@ abstract class QueryGenerator(
       }
     }
 
+    // Extract value from the result of a grouped statement
+    if (isNamedQuery && query.statement is SqlDelightStmtClojureStmtList) {
+      binder += "%L"
+      if (generateAsync) {
+        arguments.add(".await()")
+      } else {
+        arguments.add(".value")
+      }
+    }
+
     val statementId = if (needsFreshStatement) CodeBlock.of("null") else CodeBlock.of("%L", id)
 
     if (isNamedQuery) {
