@@ -15,6 +15,7 @@ import com.intellij.find.findUsages.FindUsagesOptions
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.module.ModuleUtil
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.VirtualFile
@@ -41,7 +42,13 @@ internal class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
   override fun createFindUsagesHandler(
     element: PsiElement,
     forHighlightUsages: Boolean,
-  ): FindUsagesHandler = SqlDelightIdentifierHandler(element)
+  ): FindUsagesHandler? {
+    return try {
+      SqlDelightIdentifierHandler(element)
+    } catch (e: ProcessCanceledException) {
+      null
+    }
+  }
 }
 
 internal class SqlDelightIdentifierHandler(
