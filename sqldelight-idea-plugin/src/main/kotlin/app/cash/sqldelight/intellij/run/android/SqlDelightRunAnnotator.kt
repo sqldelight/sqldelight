@@ -44,8 +44,9 @@ class SqlDelightRunAnnotator : Annotator {
   private data class RunSqliteStatementGutterIconRenderer(
     private val element: SmartPsiElementPointer<SqlStmt>,
   ) : GutterIconRenderer() {
-    private val sqliteExplorerProjectService =
+    private val sqliteExplorerProjectService by lazy {
       DatabaseInspectorProjectService.getInstance(element.project)
+    }
 
     override fun getIcon(): Icon {
       return if (sqliteExplorerProjectService.hasOpenDatabase()) {
