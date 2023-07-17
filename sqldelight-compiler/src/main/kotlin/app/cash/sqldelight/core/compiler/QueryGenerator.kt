@@ -272,6 +272,13 @@ abstract class QueryGenerator(
       }
     }
 
+    // Extract value from the result of a grouped statement in async,
+    // because the transaction is put in an QueryResult.AsyncValue block.
+    if (generateAsync && isNamedQuery && query.statement is SqlDelightStmtClojureStmtList) {
+      binder += "%L"
+      arguments.add(".await()")
+    }
+
     val statementId = if (needsFreshStatement) CodeBlock.of("null") else CodeBlock.of("%L", id)
 
     if (isNamedQuery) {
