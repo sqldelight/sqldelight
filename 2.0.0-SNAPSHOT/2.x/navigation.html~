@@ -2002,6 +2002,11 @@
      </div>
     </div>
    </div>
+   <div class="sideMenuPart" id="sqlite-driver-nav-submenu-0-1" pageid="sqlite-driver::app.cash.sqldelight.driver.jdbc.sqlite//JdbcSqliteDriver/#kotlin.String#java.util.Properties#app.cash.sqldelight.db.SqlSchema[app.cash.sqldelight.db.QueryResult.Value[kotlin.Unit]]#kotlin.Boolean#kotlin.Array[app.cash.sqldelight.db.AfterVersion]/PointingToDeclaration//-190179072">
+    <div class="overview">
+     <a href="drivers/sqlite-driver/app.cash.sqldelight.driver.jdbc.sqlite/-jdbc-sqlite-driver.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon function"></span><span class="nav-link-child"><span>Jdbc</span><wbr><span>Sqlite</span><wbr><span><span>Driver()</span></span></span></span></a>
+    </div>
+   </div>
   </div>
  </div>
  <div class="sideMenuPart" id="sqljs-driver-nav-submenu" pageid="sqljs-driver::////PointingToDeclaration//1080447656">

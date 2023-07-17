@@ -3545,6 +3545,17 @@
 <span class="p">)</span>
 </code></pre></div>
 <p>In the following example, if you have 1.sqm, 2.sqm, 3.sqm, 4.sqm, and 5.sqm as migrations, the above callback will happen after 3.sqm completes when the database is on version 4. After the callback it will resume at 4.sqm and complete the remaining migrations, in this case 4.sqm and 5.sqm, meaning the final database version is 6.</p>
+<p>If you are using an <code>JdbcSqliteDriver</code> you can pass the schema and callbacks in during the driver's creation.
+It uses <code>PRAGMA user_version</code> to store current version of schema in database.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span>
+<span class="w">    </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;jdbc:sqlite:test.db&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Properties</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span>
+<span class="w">    </span><span class="n">callbacks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arrayOf</span><span class="p">(</span>
+<span class="w">        </span><span class="n">AfterVersion</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;INSERT INTO test (value) VALUES(&#39;hello&#39;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
 
 
 
