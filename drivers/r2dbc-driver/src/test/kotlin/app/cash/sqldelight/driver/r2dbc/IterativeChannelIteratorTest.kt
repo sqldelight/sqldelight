@@ -34,7 +34,7 @@ class IterativeChannelIteratorTest {
       }
     }.take(3).asPublisher()
 
-    val iterator = publisher.iterator()
+    val iterator = publisher.asIterator()
 
     var lastValue: Value? = null
     while (iterator.hasNext()) {

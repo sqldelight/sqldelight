@@ -41,13 +41,13 @@ class R2dbcDriver(
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
 
-      val resultChannel = result.map { row, rowMetadata ->
+      val rowPublisher = result.map { row, rowMetadata ->
         List(rowMetadata.columnMetadatas.size) { index ->
           row.get(index)
         }
       }
 
-      return@AsyncValue mapper(R2dbcCursor(resultChannel.iterator())).await()
+      return@AsyncValue mapper(R2dbcCursor(rowPublisher.asIterator())).await()
     }
   }
 
@@ -205,7 +205,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
   }
 }
 
-internal fun<T : Any> Publisher<T>.iterator(): ChannelIterator<T> =
+internal fun<T : Any> Publisher<T>.asIterator(): ChannelIterator<T> =
   AsyncChannelIterator(this)
 
 private class AsyncChannelIterator<T : Any>(
