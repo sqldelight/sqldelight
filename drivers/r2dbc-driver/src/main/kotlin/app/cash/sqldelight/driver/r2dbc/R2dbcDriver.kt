@@ -7,27 +7,18 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
-import io.r2dbc.spi.Row
 import io.r2dbc.spi.Statement
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ChannelIterator
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
 import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
-import kotlin.reflect.KClass
 
 class R2dbcDriver(
   val connection: Connection,
@@ -49,7 +40,11 @@ class R2dbcDriver(
 
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
-      val resultChannel = result.map { row, _ -> row }
+      val resultChannel = result.map { row, metadata ->
+        List(metadata.columnMetadatas.size) {
+          row.get(it)
+        }
+      }
       mapper(R2dbcCursor(resultChannel.iterator())).await()
     }
   }
@@ -208,40 +203,36 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
   }
 }
 
-internal fun<T : Any> Publisher<T>.iterator(): ChannelIterator<T> = AsyncChannelIterator(this)
+internal fun<T : Any> Publisher<T>.iterator(): ChannelIterator<T> = 
+  AsyncChannelIterator(this)
 
 private class AsyncChannelIterator<T : Any>(
   pub: Publisher<T>,
 ) : ChannelIterator<T> {
-  private val syncChannel: Channel<T?> = Channel(
-    capacity = 1,
-    onBufferOverflow = BufferOverflow.SUSPEND,
-  )
+  private var nextValue = CompletableDeferred<T?>()
   private val subscription = CompletableDeferred<Subscription>()
   private lateinit var next: T
 
   init {
     pub.subscribe(object : Subscriber<T> {
-      private lateinit var sub: Subscription
       override fun onSubscribe(sub: Subscription) {
         println("onSubscribe")
-        this.sub = sub
         subscription.complete(sub)
       }
 
       override fun onError(error: Throwable) {
         println("onError $error")
-        syncChannel.close(error)
+        nextValue.completeExceptionally(error)
       }
 
       override fun onComplete() {
         println("onComplete")
-        syncChannel.close()
+        nextValue.complete(null)
       }
 
-      override fun onNext(nextValue: T) {
-        println("onNext $nextValue")
-        syncChannel.trySendBlocking(nextValue)
+      override fun onNext(next: T) {
+        println("onNext $next")
+        nextValue.complete(next)
       }
     })
   }
@@ -251,12 +242,14 @@ private class AsyncChannelIterator<T : Any>(
     val sub = subscription.await()
     sub.request(1)
     try {
-      val next = syncChannel.receiveCatching().getOrNull().also {
+      val next = nextValue.await()?.also {
         println("hasNext received $it")
       } ?: return false
       this.next = next
+      nextValue = CompletableDeferred()
       return true
     } catch (cancel: CancellationException) {
+      println("canceled $cancel")
       sub.cancel()
       throw cancel
     }
@@ -266,10 +259,12 @@ private class AsyncChannelIterator<T : Any>(
 }
 
 class R2dbcCursor
-internal constructor(private val results: ChannelIterator<Row>) : SqlCursor {
-  private lateinit var currentRow: Row
+internal constructor(private val results: ChannelIterator<List<Any?>>) : SqlCursor {
+  private lateinit var currentRow: List<Any?>
   override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
+    println("cursor next")
     val hasNext = results.hasNext()
+    println("cursor next $hasNext")
     if (hasNext) {
       currentRow = results.next()
       true
@@ -279,22 +274,23 @@ internal constructor(private val results: ChannelIterator<Row>) : SqlCursor {
   }
 
   @PublishedApi
-  internal fun <T : Any> get(index: Int, klass: KClass<T>): T? {
-    return currentRow.get(index, klass.java)
+  internal fun <T : Any> get(index: Int): T? {
+    println("get $index $currentRow")
+    @Suppress("UNCHECKED_CAST")
+    return currentRow[index] as T?
   }
 
-  override fun getString(index: Int): String? = get(index, String::class)
+  override fun getString(index: Int): String? = get(index)
 
-  override fun getLong(index: Int): Long? = get(index, Number::class)?.toLong()
+  override fun getLong(index: Int): Long? = get<Number>(index)?.toLong()
 
-  override fun getBytes(index: Int): ByteArray? = get(index, ByteArray::class)
+  override fun getBytes(index: Int): ByteArray? = get(index)
 
-  override fun getDouble(index: Int): Double? = get(index, Double::class)
+  override fun getDouble(index: Int): Double? = get(index)
 
-  override fun getBoolean(index: Int): Boolean? = get(index, Boolean::class)
+  override fun getBoolean(index: Int): Boolean? = get(index)
 
-  inline fun <reified T : Any> getObject(index: Int): T? = get(index, T::class)
+  inline fun <reified T : Any> getObject(index: Int): T? = get(index)
 
-  @Suppress("UNCHECKED_CAST")
-  fun <T> getArray(index: Int): Array<T>? = get(index, Array::class) as Array<T>?
+  fun <T> getArray(index: Int): Array<T>? = get(index)
 }

@@ -1,19 +1,18 @@
 package app.cash.sqldelight.driver.r2dbc
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.reactive.asPublisher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 class IterativeChannelIteratorTest {
   data class Value(
-    var value: Long?,
+    var value: Int?,
   )
 
   @Test
@@ -24,27 +23,28 @@ class IterativeChannelIteratorTest {
       Value(2),
     )
 
-    // R2DBC cleans values after onComplete, so we do it here too.
-    fun cleanup() {
-      for (value in values) {
-        value.value = null
+    // R2DBC cleans values after onNext, so we do it here too.
+    val publisher = flow {
+      var counter = 0
+      while(true) {
+        val current = Value(counter)
+        emit(current)
+        current.value = null
+        counter += 1
       }
-    }
-
-    val publisher = values.asFlow().onCompletion {
-      cleanup()
-    }.asPublisher()
+    }.take(3).asPublisher()
 
     val iterator = publisher.iterator()
 
     var lastValue: Value? = null
     while (iterator.hasNext()) {
+      println("while hasNext true")
       val current = iterator.next()
+      println("while hasNext $current")
       assertNotNull(current.value)
       lastValue = current
     }
     assertNotNull(lastValue)
     assertFalse(iterator.hasNext())
-    assertNull(lastValue.value)
   }
 }
