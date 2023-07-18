@@ -24,6 +24,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.ui.EditorNotifications
 import com.intellij.util.lang.ClassPath
 import com.intellij.util.lang.UrlClassLoader
+import io.ktor.util.rootCause
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
 import org.jetbrains.plugins.gradle.settings.DistributionType
 import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
@@ -120,7 +121,7 @@ internal class FileIndexMap {
 
               if (compatibility is Incompatible) {
                 FileIndexingNotification.getInstance(project).unconfiguredReason =
-                  FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason)
+                  FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason, null)
                 return@mapValues defaultIndex
               }
 
@@ -143,22 +144,28 @@ internal class FileIndexMap {
         Timber.i("Initialized file index")
         EditorNotifications.getInstance(module.project).updateAllNotifications()
       } catch (externalException: ExternalSystemException) {
-        // It's a gradle error, ignore and let the user fix when they try and build the project
-        Timber.i("sqldelight model gen failed")
-        Timber.i(externalException)
+        // Expected interrupt from calling close() on the index.
+        if (externalException.rootCause() !is InterruptedException) {
+          // It's a gradle error, ignore and let the user fix when they try and build the project
+          Timber.i("sqldelight model gen failed")
+          Timber.i(externalException)
 
-        FileIndexingNotification.getInstance(project).unconfiguredReason =
-          FileIndexingNotification.UnconfiguredReason.Incompatible(
-            """
-            Connecting with the SQLDelight plugin failed: try building from the command line.
-            """.trimIndent(),
-          )
+          FileIndexingNotification.getInstance(project).unconfiguredReason =
+            FileIndexingNotification.UnconfiguredReason.Incompatible(
+              """
+              Connecting with the SQLDelight plugin failed: try building from the command line.
+              """.trimIndent(),
+              externalException,
+            )
+        }
       } finally {
         fetchThread = null
         initialized = false
       }
     }
   }
+
+  private fun Throwable.rootCause(): Throwable = cause?.rootCause() ?: this
 
   companion object {
     internal var defaultIndex: SqlDelightFileIndex = SqlDelightFileIndexImpl()
