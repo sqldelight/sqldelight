@@ -8,13 +8,14 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 
@@ -39,11 +40,13 @@ class R2dbcDriver(
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
 
-      val rowSet = result.map { row, rowMetadata ->
-        List(rowMetadata.columnMetadatas.size) { index -> row.get(index) }
-      }.asFlow().toList()
+      val rowPublisher = result.map { row, rowMetadata ->
+        List(rowMetadata.columnMetadatas.size) { index ->
+          row.get(index)
+        }
+      }
 
-      return@AsyncValue mapper(R2dbcCursor(rowSet)).await()
+      return@AsyncValue mapper(R2dbcCursor(rowPublisher.asIterator())).await()
     }
   }
 
@@ -201,27 +204,76 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
   }
 }
 
-/**
- * TODO: Write a better async cursor API
- */
-class R2dbcCursor(val rowSet: List<List<Any?>>) : SqlCursor {
-  var row = -1
-    private set
+internal fun <T : Any> Publisher<T>.asIterator(): AsyncPublisherIterator<T> =
+  AsyncPublisherIterator(this)
 
-  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(++row < rowSet.size)
+internal class AsyncPublisherIterator<T : Any>(
+  pub: Publisher<T>,
+) {
+  private var nextValue = CompletableDeferred<T?>()
+  private val subscription = CompletableDeferred<Subscription>()
 
-  override fun getString(index: Int): String? = rowSet[row][index] as String?
+  init {
+    pub.subscribe(object : Subscriber<T> {
+      override fun onSubscribe(sub: Subscription) {
+        subscription.complete(sub)
+      }
 
-  override fun getLong(index: Int): Long? = (rowSet[row][index] as Number?)?.toLong()
+      override fun onError(error: Throwable) {
+        nextValue.completeExceptionally(error)
+      }
 
-  override fun getBytes(index: Int): ByteArray? = rowSet[row][index] as ByteArray?
+      override fun onComplete() {
+        nextValue.complete(null)
+      }
 
-  override fun getDouble(index: Int): Double? = rowSet[row][index] as Double?
+      override fun onNext(next: T) {
+        nextValue.complete(next)
+      }
+    })
+  }
 
-  override fun getBoolean(index: Int): Boolean? = rowSet[row][index] as Boolean?
+  suspend fun next(): T? {
+    val sub = subscription.await()
+    sub.request(1)
+    try {
+      val next = nextValue.await() ?: return null
+      nextValue = CompletableDeferred()
+      return next
+    } catch (cancel: CancellationException) {
+      sub.cancel()
+      throw cancel
+    }
+  }
+}
 
-  inline fun <reified T : Any> getObject(index: Int): T? = rowSet[row][index] as T?
+class R2dbcCursor
+internal constructor(private val results: AsyncPublisherIterator<List<Any?>>) : SqlCursor {
+  private lateinit var currentRow: List<Any?>
 
-  @Suppress("UNCHECKED_CAST")
-  fun <T> getArray(index: Int): Array<T>? = rowSet[row][index] as Array<T>?
+  override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
+    val next = results.next() ?: return@AsyncValue false
+    currentRow = next
+    true
+  }
+
+  @PublishedApi
+  internal fun <T : Any> get(index: Int): T? {
+    @Suppress("UNCHECKED_CAST")
+    return currentRow[index] as T?
+  }
+
+  override fun getString(index: Int): String? = get(index)
+
+  override fun getLong(index: Int): Long? = get<Number>(index)?.toLong()
+
+  override fun getBytes(index: Int): ByteArray? = get(index)
+
+  override fun getDouble(index: Int): Double? = get(index)
+
+  override fun getBoolean(index: Int): Boolean? = get(index)
+
+  inline fun <reified T : Any> getObject(index: Int): T? = get(index)
+
+  fun <T> getArray(index: Int): Array<T>? = get(index)
 }
