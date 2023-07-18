@@ -55,3 +55,19 @@ WITH
          )
   )
 SELECT s FROM x WHERE ind=0;
+
+CREATE TABLE `tbl_accounts` (
+  `id` INTEGER,
+  `parent_id` INTEGER
+);
+
+WITH RECURSIVE `name_tree` AS (
+SELECT `id`, `parent_id`
+FROM `tbl_accounts`
+WHERE `id` = ?
+UNION ALL
+SELECT `c`.`id`, `c`.`parent_id`
+FROM `tbl_accounts` `c`
+JOIN `name_tree` `p` ON `c`.`id` = `p`.parent_id
+AND `c`.`id` <> `c`.`parent_id`)
+SELECT count(*) AS `level` FROM `name_tree`;
