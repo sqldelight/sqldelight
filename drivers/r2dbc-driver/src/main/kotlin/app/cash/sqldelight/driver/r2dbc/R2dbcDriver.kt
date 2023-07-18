@@ -8,12 +8,12 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ChannelIterator
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import org.reactivestreams.Publisher
@@ -205,7 +205,7 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
   }
 }
 
-internal fun<T : Any> Publisher<T>.iterator(): ChannelIterator<T> = 
+internal fun<T : Any> Publisher<T>.iterator(): ChannelIterator<T> =
   AsyncChannelIterator(this)
 
 private class AsyncChannelIterator<T : Any>(

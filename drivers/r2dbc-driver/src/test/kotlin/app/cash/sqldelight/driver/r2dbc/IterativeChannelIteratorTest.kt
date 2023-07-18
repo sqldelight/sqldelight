@@ -26,7 +26,7 @@ class IterativeChannelIteratorTest {
     // R2DBC cleans values after onNext, so we do it here too.
     val publisher = flow {
       var counter = 0
-      while(true) {
+      while (true) {
         val current = Value(counter)
         emit(current)
         current.value = null
