@@ -12,7 +12,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.ChannelIterator
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
@@ -205,15 +204,14 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
   }
 }
 
-internal fun<T : Any> Publisher<T>.asIterator(): ChannelIterator<T> =
-  AsyncChannelIterator(this)
+internal fun <T : Any> Publisher<T>.asIterator(): AsyncPublisherIterator<T> =
+  AsyncPublisherIterator(this)
 
-private class AsyncChannelIterator<T : Any>(
+internal class AsyncPublisherIterator<T : Any>(
   pub: Publisher<T>,
-) : ChannelIterator<T> {
+) {
   private var nextValue = CompletableDeferred<T?>()
   private val subscription = CompletableDeferred<Subscription>()
-  private lateinit var next: T
 
   init {
     pub.subscribe(object : Subscriber<T> {
@@ -235,35 +233,28 @@ private class AsyncChannelIterator<T : Any>(
     })
   }
 
-  override suspend fun hasNext(): Boolean {
+  suspend fun next(): T? {
     val sub = subscription.await()
     sub.request(1)
     try {
-      val next = nextValue.await() ?: return false
-      this.next = next
+      val next = nextValue.await() ?: return null
       nextValue = CompletableDeferred()
-      return true
+      return next
     } catch (cancel: CancellationException) {
       sub.cancel()
       throw cancel
     }
   }
-
-  override fun next(): T = next
 }
 
 class R2dbcCursor
-internal constructor(private val results: ChannelIterator<List<Any?>>) : SqlCursor {
+internal constructor(private val results: AsyncPublisherIterator<List<Any?>>) : SqlCursor {
   private lateinit var currentRow: List<Any?>
 
   override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
-    val hasNext = results.hasNext()
-    if (hasNext) {
-      currentRow = results.next()
-      true
-    } else {
-      false
-    }
+    val next = results.next() ?: return@AsyncValue false
+    currentRow = next
+    true
   }
 
   @PublishedApi

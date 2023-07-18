@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.reactive.asPublisher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 class IterativeChannelIteratorTest {
@@ -17,12 +17,6 @@ class IterativeChannelIteratorTest {
 
   @Test
   fun testAsSyncIteratorWithCleanup() = runTest {
-    val values = listOf(
-      Value(0),
-      Value(1),
-      Value(2),
-    )
-
     // R2DBC cleans values after onNext, so we do it here too.
     val publisher = flow {
       var counter = 0
@@ -37,12 +31,12 @@ class IterativeChannelIteratorTest {
     val iterator = publisher.asIterator()
 
     var lastValue: Value? = null
-    while (iterator.hasNext()) {
-      val current = iterator.next()
+    while (true) {
+      val current = iterator.next() ?: break
       assertNotNull(current.value)
       lastValue = current
     }
     assertNotNull(lastValue)
-    assertFalse(iterator.hasNext())
+    assertNull(iterator.next())
   }
 }
