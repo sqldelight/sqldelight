@@ -38,9 +38,7 @@ class IterativeChannelIteratorTest {
 
     var lastValue: Value? = null
     while (iterator.hasNext()) {
-      println("while hasNext true")
       val current = iterator.next()
-      println("while hasNext $current")
       assertNotNull(current.value)
       lastValue = current
     }

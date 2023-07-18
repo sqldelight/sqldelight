@@ -218,40 +218,32 @@ private class AsyncChannelIterator<T : Any>(
   init {
     pub.subscribe(object : Subscriber<T> {
       override fun onSubscribe(sub: Subscription) {
-        println("onSubscribe")
         subscription.complete(sub)
       }
 
       override fun onError(error: Throwable) {
-        println("onError $error")
         nextValue.completeExceptionally(error)
       }
 
       override fun onComplete() {
-        println("onComplete")
         nextValue.complete(null)
       }
 
       override fun onNext(next: T) {
-        println("onNext $next")
         nextValue.complete(next)
       }
     })
   }
 
   override suspend fun hasNext(): Boolean {
-    println("hasNext")
     val sub = subscription.await()
     sub.request(1)
     try {
-      val next = nextValue.await()?.also {
-        println("hasNext received $it")
-      } ?: return false
+      val next = nextValue.await() ?: return false
       this.next = next
       nextValue = CompletableDeferred()
       return true
     } catch (cancel: CancellationException) {
-      println("canceled $cancel")
       sub.cancel()
       throw cancel
     }
@@ -264,9 +256,7 @@ class R2dbcCursor
 internal constructor(private val results: ChannelIterator<List<Any?>>) : SqlCursor {
   private lateinit var currentRow: List<Any?>
   override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
-    println("cursor next")
     val hasNext = results.hasNext()
-    println("cursor next $hasNext")
     if (hasNext) {
       currentRow = results.next()
       true
@@ -277,7 +267,6 @@ internal constructor(private val results: ChannelIterator<List<Any?>>) : SqlCurs
 
   @PublishedApi
   internal fun <T : Any> get(index: Int): T? {
-    println("get $index $currentRow")
     @Suppress("UNCHECKED_CAST")
     return currentRow[index] as T?
   }
