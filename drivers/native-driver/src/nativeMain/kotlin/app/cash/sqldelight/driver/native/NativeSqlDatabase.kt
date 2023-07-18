@@ -130,7 +130,7 @@ class NativeSqliteDriver(
   )
 
   // A pool of reader connections used by all operations not in a transaction
-  internal val transactionPool: Pool<ThreadConnection>
+  private val transactionPool: Pool<ThreadConnection>
   internal val readerPool: Pool<ThreadConnection>
 
   // Once a transaction is started and connection borrowed, it will be here, but only for that
@@ -332,10 +332,10 @@ internal class ThreadConnection(
   private val onEndTransaction: (ThreadConnection) -> Unit,
 ) : Closeable {
   internal val transaction = ThreadLocalRef<Transacter.Transaction?>()
-  internal val closed: Boolean
+  private val closed: Boolean
     get() = connection.closed
 
-  internal val statementCache = mutableMapOf<Int, Statement>()
+  private val statementCache = mutableMapOf<Int, Statement>()
 
   fun useStatement(identifier: Int?, sql: String): Statement {
     return if (identifier != null) {

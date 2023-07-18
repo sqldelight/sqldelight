@@ -26,7 +26,5 @@ internal expect class PoolLock(reentrant: Boolean = false) {
      * depend on the same conditional result.
      */
     fun <R> loopForConditionalResult(block: () -> R?): R
-
-    fun loopUntilConditionalResult(block: () -> Boolean)
   }
 }

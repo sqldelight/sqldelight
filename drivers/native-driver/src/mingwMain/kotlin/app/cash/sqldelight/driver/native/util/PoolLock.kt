@@ -27,7 +27,7 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
     .apply {
       pthread_mutexattr_init(ptr)
       if (reentrant) {
-        pthread_mutexattr_settype(ptr, PTHREAD_MUTEX_RECURSIVE.toInt())
+        pthread_mutexattr_settype(ptr, PTHREAD_MUTEX_RECURSIVE)
       }
     }
   private val mutex = nativeHeap.alloc<pthread_mutex_tVar>()
@@ -82,14 +82,6 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
       }
 
       return result
-    }
-
-    actual fun loopUntilConditionalResult(block: () -> Boolean) {
-      check(isActive.value)
-
-      while (!block()) {
-        pthread_cond_wait(cond.ptr, mutex.ptr)
-      }
     }
   }
 }
