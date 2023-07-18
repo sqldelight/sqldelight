@@ -255,6 +255,7 @@ private class AsyncChannelIterator<T : Any>(
 class R2dbcCursor
 internal constructor(private val results: ChannelIterator<List<Any?>>) : SqlCursor {
   private lateinit var currentRow: List<Any?>
+
   override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
     val hasNext = results.hasNext()
     if (hasNext) {
