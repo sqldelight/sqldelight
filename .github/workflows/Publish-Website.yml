@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-java@v3.11.0
         with:
           distribution: 'zulu'
-          java-version: 17
+          java-version-file: .github/workflows/.ci-java-version
       - name: Setup Gradle Java installations paths
         run: |
           cd ~/.gradle
