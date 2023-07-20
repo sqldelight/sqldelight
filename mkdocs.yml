@@ -185,7 +185,7 @@ nav:
 theme:
   name: 'material'
   favicon: images/icon-cashapp.png
-  logo: images/icon-sqldelight.png
+  logo: images/icon-sqldelight.svg
   custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
