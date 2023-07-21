@@ -15,8 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
-        os: [ macOS-latest, ubuntu-latest ]
+        os: [ macOS-latest, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
