@@ -4,11 +4,11 @@
 #
 #    pip-compile requirements.in
 #
-certifi==2023.5.7
+certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
     # via requests
-click==8.1.5
+click==8.1.6
     # via mkdocs
 colorama==0.4.6
     # via mkdocs-material
@@ -57,7 +57,7 @@ python-dateutil==2.8.2
     # via
     #   ghp-import
     #   mkdocs-macros-plugin
-pyyaml==6.0
+pyyaml==6.0.1
     # via
     #   mike
     #   mkdocs
@@ -74,7 +74,7 @@ six==1.16.0
     # via python-dateutil
 termcolor==2.3.0
     # via mkdocs-macros-plugin
-urllib3==2.0.3
+urllib3==2.0.4
     # via requests
 verspec==0.1.0
     # via mike
