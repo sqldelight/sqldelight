@@ -17,8 +17,6 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.ProcessingContext
 import org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex
 import org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
 
 internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -62,8 +60,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       val project = element.project
       val scope = GlobalSearchScope.allScope(project)
       val ktClass = { KotlinFullClassNameIndex[qName, project, scope].firstOrNull() }
-      val typeAliasFqNameIndex = getKotlinTopLevelTypeAliasFqNameIndex()
-      val typeAlias = { typeAliasFqNameIndex[qName, project, scope].firstOrNull() }
+      val typeAlias = { KotlinTopLevelTypeAliasFqNameIndex.get(qName, project, scope).firstOrNull() }
       val javaPsiFacade = JavaPsiFacade.getInstance(project)
       val javaClass = { javaPsiFacade.findClass(qName, scope) }
       return ktClass() ?: typeAlias() ?: javaClass()
@@ -71,22 +68,4 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
 
     private fun typeForThisPackage(file: SqlDelightFile) = "${file.packageName}.${element.text}"
   }
-}
-
-private fun getKotlinTopLevelTypeAliasFqNameIndex(): KotlinTopLevelTypeAliasFqNameIndex {
-  // read the INSTANCE variable reflectively first (newer Kotlin plugins)
-  try {
-    val instanceField = KotlinTopLevelTypeAliasFqNameIndex::class.java.getField("INSTANCE")
-    val instance = instanceField.get(null)
-    if (instance is KotlinTopLevelTypeAliasFqNameIndex) {
-      return instance
-    }
-  } catch (e: Exception) {
-    /* intentionally empty, fall back to getInstance() call in case of errors */
-  }
-  // Call the method getInstance on the companion type.
-  val companionMethod =
-    KotlinTopLevelTypeAliasFqNameIndex::class.companionObject!!.java.getMethod("getInstance")
-  return companionMethod.invoke(KotlinTopLevelTypeAliasFqNameIndex::class.companionObjectInstance!!)
-    as KotlinTopLevelTypeAliasFqNameIndex
 }
