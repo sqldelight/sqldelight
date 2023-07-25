@@ -33,6 +33,7 @@ import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
@@ -135,6 +136,7 @@ private class SqlDelightFileViewProvider(
       {
         ReadAction.nonBlocking(
           Callable {
+            DumbService.getInstance(module.project).waitForSmartMode()
             file.findChildrenOfType<TableElement>().forEach { queryable ->
               val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
                 .mapNotNull { it.element.containingFile as? SqlDelightFile }
