@@ -26,7 +26,7 @@ class MySqlTest {
 
   @Before
   fun before() {
-    connection = DriverManager.getConnection("jdbc:tc:mysql:///myDb")
+    connection = DriverManager.getConnection("jdbc:tc:mysql:8.0:///myDb")
     driver = object : JdbcDriver() {
       override fun getConnection() = connection
       override fun closeConnection(connection: Connection) = Unit
