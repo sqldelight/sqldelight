@@ -1,7 +1,8 @@
 @import url("/sqldelight/css/app.css");
 
 :root {
-  --color-dark: #7e56c2;
+  --color-dark: #d2522b;
+  --sidemenu-section-active-color: #d2522b;
 }
 
 .library-name a {
@@ -11,7 +12,17 @@
 
 .library-name a::before {
   content: ' ';
-  background: url("/sqldelight/images/icon-cashapp.png") center no-repeat;
+  background: url("../../images/icon-sqldelight.png") center no-repeat;
+  height: 24px;
+  width: 24px;
+  background-size: cover;
+  display: inline-block;
+  margin-right: 24px;
+}
+
+.library-name a:hover::before {
+  content: ' ';
+  background: url("../../images/icon-cashapp.png") center no-repeat;
   height: 24px;
   width: 24px;
   background-size: cover;
