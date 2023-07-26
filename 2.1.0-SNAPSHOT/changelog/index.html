@@ -5178,16 +5178,26 @@
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[MySQL Dialect] MySQL: support timestamp/bigint in IF expression (#4329 by <a href="https://github.com/shellderp">Mike Gershunovsky</a>)</li>
+<li>[MySQL Dialect] MySQL: Add now (#4431 by <a href="https://github.com/hfhbd">Philip Wedemann</a>)</li>
 <li>[Web Driver] Enable NPM package publishing (#4364)</li>
+<li>[IDE Plugin] Allow users to show the stacktrace when the gradle tooling connect fails (#4383)</li>
 </ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[Sqlite Driver] Simplify using schema migrations for JdbcSqliteDriver (#3737 by [Lukáš Moravec][])</li>
+<li>[Sqlite Driver] Simplify using schema migrations for JdbcSqliteDriver (#3737 by <a href="https://github.com/morki">Lukáš Moravec</a>)</li>
+<li>[R2DBC Driver] Real async R2DBC cursor (#4387 by <a href="https://github.com/hfhbd">Philip Wedemann</a>)</li>
 </ul>
 <h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
 <ul>
+<li>[IDE Plugin] Dont instantiate the database project service until needed (#4382)</li>
 <li>[IDE Plugin] Handle process cancellation during find usages (#4340)</li>
+<li>[IDE Plugin] Fix IDE generation of async code (#4406)</li>
+<li>[IDE Plugin] Move assembly of the package structure to be one-time computed and off the EDT (#4417)</li>
+<li>[IDE Plugin] Use the correct stub index key for kotlin type resolution on 2023.2 (#4416)</li>
+<li>[IDE Plugin] Wait for the index to be ready before performing a search (#4419)</li>
+<li>[IDE Plugin] Dont perform a goto if the index is unavailable (#4420)</li>
 <li>[Compiler] Fix result expression for grouped statements (#4378)</li>
+<li>[Compiler] Don't use virtual table as interface type (#4427 by <a href="https://github.com/hfhbd">Philip Wedemann</a>)</li>
 </ul>
 <h2 id="200-rc02-2023-06-27">[2.0.0-rc02] - 2023-06-27<a class="headerlink" href="#200-rc02-2023-06-27" title="Permanent link">&para;</a></h2>
 <h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
