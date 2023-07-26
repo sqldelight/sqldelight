@@ -1,7 +1,6 @@
 package app.cash.sqldelight.core.integration
 
 import app.cash.sqldelight.EnumColumnAdapter
-import app.cash.sqldelight.Query
 import app.cash.sqldelight.core.integration.Shoots.LEFT
 import app.cash.sqldelight.core.integration.Shoots.RIGHT
 import app.cash.sqldelight.core.integration.Shoots.Type.ONE
@@ -187,13 +186,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val allPlayers = queryWrapper.playerQueries.allPlayers()
-    allPlayers.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    allPlayers.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(allPlayers.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -215,13 +208,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val teamForCoach = queryWrapper.teamQueries.teamForCoach("Randy Carlyle")
-    teamForCoach.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    teamForCoach.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(teamForCoach.executeAsList()).containsExactly(
       TeamForCoach(Team.Name("Anaheim Ducks"), 15),
@@ -236,13 +223,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(15, 87))
-    playersForNumbers.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForNumbers.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -262,13 +243,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(10, 87, 15))
-    playersForNumbers.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForNumbers.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -292,13 +267,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForTeam = queryWrapper.playerQueries.playersForTeam(Team.Name("Anaheim Ducks"))
-    playersForTeam.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForTeam.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -320,13 +289,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForTeam = queryWrapper.playerQueries.playersForTeam(Team.Name("Anaheim Ducks"))
-    playersForTeam.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForTeam.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),

@@ -499,8 +499,8 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
-      |    Data_(
+      |  public fun selectForId(id: Long): Query<SelectForId> = selectForId(id) { id_, value_ ->
+      |    SelectForId(
       |      id_,
       |      value_
       |    )
