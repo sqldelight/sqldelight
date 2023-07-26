@@ -36,7 +36,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WINDOW"
   ]
 }
-overrides ::= alter_table_rules | result_column | select_stmt
+overrides ::= alter_table_rules | result_column | select_stmt | extension_expr
 
 alter_table_rules ::= (
   {alter_table_add_column}
@@ -102,3 +102,9 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
 window_func ::= id
 window_name ::= id
 base_window_name ::= id
+
+extension_expr ::= window_function_invocation {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+  override = true
+}
