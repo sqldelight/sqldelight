@@ -263,17 +263,17 @@
               </div>
             </div>
           </div>
-<a data-name="-777508330%2FFunctions%2F1586659465" anchor-label="prepareStatementBinder" id="-777508330%2FFunctions%2F1586659465" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"></a>
+<a data-name="763025802%2FFunctions%2F1586659465" anchor-label="prepareStatementBinder" id="763025802%2FFunctions%2F1586659465" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":sqldelight-compiler:dialect:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="prepare-statement-binder.html"><span>prepare</span><wbr><span>Statement</span><wbr><span><span>Binder</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-777508330%2FFunctions%2F1586659465"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="763025802%2FFunctions%2F1586659465"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="prepare-statement-binder.html"><span class="token function">prepareStatementBinder</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">columnIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/CodeBlock///PointingToDeclaration/">CodeBlock</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/CodeBlock///PointingToDeclaration/">CodeBlock</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="prepare-statement-binder.html"><span class="token function">prepareStatementBinder</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">columnIndex<span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/CodeBlock///PointingToDeclaration/">CodeBlock</span><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/CodeBlock///PointingToDeclaration/">CodeBlock</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/CodeBlock///PointingToDeclaration/">CodeBlock</span></div></div></div>
                 </div>
               </div>
             </div>
