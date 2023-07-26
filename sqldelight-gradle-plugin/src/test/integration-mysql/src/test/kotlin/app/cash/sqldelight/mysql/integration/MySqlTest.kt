@@ -90,6 +90,7 @@ class MySqlTest {
 
   @Test
   fun testDates() {
+    val result: String = datesQueries.getNow().executeAsOne()
     with(
       datesQueries.insertDate(
         date = LocalDate.of(2020, 1, 1),
