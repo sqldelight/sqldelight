@@ -1,4 +1,4 @@
-# SQLDelight
+# <img src="docs/images/icon-sqldelight.svg" style="height: 1em; margin-bottom: -0.1em;"> SQLDelight
 
 See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
 
