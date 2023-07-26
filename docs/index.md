@@ -4,7 +4,7 @@
 
 SQLDelight generates typesafe Kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
-SQLDelight understands your existing SQL schema.
+SQLDelight takes your existing SQL schema,
 
 ```sql
 CREATE TABLE hockey_player (
@@ -14,7 +14,7 @@ CREATE TABLE hockey_player (
 );
 ```
 
-It generates typesafe code for any labeled SQL statements.
+and generates typesafe code to run your SQL statements and queries.
 
 ![intro.gif](images/intro.gif)
 
