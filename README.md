@@ -32,7 +32,7 @@ SQLite
 
 [MySQL (JVM)](https://cashapp.github.io/sqldelight/jvm_mysql/)
 
-[PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql) (Experimental)
+[PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql)
 
 [HSQL/H2 (JVM)](https://cashapp.github.io/sqldelight/jvm_h2) (Experimental)
 
