@@ -94,7 +94,7 @@
               </button>
             
             
-   SQLDelight 2.0 is now available! See <a href="upgrading-2.0">the docs</a> on migrating.
+   SQLDelight 2.0 is now available! See <a href="/sqldelight/upgrading-2.0">the docs</a> on migrating.
 
           </div>
           
@@ -830,37 +830,23 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../android_sqlite/upgrading/" class="md-nav__link">
-        Upgrading Pre-1.0
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
       
       
       
-        <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+        <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
           2.x API
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_2_9">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2_8">
           <span class="md-nav__icon md-icon"></span>
           2.x API
         </label>
@@ -2418,6 +2404,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#value-types" class="md-nav__link">
+    Value types
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3513,6 +3506,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#value-types" class="md-nav__link">
+    Value types
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3616,6 +3616,12 @@ which specifies the Kotlin type of the column in the generated interface.</p>
 <span class="w">    </span><span class="n">positionAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EnumColumnAdapter</span><span class="p">()</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">)</span>
+</code></pre></div>
+<h2 id="value-types">Value types<a class="headerlink" href="#value-types" title="Permanent link">&para;</a></h2>
+<p>SQLDelight can generate a value type for a column which wraps the underlying database type if requested:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">VALUE</span>
+<span class="p">);</span>
 </code></pre></div>
 
 

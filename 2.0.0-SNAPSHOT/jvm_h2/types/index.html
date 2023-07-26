@@ -94,7 +94,7 @@
               </button>
             
             
-   SQLDelight 2.0 is now available! See <a href="upgrading-2.0">the docs</a> on migrating.
+   SQLDelight 2.0 is now available! See <a href="/sqldelight/upgrading-2.0">the docs</a> on migrating.
 
           </div>
           
@@ -830,37 +830,23 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../android_sqlite/upgrading/" class="md-nav__link">
-        Upgrading Pre-1.0
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
       
       
       
-        <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+        <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
           2.x API
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_2_9">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2_8">
           <span class="md-nav__icon md-icon"></span>
           2.x API
         </label>
@@ -2088,6 +2074,20 @@
         <li class="md-nav__item">
   <a href="#enums" class="md-nav__link">
     Enums
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-types" class="md-nav__link">
+    Value types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimistic-locking" class="md-nav__link">
+    Optimistic Locking
   </a>
   
 </li>
@@ -3507,6 +3507,20 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#value-types" class="md-nav__link">
+    Value types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimistic-locking" class="md-nav__link">
+    Optimistic Locking
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#custom-types-in-migrations" class="md-nav__link">
     Custom Types in Migrations
   </a>
@@ -3630,6 +3644,33 @@ generated interface.</p>
 <span class="w">    </span><span class="n">positionAdapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EnumColumnAdapter</span><span class="p">()</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">)</span>
+</code></pre></div>
+<h2 id="value-types">Value types<a class="headerlink" href="#value-types" title="Permanent link">&para;</a></h2>
+<p>SQLDelight can generate a value type for a column which wraps the underlying database type if requested:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">VALUE</span>
+<span class="p">);</span>
+</code></pre></div>
+<h2 id="optimistic-locking">Optimistic Locking<a class="headerlink" href="#optimistic-locking" title="Permanent link">&para;</a></h2>
+<p>If you specify a column as a <code>LOCK</code>, it would have a value type generated for it, and also require
+that <code>UPDATE</code> statements correctly use the lock to perform updates.</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">VALUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">version_number</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">LOCK</span><span class="p">,</span>
+<span class="w">  </span><span class="n">nmae</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- This will fail (and the IDE plugin will suggest rewriting to the below)</span>
+<span class="n">updateName</span><span class="p">:</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
+
+<span class="c1">-- This will pass compilation</span>
+<span class="n">updateNamePassing</span><span class="p">:</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">hockeyPlayer</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+<span class="w">    </span><span class="n">version_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">version_number</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">version_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">version_number</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="custom-types-in-migrations">Custom Types in Migrations<a class="headerlink" href="#custom-types-in-migrations" title="Permanent link">&para;</a></h2>
 <p>If migrations are the schema's source of truth, you can also specify

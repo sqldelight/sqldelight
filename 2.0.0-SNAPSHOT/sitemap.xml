@@ -101,11 +101,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/android_sqlite/upgrading/</loc>
-         <lastmod>2023-07-26</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://cashapp.github.io/sqldelight/2.0.0-SNAPSHOT/common/androidx_paging/</loc>
          <lastmod>2023-07-26</lastmod>
          <changefreq>daily</changefreq>
