@@ -11,7 +11,7 @@ interface DialectType {
 
   fun encode(value: CodeBlock): CodeBlock = value
 
-  fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock
+  fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock
 
   fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock
 }

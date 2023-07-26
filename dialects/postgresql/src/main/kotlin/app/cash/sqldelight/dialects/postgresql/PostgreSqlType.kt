@@ -29,7 +29,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
   NUMERIC(ClassName("java.math", "BigDecimal")),
   ;
 
-  override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
+  override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
       .add(
         when (this) {
@@ -38,7 +38,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
           NUMERIC -> "bindBigDecimal"
         },
       )
-      .add("($columnIndex, %L)\n", value)
+      .add("(%L, %L)\n", columnIndex, value)
       .build()
   }
 

@@ -165,7 +165,14 @@ abstract class QueryGenerator(
         // id.forEachIndex { index, parameter ->
         //   statement.bindLong(previousArray.size + index, parameter)
         // }
-        val indexCalculator = "index + $offset".replace(" + 0", "")
+        val indexCalculator = CodeBlock.of(
+          if (offset == "0") {
+            "index"
+          } else {
+            "index + %L"
+          },
+          offset,
+        )
         val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.add(
           """
@@ -204,7 +211,7 @@ abstract class QueryGenerator(
 
           // Binds each parameter to the statement:
           // statement.bindLong(0, id)
-          bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
+          bindStatements.add(type.preparedStatementBinder(CodeBlock.of(offset), extractedVariables[type]))
 
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects

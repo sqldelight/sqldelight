@@ -21,7 +21,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
   BLOB(ByteArray::class.asTypeName()),
   ;
 
-  override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
+  override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
       .add(
         when (this) {
@@ -33,7 +33,7 @@ enum class PrimitiveType(override val javaType: TypeName) : DialectType {
           else -> throw IllegalArgumentException("Cannot bind unknown types or null")
         },
       )
-      .add("($columnIndex, %L)\n", value)
+      .add("(%L, %L)\n", columnIndex, value)
       .build()
   }
 
