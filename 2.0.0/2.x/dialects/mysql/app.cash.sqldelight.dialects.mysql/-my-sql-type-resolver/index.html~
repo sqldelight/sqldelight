@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MySqlTypeResolver</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../../index.html">
+<span>SQLDelight</span>            </a>    </div>
+    <div>2.0.0
+    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:mysql:dokkaHtmlPartial/main">jvm</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mysql::app.cash.sqldelight.dialects.mysql/MySqlTypeResolver///PointingToDeclaration//666177779">
+  <div class="breadcrumbs"><a href="../../index.html">mysql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.mysql</a><span class="delimiter">/</span><span class="current">MySqlTypeResolver</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>My</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Resolver</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MySqlTypeResolver</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span> : <a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-1540264280%2FConstructors%2F666177779" anchor-label="MySqlTypeResolver" id="-1540264280%2FConstructors%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-type-resolver.html"><span>My</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Resolver</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1540264280%2FConstructors%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1682584988%2FFunctions%2F666177779" anchor-label="argumentType" id="-1682584988%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="argument-type.html"><span>argument</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1682584988%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="argument-type.html"><span class="token function">argumentType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parent<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">, </span></span><span class="parameter ">argument<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-115613265%2FFunctions%2F666177779" anchor-label="definitionType" id="-115613265%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="definition-type.html"><span>definition</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-115613265%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="definition-type.html"><span class="token function">definitionType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">typeName<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTypeName///PointingToDeclaration/">SqlTypeName</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1269145172%2FFunctions%2F666177779" anchor-label="functionType" id="-1269145172%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="function-type.html"><span>function</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1269145172%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="function-type.html"><span class="token function">functionType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">functionExpr<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlFunctionExpr///PointingToDeclaration/">SqlFunctionExpr</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-219377026%2FFunctions%2F666177779" anchor-label="queryWithResults" id="-219377026%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-219377026%2FFunctions%2F666177779"><span>query</span><wbr><span>With</span><wbr><span><span>Results</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-219377026%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-219377026%2FFunctions%2F666177779"><span class="token function">queryWithResults</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sqlStmt<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlStmt///PointingToDeclaration/">SqlStmt</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-query-with-results/index.html">QueryWithResults</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1798599876%2FFunctions%2F666177779" anchor-label="resolvedType" id="1798599876%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="resolved-type.html"><span>resolved</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1798599876%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="resolved-type.html"><span class="token function">resolvedType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">expr<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="743324537%2FFunctions%2F666177779" anchor-label="simplifyType" id="743324537%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#743324537%2FFunctions%2F666177779"><span>simplify</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="743324537%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#743324537%2FFunctions%2F666177779"><span class="token function">simplifyType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">intermediateType<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+
