@@ -1,5 +1,18 @@
 # Change Log
 
+## [2.0.0] - 2023-07-26
+
+### Added
+- [MySQL Dialect] MySQL: support timestamp/bigint in IF expression (#4329 by [Mike Gershunovsky][shellderp])
+- [Web Driver] Enable NPM package publishing (#4364)
+
+### Changed
+- [Sqlite Driver] Simplify using schema migrations for JdbcSqliteDriver (#3737 by [Lukáš Moravec][])
+
+### Fixed
+- [IDE Plugin] Handle process cancellation during find usages (#4340)
+- [Compiler] Fix result expression for grouped statements (#4378)
+
 ## [2.0.0-rc02] - 2023-06-27
 
 ### Added
