@@ -44,7 +44,7 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
   TIMESTAMP(ClassName("java.time", "OffsetDateTime")),
   ;
 
-  override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
+  override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
       .add(
         when (this) {
@@ -53,7 +53,7 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
           NUMERIC -> "bindBigDecimal"
         },
       )
-      .add("($columnIndex, %L)\n", value)
+      .add("(%L, %L)\n", columnIndex, value)
       .build()
   }
 

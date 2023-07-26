@@ -68,8 +68,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         object : DialectType {
           override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
 
-          override fun prepareStatementBinder(columnIndex: String, value: CodeBlock) =
-            CodeBlock.of("bindObject($columnIndex, %L)\n", value)
+          override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
+            CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
 
           override fun cursorGetter(columnIndex: Int, cursorName: String) =
             CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
