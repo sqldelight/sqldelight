@@ -53,7 +53,7 @@ import java.io.File
 import java.util.StringTokenizer
 import kotlin.math.log10
 import kotlin.reflect.KClass
-import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 /**
  * Mocks an intellij environment for compiling sqldelight files without an instance of intellij
@@ -161,17 +161,17 @@ class SqlDelightEnvironment(
       }
 
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
-      logger("----- START ${it.name} ms -------")
-      val timeTaken = measureTimeMillis {
+      logger("----- START ${it.name} -------")
+      val timeTaken = measureTime {
         SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
         sourceFile = it
       }
-      logger("----- END ${it.name} in $timeTaken ms ------")
+      logger("----- END ${it.name} in $timeTaken ------")
     }
 
     topMigrationFile?.let { migrationFile ->
-      logger("----- START ${migrationFile.name} ms -------")
-      val timeTaken = measureTimeMillis {
+      logger("----- START ${migrationFile.name} -------")
+      val timeTaken = measureTime {
         SqlDelightCompiler.writeInterfaces(
           file = migrationFile,
           output = writer,
@@ -179,7 +179,7 @@ class SqlDelightEnvironment(
         )
         SqlDelightCompiler.writeImplementations(module, migrationFile, moduleName, writer)
       }
-      logger("----- END ${migrationFile.name} in $timeTaken ms ------")
+      logger("----- END ${migrationFile.name} in $timeTaken ------")
     }
 
     sourceFile?.let {
