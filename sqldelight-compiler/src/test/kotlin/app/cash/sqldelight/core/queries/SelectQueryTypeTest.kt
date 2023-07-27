@@ -1868,4 +1868,55 @@ class SelectQueryTypeTest {
       """.trimMargin(),
     )
   }
+
+  @Test
+  fun `multi column expression select`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE multi(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |multiColumnExpressionSelect:
+      |SELECT *
+      |FROM multi
+      |WHERE (id, name) > (?, ?);
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val select = file.namedQueries.first()
+    val generator = SelectQueryGenerator(select)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class MultiColumnExpressionSelectQuery<out T : kotlin.Any>(
+      |  public val id: kotlin.Long,
+      |  public val name: kotlin.String,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("multi", listener = listener)
+      |  }
+      |
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("multi", listener = listener)
+      |  }
+      |
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(841_750_630, ""${'"'}
+      |  |SELECT *
+      |  |FROM multi
+      |  |WHERE (id, name) > (?, ?)
+      |  ""${'"'}.trimMargin(), mapper, 2) {
+      |    bindLong(0, id)
+      |    bindString(1, name)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:multiColumnExpressionSelect"
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
 }
