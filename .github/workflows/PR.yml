@@ -28,6 +28,9 @@ jobs:
       contents: read
 
     steps:
+      - name: Disk Space at start
+        run: df -h
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
       - name: Checkout the repo
         uses: actions/checkout@v3
       # https://github.com/gradle/gradle-build-action/issues/561
@@ -68,6 +71,10 @@ jobs:
       - name: Verify IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:runPluginVerifier
+
+      - name: Disk Space after running IntelliJ plugin
+        run: df -h
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
 
       # Windows tests
       - name: Run windows tests
