@@ -53,8 +53,10 @@ kotlin {
     }
     jsTest {
       dependencies {
-        implementation projects.drivers.sqljsDriver
         implementation libs.stately.concurrency
+        implementation projects.drivers.webWorkerDriver
+        implementation npm("sql.js", libs.versions.sqljs.get())
+        implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
       }
     }
     testableNativeTest {
