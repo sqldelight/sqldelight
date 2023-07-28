@@ -341,7 +341,7 @@ class IntegrationTest {
     queryWrapper.playerQueries.insertPlayer(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT)
 
     assertThat(
-      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("A")).executeAsList()
+      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("A")).executeAsList(),
     ).containsExactly(
       Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -349,7 +349,7 @@ class IntegrationTest {
     )
 
     assertThat(
-      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("Z")).executeAsList()
+      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("Z")).executeAsList(),
     ).containsExactly(
       Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -357,7 +357,7 @@ class IntegrationTest {
     )
 
     assertThat(
-      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("A")).executeAsList()
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("A")).executeAsList(),
     ).containsExactly(
       Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -365,14 +365,14 @@ class IntegrationTest {
     )
 
     assertThat(
-      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("C")).executeAsList()
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("C")).executeAsList(),
     ).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
       Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
     )
 
     assertThat(
-      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("Z")).executeAsList()
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("Z")).executeAsList(),
     ).containsExactly(
       Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
     )
