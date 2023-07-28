@@ -68,13 +68,14 @@ jobs:
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
-      - name: Verify IntelliJ plugin
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        run: ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
       - name: Disk Space after running IntelliJ plugin
         run: df -h
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+
+      - name: Verify IntelliJ plugin
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        run: ./gradlew :sqldelight-idea-plugin:runPluginVerifier
 
       # Windows tests
       - name: Run windows tests
