@@ -3451,7 +3451,7 @@ that <code>UPDATE</code> statements correctly use the lock to perform updates.</
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">(</span>
 <span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">VALUE</span><span class="p">,</span>
 <span class="w">  </span><span class="n">version_number</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">LOCK</span><span class="p">,</span>
-<span class="w">  </span><span class="n">nmae</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 <span class="p">);</span>
 
 <span class="c1">-- This will fail (and the IDE plugin will suggest rewriting to the below)</span>
