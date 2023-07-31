@@ -22,7 +22,7 @@ jinja2==3.1.2
     #   mkdocs
     #   mkdocs-macros-plugin
     #   mkdocs-material
-markdown==3.3.7
+markdown==3.4.4
     # via
     #   mkdocs
     #   mkdocs-material
@@ -51,9 +51,9 @@ mkdocs-material-extensions==1.1.1
     #   mkdocs-material
 packaging==23.1
     # via mkdocs
-pathspec==0.11.1
+pathspec==0.11.2
     # via mkdocs
-platformdirs==3.9.1
+platformdirs==3.10.0
     # via mkdocs
 pygments==2.15.1
     # via mkdocs-material
