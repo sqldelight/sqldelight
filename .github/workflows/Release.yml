@@ -45,8 +45,6 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Assemble in parallel
-        run: ./gradlew assemble dokkaHtml
       - name: Publish the macOS artifacts
         if: matrix.os == 'macOS-latest'
         env:
@@ -98,8 +96,6 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Assemble in parallel
-        run: ./gradlew assemble dokkaHtml
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
