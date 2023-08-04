@@ -53,8 +53,7 @@ abstract class SqlDelightFile(
   }
 
   val packageName: String? by lazy {
-    module?.let {
-        module ->
+    module?.let { module ->
       SqlDelightFileIndex.getInstance(module).packageName(this)
     }
   }
