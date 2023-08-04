@@ -11,7 +11,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 
-abstract class DropForeignKeyMixin(
+internal abstract class DropForeignKeyMixin(
   node: ASTNode,
 ) : SqlCompositeElementImpl(node),
   MySqlAlterTableDropForeignKey {
