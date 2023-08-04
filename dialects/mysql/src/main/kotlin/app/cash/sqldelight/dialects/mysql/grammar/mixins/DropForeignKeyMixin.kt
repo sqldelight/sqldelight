@@ -28,12 +28,13 @@ internal abstract class DropForeignKeyMixin(
   }
 
   private fun SqlColumnName.getColumnDefOrNull(): SqlColumnDef? {
+    val ref = reference?.resolve() ?: return null
     val tables = tablesAvailable(this)
     for (table in tables) {
       val tableDef = table.tableName.parentOfType<SqlCreateTableStmt>() ?: continue
       for (columnDef in tableDef.columnDefList) {
-        val name = columnDef.columnName.name
-        if (name == this.name) {
+        val columnRef = columnDef.columnName.reference
+        if (columnRef != null && columnRef.resolve() == ref) {
           return columnDef
         }
       }
@@ -54,7 +55,7 @@ internal abstract class DropForeignKeyMixin(
         if (foreignKeyClause != null) {
           val columns = (foreignKeyClause.parent as SqlTableConstraint).columnNameList
           for (column in columns) {
-            if (column.name == columnName.name) {
+            if (column.reference?.resolve() == columnName) {
               return true
             }
           }
