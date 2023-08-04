@@ -256,7 +256,7 @@ alter_table_add_constraint ::= ADD table_constraint
 
 alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
 
-alter_table_drop_index ::= DROP (INDEX | KEY) {index_name}
+alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
 alter_table_drop_foreign_key ::= DROP FOREIGN KEY {column_name} {
   mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.DropForeignKeyMixin"
   pin = 2
