@@ -219,6 +219,8 @@ alter_table_rules ::= (
   | alter_table_modify_column
   | alter_table_add_index
   | alter_table_drop_index
+  | alter_table_drop_foreign_key
+  | alter_table_drop_primary_key
   | alter_table_drop_column
   | alter_table_convert_character_set
   | row_format_clause
@@ -254,7 +256,12 @@ alter_table_add_constraint ::= ADD table_constraint
 
 alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
 
-alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
+alter_table_drop_index ::= DROP (INDEX | KEY) {index_name}
+alter_table_drop_foreign_key ::= DROP FOREIGN KEY {column_name} {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.DropForeignKeyMixin"
+  pin = 2
+}
+alter_table_drop_primary_key ::= DROP PRIMARY KEY
 
 placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 
