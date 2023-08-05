@@ -20,3 +20,14 @@ INSERT
 INTO sample
 SELECT test_id0, 100
 FROM test_ids0;
+
+WITH insert_test_sample AS (
+   INSERT INTO test
+   VALUES(1, 'Foo')
+   RETURNING id, name
+),
+insert_sample AS (
+    INSERT INTO sample (id, val)
+    SELECT id, 31 FROM insert_test_sample
+)
+SELECT * FROM insert_test_sample;
