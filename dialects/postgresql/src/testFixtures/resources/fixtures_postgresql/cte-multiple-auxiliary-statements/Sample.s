@@ -31,3 +31,12 @@ insert_sample AS (
     SELECT id, 31 FROM insert_test_sample
 )
 SELECT * FROM insert_test_sample;
+
+WITH deleted_test_sample AS (
+  DELETE FROM test
+  RETURNING id
+), deleted_sample AS (
+  DELETE FROM sample WHERE id IN (SELECT id FROM deleted_test_sample)
+  RETURNING id
+)
+SELECT * FROM deleted_test_sample;
