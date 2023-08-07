@@ -40,3 +40,12 @@ WITH deleted_test_sample AS (
   RETURNING id
 )
 SELECT * FROM deleted_test_sample;
+
+WITH updated_test_sample AS (
+  UPDATE test SET name = 'Bar'
+  RETURNING id
+), updated_sample AS (
+  UPDATE sample SET val = 42 WHERE id IN (SELECT id FROM updated_test_sample)
+  RETURNING id
+)
+SELECT * FROM updated_sample;
