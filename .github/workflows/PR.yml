@@ -22,7 +22,6 @@ jobs:
       - run: ./gradlew spotlessCheck
 
   build:
-    needs: spotless
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
       matrix:
