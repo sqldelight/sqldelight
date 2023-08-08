@@ -21,7 +21,7 @@ internal abstract class AlterTableModifyColumnMixin(
 
   override fun applyTo(lazyQuery: LazyQuery): LazyQuery {
     return LazyQuery(
-      tableName = lazyQuery.tableName,
+            tableName = lazyQuery.tableName,
       query = {
         val columns = placementClause.placeInQuery(
           columns = lazyQuery.query.columns,
