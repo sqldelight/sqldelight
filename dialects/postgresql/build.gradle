@@ -25,6 +25,7 @@ dependencies {
   testImplementation(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
+  testImplementation projects.dialects.postgresql.postgresqlTestFixtures
   testImplementation libs.junit
   testImplementation libs.truth
   testImplementation(libs.sqlPsiTestFixtures) {

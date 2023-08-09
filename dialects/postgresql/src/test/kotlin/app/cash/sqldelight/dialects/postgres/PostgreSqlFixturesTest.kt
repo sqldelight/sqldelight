@@ -1,6 +1,7 @@
 package app.cash.sqldelight.dialects.postgres
 
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
+import app.cash.sqldelight.dialects.postgresql.PostgresqlTestFixtures
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -25,16 +26,10 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
   }
 
   companion object {
-    private val fixtures = arrayOf("src/test/fixtures_postgresql")
-
     @Suppress("unused")
     // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
     @JvmStatic
-    fun parameters() = fixtures.flatMap { fixtureFolder ->
-      File(fixtureFolder).listFiles()!!
-        .filter { it.isDirectory }
-        .map { arrayOf(it.name, it) }
-    } + ansiFixtures
+    fun parameters() = PostgresqlTestFixtures.fixtures + ansiFixtures
   }
 }

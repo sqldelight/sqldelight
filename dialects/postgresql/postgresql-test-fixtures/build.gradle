@@ -1,0 +1,6 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  id("app.cash.sqldelight.toolchain.compiler")
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
