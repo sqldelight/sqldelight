@@ -55,7 +55,7 @@ pathspec==0.11.2
     # via mkdocs
 platformdirs==3.10.0
     # via mkdocs
-pygments==2.15.1
+pygments==2.16.1
     # via mkdocs-material
 pymdown-extensions==10.1
     # via mkdocs-material
@@ -72,7 +72,7 @@ pyyaml==6.0.1
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2023.6.3
+regex==2023.8.8
     # via mkdocs-material
 requests==2.31.0
     # via mkdocs-material
