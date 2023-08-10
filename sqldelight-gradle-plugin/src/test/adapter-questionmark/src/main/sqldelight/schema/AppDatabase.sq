@@ -1,0 +1,8 @@
+CREATE TABLE Person (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL
+);
+
+insertNewPerson:
+INSERT INTO Person(id, name)
+VALUES(?, ?);
