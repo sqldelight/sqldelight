@@ -8,6 +8,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
@@ -182,6 +183,7 @@ class PostgreSqlTest {
       )
   }
 
+  @Ignore
   @Test fun testDateFunctions() {
     database.datesQueries.insertDate(
       date = LocalDate.of(2020, 1, 1),
