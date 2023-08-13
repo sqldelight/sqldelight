@@ -41,6 +41,7 @@ class PostgreSqlTest {
   )
 
   @Before fun before() {
+    driver.execute(null, "SET timezone TO UTC", 0)
     MyDatabase.Schema.create(driver)
   }
 
