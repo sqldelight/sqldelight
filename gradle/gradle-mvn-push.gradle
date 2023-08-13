@@ -18,14 +18,14 @@ publishing {
       relocation(MavenPublication) {
         pom {
           // Old artifact coordinates
-          groupId = "com.squareup"
+          groupId = "com.squareup.sqldelight"
           artifactId = POM_ARTIFACT_ID
           version = "2.0.0"
 
           distributionManagement {
             relocation {
               // New artifact coordinates
-              groupId = "app.cash"
+              groupId = "app.cash.sqldelight"
               artifactId = POM_ARTIFACT_ID
               version = "2.0.0"
               message = "groupId has been changed"
