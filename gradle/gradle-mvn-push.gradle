@@ -12,4 +12,31 @@ publishing {
             url = "${rootProject.buildDir}/localMaven"
         }
     }
+
+    publications {
+    // Specify relocation POM
+      relocation(MavenPublication) {
+        pom {
+          // Old artifact coordinates
+          groupId = "com.squareup"
+          artifactId = POM_ARTIFACT_ID
+          version = "2.0.0"
+
+          distributionManagement {
+            relocation {
+              // New artifact coordinates
+              groupId = "app.cash"
+              artifactId = POM_ARTIFACT_ID
+              version = "2.0.0"
+              message = "groupId has been changed"
+            }
+          }
+        }
+      }
+  }
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    setPreserveFileTimestamps false
+    setReproducibleFileOrder true
 }
