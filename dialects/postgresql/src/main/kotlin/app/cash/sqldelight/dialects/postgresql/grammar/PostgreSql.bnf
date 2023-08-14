@@ -53,6 +53,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -69,6 +70,8 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TEMP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TEMPORARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
@@ -364,7 +367,7 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>'
 jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
 
-extension_stmt ::= copy_stdin {
+extension_stmt ::= create_sequence_stmt | copy_stdin {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
@@ -373,6 +376,19 @@ extension_stmt ::= copy_stdin {
 copy_stdin ::= 'COPY' [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] FROM 'STDIN' [ [ WITH ] LP copy_option ( COMMA copy_option) * RP ] [ WHERE <<expr '-1'>> ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
 }
+
+sequence_name ::= id | string
+
+sequence_data_type ::= ( small_int_data_type
+                         | int_data_type
+                         | big_int_data_type )
+
+create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [ IF NOT EXISTS ] sequence_name
+    [ AS sequence_data_type ]
+    [ 'INCREMENT' [ BY ] {signed_number} ]
+    [ 'MINVALUE' {signed_number} | NO 'MINVALUE' ] [ 'MAXVALUE' {signed_number} | NO 'MAXVALUE' ]
+    [ 'START' [ WITH ] {signed_number} ] [ 'CACHE' {signed_number} ] [ [ NO ] 'CYCLE' ]
+    [ 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' ]
 
 copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
 copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
