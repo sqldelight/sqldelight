@@ -388,7 +388,9 @@ create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [
     [ 'INCREMENT' [ BY ] {signed_number} ]
     [ 'MINVALUE' {signed_number} | NO 'MINVALUE' ] [ 'MAXVALUE' {signed_number} | NO 'MAXVALUE' ]
     [ 'START' [ WITH ] {signed_number} ] [ 'CACHE' {signed_number} ] [ [ NO ] 'CYCLE' ]
-    [ 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' ]
+    [ 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' ] {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
+}
 
 copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
 copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
