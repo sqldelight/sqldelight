@@ -23,14 +23,15 @@ dependencies {
   }
   compileOnly libs.moshi
 
-  testImplementation(projects.sqldelightCompiler.environment) {
+  testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  testImplementation libs.junit
-  testImplementation libs.truth
-  testImplementation(libs.sqlPsiTestFixtures) {
+  testFixturesApi libs.junit
+  testFixturesApi(libs.sqlPsiTestFixtures) {
     exclude group: "com.jetbrains.intellij.platform"
   }
+
+  testImplementation libs.truth
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
