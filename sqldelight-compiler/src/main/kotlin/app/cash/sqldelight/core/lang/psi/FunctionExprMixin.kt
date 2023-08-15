@@ -9,11 +9,16 @@ import com.intellij.lang.ASTNode
 
 internal class FunctionExprMixin(node: ASTNode?) : SqlFunctionExprImpl(node) {
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
-    if (parent is SqlResultColumn &&
-      typeResolver != AnsiSqlTypeResolver &&
-      typeResolver.functionType(this) == null
-    ) {
-      annotationHolder.createErrorAnnotation(this, "Unknown function ${functionName.text}")
+    if (parent is SqlResultColumn) {
+      if (typeResolver != AnsiSqlTypeResolver &&
+        typeResolver.functionType(this) == null
+      ) {
+        annotationHolder.createErrorAnnotation(this, "Unknown function ${functionName.text}")
+      } else {
+        with(typeResolver) {
+          validateFunction(annotationHolder)
+        }
+      }
     }
   }
 }

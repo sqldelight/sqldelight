@@ -8,6 +8,7 @@ import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.blobType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.kotlinpoet.DOUBLE
@@ -403,6 +404,8 @@ class ExpressionTest {
       POSTGRESQL, HSQL, MYSQL -> INT
       else -> LONG
     }
+
+    val f = file.children.filterIsInstance<SqlFunctionExpr>()
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(

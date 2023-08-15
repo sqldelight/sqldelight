@@ -21,6 +21,7 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionEx
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
@@ -108,6 +109,25 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
     "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
+  }
+
+  override fun SqlFunctionExpr.validateFunction(
+    annotationHolder: SqlAnnotationHolder,
+  ) {
+    when (functionName.text.lowercase()) {
+      "max", "min" -> {
+        if (exprList.size != 1) {
+          annotationHolder.createErrorAnnotation(
+            this,
+            "${functionName.text} only takes one argument",
+          )
+        }
+      }
+
+      else -> with(parentResolver) {
+        validateFunction(annotationHolder)
+      }
+    }
   }
 
   override fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults? {

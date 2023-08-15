@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialect.api
 
+import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -22,6 +23,8 @@ interface TypeResolver {
    * Resolves the type of dialect specific functions
    */
   fun functionType(functionExpr: SqlFunctionExpr): IntermediateType?
+
+  fun SqlFunctionExpr.validateFunction(annotationHolder: SqlAnnotationHolder) {}
 
   /**
    * @return the dialect specific (or [PrimitiveType]) for a type name.
