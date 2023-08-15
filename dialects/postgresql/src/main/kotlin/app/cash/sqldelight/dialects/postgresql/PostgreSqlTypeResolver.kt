@@ -101,9 +101,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "var_pop", "var_samp",
     -> if (resolvedType(exprList[0]).dialectType == REAL) {
       IntermediateType(REAL).asNullable()
-    } else IntermediateType(
-      PostgreSqlType.NUMERIC,
-    ).asNullable()
+    } else {
+      IntermediateType(
+        PostgreSqlType.NUMERIC,
+      ).asNullable()
+    }
     "regr_count" -> IntermediateType(BIG_INT).asNullable()
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
     "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
