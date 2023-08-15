@@ -16,3 +16,6 @@ SELECT currval('serial');
 
 selectLastVal:
 SELECT lastval();
+
+selectSetVal:
+SELECT setval('serial', 200, TRUE);

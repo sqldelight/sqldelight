@@ -458,5 +458,8 @@ class PostgreSqlTest {
     val selectNextVal = database.sequencesQueries.selectNextVal().executeAsOne()
     val lastVal = database.sequencesQueries.selectLastVal().executeAsOne()
     assertThat(selectNextVal).isEqualTo(lastVal)
+
+    val selectSetVal = database.sequencesQueries.selectSetVal().executeAsOne()
+    assertThat(selectSetVal).isEqualTo(nextVal)
   }
 }
