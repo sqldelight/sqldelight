@@ -96,7 +96,13 @@ class JsDriverTest {
       QueryResult.Unit
     }
 
-    assertEquals(1, changes { it.next(); QueryResult.Value(it.getLong(0)) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        QueryResult.Value(it.getLong(0))
+      },
+    )
 
     query {
       assertTrue(it.next().value)
@@ -109,7 +115,13 @@ class JsDriverTest {
       bindLong(0, 2)
       bindString(1, "Jake")
     }
-    assertEquals(1, changes { it.next(); QueryResult.Value(it.getLong(0)) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        QueryResult.Value(it.getLong(0))
+      },
+    )
 
     query {
       assertTrue(it.next().value)
@@ -122,7 +134,13 @@ class JsDriverTest {
     }
 
     driver.execute(5, "DELETE FROM test", 0)
-    assertEquals(2, changes { it.next(); QueryResult.Value(it.getLong(0)) })
+    assertEquals(
+      2,
+      changes {
+        it.next()
+        QueryResult.Value(it.getLong(0))
+      },
+    )
 
     query {
       assertFalse(it.next().value)
@@ -143,12 +161,24 @@ class JsDriverTest {
       bindLong(0, 1)
       bindString(1, "Alec")
     }
-    assertEquals(1, changes { it.next(); QueryResult.Value(it.getLong(0)) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        QueryResult.Value(it.getLong(0))
+      },
+    )
     insert {
       bindLong(0, 2)
       bindString(1, "Jake")
     }
-    assertEquals(1, changes { it.next(); QueryResult.Value(it.getLong(0)) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        QueryResult.Value(it.getLong(0))
+      },
+    )
 
     fun query(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> QueryResult<Unit>) {
       driver.executeQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
@@ -195,7 +225,13 @@ class JsDriverTest {
       bindBytes(3, null)
       bindDouble(4, null)
     }
-    assertEquals(1, changes { it.next(); QueryResult.Value(it.getLong(0)) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        QueryResult.Value(it.getLong(0))
+      },
+    )
 
     val mapper: (SqlCursor) -> QueryResult<Unit> = {
       assertTrue(it.next().value)
