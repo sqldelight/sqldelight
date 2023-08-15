@@ -43,6 +43,11 @@ interface SqlDelightDialect {
    */
   fun typeResolver(parentResolver: TypeResolver): TypeResolver
 
+  /**
+   * A validator specific to this dialect.
+   */
+  fun validator(parentValidator: Validator): Validator = parentValidator
+
   fun migrationSquasher(parentSquasher: MigrationSquasher): MigrationSquasher = parentSquasher
 
   /**

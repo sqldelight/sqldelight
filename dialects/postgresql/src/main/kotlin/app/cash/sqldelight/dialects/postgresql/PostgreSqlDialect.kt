@@ -5,6 +5,7 @@ import app.cash.sqldelight.dialect.api.MigrationSquasher
 import app.cash.sqldelight.dialect.api.RuntimeTypes
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
+import app.cash.sqldelight.dialect.api.Validator
 import app.cash.sqldelight.dialects.postgresql.grammar.PostgreSqlParserUtil
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ColumnDefMixin
 import app.cash.sqldelight.dialects.postgresql.ide.PostgresConnectionManager
@@ -48,6 +49,8 @@ class PostgreSqlDialect : SqlDelightDialect {
   override fun typeResolver(parentResolver: TypeResolver): TypeResolver {
     return PostgreSqlTypeResolver(parentResolver)
   }
+
+  override fun validator(parentValidator: Validator): Validator = PostgreSqlValidator(parentValidator)
 
   override fun migrationSquasher(parentSquasher: MigrationSquasher): MigrationSquasher {
     return PostgreSqlMigrationSquasher(parentSquasher)

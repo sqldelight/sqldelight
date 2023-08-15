@@ -3,8 +3,10 @@ package app.cash.sqldelight.core.lang
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.lang.util.AnsiSqlTypeResolver
+import app.cash.sqldelight.core.lang.util.AnsiSqlValidator
 import app.cash.sqldelight.dialect.api.SqlDelightModule
 import app.cash.sqldelight.dialect.api.TypeResolver
+import app.cash.sqldelight.dialect.api.Validator
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.lang.Language
 import com.intellij.openapi.module.Module
@@ -50,6 +52,14 @@ abstract class SqlDelightFile(
       parentResolver = it.typeResolver(parentResolver)
     }
     dialect.typeResolver(parentResolver)
+  }
+
+  internal val validator: Validator by lazy {
+    var parentValidator: Validator = AnsiSqlValidator
+    ServiceLoader.load(SqlDelightModule::class.java, dialect::class.java.classLoader).forEach {
+      parentValidator = it.validator(parentValidator)
+    }
+    dialect.validator(parentValidator)
   }
 
   abstract val packageName: String?
