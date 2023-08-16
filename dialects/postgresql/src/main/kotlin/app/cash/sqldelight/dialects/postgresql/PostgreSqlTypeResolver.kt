@@ -165,7 +165,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
 
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
     is SqlBinaryExpr -> {
-      if (node.findChildByType(binaryExpressionChildOfTypeSet) != null) {
+      if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
         IntermediateType(PrimitiveType.BOOLEAN)
       } else {
         encapsulatingType(
@@ -200,7 +200,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   companion object {
-    private val binaryExpressionChildOfTypeSet = TokenSet.create(
+    private val binaryExprChildTypesResolvingToBool = TokenSet.create(
       SqlTypes.EQ,
       SqlTypes.EQ2,
       SqlTypes.NEQ,
