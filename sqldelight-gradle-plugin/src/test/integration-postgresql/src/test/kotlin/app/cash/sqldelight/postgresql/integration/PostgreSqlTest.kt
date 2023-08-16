@@ -327,4 +327,126 @@ class PostgreSqlTest {
       ),
     )
   }
+
+  @Test fun testIntsMinMaxSum() {
+    with(
+      database.numbersQueries.sumInts().executeAsOne(),
+    ) {
+      assertThat(sumSmall).isNull()
+      assertThat(sumInt).isNull()
+      assertThat(sumBig).isNull()
+    }
+
+    with(
+      database.numbersQueries.minInts().executeAsOne(),
+    ) {
+      assertThat(minSmall).isNull()
+      assertThat(minInt).isNull()
+      assertThat(minBig).isNull()
+    }
+
+    with(
+      database.numbersQueries.maxInts().executeAsOne(),
+    ) {
+      assertThat(maxSmall).isNull()
+      assertThat(maxInt).isNull()
+      assertThat(maxBig).isNull()
+    }
+
+    database.numbersQueries.insertInts(
+      small = 1,
+      reg = 1,
+      big = 1,
+    )
+    database.numbersQueries.insertInts(
+      small = 2,
+      big = 2,
+      reg = 2,
+    )
+
+    with(
+      database.numbersQueries.sumInts().executeAsOne(),
+    ) {
+      assertThat(sumSmall).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumInt).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumBig).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumSmall).isEqualTo(3)
+      assertThat(sumInt).isEqualTo(3)
+      assertThat(sumBig).isEqualTo(3)
+    }
+
+    with(
+      database.numbersQueries.minInts().executeAsOne(),
+    ) {
+      assertThat(minSmall).isEqualTo(1)
+      assertThat(minInt).isEqualTo(1)
+      assertThat(minBig).isEqualTo(1)
+    }
+
+    with(
+      database.numbersQueries.maxInts().executeAsOne(),
+    ) {
+      assertThat(maxSmall).isEqualTo(2)
+      assertThat(maxInt).isEqualTo(2)
+      assertThat(maxBig).isEqualTo(2)
+    }
+  }
+
+  @Test
+  fun testMultiplySmallerIntsBecomeLongs() {
+    database.numbersQueries.insertInts(
+      small = 1,
+      reg = 1,
+      big = Long.MAX_VALUE,
+    )
+
+    with(
+      database.numbersQueries.multiplyWithBigInts().executeAsOne(),
+    ) {
+      assertThat(small).isEqualTo(Long.MAX_VALUE)
+      assertThat(reg).isEqualTo(Long.MAX_VALUE)
+    }
+  }
+
+  @Test
+  fun testFloat() {
+    with(
+      database.numbersQueries.sumMinMaxFloat().executeAsOne(),
+    ) {
+      assertThat(sumFloat).isNull()
+      assertThat(minFloat).isNull()
+      assertThat(maxFloat).isNull()
+    }
+
+    database.numbersQueries.insertFloats(
+      flo = 1.5,
+    )
+
+    with(
+      database.numbersQueries.sumMinMaxFloat().executeAsOne(),
+    ) {
+      assertThat(sumFloat).isEqualTo(1.5)
+      assertThat(minFloat).isEqualTo(1.5)
+      assertThat(maxFloat).isEqualTo(1.5)
+    }
+  }
+
+  @Test
+  fun testMultiplyFloatInt() {
+    database.numbersQueries.insertInts(
+      small = 3,
+      reg = 3,
+      big = 3,
+    )
+
+    database.numbersQueries.insertFloats(
+      flo = 1.5,
+    )
+
+    with(
+      database.numbersQueries.multiplyFloatInt().executeAsOne(),
+    ) {
+      assertThat(mul).isEqualTo(4.5)
+    }
+  }
 }
