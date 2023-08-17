@@ -524,6 +524,21 @@
               </div>
             </div>
           </div>
+<a data-name="-2069810007%2FClasslikes%2F-128169639" anchor-label="PostgreSqlCreateIndexStmt" id="-2069810007%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-create-index-stmt/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2069810007%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-index-stmt/index.html">PostgreSqlCreateIndexStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlGeneratedClause///PointingToDeclaration/">SqlGeneratedClause</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="3699123%2FClasslikes%2F-128169639" anchor-label="PostgreSqlCurrentTimestampWithOptionalInterval" id="3699123%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
