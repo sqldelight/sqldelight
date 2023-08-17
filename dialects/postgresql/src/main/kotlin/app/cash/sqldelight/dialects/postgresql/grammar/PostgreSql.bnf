@@ -20,6 +20,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CREATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_DATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
@@ -31,6 +32,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ESCAPE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FALSE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
@@ -39,7 +41,9 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
@@ -86,6 +90,7 @@ overrides ::= type_name
   | compound_select_stmt
   | extension_expr
   | extension_stmt
+  | create_index_stmt
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -149,6 +154,13 @@ table_constraint ::= [ CONSTRAINT {identifier} ] (
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableConstraintImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTableConstraint"
   override = true
+}
+
+create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name} LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
+  override = true
+  pin = 6
 }
 
 identity_clause ::= 'IDENTITY'
