@@ -43,6 +43,28 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
 
   private fun SqlFunctionExpr.hsqlFunctionType() = when (functionName.text.lowercase()) {
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "greatest" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      TINY_INT,
+      SMALL_INT,
+      HsqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      TEXT,
+      BLOB,
+    )
+    "least" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      BLOB,
+      TEXT,
+      TINY_INT,
+      SMALL_INT,
+      INTEGER,
+      HsqlType.INTEGER,
+      BIG_INT,
+      REAL,
+    )
     "max" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, HsqlType.INTEGER, BIG_INT, REAL).asNullable()
     "length", "char_length", "character_length" -> IntermediateType(BIG_INT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)

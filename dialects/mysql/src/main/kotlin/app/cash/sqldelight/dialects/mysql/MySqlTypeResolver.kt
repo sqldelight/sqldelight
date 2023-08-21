@@ -94,8 +94,36 @@ class MySqlTypeResolver(
   }
 
   private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.lowercase()) {
-    "greatest" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB)
-    "least" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, INTEGER, REAL)
+    "greatest" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      TINY_INT,
+      SMALL_INT,
+      MySqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      MySqlType.TIMESTAMP,
+      MySqlType.DATE,
+      MySqlType.DATETIME,
+      MySqlType.TIME,
+      TEXT,
+      BLOB,
+    )
+    "least" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      BLOB,
+      TEXT,
+      MySqlType.TIME,
+      MySqlType.DATETIME,
+      MySqlType.DATE,
+      MySqlType.TIMESTAMP,
+      TINY_INT,
+      SMALL_INT,
+      INTEGER,
+      MySqlType.INTEGER,
+      BIG_INT,
+      REAL,
+    )
     "concat" -> encapsulatingType(exprList, TEXT)
     "last_insert_id" -> IntermediateType(INTEGER)
     "row_count" -> IntermediateType(INTEGER)

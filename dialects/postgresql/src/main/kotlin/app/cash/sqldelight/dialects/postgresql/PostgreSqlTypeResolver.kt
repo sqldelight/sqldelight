@@ -85,8 +85,30 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.lowercase()) {
-    "greatest" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB)
-    "least" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, INTEGER, REAL)
+    "greatest" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      SMALL_INT,
+      PostgreSqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      TEXT,
+      BLOB,
+      TIMESTAMP_TIMEZONE,
+      TIMESTAMP,
+    )
+    "least" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      BLOB,
+      TEXT,
+      SMALL_INT,
+      INTEGER,
+      PostgreSqlType.INTEGER,
+      BIG_INT,
+      REAL,
+      TIMESTAMP_TIMEZONE,
+      TIMESTAMP,
+    )
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
