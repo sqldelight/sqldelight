@@ -74,15 +74,13 @@ insert_stmt ::= [ {with_clause} ]
   ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT )
   INTO [ {database_name} DOT ] {table_name} [ AS {table_alias} ]
   [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ ( upsert_clause ) * ] [ returning_clause ] {
-  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteInsertStmtImpl"
-  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteInsertStmt"
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_35.grammar.mixins.InsertStmtMixin"
   pin = 5
   override = true
 }
 
-upsert_clause ::= ON CONFLICT ( [ upsert_conflict_target ] DO UPDATE upsert_do_update | [ upsert_conflict_target ] DO NOTHING ) {
+upsert_clause ::= ON CONFLICT [ upsert_conflict_target ] DO UPDATE upsert_do_update | ON CONFLICT [ upsert_conflict_target ] DO NOTHING {
   extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertClauseImpl"
-  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertClause"
 }
 
 upsert_conflict_target ::= LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
