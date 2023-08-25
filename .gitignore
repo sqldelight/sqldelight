@@ -27,3 +27,6 @@ docs/2.x
 docs/changelog.md
 docs/upgrading.md
 docs/contributing.md
+
+# Jenv local setting
+.java-version
