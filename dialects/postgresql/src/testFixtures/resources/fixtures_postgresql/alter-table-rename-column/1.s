@@ -11,3 +11,6 @@ FROM test;
 
 SELECT value2
 FROM test;
+
+ALTER TABLE test
+  RENAME COLUMN value2 TO value3;
