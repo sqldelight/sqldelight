@@ -294,6 +294,7 @@ alter_table_column_alias ::= id | string {
     "com.alecstrong.sql.psi.core.psi.AliasElement";
     "com.alecstrong.sql.psi.core.psi.NamedElement";
     "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+    "com.alecstrong.sql.psi.core.psi.SqlColumnName"
   ]
 }
 

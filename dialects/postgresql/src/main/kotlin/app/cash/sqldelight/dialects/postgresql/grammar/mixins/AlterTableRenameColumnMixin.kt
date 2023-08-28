@@ -18,7 +18,7 @@ internal abstract class AlterTableRenameColumnMixin(
   PostgreSqlAlterTableRenameColumn,
   AlterTableApplier {
   private val columnName
-    get() = children.filterIsInstance<SqlColumnName>().single()
+    get() = children.filterIsInstance<SqlColumnName>().first()
 
   private val columnAlias
     get() = children.filterIsInstance<SqlColumnAlias>().single()
