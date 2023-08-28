@@ -4648,9 +4648,13 @@ generated interface.</p>
 <span class="w">  </span><span class="n">some_time</span><span class="w"> </span><span class="k">TIME</span><span class="p">,</span><span class="w">                       </span><span class="c1">-- Retrieved as LocalTime</span>
 <span class="w">  </span><span class="n">some_timestamp</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span><span class="w">             </span><span class="c1">-- Retrieved as LocalDateTime</span>
 <span class="w">  </span><span class="n">some_timestamp</span><span class="w"> </span><span class="n">TIMESTAMPTZ</span><span class="p">,</span><span class="w">           </span><span class="c1">-- Retrieved as OffsetDateTime</span>
-<span class="w">  </span><span class="n">some_json</span><span class="w"> </span><span class="n">JSON</span><span class="w">                        </span><span class="c1">-- Retrieved as String</span>
-<span class="w">  </span><span class="n">some_interval</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w">                </span><span class="c1">-- Retrieved as PGInterval</span>
+<span class="w">  </span><span class="n">some_json</span><span class="w"> </span><span class="n">JSON</span><span class="p">,</span><span class="w">                       </span><span class="c1">-- Retrieved as String</span>
+<span class="w">  </span><span class="n">some_jsonb</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span><span class="w">                     </span><span class="c1">-- Retrieved as String</span>
+<span class="w">  </span><span class="n">some_interval</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="p">,</span><span class="w">               </span><span class="c1">-- Retrieved as PGInterval</span>
 <span class="w">  </span><span class="n">some_uuid</span><span class="w"> </span><span class="n">UUID</span><span class="w">                        </span><span class="c1">-- Retrieved as UUID</span>
+<span class="w">  </span><span class="n">some_bool</span><span class="w"> </span><span class="n">BOOL</span><span class="p">,</span><span class="w">                       </span><span class="c1">-- Retrieved as Boolean</span>
+<span class="w">  </span><span class="n">some_boolean</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="p">,</span><span class="w">                 </span><span class="c1">-- Retrieved as Boolean</span>
+<span class="w">  </span><span class="n">some_bytea</span><span class="w"> </span><span class="n">BYTEA</span><span class="w">                      </span><span class="c1">-- Retrieved as ByteArray</span>
 <span class="p">);</span>
 </code></pre></div>
 <h2 id="custom-column-types">Custom Column Types<a class="headerlink" href="#custom-column-types" title="Permanent link">&para;</a></h2>
