@@ -34,9 +34,13 @@ CREATE TABLE some_types (
   some_time TIME,                       -- Retrieved as LocalTime
   some_timestamp TIMESTAMP,             -- Retrieved as LocalDateTime
   some_timestamp TIMESTAMPTZ,           -- Retrieved as OffsetDateTime
-  some_json JSON                        -- Retrieved as String
-  some_interval INTERVAL                -- Retrieved as PGInterval
+  some_json JSON,                       -- Retrieved as String
+  some_jsonb JSONB,                     -- Retrieved as String
+  some_interval INTERVAL,               -- Retrieved as PGInterval
   some_uuid UUID                        -- Retrieved as UUID
+  some_bool BOOL,                       -- Retrieved as Boolean
+  some_boolean BOOLEAN,                 -- Retrieved as Boolean
+  some_bytea BYTEA                      -- Retrieved as ByteArray
 );
 ```
 
