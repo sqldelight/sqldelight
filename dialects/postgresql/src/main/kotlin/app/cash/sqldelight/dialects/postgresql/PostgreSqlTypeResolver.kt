@@ -21,6 +21,10 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionEx
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
+import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryMultExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
@@ -28,6 +32,8 @@ import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.asTypeName
@@ -90,6 +96,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "coalesce", "ifnull" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
     "max" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
     "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
+    "sum" -> {
+      val type = resolvedType(exprList.single())
+      if (type.dialectType == REAL) {
+        IntermediateType(REAL).asNullable()
+      } else {
+        IntermediateType(INTEGER).asNullable()
+      }
+    }
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "date_part" -> IntermediateType(REAL)
     "percentile_disc" -> IntermediateType(REAL).asNullable()
@@ -150,6 +164,23 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
+    is SqlBinaryExpr -> {
+      if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
+        IntermediateType(PrimitiveType.BOOLEAN)
+      } else {
+        encapsulatingType(
+          exprList = getExprList(),
+          nullableIfAny = this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr,
+          SMALL_INT,
+          PostgreSqlType.INTEGER,
+          INTEGER,
+          BIG_INT,
+          REAL,
+          TEXT,
+          BLOB,
+        )
+      }
+    }
     is SqlLiteralExpr -> when {
       literalValue.text == "CURRENT_DATE" -> IntermediateType(PostgreSqlType.DATE)
       literalValue.text == "CURRENT_TIME" -> IntermediateType(PostgreSqlType.TIME)
@@ -166,5 +197,20 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
 
     else -> parentResolver.resolvedType(this)
+  }
+
+  companion object {
+    private val binaryExprChildTypesResolvingToBool = TokenSet.create(
+      SqlTypes.EQ,
+      SqlTypes.EQ2,
+      SqlTypes.NEQ,
+      SqlTypes.NEQ2,
+      SqlTypes.AND,
+      SqlTypes.OR,
+      SqlTypes.GT,
+      SqlTypes.GTE,
+      SqlTypes.LT,
+      SqlTypes.LTE,
+    )
   }
 }
