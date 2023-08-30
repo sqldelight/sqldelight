@@ -174,8 +174,11 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun insertData(id: Long?, value_: List?) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public fun insertData(id: Long?, value_: List?): QueryResult<Long> {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
@@ -185,6 +188,7 @@ class QueriesTypeTest {
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
+      |    return result
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
@@ -300,14 +304,19 @@ class QueriesTypeTest {
       |package com.example
       |
       |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Long
       |
       |public class DataQueries(
       |  driver: SqlDriver,
       |  private val data_Adapter: Data_.Adapter,
       |) : TransacterImpl(driver) {
-      |  public fun insertData(data_: Data_) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public fun insertData(data_: Data_): QueryResult<Long> {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data (id, value)
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
@@ -317,6 +326,7 @@ class QueriesTypeTest {
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
+      |    return result
       |  }
       |}
       |
@@ -506,8 +516,11 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun insertData(id: Long?, value_: List?) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public fun insertData(id: Long?, value_: List?): QueryResult<Long> {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
@@ -517,6 +530,7 @@ class QueriesTypeTest {
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
+      |    return result
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
@@ -661,8 +675,11 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun insertData(id: Long?, value_: String?) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public fun insertData(id: Long?, value_: String?): QueryResult<Long> {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO search
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
@@ -672,6 +689,7 @@ class QueriesTypeTest {
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("search")
       |    }
+      |    return result
       |  }
       |
       |  private inner class SelectOffsetsQuery<out T : Any>(
