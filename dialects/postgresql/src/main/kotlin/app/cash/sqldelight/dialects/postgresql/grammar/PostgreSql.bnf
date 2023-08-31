@@ -10,6 +10,7 @@
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
@@ -27,6 +28,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
@@ -40,6 +42,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
@@ -63,6 +66,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
@@ -70,6 +74,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
@@ -91,6 +96,7 @@ overrides ::= type_name
   | extension_expr
   | extension_stmt
   | create_index_stmt
+  | select_stmt
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -316,6 +322,13 @@ alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 | SET GENERATED (ALWAYS | BY DEFAULT )
 ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAlterColumnMixin"
+  pin = 1
+}
+
+select_stmt ::= SELECT ( [ DISTINCT ON LP {result_column} ( COMMA {result_column} ) * RP ] | [ DISTINCT | ALL ] ) {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [HAVING <<expr '-1'>>] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
+  override = true
   pin = 1
 }
 
