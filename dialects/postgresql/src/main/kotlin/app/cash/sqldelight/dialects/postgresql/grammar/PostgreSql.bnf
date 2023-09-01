@@ -325,7 +325,12 @@ alter_table_alter_column ::= ALTER [COLUMN] {column_name}
   pin = 1
 }
 
-select_stmt ::= SELECT ( [ DISTINCT ON LP {result_column} ( COMMA {result_column} ) * RP ] | [ DISTINCT | ALL ] ) {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [HAVING <<expr '-1'>>] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+distinct_on_expr ::= DISTINCT ON LP {result_column} ( COMMA {result_column} ) * RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DistinctOnExpressionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+}
+
+select_stmt ::= SELECT ( [ distinct_on_expr ] | [ DISTINCT | ALL ] ) {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [HAVING <<expr '-1'>>] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
