@@ -114,9 +114,9 @@ class OptimisticLockTest {
       |      ""${'"'}.trimMargin(), 4) {
       |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
       |        bindString(0, text)
-      |        bindLong(1, version.version.toLong())
-      |        bindLong(2, id.id.toLong())
-      |        bindLong(3, version.version.toLong())
+      |        bindInt(1, version.version)
+      |        bindInt(2, id.id)
+      |        bindInt(3, version.version)
       |      }
       |  if (result.value == 0L) throw app.cash.sqldelight.db.OptimisticLockException("UPDATE on test failed because optimistic lock version did not match")
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->

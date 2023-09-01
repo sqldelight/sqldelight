@@ -63,8 +63,8 @@ class SelectQueryTypeTest {
     )
   }
 
-  @Test fun `returning clause in an update correctly generates a query function`(dialect: TestDialect) {
-    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
+  @Test fun `returning clause in an update correctly generates a query function - postgres`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.POSTGRESQL)
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE IF NOT EXISTS users(
@@ -82,7 +82,7 @@ class SelectQueryTypeTest {
       |
       """.trimMargin(),
       tempFolder,
-      dialect = PostgreSqlDialect(),
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -102,7 +102,55 @@ class SelectQueryTypeTest {
       |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
-      |    cursor.getLong(0)!!.toInt(),
+      |    cursor.getInt(0)!!,
+      |    cursor.getString(1)!!,
+      |    cursor.getString(2)!!
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `returning clause in an update correctly generates a query function - sqlite`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.SQLITE_3_35)
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE IF NOT EXISTS users(
+      |    id ${dialect.intType} PRIMARY KEY,
+      |    firstname ${dialect.textType} NOT NULL,
+      |    lastname ${dialect.textType} NOT NULL
+      |);
+      |
+      |update:
+      |UPDATE users SET
+      |    firstname = :firstname,
+      |    lastname = :lastname
+      |WHERE id = :id
+      |RETURNING id, firstname, lastname;
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> update(
+      |  firstname: kotlin.String,
+      |  lastname: kotlin.String,
+      |  id: kotlin.Long,
+      |  mapper: (
+      |    id: kotlin.Long,
+      |    firstname: kotlin.String,
+      |    lastname: kotlin.String,
+      |  ) -> T,
+      |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!
       |  )
