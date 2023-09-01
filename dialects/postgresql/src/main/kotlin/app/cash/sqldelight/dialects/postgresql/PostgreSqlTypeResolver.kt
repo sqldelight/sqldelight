@@ -172,6 +172,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
     "currval", "lastval", "nextval", "setval" -> IntermediateType(BIG_INT)
     "generate_series" -> encapsulatingType(exprList, INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP)
+    "regexp_count", "regexp_instr" -> IntermediateType(INTEGER)
+    "regexp_like" -> IntermediateType(BOOLEAN)
+    "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
     else -> null
   }
 
