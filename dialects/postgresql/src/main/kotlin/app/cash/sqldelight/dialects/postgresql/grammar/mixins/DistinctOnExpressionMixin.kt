@@ -35,7 +35,7 @@ internal abstract class DistinctOnExpressionMixin(node: ASTNode) :
       distinctOnColumns.mapNotNull { PsiTreeUtil.findChildOfType(it, SqlColumnName::class.java) }
 
     orderByColumnNames.zip(distinctOnColumnNames) { orderByCol, _ ->
-      if (!distinctOnColumnNames.any { distinctOnCol -> distinctOnCol.textMatches(orderByCol) }) {
+      if (distinctOnColumnNames.none { distinctOnCol -> distinctOnCol.textMatches(orderByCol) }) {
         annotationHolder.createErrorAnnotation(
           element = orderByCol,
           message = "SELECT DISTINCT ON expressions must match initial ORDER BY expressions",
