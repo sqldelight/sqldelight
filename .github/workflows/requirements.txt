@@ -45,7 +45,7 @@ mkdocs==1.5.2
     #   mkdocs-material
 mkdocs-macros-plugin==1.0.4
     # via -r requirements.in
-mkdocs-material==9.2.7
+mkdocs-material==9.2.8
     # via -r requirements.in
 mkdocs-material-extensions==1.1.1
     # via
@@ -76,7 +76,7 @@ pyyaml==6.0.1
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2022.10.31
+regex==2023.8.8
     # via mkdocs-material
 requests==2.31.0
     # via mkdocs-material
