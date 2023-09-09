@@ -102,7 +102,7 @@ jobs:
 
       # Build the sample
       - name: Build the sample
-        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         uses: gradle/gradle-build-action@v2
         with:
           arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
