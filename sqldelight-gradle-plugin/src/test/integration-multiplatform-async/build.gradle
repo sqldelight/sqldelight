@@ -50,7 +50,7 @@ kotlin {
         implementation("app.cash.sqldelight:android-driver:${app.cash.sqldelight.VersionKt.VERSION}")
       }
     }
-    androidTest {
+    androidUnitTest {
       dependencies {
         implementation libs.junit
         implementation libs.robolectric
