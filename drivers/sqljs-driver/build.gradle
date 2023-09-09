@@ -1,5 +1,5 @@
 plugins {
-  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.js)
   alias(libs.plugins.dokka)
 }
 
@@ -13,24 +13,16 @@ kotlin {
       }
     }
   }
+}
 
-  sourceSets {
-    jsMain {
-      dependencies {
-        api projects.runtime
-        implementation libs.kotlin.coroutines.core
-        implementation libs.stately.concurrency
-      }
-    }
+dependencies {
+  api projects.runtime
+  implementation libs.kotlin.coroutines.core
+  implementation libs.stately.concurrency
 
-    jsTest {
-      dependencies {
-        implementation libs.kotlin.test.js
-        implementation npm('sql.js', libs.versions.sqljs.get())
-        implementation devNpm("copy-webpack-plugin", "9.1.0")
-        implementation libs.kotlin.coroutines.test
-        implementation project(':extensions:async-extensions')
-      }
-    }
-  }
+  testImplementation libs.kotlin.test.js
+  testImplementation npm('sql.js', libs.versions.sqljs.get())
+  testImplementation devNpm("copy-webpack-plugin", "9.1.0")
+  testImplementation libs.kotlin.coroutines.test
+  testImplementation project(':extensions:async-extensions')
 }

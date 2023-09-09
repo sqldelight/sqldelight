@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.22"
+kotlin = "1.9.0"
 dokka = "1.8.20"
 kotlinCoroutines = "1.7.3"
 idea = "222.4459.24" # Flamingo | 2022.2.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
@@ -112,5 +112,5 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.21.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
-ksp = { id = "com.google.devtools.ksp", version = "1.8.22-1.0.11" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.0-1.0.11" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.13.2" }
