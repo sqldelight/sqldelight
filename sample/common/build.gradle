@@ -74,10 +74,3 @@ configurations {
   podDebugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
   podReleaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
 }
-
-afterEvaluate {
-  tasks.named("compileCommonMainKotlinMetadata") {
-    // https://youtrack.jetbrains.com/issue/KT-51293
-    enabled = false
-  }
-}
