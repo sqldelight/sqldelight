@@ -7,6 +7,7 @@ import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.util.Properties
 import kotlin.concurrent.getOrSet
 
@@ -57,15 +58,15 @@ private fun connectionManager(url: String, properties: Properties) = when (url) 
 
 private abstract class JdbcSqliteDriverConnectionManager : ConnectionManager {
   override fun Connection.beginTransaction() {
-    prepareStatement("BEGIN TRANSACTION").execute()
+    prepareStatement("BEGIN TRANSACTION").use(PreparedStatement::execute)
   }
 
   override fun Connection.endTransaction() {
-    prepareStatement("END TRANSACTION").execute()
+    prepareStatement("END TRANSACTION").use(PreparedStatement::execute)
   }
 
   override fun Connection.rollbackTransaction() {
-    prepareStatement("ROLLBACK TRANSACTION").execute()
+    prepareStatement("ROLLBACK TRANSACTION").use(PreparedStatement::execute)
   }
 }
 
