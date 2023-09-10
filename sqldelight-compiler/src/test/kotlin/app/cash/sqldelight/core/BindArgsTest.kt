@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core
 
+import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -383,6 +384,58 @@ class BindArgsTest {
       assertThat(args[2].dialectType).isEqualTo(PrimitiveType.TEXT)
       assertThat(args[2].javaType).isEqualTo(String::class.asClassName())
       assertThat(args[2].name).isEqualTo("last_name")
+    }
+  }
+
+  @Test fun `bind arg type in binary expression can be inferred from column`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE data (
+        |  datum INTEGER NOT NULL
+        |);
+        |
+        |selectData:
+        |SELECT *
+        |FROM data
+        |WHERE datum > :datum1 - 2.5 AND datum < :datum2 + 2.5;
+      """.trimMargin(),
+      tempFolder,
+    )
+    val column = file.namedQueries.first()
+    column.parameters.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[0].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[0].name).isEqualTo("datum1")
+
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[1].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[1].name).isEqualTo("datum2")
+    }
+  }
+
+  @Test fun `bind arg in binary expression can be cast as type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE data (
+        |  datum INTEGER NOT NULL
+        |);
+        |
+        |selectData:
+        |SELECT CAST(:datum1 AS REAL) + CAST(:datum2 AS INTEGER) - 10.5
+        |FROM data;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val column = file.namedQueries.first()
+    column.parameters.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.REAL)
+      assertThat(args[0].javaType).isEqualTo(Double::class.asClassName().copy(nullable = true))
+      assertThat(args[0].name).isEqualTo("datum1")
+
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[1].javaType).isEqualTo(Long::class.asClassName().copy(nullable = true))
+      assertThat(args[1].name).isEqualTo("datum2")
     }
   }
 

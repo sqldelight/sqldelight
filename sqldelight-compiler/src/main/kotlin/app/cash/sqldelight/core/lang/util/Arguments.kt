@@ -25,12 +25,16 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.SelectQueryable
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryBooleanExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlCaseExpr
 import com.alecstrong.sql.psi.core.psi.SqlCastExpr
 import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
@@ -114,8 +118,18 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
         IntermediateType(PrimitiveType.BOOLEAN)
       }
     }
-    is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
+
+    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlIsExpr, is SqlBinaryBooleanExpr, is SqlBetweenExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
+    }
+
+    is SqlBinaryExpr -> {
+      val validArg = children.lastOrNull { it is SqlCastExpr && it == argument } ?: if (children.none() { it is SqlColumnExpr }) {
+        parent.children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBinaryExpr }
+      } else {
+        children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      }
       validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }
 
