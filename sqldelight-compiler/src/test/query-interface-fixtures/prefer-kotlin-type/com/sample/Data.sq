@@ -1,0 +1,17 @@
+import java.util.List;
+import kotlin.Boolean;
+import com.sample.Person;
+import com.squareup.Redacted;
+
+CREATE TABLE people (
+  _id INTEGER NOT NULL PRIMARY KEY,
+  person1 BLOB AS Person NOT NULL,
+  person2 BLOB AS Person
+);
+
+preferKotlinType:
+SELECT MAX(person1, person2) AS max_person,
+       MIN(person1, person2) AS min_person,
+       COALESCE(person2, person1) AS coalesce_person,
+       IFNULL(person2, person1) AS if_null_person
+FROM people;

@@ -743,6 +743,10 @@ class QueriesTypeTest {
       |SELECT *
       |FROM soupView
       |WHERE soup_token = ?;
+      |
+      |maxSoupBroth:
+      |SELECT MAX(soup_broth)
+      |FROM soupView;
       """.trimMargin(),
       temporaryFolder,
       fileName = "MyView.sq",
@@ -795,6 +799,22 @@ class QueriesTypeTest {
       |      soup_token_,
       |      soup_broth,
       |      soup_name
+      |    )
+      |  }
+      |
+      |  public fun <T : Any> maxSoupBroth(mapper: (MAX: ChickenSoupBase.Broth?) -> T): Query<T> =
+      |      Query(-1_892_940_684, arrayOf("soupBase", "soup"), driver, "MyView.sq", "maxSoupBroth", ""${'"'}
+      |  |SELECT MAX(soup_broth)
+      |  |FROM soupView
+      |  ""${'"'}.trimMargin()) { cursor ->
+      |    mapper(
+      |      cursor.getBytes(0)?.let { soupBaseAdapter.soup_brothAdapter.decode(it) }
+      |    )
+      |  }
+      |
+      |  public fun maxSoupBroth(): Query<MaxSoupBroth> = maxSoupBroth { MAX ->
+      |    MaxSoupBroth(
+      |      MAX
       |    )
       |  }
       |

@@ -11,6 +11,7 @@ import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.ReturningQueryable
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.BIG_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
@@ -90,12 +91,35 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   private fun SqlFunctionExpr.postgreSqlFunctionType() = when (functionName.text.lowercase()) {
-    "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+    "greatest" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      SMALL_INT,
+      PostgreSqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      TEXT,
+      BLOB,
+      TIMESTAMP_TIMEZONE,
+      TIMESTAMP,
+    )
+    "least" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      BLOB,
+      TEXT,
+      SMALL_INT,
+      INTEGER,
+      PostgreSqlType.INTEGER,
+      BIG_INT,
+      REAL,
+      TIMESTAMP_TIMEZONE,
+      TIMESTAMP,
+    )
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
-    "coalesce", "ifnull" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
+    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
     "sum" -> {
       val type = resolvedType(exprList.single())
       if (type.dialectType == REAL) {
