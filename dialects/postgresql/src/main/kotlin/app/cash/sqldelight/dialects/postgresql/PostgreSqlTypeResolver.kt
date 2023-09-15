@@ -128,7 +128,6 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         IntermediateType(INTEGER).asNullable()
       }
     }
-
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "date_part" -> IntermediateType(REAL)
     "percentile_disc" -> IntermediateType(REAL).asNullable()
