@@ -11,3 +11,14 @@ FROM test;
 
 SELECT value2
 FROM test;
+
+ALTER TABLE test
+  RENAME COLUMN value2 TO value3;
+
+-- error[col 7]: No column found with name value2
+SELECT value2
+FROM test;
+
+SELECT value3
+FROM test;
+

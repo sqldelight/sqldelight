@@ -4,11 +4,13 @@
 #
 #    pip-compile requirements.in
 #
+babel==2.12.1
+    # via mkdocs-material
 certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
     # via requests
-click==8.1.6
+click==8.1.7
     # via mkdocs
 colorama==0.4.6
     # via mkdocs-material
@@ -43,7 +45,7 @@ mkdocs==1.5.2
     #   mkdocs-material
 mkdocs-macros-plugin==1.0.4
     # via -r requirements.in
-mkdocs-material==9.1.21
+mkdocs-material==9.3.1
     # via -r requirements.in
 mkdocs-material-extensions==1.1.1
     # via
@@ -51,13 +53,15 @@ mkdocs-material-extensions==1.1.1
     #   mkdocs-material
 packaging==23.1
     # via mkdocs
+paginate==0.5.6
+    # via mkdocs-material
 pathspec==0.11.2
     # via mkdocs
 platformdirs==3.10.0
     # via mkdocs
 pygments==2.16.1
     # via mkdocs-material
-pymdown-extensions==10.1
+pymdown-extensions==10.3
     # via mkdocs-material
 python-dateutil==2.8.2
     # via

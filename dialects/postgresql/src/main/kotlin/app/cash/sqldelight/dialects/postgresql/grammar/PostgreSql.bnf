@@ -203,6 +203,7 @@ with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | in
 }
 
 delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] [ returning_clause ] {
+  mixin =  "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlDeleteStmtLimitedMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDeleteStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited"
   pin = 2
@@ -233,7 +234,7 @@ insert_stmt ::= [ {with_clause} ]
     [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values}
     [ ON CONFLICT ( [conflict_target] DO NOTHING | conflict_target conflict_update ) ]
     [ returning_clause ] {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlInsertStmtMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
   override = true
   pin = 5
@@ -293,6 +294,7 @@ alter_table_column_alias ::= id | string {
     "com.alecstrong.sql.psi.core.psi.AliasElement";
     "com.alecstrong.sql.psi.core.psi.NamedElement";
     "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+    "com.alecstrong.sql.psi.core.psi.SqlColumnName"
   ]
 }
 
