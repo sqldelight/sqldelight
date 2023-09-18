@@ -125,11 +125,14 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
     }
 
     is SqlBinaryExpr -> {
-      val validArg = children.lastOrNull { it is SqlCastExpr && it == argument } ?: if (children.none() { it is SqlColumnExpr }) {
-        parent.children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBinaryExpr }
-      } else {
-        children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      val validArg = children.lastOrNull {
+        it is SqlCastExpr && it == argument
+      } ?: children.lastOrNull {
+        it is SqlColumnExpr
+      } ?: parent.children.lastOrNull {
+        it is SqlExpr && it !== argument && it !is SqlBinaryExpr
       }
+
       validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }
 
