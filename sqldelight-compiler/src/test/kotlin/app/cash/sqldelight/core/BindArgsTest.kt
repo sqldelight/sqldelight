@@ -413,6 +413,29 @@ class BindArgsTest {
     }
   }
 
+  @Test fun `bind arg in arithmetic binary expression can be cast as type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE data (
+        | datum INTEGER NOT NULL,
+        | point INTEGER NOT NULL
+        |);
+        |
+        |selectData:
+        |SELECT *, (datum + CAST(:datum1 AS REAL) * point) AS expected_datum
+        |FROM data;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val column = file.namedQueries.first()
+    column.parameters.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.REAL)
+      assertThat(args[0].javaType).isEqualTo(Double::class.asClassName().copy(nullable = true))
+      assertThat(args[0].name).isEqualTo("datum1")
+    }
+  }
+
   @Test fun `bind arg in binary expression can be cast as type`() {
     val file = FixtureCompiler.parseSql(
       """
