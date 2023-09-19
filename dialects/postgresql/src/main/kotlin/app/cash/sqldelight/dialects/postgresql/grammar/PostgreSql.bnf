@@ -276,6 +276,7 @@ alter_table_rules ::= (
   | alter_table_rename_column
   | alter_table_drop_column
   | alter_table_add_constraint
+  | alter_table_drop_constraint
   | alter_table_alter_column
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
@@ -304,6 +305,8 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
 }
 
 alter_table_add_constraint ::= ADD table_constraint
+
+alter_table_drop_contraint ::= DROP CONSTRAINT [ IF EXISTS ] constraint_name [ RESTRICT | CASCADE ]
 
 type_clause ::= 'TYPE'
 
