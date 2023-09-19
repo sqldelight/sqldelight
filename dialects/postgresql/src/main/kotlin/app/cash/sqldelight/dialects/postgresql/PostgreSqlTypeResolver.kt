@@ -2,8 +2,8 @@ package app.cash.sqldelight.dialects.postgresql
 
 import app.cash.sqldelight.dialect.api.DialectType
 import app.cash.sqldelight.dialect.api.IntermediateType
-import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
@@ -65,7 +65,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           }
         }
         jsonDataType != null -> TEXT
-        booleanDataType != null -> PrimitiveType.BOOLEAN
+        booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
@@ -147,6 +147,22 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "regr_count" -> IntermediateType(BIG_INT).asNullable()
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
     "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+    "to_json", "to_jsonb",
+    "array_to_json", "row_to_json",
+    "json_build_array", "jsonb_build_array",
+    "json_build_object", "jsonb_build_object",
+    "json_object", "jsonb_object",
+    "json_extract_path", "jsonb_extract_path",
+    "json_extract_path_text", "jsonb_extract_path_text",
+    "jsonb_set", "jsonb_set_lax", "jsonb_insert",
+    "json_strip_nulls", "jsonb_strip_nulls",
+    "jsonb_path_query_array", "jsonb_path_query_first", "jsonb_path_query_array_tz", "jsonb_path_query_first_tz",
+    "jsonb_pretty",
+    "json_typeof", "jsonb_typeof",
+    "json_agg", "jsonb_agg", "json_object_agg", "jsonb_object_agg",
+    -> IntermediateType(TEXT)
+    "json_array_length", "jsonb_array_length" -> IntermediateType(INTEGER)
+    "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
     else -> null
   }
 
@@ -190,7 +206,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
     is SqlBinaryExpr -> {
       if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
-        IntermediateType(PrimitiveType.BOOLEAN)
+        IntermediateType(BOOLEAN)
       } else {
         encapsulatingType(
           exprList = getExprList(),
