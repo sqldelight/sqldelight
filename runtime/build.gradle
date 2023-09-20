@@ -16,6 +16,10 @@ apiValidation {
 }
 
 kotlin {
+  wasm {
+    nodejs()
+  }
+
   targetHierarchy.default {
     it.group("testableNative") {
       // no withApple: https://github.com/cashapp/sqldelight/issues/4257

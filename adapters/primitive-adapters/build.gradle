@@ -8,6 +8,10 @@ plugins {
 archivesBaseName = 'sqldelight-primitive-adapters'
 
 kotlin {
+  wasm {
+    nodejs()
+  }
+
   sourceSets {
     commonMain {
       dependencies {
