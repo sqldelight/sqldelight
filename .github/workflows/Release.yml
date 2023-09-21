@@ -155,5 +155,5 @@ jobs:
         run: npm publish
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.caching=true -Dorg.gradle.jvmargs="-Xmx2g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.caching=true
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
