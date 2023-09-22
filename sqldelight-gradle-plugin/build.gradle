@@ -110,7 +110,7 @@ if (System.getenv("CI") == "true") {
       relocators = relocators.grep {
         !it.getPattern().startsWith("com.squareup.sqldelight") &&
                 !it.getPattern().startsWith("groovy") &&
-                !it.getPattern().startsWith("kotlin")
+                !it.getPattern().startsWith("kotlin.")
       }
     }
 
