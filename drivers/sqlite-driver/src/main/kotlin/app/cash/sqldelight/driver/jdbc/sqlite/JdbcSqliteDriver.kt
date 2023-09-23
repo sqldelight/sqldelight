@@ -4,7 +4,6 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.ConnectionManager
 import app.cash.sqldelight.driver.jdbc.ConnectionManager.Transaction
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
@@ -73,7 +72,7 @@ private fun connectionManager(url: String, properties: Properties): ConnectionMa
       path == ":memory:" ||
       path == "file::memory:" ||
       path.startsWith(":resource:") ||
-      url.contains("mode=memory") -> InMemoryConnectionManager(url, properties)
+      url.contains("mode=memory") -> StaticConnectionManager(url, properties)
     else -> ThreadedConnectionManager(url, properties)
   }
 }
@@ -92,7 +91,7 @@ private abstract class JdbcSqliteDriverConnectionManager : ConnectionManager {
   }
 }
 
-private class InMemoryConnectionManager(
+private class StaticConnectionManager(
   url: String,
   properties: Properties,
 ) : JdbcSqliteDriverConnectionManager() {
