@@ -72,7 +72,7 @@ private fun connectionManager(url: String, properties: Properties): ConnectionMa
       path == ":memory:" ||
       path == "file::memory:" ||
       path.startsWith(":resource:") ||
-      url.contains("mode=memory") -> InMemoryConnectionManager(url, properties)
+      url.contains("mode=memory") -> StaticConnectionManager(url, properties)
     else -> ThreadedConnectionManager(url, properties)
   }
 }
@@ -91,7 +91,7 @@ private abstract class JdbcSqliteDriverConnectionManager : ConnectionManager {
   }
 }
 
-private class InMemoryConnectionManager(
+private class StaticConnectionManager(
   url: String,
   properties: Properties,
 ) : JdbcSqliteDriverConnectionManager() {
