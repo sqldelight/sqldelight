@@ -29,6 +29,8 @@ class JdbcSqliteDriver constructor(
    * - `jdbc:sqlite::memory:` will create a purely in-memory database.
    * - `jdbc:sqlite:memdb1?mode=memory&cache=shared` will create a named in-memory
    *   database which can be shared across connections until all are closed.
+   *
+   * [sqlite.org/inmemorydb](https://www.sqlite.org/inmemorydb.html)
    */
   url: String,
   properties: Properties = Properties(),
