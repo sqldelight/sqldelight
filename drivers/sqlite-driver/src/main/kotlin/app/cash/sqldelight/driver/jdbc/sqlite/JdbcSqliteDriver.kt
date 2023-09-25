@@ -27,7 +27,7 @@ class JdbcSqliteDriver constructor(
    * - `jdbc:sqlite:` (i.e. an empty path) will create a temporary database whereby the
    *   temp file is deleted upon connection closure.
    * - `jdbc:sqlite::memory:` will create a purely in-memory database.
-   * - `jdbc:sqlite:memdb1?mode=memory&cache=shared` will create a named in-memory
+   * - `jdbc:sqlite:file:memdb1?mode=memory&cache=shared` will create a named in-memory
    *   database which can be shared across connections until all are closed.
    *
    * [sqlite.org/inmemorydb](https://www.sqlite.org/inmemorydb.html)
