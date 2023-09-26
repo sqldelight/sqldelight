@@ -280,6 +280,7 @@ alter_table_rules ::= (
   {alter_table_add_column}
   | {alter_table_rename_table}
   | alter_table_rename_column
+  | alter_table_drop_constraint
   | alter_table_drop_column
   | alter_table_add_constraint
   | alter_table_alter_column
@@ -310,6 +311,8 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
 }
 
 alter_table_add_constraint ::= ADD table_constraint
+
+alter_table_drop_constraint ::= DROP CONSTRAINT {identifier}
 
 type_clause ::= 'TYPE'
 
