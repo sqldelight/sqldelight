@@ -105,7 +105,7 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
+          arguments: build --stacktrace --parallel
           build-root-directory: sample
 
       - name: Build the web sample
