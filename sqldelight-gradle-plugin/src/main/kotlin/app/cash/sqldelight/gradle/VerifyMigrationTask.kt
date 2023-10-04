@@ -123,7 +123,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         .findDatabaseFiles()
 
       check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
-        "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+        "Verifying a migration requires a database file to be present. To generate one, use the generate schema Gradle task for your database. A quick way to find the task name(s) is to run `gradle :module:tasks | grep generate`."
       }
 
       databaseFiles.forEach { dbFile ->
