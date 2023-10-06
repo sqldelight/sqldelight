@@ -12,9 +12,22 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SEPARATOR"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
   ]
 }
-overrides ::= type_name | bind_parameter | alter_table_stmt
+overrides ::= type_name | bind_parameter | alter_table_stmt | select_stmt
 
 type_name ::= text_data_type | blob_data_type | int_data_type | real_data_type {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
@@ -39,4 +52,15 @@ alter_table_stmt ::= ALTER TABLE [ {database_name} DOT ] {table_name} {alter_tab
   stubClass = "com.alecstrong.sql.psi.core.psi.mixins.AlterTableStmtStub"
   pin = 1
   override = true
+}
+
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM ([ database_name DOT ] pragma_function_expr | {join_clause})] [ WHERE <<expr '-1'>> ] [{group_by}] [ HAVING <<expr '-1'>> ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
+  override = true
+  pin = 1
+}
+
+pragma_function_expr ::= {pragma_name} LP [ [ DISTINCT ] <<expr'-1'>> ( ( COMMA | FROM | FOR | SEPARATOR )  <<expr'-1'>> ) * | MULTIPLY ] RP {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_18.grammar.mixins.PragmaFunctionValidatorMixin"
 }

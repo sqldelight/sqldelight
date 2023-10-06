@@ -1,0 +1,1 @@
+Test.s line 2:14 - not a valid pragma function
