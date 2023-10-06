@@ -218,7 +218,6 @@ alter_table_rules ::= (
   | alter_table_change_column
   | alter_table_modify_column
   | alter_table_add_index
-  | alter_table_add_primary_index
   | alter_table_drop_index
   | alter_table_drop_primary_index
   | alter_table_drop_column
@@ -255,8 +254,6 @@ alter_table_modify_column ::= 'MODIFY' [ COLUMN ] {column_def} [ placement_claus
 alter_table_add_constraint ::= ADD table_constraint
 
 alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
-
-alter_table_add_primary_index ::= ADD PRIMARY KEY LP {indexed_column} ( COMMA {indexed_column} ) * RP
 
 alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
 
