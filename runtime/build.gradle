@@ -26,7 +26,6 @@ kotlin {
       it.withWatchosArm64()
       it.withWatchosX64()
       it.withWatchosSimulatorArm64()
-
       it.withLinuxX64()
       it.withMingw()
     }
@@ -43,13 +42,6 @@ kotlin {
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
-        implementation libs.stately.collections
-      }
-    }
-    testableNativeTest {
-      dependencies {
-        implementation libs.stately.concurrency
-        implementation libs.stately.collections
       }
     }
   }
