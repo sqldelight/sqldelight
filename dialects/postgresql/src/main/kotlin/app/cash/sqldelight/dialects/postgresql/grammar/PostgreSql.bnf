@@ -16,6 +16,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
@@ -64,6 +65,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RESTRICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
@@ -312,7 +314,7 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
 
 alter_table_add_constraint ::= ADD table_constraint
 
-alter_table_drop_constraint ::= DROP CONSTRAINT {identifier}
+alter_table_drop_constraint ::= DROP CONSTRAINT [ IF EXISTS ] {identifier} [ RESTRICT | CASCADE ]
 
 type_clause ::= 'TYPE'
 
