@@ -39,7 +39,6 @@ kotlin {
     commonTest {
       dependencies {
         implementation libs.kotlin.test
-        implementation libs.stately.core
         implementation libs.stately.concurrency
         implementation "app.cash.sqldelight:runtime:${app.cash.sqldelight.VersionKt.VERSION}"
       }
