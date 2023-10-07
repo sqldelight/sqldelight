@@ -77,7 +77,7 @@ schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref 
 
 objectDiff = { module = "de.danielbechler:java-object-diff", version = "0.95" }
 sqliter = { module = "co.touchlab:sqliter-driver", version.ref = "sqliter" }
-stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2.0.4" }
+stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2.0.5" }
 
 testhelp = { module = "co.touchlab:testhelp", version = "0.6.11" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
