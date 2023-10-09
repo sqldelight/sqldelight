@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-babel==2.12.1
+babel==2.13.0
     # via mkdocs-material
 certifi==2023.7.22
     # via requests
@@ -24,7 +24,7 @@ jinja2==3.1.2
     #   mkdocs
     #   mkdocs-macros-plugin
     #   mkdocs-material
-markdown==3.4.4
+markdown==3.5
     # via
     #   mkdocs
     #   mkdocs-material
@@ -57,7 +57,7 @@ paginate==0.5.6
     # via mkdocs-material
 pathspec==0.11.2
     # via mkdocs
-platformdirs==3.10.0
+platformdirs==3.11.0
     # via mkdocs
 pygments==2.16.1
     # via mkdocs-material
@@ -76,7 +76,7 @@ pyyaml==6.0.1
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2023.8.8
+regex==2023.10.3
     # via mkdocs-material
 requests==2.31.0
     # via mkdocs-material
@@ -84,7 +84,7 @@ six==1.16.0
     # via python-dateutil
 termcolor==2.3.0
     # via mkdocs-macros-plugin
-urllib3==2.0.5
+urllib3==2.0.6
     # via requests
 verspec==0.1.0
     # via mike
