@@ -1693,6 +1693,51 @@ class SelectQueryTypeTest {
   }
 
   @Test
+  fun `grouped statements with return and no parameters`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertAndReturn {
+      |  INSERT INTO data (value)
+      |  VALUES (NULL)
+      |  ;
+      |  SELECT last_insert_rowid();
+      |}
+      |
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    println(generator.defaultResultTypeFunction().toString())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class InsertAndReturnQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = transactionWithResult {
+      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (NULL)
+      |        ""${'"'}.trimMargin(), 0)
+      |    driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
   fun `proper exposure of case arguments function`() {
     val file = FixtureCompiler.parseSql(
       """
