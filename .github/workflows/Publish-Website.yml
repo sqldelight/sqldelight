@@ -18,30 +18,20 @@ jobs:
       contents: write
       pages: write
       id-token: write
-      
+
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}  
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
       - uses: actions/configure-pages@v3
-      # https://github.com/gradle/gradle-build-action/issues/561    
-      - name: Create Gradle files
-        run: |
-          cd ~
-          mkdir -p .gradle/ && touch .gradle/gradle.properties
       - name: Set up Java
-        id: setup-java
         uses: actions/setup-java@v3.13.0
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - name: Setup Gradle Java installations paths
-        run: |
-          cd ~/.gradle
-          echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
 
