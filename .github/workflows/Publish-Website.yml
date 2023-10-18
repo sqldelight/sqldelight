@@ -18,16 +18,16 @@ jobs:
       contents: write
       pages: write
       id-token: write
-      
+
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}  
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
       - uses: actions/configure-pages@v3
-      # https://github.com/gradle/gradle-build-action/issues/561    
+      # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
           cd ~
@@ -44,6 +44,8 @@ jobs:
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
