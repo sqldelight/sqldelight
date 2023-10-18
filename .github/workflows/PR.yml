@@ -25,7 +25,7 @@ jobs:
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
       matrix:
-        os: [ macOS-latest, windows-latest, ubuntu-latest ]
+        os: [ macos-latest-xlarge, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
@@ -66,7 +66,7 @@ jobs:
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
       - name: Run gradle plugin tests
-        if: matrix.os == 'macOS-latest' && matrix.job == 'gradle-plugin-tests'
+        if: matrix.os == 'macos-latest-xlarge' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --parallel
 
       - name: Run the IntelliJ plugin
@@ -88,7 +88,7 @@ jobs:
 
       # android tests
       - name: Run instrumentation tests
-        if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'macos-latest-xlarge' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -97,12 +97,12 @@ jobs:
 
       # ios tests
       - name: Run ios tests
-        if: matrix.os == 'macOS-latest' && matrix.job == 'test'
+        if: matrix.os == 'macos-latest-xlarge' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace --parallel
 
       # Build the sample
       - name: Build the sample
-        if: matrix.os == 'macOS-latest' && matrix.job == 'test'
+        if: matrix.os == 'macos-latest-xlarge' && matrix.job == 'test'
         uses: gradle/gradle-build-action@v2
         with:
           arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
