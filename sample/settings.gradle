@@ -58,7 +58,6 @@ includeBuild('..') {
     substitute module("app.cash.sqldelight:sqlite-driver") using project(":drivers:sqlite-driver")
     substitute module("app.cash.sqldelight:android-driver") using project(":drivers:android-driver")
     substitute module("app.cash.sqldelight:native-driver") using project(":drivers:native-driver")
-    substitute module("app.cash.sqldelight:sqljs-driver") using project(":drivers:sqljs-driver")
     substitute module("app.cash.sqldelight:runtime") using project(":runtime")
     substitute module("app.cash.sqldelight:runtime-jvm") using project(":runtime")
     substitute module("app.cash.sqldelight:gradle-plugin") using project(":sqldelight-gradle-plugin")
