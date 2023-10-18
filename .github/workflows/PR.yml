@@ -105,8 +105,15 @@ jobs:
         if: matrix.os == 'macos-latest-large' && matrix.job == 'test'
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
+          arguments: build --stacktrace --parallel
           build-root-directory: sample
+
+      - name: Build the web sample
+        if: matrix.os == 'macOS-latest' && matrix.job == 'test'
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
+          build-root-directory: sample-web
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
