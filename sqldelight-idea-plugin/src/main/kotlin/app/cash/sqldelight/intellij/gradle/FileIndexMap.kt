@@ -104,8 +104,8 @@ internal class FileIndexMap {
 
             Timber.i("Fetching SQLDelight models")
             val javaHome = (
-              ExternalSystemJdkUtil.getJavaHome()
-                ?: ExternalSystemJdkUtil.getAvailableJdk(project).second.homePath
+              ExternalSystemJdkUtil.getAvailableJdk(project).second.homePath
+                ?: ExternalSystemJdkUtil.getJavaHome()
               )?.let { File(it) }
 
             val properties =

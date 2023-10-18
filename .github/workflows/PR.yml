@@ -100,13 +100,20 @@ jobs:
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace --parallel
 
-      # Build the sample
-      - name: Build the sample
+      # Build the samples
+      - name: Build the mobile sample
+        if: matrix.os == 'macOS-latest' && matrix.job == 'test'
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build --stacktrace --parallel
+          build-root-directory: sample
+
+      - name: Build the web sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
         uses: gradle/gradle-build-action@v2
         with:
           arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
-          build-root-directory: sample
+          build-root-directory: sample-web
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true

@@ -6,4 +6,4 @@ expect class DateFormatHelper(format: String) {
   fun format(d: Date): String
 }
 
-val defaultFormatter = DateFormatHelper("dd/MM/yyyy")
+val defaultFormatter = DateFormatHelper("dd/mm/yyyy")

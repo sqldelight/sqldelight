@@ -70,7 +70,7 @@ sqlPsiTestFixtures  = { module = "com.alecstrong.sql.psi:test-fixtures", version
 robolectric = { module = "org.robolectric:robolectric", version = "4.10.3" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.8" }
-sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.43.0.0" }
+sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.43.2.1" }
 postgresJdbc = { module = "org.postgresql:postgresql", version = "42.6.0" }
 mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.33" }
 
@@ -85,7 +85,7 @@ stately-collections = { module = "co.touchlab:stately-collections", version.ref 
 
 testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
-testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.12" }
+testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.13" }
 
 r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
 testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
@@ -106,7 +106,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-android-extensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.15.0" }
+intellij = { id = "org.jetbrains.intellij", version = "1.16.0" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.12" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.22.0" }
