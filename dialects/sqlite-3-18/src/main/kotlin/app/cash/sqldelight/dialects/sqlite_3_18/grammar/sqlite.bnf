@@ -54,7 +54,7 @@ alter_table_stmt ::= ALTER TABLE [ {database_name} DOT ] {table_name} {alter_tab
   override = true
 }
 
-select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM ([ database_name DOT ] pragma_function_expr | {join_clause})] [ WHERE <<expr '-1'>> ] [{group_by}] [ HAVING <<expr '-1'>> ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM ([ {database_name} DOT ] pragma_function_expr | {join_clause})] [ WHERE <<expr '-1'>> ] [{group_by}] [ HAVING <<expr '-1'>> ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
