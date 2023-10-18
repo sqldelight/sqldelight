@@ -55,8 +55,6 @@ module:r2dbc-driver
 app.cash.sqldelight.driver.r2dbc
 module:sqlite-driver
 app.cash.sqldelight.driver.jdbc.sqlite
-module:sqljs-driver
-app.cash.sqldelight.driver.sqljs
 module:web-worker-driver
 app.cash.sqldelight.driver.worker
 module:androidx-paging3
