@@ -15,7 +15,7 @@ jobs:
   publish_archives:
     strategy:
       matrix:
-        os: [macos-latest-xlarge, windows-latest, ubuntu-latest]
+        os: [macos-latest-large, windows-latest, ubuntu-latest]
 
     runs-on: ${{matrix.os}}
     if: github.repository == 'cashapp/sqldelight'
@@ -46,7 +46,7 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Publish the macOS artifacts
-        if: matrix.os == 'macos-latest-xlarge'
+        if: matrix.os == 'macos-latest-large'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
