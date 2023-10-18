@@ -40,6 +40,13 @@ jobs:
       contents: read
 
     steps:
+      - name: Free Disk Space (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: false
+    
       - name: Checkout the repo
         uses: actions/checkout@v4
       # https://github.com/gradle/gradle-build-action/issues/561
