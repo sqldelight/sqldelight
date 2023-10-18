@@ -34,7 +34,7 @@ androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", versio
 app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
 app-cash-paging-runtime-uikit = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-mpp" }
 androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging3" }
-androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.3.1" }
+androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.3.2" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
 kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.14.2" }
