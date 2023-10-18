@@ -47,6 +47,7 @@ jobs:
           tool-cache: true
           android: false
           large-packages: false
+          docker: false
     
       - name: Checkout the repo
         uses: actions/checkout@v4
