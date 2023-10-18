@@ -49,6 +49,8 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
 
       # Linux tests
       - name: Run gradle tests
@@ -97,6 +99,7 @@ jobs:
         with:
           arguments: build --stacktrace --parallel
           build-root-directory: sample
+          gradle-home-cache-cleanup: true
 
       - name: Build the web sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
@@ -104,6 +107,7 @@ jobs:
         with:
           arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
           build-root-directory: sample-web
+          gradle-home-cache-cleanup: true
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true

@@ -34,6 +34,8 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
