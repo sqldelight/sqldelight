@@ -35,7 +35,7 @@ class SqlDelightParserDefinition : SqlParserDefinition() {
   override fun createElement(node: ASTNode): PsiElement {
     try {
       return super.createElement(node)
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
       throw IllegalStateException(
         """
         Failed to create element for node ${node.text}
