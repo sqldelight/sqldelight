@@ -5,9 +5,7 @@ kotlinCoroutines = "1.7.3"
 idea = "222.4459.24" # Flamingo | 2022.2.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.4.0"
 schemaCrawler = "16.19.2"
-stately = "1.2.5"
 sqliter = "1.2.3"
-testhelp = "0.6.9"
 sqljs = "1.8.0"
 paging-mpp = "3.1.1-0.3.1"
 paging3 = "3.1.1"
@@ -79,11 +77,9 @@ schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref 
 
 objectDiff = { module = "de.danielbechler:java-object-diff", version = "0.95" }
 sqliter = { module = "co.touchlab:sqliter-driver", version.ref = "sqliter" }
-stately-core = { module = "co.touchlab:stately-common", version.ref = "stately" }
-stately-concurrency = { module = "co.touchlab:stately-concurrency", version.ref = "stately" }
-stately-collections = { module = "co.touchlab:stately-collections", version.ref = "stately" }
+stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2.0.5" }
 
-testhelp = { module = "co.touchlab:testhelp", version.ref = "testhelp" }
+testhelp = { module = "co.touchlab:testhelp", version = "0.6.11" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
 testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.13" }
 
