@@ -21,6 +21,8 @@ abstract class EphemeralTest {
     TEMPORARY,
   }
 
+  protected open val skipNamed: Boolean = false
+
   protected val schema = object : SqlSchema<QueryResult.Value<Unit>> {
     override val version: Long = 1
 
@@ -86,6 +88,8 @@ abstract class EphemeralTest {
 
   @Test
   fun namedCreatesSharedDatabase() {
+    if (skipNamed) return
+
     val data1 = TestData(1, "val1")
     val driver1 = setupDatabase(Type.NAMED)
     driver1.insertTestData(data1)
