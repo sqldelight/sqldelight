@@ -1,0 +1,13 @@
+CREATE TABLE myJson(
+  data JSON NOT NULL,
+  datab JSONB NOT NULL
+);
+
+insert:
+INSERT INTO myJson(data, datab) VALUES(
+  json_build_object(:key, :value),
+  jsonb_build_object('key', 'value')
+);
+
+buildJson:
+SELECT json_build_object('key', 'value'), jsonb_build_object('key', 'value');

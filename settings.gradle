@@ -9,8 +9,8 @@ pluginManagement {
 }
 
 plugins {
-    id "com.gradle.enterprise" version "3.14.1"
-    id "org.gradle.toolchains.foojay-resolver-convention" version "0.6.0"
+    id "com.gradle.enterprise" version "3.15.1"
+    id "org.gradle.toolchains.foojay-resolver-convention" version "0.7.0"
 }
 
 gradleEnterprise {
@@ -45,7 +45,6 @@ include ':drivers:jdbc-driver'
 include ':drivers:r2dbc-driver'
 include ':drivers:native-driver'
 include ':drivers:sqlite-driver'
-include ':drivers:sqljs-driver'
 include ':drivers:web-worker-driver'
 include ':drivers:web-worker-driver:sqljs'
 include ':drivers:driver-test'

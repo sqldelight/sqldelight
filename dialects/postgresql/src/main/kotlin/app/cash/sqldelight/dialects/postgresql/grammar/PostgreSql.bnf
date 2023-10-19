@@ -10,6 +10,7 @@
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
@@ -20,17 +21,20 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CREATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_DATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DELETE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ESCAPE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FAIL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FALSE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOR"
@@ -38,8 +42,11 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
@@ -59,6 +66,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
@@ -66,6 +74,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
@@ -86,6 +95,8 @@ overrides ::= type_name
   | compound_select_stmt
   | extension_expr
   | extension_stmt
+  | create_index_stmt
+  | select_stmt
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -151,6 +162,13 @@ table_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
+create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name} LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
+  override = true
+  pin = 6
+}
+
 identity_clause ::= 'IDENTITY'
 
 generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
@@ -191,6 +209,7 @@ with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | in
 }
 
 delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ WHERE <<expr '-1'>> ] [ [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] LIMIT <<expr '-1'>> [ ( OFFSET | COMMA ) <<expr '-1'>> ] ] [ returning_clause ] {
+  mixin =  "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlDeleteStmtLimitedMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDeleteStmtLimitedImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited"
   pin = 2
@@ -221,7 +240,7 @@ insert_stmt ::= [ {with_clause} ]
     [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values}
     [ ON CONFLICT ( [conflict_target] DO NOTHING | conflict_target conflict_update ) ]
     [ returning_clause ] {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlInsertStmtImpl"
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlInsertStmtMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlInsertStmt"
   override = true
   pin = 5
@@ -281,6 +300,7 @@ alter_table_column_alias ::= id | string {
     "com.alecstrong.sql.psi.core.psi.AliasElement";
     "com.alecstrong.sql.psi.core.psi.NamedElement";
     "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+    "com.alecstrong.sql.psi.core.psi.SqlColumnName"
   ]
 }
 
@@ -302,6 +322,18 @@ alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 | SET GENERATED (ALWAYS | BY DEFAULT )
 ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAlterColumnMixin"
+  pin = 1
+}
+
+distinct_on_expr ::= DISTINCT ON LP {result_column} ( COMMA {result_column} ) * RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DistinctOnExpressionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+}
+
+select_stmt ::= SELECT ( [ distinct_on_expr ] | [ DISTINCT | ALL ] ) {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [HAVING <<expr '-1'>>] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
+  override = true
   pin = 1
 }
 

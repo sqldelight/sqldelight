@@ -1,0 +1,61 @@
+pluginManagement {
+  resolutionStrategy {
+    eachPlugin {
+      if (requested.id.namespace == 'app.cash') {
+        useModule('app.cash.sqldelight:gradle-plugin:+')
+      }
+    }
+  }
+  repositories {
+    mavenCentral()
+    google()
+    gradlePluginPortal()
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    maven { url "../build/localMaven" }
+  }
+}
+
+plugins {
+    id "com.gradle.enterprise" version "3.15.1"
+    id "org.gradle.toolchains.foojay-resolver-convention" version "0.7.0"
+}
+
+gradleEnterprise {
+  buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+    if (System.getenv("CI")) {
+      publishAlways()
+      tag "CI"
+    }
+  }
+}
+
+dependencyResolutionManagement {
+  versionCatalogs {
+    libs {
+      from(files("../gradle/libs.versions.toml"))
+    }
+  }
+  repositories {
+    mavenCentral()
+    google()
+    maven { url "../build/localMaven" }
+  }
+}
+
+rootProject.name = "sample-web"
+
+includeBuild('..') {
+  dependencySubstitution {
+    substitute module("app.cash.sqldelight:primitive-adapters") using project(":adapters:primitive-adapters")
+    substitute module("app.cash.sqldelight:web-worker-driver") using project(":drivers:web-worker-driver")
+    substitute module("app.cash.sqldelight:runtime") using project(":runtime")
+    substitute module("app.cash.sqldelight:gradle-plugin") using project(":sqldelight-gradle-plugin")
+    substitute module("app.cash.sqldelight:sqlite-3-18-dialect") using project(":dialects:sqlite-3-18")
+    substitute module("app.cash.sqldelight:compiler-env") using project(":sqldelight-compiler:environment")
+    substitute module("app.cash.sqldelight:migration-env") using project(":sqlite-migrations:environment")
+    substitute module("app.cash.sqldelight:async-extensions") using project(":extensions:async-extensions")
+  }
+}

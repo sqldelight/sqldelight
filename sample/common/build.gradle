@@ -36,20 +36,6 @@ kotlin {
     implementation "app.cash.sqldelight:sqlite-driver"
   }
 
-  // Configure web.
-  js {
-    useCommonJs()
-    browser()
-  }
-  sourceSets.jsMain.dependencies {
-    implementation npm('dateformat', '3.0.3')
-  }
-  sourceSets.jsTest.dependencies {
-    implementation "app.cash.sqldelight:sqljs-driver"
-    implementation npm('sql.js', libs.versions.sqljs.get())
-    implementation devNpm("copy-webpack-plugin", "9.1.0")
-  }
-
   // Configure iOS.
   def sdkName = System.getenv("SDK_NAME")
   if (sdkName != null && sdkName.startsWith("iphoneos")) {
@@ -73,11 +59,4 @@ configurations {
 
   podDebugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
   podReleaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
-}
-
-afterEvaluate {
-  tasks.named("compileCommonMainKotlinMetadata") {
-    // https://youtrack.jetbrains.com/issue/KT-51293
-    enabled = false
-  }
 }

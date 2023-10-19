@@ -63,8 +63,8 @@ class SelectQueryTypeTest {
     )
   }
 
-  @Test fun `returning clause in an update correctly generates a query function`(dialect: TestDialect) {
-    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
+  @Test fun `returning clause in an update correctly generates a query function - postgres`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.POSTGRESQL)
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE IF NOT EXISTS users(
@@ -82,7 +82,7 @@ class SelectQueryTypeTest {
       |
       """.trimMargin(),
       tempFolder,
-      dialect = PostgreSqlDialect(),
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -102,7 +102,55 @@ class SelectQueryTypeTest {
       |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
-      |    cursor.getLong(0)!!.toInt(),
+      |    cursor.getInt(0)!!,
+      |    cursor.getString(1)!!,
+      |    cursor.getString(2)!!
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `returning clause in an update correctly generates a query function - sqlite`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.SQLITE_3_35)
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE IF NOT EXISTS users(
+      |    id ${dialect.intType} PRIMARY KEY,
+      |    firstname ${dialect.textType} NOT NULL,
+      |    lastname ${dialect.textType} NOT NULL
+      |);
+      |
+      |update:
+      |UPDATE users SET
+      |    firstname = :firstname,
+      |    lastname = :lastname
+      |WHERE id = :id
+      |RETURNING id, firstname, lastname;
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> update(
+      |  firstname: kotlin.String,
+      |  lastname: kotlin.String,
+      |  id: kotlin.Long,
+      |  mapper: (
+      |    id: kotlin.Long,
+      |    firstname: kotlin.String,
+      |    lastname: kotlin.String,
+      |  ) -> T,
+      |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!
       |  )
@@ -1638,6 +1686,51 @@ class SelectQueryTypeTest {
       |  notifyQueries(${query.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `grouped statements with return and no parameters`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertAndReturn {
+      |  INSERT INTO data (value)
+      |  VALUES (NULL)
+      |  ;
+      |  SELECT last_insert_rowid();
+      |}
+      |
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    println(generator.defaultResultTypeFunction().toString())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class InsertAndReturnQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = transactionWithResult {
+      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (NULL)
+      |        ""${'"'}.trimMargin(), 0)
+      |    driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
       |}
       |
       """.trimMargin(),

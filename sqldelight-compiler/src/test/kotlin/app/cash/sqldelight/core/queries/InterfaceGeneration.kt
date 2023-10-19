@@ -899,7 +899,7 @@ class InterfaceGeneration {
       |  public fun insertUser(slack_user_id: String): Query<Int> = InsertUserQuery(slack_user_id) {
       |      cursor ->
       |    check(cursor is JdbcCursor)
-      |    cursor.getLong(0)!!.toInt()
+      |    cursor.getInt(0)!!
       |  }
       |
       |  public fun insertSubscription(user_id2: Int) {
@@ -908,7 +908,7 @@ class InterfaceGeneration {
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          check(this is JdbcPreparedStatement)
-      |          bindLong(0, user_id2.toLong())
+      |          bindInt(0, user_id2)
       |        }
       |    notifyQueries(${result.compiledFile.namedMutators[0].id.withUnderscores}) { emit ->
       |      emit("subscriptionEntity")
