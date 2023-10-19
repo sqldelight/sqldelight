@@ -14,9 +14,14 @@ import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.stubs.StubIndex
+import com.intellij.psi.stubs.StubIndexKey
 import com.intellij.util.ProcessingContext
 import org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex
 import org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex
+import org.jetbrains.kotlin.psi.KtTypeAlias
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
 
 internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -60,7 +65,10 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       val project = element.project
       val scope = GlobalSearchScope.allScope(project)
       val ktClass = { KotlinFullClassNameIndex[qName, project, scope].firstOrNull() }
-      val typeAlias = { KotlinTopLevelTypeAliasFqNameIndex.get(qName, project, scope).firstOrNull() }
+      val indexKey = getKotlinTopLevelTypeAliasFqNameIndex()
+      val typeAlias = {
+        StubIndex.getElements(indexKey, qName, project, scope, KtTypeAlias::class.java).firstOrNull()
+      }
       val javaPsiFacade = JavaPsiFacade.getInstance(project)
       val javaClass = { javaPsiFacade.findClass(qName, scope) }
       return ktClass() ?: typeAlias() ?: javaClass()
@@ -68,4 +76,39 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
 
     private fun typeForThisPackage(file: SqlDelightFile) = "${file.packageName}.${element.text}"
   }
+}
+
+private fun getKotlinTopLevelTypeAliasFqNameIndex(): StubIndexKey<String, KtTypeAlias> {
+  // read the HELPER variable reflectively (2023.2)
+  try {
+    val helperField = KotlinTopLevelTypeAliasFqNameIndex::class.java.getField("Helper")
+    val helper = helperField.get(null)
+    if (helper != null) {
+      val keyMethod = helper.javaClass.getMethod("getIndexKey")
+      val key = keyMethod.invoke(helper)
+      @Suppress("UNCHECKED_CAST") // Reflection that will go away when our minimum version is >= 2023.2
+      if (key != null) return key as StubIndexKey<String, KtTypeAlias>
+    }
+  } catch (e: Exception) {
+    /* intentionally empty, fall back to getInstance() call in case of errors */
+  }
+
+  // read the INSTANCE variable reflectively first (newer Kotlin plugins)
+  try {
+    val instanceField = KotlinTopLevelTypeAliasFqNameIndex::class.java.getField("INSTANCE")
+    val instance = instanceField.get(null)
+    if (instance is KotlinTopLevelTypeAliasFqNameIndex) {
+      return instance.KEY
+    }
+  } catch (e: Exception) {
+    /* intentionally empty, fall back to getInstance() call in case of errors */
+  }
+
+  // Call the method getInstance on the companion type.
+  val companionMethod =
+    KotlinTopLevelTypeAliasFqNameIndex::class.companionObject!!.java.getMethod("getInstance")
+  return (
+    companionMethod.invoke(KotlinTopLevelTypeAliasFqNameIndex::class.companionObjectInstance!!)
+      as KotlinTopLevelTypeAliasFqNameIndex
+    ).KEY
 }

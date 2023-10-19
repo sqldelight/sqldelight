@@ -69,4 +69,11 @@ class IntegrationTests {
     assertThat(personQueries.deleteAndReturnAll("Strong").executeAsOne())
       .isEqualTo(Person(1, "Alec", "Strong"))
   }
+
+  @Test fun upsertWithMultipleConflict() {
+    personQueries.performUpsert(1, "First", "Last")
+    personQueries.performUpsert(1, "Alpha", "Omega")
+    assertThat(personQueries.deleteAndReturnAll("Omega").executeAsOne())
+      .isEqualTo(Person(1, "Alpha", "Omega"))
+  }
 }

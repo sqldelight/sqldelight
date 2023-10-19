@@ -39,6 +39,8 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
 import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpr
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpression
 import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
@@ -66,6 +68,14 @@ internal fun SqlExpr.inferredType(): IntermediateType {
       } else {
         result
       }
+    }
+
+    is SqlMultiColumnExpression -> {
+      val idx = parentRule.exprList.indexOf(this)
+      val parentParent = parentRule.parent as SqlMultiColumnExpr
+
+      // The first multiColumnExpression is the column list
+      parentParent.multiColumnExpressionList[0].exprList[idx].type()
     }
 
     is SqlValuesExpression -> parentRule.argumentType(this)

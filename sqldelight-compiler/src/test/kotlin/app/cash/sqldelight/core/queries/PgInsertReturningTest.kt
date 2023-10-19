@@ -49,7 +49,7 @@ class PgInsertReturningTest {
         |public fun <T : kotlin.Any> insertReturn(data_: com.example.Data_, mapper: (id: kotlin.Int, data_: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = InsertReturnQuery(data_) { cursor ->
         |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
         |  mapper(
-        |    cursor.getLong(0)!!.toInt(),
+        |    cursor.getInt(0)!!,
         |    cursor.getString(1)
         |  )
         |}
@@ -96,7 +96,7 @@ class PgInsertReturningTest {
         |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
         |  mapper(
         |    cursor.getString(0),
-        |    cursor.getLong(1)!!.toInt()
+        |    cursor.getInt(1)!!
         |  )
         |}
         |

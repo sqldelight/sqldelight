@@ -51,3 +51,8 @@ deleteAndReturnAll:
 DELETE FROM person
 WHERE last_name = ?
 RETURNING *;
+
+performUpsert:
+INSERT INTO person (_id, first_name, last_name) VALUES (?, ?, ?)
+  ON CONFLICT(_id) DO UPDATE SET first_name=excluded.first_name, last_name=excluded.last_name
+  ON CONFLICT DO NOTHING;
