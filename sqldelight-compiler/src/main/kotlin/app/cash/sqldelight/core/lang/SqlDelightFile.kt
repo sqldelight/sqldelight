@@ -52,7 +52,11 @@ abstract class SqlDelightFile(
     dialect.typeResolver(parentResolver)
   }
 
-  abstract val packageName: String?
+  val packageName: String? by lazy {
+    module?.let { module ->
+      SqlDelightFileIndex.getInstance(module).packageName(this)
+    }
+  }
 
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile
