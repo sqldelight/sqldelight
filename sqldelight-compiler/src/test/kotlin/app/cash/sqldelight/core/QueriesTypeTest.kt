@@ -846,4 +846,68 @@ class QueriesTypeTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `grouped statement with return and no arguments gets a query type`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value TEXT
+      |);
+      |
+      |insertAndReturn {
+      |  INSERT INTO data (value)
+      |  VALUES (NULL)
+      |  ;
+      |  SELECT last_insert_rowid();
+      |}
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Data.sq",
+    )
+
+    val query = result.compiledFile.namedQueries.first()
+    assertThat(result.errors).isEmpty()
+
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.ExecutableQuery
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class DataQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun insertAndReturn(): ExecutableQuery<Long> = InsertAndReturnQuery() { cursor ->
+      |    cursor.getLong(0)!!
+      |  }
+      |
+      |  private inner class InsertAndReturnQuery<out T : Any>(
+      |    mapper: (SqlCursor) -> T,
+      |  ) : ExecutableQuery<T>(mapper) {
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+      |        transactionWithResult {
+      |      driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |          |INSERT INTO data (value)
+      |          |  VALUES (NULL)
+      |          ""${'"'}.trimMargin(), 0)
+      |      driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
+      |    }
+      |
+      |    override fun toString(): String = "Data.sq:insertAndReturn"
+      |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
 }
