@@ -9,6 +9,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.ConnectionManager.Transaction
+import org.intellij.lang.annotations.Language
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -120,7 +121,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
 
   override fun execute(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
@@ -140,7 +141,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
 
   override fun <R> executeQuery(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
