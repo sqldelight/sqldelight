@@ -462,7 +462,7 @@ class PostgreSqlTest {
     val selectSetVal = database.sequencesQueries.selectSetVal().executeAsOne()
     assertThat(selectSetVal).isEqualTo(nextVal)
   }
-  
+
   @Test
   fun testGenerateSeries() {
     val start = OffsetDateTime.of(2023, 9, 1, 0, 0, 0, 0, ZoneOffset.ofHours(0))
