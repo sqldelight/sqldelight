@@ -16,3 +16,10 @@ stddev(foo),
 regr_count(foo, bar)
 FROM myTable
 GROUP BY foo, bar;
+
+selectGenerateSeries:
+SELECT generate_series(
+    CAST(:start AS TIMESTAMPTZ),
+    CAST(:finish AS TIMESTAMPTZ),
+    CAST('1 hour' AS INTERVAL)
+);

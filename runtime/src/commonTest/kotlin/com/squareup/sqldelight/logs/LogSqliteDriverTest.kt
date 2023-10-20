@@ -17,7 +17,7 @@ class LogSqliteDriverTest {
 
   private lateinit var driver: LogSqliteDriver
   private lateinit var transacter: TransacterImpl
-  private val logs = LinkedList<String>()
+  private val logs = mutableListOf<String>()
 
   @BeforeTest fun setup() {
     driver = LogSqliteDriver(FakeSqlDriver()) { log ->

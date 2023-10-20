@@ -141,7 +141,7 @@ class NativeSqliteDriver(
   private val lock = PoolLock(reentrant = true)
 
   init {
-    if (databaseManager.configuration.inMemory) {
+    if (databaseManager.configuration.isEphemeral) {
       // Single connection for transactions
       transactionPool = Pool(1) {
         ThreadConnection(databaseManager.createMultiThreadedConnection()) { _ ->
@@ -412,4 +412,8 @@ internal class ThreadConnection(
       return QueryResult.Unit
     }
   }
+}
+
+private inline val DatabaseConfiguration.isEphemeral: Boolean get() {
+  return inMemory || (name?.isEmpty() == true && extendedConfig.basePath?.isEmpty() == true)
 }
