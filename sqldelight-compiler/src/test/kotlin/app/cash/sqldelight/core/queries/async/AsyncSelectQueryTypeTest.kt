@@ -75,7 +75,7 @@ class AsyncSelectQueryTypeTest {
       |
       """.trimMargin(),
       tempFolder,
-      dialect = PostgreSqlDialect(),
+      dialect = dialect.dialect,
       generateAsync = true,
     )
 
@@ -96,7 +96,7 @@ class AsyncSelectQueryTypeTest {
       |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.r2dbc.R2dbcCursor)
       |  mapper(
-      |    cursor.getLong(0)!!.toInt(),
+      |    cursor.getInt(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!
       |  )

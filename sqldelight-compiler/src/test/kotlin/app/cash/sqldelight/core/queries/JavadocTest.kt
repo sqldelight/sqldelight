@@ -6,14 +6,11 @@ import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.cursorCheck
-import app.cash.sqldelight.core.dialects.intKotlinType
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
-import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.LONG
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -175,8 +172,7 @@ class JavadocTest {
       createTable(testDialect) + """
       |/** Queries all values. */
       |selectAll:
-      |SELECT *
-      |FROM test;
+      |SELECT CAST(:input AS ${testDialect.textType});
       |
       """.trimMargin(),
       tempFolder,
@@ -189,35 +185,23 @@ class JavadocTest {
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
+      |public fun selectAll(input: kotlin.String?): app.cash.sqldelight.ExecutableQuery<com.example.SelectAll> = selectAll(input) { expr ->
+      |  com.example.SelectAll(
+      |    expr
       |  )
       |}
       |
       """.trimMargin(),
     )
 
-    val int = testDialect.intKotlinType
-    val toInt = when (int) {
-      LONG -> ""
-      INT -> ".toInt()"
-      else -> error("Unknown kotlinType $int")
-    }
-
     assertThat(selectGenerator.customResultTypeFunction().toString()).isEqualTo(
       """
       |/**
       | * Queries all values.
       | */
-      |public fun <T : kotlin.Any> selectAll(mapper: (_id: $int, value_: kotlin.String) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-585_795_480, arrayOf("test"), driver, "Test.sq", "selectAll", ""${'"'}
-      ||SELECT *
-      ||FROM test
-      |""${'"'}.trimMargin()) { cursor ->
+      |public fun <T : kotlin.Any> selectAll(input: kotlin.String?, mapper: (expr: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = SelectAllQuery(input) { cursor ->
       |  ${testDialect.cursorCheck(2)}mapper(
-      |    cursor.getLong(0)!!$toInt,
-      |    cursor.getString(1)!!
+      |    cursor.getString(0)
       |  )
       |}
       |

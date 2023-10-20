@@ -49,10 +49,20 @@ fun TypeResolver.encapsulatingType(
 /**
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
+fun TypeResolver.encapsulatingTypePreferringKotlin(
+  exprList: List<SqlExpr>,
+  vararg typeOrder: DialectType,
+  nullableIfAny: Boolean = false,
+) = encapsulatingType(exprList = exprList, nullableIfAny = nullableIfAny, preferKotlinType = true, typeOrder = typeOrder)
+
+/**
+ * @return the type from the expr list which is the highest order in the typeOrder list
+ */
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
   nullableIfAny: Boolean,
   vararg typeOrder: DialectType,
+  preferKotlinType: Boolean = false,
 ): IntermediateType {
   val types = exprList.map { resolvedType(it) }
   val sqlTypes = types.map { it.dialectType }
@@ -68,12 +78,18 @@ fun TypeResolver.encapsulatingType(
     error("The Kotlin type of the argument cannot be inferred, use CAST instead.")
   }
 
-  val type = typeOrder.last { it in sqlTypes }
+  // stripping nullability because that shouldn't affect the type comparison
+  val isTypesHomogeneous = types.map { it.dialectType to it.javaType.copy(nullable = false) }.distinct().size == 1
+  val type = if (preferKotlinType && isTypesHomogeneous) {
+    types.first()
+  } else {
+    IntermediateType(typeOrder.last { it in sqlTypes })
+  }
 
   if (!nullableIfAny && types.all { it.javaType.isNullable } ||
     nullableIfAny && types.any { it.javaType.isNullable }
   ) {
-    return IntermediateType(type).asNullable()
+    return type.asNullable()
   }
-  return IntermediateType(type)
+  return type
 }
