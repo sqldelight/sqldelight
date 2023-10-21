@@ -221,7 +221,9 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   private class MissingDialect : SqlDelightDialect {
     override val icon = AllIcons.Providers.Sqlite
-    override fun setup() { SqlParserUtil.reset() }
+    override fun setup() {
+      SqlParserUtil.reset()
+    }
     override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

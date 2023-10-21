@@ -104,7 +104,9 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
 
   override var transaction: Transaction?
     get() = transactions.get()
-    set(value) { transactions.set(value) }
+    set(value) {
+      transactions.set(value)
+    }
 
   /**
    * Returns a [Connection] and handler which closes the connection after the transaction finished.

@@ -27,6 +27,7 @@ spotless {
     targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*", "sqldelight-gradle-plugin/src/test/build-logic-tests/build/**/*.*"
     ktlint(libs.versions.ktlint.get()).editorConfigOverride([
       "indent_size": "2",
+      "ktlint_standard_discouraged-comment-location": "disabled",
       "ktlint_standard_package-name": "disabled",
       "ij_kotlin_allow_trailing_comma": "true",
       "ij_kotlin_allow_trailing_comma_on_call_site": "true",
