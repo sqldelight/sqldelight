@@ -9,7 +9,7 @@ sqliter = "1.2.3"
 sqljs = "1.8.0"
 paging-mpp = "3.1.1-0.3.1"
 paging3 = "3.1.1"
-ktlint = "0.50.0"
+ktlint = "1.0.1"
 agp = "8.1.2"
 compileSdk = "34"
 minSdk = "16"
@@ -90,7 +90,7 @@ testContainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "tes
 
 # dummy to get renovate updates.
 # The version is used in rootProject build.gradle with spotless.
-ktlint-dummy = { module = "com.pinterest:ktlint", version.ref = "ktlint" }
+ktlint-dummy = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
