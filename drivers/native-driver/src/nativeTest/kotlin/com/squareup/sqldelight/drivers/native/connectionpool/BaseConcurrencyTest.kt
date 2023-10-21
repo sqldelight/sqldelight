@@ -106,7 +106,10 @@ abstract class BaseConcurrencyTest {
   }
 
   enum class DbType {
-    RegularWal, RegularDelete, InMemoryShared, InMemorySingle
+    RegularWal,
+    RegularDelete,
+    InMemoryShared,
+    InMemorySingle,
   }
 
   fun createDriver(

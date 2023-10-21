@@ -72,7 +72,7 @@ class MappingJvmTest : DbTest {
   private suspend fun Flow<*>.assertInitialAndAsyncNotificationUsesContext(db: TestDb, testScope: TestScope) {
     var seen = 0
 
-    testScope.launch() {
+    testScope.launch {
       collect {
         if (++seen == 2) {
           throw CancellationException("done!")

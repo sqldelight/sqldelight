@@ -29,23 +29,23 @@ class ReflectiveKotlinFindUsagesFactory private constructor(
 
   companion object {
     // IC 2023.1 or later
-    private const val kotlinUsagePackage = "org.jetbrains.kotlin.idea.base.searching.usages"
+    private const val KOTLIN_USAGE_PACKAGE = "org.jetbrains.kotlin.idea.base.searching.usages"
 
     // older than IC 2023.1
-    private const val legacyKotlinUsagePackage = "org.jetbrains.kotlin.idea.findUsages"
+    private const val LEGACY_KOTLIN_USAGE_PACKAGE = "org.jetbrains.kotlin.idea.findUsages"
 
     private val factoryClass = try {
-      Class.forName("$kotlinUsagePackage.KotlinFindUsagesHandlerFactory")
+      Class.forName("$KOTLIN_USAGE_PACKAGE.KotlinFindUsagesHandlerFactory")
     } catch (e: ClassNotFoundException) {
       // fall back to older version
-      Class.forName("$legacyKotlinUsagePackage.KotlinFindUsagesHandlerFactory")
+      Class.forName("$LEGACY_KOTLIN_USAGE_PACKAGE.KotlinFindUsagesHandlerFactory")
     }
 
     private val kotlinReferenceUsageInfoClass = try {
-      Class.forName("$kotlinUsagePackage.KotlinReferenceUsageInfo")
+      Class.forName("$KOTLIN_USAGE_PACKAGE.KotlinReferenceUsageInfo")
     } catch (e: ClassNotFoundException) {
       // fall back to older version
-      Class.forName("$legacyKotlinUsagePackage.KotlinReferenceUsageInfo")
+      Class.forName("$LEGACY_KOTLIN_USAGE_PACKAGE.KotlinReferenceUsageInfo")
     }
 
     private fun createKotlinFindUsagesHandlerFactory(project: Project): FindUsagesHandlerFactory {
