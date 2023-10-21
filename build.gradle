@@ -26,14 +26,9 @@ spotless {
     target "**/*.kt"
     targetExclude "**/gen/**/*.*", "**/generated/**/*.*", "sqldelight-compiler/integration-tests/src/test/kotlin/com/example/**/*.*", "sqldelight-compiler/src/test/migration-interface-fixtures/**/*.*", "sqldelight-gradle-plugin/src/test/build-logic-tests/build/**/*.*"
     ktlint(libs.versions.ktlint.get()).editorConfigOverride([
-      "indent_size": "2",
       "ktlint_standard_discouraged-comment-location": "disabled",
       "ktlint_standard_package-name": "disabled",
-      "ij_kotlin_allow_trailing_comma": "true",
-      "ij_kotlin_allow_trailing_comma_on_call_site": "true",
     ])
-    trimTrailingWhitespace()
-    endWithNewline()
   }
 }
 
@@ -45,8 +40,8 @@ allprojects {
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
     // Repo for the backported Android IntelliJ Plugin by Jetbrains used in Ultimate
     maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/" }
-    // Repo for Ktor eap builds used by IntelliJ. Some builds use a eap version. 
-    // When a new version of Intellij switched to a stable Ktor version, this repo can be removed. 
+    // Repo for Ktor eap builds used by IntelliJ. Some builds use a eap version.
+    // When a new version of Intellij switched to a stable Ktor version, this repo can be removed.
     maven { url "https://maven.pkg.jetbrains.space/public/p/ktor/eap" }
   }
 
