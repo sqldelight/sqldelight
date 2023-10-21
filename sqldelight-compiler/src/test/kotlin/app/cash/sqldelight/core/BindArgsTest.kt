@@ -11,10 +11,10 @@ import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.asClassName
+import kotlin.test.assertFailsWith
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import kotlin.test.assertFailsWith
 
 class BindArgsTest {
   @get:Rule val tempFolder = TemporaryFolder()

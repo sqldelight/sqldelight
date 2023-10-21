@@ -30,11 +30,11 @@ import app.cash.paging.NullPaddedList
 import app.cash.paging.PagingData
 import app.cash.paging.PagingDataDiffer
 import co.touchlab.stately.concurrency.AtomicInt
+import kotlin.jvm.JvmOverloads
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import kotlin.jvm.JvmOverloads
 
 /**
  * Helper class for mapping a [PagingData] into a

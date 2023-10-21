@@ -17,11 +17,11 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
 import com.intellij.util.ProcessingContext
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
 import org.jetbrains.kotlin.idea.stubindex.KotlinFullClassNameIndex
 import org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelTypeAliasFqNameIndex
 import org.jetbrains.kotlin.psi.KtTypeAlias
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
 
 internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
