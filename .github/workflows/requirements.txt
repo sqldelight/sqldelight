@@ -8,7 +8,7 @@ babel==2.13.0
     # via mkdocs-material
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.3.0
+charset-normalizer==3.3.1
     # via requests
 click==8.1.7
     # via mkdocs
@@ -61,7 +61,7 @@ platformdirs==3.11.0
     # via mkdocs
 pygments==2.16.1
     # via mkdocs-material
-pymdown-extensions==10.3
+pymdown-extensions==10.3.1
     # via mkdocs-material
 python-dateutil==2.8.2
     # via
@@ -84,7 +84,7 @@ six==1.16.0
     # via python-dateutil
 termcolor==2.3.0
     # via mkdocs-macros-plugin
-urllib3==2.0.6
+urllib3==2.0.7
     # via requests
 verspec==0.1.0
     # via mike
