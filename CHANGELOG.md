@@ -1,5 +1,39 @@
 # Change Log
 
+## [2.0.1] - Date TBD
+
+### Added
+- [Compiler] Add support multi-column-expr when doing a SELECT (#4453 by [Adriel Martinez][Adriel-M])
+- [PostgreSQL Dialect] Add support for PostgreSQL CREATE INDEX CONCURRENTLY (#4531 by [Griffio][griffio])
+- [PostgreSQL Dialect] Allow PostgreSQL CTEs auxiliary statements to reference each other (#4493 by [Griffio][griffio])
+- [SQLite 3.35 Dialect] Allow multiple ON CONFLICT clauses that are evaluated in order (#4551 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for PostgreSQL types for binary expr and sum (#4539 by [Adriel Martinez][Adriel-M])
+- [PostgreSQL Dialect] Add support for PostgreSQL SELECT DISTINCT ON syntax (#4584 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for PostgreSQL JSON functions in SELECT statements (#4590 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add generate_series PostgreSQL function (#4717 by [Griffio][griffio])
+- [JDBC Driver] Add Language annotations for more pleasant SQL editing (#4602 by [Marius Volkhart][MariusV])
+
+### Changed
+- [PostgreSQL Dialect] Remove experimental status from PostgreSQL dialect (#4443 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] Update docs for PostgreSQL types (#4569 by [Marius Volkhart][MariusV])
+- [Compiler] Prefer Kotlin types where appropriate (#4517 by [Eliezer Graber][eygraber])
+- [R2DBC Driver] Optimize performance when handling integer data types in PostgreSQL (#4588 by [Marius Volkhart][MariusV])
+
+### Removed
+- [SQLite Javascript Driver] Remove sqljs-driver (#4613, #4670 by [Derek Ellis][dellisd])
+
+### Fixed
+- [Native Driver] Ensure thread safety for query listener collection (#4567 by [Kevin Galligan][kpgalligan])
+- [PostgreSQL Dialect] Fix the renaming of PostgreSQL columns multiple times (#4566 by [Griffio][griffio])
+- [JDBC Driver] Fix a connection leak in the ConnectionManager (#4589 by [Marius Volkhart][MariusV])
+- [JDBC Driver] Fix JdbcSqliteDriver url parsing when choosing ConnectionManager type (#4656 by [Matthew Nelson][05nelsonm])
+- [Gradle Plugin] Add Gradle task output message to help users generate a database before verifying a database (#4684 by [Jingwei][jingwei99])
+- [Gradle Plugin] Correct documentation of verifyMigrationTask Gradle task (#4713 by [Josh Friend][joshfriend])
+- [Compiler] Fix compilation of grouped statements with returns and no parameters (#4699 by [Griffio][griffio])
+- [IDE Plugin] Use IDEA Project JDK if set (#4689 by [Griffio][griffio])
+- [IDE Plugin] Fix "Unknown element type: TYPE_NAME" error in IDEA 2023.2 and greater (#4727 by [Alec Kazakova][AlecKazakova])
+- [Native Driver] Support named in-memory databases (#4662 by [Matthew Nelson][05nelsonm])
+
 ## [2.0.0] - 2023-07-26
 
 ### Added
@@ -986,3 +1020,7 @@ Initial release.
   [joshfriend]: https://github.com/joshfriend
   [daio]: https://github.com/daio
   [morki]: https://github.com/morki
+  [Adriel-M]: https://github.com/Adriel-M
+  [05nelsonm]: https://github.com/05nelsonm
+  [jingwei99]: https://github.com/jingwei99
+  [AlecKazakova]: https://github.com/AlecKazakova
