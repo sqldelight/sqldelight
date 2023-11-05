@@ -10,7 +10,7 @@ import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
 import co.touchlab.testhelp.concurrency.sleep
-import kotlin.native.concurrent.AtomicInt
+import kotlin.concurrent.AtomicInt
 import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest
 import kotlin.time.TimeSource
