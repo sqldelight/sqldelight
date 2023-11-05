@@ -4,11 +4,11 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.fixtureRoot
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import kotlin.test.assertFailsWith
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import kotlin.test.assertFailsWith
 
 class QueryWrapperTest {
   @get:Rule val tempFolder = TemporaryFolder()

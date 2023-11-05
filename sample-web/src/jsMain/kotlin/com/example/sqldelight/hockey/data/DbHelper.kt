@@ -9,10 +9,10 @@ import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import com.example.sqldelight.hockey.HockeyDb
 import com.example.sqldelight.hockey.data.PlayerVals.Position
 import com.example.sqldelight.hockey.data.PlayerVals.Shoots
+import kotlin.js.Date
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.w3c.dom.Worker
-import kotlin.js.Date
 
 class DbHelper {
   private val driver: SqlDriver

@@ -22,6 +22,8 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
+import kotlin.coroutines.CoroutineContext
+import kotlin.jvm.JvmName
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
@@ -29,8 +31,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
-import kotlin.jvm.JvmName
 
 /** Turns this [Query] into a [Flow] which emits whenever the underlying result set changes. */
 @JvmName("toFlow")

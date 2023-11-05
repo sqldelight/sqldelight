@@ -7,10 +7,10 @@ import app.cash.sqldelight.withCommonConfiguration
 import app.cash.sqldelight.withInvariantPathSeparators
 import app.cash.sqldelight.withSortedCompilationUnits
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Ignore
 import org.junit.Test
-import java.io.File
 
 class MultiModuleTests {
   @Ignore

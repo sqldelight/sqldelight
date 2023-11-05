@@ -25,14 +25,14 @@ import com.intellij.ui.EditorNotifications
 import com.intellij.util.lang.ClassPath
 import com.intellij.util.lang.UrlClassLoader
 import io.ktor.util.rootCause
-import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
-import org.jetbrains.plugins.gradle.settings.DistributionType
-import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
-import timber.log.Timber
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
 import java.util.ServiceLoader
+import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
+import org.jetbrains.plugins.gradle.settings.DistributionType
+import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
+import timber.log.Timber
 
 internal class FileIndexMap {
   private var fetchThread: Thread? = null

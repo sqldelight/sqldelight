@@ -5,8 +5,8 @@ import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.withTemporaryFixture
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
 import java.io.File
+import org.junit.Test
 
 class CompilationUnitTests {
   @Test

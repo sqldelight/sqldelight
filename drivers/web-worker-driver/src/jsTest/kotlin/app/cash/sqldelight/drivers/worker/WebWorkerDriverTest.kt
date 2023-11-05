@@ -12,8 +12,6 @@ import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import app.cash.sqldelight.driver.worker.WebWorkerException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -21,6 +19,8 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.w3c.dom.Worker
 
 typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 

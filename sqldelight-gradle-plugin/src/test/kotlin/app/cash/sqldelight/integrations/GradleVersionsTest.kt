@@ -17,13 +17,13 @@ package app.cash.sqldelight.integrations
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.nio.file.Files
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import java.io.File
-import java.nio.file.Files
 
 @RunWith(Parameterized::class)
 class GradleVersionsTest(private val gradleVersion: String) {

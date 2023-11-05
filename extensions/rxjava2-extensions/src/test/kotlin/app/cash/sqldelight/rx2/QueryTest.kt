@@ -4,9 +4,9 @@ import app.cash.sqldelight.rx2.Employee.Companion.MAPPER
 import app.cash.sqldelight.rx2.Employee.Companion.SELECT_EMPLOYEES
 import app.cash.sqldelight.rx2.TestDb.Companion.TABLE_EMPLOYEE
 import io.reactivex.schedulers.Schedulers
+import java.util.Optional
 import org.junit.After
 import org.junit.Test
-import java.util.Optional
 
 class QueryTest {
   private val db = TestDb()

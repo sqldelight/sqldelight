@@ -7,9 +7,9 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.util.PsiTreeUtil
+import javax.swing.Icon
 import org.jetbrains.kotlin.idea.stubindex.KotlinClassShortNameIndex
 import org.jetbrains.kotlin.psi.KtClassOrObject
-import javax.swing.Icon
 
 internal object PsiClassSearchHelper {
 

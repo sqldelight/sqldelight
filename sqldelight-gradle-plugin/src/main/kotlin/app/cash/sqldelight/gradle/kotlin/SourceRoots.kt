@@ -5,6 +5,7 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
+import java.io.File
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
@@ -13,7 +14,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import java.io.File
 
 /**
  * @return A list of source roots and their dependencies.
