@@ -26,10 +26,7 @@ dependencies {
   testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  testFixturesApi libs.junit
-  testFixturesApi(testFixtures(libs.sqlPsi)) {
-    exclude group: "com.jetbrains.intellij.platform"
-  }
+  testFixturesApi testFixtures(libs.sqlPsi)
 
   testImplementation libs.truth
 }
