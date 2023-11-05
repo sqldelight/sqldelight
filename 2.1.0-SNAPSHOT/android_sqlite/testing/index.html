@@ -4611,9 +4611,9 @@ driver:</p>
 </code></pre></div>
 <p>If you are using the SQLite that comes bundled with Android (rather than shipping <a href="https://github.com/requery/sqlite-android/">your own</a>), you can override the version of <a href="https://github.com/xerial/sqlite-jdbc">sqlite-jdbc</a> to one that <a href="https://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android#4377116">matches your Android minSdkVersion</a>, for example for API 23 use SQLite 3.8.10.2:</p>
 <div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">testImplementation</span><span class="o">(</span><span class="s1">&#39;org.xerial:sqlite-jdbc:3.8.10.2&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">testImplementation</span><span class="o">(</span><span class="s1">&#39;org.xerial:sqlite-jdbc&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="c1">// Override the version of sqlite used by sqlite-driver to match Android API 23</span>
-<span class="w">    </span><span class="n">force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="n">version</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">strictly</span><span class="o">(</span><span class="s1">&#39;3.8.10.2&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">}</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
