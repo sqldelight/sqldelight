@@ -116,7 +116,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       TIMESTAMP,
     )
     "concat" -> encapsulatingType(exprList, TEXT)
-    "substring" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+    "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+    "starts_with" -> IntermediateType(BOOLEAN)
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
@@ -128,6 +129,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         IntermediateType(INTEGER).asNullable()
       }
     }
+    "to_hex", "quote_literal", "quote_ident", "md5" -> IntermediateType(TEXT)
+    "quote_nullable" -> IntermediateType(TEXT).asNullable()
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "date_part" -> IntermediateType(REAL)
     "percentile_disc" -> IntermediateType(REAL).asNullable()
