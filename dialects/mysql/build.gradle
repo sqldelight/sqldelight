@@ -27,7 +27,7 @@ dependencies {
   }
   testImplementation libs.junit
   testImplementation libs.truth
-  testImplementation(libs.sqlPsiTestFixtures) {
+  testImplementation(testFixtures(libs.sqlPsi)) {
     exclude group: "com.jetbrains.intellij.platform"
   }
 }

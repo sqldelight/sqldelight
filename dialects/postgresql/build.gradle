@@ -27,7 +27,7 @@ dependencies {
     targetConfiguration = "shadow"
   }
   testFixturesApi libs.junit
-  testFixturesApi(libs.sqlPsiTestFixtures) {
+  testFixturesApi(testFixtures(libs.sqlPsi)) {
     exclude group: "com.jetbrains.intellij.platform"
   }
 
