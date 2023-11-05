@@ -18,15 +18,13 @@ dependencies {
     targetConfiguration = "shadow"
   }
 
-  testImplementation projects.dialects.sqlite318
-  testImplementation(projects.sqldelightCompiler.environment) {
+  testFixturesApi testFixtures(projects.dialects.sqlite318)
+  testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  testImplementation libs.junit
+  testFixturesApi testFixtures(libs.sqlPsi)
+
   testImplementation libs.truth
-  testFixturesApi(testFixtures(libs.sqlPsi)) {
-    exclude group: "com.jetbrains.intellij.platform"
-  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
