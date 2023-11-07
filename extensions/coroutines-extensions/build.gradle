@@ -12,17 +12,11 @@ archivesBaseName = 'sqldelight-coroutines-extensions'
 kotlin {
   targetHierarchy.default {
     it.group("testableNative") {
-      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
-      it.withIos()
-      it.withTvos()
-      it.withMacos()
-      it.withWatchosArm32()
-      it.withWatchosArm64()
-      it.withWatchosX64()
-      it.withWatchosSimulatorArm64()
-
-      it.withLinuxX64()
+      it.withApple()
+      it.withLinux()
       it.withMingw()
+      // https://github.com/touchlab/SQLiter/issues/117
+      // it.withAndroidNative()
     }
   }
 
