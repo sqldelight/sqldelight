@@ -46,7 +46,7 @@
         </div>
         <div class="filter-section" id="filter-section">
                 <button class="platform-tag platform-selector common-like" data-active="" data-filter=":drivers:native-driver:dokkaHtmlPartial/appleMain">apple</button>
-                <button class="platform-tag platform-selector native-like" data-active="" data-filter=":drivers:native-driver:dokkaHtmlPartial/linuxMain">linux</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":drivers:native-driver:dokkaHtmlPartial/linuxMain">linux</button>
         </div>
     </div>
     <div class="navigation-controls">
@@ -59,7 +59,7 @@
                 <div class="sidebar--inner" id="sideMenu"></div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="native-driver::app.cash.sqldelight.driver.native.util////PointingToDeclaration//-123554132">
+<div class="main-content" data-page-type="package" id="content" pageids="native-driver::app.cash.sqldelight.driver.native.util////PointingToDeclaration//-901703848">
   <div class="breadcrumbs"><a href="index.html">native-driver</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.driver.native.util</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
