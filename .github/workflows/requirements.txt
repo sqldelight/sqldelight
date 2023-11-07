@@ -4,11 +4,11 @@
 #
 #    pip-compile requirements.in
 #
-babel==2.13.0
+babel==2.13.1
     # via mkdocs-material
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.3.1
+charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via mkdocs
@@ -24,7 +24,7 @@ jinja2==3.1.2
     #   mkdocs
     #   mkdocs-macros-plugin
     #   mkdocs-material
-markdown==3.5
+markdown==3.5.1
     # via
     #   mkdocs
     #   mkdocs-material
