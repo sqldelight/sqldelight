@@ -1,7 +1,10 @@
 package app.cash.sqldelight.driver.android
 
 import android.content.Context
+import android.database.AbstractWindowedCursor
 import android.database.Cursor
+import android.database.CursorWindow
+import android.os.Build
 import android.util.LruCache
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -24,6 +27,7 @@ class AndroidSqliteDriver private constructor(
   private val openHelper: SupportSQLiteOpenHelper? = null,
   database: SupportSQLiteDatabase? = null,
   private val cacheSize: Int,
+  private val windowSizeBytes: Long? = null,
 ) : SqlDriver {
   init {
     require((openHelper != null) xor (database != null))
@@ -36,14 +40,16 @@ class AndroidSqliteDriver private constructor(
 
   constructor(
     openHelper: SupportSQLiteOpenHelper,
-  ) : this(openHelper = openHelper, database = null, cacheSize = DEFAULT_CACHE_SIZE)
+  ) : this(openHelper = openHelper, database = null, cacheSize = DEFAULT_CACHE_SIZE, windowSizeBytes = null)
 
   /**
    * @param [cacheSize] The number of compiled sqlite statements to keep in memory per connection.
    *   Defaults to 20.
    * @param [useNoBackupDirectory] Sets whether to use a no backup directory or not.
+   * @param [windowSizeBytes] Size of cursor window in bytes, per [CursorWindow] (Android 28+ only), or null to use the default.
    */
-  @JvmOverloads constructor(
+  @JvmOverloads
+  constructor(
     schema: SqlSchema<QueryResult.Value<Unit>>,
     context: Context,
     name: String? = null,
@@ -51,6 +57,7 @@ class AndroidSqliteDriver private constructor(
     callback: SupportSQLiteOpenHelper.Callback = AndroidSqliteDriver.Callback(schema),
     cacheSize: Int = DEFAULT_CACHE_SIZE,
     useNoBackupDirectory: Boolean = false,
+    windowSizeBytes: Long? = null,
   ) : this(
     database = null,
     openHelper = factory.create(
@@ -61,12 +68,15 @@ class AndroidSqliteDriver private constructor(
         .build(),
     ),
     cacheSize = cacheSize,
+    windowSizeBytes = windowSizeBytes,
   )
 
-  @JvmOverloads constructor(
+  @JvmOverloads
+  constructor(
     database: SupportSQLiteDatabase,
     cacheSize: Int = DEFAULT_CACHE_SIZE,
-  ) : this(openHelper = null, database = database, cacheSize = cacheSize)
+    windowSizeBytes: Long? = null,
+  ) : this(openHelper = null, database = database, cacheSize = cacheSize, windowSizeBytes = windowSizeBytes)
 
   private val statements = object : LruCache<Int, AndroidStatement>(cacheSize) {
     override fun entryRemoved(
@@ -176,7 +186,7 @@ class AndroidSqliteDriver private constructor(
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ) = execute(identifier, { AndroidQuery(sql, database, parameters) }, binders) { executeQuery(mapper) }
+  ) = execute(identifier, { AndroidQuery(sql, database, parameters, windowSizeBytes) }, binders) { executeQuery(mapper) }
 
   override fun close() {
     statements.evictAll()
@@ -257,6 +267,7 @@ private class AndroidQuery(
   override val sql: String,
   private val database: SupportSQLiteDatabase,
   override val argCount: Int,
+  private val windowSizeBytes: Long?,
 ) : SupportSQLiteQuery, AndroidStatement {
   private val binds = MutableList<((SupportSQLiteProgram) -> Unit)?>(argCount) { null }
 
@@ -290,7 +301,7 @@ private class AndroidQuery(
 
   override fun <R> executeQuery(mapper: (SqlCursor) -> QueryResult<R>): R {
     return database.query(this)
-      .use { cursor -> mapper(AndroidCursor(cursor)).value }
+      .use { cursor -> mapper(AndroidCursor(cursor, windowSizeBytes)).value }
   }
 
   override fun bindTo(statement: SupportSQLiteProgram) {
@@ -301,12 +312,23 @@ private class AndroidQuery(
 
   override fun toString() = sql
 
-  override fun close() { }
+  override fun close() {}
 }
 
 private class AndroidCursor(
   private val cursor: Cursor,
+  windowSizeBytes: Long?,
 ) : SqlCursor {
+  init {
+    if (
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+      windowSizeBytes != null &&
+      cursor is AbstractWindowedCursor
+    ) {
+      cursor.window = CursorWindow(null, windowSizeBytes)
+    }
+  }
+
   override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(cursor.moveToNext())
   override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)
   override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
