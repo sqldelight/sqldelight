@@ -364,7 +364,7 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>'
 jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
 
-extension_stmt ::= copy_stdin {
+extension_stmt ::= copy_stdin | truncate_stm {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
@@ -385,3 +385,10 @@ copy_option_escape ::= ESCAPE string_literal
 copy_option_force_not_null ::= 'FORCE_NOT_NULL' LP {column_name} ( COMMA {column_name}) * RP
 copy_option_force_null ::= 'FORCE_NULL' LP {column_name} ( COMMA {column_name}) * RP
 copy_option_encoding ::= 'ENCODING' string_literal
+
+truncate_stm ::= 'TRUNCATE' [ 'TABLE' ] ( truncate_only | truncate_descendant ) [ truncate_option * ]
+truncate_only ::= 'ONLY' {table_name} ( COMMA {table_name} ) *
+truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
+truncate_option ::= truncate_option_identity | truncate_option_cascade
+truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
+truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
