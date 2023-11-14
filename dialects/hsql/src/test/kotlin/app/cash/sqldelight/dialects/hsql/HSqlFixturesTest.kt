@@ -1,10 +1,10 @@
 package app.cash.sqldelight.dialects.hsql
 
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
+import java.io.File
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import java.io.File
 
 @RunWith(Parameterized::class)
 class HSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {

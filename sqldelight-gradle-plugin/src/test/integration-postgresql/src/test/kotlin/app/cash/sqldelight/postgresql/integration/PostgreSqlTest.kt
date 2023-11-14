@@ -5,10 +5,6 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.time.LocalDate
@@ -17,6 +13,10 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
 
 class PostgreSqlTest {
   val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")

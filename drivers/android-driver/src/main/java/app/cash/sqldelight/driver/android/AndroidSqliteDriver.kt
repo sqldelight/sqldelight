@@ -150,7 +150,9 @@ class AndroidSqliteDriver private constructor(
       statement = createStatement()
     }
     try {
-      if (binders != null) { statement.binders() }
+      if (binders != null) {
+        statement.binders()
+      }
       return QueryResult.Value(statement.result())
     } finally {
       if (identifier != null) {

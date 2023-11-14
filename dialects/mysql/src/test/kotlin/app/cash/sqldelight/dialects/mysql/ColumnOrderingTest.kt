@@ -3,10 +3,10 @@ package app.cash.sqldelight.dialects.mysql
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.test.fixtures.compileFile
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.io.File
 
 class ColumnOrderingTest {
   @Before

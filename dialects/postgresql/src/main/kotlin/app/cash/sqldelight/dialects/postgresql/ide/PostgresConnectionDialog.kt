@@ -32,7 +32,7 @@ internal class PostgresConnectionDialog(
         textField(
           getter = { connectionKey },
           setter = { connectionName = it },
-        ).withValidationOnApply(validateNonEmpty(connectionNameNonEmpty))
+        ).withValidationOnApply(validateNonEmpty(CONNECTION_NAME_NON_EMPTY))
           .growPolicy(MEDIUM_TEXT)
           .applyToComponent {
             if (connectionName != null) this.isEditable = false
@@ -42,14 +42,14 @@ internal class PostgresConnectionDialog(
         textField(
           getter = { host },
           setter = { host = it },
-        ).withValidationOnApply(validateNonEmpty(hostNonEmpty))
+        ).withValidationOnApply(validateNonEmpty(HOST_NON_EMPTY))
           .growPolicy(MEDIUM_TEXT)
       }
       row("Port") {
         textField(
           getter = { port },
           setter = { port = it },
-        ).withValidationOnApply(validateNonEmpty(portNonEmpty))
+        ).withValidationOnApply(validateNonEmpty(PORT_NON_EMPTY))
           .growPolicy(MEDIUM_TEXT)
       }
       row("Database Name") {
@@ -77,9 +77,9 @@ internal class PostgresConnectionDialog(
   }
 
   companion object {
-    private const val connectionNameNonEmpty = "You must supply a connection name."
-    private const val hostNonEmpty = "You must supply a host."
-    private const val portNonEmpty = "You must supply a port."
+    private const val CONNECTION_NAME_NON_EMPTY = "You must supply a connection name."
+    private const val HOST_NON_EMPTY = "You must supply a host."
+    private const val PORT_NON_EMPTY = "You must supply a port."
   }
 }
 

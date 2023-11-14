@@ -24,7 +24,7 @@ internal sealed interface WorkerAction {
   }
 }
 
-@Suppress("NOTHING_TO_INLINE")
+@Suppress("NOTHING_TO_INLINE", "FunctionName")
 /**
  * @suppress
  */

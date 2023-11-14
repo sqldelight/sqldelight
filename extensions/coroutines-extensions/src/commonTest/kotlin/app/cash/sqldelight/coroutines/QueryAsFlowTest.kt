@@ -5,14 +5,14 @@ import app.cash.sqldelight.coroutines.Employee.Companion.SELECT_EMPLOYEES
 import app.cash.sqldelight.coroutines.Employee.Companion.USERNAME
 import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.turbine.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class QueryAsFlowTest : DbTest {
 

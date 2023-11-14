@@ -5,10 +5,10 @@ import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class InterfaceGeneration {
   @get:Rule val temporaryFolder = TemporaryFolder()

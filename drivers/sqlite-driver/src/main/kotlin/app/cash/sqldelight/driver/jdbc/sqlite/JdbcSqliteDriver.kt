@@ -114,7 +114,9 @@ private class ThreadedConnectionManager(
 
   override var transaction: Transaction?
     get() = transactions.get()
-    set(value) { transactions.set(value) }
+    set(value) {
+      transactions.set(value)
+    }
 
   override fun getConnection() = connections.getOrSet {
     DriverManager.getConnection(url, properties)

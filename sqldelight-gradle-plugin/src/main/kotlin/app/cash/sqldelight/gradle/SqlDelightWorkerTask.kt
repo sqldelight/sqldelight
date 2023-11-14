@@ -1,12 +1,12 @@
 package app.cash.sqldelight.gradle
 
+import javax.inject.Inject
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.SourceTask
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
-import javax.inject.Inject
 
 /**
  * Common API for interacting with gradle workers

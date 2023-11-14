@@ -14,12 +14,12 @@ import com.example.Team
 import com.example.TeamForCoach
 import com.example.TestDatabase
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
   private lateinit var driver: SqlDriver

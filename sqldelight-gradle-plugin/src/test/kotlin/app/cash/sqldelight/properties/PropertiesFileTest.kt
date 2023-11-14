@@ -7,9 +7,9 @@ import app.cash.sqldelight.withCommonConfiguration
 import app.cash.sqldelight.withInvariantPathSeparators
 import app.cash.sqldelight.withTemporaryFixture
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class PropertiesFileTest {
   @Test fun `properties file generates correctly`() {
