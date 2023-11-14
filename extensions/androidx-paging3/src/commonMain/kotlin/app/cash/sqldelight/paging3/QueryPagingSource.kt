@@ -66,7 +66,7 @@ fun <RowType : Any> QueryPagingSource(
   transacter: TransacterBase,
   context: CoroutineContext,
   queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
-  initialOffset : Int = 0,
+  initialOffset: Int = 0,
 ): PagingSource<Int, RowType> = OffsetQueryPagingSource(
   queryProvider,
   countQuery,
@@ -91,7 +91,7 @@ fun <RowType : Any> QueryPagingSource(
   transacter: TransacterBase,
   context: CoroutineContext,
   queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-  initialOffset : Int = 0,
+  initialOffset: Int = 0,
 ): PagingSource<Int, RowType> = OffsetQueryPagingSource(
   { limit, offset -> queryProvider(limit.toLong(), offset.toLong()) },
   countQuery.toInt(),
