@@ -6,6 +6,8 @@ import android.database.Cursor
 import android.database.CursorWindow
 import android.os.Build
 import android.util.LruCache
+import androidx.annotation.DoNotInline
+import androidx.annotation.RequiresApi
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.SupportSQLiteProgram
@@ -20,6 +22,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
+import app.cash.sqldelight.driver.android.Api28Impl.setWindowSize
 
 private const val DEFAULT_CACHE_SIZE = 20
 
@@ -325,7 +328,7 @@ private class AndroidCursor(
       windowSizeBytes != null &&
       cursor is AbstractWindowedCursor
     ) {
-      cursor.window = CursorWindow(null, windowSizeBytes)
+      cursor.setWindowSize(windowSizeBytes)
     }
   }
 
@@ -335,4 +338,13 @@ private class AndroidCursor(
   override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)
   override fun getDouble(index: Int) = if (cursor.isNull(index)) null else cursor.getDouble(index)
   override fun getBoolean(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index) == 1L
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+private object Api28Impl {
+  @JvmStatic
+  @DoNotInline
+  fun AbstractWindowedCursor.setWindowSize(windowSizeBytes: Long) {
+    window = CursorWindow(null, windowSizeBytes)
+  }
 }
