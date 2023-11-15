@@ -6,6 +6,11 @@ CREATE TABLE test2(
   id2 TEXT
 );
 
+CREATE TABLE test3(
+    id INTEGER NOT NULL,
+    data TEXT NOT NULL
+);
+
 UPDATE test
 SET id = id2
 FROM (
@@ -40,4 +45,7 @@ FROM (
   ON otherTest.id = test2.id2
 );
 
-
+UPDATE test3
+SET data = subquery.data
+FROM (SELECT id, data FROM test3) subquery
+WHERE subquery.id = test3.id;
