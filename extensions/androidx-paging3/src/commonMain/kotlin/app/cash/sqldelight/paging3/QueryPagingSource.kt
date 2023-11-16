@@ -120,7 +120,7 @@ fun <RowType : Any> QueryPagingSource(
 /**
  * Variant of [QueryPagingSource] that accepts a [Long] instead of an [Int] for [countQuery]
  * and [queryProvider].
- * Is also accepts an [initialOffset] to start paging from.
+ * Also accepts an [initialOffset] to start paging from.
  * If the result of [countQuery] exceeds [Int.MAX_VALUE], then the count will be truncated
  * to the least significant 32 bits of this [Long] value.
  *
