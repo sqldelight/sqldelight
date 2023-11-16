@@ -253,9 +253,9 @@ class PostgreSqlTest {
   }
 
   @Test fun nowPlusInterval() {
-    val now = database.datesQueries.selectNowInterval().executeAsOne()
-    assertThat(now).isNotNull()
-    assertThat(now).isGreaterThan(OffsetDateTime.MIN)
+    val selectNowInterval = database.datesQueries.selectNowInterval().executeAsOne()
+    assertThat(selectNowInterval.now).isNotNull()
+    assertThat(selectNowInterval.nowPlusOneDay).isGreaterThan(selectNowInterval.now)
   }
 
   @Test fun interval() {

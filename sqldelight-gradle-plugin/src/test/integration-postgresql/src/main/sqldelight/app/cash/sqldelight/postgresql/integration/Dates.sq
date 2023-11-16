@@ -20,7 +20,7 @@ selectNow:
 SELECT NOW();
 
 selectNowInterval:
-SELECT NOW() + INTERVAL '1 day';
+SELECT NOW() AS now, NOW() + INTERVAL '1 day' AS nowPlusOneDay;
 
 selectInterval:
 SELECT INTERVAL '1 day';
