@@ -66,7 +66,25 @@ fun <RowType : Any> QueryPagingSource(
   transacter: TransacterBase,
   context: CoroutineContext,
   queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
-  initialOffset: Int = 0,
+): PagingSource<Int, RowType> = OffsetQueryPagingSource(
+  queryProvider,
+  countQuery,
+  transacter,
+  context,
+  0,
+)
+
+/**
+ * Variant of [QueryPagingSource] that accepts an [initialOffset] to start paging from.
+ */
+@Suppress("FunctionName")
+@JvmName("QueryPagingSourceIntInitOffset")
+fun <RowType : Any> QueryPagingSource(
+  countQuery: Query<Int>,
+  transacter: TransacterBase,
+  context: CoroutineContext,
+  queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
+  initialOffset: Int,
 ): PagingSource<Int, RowType> = OffsetQueryPagingSource(
   queryProvider,
   countQuery,
@@ -91,7 +109,31 @@ fun <RowType : Any> QueryPagingSource(
   transacter: TransacterBase,
   context: CoroutineContext,
   queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
-  initialOffset: Int = 0,
+): PagingSource<Int, RowType> = OffsetQueryPagingSource(
+  { limit, offset -> queryProvider(limit.toLong(), offset.toLong()) },
+  countQuery.toInt(),
+  transacter,
+  context,
+  0,
+)
+
+/**
+ * Variant of [QueryPagingSource] that accepts a [Long] instead of an [Int] for [countQuery]
+ * and [queryProvider].
+ * Is also accepts an [initialOffset] to start paging from.
+ * If the result of [countQuery] exceeds [Int.MAX_VALUE], then the count will be truncated
+ * to the least significant 32 bits of this [Long] value.
+ *
+ * @see toInt
+ */
+@Suppress("FunctionName")
+@JvmName("QueryPagingSourceLongInitOffset")
+fun <RowType : Any> QueryPagingSource(
+  countQuery: Query<Long>,
+  transacter: TransacterBase,
+  context: CoroutineContext,
+  queryProvider: (limit: Long, offset: Long) -> Query<RowType>,
+  initialOffset: Int,
 ): PagingSource<Int, RowType> = OffsetQueryPagingSource(
   { limit, offset -> queryProvider(limit.toLong(), offset.toLong()) },
   countQuery.toInt(),
