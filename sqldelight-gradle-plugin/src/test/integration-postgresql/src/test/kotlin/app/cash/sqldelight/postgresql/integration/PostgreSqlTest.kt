@@ -276,10 +276,29 @@ class PostgreSqlTest {
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
   }
 
+  @Test fun nowPlusInterval() {
+    val selectNowInterval = database.datesQueries.selectNowInterval().executeAsOne()
+    assertThat(selectNowInterval.now).isNotNull()
+    assertThat(selectNowInterval.nowPlusOneDay).isGreaterThan(selectNowInterval.now)
+  }
+
   @Test fun interval() {
     val interval = database.datesQueries.selectInterval().executeAsOne()
     assertThat(interval).isNotNull()
     assertThat(interval.getDays()).isEqualTo(1)
+  }
+
+  @Test fun intervalBinaryMultiplyExpression() {
+    val interval = database.datesQueries.selectMultiplyInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(31)
+  }
+
+  @Test fun intervalBinaryAddExpression() {
+    val interval = database.datesQueries.selectAddInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(1)
+    assertThat(interval.getHours()).isEqualTo(3)
   }
 
   @Test fun successfulOptimisticLock() {
