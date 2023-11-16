@@ -27,3 +27,9 @@ SELECT max(timestamp) FROM dates;
 
 selectMin:
 SELECT min(timestamp_with_timezone) FROM dates;
+
+selectMaxDate:
+SELECT max(date) FROM dates;
+
+selectMinDate:
+SELECT min(date) FROM dates;
