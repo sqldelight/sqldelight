@@ -7,6 +7,7 @@ import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
 import java.sql.Connection
 import java.sql.DriverManager
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -36,6 +37,26 @@ class PostgreSqlTest {
 
         override fun encode(value: Array<UInt>): Array<Int> =
           value.map { it.toInt() }.toTypedArray()
+      },
+    ),
+    data_Adapter = Data_.Adapter(
+      object : ColumnAdapter<Instant, LocalDateTime> {
+        override fun encode(value: Instant): LocalDateTime {
+          return LocalDateTime.ofInstant(value, ZoneOffset.UTC)
+        }
+
+        override fun decode(databaseValue: LocalDateTime): Instant {
+          return databaseValue.toInstant(ZoneOffset.UTC)
+        }
+      },
+      object : ColumnAdapter<Instant, LocalDateTime> {
+        override fun encode(value: Instant): LocalDateTime {
+          return LocalDateTime.ofInstant(value, ZoneOffset.UTC)
+        }
+
+        override fun decode(databaseValue: LocalDateTime): Instant {
+          return databaseValue.toInstant(ZoneOffset.UTC)
+        }
       },
     ),
   )
@@ -458,5 +479,52 @@ class PostgreSqlTest {
     assertThat(series.size).isEqualTo(6)
     assertThat(series.first()).isEqualTo(start)
     assertThat(series.last()).isEqualTo(finish)
+  }
+
+  @Test
+  fun testSelectDataBinaryComparison() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryComparison(10, 10).executeAsList()
+    assertThat(result.first().datum).isEqualTo(10)
+  }
+
+  @Test
+  fun testSelectDataBinaryCast1() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryCast1(10.0).executeAsOne()
+    assertThat(result.expected_datum).isEqualTo(60.toDouble())
+  }
+
+  @Test
+  fun testSelectDataBinaryCast2() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryCast2(10.0, 10).executeAsOne()
+    assertThat(result.expected_datum).isEqualTo(9.5)
+  }
+
+  @Test
+  fun testSelectDataBinaryIntervalComparison1() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    val createdAt = Instant.parse("2017-12-05T10:00:00.00Z")
+    val updatedAt = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryIntervalComparison1(createdAt, updatedAt).executeAsList()
+    assertThat(result.first().datum).isEqualTo(10)
+  }
+
+  @Test
+  fun testSelectDataBinaryIntervalComparison2() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryIntervalComparison2(created).executeAsList()
+    assertThat(result.first().datum).isEqualTo(10)
   }
 }
