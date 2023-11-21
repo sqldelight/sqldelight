@@ -8,15 +8,11 @@ import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.queriesType
-import app.cash.sqldelight.dialect.api.SqlDelightDialect
-import com.intellij.openapi.module.Module
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
 
 class QueriesTypeGenerator(
-  private val module: Module,
   private val file: SqlDelightQueriesFile,
-  private val dialect: SqlDelightDialect,
 ) {
   private val generateAsync = file.generateAsync
 
@@ -30,7 +26,7 @@ class QueriesTypeGenerator(
    *       transactions: ThreadLocal<Transacter.Transaction>
    *     ) : TransacterImpl(driver, transactions)
    */
-  fun generateType(packageName: String): TypeSpec? {
+  fun generateType(): TypeSpec? {
     if (file.isEmpty()) {
       return null
     }
@@ -46,12 +42,12 @@ class QueriesTypeGenerator(
 
     // Add any required adapters.
     // private val tableAdapter: Table.Adapter
-    file.requiredAdapters.forEach {
+    for (it in file.requiredAdapters) {
       type.addProperty(it)
       constructor.addParameter(it.name, it.type)
     }
 
-    file.namedQueries.forEach { query ->
+    for (query in file.namedQueries) {
       tryWithElement(query.select) {
         val generator = SelectQueryGenerator(query)
 
@@ -67,11 +63,11 @@ class QueriesTypeGenerator(
       }
     }
 
-    file.namedMutators.forEach { mutator ->
+    for (mutator in file.namedMutators) {
       type.addExecute(mutator)
     }
 
-    file.namedExecutes.forEach { execute ->
+    for (execute in file.namedExecutes) {
       type.addExecute(execute)
     }
 

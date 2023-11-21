@@ -24,7 +24,6 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.dialect.api.SelectQueryable
-import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.psi.InvalidElementDetectedException
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
@@ -41,15 +40,13 @@ private typealias FileAppender = (fileName: String) -> Appendable
 
 object SqlDelightCompiler {
   fun writeInterfaces(
-    module: Module,
-    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender,
   ) {
     try {
       writeTableInterfaces(file, output)
       writeQueryInterfaces(file, output)
-      writeQueries(module, dialect, file, output)
+      writeQueries(file, output)
     } catch (e: InvalidElementDetectedException) {
       // It's okay if compilation is cut short, we can just quit out.
     }
@@ -89,7 +86,7 @@ object SqlDelightCompiler {
       .addType(databaseImplementationType)
       .build()
 
-    fileIndex.outputDirectory(sourceFile).forEach { outputDirectory ->
+    for (outputDirectory in fileIndex.outputDirectory(sourceFile)) {
       val packageDirectory = "$outputDirectory/${packageName.replace(".", "/")}"
       fileSpec.writeToAndClose(output("$packageDirectory/${databaseImplementationType.name}.kt"))
     }
@@ -108,15 +105,14 @@ object SqlDelightCompiler {
       // TODO: Remove these when kotlinpoet supports top level types.
       .addImport("$packageName.$implementationFolder", "newInstance", "schema")
       .apply {
-        var index = 0
-        fileIndex.dependencies.forEach {
-          addAliasedImport(ClassName(it.packageName, it.className), "${it.className}${index++}")
+        for ((index, it) in fileIndex.dependencies.withIndex()) {
+          addAliasedImport(ClassName(it.packageName, it.className), "${it.className}$index")
         }
       }
       .addType(queryWrapperType)
       .build()
 
-    fileIndex.outputDirectory(sourceFile).forEach { outputDirectory ->
+    for (outputDirectory in fileIndex.outputDirectory(sourceFile)) {
       val packageDirectory = "$outputDirectory/${packageName.replace(".", "/")}"
       fileSpec.writeToAndClose(output("$packageDirectory/${queryWrapperType.name}.kt"))
     }
@@ -128,16 +124,16 @@ object SqlDelightCompiler {
     includeAll: Boolean = false,
   ) {
     val packageName = file.packageName ?: return
-    file.tables(includeAll).forEach { query ->
+    for (query in file.tables(includeAll)) {
       val statement = query.tableName.parent
 
       if (statement is SqlCreateViewStmt && statement.compoundSelectStmt != null) {
         listOf(NamedQuery(allocateName(statement.viewName), SelectQueryable(statement.compoundSelectStmt!!)))
           .writeQueryInterfaces(file, output)
-        return@forEach
+        continue
       }
 
-      if (statement is SqlCreateVirtualTableStmt) return@forEach
+      if (statement is SqlCreateVirtualTableStmt) continue
 
       val fileSpec = FileSpec.builder(packageName, allocateName(query.tableName))
         .apply {
@@ -148,8 +144,11 @@ object SqlDelightCompiler {
         }
         .build()
 
-      statement.sqFile().generatedDirectories?.forEach { directory ->
-        fileSpec.writeToAndClose(output("$directory/${allocateName(query.tableName).capitalize()}.kt"))
+      val generatedDirectories = statement.sqFile().generatedDirectories
+      if (generatedDirectories != null) {
+        for (directory in generatedDirectories) {
+          fileSpec.writeToAndClose(output("$directory/${allocateName(query.tableName).capitalize()}.kt"))
+        }
       }
     }
   }
@@ -162,21 +161,22 @@ object SqlDelightCompiler {
   }
 
   internal fun writeQueries(
-    module: Module,
-    dialect: SqlDelightDialect,
     file: SqlDelightQueriesFile,
     output: FileAppender,
   ) {
     val packageName = file.packageName ?: return
-    val queriesType = QueriesTypeGenerator(module, file, dialect)
-      .generateType(packageName) ?: return
+    val queriesType = QueriesTypeGenerator(file)
+      .generateType() ?: return
 
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
       .addType(queriesType)
       .build()
 
-    file.generatedDirectories?.forEach { directory ->
-      fileSpec.writeToAndClose(output("$directory/${queriesType.name}.kt"))
+    val generatedDirectories = file.generatedDirectories
+    if (generatedDirectories != null) {
+      for (directory in generatedDirectories) {
+        fileSpec.writeToAndClose(output("$directory/${queriesType.name}.kt"))
+      }
     }
   }
 
@@ -185,21 +185,23 @@ object SqlDelightCompiler {
   }
 
   private fun List<NamedQuery>.writeQueryInterfaces(file: SqlDelightFile, output: FileAppender) {
-    return filter { tryWithElement(it.select) { it.needsInterface() } == true }
-      .forEach { namedQuery ->
-        val fileSpec = FileSpec.builder(namedQuery.interfaceType.packageName, namedQuery.name)
-          .apply {
-            tryWithElement(namedQuery.select) {
-              val generator = QueryInterfaceGenerator(namedQuery)
-              addType(generator.kotlinImplementationSpec())
-            }
+    for (namedQuery in filter { tryWithElement(it.select) { it.needsInterface() } == true }) {
+      val fileSpec = FileSpec.builder(namedQuery.interfaceType.packageName, namedQuery.name)
+        .apply {
+          tryWithElement(namedQuery.select) {
+            val generator = QueryInterfaceGenerator(namedQuery)
+            addType(generator.kotlinImplementationSpec())
           }
-          .build()
+        }
+        .build()
 
-        file.generatedDirectories(namedQuery.interfaceType.packageName)?.forEach { directory ->
+      val generatedDirectories = file.generatedDirectories(namedQuery.interfaceType.packageName)
+      if (generatedDirectories != null) {
+        for (directory in generatedDirectories) {
           fileSpec.writeToAndClose(output("$directory/${namedQuery.name.capitalize()}.kt"))
         }
       }
+    }
   }
 
   private val NamedElement.normalizedName: String

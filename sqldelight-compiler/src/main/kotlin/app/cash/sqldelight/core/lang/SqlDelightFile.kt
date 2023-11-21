@@ -46,8 +46,8 @@ abstract class SqlDelightFile(
 
   internal val typeResolver: TypeResolver by lazy {
     var parentResolver: TypeResolver = AnsiSqlTypeResolver
-    ServiceLoader.load(SqlDelightModule::class.java, dialect::class.java.classLoader).forEach {
-      parentResolver = it.typeResolver(parentResolver)
+    for (sqldelightModule in ServiceLoader.load(SqlDelightModule::class.java, dialect::class.java.classLoader)) {
+      parentResolver = sqldelightModule.typeResolver(parentResolver)
     }
     dialect.typeResolver(parentResolver)
   }

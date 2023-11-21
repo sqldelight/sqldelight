@@ -21,6 +21,7 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.InsertStmtValuesMixin
+import app.cash.sqldelight.core.lang.shouldInferColumns
 import app.cash.sqldelight.dialect.api.ExposableType
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
@@ -133,7 +134,7 @@ fun PsiElement.childOfType(types: TokenSet): PsiElement? {
 }
 
 fun ASTNode.findChildRecursive(type: IElementType): ASTNode? {
-  getChildren(null).forEach {
+  for (it in getChildren(null)) {
     if (it.elementType == type) return it
     it.findChildByType(type)?.let { return it }
   }
@@ -217,25 +218,28 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   val creators = ArrayList<PsiElement>()
   val miscellanious = ArrayList<PsiElement>()
 
-  forEach { file ->
-    file.sqlStatements()
-      .filter { (label, _) -> label.name == null }
-      .forEach { (_, sqlStatement) ->
-        when {
-          sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
-          sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
-          sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
-          sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
-          else -> miscellanious.add(sqlStatement)
-        }
+  for (file in this) {
+    for ((_, sqlStatement) in file.sqlStatements()
+      .filter { (label, _) -> label.name == null }) {
+      when {
+        sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
+        sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
+        sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
+        sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
+        else -> miscellanious.add(sqlStatement)
       }
+    }
   }
 
   when (allowReferenceCycles) {
     // If we allow cycles, don't attempt to order the table creation statements. The dialect
     // is permissive.
-    true -> tables.forEach { body(it.rawSqlText()) }
-    false -> tables.buildGraph().topological().forEach { body(it.rawSqlText()) }
+    true -> for (it in tables) {
+      body(it.rawSqlText())
+    }
+    false -> for (it in tables.buildGraph().topological()) {
+      body(it.rawSqlText())
+    }
   }
 
   views.orderStatements(
@@ -245,18 +249,22 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
     body,
   )
 
-  creators.forEach { body(it.rawSqlText()) }
-  miscellanious.forEach { body(it.rawSqlText()) }
+  for (it in creators) {
+    body(it.rawSqlText())
+  }
+  for (it in miscellanious) {
+    body(it.rawSqlText())
+  }
 }
 
 private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt, DefaultEdge> {
   val graph = DirectedAcyclicGraph<SqlCreateTableStmt, DefaultEdge>(DefaultEdge::class.java)
   val namedStatements = this.associateBy { it.tableName.name }
 
-  this.forEach { table ->
+  for (table in this) {
     graph.addVertex(table)
-    table.columnDefList.forEach { column ->
-      column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }.forEach { fk ->
+    for (column in table.columnDefList) {
+      for (fk in column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }) {
         try {
           val foreignTable = namedStatements[fk.name]
           graph.apply {

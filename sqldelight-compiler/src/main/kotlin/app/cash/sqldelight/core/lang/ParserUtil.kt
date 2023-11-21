@@ -21,7 +21,7 @@ internal class ParserUtil {
       SqldelightParserUtil.reset()
 
       newDialect.setup()
-      ServiceLoader.load(SqlDelightModule::class.java, newDialect::class.java.classLoader).forEach {
+      for (it in ServiceLoader.load(SqlDelightModule::class.java, newDialect::class.java.classLoader)) {
         it.setup()
       }
       SqldelightParserUtil.overrideSqlParser()

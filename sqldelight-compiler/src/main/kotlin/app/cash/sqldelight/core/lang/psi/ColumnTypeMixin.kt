@@ -168,7 +168,7 @@ internal abstract class ColumnTypeMixin(
   }
 
   private fun SqlDelightJavaType.type(): ClassName {
-    parentOfType<SqlDelightStmtList>()!!.importStmtList.importStmtList.forEach { import ->
+    for (import in parentOfType<SqlDelightStmtList>()!!.importStmtList.importStmtList) {
       val typePrefix = text.substringBefore('.')
       if (import.javaType.text.endsWith(".$typePrefix")) {
         return text.split(".").drop(1).fold(import.javaType.type()) { current, nested ->
@@ -232,10 +232,9 @@ internal abstract class ColumnTypeMixin(
       }
     }
     val children = node.getChildren(TokenSet.create(SqlTypes.ID))
-    children.filter { (it.text == "as" || it.text == "As") && it.prevVisibleSibling?.psi is SqlTypeName }
-      .forEach {
-        annotationHolder.createErrorAnnotation(it.psi, "Expected 'AS', got '${it.text}'")
-      }
+    for (it in children.filter { (it.text == "as" || it.text == "As") && it.prevVisibleSibling?.psi is SqlTypeName }) {
+      annotationHolder.createErrorAnnotation(it.psi, "Expected 'AS', got '${it.text}'")
+    }
   }
 
   internal inner class ValueTypeDialectType(

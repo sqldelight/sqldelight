@@ -92,28 +92,30 @@ abstract class BindableQuery(
     val manuallyNamedIndexes = mutableSetOf<Int>()
     val namesSeen = mutableSetOf<String>()
     var maxIndexSeen = 0
-    statement.findChildrenOfType<SqlBindExpr>().forEach { bindArg ->
+    for (bindArg in statement.findChildrenOfType<SqlBindExpr>()) {
       val bindParameter = bindArg.bindParameter
       if (bindParameter is BindParameterMixin && bindParameter.text != "DEFAULT") {
-        bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()?.let { index ->
-          if (!indexesSeen.add(index)) {
-            result.findAndReplace(bindArg, index) { it.index == index }
-            return@forEach
+        val bindIndex = bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()
+        if (bindIndex != null) {
+          if (!indexesSeen.add(bindIndex)) {
+            result.findAndReplace(bindArg, bindIndex) { it.index == bindIndex }
+            continue
           }
-          maxIndexSeen = maxOf(maxIndexSeen, index)
-          result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
-          return@forEach
+          maxIndexSeen = maxOf(maxIndexSeen, bindIndex)
+          result.add(Argument(bindIndex, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
+          continue
         }
-        bindParameter.identifier?.let {
-          if (!namesSeen.add(it.text)) {
-            result.findAndReplace(bindArg) { (_, type, _) -> type.name == it.text }
-            return@forEach
+        val identifier = bindParameter.identifier
+        if (identifier != null) {
+          if (!namesSeen.add(identifier.text)) {
+            result.findAndReplace(bindArg) { (_, type, _) -> type.name == identifier.text }
+            continue
           }
           val index = ++maxIndexSeen
           indexesSeen.add(index)
           manuallyNamedIndexes.add(index)
-          result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = it.text), mutableListOf(bindArg)))
-          return@forEach
+          result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = identifier.text), mutableListOf(bindArg)))
+          continue
         }
         val index = ++maxIndexSeen
         indexesSeen.add(index)

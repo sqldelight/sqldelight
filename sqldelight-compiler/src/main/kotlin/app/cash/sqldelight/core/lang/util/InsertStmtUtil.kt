@@ -13,7 +13,7 @@ internal val SqlInsertStmt.columns: List<NamedElement>
       .map { (it.element as NamedElement) }
     if (columnNameList.isEmpty()) return columns
 
-    val columnMap = linkedMapOf(*columns.map { it.name to it }.toTypedArray())
+    val columnMap = columns.associateBy { it.name }
     return columnNameList.mapNotNull { columnMap[it.name] }
   }
 

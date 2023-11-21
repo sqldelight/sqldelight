@@ -163,7 +163,7 @@ class SqlDelightEnvironment(
       if (it !is SqlDelightQueriesFile) return@forSourceFiles
       logger("----- START ${it.name} ms -------")
       val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
+        SqlDelightCompiler.writeInterfaces(it, writer)
         sourceFile = it
       }
       logger("----- END ${it.name} in $timeTaken ms ------")
@@ -198,25 +198,24 @@ class SqlDelightEnvironment(
       .map { localFileSystem.findFileByPath(it.absolutePath)!! }
       .map { psiManager.findDirectory(it)!! }
       .flatMap { directory: PsiDirectory -> directory.migrationFiles() }
-    migrationFiles.sortedBy { it.version }
-      .forEach {
-        val errorElements = ArrayList<PsiErrorElement>()
-        PsiTreeUtil.processElements(it) { element ->
-          when (element) {
-            is PsiErrorElement -> errorElements.add(element)
-            // Uncomment when sqm files understand their state of the world.
-            // is SqlAnnotatedElement -> element.annotate(annotationHolder)
-          }
-          return@processElements true
+    for (it in migrationFiles.sortedBy { it.version }) {
+      val errorElements = ArrayList<PsiErrorElement>()
+      PsiTreeUtil.processElements(it) { element ->
+        when (element) {
+          is PsiErrorElement -> errorElements.add(element)
+          // Uncomment when sqm files understand their state of the world.
+          // is SqlAnnotatedElement -> element.annotate(annotationHolder)
         }
-        if (errorElements.isNotEmpty()) {
-          throw SqlDelightException(
-            "Error Reading ${it.name}:\n\n" +
-              errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) },
-          )
-        }
-        body(it)
+        return@processElements true
       }
+      if (errorElements.isNotEmpty()) {
+        throw SqlDelightException(
+          "Error Reading ${it.name}:\n\n" +
+            errorElements.joinToString(separator = "\n") { errorMessage(it, it.errorDescription) },
+        )
+      }
+      body(it)
+    }
   }
 
   private fun errorMessage(element: PsiElement, message: String): String =

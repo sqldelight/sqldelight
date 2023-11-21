@@ -57,7 +57,7 @@ open class ExecuteQueryGenerator(
       CodeBlock.builder()
         .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
         .apply {
-          tablesUpdated.sortedBy { it.name }.forEach {
+          for (it in tablesUpdated.sortedBy { it.name }) {
             addStatement("emit(\"${it.name}\")")
           }
         }

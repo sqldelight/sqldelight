@@ -29,9 +29,9 @@ class SelectQueryable(
         PsiTreeUtil.getParentOfType(resolvedTable, Queryable::class.java)?.tableExposed()
       }.orEmpty()
     }
-    tablesSelected.forEach {
-      if (it.query.columns.flattenCompounded() == pureColumns) {
-        val table = it.query.table
+    for (tableSelected in tablesSelected) {
+      if (tableSelected.query.columns.flattenCompounded() == pureColumns) {
+        val table = tableSelected.query.table
         if (table is SqlViewName) {
           // check, if this view uses exactly 1 pure table and use this table, if found.
           val createViewStmt = table.nameIdentifier?.parentOfType<SqlCreateViewStmt>()?.compoundSelectStmt
@@ -42,7 +42,7 @@ class SelectQueryable(
             }
           }
         }
-        return@lazy it.tableName
+        return@lazy tableSelected.tableName
       }
     }
 

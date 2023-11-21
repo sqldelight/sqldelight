@@ -138,13 +138,13 @@ class SqlDelightQueriesFile(
     val module = module ?: return
 
     fun PsiDirectory.iterateSqlFiles() {
-      children.forEach {
+      for (it in children) {
         if (it is PsiDirectory) it.iterateSqlFiles()
         if (it is SqlDelightQueriesFile) block(it)
       }
     }
 
-    SqlDelightFileIndex.getInstance(module).sourceFolders(this).forEach { dir ->
+    for (dir in SqlDelightFileIndex.getInstance(module).sourceFolders(this)) {
       dir.iterateSqlFiles()
     }
   }

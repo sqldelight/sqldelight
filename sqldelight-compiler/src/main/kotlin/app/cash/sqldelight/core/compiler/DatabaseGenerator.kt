@@ -67,7 +67,7 @@ internal class DatabaseGenerator(
     val typeSpec = TypeSpec.interfaceBuilder(fileIndex.className)
       .addSuperinterface(if (generateAsync) SUSPENDING_TRANSACTER_TYPE else TRANSACTER_TYPE)
 
-    fileIndex.dependencies.forEach {
+    for (it in fileIndex.dependencies) {
       typeSpec.addSuperinterface(ClassName(it.packageName, it.className))
     }
 
@@ -84,18 +84,17 @@ internal class DatabaseGenerator(
     invoke.addParameter(dbParameter)
     invokeReturn.add("%N", dbParameter)
 
-    moduleFolders.flatMap { it.queryFiles() }
+    for (file in moduleFolders.flatMap { it.queryFiles() }
       .filterNot { it.isEmpty() }
-      .sortedBy { it.name }
-      .forEach { file ->
-        // queries property added to QueryWrapper type:
-        // val dataQueries = DataQueries(this, driver)
-        typeSpec.addProperty(file.queriesName, file.queriesType)
-      }
+      .sortedBy { it.name }) {
+      // queries property added to QueryWrapper type:
+      // val dataQueries = DataQueries(this, driver)
+      typeSpec.addProperty(file.queriesName, file.queriesType)
+    }
 
-    forAdapters {
-      invoke.addParameter(it.name, it.type)
-      invokeReturn.add(", %L", it.name)
+    for (adapter in adapters()) {
+      invoke.addParameter(adapter.name, adapter.type)
+      invokeReturn.add(", %L", adapter.name)
     }
 
     return typeSpec
@@ -131,16 +130,11 @@ internal class DatabaseGenerator(
       .build()
   }
 
-  private fun forAdapters(
-    block: (PropertySpec) -> Unit,
-  ) {
-    sourceFolders
-      .flatMap { it.queryFiles() }
-      .flatMap { it.requiredAdapters }
-      .sortedBy { it.name }
-      .toSet()
-      .forEach(block)
-  }
+  private fun adapters(): Set<PropertySpec> = sourceFolders
+    .flatMap { it.queryFiles() }
+    .flatMap { it.requiredAdapters }
+    .sortedBy { it.name }
+    .toSet()
 
   fun type(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder("${fileIndex.className}Impl")
@@ -177,30 +171,29 @@ internal class DatabaseGenerator(
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
       .addParameter(oldVersion)
       .addParameter(newVersion)
-    forAdapters {
-      constructor.addParameter(it.name, it.type)
+    for (adapter in adapters()) {
+      constructor.addParameter(adapter.name, adapter.type)
     }
 
-    sourceFolders.flatMap { it.queryFiles() }
+    for (file in sourceFolders.flatMap { it.queryFiles() }
       .filterNot { it.isEmpty() }
-      .sortedBy { it.name }
-      .forEach { file ->
-        var adapters = ""
-        if (file.requiredAdapters.isNotEmpty()) {
-          adapters = file.requiredAdapters.joinToString(
-            prefix = ", ",
-            transform = { it.name },
-          )
-        }
-        // queries property added to QueryWrapper type:
-        // val dataQueries = DataQueries(this, driver, transactions)
-        typeSpec.addProperty(
-          PropertySpec.builder(file.queriesName, file.queriesType)
-            .addModifiers(OVERRIDE)
-            .initializer("%T($DRIVER_NAME$adapters)", file.queriesType)
-            .build(),
+      .sortedBy { it.name }) {
+      var adapters = ""
+      if (file.requiredAdapters.isNotEmpty()) {
+        adapters = file.requiredAdapters.joinToString(
+          prefix = ", ",
+          transform = { it.name },
         )
       }
+      // queries property added to QueryWrapper type:
+      // val dataQueries = DataQueries(this, driver, transactions)
+      typeSpec.addProperty(
+        PropertySpec.builder(file.queriesName, file.queriesType)
+          .addModifiers(OVERRIDE)
+          .initializer("%T($DRIVER_NAME$adapters)", file.queriesType)
+          .build(),
+      )
+    }
 
     if (generateAsync) {
       createFunction.beginControlFlow("return %T", ASYNC_RESULT_TYPE)
@@ -221,39 +214,36 @@ internal class DatabaseGenerator(
         .sortedBy { it.order }
 
       // Derive the schema from migration files.
-      orderedMigrations.flatMap { it.sqlStatements() }
-        .filter { it.isSchema() }
-        .forEach {
-          val statement =
-            if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
-          createFunction.addStatement(statement, it.rawSqlText().toCodeLiteral())
-        }
+      for (it in orderedMigrations.flatMap { it.sqlStatements() }
+        .filter { it.isSchema() }) {
+        val statement =
+          if (generateAsync) "$DRIVER_NAME.execute(null, %L, 0).await()" else "$DRIVER_NAME.execute(null, %L, 0)"
+        createFunction.addStatement(statement, it.rawSqlText().toCodeLiteral())
+      }
     }
 
     var maxVersion = 1L
     val hasMigrations = sourceFolders.flatMap { it.migrationFiles() }.isNotEmpty()
 
-    sourceFolders.flatMap { it.migrationFiles() }
-      .sortedBy { it.version }
-      .forEach { migrationFile ->
-        try {
-          maxVersion = maxOf(maxVersion, migrationFile.version + 1)
-        } catch (e: Throwable) {
-          throw SqlDelightException("Migration files can only have versioned names (1.sqm, 2.sqm, etc)")
-        }
-        migrateFunction.beginControlFlow(
-          "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
-          oldVersion,
-          newVersion,
-        )
-        migrationFile.sqlStatements().forEach {
-          migrateFunction.addStatement(
-            if (generateAsync) "$DRIVER_NAME.execute(null, %S, 0).await()" else "$DRIVER_NAME.execute(null, %S, 0)",
-            it.rawSqlText(),
-          )
-        }
-        migrateFunction.endControlFlow()
+    for (migrationFile in sourceFolders.flatMap { it.migrationFiles() }.sortedBy { it.version }) {
+      try {
+        maxVersion = maxOf(maxVersion, migrationFile.version + 1)
+      } catch (e: Throwable) {
+        throw SqlDelightException("Migration files can only have versioned names (1.sqm, 2.sqm, etc)")
       }
+      migrateFunction.beginControlFlow(
+        "if (%N <= ${migrationFile.version} && %N > ${migrationFile.version})",
+        oldVersion,
+        newVersion,
+      )
+      for (sqlStmt in migrationFile.sqlStatements()) {
+        migrateFunction.addStatement(
+          if (generateAsync) "$DRIVER_NAME.execute(null, %S, 0).await()" else "$DRIVER_NAME.execute(null, %S, 0)",
+          sqlStmt.rawSqlText(),
+        )
+      }
+      migrateFunction.endControlFlow()
+    }
 
     if (!generateAsync) {
       createFunction.addStatement("return %T", UNIT_RESULT_TYPE)

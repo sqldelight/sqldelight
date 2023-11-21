@@ -22,14 +22,13 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import java.io.File
 import org.junit.rules.TemporaryFolder
 
-private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
+private typealias CompilationMethod = (SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
 object FixtureCompiler {
 
@@ -125,7 +124,7 @@ object FixtureCompiler {
       psiFile.log(sourceFiles)
       if (psiFile is SqlDelightQueriesFile) {
         if (errors.isEmpty()) {
-          compilationMethod(environment.module, environment.dialect, psiFile, fileWriter)
+          compilationMethod(psiFile, fileWriter)
         }
         file = psiFile
       } else if (psiFile is MigrationFile) {

@@ -88,23 +88,22 @@ abstract class QueryGenerator(
     handledArrayArgs: Set<BindableQuery.Argument>,
     id: Int,
   ): Pair<CodeBlock, Set<BindableQuery.Argument>> {
-    val dialectPreparedStatementType = if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
+    val dialectPreparedStatementType =
+      if (generateAsync) dialect.asyncRuntimeTypes.preparedStatementType else dialect.runtimeTypes.preparedStatementType
 
     val result = CodeBlock.builder()
 
     val positionToArgument = mutableListOf<Triple<Int, BindableQuery.Argument, SqlBindExpr?>>()
     val seenArgs = mutableSetOf<BindableQuery.Argument>()
     val duplicateTypes = mutableSetOf<IntermediateType>()
-    query.arguments.forEach { argument ->
+    for (argument in query.arguments) {
       if (argument.bindArgs.isNotEmpty()) {
-        argument.bindArgs
-          .filter { PsiTreeUtil.isAncestor(statement, it, true) }
-          .forEach { bindArg ->
-            if (!seenArgs.add(argument)) {
-              duplicateTypes.add(argument.type)
-            }
-            positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
+        for (bindArg in argument.bindArgs.filter { PsiTreeUtil.isAncestor(statement, it, true) }) {
+          if (!seenArgs.add(argument)) {
+            duplicateTypes.add(argument.type)
           }
+          positionToArgument.add(Triple(bindArg.node.textRange.startOffset, argument, bindArg))
+        }
       } else {
         positionToArgument.add(Triple(0, argument, null))
       }
@@ -119,7 +118,9 @@ abstract class QueryGenerator(
     val seenArrayArguments = mutableSetOf<BindableQuery.Argument>()
 
     val argumentNameAllocator = NameAllocator().apply {
-      query.arguments.forEach { newName(it.type.name) }
+      for (it in query.arguments) {
+        newName(it.type.name)
+      }
     }
 
     // A list of [SqlBindExpr] in order of appearance in the query.
@@ -140,8 +141,9 @@ abstract class QueryGenerator(
       extractedVariables[type] = variableName
       bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
+
     // For each argument in the sql
-    orderedBindArgs.forEach { (_, argument, bindArg) ->
+    for ((_, argument, bindArg) in orderedBindArgs) {
       val type = argument.type
       // Need to replace the single argument with a group of indexed arguments, calculated at
       // runtime from the list parameter:

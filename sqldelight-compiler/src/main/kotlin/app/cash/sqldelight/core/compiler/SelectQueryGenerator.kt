@@ -107,7 +107,7 @@ class SelectQueryGenerator(
   private fun defaultResultTypeFunctionInterface(params: List<Pair<String, TypeName>>): FunSpec.Builder {
     val function = FunSpec.builder(query.name)
       .also(this::addJavadoc)
-    params.forEach { (name, type) ->
+    for ((name, type) in params) {
       function.addParameter(name, type)
     }
     return function
@@ -117,7 +117,7 @@ class SelectQueryGenerator(
   private fun customResultTypeFunctionInterface(): FunSpec.Builder {
     val function = FunSpec.builder(query.name).also(::addJavadoc)
 
-    query.parameters.forEach {
+    for (it in query.parameters) {
       // Adds each sqlite parameter to the argument list:
       // fun <T> selectForId(<<id>>, <<other_param>>, ...)
       function.addParameter(it.name, it.argumentType())
@@ -166,7 +166,7 @@ class SelectQueryGenerator(
     val function = customResultTypeFunctionInterface()
     val dialectCursorType = if (generateAsync) dialect.asyncRuntimeTypes.cursorType else dialect.runtimeTypes.cursorType
 
-    query.resultColumns.forEach { resultColumn ->
+    for (resultColumn in query.resultColumns) {
       (listOf(resultColumn) + resultColumn.assumedCompatibleTypes)
         .takeIf { it.size > 1 }
         ?.map { assumedCompatibleType ->
@@ -316,7 +316,7 @@ class SelectQueryGenerator(
       .addCode(executeBlock())
 
     // For each bind argument the query has.
-    query.parameters.forEach { parameter ->
+    for (parameter in query.parameters) {
       // Add the argument as a constructor property. (Used later to figure out if query dirtied)
       // val id: Int
       queryType.addProperty(

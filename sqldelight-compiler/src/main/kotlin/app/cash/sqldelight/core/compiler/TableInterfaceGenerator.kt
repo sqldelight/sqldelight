@@ -51,7 +51,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
 
     val constructor = FunSpec.constructorBuilder()
 
-    table.query.columns.map { it.element as NamedElement }.forEach { column ->
+    for (column in table.query.columns.map { it.element as NamedElement }) {
       val columnName = allocateName(column)
       val columnDef = column.columnDefSource()!!
       val columnType = columnDef.columnType as ColumnTypeMixin
@@ -95,15 +95,14 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       )
     }
 
-    table.query.columns
+    for (it in table.query.columns
       .mapNotNull { column ->
         val columnDef = (column.element as NamedElement).columnDefSource()!!
         val columnType = columnDef.columnType as ColumnTypeMixin
         columnType.valueClass()
-      }
-      .forEach {
-        typeSpec.addType(it)
-      }
+      }) {
+      typeSpec.addType(it)
+    }
 
     return typeSpec
       .primaryConstructor(constructor.build())
