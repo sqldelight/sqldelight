@@ -20,6 +20,7 @@ import app.cash.sqldelight.core.compiler.SqlDelightCompiler.allocateName
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin.ValueTypeDialectType
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
+import app.cash.sqldelight.core.lang.shouldInferColumns
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.childOfType
@@ -92,34 +93,49 @@ abstract class BindableQuery(
     val manuallyNamedIndexes = mutableSetOf<Int>()
     val namesSeen = mutableSetOf<String>()
     var maxIndexSeen = 0
-    for (bindArg in statement.findChildrenOfType<SqlBindExpr>()) {
-      val bindParameter = bindArg.bindParameter
-      if (bindParameter is BindParameterMixin && bindParameter.text != "DEFAULT") {
-        val bindIndex = bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()
-        if (bindIndex != null) {
-          if (!indexesSeen.add(bindIndex)) {
-            result.findAndReplace(bindArg, bindIndex) { it.index == bindIndex }
+    if (statement is SqlInsertStmt && statement.shouldInferColumns()) {
+      for (column in statement.columns) {
+        val index = ++maxIndexSeen
+        indexesSeen.add(index)
+        manuallyNamedIndexes.add(index)
+        result.add(Argument(index, column.type()))
+      }
+    } else {
+      for (bindArg in statement.findChildrenOfType<SqlBindExpr>()) {
+        val bindParameter = bindArg.bindParameter
+        if (bindParameter is BindParameterMixin && bindParameter.text != "DEFAULT") {
+          val bindIndex = bindParameter.node.findChildByType(SqlTypes.DIGIT)?.text?.toInt()
+          if (bindIndex != null) {
+            if (!indexesSeen.add(bindIndex)) {
+              result.findAndReplace(bindArg, bindIndex) { it.index == bindIndex }
+              continue
+            }
+            maxIndexSeen = maxOf(maxIndexSeen, bindIndex)
+            result.add(Argument(bindIndex, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
             continue
           }
-          maxIndexSeen = maxOf(maxIndexSeen, bindIndex)
-          result.add(Argument(bindIndex, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
-          continue
-        }
-        val identifier = bindParameter.identifier
-        if (identifier != null) {
-          if (!namesSeen.add(identifier.text)) {
-            result.findAndReplace(bindArg) { (_, type, _) -> type.name == identifier.text }
+          val identifier = bindParameter.identifier
+          if (identifier != null) {
+            if (!namesSeen.add(identifier.text)) {
+              result.findAndReplace(bindArg) { (_, type, _) -> type.name == identifier.text }
+              continue
+            }
+            val index = ++maxIndexSeen
+            indexesSeen.add(index)
+            manuallyNamedIndexes.add(index)
+            result.add(
+              Argument(
+                index,
+                typeResolver.argumentType(bindArg).copy(name = identifier.text),
+                mutableListOf(bindArg),
+              ),
+            )
             continue
           }
           val index = ++maxIndexSeen
           indexesSeen.add(index)
-          manuallyNamedIndexes.add(index)
-          result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = identifier.text), mutableListOf(bindArg)))
-          continue
+          result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
         }
-        val index = ++maxIndexSeen
-        indexesSeen.add(index)
-        result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
       }
     }
 

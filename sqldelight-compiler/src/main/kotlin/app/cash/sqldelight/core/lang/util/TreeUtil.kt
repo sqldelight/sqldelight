@@ -173,7 +173,7 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         second = "",
       ),
     )
-  } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
+  } else if (this is InsertStmtValuesMixin && (parent?.acceptsTableInterface() == true || parent?.shouldInferColumns() == true)) {
     listOf(
       Pair(
         first = childOfType(SqlTypes.BIND_EXPR)!!.range,

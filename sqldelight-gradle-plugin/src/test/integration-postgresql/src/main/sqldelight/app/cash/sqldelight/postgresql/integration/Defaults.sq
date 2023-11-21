@@ -1,0 +1,11 @@
+CREATE TABLE foo(
+a INT DEFAULT 42 NOT NULL,
+b TEXT NOT NULL,
+c TEXT NOT NULL
+);
+
+insertFoo:
+INSERT INTO foo (b, c) VALUES ?;
+
+insertFooDefault:
+INSERT INTO foo (DEFAULT, b, c) VALUES ?;

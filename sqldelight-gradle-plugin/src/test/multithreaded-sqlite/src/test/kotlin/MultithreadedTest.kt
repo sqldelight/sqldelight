@@ -6,9 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 import org.junit.After
 import org.junit.Test
-import tables.TableA
-import tables.TableB
-import tables.TableC
 
 /**
  * I run two threads. Each thread selects all records from TableA, TableB and TableC
@@ -96,13 +93,10 @@ private fun selectWithoutTransactions(dbHelper: DbHelper) {
 
 fun insertSomeData(dbHelper: DbHelper) {
   for (i in 0..100) {
-    val a = TableA(0, genString(10), genString(10), genLong())
-    dbHelper.database.tableAQueries.insert(a)
+    dbHelper.database.tableAQueries.insert(genString(10), genString(10), genLong())
 
-    val b = TableB(0, genString(10), genString(10), genLong())
-    dbHelper.database.tableBQueries.insert(b)
+    dbHelper.database.tableBQueries.insert(genString(10), genString(10), genLong())
 
-    val c = TableC(0, genString(10), genString(10), genLong())
-    dbHelper.database.tableCQueries.insert(c)
+    dbHelper.database.tableCQueries.insert(genString(10), genString(10), genLong())
   }
 }

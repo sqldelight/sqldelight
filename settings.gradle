@@ -27,6 +27,7 @@ gradleEnterprise {
 rootProject.name = 'sqldelight'
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 include ':adapters:primitive-adapters'
 include ':dialects:hsql'

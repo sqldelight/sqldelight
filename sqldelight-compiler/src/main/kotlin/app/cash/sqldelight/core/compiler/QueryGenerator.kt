@@ -10,6 +10,7 @@ import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
+import app.cash.sqldelight.core.lang.shouldInferColumns
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -22,6 +23,7 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
@@ -141,87 +143,94 @@ abstract class QueryGenerator(
       extractedVariables[type] = variableName
       bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
+    if (statement is SqlInsertStmt && statement.shouldInferColumns()) {
+      for ((index, arg) in orderedBindArgs.withIndex()) {
+        val type = arg.second.type
+        bindStatements.add(type.preparedStatementBinder(CodeBlock.of("$index"), extractedVariables[type]))
+      }
+      argumentCounts.add("${orderedBindArgs.size}")
+    } else {
+      // For each argument in the sql
+      for ((_, argument, bindArg) in orderedBindArgs) {
+        val type = argument.type
+        // Need to replace the single argument with a group of indexed arguments, calculated at
+        // runtime from the list parameter:
+        // val idIndexes = id.mapIndexed { index, _ -> "?${previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
+        val offset = (precedingArrays.map { "$it.size" } + "$nonArrayBindArgsCount")
+          .joinToString(separator = " + ").replace(" + 0", "")
+        if (bindArg?.isArrayParameter() == true) {
+          needsFreshStatement = true
 
-    // For each argument in the sql
-    for ((_, argument, bindArg) in orderedBindArgs) {
-      val type = argument.type
-      // Need to replace the single argument with a group of indexed arguments, calculated at
-      // runtime from the list parameter:
-      // val idIndexes = id.mapIndexed { index, _ -> "?${previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
-      val offset = (precedingArrays.map { "$it.size" } + "$nonArrayBindArgsCount")
-        .joinToString(separator = " + ").replace(" + 0", "")
-      if (bindArg?.isArrayParameter() == true) {
-        needsFreshStatement = true
-
-        if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {
-          result.addStatement(
-            """
+          if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {
+            result.addStatement(
+              """
             |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
-            """.trimMargin(),
+              """.trimMargin(),
+            )
+          }
+
+          // Replace the single bind argument with the array of bind arguments:
+          // WHERE id IN ${idIndexes}
+          replacements.add(bindArg.range to "\$${type.name}Indexes")
+
+          // Perform the necessary binds:
+          // id.forEachIndex { index, parameter ->
+          //   statement.bindLong(previousArray.size + index, parameter)
+          // }
+          val indexCalculator = CodeBlock.of(
+            if (offset == "0") {
+              "index"
+            } else {
+              "index + %L"
+            },
+            offset,
           )
-        }
-
-        // Replace the single bind argument with the array of bind arguments:
-        // WHERE id IN ${idIndexes}
-        replacements.add(bindArg.range to "\$${type.name}Indexes")
-
-        // Perform the necessary binds:
-        // id.forEachIndex { index, parameter ->
-        //   statement.bindLong(previousArray.size + index, parameter)
-        // }
-        val indexCalculator = CodeBlock.of(
-          if (offset == "0") {
-            "index"
-          } else {
-            "index + %L"
-          },
-          offset,
-        )
-        val elementName = argumentNameAllocator.newName(type.name)
-        bindStatements.add(
-          """
+          val elementName = argumentNameAllocator.newName(type.name)
+          bindStatements.add(
+            """
           |${type.name}.forEachIndexed { index, $elementName ->
           |  %L}
           |
-          """.trimMargin(),
-          type.copy(name = elementName).preparedStatementBinder(indexCalculator),
-        )
+            """.trimMargin(),
+            type.copy(name = elementName).preparedStatementBinder(indexCalculator),
+          )
 
-        precedingArrays.add(type.name)
-        argumentCounts.add("${type.name}.size")
-      } else {
-        val bindParameter = bindArg?.bindParameter as? BindParameterMixin
-        if (bindParameter == null || bindParameter.text != "DEFAULT") {
-          nonArrayBindArgsCount += 1
+          precedingArrays.add(type.name)
+          argumentCounts.add("${type.name}.size")
+        } else {
+          val bindParameter = bindArg?.bindParameter as? BindParameterMixin
+          if (bindParameter == null || bindParameter.text != "DEFAULT") {
+            nonArrayBindArgsCount += 1
 
-          if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
-            val parent = bindArg?.parent
-            if (parent is SqlBinaryEqualityExpr) {
-              needsFreshStatement = true
+            if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
+              val parent = bindArg?.parent
+              if (parent is SqlBinaryEqualityExpr) {
+                needsFreshStatement = true
 
-              var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
-              val nullableEquality: String
-              if (symbol != null) {
-                nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
-              } else {
-                symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
-                nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+                var symbol = parent.childOfType(SqlTypes.EQ) ?: parent.childOfType(SqlTypes.EQ2)
+                val nullableEquality: String
+                if (symbol != null) {
+                  nullableEquality = "${symbol.leftWhitspace()}IS${symbol.rightWhitespace()}"
+                } else {
+                  symbol = parent.childOfType(SqlTypes.NEQ) ?: parent.childOfType(SqlTypes.NEQ2)!!
+                  nullableEquality = "${symbol.leftWhitspace()}IS NOT${symbol.rightWhitespace()}"
+                }
+
+                val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
+                replacements.add(symbol.range to "\${ $block }")
               }
-
-              val block = CodeBlock.of("if (${type.name} == null) \"$nullableEquality\" else \"${symbol.text}\"")
-              replacements.add(symbol.range to "\${ $block }")
             }
-          }
 
-          // Binds each parameter to the statement:
-          // statement.bindLong(0, id)
-          bindStatements.add(type.preparedStatementBinder(CodeBlock.of(offset), extractedVariables[type]))
+            // Binds each parameter to the statement:
+            // statement.bindLong(0, id)
+            bindStatements.add(type.preparedStatementBinder(CodeBlock.of(offset), extractedVariables[type]))
 
-          // Replace the named argument with a non named/indexed argument.
-          // This allows us to use the same algorithm for non Sqlite dialects
-          // :name becomes ?
-          if (bindParameter != null) {
-            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
+            // Replace the named argument with a non named/indexed argument.
+            // This allows us to use the same algorithm for non Sqlite dialects
+            // :name becomes ?
+            if (bindParameter != null) {
+              replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
+            }
           }
         }
       }
