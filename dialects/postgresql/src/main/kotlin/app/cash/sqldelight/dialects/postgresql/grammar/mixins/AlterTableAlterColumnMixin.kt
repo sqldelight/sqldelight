@@ -19,24 +19,20 @@ internal abstract class AlterTableAlterColumnMixin(
     get() = children.filterIsInstance<SqlColumnName>().first()
 
   override fun applyTo(lazyQuery: LazyQuery): LazyQuery {
-    val hasDropNotNull = columnNotNullClause?.let { it.firstChild.elementType == SqlTypes.DROP }
-    val hasSetNotNull = columnNotNullClause?.let { it.firstChild.elementType == SqlTypes.SET }
+    val nullableColumn: Boolean? = columnNotNullClause?.let {
+      when (it.firstChild.elementType) {
+        SqlTypes.DROP -> true
+        SqlTypes.SET -> false
+        else -> null
+      }
+    }
 
     return LazyQuery(
       tableName = lazyQuery.tableName,
       query = {
-        val columns = lazyQuery.query.columns.map {
-          if (it.element.textMatches(columnName)) {
-            when {
-              (hasDropNotNull == true) -> it.copy(nullable = true)
-              (hasSetNotNull == true) -> it.copy(nullable = false)
-              else -> it
-            }
-          } else {
-            it
-          }
+        val columns = lazyQuery.query.columns.map { queryColumn ->
+          if (queryColumn.element.textMatches(columnName)) queryColumn.copy(nullable = nullableColumn) else queryColumn
         }
-
         lazyQuery.query.copy(columns = columns)
       },
     )
