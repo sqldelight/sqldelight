@@ -2,5 +2,6 @@ CREATE TABLE test (
   first TEXT NOT NULL,
   second INTEGER,
   third TEXT NOT NULL,
-  fourth INTEGER
+  fourth INTEGER,
+  fifth INTEGER NOT NULL
 );
