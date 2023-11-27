@@ -463,6 +463,21 @@
               </div>
             </div>
           </div>
+<a data-name="1468488351%2FProperties%2F-128169639" anchor-label="COLUMN_NOT_NULL_CLAUSE" id="1468488351%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-l-u-m-n_-n-o-t_-n-u-l-l_-c-l-a-u-s-e.html"><span><span>COLUMN_NOT_NULL_CLAUSE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1468488351%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="-c-o-l-u-m-n_-n-o-t_-n-u-l-l_-c-l-a-u-s-e.html">COLUMN_NOT_NULL_CLAUSE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1549595436%2FProperties%2F-128169639" anchor-label="COMMA" id="-1549595436%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
