@@ -1,0 +1,2 @@
+insertFirst:
+INSERT INTO test (first, second, third, fourth) VALUES (?, ?, ?, ?);
