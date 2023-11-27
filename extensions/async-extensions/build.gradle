@@ -10,7 +10,7 @@ archivesBaseName = 'sqldelight-async-extensions'
 kotlin {
   applyDefaultHierarchyTemplate {
     it.common {
-      it.group("sync") {
+      it.group("concurrent") {
         it.withJvm()
         it.withNative()
       }
