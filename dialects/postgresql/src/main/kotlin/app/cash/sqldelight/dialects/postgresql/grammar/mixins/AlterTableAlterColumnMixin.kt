@@ -1,14 +1,14 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAlterTableAlterColumn
-import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
-import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnConstraint
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlColumnType
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.alterStmt
 import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
@@ -22,12 +22,10 @@ internal abstract class AlterTableAlterColumnMixin(
   AlterTableApplier {
 
   override fun getColumnConstraintList(): MutableList<SqlColumnConstraint> {
-    return (
-      (
-        tablesAvailable(this).first()
-          .query.columns.first { it.element.textMatches(columnName) }.element as NamedElement
-        ).columnDefSource()!!.columnConstraintList
-      )
+    return alterStmt.tablesAvailable(this).single()
+      .query.columns.firstOrNull { it.element.textMatches(columnName) }?.element?.let {
+        (it.parent as SqlColumnDef).columnConstraintList
+      } ?: mutableListOf()
   }
 
   override fun getColumnName(): SqlColumnName {
@@ -35,28 +33,15 @@ internal abstract class AlterTableAlterColumnMixin(
   }
 
   override fun getColumnType(): SqlColumnType {
-    return children.filterIsInstance<SqlColumnType>().firstOrNull()
-      ?: return (
-        (
-          tablesAvailable(this).first()
-            .query.columns.first { it.element.textMatches(columnName) }.element as NamedElement
-          ).columnDefSource()!!.columnType
-        )
+    val sqlColumnType = children.filterIsInstance<SqlColumnType>().firstOrNull()
+    if (sqlColumnType != null) return sqlColumnType
+
+    val columnName = columnName
+    val element = tablesAvailable(this).first().query.columns.first { it.element.textMatches(columnName) }.element
+    return (element.parent as ColumnDefMixin).columnType
   }
 
   override fun getJavadoc(): PsiElement? {
-    return (
-      (
-        tablesAvailable(this).first()
-          .query.columns.first { it.element.textMatches(columnName) }.element as NamedElement
-        ).columnDefSource()!!.javadoc
-      )
-  }
-
-  private fun NamedElement.columnDefSource(): ColumnDefMixin? {
-    if (this.parent is ColumnDefMixin) return this.parent as ColumnDefMixin
-    if (this is AliasElement) return (source() as NamedElement).columnDefSource()
-    if (this is SqlColumnName) return (reference!!.resolve() as NamedElement).columnDefSource()
     return null
   }
 
