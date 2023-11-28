@@ -22,7 +22,7 @@ internal abstract class AlterTableAlterColumnMixin(
   AlterTableApplier {
 
   override fun getColumnConstraintList(): MutableList<SqlColumnConstraint> {
-    return alterStmt.tablesAvailable(this).single()
+    return alterStmt.tablesAvailable(this).first()
       .query.columns.firstOrNull { it.element.textMatches(columnName) }?.element?.let {
         (it.parent as SqlColumnDef).columnConstraintList
       } ?: mutableListOf()
@@ -59,7 +59,7 @@ internal abstract class AlterTableAlterColumnMixin(
       tableName = lazyQuery.tableName,
       query = {
         val columns = lazyQuery.query.columns.map { queryColumn ->
-          if (queryColumn.element.textMatches(alterColumnTable)) queryColumn.copy(element = alterColumnTable, nullable = nullableColumn) else queryColumn
+          if (queryColumn.element.textMatches(alterColumnTable)) queryColumn.copy(element = alterColumnTable, nullable = nullableColumn ?: queryColumn.nullable) else queryColumn
         }
         lazyQuery.query.copy(columns = columns)
       },
