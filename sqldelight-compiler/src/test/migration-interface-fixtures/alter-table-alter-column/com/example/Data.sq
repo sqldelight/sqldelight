@@ -1,2 +1,2 @@
 insertFirst:
-INSERT INTO test (first, second, third, fourth) VALUES (?, ?, ?, ?);
+INSERT INTO test (first, second, third, fourth, fifth) VALUES (?, ?, ?, ?, ?);

@@ -4,6 +4,7 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
 import kotlin.Int
+import kotlin.Long
 import kotlin.String
 
 public class DataQueries(
@@ -14,7 +15,7 @@ public class DataQueries(
     second: Int,
     third: String,
     fourth: Int?,
-    fifth: Long
+    fifth: Long?,
   ) {
     driver.execute(-2_134_278_654,
         """INSERT INTO test (first, second, third, fourth, fifth) VALUES (?, ?, ?, ?, ?)""", 5) {

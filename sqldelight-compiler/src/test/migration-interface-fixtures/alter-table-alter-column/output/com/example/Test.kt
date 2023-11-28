@@ -9,5 +9,5 @@ public data class Test(
   public val second: Int,
   public val third: String,
   public val fourth: Int?,
-  public val fifth: Long,
+  public val fifth: Long?,
 )
