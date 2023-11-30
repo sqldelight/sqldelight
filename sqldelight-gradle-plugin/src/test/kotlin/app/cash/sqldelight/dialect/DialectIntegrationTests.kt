@@ -3,9 +3,9 @@ package app.cash.sqldelight.dialect
 import app.cash.sqldelight.assertions.FileSubject
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class DialectIntegrationTests {
 

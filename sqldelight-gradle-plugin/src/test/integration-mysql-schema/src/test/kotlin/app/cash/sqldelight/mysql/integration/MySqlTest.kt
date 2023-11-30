@@ -3,11 +3,11 @@ package app.cash.sqldelight.mysql.integration
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
+import java.sql.Connection
+import java.sql.DriverManager
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
 
 class MySqlTest {
   lateinit var connection: Connection

@@ -9,7 +9,7 @@ You can enable foreign key constraints for the Native SQLite driver by enabling 
 ```kotlin
 NativeSqliteDriver(
   schema = Database.Schema,
-  onConfiguration = { config ->
+  onConfiguration = { config: DatabaseConfiguration ->
     config.copy(
       extendedConfig = DatabaseConfiguration.Extended(foreignKeyConstraints = true)
     )

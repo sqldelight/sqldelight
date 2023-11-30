@@ -25,8 +25,8 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
-import org.jetbrains.kotlin.idea.util.findModule
 import java.util.Properties
+import org.jetbrains.kotlin.idea.util.findModule
 
 /**
  * Creates a new SqlDelight file/table/migration from a template (see [fileTemplates.internal])

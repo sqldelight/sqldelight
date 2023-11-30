@@ -1,0 +1,35 @@
+import java.time.Instant;
+
+CREATE TABLE data (
+  datum INTEGER NOT NULL,
+  point INTEGER NOT NULL,
+  created_at TIMESTAMP AS Instant NOT NULL,
+  updated_at TIMESTAMP AS Instant NOT NULL
+);
+
+insertData:
+INSERT INTO data(datum, point, created_at, updated_at)
+VALUES(?, ?, ?, ?);
+
+selectDataBinaryComparison:
+SELECT *
+FROM data
+WHERE datum > :datum1 - 2.5 AND datum < :datum2 + 2.5;
+
+selectDataBinaryCast1:
+SELECT *, (datum + CAST(:datum1 AS REAL) * point) AS expected_datum
+FROM data;
+
+selectDataBinaryCast2:
+SELECT CAST(:datum1 AS REAL) + CAST(:datum2 AS INTEGER) - 10.5 AS expected_datum
+FROM data;
+
+selectDataBinaryIntervalComparison1:
+SELECT *
+FROM data
+WHERE created_at = :createdAt - INTERVAL '2 days' OR updated_at = :updatedAt + INTERVAL '2 days';
+
+selectDataBinaryIntervalComparison2:
+SELECT *
+FROM data
+WHERE created_at BETWEEN :createdAt - INTERVAL '2 days' AND :createdAt + INTERVAL '2 days';

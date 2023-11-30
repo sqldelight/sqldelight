@@ -8,12 +8,12 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
-import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import org.w3c.dom.Worker
 
 class WebWorkerTransacterTest {
   private val schema = object : SqlSchema<QueryResult.Value<Unit>> {

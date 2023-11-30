@@ -10,6 +10,8 @@ import app.cash.sqldelight.driver.worker.api.WorkerAction
 import app.cash.sqldelight.driver.worker.api.WorkerRequest
 import app.cash.sqldelight.driver.worker.api.WorkerResponse
 import app.cash.sqldelight.driver.worker.api.WorkerResult
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
@@ -17,8 +19,6 @@ import org.w3c.dom.MessageEvent
 import org.w3c.dom.Worker
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 /**
  * A [SqlDriver] implementation for interacting with SQL databases running in a Web Worker.

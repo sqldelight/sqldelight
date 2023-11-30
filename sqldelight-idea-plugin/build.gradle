@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
+import app.cash.sqldelight.toolchain.BugsnagKey
 
 plugins {
   alias(libs.plugins.intellij)
@@ -72,10 +73,6 @@ tasks.named('publishPlugin') {
   channels = [isReleaseBuild() ? 'Stable' : 'EAP']
 }
 
-sourceSets {
-  main.java.srcDir "src/generated/kotlin"
-}
-
 repositories {
   maven { url = uri("https://repo.gradle.org/gradle/libs-releases") }
 }
@@ -97,31 +94,9 @@ dependencies {
   testImplementation projects.dialects.sqlite318
 }
 
-def getBugsnagKey() {
-  return hasProperty('SQLDELIGHT_BUGSNAG_KEY') ? SQLDELIGHT_BUGSNAG_KEY : ''
+def bugsnagKey = tasks.register('bugsnagKey', BugsnagKey)
+sourceSets.main {
+  kotlin.srcDir(bugsnagKey)
 }
-
-tasks.register('bugsnagKey') {
-  def outputDir = file("src/generated/kotlin")
-  def versionFile = file("$outputDir/app.cash.sqldelight/intellij/Bugsnag.kt")
-
-  inputs.property 'bugsnagKey', getBugsnagKey()
-  outputs.file(versionFile)
-
-  doLast {
-    versionFile.parentFile.mkdirs()
-    versionFile.text = """// Generated file. Do not edit!
-package app.cash.sqldelight.intellij
-
-internal val BUGSNAG_KEY = "${getBugsnagKey()}"
-"""
-  }
-}
-
-tasks.named('compileKotlin') { dependsOn('bugsnagKey') }
 
 tasks.named('buildSearchableOptions') { enabled = false }
-
-afterEvaluate {
-  tasks.named('kspKotlin') { dependsOn('bugsnagKey') }
-}

@@ -17,7 +17,6 @@ import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotificationProvider
 import com.intellij.ui.EditorNotifications
 import com.intellij.ui.components.JBScrollPane
-import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -29,6 +28,7 @@ import javax.swing.JLabel
 import javax.swing.JTextArea
 import javax.swing.UIManager
 import javax.swing.text.DefaultCaret
+import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
 class FileIndexingNotification(
   private val project: Project,

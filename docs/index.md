@@ -69,6 +69,11 @@ SQLDelight supports a variety of SQL dialects and platforms.
 <hr />
 [:octicons-arrow-right-24: __JVM__](https://github.com/hfhbd/sqldelight-db2-dialect)  
 </div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-oracle:{ .lg .middle } __Oracle DB__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/hfhbd/sqldelight-oracle-dialect)  
+</div>
 </div>
 
 ## Snapshots

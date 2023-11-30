@@ -7,13 +7,13 @@ import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_EMPLOYEE
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.turbine.test
-import kotlinx.coroutines.flow.take
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlinx.coroutines.flow.take
 
 class MappingTest : DbTest {
 

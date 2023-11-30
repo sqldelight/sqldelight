@@ -11,14 +11,12 @@ class MultiplatformConventions : Plugin<Project> {
     project.plugins.apply("org.jetbrains.kotlin.multiplatform")
 
     (project.kotlinExtension as KotlinMultiplatformExtension).apply {
-      targetHierarchy.default()
-
       jvm()
 
       js {
         browser {
           testTask {
-            useKarma {
+            it.useKarma {
               useChromeHeadless()
             }
           }
