@@ -63,6 +63,7 @@ internal abstract class QueryPagingSource<Key : Any, RowType : Any> :
  */
 @Suppress("FunctionName")
 @JvmName("QueryPagingSourceInt")
+@JvmOverloads
 fun <RowType : Any> QueryPagingSource(
   countQuery: Query<Int>,
   transacter: TransacterBase,
