@@ -1,0 +1,464 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>SqliteParserUtil</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            SQLDelight
+                    </a>            </div>
+            <div class="library-version">2.1.0-SNAPSHOT
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:sqlite-3-25:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="sqlite-3-25::app.cash.sqldelight.dialects.sqlite_3_25.grammar/SqliteParserUtil///PointingToDeclaration//1849874135">
+  <div class="breadcrumbs"><a href="../../index.html">sqlite-3-25</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.sqlite_3_25.grammar</a><span class="delimiter">/</span><span class="current">SqliteParserUtil</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Sqlite</span><wbr><span>Parser</span><wbr><span><span>Util</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">SqliteParserUtil</a> : <span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase///PointingToDeclaration/">GeneratedParserUtilBase</span></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-333749818%2FProperties%2F1849874135" anchor-label="alter_table_rename_column" id="-333749818%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter_table_rename_column.html"><span><span>alter_table_rename_column</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-333749818%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="alter_table_rename_column.html">alter_table_rename_column</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1146290106%2FProperties%2F1849874135" anchor-label="alter_table_rules" id="-1146290106%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter_table_rules.html"><span><span>alter_table_rules</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1146290106%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="alter_table_rules.html">alter_table_rules</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1121180395%2FProperties%2F1849874135" anchor-label="base_window_name" id="1121180395%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="base_window_name.html"><span><span>base_window_name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1121180395%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="base_window_name.html">base_window_name</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="842212579%2FProperties%2F1849874135" anchor-label="createElement" id="842212579%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-element.html"><span>create</span><wbr><span><span>Element</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="842212579%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="create-element.html">createElement</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1985963850%2FProperties%2F1849874135" anchor-label="frame_spec" id="1985963850%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="frame_spec.html"><span><span>frame_spec</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1985963850%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="frame_spec.html">frame_spec</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-572933636%2FProperties%2F1849874135" anchor-label="overrides" id="-572933636%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="overrides.html"><span><span>overrides</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-572933636%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="overrides.html">overrides</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2141438837%2FProperties%2F1849874135" anchor-label="result_column" id="-2141438837%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="result_column.html"><span><span>result_column</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2141438837%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="result_column.html">result_column</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2094403080%2FProperties%2F1849874135" anchor-label="select_stmt" id="-2094403080%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="select_stmt.html"><span><span>select_stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2094403080%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="select_stmt.html">select_stmt</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1756478411%2FProperties%2F1849874135" anchor-label="window_defn" id="1756478411%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window_defn.html"><span><span>window_defn</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1756478411%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="window_defn.html">window_defn</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2123624048%2FProperties%2F1849874135" anchor-label="window_func" id="2123624048%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window_func.html"><span><span>window_func</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2123624048%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="window_func.html">window_func</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1206569583%2FProperties%2F1849874135" anchor-label="window_function_invocation" id="1206569583%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window_function_invocation.html"><span><span>window_function_invocation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1206569583%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="window_function_invocation.html">window_function_invocation</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1021307767%2FProperties%2F1849874135" anchor-label="window_name" id="-1021307767%2FProperties%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window_name.html"><span><span>window_name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1021307767%2FProperties%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="window_name.html">window_name</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1024892392%2FFunctions%2F1849874135" anchor-label="alterTableRenameColumnExt" id="-1024892392%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter-table-rename-column-ext.html"><span>alter</span><wbr><span>Table</span><wbr><span>Rename</span><wbr><span>Column</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1024892392%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="alter-table-rename-column-ext.html"><span class="token function">alterTableRenameColumnExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">alter_table_rename_column<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="905206065%2FFunctions%2F1849874135" anchor-label="alterTableRulesExt" id="905206065%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter-table-rules-ext.html"><span>alter</span><wbr><span>Table</span><wbr><span>Rules</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="905206065%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="alter-table-rules-ext.html"><span class="token function">alterTableRulesExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">alter_table_rules<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-245809800%2FFunctions%2F1849874135" anchor-label="baseWindowNameExt" id="-245809800%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="base-window-name-ext.html"><span>base</span><wbr><span>Window</span><wbr><span>Name</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-245809800%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="base-window-name-ext.html"><span class="token function">baseWindowNameExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">base_window_name<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1070126136%2FFunctions%2F1849874135" anchor-label="frameSpecExt" id="-1070126136%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="frame-spec-ext.html"><span>frame</span><wbr><span>Spec</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1070126136%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="frame-spec-ext.html"><span class="token function">frameSpecExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">frame_spec<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-306318071%2FFunctions%2F1849874135" anchor-label="overridesExt" id="-306318071%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="overrides-ext.html"><span>overrides</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-306318071%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="overrides-ext.html"><span class="token function">overridesExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">overrides<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1145029186%2FFunctions%2F1849874135" anchor-label="overrideSqlParser" id="1145029186%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="override-sql-parser.html"><span>override</span><wbr><span>Sql</span><wbr><span><span>Parser</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1145029186%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="override-sql-parser.html"><span class="token function">overrideSqlParser</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2018511572%2FFunctions%2F1849874135" anchor-label="reset" id="2018511572%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset.html"><span><span>reset</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2018511572%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="reset.html"><span class="token function">reset</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-439131631%2FFunctions%2F1849874135" anchor-label="resultColumnExt" id="-439131631%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="result-column-ext.html"><span>result</span><wbr><span>Column</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-439131631%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="result-column-ext.html"><span class="token function">resultColumnExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">result_column<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-406307616%2FFunctions%2F1849874135" anchor-label="selectStmtExt" id="-406307616%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="select-stmt-ext.html"><span>select</span><wbr><span>Stmt</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-406307616%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="select-stmt-ext.html"><span class="token function">selectStmtExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">select_stmt<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1711029643%2FFunctions%2F1849874135" anchor-label="windowDefnExt" id="1711029643%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window-defn-ext.html"><span>window</span><wbr><span>Defn</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1711029643%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="window-defn-ext.html"><span class="token function">windowDefnExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">window_defn<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1605902608%2FFunctions%2F1849874135" anchor-label="windowFuncExt" id="-1605902608%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window-func-ext.html"><span>window</span><wbr><span>Func</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1605902608%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="window-func-ext.html"><span class="token function">windowFuncExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">window_func<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1160145708%2FFunctions%2F1849874135" anchor-label="windowFunctionInvocationExt" id="1160145708%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window-function-invocation-ext.html"><span>window</span><wbr><span>Function</span><wbr><span>Invocation</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1160145708%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="window-function-invocation-ext.html"><span class="token function">windowFunctionInvocationExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">window_function_invocation<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="105510601%2FFunctions%2F1849874135" anchor-label="windowNameExt" id="105510601%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="window-name-ext.html"><span>window</span><wbr><span>Name</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="105510601%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="window-name-ext.html"><span class="token function">windowNameExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">window_name<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

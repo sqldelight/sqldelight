@@ -224,6 +224,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1373492729%2FFunctions%2F1896744885" anchor-label="close" id="-1373492729%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1373492729%2FFunctions%2F1896744885"><span><span>close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1373492729%2FFunctions%2F1896744885"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1373492729%2FFunctions%2F1896744885"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-527947269%2FFunctions%2F1896744885" anchor-label="fileIndex" id="-527947269%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">

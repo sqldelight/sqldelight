@@ -523,6 +523,21 @@
               </div>
             </div>
           </div>
+<a data-name="-213137063%2FFunctions%2F-128169639" anchor-label="getLimitingTerm" id="-213137063%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-213137063%2FFunctions%2F-128169639"><span>get</span><wbr><span>Limiting</span><wbr><span><span>Term</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-213137063%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-213137063%2FFunctions%2F-128169639"><span class="token function">getLimitingTerm</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlLimitingTerm///PointingToDeclaration/">SqlLimitingTerm</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1803935968%2FFunctions%2F-128169639" anchor-label="getManager" id="1803935968%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
