@@ -4869,7 +4869,7 @@
 <p>You can enable foreign key constraints for the Native SQLite driver by enabling them in the database configuration.</p>
 <div class="highlight"><pre><span></span><code><span class="n">NativeSqliteDriver</span><span class="p">(</span>
 <span class="w">  </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span>
-<span class="w">  </span><span class="n">onConfiguration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">  </span><span class="n">onConfiguration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">config</span><span class="p">:</span><span class="w"> </span><span class="n">DatabaseConfiguration</span><span class="w"> </span><span class="o">-&gt;</span>
 <span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">copy</span><span class="p">(</span>
 <span class="w">      </span><span class="n">extendedConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DatabaseConfiguration</span><span class="p">.</span><span class="na">Extended</span><span class="p">(</span><span class="n">foreignKeyConstraints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
 <span class="w">    </span><span class="p">)</span>
