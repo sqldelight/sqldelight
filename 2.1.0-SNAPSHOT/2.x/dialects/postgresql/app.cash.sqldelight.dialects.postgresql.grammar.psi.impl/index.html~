@@ -563,6 +563,21 @@
               </div>
             </div>
           </div>
+<a data-name="1328233162%2FClasslikes%2F-128169639" anchor-label="PostgreSqlCreateSequenceStmtImpl" id="1328233162%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-create-sequence-stmt-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Sequence</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1328233162%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-create-sequence-stmt-impl/index.html">PostgreSqlCreateSequenceStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-sequence-mixin/index.html">CreateSequenceMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-create-sequence-stmt/index.html">PostgreSqlCreateSequenceStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1004359673%2FClasslikes%2F-128169639" anchor-label="PostgreSqlCurrentTimestampWithOptionalIntervalImpl" id="-1004359673%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -889,6 +904,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-select-stmt-impl/index.html">PostgreSqlSelectStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlSelectStmtImpl///PointingToDeclaration/">SqlSelectStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-select-stmt/index.html">PostgreSqlSelectStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1923503018%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSequenceDataTypeImpl" id="1923503018%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-sequence-data-type-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1923503018%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-sequence-data-type-impl/index.html">PostgreSqlSequenceDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-sequence-data-type/index.html">PostgreSqlSequenceDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1567289597%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSequenceNameImpl" id="-1567289597%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-sequence-name-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1567289597%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-sequence-name-impl/index.html">PostgreSqlSequenceNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-sequence-name/index.html">PostgreSqlSequenceName</a></div></div></div>
                 </div>
               </div>
             </div>
