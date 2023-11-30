@@ -17,10 +17,10 @@ package app.cash.sqldelight.integrations
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
-import java.io.File
 
 class IntegrationTest {
   @Test fun integrationTests() {

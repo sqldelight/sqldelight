@@ -3,10 +3,10 @@ package app.cash.sqldelight.dialects.postgres
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgresqlTestFixtures
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
+import java.io.File
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import java.io.File
 
 @RunWith(Parameterized::class)
 class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {

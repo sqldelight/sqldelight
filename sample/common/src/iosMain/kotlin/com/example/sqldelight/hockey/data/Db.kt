@@ -3,7 +3,7 @@ package com.example.sqldelight.hockey.data
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.example.sqldelight.hockey.HockeyDb
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 
 object Db {

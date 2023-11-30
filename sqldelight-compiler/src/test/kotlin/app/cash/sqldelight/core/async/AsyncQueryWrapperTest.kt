@@ -2,10 +2,10 @@ package app.cash.sqldelight.core.async
 
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class AsyncQueryWrapperTest {
   @get:Rule val tempFolder = TemporaryFolder()

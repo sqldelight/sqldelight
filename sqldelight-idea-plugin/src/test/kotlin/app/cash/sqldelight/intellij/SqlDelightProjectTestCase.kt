@@ -19,10 +19,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import java.io.File
 import java.io.PrintStream
 import kotlin.io.path.absolutePathString
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 
 abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase() {
   protected val tempRoot: VirtualFile

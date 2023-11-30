@@ -17,7 +17,7 @@ extension_expr ::= json_expression {
   override = true
 }
 
-json_expression ::= {column_name} json_binary_operator <<expr '-1'>> {
+json_expression ::= {column_expr} json_binary_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_38.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }

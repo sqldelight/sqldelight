@@ -9,13 +9,13 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.jdbc.ConnectionManager.Transaction
-import org.intellij.lang.annotations.Language
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
 import javax.sql.DataSource
+import org.intellij.lang.annotations.Language
 
 @JvmName("fromDataSource")
 fun DataSource.asJdbcDriver() = object : JdbcDriver() {

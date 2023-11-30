@@ -5,18 +5,19 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
 
 class PostgreSqlTest {
   val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
@@ -36,6 +37,26 @@ class PostgreSqlTest {
 
         override fun encode(value: Array<UInt>): Array<Int> =
           value.map { it.toInt() }.toTypedArray()
+      },
+    ),
+    data_Adapter = Data_.Adapter(
+      object : ColumnAdapter<Instant, LocalDateTime> {
+        override fun encode(value: Instant): LocalDateTime {
+          return LocalDateTime.ofInstant(value, ZoneOffset.UTC)
+        }
+
+        override fun decode(databaseValue: LocalDateTime): Instant {
+          return databaseValue.toInstant(ZoneOffset.UTC)
+        }
+      },
+      object : ColumnAdapter<Instant, LocalDateTime> {
+        override fun encode(value: Instant): LocalDateTime {
+          return LocalDateTime.ofInstant(value, ZoneOffset.UTC)
+        }
+
+        override fun decode(databaseValue: LocalDateTime): Instant {
+          return databaseValue.toInstant(ZoneOffset.UTC)
+        }
       },
     ),
   )
@@ -228,6 +249,30 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testMinMaxDates() {
+    database.datesQueries.insertDate(
+      date = LocalDate.of(2023, 1, 1),
+      time = LocalTime.of(11, 30, 59, 10000),
+      timestamp = LocalDateTime.of(2029, 1, 1, 21, 30, 59, 10000),
+      timestamp_with_timezone = OffsetDateTime.of(1970, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+    ).executeAsOne()
+
+    database.datesQueries.insertDate(
+      date = LocalDate.of(2022, 10, 17),
+      time = LocalTime.of(11, 30, 59, 10000),
+      timestamp = LocalDateTime.of(2029, 1, 1, 21, 30, 59, 10000),
+      timestamp_with_timezone = OffsetDateTime.of(1970, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0)),
+    ).executeAsOne()
+
+    database.datesQueries.selectMaxDate().executeAsOne().let {
+      assertThat(it.max).isEqualTo(LocalDate.of(2023, 1, 1))
+    }
+
+    database.datesQueries.selectMinDate().executeAsOne().let {
+      assertThat(it.min).isEqualTo(LocalDate.of(2022, 10, 17))
+    }
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {
@@ -252,10 +297,29 @@ class PostgreSqlTest {
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
   }
 
+  @Test fun nowPlusInterval() {
+    val selectNowInterval = database.datesQueries.selectNowInterval().executeAsOne()
+    assertThat(selectNowInterval.now).isNotNull()
+    assertThat(selectNowInterval.nowPlusOneDay).isGreaterThan(selectNowInterval.now)
+  }
+
   @Test fun interval() {
     val interval = database.datesQueries.selectInterval().executeAsOne()
     assertThat(interval).isNotNull()
     assertThat(interval.getDays()).isEqualTo(1)
+  }
+
+  @Test fun intervalBinaryMultiplyExpression() {
+    val interval = database.datesQueries.selectMultiplyInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(31)
+  }
+
+  @Test fun intervalBinaryAddExpression() {
+    val interval = database.datesQueries.selectAddInterval().executeAsOne()
+    assertThat(interval).isNotNull()
+    assertThat(interval.getDays()).isEqualTo(1)
+    assertThat(interval.getHours()).isEqualTo(3)
   }
 
   @Test fun successfulOptimisticLock() {
@@ -450,6 +514,19 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun sequenceFunctions() {
+    val nextVal = database.sequencesQueries.insertNextVal().executeAsOne()
+    val currVal = database.sequencesQueries.selectCurrentVal().executeAsOne()
+    assertThat(nextVal).isEqualTo(currVal)
+
+    val selectNextVal = database.sequencesQueries.selectNextVal().executeAsOne()
+    val lastVal = database.sequencesQueries.selectLastVal().executeAsOne()
+    assertThat(selectNextVal).isEqualTo(lastVal)
+
+    val selectSetVal = database.sequencesQueries.selectSetVal().executeAsOne()
+    assertThat(selectSetVal).isEqualTo(nextVal)
+  }
+
   @Test
   fun testGenerateSeries() {
     val start = OffsetDateTime.of(2023, 9, 1, 0, 0, 0, 0, ZoneOffset.ofHours(0))
@@ -458,5 +535,52 @@ class PostgreSqlTest {
     assertThat(series.size).isEqualTo(6)
     assertThat(series.first()).isEqualTo(start)
     assertThat(series.last()).isEqualTo(finish)
+  }
+
+  @Test
+  fun testSelectDataBinaryComparison() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryComparison(10, 10).executeAsList()
+    assertThat(result.first().datum).isEqualTo(10)
+  }
+
+  @Test
+  fun testSelectDataBinaryCast1() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryCast1(10.0).executeAsOne()
+    assertThat(result.expected_datum).isEqualTo(60.toDouble())
+  }
+
+  @Test
+  fun testSelectDataBinaryCast2() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryCast2(10.0, 10).executeAsOne()
+    assertThat(result.expected_datum).isEqualTo(9.5)
+  }
+
+  @Test
+  fun testSelectDataBinaryIntervalComparison1() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    val createdAt = Instant.parse("2017-12-05T10:00:00.00Z")
+    val updatedAt = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryIntervalComparison1(createdAt, updatedAt).executeAsList()
+    assertThat(result.first().datum).isEqualTo(10)
+  }
+
+  @Test
+  fun testSelectDataBinaryIntervalComparison2() {
+    val created = Instant.parse("2017-12-03T10:00:00.00Z")
+    val updated = Instant.parse("2022-05-01T10:00:00.00Z")
+    database.binaryArgumentsQueries.insertData(10, 5, created, updated)
+    val result = database.binaryArgumentsQueries.selectDataBinaryIntervalComparison2(created).executeAsList()
+    assertThat(result.first().datum).isEqualTo(10)
   }
 }

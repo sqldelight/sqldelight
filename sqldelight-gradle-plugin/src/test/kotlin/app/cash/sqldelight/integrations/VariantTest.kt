@@ -4,9 +4,9 @@ import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.properties
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class VariantTest {
   @Test

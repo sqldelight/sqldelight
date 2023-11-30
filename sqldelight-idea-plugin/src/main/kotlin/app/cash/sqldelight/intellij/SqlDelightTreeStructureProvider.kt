@@ -23,8 +23,8 @@ import com.intellij.openapi.vfs.VirtualFileFilter
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import org.jetbrains.kotlin.konan.file.File
 import java.util.ArrayList
+import org.jetbrains.kotlin.konan.file.File
 
 internal class SqlDelightTreeStructureProvider(
   private val project: Project,
