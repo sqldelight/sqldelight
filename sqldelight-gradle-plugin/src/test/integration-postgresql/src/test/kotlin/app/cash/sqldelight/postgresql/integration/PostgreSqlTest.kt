@@ -514,6 +514,19 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun sequenceFunctions() {
+    val nextVal = database.sequencesQueries.insertNextVal().executeAsOne()
+    val currVal = database.sequencesQueries.selectCurrentVal().executeAsOne()
+    assertThat(nextVal).isEqualTo(currVal)
+
+    val selectNextVal = database.sequencesQueries.selectNextVal().executeAsOne()
+    val lastVal = database.sequencesQueries.selectLastVal().executeAsOne()
+    assertThat(selectNextVal).isEqualTo(lastVal)
+
+    val selectSetVal = database.sequencesQueries.selectSetVal().executeAsOne()
+    assertThat(selectSetVal).isEqualTo(nextVal)
+  }
+
   @Test
   fun testGenerateSeries() {
     val start = OffsetDateTime.of(2023, 9, 1, 0, 0, 0, 0, ZoneOffset.ofHours(0))
