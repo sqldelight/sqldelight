@@ -3,7 +3,6 @@ pluginManagement {
         maven(url = "file://${settingsDir.absolutePath}/../../../../build/localMaven")
         mavenCentral()
         google()
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 
@@ -27,6 +26,5 @@ dependencyResolutionManagement {
     maven(url = "file://${rootDir}/../../../../build/localMaven")
     mavenCentral()
     google()
-    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
   }
 }
