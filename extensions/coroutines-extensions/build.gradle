@@ -10,7 +10,7 @@ plugins {
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
-  targetHierarchy.default {
+  applyDefaultHierarchyTemplate {
     it.group("testableNative") {
       it.withApple()
       it.withLinux()

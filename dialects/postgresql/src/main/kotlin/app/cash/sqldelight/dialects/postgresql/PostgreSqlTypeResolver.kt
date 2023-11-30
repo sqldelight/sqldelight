@@ -13,6 +13,7 @@ import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
 import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.BIG_INT
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.DATE
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
@@ -119,8 +120,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "starts_with" -> IntermediateType(BOOLEAN)
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
-    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP).asNullable()
+    "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "sum" -> {
       val type = resolvedType(exprList.single())
       if (type.dialectType == REAL) {
@@ -166,6 +167,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     -> IntermediateType(TEXT)
     "json_array_length", "jsonb_array_length" -> IntermediateType(INTEGER)
     "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
+    "currval", "lastval", "nextval", "setval" -> IntermediateType(BIG_INT)
     "generate_series" -> encapsulatingType(exprList, INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP)
     else -> null
   }
@@ -222,6 +224,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           REAL,
           TEXT,
           BLOB,
+          PostgreSqlType.INTERVAL,
+          PostgreSqlType.TIMESTAMP_TIMEZONE,
+          PostgreSqlType.TIMESTAMP,
         )
       }
     }
