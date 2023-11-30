@@ -10,6 +10,11 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqlite.migrations.CatalogDatabase
 import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
+import java.io.File
+import java.sql.DriverManager
+import java.util.Properties
+import java.util.ServiceLoader
+import kotlin.collections.ArrayList
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.RegularFileProperty
@@ -29,11 +34,6 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.sql.DriverManager
-import java.util.Properties
-import java.util.ServiceLoader
-import kotlin.collections.ArrayList
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
@@ -123,7 +123,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         .findDatabaseFiles()
 
       check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
-        "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+        "Verifying a migration requires a database file to be present. To generate one, use the generate schema Gradle task for your database. A quick way to find the task name(s) is to run `gradle :module:tasks | grep generate`."
       }
 
       databaseFiles.forEach { dbFile ->

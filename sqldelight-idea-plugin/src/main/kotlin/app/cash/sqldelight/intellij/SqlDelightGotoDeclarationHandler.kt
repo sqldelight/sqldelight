@@ -29,6 +29,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -57,7 +58,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
     offset: Int,
     editor: Editor,
   ): Array<PsiElement> {
-    if (sourceElement == null) {
+    if (sourceElement == null || DumbService.getInstance(sourceElement.project).isDumb) {
       return emptyArray()
     }
 

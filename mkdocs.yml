@@ -32,7 +32,6 @@ nav:
     - 'Testing': android_sqlite/testing.md
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
     - 'Gradle': android_sqlite/gradle.md
-    - 'Upgrading Pre-1.0': android_sqlite/upgrading.md
     - '2.x API':
         - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
         - 'rxjava2-extensions': 2.x/extensions/rxjava2-extensions/index.html
@@ -185,13 +184,14 @@ nav:
 theme:
   name: 'material'
   favicon: images/icon-cashapp.png
-  logo: images/icon-cashapp.png
+  logo: images/icon-sqldelight.svg
+  custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
       media: "(prefers-color-scheme: light)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -199,8 +199,8 @@ theme:
     # Palette toggle for dark mode
     - scheme: slate
       media: "(prefers-color-scheme: dark)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -209,6 +209,7 @@ theme:
     - content.tabs.link
     - content.code.annotate
     - content.action.view
+    - announce.dismiss
 
 extra_css:
   - 'css/app.css'

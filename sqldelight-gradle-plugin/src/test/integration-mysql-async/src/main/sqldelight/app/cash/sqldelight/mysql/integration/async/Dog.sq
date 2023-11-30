@@ -9,6 +9,13 @@ insertDog:
 INSERT INTO dog
 VALUES (?, ?, DEFAULT, ?);
 
+insertDogAndReturnAll {
+INSERT INTO dog
+VALUES (?, ?, DEFAULT, ?);
+
+SELECT * FROM dog;
+}
+
 selectDogs:
 SELECT *
 FROM dog;

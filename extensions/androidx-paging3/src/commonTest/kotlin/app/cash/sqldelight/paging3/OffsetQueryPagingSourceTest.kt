@@ -35,8 +35,6 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -46,6 +44,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 
 @ExperimentalCoroutinesApi
 class OffsetQueryPagingSourceTest : BaseOffsetQueryPagingSourceTest() {

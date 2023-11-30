@@ -52,3 +52,13 @@ val queryWrapper: Database = Database(
   )
 )
 ```
+
+## Value types
+
+SQLDelight can generate a value type for a column which wraps the underlying database type if requested:
+
+```sql
+CREATE TABLE hockeyPlayer (
+  id INT AS VALUE
+);
+```

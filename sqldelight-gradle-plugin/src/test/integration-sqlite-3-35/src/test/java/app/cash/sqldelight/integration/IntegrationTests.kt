@@ -35,21 +35,21 @@ class IntegrationTests {
   }
 
   @Test fun updateReturning1() {
-    personQueries.insertAndReturn1(1, "Alec", "Weak").executeAsOne()
+    personQueries.insertAndReturn1(1, "Alec", "Strong").executeAsOne()
     assertThat(personQueries.updateAndReturn1("Weak", "Strong").executeAsOne())
       .isEqualTo("Alec")
   }
 
   @Test fun updateReturningMany() {
-    personQueries.insertAndReturn1(1, "Alec", "Weak").executeAsOne()
+    personQueries.insertAndReturn1(1, "Alec", "Strong").executeAsOne()
     assertThat(personQueries.updateAndReturnMany("Weak", "Strong").executeAsOne())
       .isEqualTo(UpdateAndReturnMany(1, "Alec"))
   }
 
   @Test fun updateReturningAll() {
-    personQueries.insertAndReturn1(1, "Alec", "Weak").executeAsOne()
+    personQueries.insertAndReturn1(1, "Alec", "Strong").executeAsOne()
     assertThat(personQueries.updateAndReturnAll("Weak", "Strong").executeAsOne())
-      .isEqualTo(Person(1, "Alec", "Strong"))
+      .isEqualTo(Person(1, "Alec", "Weak"))
   }
 
   @Test fun deleteReturning1() {
@@ -68,5 +68,12 @@ class IntegrationTests {
     personQueries.insertAndReturn1(1, "Alec", "Strong").executeAsOne()
     assertThat(personQueries.deleteAndReturnAll("Strong").executeAsOne())
       .isEqualTo(Person(1, "Alec", "Strong"))
+  }
+
+  @Test fun upsertWithMultipleConflict() {
+    personQueries.performUpsert(1, "First", "Last")
+    personQueries.performUpsert(1, "Alpha", "Omega")
+    assertThat(personQueries.deleteAndReturnAll("Omega").executeAsOne())
+      .isEqualTo(Person(1, "Alpha", "Omega"))
   }
 }

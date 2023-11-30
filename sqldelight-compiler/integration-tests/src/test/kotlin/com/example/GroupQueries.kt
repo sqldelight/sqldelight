@@ -26,8 +26,8 @@ public class GroupQueries(
     )
   }
 
-  public fun selectFromTable2(): Query<Myftstable2> = selectFromTable2 { something, nice ->
-    Myftstable2(
+  public fun selectFromTable2(): Query<SelectFromTable2> = selectFromTable2 { something, nice ->
+    SelectFromTable2(
       something,
       nice
     )

@@ -51,12 +51,12 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
-import org.jetbrains.kotlin.idea.util.projectStructure.getModule
-import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.reflect.jvm.jvmName
+import org.jetbrains.kotlin.idea.util.projectStructure.getModule
+import timber.log.Timber
 
 class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
   private var fileIndexes: FileIndexMap?
@@ -221,7 +221,9 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   private class MissingDialect : SqlDelightDialect {
     override val icon = AllIcons.Providers.Sqlite
-    override fun setup() { SqlParserUtil.reset() }
+    override fun setup() {
+      SqlParserUtil.reset()
+    }
     override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

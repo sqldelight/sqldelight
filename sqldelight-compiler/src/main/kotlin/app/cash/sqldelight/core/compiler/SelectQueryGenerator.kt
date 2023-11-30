@@ -223,7 +223,7 @@ class SelectQueryGenerator(
     }
     mapperLambda.unindent().add("}\n")
 
-    if (query.arguments.isEmpty()) {
+    if (!query.needsQuerySubType()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       val tablesObserved = query.tablesObserved

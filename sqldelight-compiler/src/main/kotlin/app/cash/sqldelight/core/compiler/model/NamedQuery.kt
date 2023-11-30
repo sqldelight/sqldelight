@@ -27,6 +27,7 @@ import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
+import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
@@ -113,8 +114,9 @@ data class NamedQuery(
    * a default implementation subclass.
    */
   internal val interfaceType: ClassName by lazy {
-    pureTable?.let {
-      return@lazy ClassName(it.sqFile().packageName!!, allocateName(it).capitalize())
+    val pureTable = pureTable
+    if (pureTable != null && pureTable.parent !is SqlCreateVirtualTableStmt) {
+      return@lazy ClassName(pureTable.sqFile().packageName!!, allocateName(pureTable).capitalize())
     }
     var packageName = queryable.select.sqFile().packageName!!
     if (queryable.select.sqFile().parent?.files
@@ -130,10 +132,17 @@ data class NamedQuery(
   /**
    * @return true if this query needs its own interface generated.
    */
-  internal fun needsInterface() = needsWrapper() &&
-    (pureTable == null || pureTable?.parent is SqlCreateVirtualTableStmt)
+  internal fun needsInterface(): Boolean {
+    val needsWrapper = needsWrapper()
+    val pureTable = pureTable
+    val parent = pureTable?.parent
+
+    return needsWrapper && (pureTable == null || parent is SqlCreateVirtualTableStmt)
+  }
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
+
+  internal fun needsQuerySubType() = arguments.isNotEmpty() || statement is SqlDelightStmtClojureStmtList
 
   internal val tablesObserved: List<TableNameElement>? by lazy {
     if (queryable is SelectQueryable && queryable.select == queryable.statement) {

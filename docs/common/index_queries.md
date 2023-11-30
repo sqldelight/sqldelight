@@ -1,6 +1,8 @@
-SQL statements inside a `.sq` file can be labeled to have a typesafe function generated for them available at runtime.
+## Defining Typesafe Queries
 
-```sql
+SQLDelight will generate a typesafe function for any labeled SQL statement in a `.sq` file.
+
+```sql title="src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq"
 selectAll:
 SELECT *
 FROM hockeyPlayer;
@@ -14,25 +16,32 @@ INSERT INTO hockeyPlayer(player_number, full_name)
 VALUES ?;
 ```
 
-Files with labeled statements in them will have a queries file generated from them that matches the `.sq` file name - putting the above sql into `Player.sq` generates `PlayerQueries.kt`. To get a reference to `PlayerQueries` you need to wrap the driver we made above:
+A "Queries" object will be generated for each `.sq` file containing labeled statements.
+For example, a `PlayerQueries` object will be generated for the `Player.sq` file shown above.
+This object can be used to call the generated typesafe functions which will execute the actual SQL
+statements.
 
 ```kotlin
-// In reality the database and driver above should be created a single time
-// and passed around using your favourite dependency injection/service
-// locator/singleton pattern.
-val database = Database(driver)
+{% if async %}suspend {% endif %}fun doDatabaseThings(driver: SqlDriver) {
+  val database = Database(driver)
+  val playerQueries: PlayerQueries = database.playerQueries
 
-val playerQueries: PlayerQueries = database.playerQueries
+  println(playerQueries.selectAll().{% if async %}await{% else %}execute{% endif %}AsList()) 
+  // [HockeyPlayer(15, "Ryan Getzlaf")]
 
-println(playerQueries.selectAll().executeAsList())
-// Prints [HockeyPlayer(15, "Ryan Getzlaf")]
+  playerQueries.insert(player_number = 10, full_name = "Corey Perry")
+  println(playerQueries.selectAll().{% if async %}await{% else %}execute{% endif %}AsList()) 
+  // [HockeyPlayer(15, "Ryan Getzlaf"), HockeyPlayer(10, "Corey Perry")]
 
-playerQueries.insert(player_number = 10, full_name = "Corey Perry")
-println(playerQueries.selectAll().executeAsList())
-// Prints [HockeyPlayer(15, "Ryan Getzlaf"), HockeyPlayer(10, "Corey Perry")]
-
-val player = HockeyPlayer(10, "Ronald McDonald")
-playerQueries.insertFullPlayerObject(player)
+  val player = HockeyPlayer(10, "Ronald McDonald")
+  playerQueries.insertFullPlayerObject(player)
+}
 ```
+
+{% if async %}
+!!! warning
+    When using an asynchronous driver, use the suspending `awaitAs*()` extension functions when 
+    running queries instead of the blocking `executeAs*()` functions.
+{% endif %}
 
 And that's it! Check out the other pages on the sidebar for other functionality.

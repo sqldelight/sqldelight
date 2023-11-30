@@ -8,6 +8,8 @@ import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.kotlin.sources
 import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
+import java.io.File
+import javax.inject.Inject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
@@ -16,8 +18,6 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
-import java.io.File
-import javax.inject.Inject
 
 @SqlDelightDsl
 abstract class SqlDelightDatabase @Inject constructor(

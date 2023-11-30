@@ -44,4 +44,4 @@ abstract class ToolchainConventions(private val targetJdkVersion: String) : Plug
 class RuntimeToolchainConventions : ToolchainConventions("1.8")
 
 // Controls the minimum JDK version required to run the SQLDelight plugin and compiler
-class CompilerToolchainConventions : ToolchainConventions("11")
+class CompilerToolchainConventions : ToolchainConventions("17")

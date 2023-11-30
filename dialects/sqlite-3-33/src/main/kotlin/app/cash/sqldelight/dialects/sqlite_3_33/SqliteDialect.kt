@@ -1,7 +1,7 @@
 package app.cash.sqldelight.dialects.sqlite_3_33
 
-import app.cash.sqldelight.dialects.sqlite_3_33.grammar.SqliteParserUtil
 import app.cash.sqldelight.dialects.sqlite_3_30.SqliteDialect as Sqlite330Dialect
+import app.cash.sqldelight.dialects.sqlite_3_33.grammar.SqliteParserUtil
 
 /**
  * A dialect for SQLite.

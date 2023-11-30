@@ -1,5 +1,28 @@
 # Change Log
 
+## [2.0.0] - 2023-07-26
+
+### Added
+- [MySQL Dialect] MySQL: support timestamp/bigint in IF expression (#4329 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] MySQL: Add now (#4431 by [Philip Wedemann][hfhbd])
+- [Web Driver] Enable NPM package publishing (#4364)
+- [IDE Plugin] Allow users to show the stacktrace when the gradle tooling connect fails (#4383)
+
+### Changed
+- [Sqlite Driver] Simplify using schema migrations for JdbcSqliteDriver (#3737 by [Lukáš Moravec][morki])
+- [R2DBC Driver] Real async R2DBC cursor (#4387 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [IDE Plugin] Dont instantiate the database project service until needed (#4382)
+- [IDE Plugin] Handle process cancellation during find usages (#4340)
+- [IDE Plugin] Fix IDE generation of async code (#4406)
+- [IDE Plugin] Move assembly of the package structure to be one-time computed and off the EDT (#4417)
+- [IDE Plugin] Use the correct stub index key for kotlin type resolution on 2023.2 (#4416)
+- [IDE Plugin] Wait for the index to be ready before performing a search (#4419)
+- [IDE Plugin] Dont perform a goto if the index is unavailable (#4420)
+- [Compiler] Fix result expression for grouped statements (#4378)
+- [Compiler] Don't use virtual table as interface type (#4427 by [Philip Wedemann][hfhbd])
+
 ## [2.0.0-rc02] - 2023-06-27
 
 ### Added
@@ -962,3 +985,4 @@ Initial release.
   [shellderp]: https://github.com/shellderp
   [joshfriend]: https://github.com/joshfriend
   [daio]: https://github.com/daio
+  [morki]: https://github.com/morki

@@ -39,7 +39,7 @@ internal fun IntermediateType.argumentType() = if (bindArg?.isArrayParameter() =
  * eg: statement.bindBytes(0, tableNameAdapter.columnNameAdapter.encode(column))
  */
 internal fun IntermediateType.preparedStatementBinder(
-  columnIndex: String,
+  columnIndex: CodeBlock,
   extractedVariable: String? = null,
 ): CodeBlock {
   val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaType()

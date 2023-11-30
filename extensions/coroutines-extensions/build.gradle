@@ -10,19 +10,13 @@ plugins {
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
-  targetHierarchy.default {
+  applyDefaultHierarchyTemplate {
     it.group("testableNative") {
-      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
-      it.withIos()
-      it.withTvos()
-      it.withMacos()
-      it.withWatchosArm32()
-      it.withWatchosArm64()
-      it.withWatchosX64()
-      it.withWatchosSimulatorArm64()
-
-      it.withLinuxX64()
+      it.withApple()
+      it.withLinux()
       it.withMingw()
+      // https://github.com/touchlab/SQLiter/issues/117
+      // it.withAndroidNative()
     }
   }
 
@@ -53,8 +47,10 @@ kotlin {
     }
     jsTest {
       dependencies {
-        implementation projects.drivers.sqljsDriver
         implementation libs.stately.concurrency
+        implementation projects.drivers.webWorkerDriver
+        implementation npm("sql.js", libs.versions.sqljs.get())
+        implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
       }
     }
     testableNativeTest {

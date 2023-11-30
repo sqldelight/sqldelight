@@ -2,9 +2,9 @@ package app.cash.sqldelight.tests
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class MigrationTest {
   @Test fun `verification enabled fails when database file is missing`() {
@@ -14,7 +14,7 @@ class MigrationTest {
       .buildAndFail()
 
     assertThat(output.output).contains(
-      "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task.",
+      "Verifying a migration requires a database file to be present. To generate one, use the generate schema Gradle task for your database. A quick way to find the task name(s) is to run `gradle :module:tasks | grep generate`.",
     )
   }
 

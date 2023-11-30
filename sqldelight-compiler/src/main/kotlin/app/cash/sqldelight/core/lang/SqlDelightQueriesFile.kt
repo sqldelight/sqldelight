@@ -43,12 +43,6 @@ class SqlDelightQueriesFile(
   viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, SqlDelightLanguage),
   SqlAnnotatedElement {
-  override val packageName by lazy {
-    module?.let { module ->
-      SqlDelightFileIndex.getInstance(module).packageName(this)
-    }
-  }
-
   val namedQueries by lazy {
     transactions().filterIsInstance<NamedQuery>() + sqlStatements()
       .filter { typeResolver.queryWithResults(it.statement) != null && it.identifier.name != null }

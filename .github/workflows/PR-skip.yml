@@ -15,8 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        # Windows checks are temporarily disabled until fixed, see: https://github.com/cashapp/sqldelight/issues/2579
-        os: [ macOS-latest, ubuntu-latest ]
+        os: [ macOS-latest, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
@@ -26,6 +25,11 @@ jobs:
           - os: ubuntu-latest
             job: gradle-plugin-tests
     # We don't actually need to run on `{{matrix.os}}` for this to work
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'
+
+  spotless:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No build required"'

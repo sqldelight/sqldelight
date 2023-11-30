@@ -11,7 +11,8 @@ plugins {
 archivesBaseName = 'sqldelight-androidx-paging3'
 
 kotlin {
-  ios()
+  iosX64()
+  iosArm64()
   iosSimulatorArm64()
   jvm()
   js {
@@ -35,51 +36,20 @@ kotlin {
         implementation libs.stately.concurrency
       }
     }
-    nativeMain {
-    }
     nativeTest {
-      dependsOn(nativeMain)
-      dependsOn(commonTest)
       dependencies {
         implementation projects.drivers.nativeDriver
       }
     }
-    iosMain {
-      dependsOn(nativeMain)
-    }
     iosTest {
-      dependsOn(nativeTest)
       dependencies {
         implementation libs.app.cash.paging.runtime.uikit
       }
-    }
-    iosSimulatorArm64Main {
-      dependsOn(iosMain)
-    }
-    iosSimulatorArm64Test {
-      dependsOn(iosTest)
-    }
-    linuxX64Main {
-      dependsOn(nativeMain)
-    }
-    linuxX64Test {
-      dependsOn(nativeTest)
-    }
-    mingwX64Main {
-      dependsOn(nativeMain)
-    }
-    mingwX64Test {
-      dependsOn(nativeTest)
     }
     jvmTest {
       dependencies {
         implementation projects.drivers.sqliteDriver
         implementation libs.androidx.paging3.runtime
-      }
-    }
-    jsTest {
-      dependencies {
-        implementation projects.drivers.sqljsDriver
       }
     }
   }
@@ -124,5 +94,8 @@ tasks.named("linkDebugTestLinuxX64") { enabled = HostManager.hostIsLinux }
 
 tasks.named("mingwX64Test") { enabled = HostManager.hostIsMingw }
 tasks.named("linkDebugTestMingwX64") { enabled = HostManager.hostIsMingw }
+
+// JS currently doesn't have a compatible driver
+tasks.named("jsBrowserTest") { enabled = false }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

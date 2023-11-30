@@ -1,7 +1,6 @@
 package app.cash.sqldelight.core.integration
 
 import app.cash.sqldelight.EnumColumnAdapter
-import app.cash.sqldelight.Query
 import app.cash.sqldelight.core.integration.Shoots.LEFT
 import app.cash.sqldelight.core.integration.Shoots.RIGHT
 import app.cash.sqldelight.core.integration.Shoots.Type.ONE
@@ -15,12 +14,12 @@ import com.example.Team
 import com.example.TeamForCoach
 import com.example.TestDatabase
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
   private lateinit var driver: SqlDriver
@@ -90,6 +89,11 @@ class IntegrationTest {
         |  FROM player
         |  WHERE player.rowid = last_insert_rowid();
         |}
+        |
+        |greaterThanNumberAndName:
+        |SELECT *
+        |FROM player
+        |WHERE (number, name) > (?, ?);
         |
       """.trimMargin(),
       temporaryFolder,
@@ -187,13 +191,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val allPlayers = queryWrapper.playerQueries.allPlayers()
-    allPlayers.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    allPlayers.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(allPlayers.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -215,13 +213,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val teamForCoach = queryWrapper.teamQueries.teamForCoach("Randy Carlyle")
-    teamForCoach.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    teamForCoach.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(teamForCoach.executeAsList()).containsExactly(
       TeamForCoach(Team.Name("Anaheim Ducks"), 15),
@@ -236,13 +228,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(15, 87))
-    playersForNumbers.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForNumbers.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -262,13 +248,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForNumbers = queryWrapper.playerQueries.playersForNumbers(listOf(10, 87, 15))
-    playersForNumbers.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForNumbers.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForNumbers.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -292,13 +272,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForTeam = queryWrapper.playerQueries.playersForTeam(Team.Name("Anaheim Ducks"))
-    playersForTeam.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForTeam.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -320,13 +294,7 @@ class IntegrationTest {
     val resultSetChanged = AtomicInteger(0)
 
     val playersForTeam = queryWrapper.playerQueries.playersForTeam(Team.Name("Anaheim Ducks"))
-    playersForTeam.addListener(
-      object : Query.Listener {
-        override fun queryResultsChanged() {
-          resultSetChanged.incrementAndGet()
-        }
-      },
-    )
+    playersForTeam.addListener { resultSetChanged.incrementAndGet() }
 
     assertThat(playersForTeam.executeAsList()).containsExactly(
       Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
@@ -367,5 +335,46 @@ class IntegrationTest {
 
       assertThat(brady.name).isEqualTo(Player.Name("Brady Tkachuk"))
     }
+  }
+
+  @Test fun `multi column expression select`() {
+    queryWrapper.playerQueries.insertPlayer(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT)
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("A")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("Z")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("A")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("C")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("Z")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
   }
 }

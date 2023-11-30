@@ -4,7 +4,7 @@
 
 SQLDelight generates typesafe Kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
-SQLDelight understands your existing SQL schema.
+SQLDelight takes your existing SQL schema,
 
 ```sql
 CREATE TABLE hockey_player (
@@ -14,7 +14,7 @@ CREATE TABLE hockey_player (
 );
 ```
 
-It generates typesafe code for any labeled SQL statements.
+and generates typesafe code to run your SQL statements and queries.
 
 ![intro.gif](images/intro.gif)
 
@@ -53,6 +53,26 @@ SQLDelight supports a variety of SQL dialects and platforms.
 <hr />
 [:octicons-arrow-right-24: __JVM__ (JDBC)](jvm_h2)  
 :octicons-arrow-right-24: __JVM__ (R2DBC)  
+</div>
+</div>
+
+### Third party dialects
+
+<div class="cash-grid" markdown="1">
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-cockroachlabs:{ .lg .middle } __CockroachDB__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/Faire/sqldelight-cockroachdb-dialect/)  
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-ibm:{ .lg .middle } __DB2__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/hfhbd/sqldelight-db2-dialect)  
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-oracle:{ .lg .middle } __Oracle DB__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/hfhbd/sqldelight-oracle-dialect)  
 </div>
 </div>
 

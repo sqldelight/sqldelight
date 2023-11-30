@@ -73,7 +73,9 @@ abstract class QueryGenerator(
         result.add(block)
       }
       result.endControlFlow()
-      if (generateAsync && query is NamedQuery) { result.endControlFlow() }
+      if (generateAsync && query is NamedQuery) {
+        result.endControlFlow()
+      }
     } else {
       result.add(executeBlock(query.statement, emptySet(), query.id).first)
     }
@@ -165,7 +167,14 @@ abstract class QueryGenerator(
         // id.forEachIndex { index, parameter ->
         //   statement.bindLong(previousArray.size + index, parameter)
         // }
-        val indexCalculator = "index + $offset".replace(" + 0", "")
+        val indexCalculator = CodeBlock.of(
+          if (offset == "0") {
+            "index"
+          } else {
+            "index + %L"
+          },
+          offset,
+        )
         val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.add(
           """
@@ -204,7 +213,7 @@ abstract class QueryGenerator(
 
           // Binds each parameter to the statement:
           // statement.bindLong(0, id)
-          bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
+          bindStatements.add(type.preparedStatementBinder(CodeBlock.of(offset), extractedVariables[type]))
 
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects
@@ -272,6 +281,13 @@ abstract class QueryGenerator(
       }
     }
 
+    // Extract value from the result of a grouped statement in async,
+    // because the transaction is put in an QueryResult.AsyncValue block.
+    if (generateAsync && isNamedQuery && query.statement is SqlDelightStmtClojureStmtList) {
+      binder += "%L"
+      arguments.add(".await()")
+    }
+
     val statementId = if (needsFreshStatement) CodeBlock.of("null") else CodeBlock.of("%L", id)
 
     if (isNamedQuery) {
@@ -322,7 +338,9 @@ abstract class QueryGenerator(
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
-    if (query.javadoc != null) { builder.addKdoc(javadocText(query.javadoc)) }
+    if (query.javadoc != null) {
+      builder.addKdoc(javadocText(query.javadoc))
+    }
   }
 
   protected open fun awaiting(): Pair<String, String>? = "%L" to ".await()"

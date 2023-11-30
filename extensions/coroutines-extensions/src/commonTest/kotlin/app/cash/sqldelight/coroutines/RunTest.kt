@@ -20,6 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 
 fun DbTest.runTest(body: suspend CoroutineScope.(TestDb) -> Unit) = kotlinx.coroutines.test.runTest {
   val db = setupDb()
-  body(db)
+  db.use { body(it) }
   db.close()
 }

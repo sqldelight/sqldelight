@@ -25,12 +25,16 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.SelectQueryable
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryBooleanExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryLikeExpr
+import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlCaseExpr
 import com.alecstrong.sql.psi.core.psi.SqlCastExpr
 import com.alecstrong.sql.psi.core.psi.SqlCollateExpr
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
@@ -39,6 +43,8 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
 import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpr
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpression
 import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
@@ -66,6 +72,14 @@ internal fun SqlExpr.inferredType(): IntermediateType {
       } else {
         result
       }
+    }
+
+    is SqlMultiColumnExpression -> {
+      val idx = parentRule.exprList.indexOf(this)
+      val parentParent = parentRule.parent as SqlMultiColumnExpr
+
+      // The first multiColumnExpression is the column list
+      parentParent.multiColumnExpressionList[0].exprList[idx].type()
     }
 
     is SqlValuesExpression -> parentRule.argumentType(this)
@@ -104,8 +118,26 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
         IntermediateType(PrimitiveType.BOOLEAN)
       }
     }
-    is SqlBetweenExpr, is SqlIsExpr, is SqlBinaryExpr -> {
+
+    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlIsExpr, is SqlBinaryBooleanExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
+    }
+
+    is SqlBetweenExpr -> {
+      val validArg = children.firstOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
+    }
+
+    is SqlBinaryExpr -> {
+      val validArg = children.lastOrNull {
+        it is SqlCastExpr && it == argument
+      } ?: children.lastOrNull {
+        it is SqlColumnExpr
+      } ?: parent.children.lastOrNull {
+        it is SqlExpr && it !== argument && it !is SqlBinaryExpr
+      }
+
       validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }
 

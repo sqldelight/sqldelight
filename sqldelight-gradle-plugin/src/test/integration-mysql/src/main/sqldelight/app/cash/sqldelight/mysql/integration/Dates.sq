@@ -38,3 +38,6 @@ CREATE TABLE dates_lowercase(
 
 ifTimestamp:
 SELECT IF(1, timestamp, timestamp) FROM dates;
+
+getNow:
+SELECT now();
