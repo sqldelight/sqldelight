@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialects.sqlite_3_38
 
+import app.cash.sqldelight.dialects.sqlite.json.module.JsonModule
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
 import java.io.File
 import org.junit.runner.RunWith
@@ -16,6 +17,7 @@ class Sqlite338FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
 
   override fun setupDialect() {
     SqliteDialect().setup()
+    JsonModule().setup()
   }
 
   companion object {

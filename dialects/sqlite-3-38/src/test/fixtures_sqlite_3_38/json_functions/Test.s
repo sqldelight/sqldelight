@@ -26,3 +26,7 @@ FROM(
   SELECT 'sup' AS newData
 )
 WHERE data = '';
+
+SELECT myTable.data
+FROM myTable, json_each(myTable.otherData)
+WHERE data -> 'sup' AND json_each.value LIKE 'FOO';

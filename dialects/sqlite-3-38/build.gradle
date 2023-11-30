@@ -11,6 +11,7 @@ grammarKit {
 
 dependencies {
   api projects.dialects.sqlite335
+  api projects.dialects.sqlite.jsonModule
 
   compileOnly(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
