@@ -119,8 +119,13 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       }
     }
 
-    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlIsExpr, is SqlBinaryBooleanExpr, is SqlBetweenExpr -> {
+    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlIsExpr, is SqlBinaryBooleanExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
+    }
+
+    is SqlBetweenExpr -> {
+      val validArg = children.firstOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
       validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }
 
