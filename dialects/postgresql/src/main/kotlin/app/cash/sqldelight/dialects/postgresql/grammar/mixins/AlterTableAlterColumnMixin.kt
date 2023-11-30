@@ -4,9 +4,11 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAlterTableA
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.SqlColumnConstraint
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlColumnType
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.alterStmt
 import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
@@ -20,7 +22,10 @@ internal abstract class AlterTableAlterColumnMixin(
   AlterTableApplier {
 
   override fun getColumnConstraintList(): MutableList<SqlColumnConstraint> {
-    return mutableListOf()
+    return alterStmt.tablesAvailable(this).first()
+      .query.columns.firstOrNull { it.element.textMatches(columnName) }?.element?.let {
+        (it.parent as SqlColumnDef).columnConstraintList
+      } ?: mutableListOf()
   }
 
   override fun getColumnName(): SqlColumnName {
