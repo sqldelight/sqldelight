@@ -8,6 +8,15 @@ plugins {
 archivesBaseName = 'sqldelight-async-extensions'
 
 kotlin {
+  applyDefaultHierarchyTemplate {
+    it.common {
+      it.group("concurrent") {
+        it.withJvm()
+        it.withNative()
+      }
+    }
+  }
+
   sourceSets {
     commonMain {
       dependencies {
