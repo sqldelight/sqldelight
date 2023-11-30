@@ -44,7 +44,7 @@ class AppSettings(project: Project) : Configurable {
 
   override fun createComponent(): JComponent = panel {
     row {
-      checkBox("Show system tables in auto-complete")
+      checkBox("Show system tables in auto-completion")
         .bindCheckbox(uiState::showSystemTablesInAutoCompletion)
     }
   }
