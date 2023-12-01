@@ -108,6 +108,8 @@ internal class FileIndexMap {
                 ?: ExternalSystemJdkUtil.getJavaHome()
               )?.let { File(it) }
 
+            Timber.i("Using java home $javaHome")
+
             val properties =
               connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
 

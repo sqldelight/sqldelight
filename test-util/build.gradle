@@ -11,5 +11,6 @@ dependencies {
   implementation(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
+  implementation projects.sqldelightGradlePlugin
   implementation libs.junit
 }

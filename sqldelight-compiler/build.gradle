@@ -40,6 +40,7 @@ dependencies {
 
   testImplementation libs.kotlin.test.junit
   testImplementation libs.truth
+  testImplementation projects.sqldelightGradlePlugin
   testImplementation projects.testUtil
   testImplementation projects.dialects.hsql
   testImplementation projects.dialects.mysql
