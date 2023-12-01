@@ -598,13 +598,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#201-date-tbd" class="md-nav__link">
+  <a href="#201-2023-01-01" class="md-nav__link">
     <span class="md-ellipsis">
-      [2.0.1] - Date TBD
+      [2.0.1] - 2023-01-01
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[2.0.1] - Date TBD">
+    <nav class="md-nav" aria-label="[2.0.1] - 2023-01-01">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5878,13 +5878,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#201-date-tbd" class="md-nav__link">
+  <a href="#201-2023-01-01" class="md-nav__link">
     <span class="md-ellipsis">
-      [2.0.1] - Date TBD
+      [2.0.1] - 2023-01-01
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[2.0.1] - Date TBD">
+    <nav class="md-nav" aria-label="[2.0.1] - 2023-01-01">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -7017,24 +7017,32 @@
 
 
 <h1 id="change-log">Change Log<a class="headerlink" href="#change-log" title="Permanent link">&para;</a></h1>
-<h2 id="201-date-tbd">[2.0.1] - Date TBD<a class="headerlink" href="#201-date-tbd" title="Permanent link">&para;</a></h2>
+<h2 id="201-2023-01-01">[2.0.1] - 2023-01-01<a class="headerlink" href="#201-2023-01-01" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[Compiler] Add support multi-column-expr when doing a SELECT (#4453 by <a href="https://github.com/Adriel-M">Adriel Martinez</a>)</li>
 <li>[PostgreSQL Dialect] Add support for PostgreSQL CREATE INDEX CONCURRENTLY (#4531 by <a href="https://github.com/griffio">Griffio</a>)</li>
 <li>[PostgreSQL Dialect] Allow PostgreSQL CTEs auxiliary statements to reference each other (#4493 by <a href="https://github.com/griffio">Griffio</a>)</li>
-<li>[SQLite 3.35 Dialect] Allow multiple ON CONFLICT clauses that are evaluated in order (#4551 by <a href="https://github.com/griffio">Griffio</a>)</li>
 <li>[PostgreSQL Dialect] Add support for PostgreSQL types for binary expr and sum (#4539 by <a href="https://github.com/Adriel-M">Adriel Martinez</a>)</li>
 <li>[PostgreSQL Dialect] Add support for PostgreSQL SELECT DISTINCT ON syntax (#4584 by <a href="https://github.com/griffio">Griffio</a>)</li>
 <li>[PostgreSQL Dialect] Add support for PostgreSQL JSON functions in SELECT statements (#4590 by <a href="https://github.com/MariusVolkhart">Marius Volkhart</a>)</li>
 <li>[PostgreSQL Dialect] Add generate_series PostgreSQL function (#4717 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[PostgreSQL Dialect] Add additional Postgres String function definitions (#4752 by <a href="https://github.com/MariusVolkhart">Marius Volkhart</a>)</li>
+<li>[PostgreSQL Dialect] Add DATE PostgreSQL type to min and max aggregate functions (#4816 by <a href="https://github.com/anddani">André Danielsson</a>)</li>
+<li>[PostgreSQL Dialect] Add PostgreSql temporal types to SqlBinaryExpr (#4657 by <a href="https://github.com/griffio">Griifio</a>)</li>
+<li>[PostgreSQL Dialect] Add TRUNCATE to postgres dialect (#4817 by <a href="https://github.com/de-luca">Bastien de Luca</a>)</li>
+<li>[SQLite 3.35 Dialect] Allow multiple ON CONFLICT clauses that are evaluated in order (#4551 by <a href="https://github.com/griffio">Griffio</a>)</li>
 <li>[JDBC Driver] Add Language annotations for more pleasant SQL editing (#4602 by <a href="https://github.com/MariusVolkhart">Marius Volkhart</a>)</li>
+<li>[Native Driver] Native-driver: add support for linuxArm64 (#4792 by <a href="https://github.com/hfhbd">Philip Wedemann</a>)</li>
+<li>[Android Driver] Add a windowSizeBytes parameter to AndroidSqliteDriver (#4804 by <a href="https://github.com/BoD">Benoit Lubek</a>)</li>
+<li>[Paging3 Extension] feat: add initialOffset for OffsetQueryPagingSource (#4802 by <a href="https://github.com/MohamadJaara">Mohamad Jaara</a>)</li>
 </ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
+<li>[Compiler] Prefer Kotlin types where appropriate (#4517 by <a href="https://github.com/eygraber">Eliezer Graber</a>)</li>
+<li>[Compiler] When doing a value type insert always include the column names (#4864)</li>
 <li>[PostgreSQL Dialect] Remove experimental status from PostgreSQL dialect (#4443 by <a href="https://github.com/hfhbd">Philip Wedemann</a>)</li>
 <li>[PostgreSQL Dialect] Update docs for PostgreSQL types (#4569 by <a href="https://github.com/MariusVolkhart">Marius Volkhart</a>)</li>
-<li>[Compiler] Prefer Kotlin types where appropriate (#4517 by <a href="https://github.com/eygraber">Eliezer Graber</a>)</li>
 <li>[R2DBC Driver] Optimize performance when handling integer data types in PostgreSQL (#4588 by <a href="https://github.com/MariusVolkhart">Marius Volkhart</a>)</li>
 </ul>
 <h3 id="removed">Removed<a class="headerlink" href="#removed" title="Permanent link">&para;</a></h3>
@@ -7043,16 +7051,23 @@
 </ul>
 <h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[Native Driver] Ensure thread safety for query listener collection (#4567 by <a href="https://github.com/kpgalligan">Kevin Galligan</a>)</li>
+<li>[Compiler] Fix compilation of grouped statements with returns and no parameters (#4699 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[Compiler] Bind arguments with SqlBinaryExpr (#4604 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[IDE Plugin] Use IDEA Project JDK if set (#4689 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[IDE Plugin] Fix "Unknown element type: TYPE_NAME" error in IDEA 2023.2 and greater (#4727)</li>
+<li>[IDE Plugin] Fixed some compatibility issues with 2023.2</li>
+<li>[Gradle Plugin] Correct documentation of verifyMigrationTask Gradle task (#4713 by <a href="https://github.com/joshfriend">Josh Friend</a>)</li>
+<li>[Gradle Plugin] Add Gradle task output message to help users generate a database before verifying a database (#4684 by <a href="https://github.com/jingwei99">Jingwei</a>)</li>
 <li>[PostgreSQL Dialect] Fix the renaming of PostgreSQL columns multiple times (#4566 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[PostgreSQL Dialect] Fix 4714 postgresql alter column nullability (#4831 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[PostgreSQL Dialect] Fix 4837 alter table alter column (#4846 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[PostgreSQL Dialect] Fix 4501 PostgreSql sequence (#4528 by <a href="https://github.com/griffio">Griffio</a>)</li>
+<li>[SQLite Dialect] Allow JSON binary operator to be used on a column expression (#4776 by <a href="https://github.com/eygraber">Eliezer Graber</a>)</li>
+<li>[SQLite Dialect] Update From false positive for multiple columns found with name (#4777 by <a href="https://github.com/eygraber">Eliezer Graber</a>)</li>
+<li>[Native Driver] Support named in-memory databases (#4662 by <a href="https://github.com/05nelsonm">Matthew Nelson</a>)</li>
+<li>[Native Driver] Ensure thread safety for query listener collection (#4567 by <a href="https://github.com/kpgalligan">Kevin Galligan</a>)</li>
 <li>[JDBC Driver] Fix a connection leak in the ConnectionManager (#4589 by <a href="https://github.com/MariusVolkhart">Marius Volkhart</a>)</li>
 <li>[JDBC Driver] Fix JdbcSqliteDriver url parsing when choosing ConnectionManager type (#4656 by <a href="https://github.com/05nelsonm">Matthew Nelson</a>)</li>
-<li>[Gradle Plugin] Add Gradle task output message to help users generate a database before verifying a database (#4684 by <a href="https://github.com/jingwei99">Jingwei</a>)</li>
-<li>[Gradle Plugin] Correct documentation of verifyMigrationTask Gradle task (#4713 by <a href="https://github.com/joshfriend">Josh Friend</a>)</li>
-<li>[Compiler] Fix compilation of grouped statements with returns and no parameters (#4699 by <a href="https://github.com/griffio">Griffio</a>)</li>
-<li>[IDE Plugin] Use IDEA Project JDK if set (#4689 by <a href="https://github.com/griffio">Griffio</a>)</li>
-<li>[IDE Plugin] Fix "Unknown element type: TYPE_NAME" error in IDEA 2023.2 and greater (#4727 by <a href="https://github.com/AlecKazakova">Alec Kazakova</a>)</li>
-<li>[Native Driver] Support named in-memory databases (#4662 by <a href="https://github.com/05nelsonm">Matthew Nelson</a>)</li>
 </ul>
 <h2 id="200-2023-07-26">[2.0.0] - 2023-07-26<a class="headerlink" href="#200-2023-07-26" title="Permanent link">&para;</a></h2>
 <h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
