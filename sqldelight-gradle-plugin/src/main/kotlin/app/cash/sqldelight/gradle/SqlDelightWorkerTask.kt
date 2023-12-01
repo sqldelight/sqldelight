@@ -31,7 +31,7 @@ abstract class SqlDelightWorkerTask : SourceTask() {
       it.classpath.from(classpath)
       it.forkOptions {
         it.executable = jvmToolchain.launcherFor {
-          languageVersion.set(JavaLanguageVersion.of(17))
+          it.languageVersion.set(JavaLanguageVersion.of(17))
         }.get().executablePath.toString()
       }
     }
