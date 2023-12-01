@@ -11,7 +11,7 @@ import com.intellij.psi.tree.ILightStubFileElementType
 class MigrationParserDefinition : SqlParserDefinition() {
   private val parserUtil = ParserUtil()
 
-  override fun createFile(viewProvider: FileViewProvider) = MigrationFile(viewProvider)
+  override fun createFile(viewProvider: FileViewProvider) = MigrationFile(viewProvider, parserUtil.systemTables)
   override fun getFileNodeType() = FILE
   override fun getLanguage() = SqlDelightLanguage
 

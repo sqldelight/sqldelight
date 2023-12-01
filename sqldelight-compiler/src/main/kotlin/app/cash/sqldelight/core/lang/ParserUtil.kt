@@ -9,10 +9,13 @@ import app.cash.sqldelight.dialect.api.SqlDelightPragmaName
 import com.alecstrong.sql.psi.core.SqlParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFileFactory
 import java.util.ServiceLoader
 
 internal class ParserUtil {
   internal var dialect: Class<out SqlDelightDialect>? = null
+  internal var systemTables: List<SqlDelightFile> = emptyList()
+    private set
 
   fun initializeDialect(project: Project) {
     val newDialect = SqlDelightProjectService.getInstance(project).dialect
@@ -34,6 +37,12 @@ internal class ParserUtil {
           SqlTypes.PRAGMA_NAME -> SqlDelightPragmaName(it)
           else -> currentElementCreation(it)
         }
+      }
+      systemTables = newDialect.predefinedSystemSchema.map { predefinedSql ->
+        val factory = PsiFileFactory.getInstance(project)
+        val predefined = factory.createFileFromText(SqlDelightLanguage, predefinedSql) as SqlDelightFile
+        predefined.putUserData(SqlDelightFile.systemTableKey, Unit)
+        predefined
       }
     }
   }

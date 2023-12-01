@@ -138,6 +138,7 @@ object SqlDelightCompiler {
       }
 
       if (statement is SqlCreateVirtualTableStmt) return@forEach
+      if (query.tableName.sqFile().isSystemTable) return@forEach
 
       val fileSpec = FileSpec.builder(packageName, allocateName(query.tableName))
         .apply {

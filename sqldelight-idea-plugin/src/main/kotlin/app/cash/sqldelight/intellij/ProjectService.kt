@@ -50,7 +50,6 @@ import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
-import com.intellij.psi.impl.PsiDocumentManagerImpl
 import java.io.PrintStream
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -206,8 +205,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     ApplicationManager.getApplication().invokeLater {
       if (project.isDisposed) return@invokeLater
       Timber.i("Reparsing ${files.size} files")
-      (PsiDocumentManager.getInstance(project) as PsiDocumentManagerImpl)
-        .reparseFiles(files, true)
+      PsiDocumentManager.getInstance(project).reparseFiles(files, true)
     }
   }
 
@@ -224,6 +222,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
     override fun setup() {
       SqlParserUtil.reset()
     }
+
     override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

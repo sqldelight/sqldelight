@@ -6,7 +6,8 @@ import com.intellij.psi.FileViewProvider
 
 class MigrationFile(
   viewProvider: FileViewProvider,
-) : SqlDelightFile(viewProvider, MigrationLanguage) {
+  systemTables: List<SqlDelightFile>,
+) : SqlDelightFile(viewProvider, MigrationLanguage, systemTables) {
   val version: Long by lazy {
     name.substringBeforeLast(".$MIGRATION_EXTENSION")
       .filter { it in '0'..'9' }.toLongOrNull() ?: 0
@@ -20,11 +21,14 @@ class MigrationFile(
   override fun getFileType() = MigrationFileType
 
   override fun baseContributorFiles(): List<SqlFileBase> {
+    val superContributors = super.baseContributorFiles()
     val module = module
     if (module == null || SqlDelightFileIndex.getInstance(module).deriveSchemaFromMigrations) {
       return emptyList()
+      return superContributors
     }
+    val dbFile = findDbFile() ?: return superContributors
 
-    return listOfNotNull(findDbFile())
+    return superContributors + dbFile
   }
 }

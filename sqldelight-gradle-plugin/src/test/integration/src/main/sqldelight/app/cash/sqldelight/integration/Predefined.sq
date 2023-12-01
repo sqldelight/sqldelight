@@ -1,0 +1,2 @@
+getSequence:
+SELECT * FROM sqlite_sequence WHERE name = ?;

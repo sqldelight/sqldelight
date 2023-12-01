@@ -49,4 +49,9 @@ interface SqlDelightDialect {
    * Called when this dialect should initialize its parser.
    */
   fun setup()
+
+  /**
+   * Specify predefined system schema in SQL.
+   */
+  val predefinedSystemSchema: List<String> get() = emptyList()
 }

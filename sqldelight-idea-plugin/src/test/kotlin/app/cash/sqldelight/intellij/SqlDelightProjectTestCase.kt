@@ -35,7 +35,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     SqldelightParserUtil.overrideSqlParser()
     myFixture.copyDirectoryToProject("", "")
     FileIndexMap.defaultIndex = FileIndex(configurePropertiesFile(), tempRoot)
-    SqlDelightProjectService.getInstance(project).dialect = SqliteDialect()
+    SqlDelightProjectService.getInstance(project).setDialect(SqliteDialect(), shouldInvalidate = true)
     ApplicationManager.getApplication().runWriteAction {
       generateSqlDelightFiles()
     }

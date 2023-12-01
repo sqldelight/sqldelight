@@ -8,6 +8,7 @@ import app.cash.sqldelight.dialect.api.TypeResolver
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.lang.Language
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
@@ -19,6 +20,7 @@ import java.util.ServiceLoader
 abstract class SqlDelightFile(
   viewProvider: FileViewProvider,
   language: Language,
+  private val systemTables: List<SqlDelightFile>,
 ) : SqlFileBase(viewProvider, language) {
   val module: Module?
     get() = virtualFile?.let { SqlDelightProjectService.getInstance(project).module(it) }
@@ -78,6 +80,11 @@ abstract class SqlDelightFile(
       .reduce { totalScope, directoryScope -> totalScope.union(directoryScope) }
   }
 
+  override fun baseContributorFiles(): List<SqlFileBase> {
+    val base = super.baseContributorFiles()
+    return base + systemTables
+  }
+
   fun findDbFile(): SqlFileBase? {
     val module = module ?: return null
 
@@ -105,5 +112,13 @@ abstract class SqlDelightFile(
       )
     }
     return result
+  }
+
+  val isSystemTable: Boolean get() = getUserData(systemTableKey) == Unit
+
+  companion object {
+    // Each system table contains this marker which is used in baseContributorFiles to prevent recursion,
+    // as well as in IDEA to provide a user option to include system tables in auto-completion.
+    internal val systemTableKey: Key<Unit> = Key.create("systemTable")
   }
 }

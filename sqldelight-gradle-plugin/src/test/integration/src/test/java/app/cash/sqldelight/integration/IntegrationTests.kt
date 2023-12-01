@@ -204,4 +204,14 @@ class IntegrationTests {
       ),
     )
   }
+
+  @Test fun predefined() {
+    val notFound: GetSequence? = queryWrapper.predefinedQueries.getSequence("foo").executeAsOneOrNull()
+
+    assertThat(
+      notFound,
+    ).isEqualTo(
+      null,
+    )
+  }
 }

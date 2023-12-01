@@ -114,7 +114,7 @@ fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
   }
 }
 
-internal fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
+fun PsiElement.sqFile(): SqlDelightFile = containingFile as SqlDelightFile
 
 inline fun <reified T : SqlAnnotatedElement> PsiElement.findChildrenOfType(): Collection<T> {
   return PsiTreeUtil.findChildrenOfType(this, T::class.java)
