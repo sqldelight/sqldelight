@@ -20,6 +20,7 @@ app.cash.sqldelight.core.lang.validation
 app.cash.sqldelight.core.psi
 app.cash.sqldelight.core.psi.impl
 module:sqldelight-gradle-plugin
+app.cash.sqldelight.core
 app.cash.sqldelight.gradle
 app.cash.sqldelight.gradle.squash
 module:sqlite-migrations

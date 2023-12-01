@@ -62,7 +62,7 @@
   <div class="breadcrumbs"><a href="../../index.html">sqldelight-compiler</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.core</a><span class="delimiter">/</span><span class="current">SqlDelightProjectService</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Sql</span><wbr><span>Delight</span><wbr><span>Project</span><wbr><span><span>Service</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">SqlDelightProjectService</a></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-sql-delight-environment/index.html">SqlDelightEnvironment</a></div></span></div><div></div></div></div></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">SqlDelightProjectService</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
