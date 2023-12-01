@@ -5,6 +5,7 @@ import app.cash.sqldelight.core.lang.psi.ImportStmtMixin
 import app.cash.sqldelight.core.lang.psi.JavaTypeMixin
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
+import app.cash.sqldelight.intellij.util.compatibleKey
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
@@ -65,7 +66,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
       val project = element.project
       val scope = GlobalSearchScope.allScope(project)
       val ktClass = { KotlinFullClassNameIndex[qName, project, scope].firstOrNull() }
-      val indexKey = getKotlinTopLevelTypeAliasFqNameIndex()
+      val indexKey = KotlinTopLevelTypeAliasFqNameIndex::class.compatibleKey()
       val typeAlias = {
         StubIndex.getElements(indexKey, qName, project, scope, KtTypeAlias::class.java).firstOrNull()
       }
@@ -98,7 +99,10 @@ private fun getKotlinTopLevelTypeAliasFqNameIndex(): StubIndexKey<String, KtType
     val instanceField = KotlinTopLevelTypeAliasFqNameIndex::class.java.getField("INSTANCE")
     val instance = instanceField.get(null)
     if (instance is KotlinTopLevelTypeAliasFqNameIndex) {
-      return instance.KEY
+      val keyMethod = instance.javaClass.getMethod("getKEY")
+      val key = keyMethod.invoke(instance)
+      @Suppress("UNCHECKED_CAST") // Reflection that will go away when our minimum version is >= 2023.2
+      if (key != null) return key as StubIndexKey<String, KtTypeAlias>
     }
   } catch (e: Exception) {
     /* intentionally empty, fall back to getInstance() call in case of errors */
@@ -107,8 +111,10 @@ private fun getKotlinTopLevelTypeAliasFqNameIndex(): StubIndexKey<String, KtType
   // Call the method getInstance on the companion type.
   val companionMethod =
     KotlinTopLevelTypeAliasFqNameIndex::class.companionObject!!.java.getMethod("getInstance")
-  return (
-    companionMethod.invoke(KotlinTopLevelTypeAliasFqNameIndex::class.companionObjectInstance!!)
-      as KotlinTopLevelTypeAliasFqNameIndex
-    ).KEY
+  val instance = companionMethod.invoke(KotlinTopLevelTypeAliasFqNameIndex::class.companionObjectInstance!!)
+    as KotlinTopLevelTypeAliasFqNameIndex
+  val keyMethod = instance.javaClass.getMethod("getKEY")
+  val key = keyMethod.invoke(instance)
+  @Suppress("UNCHECKED_CAST") // Reflection that will go away when our minimum version is >= 2023.2
+  return key as StubIndexKey<String, KtTypeAlias>
 }
