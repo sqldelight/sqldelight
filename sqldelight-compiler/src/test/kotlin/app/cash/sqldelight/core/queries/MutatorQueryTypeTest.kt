@@ -79,7 +79,7 @@ class MutatorQueryTypeTest {
       """
     |public fun insertData(data_: com.example.Data_) {
     |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
-    |      |INSERT INTO data
+    |      |INSERT INTO data (id, value)
     |      |VALUES (?, ?)
     |      ""${'"'}.trimMargin(), 2) {
     |        bindLong(0, data_Adapter.idAdapter.encode(data_.id))

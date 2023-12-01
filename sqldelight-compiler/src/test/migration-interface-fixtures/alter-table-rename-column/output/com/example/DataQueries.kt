@@ -10,7 +10,7 @@ public class DataQueries(
 ) : TransacterImpl(driver) {
   public fun insertWhole(test: Test) {
     driver.execute(-2_118_611_703, """
-        |INSERT INTO test
+        |INSERT INTO test (third, second)
         |VALUES (?, ?)
         """.trimMargin(), 2) {
           check(this is JdbcPreparedStatement)

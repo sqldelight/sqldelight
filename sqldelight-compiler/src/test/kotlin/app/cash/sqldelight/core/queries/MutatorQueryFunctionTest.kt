@@ -145,7 +145,7 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(data_: com.example.Data_) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
-      |      |INSERT INTO data
+      |      |INSERT INTO data (id, value)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, data_.id)
@@ -259,7 +259,7 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertData(data_: com.example.Data_) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
-      |      |INSERT INTO data
+      |      |INSERT INTO data (id, value)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, data_.id)
@@ -554,7 +554,7 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertNullableType(nullableTypes: com.example.NullableTypes) {
       |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
-      |      |INSERT INTO nullableTypes
+      |      |INSERT INTO nullableTypes (val1, val2)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindString(0, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
@@ -677,7 +677,7 @@ class MutatorQueryFunctionTest {
       """
       |public fun insertAnnotation(annotation_: com.example.Annotation_) {
       |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
-      |      |INSERT INTO annotation
+      |      |INSERT INTO annotation (id, name)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
       |        bindLong(0, annotation_.id)
