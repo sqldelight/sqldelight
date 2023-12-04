@@ -1,4 +1,8 @@
-CREATE TABLE test (
+CREATE TABLE test_1 (
+  first INTEGER
+);
+
+CREATE TABLE test_2 (
   first TEXT NOT NULL,
   second INTEGER,
   third TEXT NOT NULL,

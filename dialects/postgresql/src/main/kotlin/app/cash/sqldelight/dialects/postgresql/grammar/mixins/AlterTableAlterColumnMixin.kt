@@ -22,10 +22,10 @@ internal abstract class AlterTableAlterColumnMixin(
   AlterTableApplier {
 
   override fun getColumnConstraintList(): MutableList<SqlColumnConstraint> {
-    return alterStmt.tablesAvailable(this).first()
-      .query.columns.firstOrNull { it.element.textMatches(columnName) }?.element?.let {
+    return alterStmt.tablesAvailable(this).first { it.tableName.textMatches(alterStmt.tableName) }
+      .query.columns.first { it.element.textMatches(columnName) }.element.let {
         (it.parent as SqlColumnDef).columnConstraintList
-      } ?: mutableListOf()
+      }
   }
 
   override fun getColumnName(): SqlColumnName {
@@ -37,7 +37,8 @@ internal abstract class AlterTableAlterColumnMixin(
     if (sqlColumnType != null) return sqlColumnType
 
     val columnName = columnName
-    val element = tablesAvailable(this).first().query.columns.first { it.element.textMatches(columnName) }.element
+    val element = tablesAvailable(this).first { it.tableName.textMatches(alterStmt.tableName) }
+      .query.columns.first { it.element.textMatches(columnName) }.element
     return (element.parent as ColumnDefMixin).columnType
   }
 
