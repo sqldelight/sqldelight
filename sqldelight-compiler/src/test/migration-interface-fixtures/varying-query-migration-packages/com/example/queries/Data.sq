@@ -1,0 +1,12 @@
+migrationSelect:
+SELECT *
+FROM test;
+
+migrationInsert:
+INSERT INTO test(first, second) VALUES (?, ?) RETURNING *;
+
+migrationDelete:
+DELETE FROM test WHERE first = ? RETURNING *;
+
+migrationUpdate:
+UPDATE test SET first = ? RETURNING *;
