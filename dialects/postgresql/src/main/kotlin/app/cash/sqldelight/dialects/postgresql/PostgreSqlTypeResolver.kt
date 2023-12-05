@@ -119,7 +119,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "starts_with" -> IntermediateType(BOOLEAN)
-    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "sum" -> {
@@ -216,7 +218,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       } else {
         encapsulatingType(
           exprList = getExprList(),
-          nullableIfAny = this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr,
+          nullability = { exprListNullability ->
+            (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
+              exprListNullability.any { it }
+          },
           SMALL_INT,
           PostgreSqlType.INTEGER,
           INTEGER,

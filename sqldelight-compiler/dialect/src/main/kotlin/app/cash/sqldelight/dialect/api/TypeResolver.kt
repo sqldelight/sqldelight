@@ -44,7 +44,7 @@ interface TypeResolver {
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
   vararg typeOrder: DialectType,
-) = encapsulatingType(exprList = exprList, nullableIfAny = false, typeOrder = typeOrder)
+) = encapsulatingType(exprList = exprList, nullability = null, typeOrder = typeOrder)
 
 /**
  * @return the type from the expr list which is the highest order in the typeOrder list
@@ -52,15 +52,15 @@ fun TypeResolver.encapsulatingType(
 fun TypeResolver.encapsulatingTypePreferringKotlin(
   exprList: List<SqlExpr>,
   vararg typeOrder: DialectType,
-  nullableIfAny: Boolean = false,
-) = encapsulatingType(exprList = exprList, nullableIfAny = nullableIfAny, preferKotlinType = true, typeOrder = typeOrder)
+  nullability: ((List<Boolean>) -> Boolean)? = null,
+) = encapsulatingType(exprList = exprList, nullability = nullability, preferKotlinType = true, typeOrder = typeOrder)
 
 /**
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
-  nullableIfAny: Boolean,
+  nullability: ((List<Boolean>) -> Boolean)?,
   vararg typeOrder: DialectType,
   preferKotlinType: Boolean = false,
 ): IntermediateType {
@@ -86,10 +86,12 @@ fun TypeResolver.encapsulatingType(
     IntermediateType(typeOrder.last { it in sqlTypes })
   }
 
-  if (!nullableIfAny && types.all { it.javaType.isNullable } ||
-    nullableIfAny && types.any { it.javaType.isNullable }
-  ) {
-    return type.asNullable()
+  val exprListNullability = types.map { it.javaType.isNullable }
+  return when (nullability) {
+    null -> when {
+      exprListNullability.all { it } -> type.asNullable()
+      else -> type
+    }
+    else -> type.nullableIf(nullability(exprListNullability))
   }
-  return type
 }

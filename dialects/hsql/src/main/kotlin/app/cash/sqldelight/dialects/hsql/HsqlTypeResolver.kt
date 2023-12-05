@@ -42,7 +42,9 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
   }
 
   private fun SqlFunctionExpr.hsqlFunctionType() = when (functionName.text.lowercase()) {
-    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
     "greatest" -> encapsulatingTypePreferringKotlin(
       exprList,
       TINY_INT,

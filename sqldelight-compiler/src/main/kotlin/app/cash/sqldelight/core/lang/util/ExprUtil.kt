@@ -138,7 +138,9 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     "avg" -> IntermediateType(REAL).asNullable()
     "abs" -> encapsulatingType(exprList, INTEGER, REAL)
     "iif" -> exprList[1].type()
-    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
     "nullif" -> exprList[0].type().asNullable()
     "max" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, BOOLEAN).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, INTEGER, REAL, BOOLEAN).asNullable()
@@ -233,10 +235,10 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
     } else {
       typeResolver.encapsulatingType(
         exprList = getExprList(),
-        nullableIfAny = (
-          this is SqlBinaryAddExpr || this is SqlBinaryMultExpr ||
-            this is SqlBinaryPipeExpr
-          ),
+        nullability = { exprListNullability ->
+          (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
+            exprListNullability.any { it }
+        },
         INTEGER,
         REAL,
         TEXT,
