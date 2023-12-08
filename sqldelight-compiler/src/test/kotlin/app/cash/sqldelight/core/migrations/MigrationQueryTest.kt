@@ -21,6 +21,10 @@ class MigrationQueryTest {
     checkFixtureCompiles("alter-table-rename-column", PostgreSqlDialect())
   }
 
+  @Test fun `alter table rename column statements with sqlite`() {
+    checkFixtureCompiles("alter-table-rename-column-sqlite", app.cash.sqldelight.dialects.sqlite_3_25.SqliteDialect())
+  }
+
   @Test fun `alter table alter column statement`() {
     checkFixtureCompiles("alter-table-alter-column", PostgreSqlDialect())
   }
