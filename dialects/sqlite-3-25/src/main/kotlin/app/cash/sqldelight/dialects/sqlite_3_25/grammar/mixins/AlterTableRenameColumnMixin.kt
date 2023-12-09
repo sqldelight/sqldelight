@@ -5,6 +5,7 @@ import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlColumnConstraint
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
@@ -50,13 +51,12 @@ abstract class AlterTableRenameColumnMixin(
       tableName = lazyQuery.tableName,
       query = {
         val columns = lazyQuery.query.columns
-        val currentColumn = columns.single {
+        val column: QueryElement.QueryColumn = QueryElement.QueryColumn(element = columnAlias)
+        val replace = columns.singleOrNull {
           (it.element as NamedElement).textMatches(columnName)
         }
-        val renamedColumn = currentColumn.copy(element = columnAlias)
-
         lazyQuery.query.copy(
-          columns = columns.map { if (it == currentColumn) renamedColumn else it },
+          columns = lazyQuery.query.columns.map { if (it == replace) column else it },
         )
       },
     )
@@ -68,7 +68,7 @@ abstract class AlterTableRenameColumnMixin(
     if (tablesAvailable(this)
         .filter { it.tableName.textMatches(alterStmt.tableName) }
         .flatMap { it.query.columns }
-        .none { (it.element as? SqlColumnName)?.textMatches(columnName) == true }
+        .none { (it.element as? NamedElement)?.textMatches(columnName) == true }
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnName,
