@@ -50,13 +50,11 @@ internal abstract class AlterTableRenameColumnMixin(
       tableName = lazyQuery.tableName,
       query = {
         val columns = lazyQuery.query.columns
-        val currentColumn = columns.single {
+        val replace = columns.singleOrNull {
           (it.element as NamedElement).textMatches(columnName)
         }
-        val renamedColumn = currentColumn.copy(element = columnAlias)
-
         lazyQuery.query.copy(
-          columns = columns.map { if (it == currentColumn) renamedColumn else it },
+          columns = columns.map { if (it == replace) it.copy(columnAlias) else it },
         )
       },
     )
@@ -68,7 +66,7 @@ internal abstract class AlterTableRenameColumnMixin(
     if (tablesAvailable(this)
         .filter { it.tableName.textMatches(alterStmt.tableName) }
         .flatMap { it.query.columns }
-        .none { (it.element as? SqlColumnName)?.textMatches(columnName) == true }
+        .none { (it.element as? NamedElement)?.textMatches(columnName) == true }
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnName,
