@@ -5,12 +5,15 @@ import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnConstraint
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlColumnType
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.alterStmt
+import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
+import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
