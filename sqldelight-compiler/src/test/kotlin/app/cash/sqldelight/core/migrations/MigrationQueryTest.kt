@@ -38,7 +38,7 @@ class MigrationQueryTest {
     )
 
     if (result.errors.isNotEmpty()) assertWithMessage(result.errors.joinToString("\n")).fail()
-    
+
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()
       assertWithMessage(expectedFile.name).that(actualOutput.toString())
