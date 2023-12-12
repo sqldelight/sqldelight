@@ -35,7 +35,7 @@ internal abstract class AlterTableAlterColumnMixin(
   }
 
   override fun getColumnType(): SqlColumnType {
-    val sqlColumnType = children.filterIsInstance<SqlColumnType>().firstOrNull()
+    val sqlColumnType = children.filterIsInstance<SqlColumnType>().singleOrNull()
     if (sqlColumnType != null) return sqlColumnType
 
     val element = tablesAvailable(this).first { it.tableName.textMatches(alterStmt.tableName) }
@@ -64,8 +64,12 @@ internal abstract class AlterTableAlterColumnMixin(
           (it.element as NamedElement).textMatches(columnName)
         }
 
+        val sqlColumnName = children.filterIsInstance<SqlColumnType>().singleOrNull()?.run { columnName }
+
         lazyQuery.query.copy(
-          columns = columns.map { if (it == alterColumn) it.copy(element = columnName, nullable = nullableColumn ?: it.nullable) else it },
+          columns = columns.map {
+            if (it == alterColumn) it.copy(element = sqlColumnName ?: it.element, nullable = nullableColumn ?: it.nullable) else it
+          },
         )
       },
     )
