@@ -11,15 +11,13 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlColumnType
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.alterStmt
-import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
-import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
 
 internal abstract class AlterTableAlterColumnMixin(
   node: ASTNode,
-) : SqlColumnDefImpl(node),
+) : ColumnDefMixin(node),
   PostgreSqlAlterTableAlterColumn,
   AlterTableApplier {
 
@@ -28,6 +26,18 @@ internal abstract class AlterTableAlterColumnMixin(
       .query.columns.first { it.element.textMatches(columnName) }.element.let {
         (it.parent as SqlColumnDef).columnConstraintList
       }
+  }
+
+  override fun hasDefaultValue(): Boolean {
+    val defaultColumn: Boolean? = columnDefaultClause?.let {
+      when (it.firstChild.elementType) {
+        SqlTypes.DROP -> false
+        SqlTypes.SET -> true
+        else -> null
+      }
+    }
+
+    return defaultColumn ?: super.hasDefaultValue()
   }
 
   override fun getColumnName(): SqlColumnName {
