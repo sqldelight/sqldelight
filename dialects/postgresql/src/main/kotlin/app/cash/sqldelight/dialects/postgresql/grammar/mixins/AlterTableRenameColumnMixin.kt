@@ -11,13 +11,11 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlColumnType
 import com.alecstrong.sql.psi.core.psi.alterStmt
-import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
-import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 
 internal abstract class AlterTableRenameColumnMixin(
   node: ASTNode,
-) : SqlColumnDefImpl(node),
+) : ColumnDefMixin(node),
   PostgreSqlAlterTableRenameColumn,
   AlterTableApplier {
 
