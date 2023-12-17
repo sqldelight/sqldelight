@@ -14,35 +14,18 @@ import kotlin.String
 public class DataQueries(
   driver: SqlDriver,
 ) : TransacterImpl(driver) {
-  public fun <T : Any> select(mapper: (alpha: String) -> T): Query<T> = Query(-1_042_942_063,
-      arrayOf("test3"), driver, "Data.sq", "select", """
+  public fun select(): Query<String> = Query(-1_042_942_063, arrayOf("test3"), driver, "Data.sq",
+      "select", """
   |SELECT *
   |FROM test3
   """.trimMargin()) { cursor ->
     check(cursor is JdbcCursor)
-    mapper(
-      cursor.getString(0)!!
-    )
+    cursor.getString(0)!!
   }
 
-  public fun select(): Query<Test3> = select { alpha ->
-    Test3(
-      alpha
-    )
-  }
-
-  public fun <T : Any> insert(test3: Test3, mapper: (alpha: String) -> T): ExecutableQuery<T> =
-      InsertQuery(test3) { cursor ->
+  public fun insert(test3: Test3): ExecutableQuery<String> = InsertQuery(test3) { cursor ->
     check(cursor is JdbcCursor)
-    mapper(
-      cursor.getString(0)
-    )
-  }
-
-  public fun insert(test3: Test3): ExecutableQuery<Test3> = insert(test3) { alpha ->
-    Test3(
-      alpha
-    )
+    cursor.getString(0)!!
   }
 
   private inner class InsertQuery<out T : Any>(
