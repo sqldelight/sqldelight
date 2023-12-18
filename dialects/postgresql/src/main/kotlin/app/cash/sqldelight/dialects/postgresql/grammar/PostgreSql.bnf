@@ -370,7 +370,7 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>'
 jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt {
+extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
@@ -387,6 +387,21 @@ sequence_data_type ::= ( small_int_data_type
                          | big_int_data_type )
 
 create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [ IF NOT EXISTS ] sequence_name
+    [ AS sequence_data_type ]
+    sequence_parameters {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
+}
+
+alter_sequence_stmt ::= ALTER 'SEQUENCE' [ IF EXISTS ] sequence_name
+     [ AS sequence_data_type ]
+     [ 'OWNER' TO ( id | 'CURRENT_USER' | 'SESSION_USER' ) ]
+     [ RENAME TO sequence_name ]
+     [ SET 'SCHEMA' id ]
+     sequence_parameters {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterSequenceMixin"
+}
+
+drop_sequence_stmt ::= DROP 'SEQUENCE' [ IF EXISTS ] sequence_name ( COMMA sequence_name ) * [ 'CASCADE' | 'RESTRICT' ]
      [ AS sequence_data_type ] (sequence_parameters) *   {
  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
 }
@@ -396,7 +411,7 @@ sequence_parameters ::= 'INCREMENT' [ BY ] {signed_number}
  | 'START' [ WITH ] {signed_number} | 'CACHE' {signed_number} | [ NO ] 'CYCLE'
  | 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' {
   pin=2
- }
+}
 
 copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
 copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')

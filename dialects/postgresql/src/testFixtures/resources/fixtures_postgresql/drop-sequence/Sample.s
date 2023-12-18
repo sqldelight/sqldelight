@@ -1,0 +1,14 @@
+CREATE TABLE abc (
+    id INTEGER PRIMARY KEY
+);
+
+CREATE SEQUENCE integers_01;
+
+CREATE SEQUENCE integers_02;
+
+DROP SEQUENCE integers_01;
+
+DROP SEQUENCE integers_01, integers_02 RESTRICT;
+
+DROP SEQUENCE IF EXISTS integers_01 CASCADE;
+
