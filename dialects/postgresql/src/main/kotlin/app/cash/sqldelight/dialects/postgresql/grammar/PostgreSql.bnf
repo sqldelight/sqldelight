@@ -387,17 +387,16 @@ sequence_data_type ::= ( small_int_data_type
                          | big_int_data_type )
 
 create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [ IF NOT EXISTS ] sequence_name
-    [ AS sequence_data_type ]
-    sequence_parameters {
+     [ AS sequence_data_type ] (sequence_parameters) *   {
  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
 }
 
 alter_sequence_stmt ::= ALTER 'SEQUENCE' [ IF EXISTS ] sequence_name
-     [ AS sequence_data_type ]
-     [ 'OWNER' TO ( id | 'CURRENT_USER' | 'SESSION_USER' ) ]
-     [ RENAME TO sequence_name ]
-     [ SET 'SCHEMA' id ]
-     sequence_parameters {
+     ( 'OWNER' TO ( id | 'CURRENT_USER' | 'SESSION_USER' )
+     | RENAME TO sequence_name
+     | SET 'SCHEMA' id
+     | ( [ AS sequence_data_type ] (sequence_parameters) * ) )
+     {
  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterSequenceMixin"
 }
 
