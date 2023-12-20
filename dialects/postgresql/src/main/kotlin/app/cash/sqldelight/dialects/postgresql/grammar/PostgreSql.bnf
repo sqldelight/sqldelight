@@ -172,7 +172,7 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   pin = 6
 }
 
-identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters ] RP ]
+identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
 generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
@@ -386,15 +386,16 @@ sequence_data_type ::= ( small_int_data_type
                          | big_int_data_type )
 
 create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [ IF NOT EXISTS ] sequence_name
-    [ AS sequence_data_type ]
-    sequence_parameters {
+     [ AS sequence_data_type ] (sequence_parameters) *   {
  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
 }
 
-sequence_parameters ::= [ 'INCREMENT' [ BY ] {signed_number} ]
- [ 'MINVALUE' {signed_number} | NO 'MINVALUE' ] [ 'MAXVALUE' {signed_number} | NO 'MAXVALUE' ]
- [ 'START' [ WITH ] {signed_number} ] [ 'CACHE' {signed_number} ] [ [ NO ] 'CYCLE' ]
- [ 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' ]
+sequence_parameters ::= 'INCREMENT' [ BY ] {signed_number}
+ | 'MINVALUE' {signed_number} | NO 'MINVALUE' | 'MAXVALUE' {signed_number} | NO 'MAXVALUE'
+ | 'START' [ WITH ] {signed_number} | 'CACHE' {signed_number} | [ NO ] 'CYCLE'
+ | 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' {
+  pin=2
+ }
 
 copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
 copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
