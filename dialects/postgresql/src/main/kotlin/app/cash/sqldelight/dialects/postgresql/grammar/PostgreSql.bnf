@@ -369,7 +369,7 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>'
 jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stm {
+extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stm | set_stm {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
@@ -412,3 +412,16 @@ truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
 truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
+
+set_stm ::= 'SET' [ ('SESSION' | 'LOCAL') ] ( set_config | set_timezone | set_schema | set_names | set_seed )
+set_value ::= literal_value | {identifier} | DEFAULT
+set_config ::= {identifier} ( TO | EQ ) set_value
+set_schema ::= 'SCHEMA' string_literal
+set_names ::= 'NAMES' set_value
+set_seed ::= 'SEED' TO ( set_value | [PLUS | MINUS]{numeric_literal} )
+set_timezone ::= 'TIME' 'ZONE'
+( [PLUS | MINUS]{numeric_literal}
+| interval_expression ['HOUR' TO 'MINUTE']
+| 'LOCAL'
+| set_value
+)
