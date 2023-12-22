@@ -121,6 +121,7 @@ default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
   current_timestamp_with_optional_interval |
   {signed_number} |
   {literal_value} |
+  {function_expr} |
   LP <<expr '-1'>> RP
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
