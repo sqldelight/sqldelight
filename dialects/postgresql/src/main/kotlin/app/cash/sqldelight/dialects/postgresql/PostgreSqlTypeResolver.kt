@@ -167,6 +167,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "json_typeof", "jsonb_typeof",
     "json_agg", "jsonb_agg", "json_object_agg", "jsonb_object_agg",
     -> IntermediateType(TEXT)
+    "string_agg" -> IntermediateType(TEXT)
     "json_array_length", "jsonb_array_length" -> IntermediateType(INTEGER)
     "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
     "currval", "lastval", "nextval", "setval" -> IntermediateType(BIG_INT)

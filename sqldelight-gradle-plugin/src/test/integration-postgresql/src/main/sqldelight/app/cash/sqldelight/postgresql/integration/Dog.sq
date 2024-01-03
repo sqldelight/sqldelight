@@ -64,3 +64,10 @@ deleteAndReturnAll:
 DELETE FROM dog
 WHERE name = ?
 RETURNING *;
+
+selectDogsStringAggName:
+SELECT breed,
+       STRING_AGG(name, ',')
+FROM dog
+GROUP BY breed
+ORDER BY breed;
