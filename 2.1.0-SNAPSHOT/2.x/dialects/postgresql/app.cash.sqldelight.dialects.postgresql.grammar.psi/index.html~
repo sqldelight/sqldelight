@@ -953,6 +953,111 @@
               </div>
             </div>
           </div>
+<a data-name="212029379%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetConfig" id="212029379%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-config/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Config</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="212029379%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-config/index.html">PostgreSqlSetConfig</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-532943147%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetNames" id="-532943147%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-names/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Names</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-532943147%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-names/index.html">PostgreSqlSetNames</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1150531140%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetSchema" id="1150531140%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-schema/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Schema</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1150531140%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-schema/index.html">PostgreSqlSetSchema</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="942685300%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetSeed" id="942685300%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-seed/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Seed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="942685300%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-seed/index.html">PostgreSqlSetSeed</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1015898877%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetStmt" id="1015898877%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-stmt/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1015898877%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-stmt/index.html">PostgreSqlSetStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-145677844%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetTimezone" id="-145677844%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-timezone/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Timezone</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-145677844%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-timezone/index.html">PostgreSqlSetTimezone</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1878967500%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSetValue" id="1878967500%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-value/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1878967500%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-set-value/index.html">PostgreSqlSetValue</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="508410895%2FClasslikes%2F-128169639" anchor-label="PostgreSqlSmallIntDataType" id="508410895%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1103,17 +1208,17 @@
               </div>
             </div>
           </div>
-<a data-name="871665633%2FClasslikes%2F-128169639" anchor-label="PostgreSqlTruncateStm" id="871665633%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+<a data-name="1201732749%2FClasslikes%2F-128169639" anchor-label="PostgreSqlTruncateStmt" id="1201732749%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-postgre-sql-truncate-stm/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Stm</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="871665633%2FClasslikes%2F-128169639"></span>
+                  <div><a href="-postgre-sql-truncate-stmt/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1201732749%2FClasslikes%2F-128169639"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-truncate-stm/index.html">PostgreSqlTruncateStm</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-truncate-stmt/index.html">PostgreSqlTruncateStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
