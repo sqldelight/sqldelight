@@ -26,7 +26,7 @@ kotlin {
       dependencies {
         implementation "app.cash.sqldelight:web-worker-driver"
         implementation "app.cash.sqldelight:primitive-adapters"
-        implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.10.1"
+        implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.11.0"
         implementation devNpm("copy-webpack-plugin", "9.1.0")
         implementation npm('dateformat', '3.0.3')
         implementation npm("sql.js", libs.versions.sqljs.get())
