@@ -83,15 +83,17 @@ dependencies {
   implementation projects.sqldelightCompiler
 
   implementation libs.sqliteJdbc
-  implementation(libs.bugsnag) {
-    exclude group: "org.slf4j"
-  }
+  implementation libs.bugsnag
   implementation libs.picnic
   implementation libs.moshi
 
   testImplementation libs.truth
   testImplementation libs.intellij.android
   testImplementation projects.dialects.sqlite318
+}
+
+configurations.named("implementation") {
+  exclude group: "org.slf4j"
 }
 
 def bugsnagKey = tasks.register('bugsnagKey', BugsnagKey)
