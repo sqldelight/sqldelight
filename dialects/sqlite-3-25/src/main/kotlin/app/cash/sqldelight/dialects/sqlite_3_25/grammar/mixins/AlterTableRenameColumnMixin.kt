@@ -4,20 +4,44 @@ import app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.SqliteAlterTableRena
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.AlterTableApplier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
+import com.alecstrong.sql.psi.core.psi.SqlColumnConstraint
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
-import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
+import com.alecstrong.sql.psi.core.psi.SqlColumnType
 import com.alecstrong.sql.psi.core.psi.alterStmt
+import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
+import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 
-internal abstract class AlterTableRenameColumnMixin(
+abstract class AlterTableRenameColumnMixin(
   node: ASTNode,
-) : SqlCompositeElementImpl(node),
+) : SqlColumnDefImpl(node),
   SqliteAlterTableRenameColumn,
   AlterTableApplier {
-  private val columnName
-    get() = children.filterIsInstance<SqlColumnName>().single()
+
+  override fun getColumnConstraintList(): MutableList<SqlColumnConstraint> {
+    return alterStmt.tablesAvailable(this).first { it.tableName.textMatches(alterStmt.tableName) }
+      .query.columns.first { it.element.textMatches(columnName) }.element.let {
+        (it.parent as SqlColumnDef).columnConstraintList
+      }
+  }
+
+  override fun getColumnName(): SqlColumnName {
+    return children.filterIsInstance<SqlColumnName>().first()
+  }
+
+  override fun getColumnType(): SqlColumnType {
+    val sqlColumnType = children.filterIsInstance<SqlColumnType>().firstOrNull()
+    if (sqlColumnType != null) return sqlColumnType
+
+    val columnName = columnName
+    val element = tablesAvailable(this).first { it.tableName.textMatches(alterStmt.tableName) }
+      .query.columns.first { it.element.textMatches(columnName) }.element
+    return (element.parent as ColumnDefMixin).columnType
+  }
 
   private val columnAlias
     get() = children.filterIsInstance<SqlColumnAlias>().single()
@@ -27,9 +51,9 @@ internal abstract class AlterTableRenameColumnMixin(
       tableName = lazyQuery.tableName,
       query = {
         val columns = lazyQuery.query.columns
-        val column = QueryElement.QueryColumn(element = columnAlias)
+        val column: QueryElement.QueryColumn = QueryElement.QueryColumn(element = columnAlias)
         val replace = columns.singleOrNull {
-          (it.element as SqlColumnName).textMatches(columnName)
+          (it.element as NamedElement).textMatches(columnName)
         }
         lazyQuery.query.copy(
           columns = lazyQuery.query.columns.map { if (it == replace) column else it },
@@ -44,7 +68,7 @@ internal abstract class AlterTableRenameColumnMixin(
     if (tablesAvailable(this)
         .filter { it.tableName.textMatches(alterStmt.tableName) }
         .flatMap { it.query.columns }
-        .none { (it.element as? SqlColumnName)?.textMatches(columnName) == true }
+        .none { (it.element as? NamedElement)?.textMatches(columnName) == true }
     ) {
       annotationHolder.createErrorAnnotation(
         element = columnName,

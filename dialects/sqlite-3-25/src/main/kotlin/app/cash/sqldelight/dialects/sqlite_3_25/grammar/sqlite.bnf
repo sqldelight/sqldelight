@@ -61,9 +61,19 @@ select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column
   pin = 1
 }
 
-alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
+alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO alter_table_column_alias {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableRenameColumnMixin"
   pin = 1
+}
+
+alter_table_column_alias ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableColumnAliasMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.AliasElement";
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+    "com.alecstrong.sql.psi.core.psi.SqlColumnName"
+  ]
 }
 
 window_function_invocation ::=

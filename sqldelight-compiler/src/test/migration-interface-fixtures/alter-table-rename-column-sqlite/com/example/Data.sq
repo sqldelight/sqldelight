@@ -1,0 +1,6 @@
+insert:
+INSERT INTO test (alpha) VALUES (?);
+
+select:
+  SELECT *
+  FROM test;
