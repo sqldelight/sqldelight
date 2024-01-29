@@ -48,7 +48,7 @@ jobs:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           gradle-home-cache-cleanup: true
 
@@ -95,7 +95,7 @@ jobs:
       # Build the samples
       - name: Build the mobile sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: build --stacktrace --parallel
           build-root-directory: sample
@@ -103,7 +103,7 @@ jobs:
 
       - name: Build the web sample
         if: matrix.os == 'macOS-latest' && matrix.job == 'test'
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
           build-root-directory: sample-web
