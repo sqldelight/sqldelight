@@ -401,9 +401,6 @@ alter_sequence_stmt ::= ALTER 'SEQUENCE' [ IF EXISTS ] sequence_name
 }
 
 drop_sequence_stmt ::= DROP 'SEQUENCE' [ IF EXISTS ] sequence_name ( COMMA sequence_name ) * [ 'CASCADE' | 'RESTRICT' ]
-     [ AS sequence_data_type ] (sequence_parameters) *   {
- mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
-}
 
 sequence_parameters ::= 'INCREMENT' [ BY ] {signed_number}
  | 'MINVALUE' {signed_number} | NO 'MINVALUE' | 'MAXVALUE' {signed_number} | NO 'MAXVALUE'
