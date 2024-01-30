@@ -40,7 +40,7 @@ class QueryTest {
   }
 
   @Test fun `mapToOneOrDefault throws on multiple rows`() {
-    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER) //
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 2", MAPPER)
       .asObservable(Schedulers.trampoline())
       .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
       .test()
@@ -50,7 +50,7 @@ class QueryTest {
   @Test fun `mapToOneOrDefault returns default when no results`() {
     val defaultEmployee = Employee("fred", "Fred Frederson")
 
-    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER) //
+    db.createQuery(TABLE_EMPLOYEE, "$SELECT_EMPLOYEES LIMIT 0", MAPPER)
       .asObservable(Schedulers.trampoline())
       .mapToOneOrDefault(Employee("fred", "Fred Frederson"))
       .test()
@@ -64,8 +64,8 @@ class QueryTest {
       .test()
       .assertValue(
         listOf(
-          Employee("alice", "Alice Allison"), //
-          Employee("bob", "Bob Bobberson"), //
+          Employee("alice", "Alice Allison"),
+          Employee("bob", "Bob Bobberson"),
           Employee("eve", "Eve Evenson"),
         ),
       )

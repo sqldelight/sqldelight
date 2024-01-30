@@ -107,7 +107,9 @@ internal class SqlDelightTreeStructureProvider(
       selected.forEach {
         if (it is SqlDelightPackageNode) {
           addAll(it.elements)
-        } else if (it.value is PsiElement) add(it.value as PsiElement)
+        } else if (it.value is PsiElement) {
+          add(it.value as PsiElement)
+        }
       }
     }.toTypedArray()
 
