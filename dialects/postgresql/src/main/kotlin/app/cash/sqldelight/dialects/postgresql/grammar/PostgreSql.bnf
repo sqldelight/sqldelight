@@ -121,6 +121,7 @@ default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
   current_timestamp_with_optional_interval |
   {signed_number} |
   {literal_value} |
+  {function_expr} |
   LP <<expr '-1'>> RP
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
@@ -172,7 +173,7 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   pin = 6
 }
 
-identity_clause ::= 'IDENTITY'
+identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
 generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
@@ -319,12 +320,13 @@ type_clause ::= 'TYPE'
 data_clause ::= 'DATA'
 
 column_not_null_clause ::= (SET | DROP) NOT NULL
+column_default_clause ::= SET {default_constraint} | DROP DEFAULT
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 ( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
 | column_not_null_clause
-| SET DEFAULT <<expr '-1'>> | DROP DEFAULT | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
-| SET GENERATED (ALWAYS | BY DEFAULT )
+| column_default_clause | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
+| ( SET GENERATED (ALWAYS | BY DEFAULT)  |  SET sequence_parameters | 'RESTART' [ WITH {signed_number} ] ) *
 ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAlterColumnMixin"
   pin = 1
@@ -386,13 +388,16 @@ sequence_data_type ::= ( small_int_data_type
                          | big_int_data_type )
 
 create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [ IF NOT EXISTS ] sequence_name
-    [ AS sequence_data_type ]
-    [ 'INCREMENT' [ BY ] {signed_number} ]
-    [ 'MINVALUE' {signed_number} | NO 'MINVALUE' ] [ 'MAXVALUE' {signed_number} | NO 'MAXVALUE' ]
-    [ 'START' [ WITH ] {signed_number} ] [ 'CACHE' {signed_number} ] [ [ NO ] 'CYCLE' ]
-    [ 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' ] {
+     [ AS sequence_data_type ] (sequence_parameters) *   {
  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
 }
+
+sequence_parameters ::= 'INCREMENT' [ BY ] {signed_number}
+ | 'MINVALUE' {signed_number} | NO 'MINVALUE' | 'MAXVALUE' {signed_number} | NO 'MAXVALUE'
+ | 'START' [ WITH ] {signed_number} | 'CACHE' {signed_number} | [ NO ] 'CYCLE'
+ | 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' {
+  pin=2
+ }
 
 copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
 copy_option_format ::= 'FORMAT' ('TEXT' | 'CSV' | 'BINARY')
