@@ -1,43 +1,44 @@
 package com.example
 
+import app.cash.sqldelight.ExecutableQuery
+import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.jdbc.JdbcCursor
 import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
-import kotlin.Int
-import kotlin.Long
+import kotlin.Any
 import kotlin.String
 
 public class DataQueries(
   driver: SqlDriver,
 ) : TransacterImpl(driver) {
-  public fun insertFirst(first: Long) {
-    driver.execute(-2_134_278_654, """INSERT INTO test_1 (first) VALUES (?)""", 1) {
-          check(this is JdbcPreparedStatement)
-          bindLong(0, first)
-        }
-    notifyQueries(-2_134_278_654) { emit ->
-      emit("test_1")
-    }
+  public fun select(): Query<String> = Query(-1_042_942_063, arrayOf("test3"), driver, "Data.sq",
+      "select", """
+  |SELECT *
+  |FROM test3
+  """.trimMargin()) { cursor ->
+    check(cursor is JdbcCursor)
+    cursor.getString(0)!!
   }
 
-  public fun insertSecond(
-    first: String?,
-    second: Int,
-    third: String,
-    fourth: Int?,
-    fifth: Long?,
-  ) {
-    driver.execute(-1_370_094_750,
-        """INSERT INTO test_2 (first, second, third, fourth, fifth) VALUES (?, ?, ?, ?, ?)""", 5) {
-          check(this is JdbcPreparedStatement)
-          bindString(0, first)
-          bindInt(1, second)
-          bindString(2, third)
-          bindInt(3, fourth)
-          bindLong(4, fifth)
-        }
-    notifyQueries(-1_370_094_750) { emit ->
-      emit("test_2")
+  public fun insert(test3: Test3): ExecutableQuery<String> = InsertQuery(test3) { cursor ->
+    check(cursor is JdbcCursor)
+    cursor.getString(0)!!
+  }
+
+  private inner class InsertQuery<out T : Any>(
+    public val test3: Test3,
+    mapper: (SqlCursor) -> T,
+  ) : ExecutableQuery<T>(mapper) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+        driver.executeQuery(-1_320_712_882, """INSERT INTO test3 (alpha) VALUES (?) RETURNING *""",
+        mapper, 1) {
+      check(this is JdbcPreparedStatement)
+      bindString(0, test3.alpha)
     }
+
+    override fun toString(): String = "Data.sq:insert"
   }
 }
