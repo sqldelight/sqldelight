@@ -16,6 +16,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
@@ -371,11 +372,21 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>'
 jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt {
+extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
 }
+
+extension_name ::= id | string
+
+extension_version ::= id | string
+
+create_extension_stmt ::= CREATE 'EXTENSION' [ IF NOT EXISTS ] extension_name [ WITH ] [ 'SCHEMA' id ] [ 'VERSION' extension_version ] [ CASCADE ]
+
+drop_extension_stmt ::= DROP 'EXTENSION' [ IF EXISTS ] extension_name [ ( COMMA extension_name ) * ] [ CASCADE | 'RESTRICT' ]
+
+alter_extension_stmt ::= ALTER 'EXTENSION' [ IF EXISTS ] extension_name ( UPDATE [ TO extension_version ] | SET 'SCHEMA' id )
 
 copy_stdin ::= 'COPY' [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] FROM 'STDIN' [ [ WITH ] LP copy_option ( COMMA copy_option) * RP ] [ WHERE <<expr '-1'>> ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
