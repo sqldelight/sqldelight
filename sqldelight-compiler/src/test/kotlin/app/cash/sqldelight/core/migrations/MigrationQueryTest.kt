@@ -29,6 +29,10 @@ class MigrationQueryTest {
     checkFixtureCompiles("alter-table-alter-column", PostgreSqlDialect())
   }
 
+  @Test fun `alter table add constraint`() {
+    checkFixtureCompiles("alter-table-add-constraint", PostgreSqlDialect())
+  }
+
   @Test fun `varying query migration packages`() {
     checkFixtureCompiles("varying-query-migration-packages", PostgreSqlDialect())
   }
