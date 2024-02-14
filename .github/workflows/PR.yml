@@ -133,7 +133,7 @@ jobs:
     needs: verify_intellij
     steps:
       - name: Success!
-        run: echo "All intelliJ plugin verification checks passed!"
+        run: echo "All IntelliJ plugin verification checks passed!"
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
