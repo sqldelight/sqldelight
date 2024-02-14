@@ -39,10 +39,8 @@ tasks.named('runIde') {
 }
 
 tasks.named('runPluginVerifier') {
-  // https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
-
+  // See: the verify_intellij job in .github/workflows/PR.yml
   def version = providers.systemProperty("ideaVersion").getOrElse(null)
-
   if (version != null) {
     ideVersions = [version]
   }

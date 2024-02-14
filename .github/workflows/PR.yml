@@ -127,5 +127,13 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - run: ./gradlew -DideaVersion=${{matrix.idea}} :sqldelight-idea-plugin:runPluginVerifier
 
+  verify_intellij_check:
+    runs-on: ubuntu-latest
+
+    needs: verify_intellij
+    steps:
+      - name: Success!
+        run: echo "All intelliJ plugin verification checks passed!"
+
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
