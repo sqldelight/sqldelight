@@ -40,11 +40,12 @@ tasks.named('runIde') {
 
 tasks.named('runPluginVerifier') {
   // https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
-  ideVersions = [
-      "IC-2022.3.3", // AS: Giraffe | 2022.3.1
-      "IC-2023.1",   // IC
-      "IC-2023.2",   // IC
-  ]
+
+  def version = providers.systemProperty("ideaVersion").getOrElse(null)
+
+  if (version != null) {
+    ideVersions = [version]
+  }
 
   def customFailureLevel = FailureLevel.ALL
   customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
