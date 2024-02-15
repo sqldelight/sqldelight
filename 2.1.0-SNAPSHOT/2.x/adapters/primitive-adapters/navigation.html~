@@ -1107,12 +1107,17 @@
    <div class="overview">
     <span class="navButton" onclick="document.getElementById(&quot;postgresql-nav-submenu-2&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>postgresql.</span><wbr><span>grammar.</span><wbr><span>mixins</span></a>
    </div>
-   <div class="sideMenuPart" id="postgresql-nav-submenu-2-0" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/BindParameterMixin///PointingToDeclaration//-128169639">
+   <div class="sideMenuPart" id="postgresql-nav-submenu-2-0" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/AlterTableAddConstraintMixin///PointingToDeclaration//-128169639">
+    <div class="overview">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-alter-table-add-constraint-mixin/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Constraint</span><wbr><span><span>Mixin</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="sideMenuPart" id="postgresql-nav-submenu-2-1" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/BindParameterMixin///PointingToDeclaration//-128169639">
     <div class="overview">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-bind-parameter-mixin/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Bind</span><wbr><span>Parameter</span><wbr><span><span>Mixin</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="postgresql-nav-submenu-2-1" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/SqlInsertExcludedTableMixin///PointingToDeclaration//-128169639">
+   <div class="sideMenuPart" id="postgresql-nav-submenu-2-2" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/SqlInsertExcludedTableMixin///PointingToDeclaration//-128169639">
     <div class="overview">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-sql-insert-excluded-table-mixin/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Insert</span><wbr><span>Excluded</span><wbr><span>Table</span><wbr><span><span>Mixin</span></span></span></span></a>
     </div>

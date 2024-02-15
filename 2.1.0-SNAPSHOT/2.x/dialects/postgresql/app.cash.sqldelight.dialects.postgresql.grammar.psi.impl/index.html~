@@ -108,7 +108,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-alter-table-add-constraint-impl/index.html">PostgreSqlAlterTableAddConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-alter-table-add-constraint/index.html">PostgreSqlAlterTableAddConstraint</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-alter-table-add-constraint-impl/index.html">PostgreSqlAlterTableAddConstraintImpl</a> : <a href="../app.cash.sqldelight.dialects.postgresql.grammar.mixins/-alter-table-add-constraint-mixin/index.html">AlterTableAddConstraintMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-alter-table-add-constraint/index.html">PostgreSqlAlterTableAddConstraint</a></div></div></div>
                 </div>
               </div>
             </div>
