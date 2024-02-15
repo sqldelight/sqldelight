@@ -1,0 +1,9 @@
+CREATE TABLE TestSingle(
+  first INTEGER,
+  second TEXT
+);
+
+CREATE TABLE TestCompound (
+  first INTEGER,
+  second TEXT
+);

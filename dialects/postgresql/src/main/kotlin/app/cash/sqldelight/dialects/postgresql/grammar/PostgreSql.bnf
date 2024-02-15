@@ -314,7 +314,9 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   pin = 1
 }
 
-alter_table_add_constraint ::= ADD table_constraint
+alter_table_add_constraint ::= ADD table_constraint {
+    mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddConstraintMixin"
+}
 
 type_clause ::= 'TYPE'
 
