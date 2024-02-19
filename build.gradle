@@ -34,6 +34,7 @@ spotless {
 
 allprojects {
   repositories {
+    mavenLocal()
     mavenCentral()
     google()
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }

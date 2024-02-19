@@ -1,10 +1,10 @@
-import com.example.sqldelight.hockey.data.Date;
 import kotlin.Boolean;
+import kotlinx.datetime.LocalDate;
 
 CREATE TABLE team (
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL UNIQUE,
-  founded INTEGER AS Date NOT NULL,
+  founded INTEGER AS LocalDate NOT NULL,
   coach TEXT NOT NULL,
   captain INTEGER,
   won_cup INTEGER AS Boolean NOT NULL DEFAULT 0,
