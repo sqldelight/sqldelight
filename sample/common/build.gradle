@@ -24,6 +24,7 @@ kotlin {
   // Configure common.
   sourceSets.commonMain.dependencies {
     implementation 'app.cash.sqldelight:primitive-adapters'
+    api "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
   }
   sourceSets.commonTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test'

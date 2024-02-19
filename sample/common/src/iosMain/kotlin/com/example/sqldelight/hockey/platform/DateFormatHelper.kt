@@ -1,6 +1,7 @@
 package com.example.sqldelight.hockey.platform
 
-import com.example.sqldelight.hockey.data.Date
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toNSDateComponents
 import platform.Foundation.NSDateFormatter
 
 actual class DateFormatHelper actual constructor(format: String) {
@@ -10,5 +11,5 @@ actual class DateFormatHelper actual constructor(format: String) {
     formatter.dateFormat = format
   }
 
-  actual fun format(d: Date): String = formatter.stringFromDate(d.nsDate)
+  actual fun format(d: LocalDate): String = formatter.stringFromDate(d.toNSDateComponents().date!!)
 }

@@ -1,9 +1,9 @@
 package com.example.sqldelight.hockey.platform
 
-import com.example.sqldelight.hockey.data.Date
+import kotlinx.datetime.LocalDate
 
 expect class DateFormatHelper(format: String) {
-  fun format(d: Date): String
+  fun format(d: LocalDate): String
 }
 
 val defaultFormatter = DateFormatHelper("dd/mm/yyyy")
