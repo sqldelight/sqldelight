@@ -596,4 +596,22 @@ class PostgreSqlTest {
     val result = database.binaryArgumentsQueries.selectDataBinaryIntervalComparison2(created).executeAsList()
     assertThat(result.first().datum).isEqualTo(10)
   }
+
+  @Test
+  fun testInsertJson() {
+    database.jsonQueries.insert("another key", "another value")
+    with(database.jsonQueries.select().executeAsList()) {
+      assertThat(first().data_).isEqualTo("""{"another key" : "another value"}""")
+      assertThat(first().datab).isEqualTo("""{"key": "value"}""")
+    }
+  }
+
+  @Test
+  fun testInsertJsonLiteral() {
+    database.jsonQueries.insertLiteral("""{"key a" : "value a"}""", """{"key b" : "value b"}""")
+    with(database.jsonQueries.select().executeAsList()) {
+      assertThat(first().data_).isEqualTo("""{"key a" : "value a"}""")
+      assertThat(first().datab).isEqualTo("""{"key b": "value b"}""")
+    }
+  }
 }
