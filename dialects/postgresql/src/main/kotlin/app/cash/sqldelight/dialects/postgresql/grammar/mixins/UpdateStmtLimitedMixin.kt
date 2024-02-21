@@ -18,9 +18,9 @@ internal abstract class UpdateStmtLimitedMixin(
   FromQuery {
   override fun queryAvailable(child: PsiElement): Collection<QueryElement.QueryResult> {
     if (child != joinClause && joinClause != null) {
-      return super.queryAvailable(child) + joinClause!!.queryExposed()
+      return super.queryAvailable(child) +
+        joinClause!!.queryExposed().map { it.copy(adjacent = true) }
     }
-
     return super.queryAvailable(child)
   }
 
