@@ -691,4 +691,25 @@ class PostgreSqlTest {
       assertThat(first().datab).isEqualTo("""{"key b": "value b"}""")
     }
   }
+
+  @Test
+  fun testJsonObjectOperators() {
+    database.jsonQueries.insertLiteral("""{"a" : 11,"aa":[1,2,3]}""", """{"b" : 12,"bb":[1,2,3]}""")
+    with(database.jsonQueries.selectJsonObjectOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo("11")
+      assertThat(first().expr_).isEqualTo("12")
+      assertThat(first().expr__).isEqualTo("[1,2,3]")
+      assertThat(first().expr___).isEqualTo("[1, 2, 3]")
+    }
+  }
+
+  @Test
+  fun testJsonArrayOperators() {
+    database.jsonQueries.insertLiteral("""[1,2,3]""", """[1,2,3]""")
+    with(database.jsonQueries.selectJsonArrayOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo("1")
+      assertThat(first().expr_).isEqualTo("2")
+      assertThat(first().expr__).isEqualTo("3")
+    }
+  }
 }

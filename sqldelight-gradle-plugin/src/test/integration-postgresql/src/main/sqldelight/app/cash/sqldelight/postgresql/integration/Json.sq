@@ -1,10 +1,10 @@
-CREATE TABLE myJson(
+CREATE TABLE TestJson(
   data JSON NOT NULL,
   datab JSONB NOT NULL
 );
 
 insert:
-INSERT INTO myJson(data, datab) VALUES(
+INSERT INTO TestJson(data, datab) VALUES(
   json_build_object(:key, :value),
   jsonb_build_object('key', 'value')
 );
@@ -13,8 +13,16 @@ buildJson:
 SELECT json_build_object('key', 'value'), jsonb_build_object('key', 'value');
 
 insertLiteral:
-INSERT INTO myJson(data, datab) VALUES (?, ?);
+INSERT INTO TestJson(data, datab) VALUES (?, ?);
 
 select:
 SELECT *
-FROM myJson;
+FROM TestJson;
+
+selectJsonObjectOperators:
+SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}'
+FROM TestJson;
+
+selectJsonArrayOperators:
+SELECT data -> 0, data ->> 1, data ->> 2
+FROM TestJson;

@@ -260,6 +260,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         val windowFunctionExpr = windowFunctionExpr as WindowFunctionMixin
         functionType(windowFunctionExpr.functionExpr)!!
       }
+      jsonExpression != null -> {
+        IntermediateType(PostgreSqlType.JSON)
+      }
       else -> parentResolver.resolvedType(this)
     }
 
