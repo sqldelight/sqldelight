@@ -133,7 +133,7 @@
       <div data-togglable="EXTENSION_FUNCTION">
         <h2 class="">Functions</h2>
         <div class="table"><a data-name="-55514979%2FFunctions%2F2094730479" anchor-label="asJdbcDriver" id="-55514979%2FFunctions%2F2094730479" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
+          <div class="table-row" data-filterable-current=":drivers:jdbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:jdbc-driver:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="as-jdbc-driver.html"><span>as</span><wbr><span>Jdbc</span><wbr><span><span>Driver</span></span></a></div>
@@ -142,7 +142,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"fromDataSource"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/javax/sql/DataSource.html">DataSource</a><span class="token punctuation">.</span><a href="as-jdbc-driver.html"><span class="token function">asJdbcDriver</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-jdbc-driver/index.html">JdbcDriver</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:jdbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"fromDataSource"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">fun </span><a href="https://docs.oracle.com/javase/8/docs/api/javax/sql/DataSource.html">DataSource</a><span class="token punctuation">.</span><a href="as-jdbc-driver.html"><span class="token function">asJdbcDriver</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-jdbc-driver/index.html">JdbcDriver</a></div></div></div>
                 </div>
               </div>
             </div>

@@ -69,7 +69,7 @@
       <div data-togglable="EXTENSION_PROPERTY">
         <h2 class="">Properties</h2>
         <div class="table"><a data-name="-664209166%2FProperties%2F1896744885" anchor-label="typeResolver" id="-664209166%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="type-resolver.html"><span>type</span><wbr><span><span>Resolver</span></span></a></div>
@@ -78,7 +78,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token punctuation">.</span><a href="type-resolver.html">typeResolver</a><span class="token operator">: </span><a href="../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token punctuation">.</span><a href="type-resolver.html">typeResolver</a><span class="token operator">: </span><a href="../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
                 </div>
               </div>
             </div>

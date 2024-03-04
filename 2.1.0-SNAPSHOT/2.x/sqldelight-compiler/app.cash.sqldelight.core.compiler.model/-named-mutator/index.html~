@@ -128,7 +128,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-bindable-query/arguments.html">arguments</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-bindable-query/-argument/index.html">BindableQuery.Argument</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The collection of all bind expressions in this query.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-bindable-query/arguments.html">arguments</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-bindable-query/-argument/index.html">BindableQuery.Argument</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The collection of all bind expressions in this query.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -143,7 +143,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="containing-file.html">containingFile</a><span class="token operator">: </span><a href="../../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="containing-file.html">containingFile</a><span class="token operator">: </span><a href="../../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-named-execute/name.html">name</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="com.intellij.openapi.util/NlsSafe///PointingToDeclaration/"><span class="token annotation builtin">NlsSafe</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-named-execute/name.html">name</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="com.intellij.openapi.util/NlsSafe///PointingToDeclaration/"><span class="token annotation builtin">NlsSafe</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -188,7 +188,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-bindable-query/parameters.html">parameters</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The collection of parameters exposed in the generated api for this query.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-bindable-query/parameters.html">parameters</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The collection of parameters exposed in the generated api for this query.</p></div></div></div>
                 </div>
               </div>
             </div>

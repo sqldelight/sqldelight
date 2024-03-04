@@ -98,7 +98,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#-889764555%2FProperties%2F-4936845">allowsReferenceCycles</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-889764555%2FProperties%2F-4936845">allowsReferenceCycles</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -113,7 +113,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#359727814%2FProperties%2F-4936845">asyncRuntimeTypes</a><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-runtime-types/index.html">RuntimeTypes</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#359727814%2FProperties%2F-4936845">asyncRuntimeTypes</a><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-runtime-types/index.html">RuntimeTypes</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -188,7 +188,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="index.html#-1986053354%2FProperties%2F-4936845">runtimeTypes</a><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-runtime-types/index.html">RuntimeTypes</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1986053354%2FProperties%2F-4936845">runtimeTypes</a><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-runtime-types/index.html">RuntimeTypes</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -207,7 +207,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-323662476%2FFunctions%2F-4936845"><span class="token function">migrationSquasher</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentSquasher<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-migration-squasher/index.html">MigrationSquasher</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-migration-squasher/index.html">MigrationSquasher</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-323662476%2FFunctions%2F-4936845"><span class="token function">migrationSquasher</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentSquasher<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-migration-squasher/index.html">MigrationSquasher</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-migration-squasher/index.html">MigrationSquasher</a></div></div></div>
                 </div>
               </div>
             </div>
