@@ -43,7 +43,7 @@ class AsyncSelectQueryTypeTest {
       |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "insertReturning", ""${'"'}
       ||INSERT INTO data
       ||VALUES ('sup', 'dude')
-      ||RETURNING *
+      ||RETURNING data.val1, data.val2
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.r2dbc.R2dbcCursor)
       |  mapper(
@@ -141,7 +141,7 @@ class AsyncSelectQueryTypeTest {
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  |SELECT data.id
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {

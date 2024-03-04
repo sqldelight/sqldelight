@@ -13,7 +13,7 @@ public class DataQueries(
 ) : TransacterImpl(driver) {
   public fun <T : Any> selectSingle(mapper: (first: Int, second: String?) -> T): Query<T> =
       Query(-79_317_191, arrayOf("TestSingle"), driver, "Data.sq", "selectSingle", """
-  |SELECT *
+  |SELECT TestSingle.first, TestSingle.second
   |FROM TestSingle
   """.trimMargin()) { cursor ->
     check(cursor is JdbcCursor)
@@ -32,7 +32,7 @@ public class DataQueries(
 
   public fun <T : Any> selectCompound(mapper: (first: Int, second: String) -> T): Query<T> =
       Query(-19_725_220, arrayOf("TestCompound"), driver, "Data.sq", "selectCompound", """
-  |SELECT *
+  |SELECT TestCompound.first, TestCompound.second
   |FROM TestCompound
   """.trimMargin()) { cursor ->
     check(cursor is JdbcCursor)

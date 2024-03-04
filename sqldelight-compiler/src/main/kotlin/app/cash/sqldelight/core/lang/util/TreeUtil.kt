@@ -43,6 +43,7 @@ import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
@@ -193,6 +194,19 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         ),
       )
     }
+  } else if (this is SqlResultColumn && this.expr == null) {
+    listOf(
+      this.range to this@rangesToReplace.queryExposed().flatMap { query ->
+        query.columns.map { column ->
+          val columnElement = column.element as? PsiNamedElement ?: return@rangesToReplace emptyList()
+
+          buildString {
+            if (query.table != null) append("${query.table!!.name}.")
+            append(columnElement.name)
+          }
+        }
+      }.joinToString(separator = ", "),
+    )
   } else {
     children.flatMap { it.rangesToReplace() }
   }
