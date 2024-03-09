@@ -1,6 +1,8 @@
 CREATE TABLE TestJson(
   data JSON NOT NULL,
-  datab JSONB NOT NULL
+  datab JSONB NOT NULL,
+  datac JSONB,
+  datad TEXT[]
 );
 
 insert:
@@ -13,7 +15,7 @@ buildJson:
 SELECT json_build_object('key', 'value'), jsonb_build_object('key', 'value');
 
 insertLiteral:
-INSERT INTO TestJson(data, datab) VALUES (?, ?);
+INSERT INTO TestJson(data, datab, datac, datad) VALUES (?, ?, ?, ?);
 
 select:
 SELECT *
@@ -25,4 +27,8 @@ FROM TestJson;
 
 selectJsonArrayOperators:
 SELECT data -> 0, data ->> 1, data ->> 2
+FROM TestJson;
+
+selectJsonBooleanOperators:
+SELECT datab @> datac, datac <@ datab, datab ?? 'b', datab ??| datad, datab ??& datad
 FROM TestJson;

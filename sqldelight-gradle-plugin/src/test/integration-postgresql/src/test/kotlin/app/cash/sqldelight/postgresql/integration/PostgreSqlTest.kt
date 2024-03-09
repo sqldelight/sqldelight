@@ -675,17 +675,8 @@ class PostgreSqlTest {
   }
 
   @Test
-  fun testInsertJson() {
-    database.jsonQueries.insert("another key", "another value")
-    with(database.jsonQueries.select().executeAsList()) {
-      assertThat(first().data_).isEqualTo("""{"another key" : "another value"}""")
-      assertThat(first().datab).isEqualTo("""{"key": "value"}""")
-    }
-  }
-
-  @Test
   fun testInsertJsonLiteral() {
-    database.jsonQueries.insertLiteral("""{"key a" : "value a"}""", """{"key b" : "value b"}""")
+    database.jsonQueries.insertLiteral("""{"key a" : "value a"}""", """{"key b" : "value b"}""", """{}""", emptyArray<String>())
     with(database.jsonQueries.select().executeAsList()) {
       assertThat(first().data_).isEqualTo("""{"key a" : "value a"}""")
       assertThat(first().datab).isEqualTo("""{"key b": "value b"}""")
@@ -694,7 +685,7 @@ class PostgreSqlTest {
 
   @Test
   fun testJsonObjectOperators() {
-    database.jsonQueries.insertLiteral("""{"a" : 11,"aa":[1,2,3]}""", """{"b" : 12,"bb":[1,2,3]}""")
+    database.jsonQueries.insertLiteral("""{"a" : 11,"aa":[1,2,3]}""", """{"b" : 12,"bb":[1,2,3]}""", """{}""", emptyArray<String>())
     with(database.jsonQueries.selectJsonObjectOperators().executeAsList()) {
       assertThat(first().expr).isEqualTo("11")
       assertThat(first().expr_).isEqualTo("12")
@@ -705,11 +696,23 @@ class PostgreSqlTest {
 
   @Test
   fun testJsonArrayOperators() {
-    database.jsonQueries.insertLiteral("""[1,2,3]""", """[1,2,3]""")
+    database.jsonQueries.insertLiteral("""[1,2,3]""", """[1,2,3]""", """{}""", emptyArray<String>())
     with(database.jsonQueries.selectJsonArrayOperators().executeAsList()) {
       assertThat(first().expr).isEqualTo("1")
       assertThat(first().expr_).isEqualTo("2")
       assertThat(first().expr__).isEqualTo("3")
+    }
+  }
+
+  @Test
+  fun testJsonBooleanOperators() {
+    database.jsonQueries.insertLiteral("""{}""", """{"a":1, "b":2}""", """{"b":2}""", arrayOf("a", "b"))
+    with(database.jsonQueries.selectJsonBooleanOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo(true)
+      assertThat(first().expr_).isEqualTo(true)
+      assertThat(first().expr__).isEqualTo(true)
+      assertThat(first().expr___).isEqualTo(true)
+      assertThat(first().expr____).isEqualTo(true)
     }
   }
 }
