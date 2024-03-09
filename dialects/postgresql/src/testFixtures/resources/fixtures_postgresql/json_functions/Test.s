@@ -31,3 +31,6 @@ WHERE
   datab ?& 'sup' AND
   datab #- 'sup'
 ;
+
+SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}'
+FROM myTable;
