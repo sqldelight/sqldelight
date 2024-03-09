@@ -261,7 +261,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         functionType(windowFunctionExpr.functionExpr)!!
       }
       jsonExpression != null -> {
-        IntermediateType(PostgreSqlType.JSON)
+        if (jsonExpression!!.jsonbBooleanOperator != null) {
+          IntermediateType(BOOLEAN)
+        } else {
+          IntermediateType(PostgreSqlType.JSON)
+        }
       }
       else -> parentResolver.resolvedType(this)
     }
