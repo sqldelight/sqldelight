@@ -374,7 +374,7 @@ json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operato
   pin = 2
 }
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
-jsonb_binary_operator ::= '#-' | '||' | '-' | '#-'
+jsonb_binary_operator ::= '#-'
 jsonb_boolean_operator ::= '@@' | '@>' | '<@' | '@?' | '??|' | '??&' | '??'
 
 extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
