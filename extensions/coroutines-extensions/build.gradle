@@ -29,20 +29,19 @@ kotlin {
   }
 
   sourceSets {
-    commonMain {
-      dependencies {
-        api projects.runtime
-        api libs.kotlin.coroutines.core
-        implementation project(":extensions:async-extensions")
-      }
+    commonMain.dependencies {
+      api projects.runtime
+      api libs.kotlin.coroutines.core
+      implementation project(":extensions:async-extensions")
     }
-    commonTest {
-      dependencies {
-        implementation libs.kotlin.coroutines.test
-        implementation libs.kotlin.test
-        implementation libs.turbine
-      }
+
+    commonTest.dependencies {
+      implementation libs.kotlin.coroutines.test
+      implementation libs.kotlin.test
+      implementation libs.turbine
+      implementation libs.stately.concurrency
     }
+
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
