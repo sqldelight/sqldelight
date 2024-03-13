@@ -7,9 +7,10 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.driver.worker.api.WorkerAction
-import app.cash.sqldelight.driver.worker.api.WorkerRequest
+import app.cash.sqldelight.driver.worker.api.WorkerActions
 import app.cash.sqldelight.driver.worker.api.WorkerResponse
 import app.cash.sqldelight.driver.worker.api.WorkerResult
+import app.cash.sqldelight.driver.worker.api.buildRequest
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -39,7 +40,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     binders?.invoke(bound)
 
     return QueryResult.AsyncValue {
-      val response = worker.sendMessage(WorkerAction.exec) {
+      val response = worker.sendMessage(WorkerActions.exec) {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
@@ -53,7 +54,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     binders?.invoke(bound)
 
     return QueryResult.AsyncValue {
-      val response = worker.sendMessage(WorkerAction.exec) {
+      val response = worker.sendMessage(WorkerActions.exec) {
         this.sql = sql
         this.params = bound.parameters.toTypedArray()
       }
@@ -90,7 +91,7 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     val transaction = Transaction(enclosing)
     this.transaction = transaction
     if (enclosing == null) {
-      worker.sendMessage(WorkerAction.beginTransaction)
+      worker.sendMessage(WorkerActions.beginTransaction)
     }
 
     return@AsyncValue transaction
@@ -104,16 +105,16 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
       if (enclosingTransaction == null) {
         if (successful) {
-          worker.sendMessage(WorkerAction.endTransaction)
+          worker.sendMessage(WorkerActions.endTransaction)
         } else {
-          worker.sendMessage(WorkerAction.rollbackTransaction)
+          worker.sendMessage(WorkerActions.rollbackTransaction)
         }
       }
       transaction = enclosingTransaction
     }
   }
 
-  private suspend fun Worker.sendMessage(action: WorkerAction, message: RequestBuilder.() -> Unit = {}): WorkerResponse = suspendCancellableCoroutine { continuation ->
+  private suspend fun Worker.sendMessage(action: WorkerAction, builder: RequestBuilder.() -> Unit = {}): WorkerResponse = suspendCancellableCoroutine { continuation ->
     val id = messageCounter++
     val messageListener = object : EventListener {
       override fun handleEvent(event: Event) {
@@ -139,12 +140,11 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     addEventListener("message", messageListener)
     addEventListener("error", errorListener)
 
-    val messageObject = js("{}").unsafeCast<WorkerRequest>().apply {
-      this.unsafeCast<RequestBuilder>().message()
+    val messageObject = buildRequest {
+      this.unsafeCast<RequestBuilder>().builder()
       this.id = id
       this.action = action
     }
-
     postMessage(messageObject)
 
     continuation.invokeOnCancellation {

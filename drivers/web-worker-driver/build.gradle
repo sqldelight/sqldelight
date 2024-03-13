@@ -14,24 +14,37 @@ kotlin {
       }
     }
   }
-
-  sourceSets {
-    jsMain {
-      dependencies {
-        api projects.runtime
-        implementation libs.kotlin.coroutines.core
+  wasmJs {
+    browser {
+      testTask {
+        useKarma {
+          useChromeHeadless()
+        }
       }
     }
-
-    jsTest {
-      dependencies {
-        implementation libs.kotlin.test.js
-        implementation npm("sql.js", libs.versions.sqljs.get())
-        implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
-        implementation devNpm("copy-webpack-plugin", "9.1.0")
-        implementation libs.kotlin.coroutines.test
-        implementation project(":extensions:async-extensions")
+  }
+  applyDefaultHierarchyTemplate {
+    it.common {
+      it.group("jsCommon") {
+        it.withJs()
+        it.withWasm()
       }
+    }
+  }
+
+  sourceSets {
+    jsCommonMain.dependencies {
+      api projects.runtime
+      implementation libs.kotlin.coroutines.core
+    }
+
+    jsCommonTest.dependencies {
+      implementation libs.kotlin.test
+      implementation npm("sql.js", libs.versions.sqljs.get())
+      implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
+      implementation devNpm("copy-webpack-plugin", "9.1.0")
+      implementation libs.kotlin.coroutines.test
+      implementation project(":extensions:async-extensions")
     }
   }
 }
@@ -39,5 +52,5 @@ kotlin {
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 tasks.named("dokkaHtmlMultiModule") {
- dependsOn(rootProject.tasks.named("dokkaHtmlMultiModule"))
+  dependsOn(rootProject.tasks.named("dokkaHtmlMultiModule"))
 }

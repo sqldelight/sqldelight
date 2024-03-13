@@ -30,3 +30,6 @@ docs/contributing.md
 
 # Jenv local setting
 .java-version
+
+# Kotlin multiplatform caches
+.kotlin

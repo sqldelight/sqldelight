@@ -26,3 +26,9 @@ internal external interface WorkerRequest {
    */
   var params: Array<Any?>?
 }
+
+internal fun buildRequest(builder: WorkerRequest.() -> Unit): WorkerRequest {
+  val request = js("{}").unsafeCast<WorkerRequest>()
+  builder(request)
+  return request
+}
