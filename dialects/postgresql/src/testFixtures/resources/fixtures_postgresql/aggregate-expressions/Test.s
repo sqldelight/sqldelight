@@ -40,3 +40,9 @@ FROM articles
 LEFT JOIN tags ON articles.id = tags.article_id
 JOIN users ON articles.author_id = users.id
 GROUP BY articles.id, users.id;
+
+SELECT username, string_agg (tag, ',')
+FROM articles
+LEFT JOIN tags ON articles.id = tags.article_id
+JOIN users ON articles.author_id = users.id
+GROUP BY articles.id, users.id;
