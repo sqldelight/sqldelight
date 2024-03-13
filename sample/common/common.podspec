@@ -8,9 +8,9 @@ Pod::Spec.new do |spec|
     spec.summary                  = 'Common core for SQLDelight sample.'
     spec.vendored_frameworks      = 'build/cocoapods/framework/common.framework'
     spec.libraries                = 'c++'
-                
-                
-                
+
+
+
     if !Dir.exist?('build/cocoapods/framework/common.framework') || Dir.empty?('build/cocoapods/framework/common.framework')
         raise "
 
@@ -21,11 +21,11 @@ Pod::Spec.new do |spec|
 
         Alternatively, proper pod installation is performed during Gradle sync in the IDE (if Podfile location is set)"
     end
-                
+
     spec.xcconfig = {
         'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
     }
-                
+
     if !Dir.exist?('build/cocoapods/framework/common.framework') || Dir.empty?('build/cocoapods/framework/common.framework')
         raise "
 
@@ -36,12 +36,12 @@ Pod::Spec.new do |spec|
 
         Alternatively, proper pod installation is performed during Gradle sync in the IDE (if Podfile location is set)"
     end
-                
+
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':common',
         'PRODUCT_MODULE_NAME' => 'common',
     }
-                
+
     spec.script_phases = [
         {
             :name => 'Build common',
@@ -61,5 +61,6 @@ Pod::Spec.new do |spec|
             SCRIPT
         }
     ]
-                
+
 end
+

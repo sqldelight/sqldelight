@@ -47,24 +47,19 @@ kotlin {
       dependencies {
         implementation libs.kotlin.test.junit
         implementation projects.drivers.sqliteDriver
-        implementation libs.stately.concurrency
       }
       languageSettings {
         optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
       }
     }
-    jsTest {
-      dependencies {
-        implementation libs.stately.concurrency
-        implementation projects.drivers.webWorkerDriver
-        implementation npm("sql.js", libs.versions.sqljs.get())
-        implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
-      }
+    jsCommonTest.dependencies {
+      implementation  projects.drivers.webWorkerDriver
+      implementation npm("sql.js", libs.versions.sqljs.get())
+      implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
     }
-    testableNativeTest {
-      dependencies {
-        implementation projects.drivers.nativeDriver
-      }
+
+    testableNativeTest.dependencies {
+      implementation projects.drivers.nativeDriver
     }
   }
 

@@ -1,5 +1,6 @@
-import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
+import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
@@ -49,32 +50,31 @@ kotlin {
   }
 
   sourceSets {
-    commonMain {
-      dependencies {
-        api projects.runtime
-        api libs.stately.concurrency
-        api libs.sqliter
-      }
+    commonMain.dependencies {
+      api projects.runtime
+      api libs.stately.concurrency
+      api libs.sqliter
     }
-    commonTest {
-      dependencies {
-        implementation libs.kotlin.test
-        implementation libs.testhelp
-        implementation projects.drivers.driverTest
+
+    commonTest.dependencies {
+      implementation libs.kotlin.test
+      implementation libs.testhelp
+      implementation projects.drivers.driverTest
+    }
+  }
+
+  targets.configureEach {
+    if (it instanceof KotlinNativeTarget && it.konanTarget.family.appleFamily) {
+      it.binaries.configureEach {
+        // we only need to link sqlite for the test binaries
+        if (outputKind == NativeOutputKind.TEST) {
+          linkerOpts += ["-lsqlite3"]
+        }
       }
     }
   }
 
-  configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
-    binaries.configureEach {
-      // we only need to link sqlite for the test binaries
-      if (outputKind == NativeOutputKind.TEST) {
-        linkerOpts += ["-lsqlite3"]
-      }
-    }
-  }
-
-  configure([targets.linuxX64]) {
+  linuxX64 {
     compilations.configureEach {
       if (name == "test") {
         cinterops {
@@ -88,7 +88,7 @@ kotlin {
     }
   }
 
-  configure([targets.mingwX64]) {
+  mingwX64 {
     binaries.configureEach {
       // we only need to link sqlite for the test binaries
       if (outputKind == NativeOutputKind.TEST) {
