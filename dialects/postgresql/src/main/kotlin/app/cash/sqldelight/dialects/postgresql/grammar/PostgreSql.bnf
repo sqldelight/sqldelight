@@ -46,6 +46,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
@@ -353,7 +354,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= json_expression | boolean_literal | boolean_not_expression | window_function_expr {
+extension_expr ::= json_expression | boolean_literal | boolean_not_expression | window_function_expr | string_agg_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -441,6 +442,10 @@ truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
 truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
+
+string_agg_stmt ::= 'string_agg' LP ( ALL | DISTINCT ) <<expr '-1'>> COMMA string_literal [ ORDER BY <<expr '-1'>> ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+}
 
 set_stmt ::= 'SET' [ ('SESSION' | 'LOCAL') ] ( set_config | set_timezone | set_schema | set_names | set_seed )
 set_value ::= literal_value | {identifier} | DEFAULT
