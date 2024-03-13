@@ -286,6 +286,19 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testStringAggOrderBy() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsStringAggNameOrderBy().executeAsList().let {
+      assertThat(it).containsExactly(
+        SelectDogsStringAggNameOrderBy("Broholmer", "Mads"),
+        SelectDogsStringAggNameOrderBy("Pomeranian", "Bruno,Tilda"),
+      )
+    }
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {
