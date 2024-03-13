@@ -354,7 +354,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= json_expression | boolean_literal | boolean_not_expression | window_function_expr | string_agg_stmt {
+extension_expr ::= string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
