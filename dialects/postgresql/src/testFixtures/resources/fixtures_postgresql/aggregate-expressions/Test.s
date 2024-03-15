@@ -23,7 +23,7 @@ CREATE TABLE tags (
 );
 
 SELECT articles.id, slug, title, description, body, users.username, users.bio, users.image, createdAt, updatedAt,
-COALESCE (string_agg (DISTINCT tag, ',' ORDER BY tag) FILTER (WHERE tag IS NOT NULL)) AS articleTags
+COALESCE (string_agg (DISTINCT tag, ',' ORDER BY tag DESC) FILTER (WHERE tag IS NOT NULL)) AS articleTags
 FROM articles
 LEFT JOIN tags ON articles.id = tags.article_id
 JOIN users ON articles.author_id = users.id
@@ -42,6 +42,19 @@ JOIN users ON articles.author_id = users.id
 GROUP BY articles.id, users.id;
 
 SELECT username, string_agg (tag, ',')
+FROM articles
+LEFT JOIN tags ON articles.id = tags.article_id
+JOIN users ON articles.author_id = users.id
+GROUP BY articles.id, users.id;
+
+SELECT articles.id, slug, title, description, body, users.username, users.bio, users.image, createdAt, updatedAt,
+COALESCE (array_agg (DISTINCT tag ORDER BY tag) FILTER (WHERE tag IS NOT NULL), '{}') AS articleTags
+FROM articles
+LEFT JOIN tags ON articles.id = tags.article_id
+JOIN users ON articles.author_id = users.id
+GROUP BY articles.id, users.id;
+
+SELECT array_agg (tag ORDER BY tag)
 FROM articles
 LEFT JOIN tags ON articles.id = tags.article_id
 JOIN users ON articles.author_id = users.id

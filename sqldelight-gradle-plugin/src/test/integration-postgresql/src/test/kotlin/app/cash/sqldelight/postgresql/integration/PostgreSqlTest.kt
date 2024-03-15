@@ -299,6 +299,22 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testArrayAggOrderBy() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggNameOrderBy().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggNameOrderBy("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggNameOrderBy("Pomeranian", arrayOf("Bruno", "Tilda")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {
