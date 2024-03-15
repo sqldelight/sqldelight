@@ -79,6 +79,13 @@ FROM dog
 GROUP BY breed
 ORDER BY breed;
 
+selectDogsArrayAggName:
+SELECT breed,
+       array_agg(name)
+FROM dog
+GROUP BY breed
+ORDER BY breed;
+
 selectDogsArrayAggNameOrderBy:
 SELECT breed,
        array_agg(DISTINCT name ORDER BY name ASC)
