@@ -181,6 +181,10 @@ class MySqlTypeResolver(
     "date_add", "date_sub" -> IntermediateType(TEXT)
     "now" -> IntermediateType(TEXT)
     "char_length", "character_length" -> IntermediateType(INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+    "inet_aton" -> IntermediateType(TEXT)
+    "inet_ntoa" -> IntermediateType(TEXT)
+    "inet6_aton" -> IntermediateType(TEXT)
+    "inet6_ntoa" -> IntermediateType(TEXT)
     else -> null
   }
 
