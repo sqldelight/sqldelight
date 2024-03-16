@@ -17,8 +17,8 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.DATE
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
-import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlArrayAggStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
@@ -243,8 +243,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     is PostgreSqlExtensionExpr -> when {
       arrayAggStmt != null -> {
-        val typeForAgg = ((arrayAggStmt as PostgreSqlArrayAggStmt).children.first() as SqlExpr).postgreSqlType()
-        arrayIntermediateType(typeForAgg)
+        val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType()
+        arrayIntermediateType(typeForArray)
       }
       stringAggStmt != null -> {
         IntermediateType(TEXT)
