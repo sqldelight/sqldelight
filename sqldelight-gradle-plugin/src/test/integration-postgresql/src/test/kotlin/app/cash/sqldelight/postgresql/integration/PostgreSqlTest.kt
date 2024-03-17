@@ -315,6 +315,22 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testCoalesceArrayAgg() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsCoalesceArrayAggName().executeAsList().zip(
+      listOf(
+        SelectDogsCoalesceArrayAggName("Broholmer", arrayOf("Mads")),
+        SelectDogsCoalesceArrayAggName("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.coalesce).isEqualTo(dog.second.coalesce) // isEqualTo works with Array equality
+    }
+  }
+
   @Test fun testArrayAggOrderBy() {
     database.dogQueries.insertDog("Tilda", "Pomeranian")
     database.dogQueries.insertDog("Bruno", "Pomeranian")
