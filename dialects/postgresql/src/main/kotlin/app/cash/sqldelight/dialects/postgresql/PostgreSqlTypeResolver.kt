@@ -110,9 +110,16 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "starts_with" -> IntermediateType(BOOLEAN)
-    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
-      exprListNullability.all { it }
-    })
+    "coalesce", "ifnull" -> {
+      val exprType = exprList.first().postgreSqlType()
+      if (isArrayType(exprType)) {
+        exprType
+      } else {
+        encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+          exprListNullability.all { it }
+        })
+      }
+    }
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "sum" -> {
@@ -243,7 +250,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     is PostgreSqlExtensionExpr -> when {
       arrayAggStmt != null -> {
-        val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType()
+        val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
         arrayIntermediateType(typeForArray)
       }
       stringAggStmt != null -> {
@@ -283,6 +290,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
         },
       )
+    }
+
+    private fun isArrayType(type: IntermediateType): Boolean {
+      return type.javaType.toString().startsWith("kotlin.Array")
     }
   }
 }
