@@ -22,13 +22,17 @@ SELECT *
 FROM TestJson;
 
 selectJsonObjectOperators:
-SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}'
+SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab - 'b'
 FROM TestJson;
 
-selectJsonArrayOperators:
-SELECT data -> 0, data ->> 1, data ->> 2
+selectJsonArrayIndexOperators:
+SELECT data -> 0, data ->> 1, data ->> 2, datab - 1
 FROM TestJson;
 
 selectJsonBooleanOperators:
-SELECT datab @> datac, datac <@ datab, datab ?? 'b', datab ??| datad, datab ??& datad
+SELECT datab @> datac, datac <@ datab, datab ?? 'b', datab ??| datad, datab ??& datad, datab @@ '$.b[*] > 0'
+FROM TestJson;
+
+selectJsonConcatOperators:
+SELECT datab || datac
 FROM TestJson;

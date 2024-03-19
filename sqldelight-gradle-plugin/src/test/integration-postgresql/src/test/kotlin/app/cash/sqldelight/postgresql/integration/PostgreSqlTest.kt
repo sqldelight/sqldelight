@@ -691,16 +691,18 @@ class PostgreSqlTest {
       assertThat(first().expr_).isEqualTo("12")
       assertThat(first().expr__).isEqualTo("[1,2,3]")
       assertThat(first().expr___).isEqualTo("[1, 2, 3]")
+      assertThat(first().expr____).isEqualTo("""{"bb": [1, 2, 3]}""")
     }
   }
 
   @Test
-  fun testJsonArrayOperators() {
+  fun testJsonArrayIndexOperators() {
     database.jsonQueries.insertLiteral("""[1,2,3]""", """[1,2,3]""", """{}""", emptyArray<String>())
-    with(database.jsonQueries.selectJsonArrayOperators().executeAsList()) {
+    with(database.jsonQueries.selectJsonArrayIndexOperators().executeAsList()) {
       assertThat(first().expr).isEqualTo("1")
       assertThat(first().expr_).isEqualTo("2")
       assertThat(first().expr__).isEqualTo("3")
+      assertThat(first().expr___).isEqualTo("[1, 3]")
     }
   }
 
@@ -713,6 +715,15 @@ class PostgreSqlTest {
       assertThat(first().expr__).isEqualTo(true)
       assertThat(first().expr___).isEqualTo(true)
       assertThat(first().expr____).isEqualTo(true)
+      assertThat(first().expr_____).isEqualTo(true)
+    }
+  }
+
+  @Test
+  fun testJsonConcatOperators() {
+    database.jsonQueries.insertLiteral("""{}""", """{"a":1}""", """{"b":2}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonConcatOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo("""{"a": 1, "b": 2}""")
     }
   }
 }
