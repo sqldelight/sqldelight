@@ -24,8 +24,9 @@ jobs:
   build:
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
+      # macOS-latest (Intel) is required to run Android simulator tests (instrumentation)
       matrix:
-        os: [ macOS-14, windows-latest, ubuntu-latest ]
+        os: [ macOS-14, macOS-latest, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
@@ -34,6 +35,12 @@ jobs:
             job: gradle-plugin-tests
           - os: ubuntu-latest
             job: gradle-plugin-tests
+          - os: macOS-latest
+            job: test
+          - os: macOS-latest
+            job: gradle-plugin-tests
+          - os: macOS-14
+            job: instrumentation
 
     runs-on: ${{matrix.os}}
     permissions:
@@ -77,7 +84,7 @@ jobs:
 
       # android tests
       - name: Run instrumentation tests
-        if: matrix.os == 'macos-14' && matrix.job == 'instrumentation'
+        if: matrix.os == 'macos-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
