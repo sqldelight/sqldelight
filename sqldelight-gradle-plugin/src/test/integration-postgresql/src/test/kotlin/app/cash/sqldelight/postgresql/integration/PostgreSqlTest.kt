@@ -286,6 +286,83 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testStringAggOrderBy() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsStringAggNameOrderBy().executeAsList().let {
+      assertThat(it).containsExactly(
+        SelectDogsStringAggNameOrderBy("Broholmer", "Mads"),
+        SelectDogsStringAggNameOrderBy("Pomeranian", "Bruno,Tilda"),
+      )
+    }
+  }
+
+  @Test fun testArrayAgg() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggName().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggName("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggName("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
+  @Test fun testCoalesceArrayAgg() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsCoalesceArrayAggName().executeAsList().zip(
+      listOf(
+        SelectDogsCoalesceArrayAggName("Broholmer", arrayOf("Mads")),
+        SelectDogsCoalesceArrayAggName("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.coalesce).isEqualTo(dog.second.coalesce) // isEqualTo works with Array equality
+    }
+  }
+
+  @Test fun testArrayAggOrderBy() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggNameOrderBy().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggNameOrderBy("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggNameOrderBy("Pomeranian", arrayOf("Bruno", "Tilda")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
+  @Test fun testArrayAggOrderByWhereFilter() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggNameOrderByWhereFilter().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggNameOrderByWhereFilter("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggNameOrderByWhereFilter("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {
