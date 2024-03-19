@@ -238,6 +238,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           PostgreSqlType.INTERVAL,
           PostgreSqlType.TIMESTAMP_TIMEZONE,
           PostgreSqlType.TIMESTAMP,
+          PostgreSqlType.JSON,
         )
       }
     }
