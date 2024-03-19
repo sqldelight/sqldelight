@@ -66,7 +66,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
           }
         }
-        jsonDataType != null -> TEXT
+        jsonDataType != null -> PostgreSqlType.JSON
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
