@@ -24,10 +24,8 @@ jobs:
   build:
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
-      # macOS-latest (Intel) is required to run Android simulator tests (instrumentation)
-      # due to nested virtualization not supported on M1
       matrix:
-        os: [ macOS-14, macOS-latest, windows-latest, ubuntu-latest ]
+        os: [ macOS-14, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
@@ -35,10 +33,6 @@ jobs:
           - os: windows-latest
             job: gradle-plugin-tests
           - os: ubuntu-latest
-            job: gradle-plugin-tests
-          - os: macOS-latest
-            job: test
-          - os: macOS-latest
             job: gradle-plugin-tests
           - os: macOS-14
             job: instrumentation
@@ -84,8 +78,14 @@ jobs:
         run: ./gradlew linuxX64Test --no-parallel
 
       # android tests
+      - name: Enable KVM group perms
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
       - name: Run instrumentation tests
-        if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
