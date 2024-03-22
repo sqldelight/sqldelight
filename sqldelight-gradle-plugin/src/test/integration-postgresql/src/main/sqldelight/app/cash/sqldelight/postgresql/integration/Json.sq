@@ -11,3 +11,10 @@ INSERT INTO myJson(data, datab) VALUES(
 
 buildJson:
 SELECT json_build_object('key', 'value'), jsonb_build_object('key', 'value');
+
+insertLiteral:
+INSERT INTO myJson(data, datab) VALUES (?, ?);
+
+select:
+SELECT *
+FROM myJson;
