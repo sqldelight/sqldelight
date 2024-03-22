@@ -182,11 +182,7 @@ class JdbcPreparedStatement(
   private val preparedStatement: PreparedStatement,
 ) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
-    if (bytes == null) {
-      preparedStatement.setNull(index + 1, Types.BLOB)
-    } else {
-      preparedStatement.setBytes(index + 1, bytes)
-    }
+    preparedStatement.setBytes(index + 1, bytes)
   }
 
   override fun bindBoolean(index: Int, boolean: Boolean?) {
@@ -246,21 +242,29 @@ class JdbcPreparedStatement(
   }
 
   fun bindBigDecimal(index: Int, decimal: BigDecimal?) {
-    if (decimal == null) {
-      preparedStatement.setNull(index + 1, Types.NUMERIC)
-    } else {
-      preparedStatement.setBigDecimal(index + 1, decimal)
-    }
+    preparedStatement.setBigDecimal(index + 1, decimal)
   }
 
+  @Deprecated(
+    "For maximum compatibility with all JDBC drivers, setObject requires the sql type.",
+    replaceWith = ReplaceWith("bindObject(index, obj, Types.OTHER", "java.sql.Types"),
+  )
   fun bindObject(index: Int, obj: Any?) {
+    bindObject(index, obj, Types.OTHER)
+  }
+
+  fun bindObject(index: Int, obj: Any?, type: Int) {
     if (obj == null) {
-      preparedStatement.setNull(index + 1, Types.OTHER)
+      preparedStatement.setNull(index + 1, type)
     } else {
-      preparedStatement.setObject(index + 1, obj)
+      preparedStatement.setObject(index + 1, obj, type)
     }
   }
 
+  @Deprecated(
+    "For maximum compatibility with all JDBC drivers, setObject requires the sql type.",
+    replaceWith = ReplaceWith("bindObject(index, obj, Types.OTHER", "java.sql.Types"),
+  )
   fun bindObjectOther(index: Int, obj: Any?) {
     if (obj == null) {
       preparedStatement.setNull(index + 1, Types.OTHER)
@@ -270,11 +274,19 @@ class JdbcPreparedStatement(
   }
 
   override fun bindString(index: Int, string: String?) {
-    if (string == null) {
-      preparedStatement.setNull(index + 1, Types.VARCHAR)
-    } else {
-      preparedStatement.setString(index + 1, string)
-    }
+    preparedStatement.setString(index + 1, string)
+  }
+
+  fun bindDate(index: Int, date: java.sql.Date?) {
+    preparedStatement.setDate(index, date)
+  }
+
+  fun bindTime(index: Int, date: java.sql.Time?) {
+    preparedStatement.setTime(index, date)
+  }
+
+  fun bindTimestamp(index: Int, timestamp: java.sql.Timestamp?) {
+    preparedStatement.setTimestamp(index, timestamp)
   }
 
   fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
@@ -312,6 +324,9 @@ class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   override fun getDouble(index: Int): Double? = getAtIndex(index, resultSet::getDouble)
   fun getBigDecimal(index: Int): BigDecimal? = resultSet.getBigDecimal(index + 1)
   inline fun <reified T : Any> getObject(index: Int): T? = resultSet.getObject(index + 1, T::class.java)
+  fun getDate(index: Int): java.sql.Date? = resultSet.getDate(index)
+  fun getTime(index: Int): java.sql.Time? = resultSet.getTime(index)
+  fun getTimestamp(index: Int): java.sql.Timestamp? = resultSet.getTimestamp(index)
 
   @Suppress("UNCHECKED_CAST")
   fun <T> getArray(index: Int) = getAtIndex(index, resultSet::getArray)?.array as Array<T>?
