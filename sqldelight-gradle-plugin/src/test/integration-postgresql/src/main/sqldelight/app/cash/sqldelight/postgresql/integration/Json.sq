@@ -11,8 +11,9 @@ INSERT INTO TestJson(data, datab) VALUES(
   jsonb_build_object('key', 'value')
 );
 
-buildJson:
-SELECT json_build_object('key', 'value'), jsonb_build_object('key', 'value');
+setJsonb:
+UPDATE TestJson
+SET datab = jsonb_set(datab, :path, :newValue) RETURNING datab;
 
 insertLiteral:
 INSERT INTO TestJson(data, datab, datac, datad) VALUES (?, ?, ?, ?);
@@ -35,4 +36,8 @@ FROM TestJson;
 
 selectJsonConcatOperators:
 SELECT datab || datac
+FROM TestJson;
+
+selectJsonPretty:
+SELECT jsonb_pretty(datab)
 FROM TestJson;

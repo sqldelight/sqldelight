@@ -675,6 +675,15 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testInsertJson() {
+    database.jsonQueries.insert("another key", "another value")
+    with(database.jsonQueries.select().executeAsList()) {
+      assertThat(first().data_).isEqualTo("""{"another key" : "another value"}""")
+      assertThat(first().datab).isEqualTo("""{"key": "value"}""")
+    }
+  }
+
+  @Test
   fun testInsertJsonLiteral() {
     database.jsonQueries.insertLiteral("""{"key a" : "value a"}""", """{"key b" : "value b"}""", """{}""", emptyArray<String>())
     with(database.jsonQueries.select().executeAsList()) {
@@ -724,6 +733,28 @@ class PostgreSqlTest {
     database.jsonQueries.insertLiteral("""{}""", """{"a":1}""", """{"b":2}""", emptyArray<String>())
     with(database.jsonQueries.selectJsonConcatOperators().executeAsList()) {
       assertThat(first().expr).isEqualTo("""{"a": 1, "b": 2}""")
+    }
+  }
+
+  @Test
+  fun testJsonbPretty() {
+    database.jsonQueries.insertLiteral("""{}""", """{"a":1,"b":2}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonPretty().executeAsList()) {
+      assertThat(first()).isEqualTo(
+        """{
+      |    "a": 1,
+      |    "b": 2
+      |}
+        """.trimMargin(),
+      )
+    }
+  }
+
+  @Test
+  fun testJsonbSet() {
+    database.jsonQueries.insertLiteral("""{}""", """[{"a":1},{"b":2}]""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.setJsonb("""{0, "a"}""", """123""").executeAsList()) {
+      assertThat(first()).isEqualTo("""[{"a": 123}, {"b": 2}]""")
     }
   }
 }

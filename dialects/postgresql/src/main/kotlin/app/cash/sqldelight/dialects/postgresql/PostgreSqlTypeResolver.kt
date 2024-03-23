@@ -154,7 +154,6 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "to_json", "to_jsonb",
     "array_to_json", "row_to_json",
     "json_build_array", "jsonb_build_array",
-    "json_build_object", "jsonb_build_object",
     "json_object", "jsonb_object",
     "json_extract_path", "jsonb_extract_path",
     "json_extract_path_text", "jsonb_extract_path_text",
@@ -164,6 +163,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "jsonb_pretty",
     "json_typeof", "jsonb_typeof",
     "json_agg", "jsonb_agg", "json_object_agg", "jsonb_object_agg",
+    -> IntermediateType(PostgreSqlType.JSON)
+    "json_build_object", "jsonb_build_object",
     -> IntermediateType(TEXT)
     "array_agg" -> {
       val typeForAgg = encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
