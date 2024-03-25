@@ -5,17 +5,8 @@ plugins {
 }
 
 kotlin {
-  js {
-    browser {
-      testTask {
-        useKarma {
-          useChromeHeadless()
-        }
-      }
-    }
-  }
-  wasmJs {
-    browser {
+  [js(), wasmJs()].forEach {
+    it.browser {
       testTask {
         useKarma {
           useChromeHeadless()
