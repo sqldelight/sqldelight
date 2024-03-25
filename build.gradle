@@ -40,8 +40,6 @@ allprojects {
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
     // Repo for the backported Android IntelliJ Plugin by Jetbrains used in Ultimate
     maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/" }
-    // Repo for Turbine snapshot builds. Should be removed in favor of release builds once Turbine 1.1.0 is released.
-    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
   }
 
   tasks.withType(Test).configureEach {
