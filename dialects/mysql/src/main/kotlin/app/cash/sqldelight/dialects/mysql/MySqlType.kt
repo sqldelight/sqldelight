@@ -7,7 +7,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
-import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.TypeName
 
@@ -46,14 +45,16 @@ internal enum class MySqlType(override val javaType: TypeName) : DialectType {
   ;
 
   override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
-    return when (this) {
-      TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
-      DATE -> CodeBlock.of("bindObject(%L, %L, %M)\n", columnIndex, value, MemberName(ClassName("java.sql", "Types"), "DATE"))
-      TIME -> CodeBlock.of("bindObject(%L, %L, %M)\n", columnIndex, value, MemberName(ClassName("java.sql", "Types"), "TIME"))
-      DATETIME -> CodeBlock.of("bindObject(%L, %L, %M)\n", columnIndex, value, MemberName(ClassName("java.sql", "Types"), "OTHER"))
-      TIMESTAMP -> CodeBlock.of("bindObject(%L, %L, %M)\n", columnIndex, value, MemberName(ClassName("java.sql", "Types"), "TIMESTAMP_WITH_TIMEZONE"))
-      NUMERIC -> CodeBlock.of("bindBigDecimal(%L, %L)\n", columnIndex, value)
-    }
+    return CodeBlock.builder()
+      .add(
+        when (this) {
+          TINY_INT, TINY_INT_BOOL, SMALL_INT, INTEGER, BIG_INT, BIT -> "bindLong"
+          DATE, TIME, DATETIME, TIMESTAMP -> "bindObject"
+          NUMERIC -> "bindBigDecimal"
+        },
+      )
+      .add("(%L, %L)\n", columnIndex, value)
+      .build()
   }
 
   override fun cursorGetter(columnIndex: Int, cursorName: String): CodeBlock {
