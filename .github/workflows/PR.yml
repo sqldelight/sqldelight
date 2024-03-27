@@ -140,7 +140,7 @@ jobs:
         with:
           build-root-directory: sample
           gradle-home-cache-cleanup: true
-      - run: build --stacktrace --parallel
+      - run: ./gradlew build --stacktrace --parallel
         working-directory: sample
 
   buildWebSample:
@@ -157,7 +157,7 @@ jobs:
         with:
           build-root-directory: sample-web
           gradle-home-cache-cleanup: true
-      - run: kotlinUpgradeYarnLock build --stacktrace --parallel
+      - run: ./gradlew kotlinUpgradeYarnLock build --stacktrace --parallel
         working-directory: sample-web
 
 env:
