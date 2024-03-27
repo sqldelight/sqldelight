@@ -15,7 +15,7 @@ jobs:
   publish_archives:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        os: [macOS-14, windows-latest, ubuntu-latest]
 
     runs-on: ${{matrix.os}}
     if: github.repository == 'cashapp/sqldelight'
@@ -31,12 +31,12 @@ jobs:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
 
       - name: Publish the macOS artifacts
-        if: matrix.os == 'macOS-latest'
+        if: matrix.os == 'macOS-14'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
@@ -82,7 +82,7 @@ jobs:
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
 
@@ -120,7 +120,7 @@ jobs:
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
 

@@ -10,9 +10,9 @@ sqljs = "1.8.0"
 paging-mpp = "3.1.1-0.3.1"
 paging3 = "3.1.1"
 ktlint = "1.2.1"
-agp = "8.3.0"
+agp = "8.3.1"
 compileSdk = "34"
-minSdk = "16"
+minSdk = "21"
 sqlPsi = "0.4.8"
 testContainers = "1.19.7"
 
@@ -76,9 +76,9 @@ schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref 
 
 objectDiff = { module = "de.danielbechler:java-object-diff", version = "0.95" }
 sqliter = { module = "co.touchlab:sqliter-driver", version.ref = "sqliter" }
-stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2.0.6" }
+stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2.0.7" }
 
-testhelp = { module = "co.touchlab:testhelp", version = "0.6.11" }
+testhelp = { module = "co.touchlab:testhelp", version = "0.6.12" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
 testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.15" }
 
@@ -101,7 +101,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-android-extensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij", version = "1.17.1" }
+intellij = { id = "org.jetbrains.intellij", version = "1.17.2" }
 grammarKitComposer = { id = "com.alecstrong.grammar.kit.composer", version = "0.1.12" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }

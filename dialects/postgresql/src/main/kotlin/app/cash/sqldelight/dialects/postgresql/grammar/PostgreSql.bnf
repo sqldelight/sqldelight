@@ -46,6 +46,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
@@ -176,6 +177,7 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   override = true
   pin = 6
 }
+
 
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
@@ -356,7 +358,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= json_expression | boolean_literal | boolean_not_expression | window_function_expr {
+extension_expr ::= array_agg_stmt| string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -370,12 +372,13 @@ boolean_not_expression ::= NOT (boolean_literal | {column_name})
 
 boolean_literal ::= TRUE | FALSE
 
-json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
-jsona_binary_operator ::= '->' | '->>' | '#>'
-jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
+jsonb_binary_operator ::= '#-'
+jsonb_boolean_operator ::= '@@' | '@>' | '<@' | '@?' | '??|' | '??&' | '??'
 
 extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
@@ -444,6 +447,15 @@ truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
 truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
+
+string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+}
+
+array_agg_stmt ::= 'array_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin"
+}
 
 set_stmt ::= 'SET' [ ('SESSION' | 'LOCAL') ] ( set_config | set_timezone | set_schema | set_names | set_seed )
 set_value ::= literal_value | {identifier} | DEFAULT
