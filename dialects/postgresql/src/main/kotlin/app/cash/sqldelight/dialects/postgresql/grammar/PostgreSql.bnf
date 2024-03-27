@@ -168,7 +168,10 @@ table_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
-create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name} LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
+gin_operator_class_stmt ::= 'array_ops' | 'jsonb_ops' | 'jsonb_path_ops' | 'tsvector_ops'
+
+create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
+ ( USING 'GIN' LP {indexed_column} [ gin_operator_class_stmt ] ( COMMA {indexed_column} [ gin_operator_class_stmt ] ) * RP | LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true
