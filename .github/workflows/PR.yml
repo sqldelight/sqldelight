@@ -97,23 +97,6 @@ jobs:
         if: matrix.os == 'macOS-14' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace --parallel
 
-      # Build the samples
-      - name: Build the mobile sample
-        if: matrix.os == 'macOS-14' && matrix.job == 'test'
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: build --stacktrace --parallel
-          build-root-directory: sample
-          gradle-home-cache-cleanup: true
-
-      - name: Build the web sample
-        if: matrix.os == 'macOS-14' && matrix.job == 'test'
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
-          build-root-directory: sample-web
-          gradle-home-cache-cleanup: true
-
   verify_intellij:
     runs-on: ubuntu-latest
 
@@ -142,6 +125,40 @@ jobs:
     steps:
       - name: Success!
         run: echo "All IntelliJ plugin verification checks passed!"
+
+  buildSample:
+    runs-on: macos-14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.ci-java-version
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          build-root-directory: sample
+          gradle-home-cache-cleanup: true
+      - run: build --stacktrace --parallel
+        working-directory: sample
+
+  buildWebSample:
+    runs-on: macos-14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.ci-java-version
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          build-root-directory: sample-web
+          gradle-home-cache-cleanup: true
+      - run: kotlinUpgradeYarnLock build --stacktrace --parallel
+        working-directory: sample-web
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
