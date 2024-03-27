@@ -138,10 +138,8 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: gradle/actions/setup-gradle@v3
         with:
-          build-root-directory: sample
           gradle-home-cache-cleanup: true
-      - run: ./gradlew build --stacktrace --parallel
-        working-directory: sample
+      - run: ./gradlew -p sample build --stacktrace --parallel
 
   buildWebSample:
     runs-on: macos-14
@@ -155,10 +153,8 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: gradle/actions/setup-gradle@v3
         with:
-          build-root-directory: sample-web
           gradle-home-cache-cleanup: true
-      - run: ./gradlew kotlinUpgradeYarnLock build --stacktrace --parallel
-        working-directory: sample-web
+      - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
