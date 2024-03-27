@@ -1633,6 +1633,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1289296175%2FProperties%2F-128169639" anchor-label="JSONB_BOOLEAN_OPERATOR" id="-1289296175%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-s-o-n-b_-b-o-o-l-e-a-n_-o-p-e-r-a-t-o-r.html"><span><span>JSONB_BOOLEAN_OPERATOR</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1289296175%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n-b_-b-o-o-l-e-a-n_-o-p-e-r-a-t-o-r.html">JSONB_BOOLEAN_OPERATOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1030320010%2FProperties%2F-128169639" anchor-label="KEY" id="1030320010%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
