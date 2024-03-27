@@ -12,7 +12,7 @@ paging3 = "3.1.1"
 ktlint = "1.2.1"
 agp = "8.3.1"
 compileSdk = "34"
-minSdk = "16"
+minSdk = "21"
 sqlPsi = "0.4.8"
 testContainers = "1.19.7"
 
