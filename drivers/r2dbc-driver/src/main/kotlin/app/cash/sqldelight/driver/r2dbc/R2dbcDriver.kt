@@ -241,6 +241,7 @@ class R2dbcPreparedStatement(val statement: Statement) : SqlPreparedStatement {
     }
   }
 
+  @JvmName("bindTypedObject")
   inline fun <reified T : Any> bindObject(index: Int, any: T?) {
     if (any == null) {
       statement.bindNull(index, T::class.java)

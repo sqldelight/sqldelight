@@ -261,18 +261,6 @@ class JdbcPreparedStatement(
     }
   }
 
-  @Deprecated(
-    "For maximum compatibility with all JDBC drivers, setObject requires the sql type.",
-    replaceWith = ReplaceWith("bindObject(index, obj, Types.OTHER", "java.sql.Types"),
-  )
-  fun bindObjectOther(index: Int, obj: Any?) {
-    if (obj == null) {
-      preparedStatement.setNull(index + 1, Types.OTHER)
-    } else {
-      preparedStatement.setObject(index + 1, obj, Types.OTHER)
-    }
-  }
-
   override fun bindString(index: Int, string: String?) {
     preparedStatement.setString(index + 1, string)
   }
