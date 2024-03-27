@@ -87,7 +87,4 @@ tasks.named("dokkaHtmlMultiModule") {
       "customStyleSheets": ["${file("docs/css/logo-styles.css")}"]
     }
   """])
-
-  // https://github.com/Kotlin/dokka/issues/2954
-  dependsOn(":sqldelight-compiler:dokkaHtmlMultiModule")
 }
