@@ -233,7 +233,7 @@ class R2dbcPreparedStatement(val statement: Statement) : SqlPreparedStatement {
     "use bindObject with generics instead",
     ReplaceWith("bindObject<T>", ""),
   )
-  fun bindObject(index: Int, any: Any?) {
+  fun bindObject(index: Int, any: Any?, ignoredSqlType: Int) {
     if (any == null) {
       statement.bindNull(index, Any::class.java)
     } else {
