@@ -15,7 +15,7 @@ internal abstract class JsonExpressionMixin(node: ASTNode) :
     if (columnType == null || columnType !in arrayOf("JSON", "JSONB")) {
       annotationHolder.createErrorAnnotation(firstChild, "Left side of json expression must be a json column.")
     }
-    if (jsonbBinaryOperator != null && columnType != "JSONB") {
+    if ((jsonbBinaryOperator != null || jsonbBooleanOperator != null) && columnType != "JSONB") {
       annotationHolder.createErrorAnnotation(firstChild, "Left side of jsonb expression must be a jsonb column.")
     }
     super.annotate(annotationHolder)

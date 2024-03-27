@@ -175,6 +175,7 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   pin = 6
 }
 
+
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
 generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
@@ -368,12 +369,13 @@ boolean_not_expression ::= NOT (boolean_literal | {column_name})
 
 boolean_literal ::= TRUE | FALSE
 
-json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
-jsona_binary_operator ::= '->' | '->>' | '#>'
-jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
+jsonb_binary_operator ::= '#-'
+jsonb_boolean_operator ::= '@@' | '@>' | '<@' | '@?' | '??|' | '??&' | '??'
 
 extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
