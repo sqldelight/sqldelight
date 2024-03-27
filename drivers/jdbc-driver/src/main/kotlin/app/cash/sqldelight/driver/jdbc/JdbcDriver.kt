@@ -250,11 +250,7 @@ class JdbcPreparedStatement(
     replaceWith = ReplaceWith("bindObject(index, obj, Types.OTHER", "java.sql.Types"),
   )
   fun bindObject(index: Int, obj: Any?) {
-    if (obj == null) {
-      preparedStatement.setNull(index + 1, Types.OTHER)
-    } else {
-      preparedStatement.setObject(index + 1, obj)
-    }
+    bindObject(index, obj, Types.OTHER)
   }
 
   fun bindObject(index: Int, obj: Any?, type: Int) {

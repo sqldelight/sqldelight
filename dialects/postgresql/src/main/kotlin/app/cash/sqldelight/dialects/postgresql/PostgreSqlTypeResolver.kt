@@ -37,7 +37,9 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.tree.TokenSet
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.asTypeName
 
@@ -285,7 +287,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         object : DialectType {
           override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
           override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
-            CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+            CodeBlock.of("bindObject(%L, %L, %M)\n", columnIndex, value, MemberName(ClassName("java.sql", "Types"), "ARRAY"))
           override fun cursorGetter(columnIndex: Int, cursorName: String) =
             CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
         },
