@@ -308,7 +308,7 @@ class QueriesTypeTest {
       |) : TransacterImpl(driver) {
       |  public fun insertData(data_: Data_) {
       |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
-      |        |INSERT INTO data
+      |        |INSERT INTO data (id, value)
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
       |          bindLong(0, data_.id)

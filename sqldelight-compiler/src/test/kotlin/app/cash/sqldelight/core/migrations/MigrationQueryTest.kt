@@ -21,8 +21,20 @@ class MigrationQueryTest {
     checkFixtureCompiles("alter-table-rename-column", PostgreSqlDialect())
   }
 
+  @Test fun `alter table rename column statements with sqlite`() {
+    checkFixtureCompiles("alter-table-rename-column-sqlite", app.cash.sqldelight.dialects.sqlite_3_25.SqliteDialect())
+  }
+
   @Test fun `alter table alter column statement`() {
     checkFixtureCompiles("alter-table-alter-column", PostgreSqlDialect())
+  }
+
+  @Test fun `alter table add constraint`() {
+    checkFixtureCompiles("alter-table-add-constraint", PostgreSqlDialect())
+  }
+
+  @Test fun `varying query migration packages`() {
+    checkFixtureCompiles("varying-query-migration-packages", PostgreSqlDialect())
   }
 
   private fun checkFixtureCompiles(fixtureRoot: String, dialect: SqlDelightDialect = SqliteDialect()) {
@@ -32,6 +44,9 @@ class MigrationQueryTest {
       generateDb = false,
       deriveSchemaFromMigrations = true,
     )
+
+    if (result.errors.isNotEmpty()) assertWithMessage(result.errors.joinToString("\n")).fail()
+
     for ((expectedFile, actualOutput) in result.compilerOutput) {
       assertWithMessage("No file with name $expectedFile").that(expectedFile.exists()).isTrue()
       assertWithMessage(expectedFile.name).that(actualOutput.toString())

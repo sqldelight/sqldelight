@@ -26,7 +26,6 @@ import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
-import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
@@ -137,7 +136,7 @@ class SqlDelightEnvironment(
     annotate(
       extraAnnotators,
     ) { element, message ->
-      val key = element.sqFile().order ?: Long.MAX_VALUE
+      val key = (element.containingFile as SqlDelightFile).order ?: Long.MAX_VALUE
       errors.putIfAbsent(key, ArrayList())
       errors[key]!!.add(errorMessage(element, message))
     }

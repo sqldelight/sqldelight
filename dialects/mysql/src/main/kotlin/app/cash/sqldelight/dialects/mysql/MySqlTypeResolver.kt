@@ -60,7 +60,10 @@ class MySqlTypeResolver(
         } else {
           encapsulatingType(
             exprList = expr.getExprList(),
-            nullableIfAny = (expr is SqlBinaryAddExpr || expr is SqlBinaryMultExpr || expr is SqlBinaryPipeExpr),
+            nullability = { exprListNullability ->
+              (expr is SqlBinaryAddExpr || expr is SqlBinaryMultExpr || expr is SqlBinaryPipeExpr) &&
+                exprListNullability.any { it }
+            },
             TINY_INT,
             SMALL_INT,
             MySqlType.INTEGER,
@@ -131,7 +134,9 @@ class MySqlTypeResolver(
       INTEGER,
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
-    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
     "max" -> encapsulatingTypePreferringKotlin(
       exprList,
       TINY_INT,

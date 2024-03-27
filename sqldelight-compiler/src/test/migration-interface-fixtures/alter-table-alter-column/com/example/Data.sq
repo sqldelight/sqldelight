@@ -1,2 +1,6 @@
-insertFirst:
-INSERT INTO test (first, second, third, fourth, fifth) VALUES (?, ?, ?, ?, ?);
+select:
+SELECT *
+FROM test3;
+
+insert:
+INSERT INTO test3 VALUES ? RETURNING *;

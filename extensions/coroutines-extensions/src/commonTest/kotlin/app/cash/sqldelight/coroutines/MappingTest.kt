@@ -145,8 +145,8 @@ class MappingTest : DbTest {
       .test {
         assertEquals(
           listOf(
-            Employee("alice", "Alice Allison"), //
-            Employee("bob", "Bob Bobberson"), //
+            Employee("alice", "Alice Allison"),
+            Employee("bob", "Bob Bobberson"),
             Employee("eve", "Eve Evenson"),
           ),
           awaitItem(),

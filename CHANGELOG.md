@@ -1,5 +1,54 @@
 # Change Log
 
+## [2.0.1] - 2023-12-01
+
+### Added
+- [Compiler] Add support multi-column-expr when doing a SELECT (#4453 by [Adriel Martinez][Adriel-M])
+- [PostgreSQL Dialect] Add support for PostgreSQL CREATE INDEX CONCURRENTLY (#4531 by [Griffio][griffio])
+- [PostgreSQL Dialect] Allow PostgreSQL CTEs auxiliary statements to reference each other (#4493 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for PostgreSQL types for binary expr and sum (#4539 by [Adriel Martinez][Adriel-M])
+- [PostgreSQL Dialect] Add support for PostgreSQL SELECT DISTINCT ON syntax (#4584 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for PostgreSQL JSON functions in SELECT statements (#4590 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add generate_series PostgreSQL function (#4717 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add additional Postgres String function definitions (#4752 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add DATE PostgreSQL type to min and max aggregate functions (#4816 by [André Danielsson][anddani])
+- [PostgreSQL Dialect] Add PostgreSql temporal types to SqlBinaryExpr (#4657 by [Griifio][griffio])
+- [PostgreSQL Dialect] Add TRUNCATE to postgres dialect (#4817 by [Bastien de Luca][de-luca])
+- [SQLite 3.35 Dialect] Allow multiple ON CONFLICT clauses that are evaluated in order (#4551 by [Griffio][griffio])
+- [JDBC Driver] Add Language annotations for more pleasant SQL editing (#4602 by [Marius Volkhart][MariusV])
+- [Native Driver] Native-driver: add support for linuxArm64 (#4792 by [Philip Wedemann][hfhbd])
+- [Android Driver] Add a windowSizeBytes parameter to AndroidSqliteDriver (#4804 by [Benoit Lubek][BoD])
+- [Paging3 Extension] feat: add initialOffset for OffsetQueryPagingSource (#4802 by [Mohamad Jaara][MohamadJaara])
+
+### Changed
+- [Compiler] Prefer Kotlin types where appropriate (#4517 by [Eliezer Graber][eygraber])
+- [Compiler] When doing a value type insert always include the column names (#4864)
+- [PostgreSQL Dialect] Remove experimental status from PostgreSQL dialect (#4443 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] Update docs for PostgreSQL types (#4569 by [Marius Volkhart][MariusV])
+- [R2DBC Driver] Optimize performance when handling integer data types in PostgreSQL (#4588 by [Marius Volkhart][MariusV])
+
+### Removed
+- [SQLite Javascript Driver] Remove sqljs-driver (#4613, #4670 by [Derek Ellis][dellisd])
+
+### Fixed
+- [Compiler] Fix compilation of grouped statements with returns and no parameters (#4699 by [Griffio][griffio])
+- [Compiler] Bind arguments with SqlBinaryExpr (#4604 by [Griffio][griffio])
+- [IDE Plugin] Use IDEA Project JDK if set (#4689 by [Griffio][griffio])
+- [IDE Plugin] Fix "Unknown element type: TYPE_NAME" error in IDEA 2023.2 and greater (#4727)
+- [IDE Plugin] Fixed some compatibility issues with 2023.2
+- [Gradle Plugin] Correct documentation of verifyMigrationTask Gradle task (#4713 by [Josh Friend][joshfriend])
+- [Gradle Plugin] Add Gradle task output message to help users generate a database before verifying a database (#4684 by [Jingwei][jingwei99])
+- [PostgreSQL Dialect] Fix the renaming of PostgreSQL columns multiple times (#4566 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4714 postgresql alter column nullability (#4831 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4837 alter table alter column (#4846 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4501 PostgreSql sequence (#4528 by [Griffio][griffio])
+- [SQLite Dialect] Allow JSON binary operator to be used on a column expression (#4776 by [Eliezer Graber][eygraber])
+- [SQLite Dialect] Update From false positive for multiple columns found with name (#4777 by [Eliezer Graber][eygraber])
+- [Native Driver] Support named in-memory databases (#4662 by [Matthew Nelson][05nelsonm])
+- [Native Driver] Ensure thread safety for query listener collection (#4567 by [Kevin Galligan][kpgalligan])
+- [JDBC Driver] Fix a connection leak in the ConnectionManager (#4589 by [Marius Volkhart][MariusV])
+- [JDBC Driver] Fix JdbcSqliteDriver url parsing when choosing ConnectionManager type (#4656 by [Matthew Nelson][05nelsonm])
+
 ## [2.0.0] - 2023-07-26
 
 ### Added
@@ -986,3 +1035,10 @@ Initial release.
   [joshfriend]: https://github.com/joshfriend
   [daio]: https://github.com/daio
   [morki]: https://github.com/morki
+  [Adriel-M]: https://github.com/Adriel-M
+  [05nelsonm]: https://github.com/05nelsonm
+  [jingwei99]: https://github.com/jingwei99
+  [anddani]: https://github.com/anddani
+  [BoD]: https://github.com/BoD
+  [de-luca]: https://github.com/de-luca
+  [MohamadJaara]: https://github.com/MohamadJaara

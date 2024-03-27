@@ -258,8 +258,10 @@ class Timber private constructor() {
      * instance rather than using static methods or to facilitate testing.
      */
     @Suppress(
-      "NOTHING_TO_INLINE", // Kotlin users should reference `Tree.Forest` directly.
-      "NON_FINAL_MEMBER_IN_OBJECT", // For japicmp check.
+      // Kotlin users should reference `Tree.Forest` directly.
+      "NOTHING_TO_INLINE",
+      // For japicmp check.
+      "NON_FINAL_MEMBER_IN_OBJECT",
     )
     @JvmStatic
     open inline fun asTree(): Tree = this

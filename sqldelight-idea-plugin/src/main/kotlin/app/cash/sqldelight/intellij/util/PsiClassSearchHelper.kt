@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiClass
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PsiShortNamesCache
+import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.Icon
 import org.jetbrains.kotlin.idea.stubindex.KotlinClassShortNameIndex
@@ -14,7 +15,8 @@ import org.jetbrains.kotlin.psi.KtClassOrObject
 internal object PsiClassSearchHelper {
 
   fun getClassesByShortName(shortName: String, project: Project, scope: GlobalSearchScope): List<ImportableType> {
-    val kotlinClasses = KotlinClassShortNameIndex.get(shortName, project, scope)
+    val indexKey = KotlinClassShortNameIndex::class.compatibleKey()
+    val kotlinClasses = StubIndex.getElements(indexKey, shortName, project, scope, KtClassOrObject::class.java)
       .map(::KotlinType)
       .sortedBy { it.qualifiedName }
 

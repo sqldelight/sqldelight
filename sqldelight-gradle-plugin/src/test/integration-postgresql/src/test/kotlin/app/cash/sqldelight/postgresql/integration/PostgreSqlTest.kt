@@ -273,6 +273,96 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testStringAgg() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsStringAggName().executeAsList().let {
+      assertThat(it).containsExactly(
+        SelectDogsStringAggName("Broholmer", "Mads"),
+        SelectDogsStringAggName("Pomeranian", "Tilda,Bruno"),
+      )
+    }
+  }
+
+  @Test fun testStringAggOrderBy() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsStringAggNameOrderBy().executeAsList().let {
+      assertThat(it).containsExactly(
+        SelectDogsStringAggNameOrderBy("Broholmer", "Mads"),
+        SelectDogsStringAggNameOrderBy("Pomeranian", "Bruno,Tilda"),
+      )
+    }
+  }
+
+  @Test fun testArrayAgg() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggName().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggName("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggName("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
+  @Test fun testCoalesceArrayAgg() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsCoalesceArrayAggName().executeAsList().zip(
+      listOf(
+        SelectDogsCoalesceArrayAggName("Broholmer", arrayOf("Mads")),
+        SelectDogsCoalesceArrayAggName("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.coalesce).isEqualTo(dog.second.coalesce) // isEqualTo works with Array equality
+    }
+  }
+
+  @Test fun testArrayAggOrderBy() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggNameOrderBy().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggNameOrderBy("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggNameOrderBy("Pomeranian", arrayOf("Bruno", "Tilda")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
+  @Test fun testArrayAggOrderByWhereFilter() {
+    database.dogQueries.insertDog("Tilda", "Pomeranian")
+    database.dogQueries.insertDog("Bruno", "Pomeranian")
+    database.dogQueries.insertDog("Mads", "Broholmer")
+
+    database.dogQueries.selectDogsArrayAggNameOrderByWhereFilter().executeAsList().zip(
+      listOf(
+        SelectDogsArrayAggNameOrderByWhereFilter("Broholmer", arrayOf("Mads")),
+        SelectDogsArrayAggNameOrderByWhereFilter("Pomeranian", arrayOf("Tilda", "Bruno")),
+      ),
+    ).forEach { dog ->
+      assertThat(dog.first.breed).isEqualTo(dog.second.breed)
+      assertThat(dog.first.expr).isEqualTo(dog.second.expr) // isEqualTo works with Array equality
+    }
+  }
+
   @Test fun testSerial() {
     database.run {
       oneEntityQueries.transaction {
@@ -582,5 +672,89 @@ class PostgreSqlTest {
     database.binaryArgumentsQueries.insertData(10, 5, created, updated)
     val result = database.binaryArgumentsQueries.selectDataBinaryIntervalComparison2(created).executeAsList()
     assertThat(result.first().datum).isEqualTo(10)
+  }
+
+  @Test
+  fun testInsertJson() {
+    database.jsonQueries.insert("another key", "another value")
+    with(database.jsonQueries.select().executeAsList()) {
+      assertThat(first().data_).isEqualTo("""{"another key" : "another value"}""")
+      assertThat(first().datab).isEqualTo("""{"key": "value"}""")
+    }
+  }
+
+  @Test
+  fun testInsertJsonLiteral() {
+    database.jsonQueries.insertLiteral("""{"key a" : "value a"}""", """{"key b" : "value b"}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.select().executeAsList()) {
+      assertThat(first().data_).isEqualTo("""{"key a" : "value a"}""")
+      assertThat(first().datab).isEqualTo("""{"key b": "value b"}""")
+    }
+  }
+
+  @Test
+  fun testJsonObjectOperators() {
+    database.jsonQueries.insertLiteral("""{"a" : 11,"aa":[1,2,3]}""", """{"b" : 12,"bb":[1,2,3]}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonObjectOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo("11")
+      assertThat(first().expr_).isEqualTo("12")
+      assertThat(first().expr__).isEqualTo("[1,2,3]")
+      assertThat(first().expr___).isEqualTo("[1, 2, 3]")
+      assertThat(first().expr____).isEqualTo("""{"bb": [1, 2, 3]}""")
+    }
+  }
+
+  @Test
+  fun testJsonArrayIndexOperators() {
+    database.jsonQueries.insertLiteral("""[1,2,3]""", """[1,2,3]""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonArrayIndexOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo("1")
+      assertThat(first().expr_).isEqualTo("2")
+      assertThat(first().expr__).isEqualTo("3")
+      assertThat(first().expr___).isEqualTo("[1, 3]")
+    }
+  }
+
+  @Test
+  fun testJsonBooleanOperators() {
+    database.jsonQueries.insertLiteral("""{}""", """{"a":1, "b":2}""", """{"b":2}""", arrayOf("a", "b"))
+    with(database.jsonQueries.selectJsonBooleanOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo(true)
+      assertThat(first().expr_).isEqualTo(true)
+      assertThat(first().expr__).isEqualTo(true)
+      assertThat(first().expr___).isEqualTo(true)
+      assertThat(first().expr____).isEqualTo(true)
+      assertThat(first().expr_____).isEqualTo(true)
+    }
+  }
+
+  @Test
+  fun testJsonConcatOperators() {
+    database.jsonQueries.insertLiteral("""{}""", """{"a":1}""", """{"b":2}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonConcatOperators().executeAsList()) {
+      assertThat(first().expr).isEqualTo("""{"a": 1, "b": 2}""")
+    }
+  }
+
+  @Test
+  fun testJsonbPretty() {
+    database.jsonQueries.insertLiteral("""{}""", """{"a":1,"b":2}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonPretty().executeAsList()) {
+      assertThat(first()).isEqualTo(
+        """{
+      |    "a": 1,
+      |    "b": 2
+      |}
+        """.trimMargin(),
+      )
+    }
+  }
+
+  @Test
+  fun testJsonbSet() {
+    database.jsonQueries.insertLiteral("""{}""", """[{"a":1},{"b":2}]""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.setJsonb("""{0, "a"}""", """123""").executeAsList()) {
+      assertThat(first()).isEqualTo("""[{"a": 123}, {"b": 2}]""")
+    }
   }
 }

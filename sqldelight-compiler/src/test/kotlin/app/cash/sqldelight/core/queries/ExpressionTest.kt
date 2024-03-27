@@ -392,7 +392,8 @@ class ExpressionTest {
       |someSelect:
       |SELECT coalesce(foo, bar),
       |       coalesce(bar, bar),
-      |       coalesce(foo, bar)
+      |       coalesce(foo, bar),
+      |       coalesce(bar, foo)
       |FROM test;
       """.trimMargin(),
       tempFolder,
@@ -403,6 +404,7 @@ class ExpressionTest {
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
       ClassName("com.example", "Foo"),
       ClassName("com.example", "Foo").copy(nullable = true),
+      ClassName("com.example", "Foo"),
       ClassName("com.example", "Foo"),
     ).inOrder()
   }
@@ -430,7 +432,9 @@ class ExpressionTest {
       |       coalesce(foo, foo2),
       |       coalesce(foo, baz),
       |       coalesce(bar, baz),
-      |       coalesce(foo, bar, baz)
+      |       coalesce(bar, foo),
+      |       coalesce(foo, bar, baz),
+      |       coalesce(baz, bar, foo)
       |FROM test;
       """.trimMargin(),
       tempFolder,
@@ -448,6 +452,8 @@ class ExpressionTest {
       DOUBLE,
       STRING,
       STRING.copy(nullable = true),
+      integerKotlinType,
+      STRING,
       STRING,
     ).inOrder()
   }

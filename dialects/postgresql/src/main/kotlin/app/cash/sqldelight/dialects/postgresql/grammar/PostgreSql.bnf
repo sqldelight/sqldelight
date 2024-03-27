@@ -16,6 +16,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
@@ -45,6 +46,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
@@ -121,6 +123,7 @@ default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
   current_timestamp_with_optional_interval |
   {signed_number} |
   {literal_value} |
+  {function_expr} |
   LP <<expr '-1'>> RP
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlDefaultConstraintImpl"
@@ -172,7 +175,8 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   pin = 6
 }
 
-identity_clause ::= 'IDENTITY'
+
+identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
 generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlGeneratedClauseImpl"
@@ -312,19 +316,22 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
   pin = 1
 }
 
-alter_table_add_constraint ::= ADD table_constraint
+alter_table_add_constraint ::= ADD table_constraint {
+    mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddConstraintMixin"
+}
 
 type_clause ::= 'TYPE'
 
 data_clause ::= 'DATA'
 
 column_not_null_clause ::= (SET | DROP) NOT NULL
+column_default_clause ::= SET {default_constraint} | DROP DEFAULT
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 ( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
 | column_not_null_clause
-| SET DEFAULT <<expr '-1'>> | DROP DEFAULT | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
-| SET GENERATED (ALWAYS | BY DEFAULT )
+| column_default_clause | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
+| ( SET GENERATED (ALWAYS | BY DEFAULT)  |  SET sequence_parameters | 'RESTART' [ WITH {signed_number} ] ) *
 ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAlterColumnMixin"
   pin = 1
@@ -348,7 +355,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= json_expression | boolean_literal | boolean_not_expression | window_function_expr {
+extension_expr ::= array_agg_stmt| string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -362,18 +369,29 @@ boolean_not_expression ::= NOT (boolean_literal | {column_name})
 
 boolean_literal ::= TRUE | FALSE
 
-json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
-jsona_binary_operator ::= '->' | '->>' | '#>'
-jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
+jsonb_binary_operator ::= '#-'
+jsonb_boolean_operator ::= '@@' | '@>' | '<@' | '@?' | '??|' | '??&' | '??'
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stm {
+extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
 }
+
+extension_name ::= id | string
+
+extension_version ::= id | string
+
+create_extension_stmt ::= CREATE 'EXTENSION' [ IF NOT EXISTS ] extension_name [ WITH ] [ 'SCHEMA' id ] [ 'VERSION' extension_version ] [ CASCADE ]
+
+drop_extension_stmt ::= DROP 'EXTENSION' [ IF EXISTS ] extension_name [ ( COMMA extension_name ) * ] [ CASCADE | 'RESTRICT' ]
+
+alter_extension_stmt ::= ALTER 'EXTENSION' [ IF EXISTS ] extension_name ( UPDATE [ TO extension_version ] | SET 'SCHEMA' id )
 
 copy_stdin ::= 'COPY' [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] FROM 'STDIN' [ [ WITH ] LP copy_option ( COMMA copy_option) * RP ] [ WHERE <<expr '-1'>> ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
@@ -386,12 +404,26 @@ sequence_data_type ::= ( small_int_data_type
                          | big_int_data_type )
 
 create_sequence_stmt ::= CREATE [ (TEMPORARY | TEMP) | 'UNLOGGED' ] 'SEQUENCE' [ IF NOT EXISTS ] sequence_name
-    [ AS sequence_data_type ]
-    [ 'INCREMENT' [ BY ] {signed_number} ]
-    [ 'MINVALUE' {signed_number} | NO 'MINVALUE' ] [ 'MAXVALUE' {signed_number} | NO 'MAXVALUE' ]
-    [ 'START' [ WITH ] {signed_number} ] [ 'CACHE' {signed_number} ] [ [ NO ] 'CYCLE' ]
-    [ 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' ] {
+     [ AS sequence_data_type ] (sequence_parameters) *   {
  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateSequenceMixin"
+}
+
+alter_sequence_stmt ::= ALTER 'SEQUENCE' [ IF EXISTS ] sequence_name
+     ( 'OWNER' TO ( id | 'CURRENT_USER' | 'SESSION_USER' )
+     | RENAME TO sequence_name
+     | SET 'SCHEMA' id
+     | ( [ AS sequence_data_type ] (sequence_parameters) * ) )
+     {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterSequenceMixin"
+}
+
+drop_sequence_stmt ::= DROP 'SEQUENCE' [ IF EXISTS ] sequence_name ( COMMA sequence_name ) * [ 'CASCADE' | 'RESTRICT' ]
+
+sequence_parameters ::= 'INCREMENT' [ BY ] {signed_number}
+ | 'MINVALUE' {signed_number} | NO 'MINVALUE' | 'MAXVALUE' {signed_number} | NO 'MAXVALUE'
+ | 'START' [ WITH ] {signed_number} | 'CACHE' {signed_number} | [ NO ] 'CYCLE'
+ | 'OWNED' BY ( {table_name} DOT {column_name} ) | 'NONE' {
+  pin=2
 }
 
 copy_option ::= copy_option_format | copy_option_freeze | copy_option_delimiter | copy_option_null | copy_option_header | copy_option_quote | copy_option_escape | copy_option_force_not_null | copy_option_force_null | copy_option_encoding
@@ -406,9 +438,31 @@ copy_option_force_not_null ::= 'FORCE_NOT_NULL' LP {column_name} ( COMMA {column
 copy_option_force_null ::= 'FORCE_NULL' LP {column_name} ( COMMA {column_name}) * RP
 copy_option_encoding ::= 'ENCODING' string_literal
 
-truncate_stm ::= 'TRUNCATE' [ 'TABLE' ] ( truncate_only | truncate_descendant ) [ truncate_option * ]
+truncate_stmt ::= 'TRUNCATE' [ 'TABLE' ] ( truncate_only | truncate_descendant ) [ truncate_option * ]
 truncate_only ::= 'ONLY' {table_name} ( COMMA {table_name} ) *
 truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
 truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
+
+string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+}
+
+array_agg_stmt ::= 'array_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin"
+}
+
+set_stmt ::= 'SET' [ ('SESSION' | 'LOCAL') ] ( set_config | set_timezone | set_schema | set_names | set_seed )
+set_value ::= literal_value | {identifier} | DEFAULT
+set_config ::= {identifier} ( TO | EQ ) set_value
+set_schema ::= 'SCHEMA' string_literal
+set_names ::= 'NAMES' set_value
+set_seed ::= 'SEED' TO ( set_value | [PLUS | MINUS]{numeric_literal} )
+set_timezone ::= 'TIME' 'ZONE'
+( [PLUS | MINUS]{numeric_literal}
+| interval_expression ['HOUR' TO 'MINUTE']
+| 'LOCAL'
+| set_value
+)
