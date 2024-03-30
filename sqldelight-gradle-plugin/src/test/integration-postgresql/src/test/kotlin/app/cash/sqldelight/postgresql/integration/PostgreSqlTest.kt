@@ -757,4 +757,29 @@ class PostgreSqlTest {
       assertThat(first()).isEqualTo("""[{"a": 123}, {"b": 2}]""")
     }
   }
+
+  @Test
+  fun testSelectJsonbPath() {
+    database.jsonQueries.insertLiteral("""{}""", """[{"a":1},{"b":2}]""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbPath("""[{"a":1}]""").executeAsList()) {
+      assertThat(first().datab).isEqualTo("""[{"a": 1}, {"b": 2}]""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonPathEquality() {
+    database.jsonQueries.insertLiteral("""{"a": 1}""", """{"b":2}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonPathEquals("1", "2").executeAsList()) {
+      assertThat(first().data_).isEqualTo("""{"a": 1}""")
+      assertThat(first().datab).isEqualTo("""{"b": 2}""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonbContains() {
+    database.jsonQueries.insertLiteral("""{}""", """{"b":2}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbContains("b").executeAsList()) {
+      assertThat(first().datab).isEqualTo("""{"b": 2}""")
+    }
+  }
 }

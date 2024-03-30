@@ -41,3 +41,18 @@ FROM TestJson;
 selectJsonPretty:
 SELECT jsonb_pretty(datab)
 FROM TestJson;
+
+selectJsonbPath:
+SELECT *
+FROM TestJson
+WHERE datab @> ?;
+
+selectJsonPathEquals:
+SELECT *
+FROM TestJson
+WHERE data ->> 'a' = ? AND datab ->> 'b' = ?;
+
+selectJsonbContains:
+SELECT *
+FROM TestJson
+WHERE datab ?? ?;
