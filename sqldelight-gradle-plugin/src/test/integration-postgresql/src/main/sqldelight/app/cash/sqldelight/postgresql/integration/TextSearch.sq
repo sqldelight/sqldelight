@@ -1,0 +1,7 @@
+CREATE TABLE search(
+  content TSVECTOR NOT NULL
+);
+
+select:
+SELECT content @@ 'something'
+FROM search;
