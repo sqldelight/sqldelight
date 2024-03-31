@@ -2,6 +2,23 @@ CREATE TABLE search(
   content TSVECTOR NOT NULL
 );
 
-select:
-SELECT content @@ 'something'
+insertLiteral:
+INSERT INTO search (content) VALUES (?);
+
+contains:
+SELECT content @@ ?
+FROM search;
+
+search:
+SELECT *
+FROM search WHERE content @@ ?;
+
+tsQuery:
+SELECT to_tsquery(?);
+
+tsVector:
+SELECT to_tsvector(?);
+
+concat:
+SELECT content || to_tsvector(?)
 FROM search;
