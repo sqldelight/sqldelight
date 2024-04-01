@@ -820,4 +820,12 @@ class PostgreSqlTest {
       assertThat(first()).isEqualTo("'fall':1 'in' 'main':2 'plain':5 'rain' 'spain' 'the'")
     }
   }
+
+  @Test
+  fun testContactTsVectorRank() {
+    database.textSearchQueries.insertLiteral("the rain in spain")
+    with(database.textSearchQueries.rank("rain | plain").executeAsList()) {
+      assertThat(first()).isEqualTo("0.030396355")
+    }
+  }
 }

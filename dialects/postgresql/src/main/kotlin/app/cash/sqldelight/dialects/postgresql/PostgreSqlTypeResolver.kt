@@ -181,6 +181,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
     "to_tsquery" -> IntermediateType(TEXT)
     "to_tsvector" -> IntermediateType(PostgreSqlType.TSVECTOR)
+    "ts_rank" -> encapsulatingType(exprList, REAL, TEXT)
     else -> null
   }
 

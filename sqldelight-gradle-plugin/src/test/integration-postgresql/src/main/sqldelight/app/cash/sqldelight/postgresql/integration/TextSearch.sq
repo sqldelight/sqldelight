@@ -22,3 +22,7 @@ SELECT to_tsvector(?);
 concat:
 SELECT content || to_tsvector(?)
 FROM search;
+
+rank:
+SELECT ts_rank(content, ?)
+FROM search;
