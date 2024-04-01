@@ -182,6 +182,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "to_tsquery" -> IntermediateType(TEXT)
     "to_tsvector" -> IntermediateType(PostgreSqlType.TSVECTOR)
     "ts_rank" -> encapsulatingType(exprList, REAL, TEXT)
+    "websearch_to_tsquery" -> IntermediateType(TEXT)
     else -> null
   }
 
