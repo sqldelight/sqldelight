@@ -63,6 +63,7 @@ public final class app/cash/sqldelight/driver/jdbc/JdbcPreparedStatement : app/c
 	public final fun bindInt (ILjava/lang/Integer;)V
 	public fun bindLong (ILjava/lang/Long;)V
 	public final fun bindObject (ILjava/lang/Object;)V
+	public final fun bindObjectOther (ILjava/lang/Object;)V
 	public final fun bindShort (ILjava/lang/Short;)V
 	public fun bindString (ILjava/lang/String;)V
 	public final fun execute ()J
