@@ -28,10 +28,10 @@ abstract class BaseConcurrencyTest {
     ).value
   }
 
-  private var _driver: SqlDriver? = null
+  private var backingDriver: SqlDriver? = null
   private var dbName: String? = null
   internal val driver: SqlDriver
-    get() = _driver!!
+    get() = backingDriver!!
 
   internal inner class ConcurrentContext {
     private val myWorkers = arrayListOf<Worker>()
@@ -161,12 +161,12 @@ abstract class BaseConcurrencyTest {
   }
 
   fun initDriver(dbType: DbType) {
-    _driver = createDriver(dbType)
+    backingDriver = createDriver(dbType)
   }
 
   @AfterTest
   fun tearDown() {
-    _driver?.close()
+    backingDriver?.close()
     dbName?.let { DatabaseFileContext.deleteDatabase(it) }
   }
 

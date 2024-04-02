@@ -17,6 +17,7 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.DATE
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
@@ -65,24 +66,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
           }
         }
-        jsonDataType != null -> TEXT
+        jsonDataType != null -> PostgreSqlType.JSON
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )
     if (node.getChildren(null).map { it.text }.takeLast(2) == listOf("[", "]")) {
-      return IntermediateType(
-        object : DialectType {
-          override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
-
-          override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
-            CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
-
-          override fun cursorGetter(columnIndex: Int, cursorName: String) =
-            CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
-        },
-      )
+      return arrayIntermediateType(type)
     }
     return type
   }
@@ -119,7 +110,16 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "starts_with" -> IntermediateType(BOOLEAN)
-    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> {
+      val exprType = exprList.first().postgreSqlType()
+      if (isArrayType(exprType)) {
+        exprType
+      } else {
+        encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+          exprListNullability.all { it }
+        })
+      }
+    }
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "sum" -> {
@@ -154,7 +154,6 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "to_json", "to_jsonb",
     "array_to_json", "row_to_json",
     "json_build_array", "jsonb_build_array",
-    "json_build_object", "jsonb_build_object",
     "json_object", "jsonb_object",
     "json_extract_path", "jsonb_extract_path",
     "json_extract_path_text", "jsonb_extract_path_text",
@@ -164,11 +163,21 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "jsonb_pretty",
     "json_typeof", "jsonb_typeof",
     "json_agg", "jsonb_agg", "json_object_agg", "jsonb_object_agg",
+    -> IntermediateType(PostgreSqlType.JSON)
+    "json_build_object", "jsonb_build_object",
     -> IntermediateType(TEXT)
+    "array_agg" -> {
+      val typeForAgg = encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+      arrayIntermediateType(typeForAgg)
+    }
+    "string_agg" -> IntermediateType(TEXT)
     "json_array_length", "jsonb_array_length" -> IntermediateType(INTEGER)
     "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
     "currval", "lastval", "nextval", "setval" -> IntermediateType(BIG_INT)
     "generate_series" -> encapsulatingType(exprList, INTEGER, BIG_INT, REAL, TIMESTAMP_TIMEZONE, TIMESTAMP)
+    "regexp_count", "regexp_instr" -> IntermediateType(INTEGER)
+    "regexp_like" -> IntermediateType(BOOLEAN)
+    "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
     else -> null
   }
 
@@ -216,7 +225,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       } else {
         encapsulatingType(
           exprList = getExprList(),
-          nullableIfAny = this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr,
+          nullability = { exprListNullability ->
+            (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
+              exprListNullability.any { it }
+          },
           SMALL_INT,
           PostgreSqlType.INTEGER,
           INTEGER,
@@ -227,6 +239,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           PostgreSqlType.INTERVAL,
           PostgreSqlType.TIMESTAMP_TIMEZONE,
           PostgreSqlType.TIMESTAMP,
+          PostgreSqlType.JSON,
         )
       }
     }
@@ -238,9 +251,23 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       else -> parentResolver.resolvedType(this)
     }
     is PostgreSqlExtensionExpr -> when {
+      arrayAggStmt != null -> {
+        val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
+        arrayIntermediateType(typeForArray)
+      }
+      stringAggStmt != null -> {
+        IntermediateType(TEXT)
+      }
       windowFunctionExpr != null -> {
         val windowFunctionExpr = windowFunctionExpr as WindowFunctionMixin
         functionType(windowFunctionExpr.functionExpr)!!
+      }
+      jsonExpression != null -> {
+        if (jsonExpression!!.jsonbBooleanOperator != null) {
+          IntermediateType(BOOLEAN)
+        } else {
+          IntermediateType(PostgreSqlType.JSON)
+        }
       }
       else -> parentResolver.resolvedType(this)
     }
@@ -261,5 +288,21 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       SqlTypes.LT,
       SqlTypes.LTE,
     )
+
+    private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
+      return IntermediateType(
+        object : DialectType {
+          override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
+          override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
+            CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+          override fun cursorGetter(columnIndex: Int, cursorName: String) =
+            CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
+        },
+      )
+    }
+
+    private fun isArrayType(type: IntermediateType): Boolean {
+      return type.javaType.toString().startsWith("kotlin.Array")
+    }
   }
 }

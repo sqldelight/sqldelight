@@ -39,12 +39,11 @@ tasks.named('runIde') {
 }
 
 tasks.named('runPluginVerifier') {
-  ideVersions = [
-      "IC-2022.2.4", // AS: Flamingo | 2022.2.1
-      "IC-2022.3.1", // IC
-      "IC-2023.1",   // IC
-      "IC-2023.2",   // IC
-  ]
+  // See: the verify_intellij job in .github/workflows/PR.yml
+  def version = providers.systemProperty("ideaVersion").getOrElse(null)
+  if (version != null) {
+    ideVersions = [version]
+  }
 
   def customFailureLevel = FailureLevel.ALL
   customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
@@ -83,15 +82,17 @@ dependencies {
   implementation projects.sqldelightCompiler
 
   implementation libs.sqliteJdbc
-  implementation(libs.bugsnag) {
-    exclude group: "org.slf4j"
-  }
+  implementation libs.bugsnag
   implementation libs.picnic
   implementation libs.moshi
 
   testImplementation libs.truth
   testImplementation libs.intellij.android
   testImplementation projects.dialects.sqlite318
+}
+
+configurations.named("implementation") {
+  exclude group: "org.slf4j"
 }
 
 def bugsnagKey = tasks.register('bugsnagKey', BugsnagKey)

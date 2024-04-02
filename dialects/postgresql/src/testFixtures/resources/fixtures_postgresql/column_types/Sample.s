@@ -70,7 +70,11 @@ CREATE TABLE all_types(
 
   some_interval_d TIMESTAMP NOT NULL DEFAULT NOW() - INTERVAL '5 days',
 
-  some_interval_e INTERVAL DEFAULT INTERVAL '3h' + INTERVAL '20m'
+  some_interval_e INTERVAL DEFAULT INTERVAL '3h' + INTERVAL '20m',
+
+  some_default_uuid UUID DEFAULT gen_random_uuid(),
+
+  some_default_sequence INTEGER DEFAULT nextval('some_seq')
 
 );
 

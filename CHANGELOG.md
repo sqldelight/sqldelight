@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.0.1] - 2023-01-01
+## [2.0.1] - 2023-12-01
 
 ### Added
 - [Compiler] Add support multi-column-expr when doing a SELECT (#4453 by [Adriel Martinez][Adriel-M])

@@ -1,13 +1,58 @@
-CREATE TABLE myJson(
+CREATE TABLE TestJson(
   data JSON NOT NULL,
-  datab JSONB NOT NULL
+  datab JSONB NOT NULL,
+  datac JSONB,
+  datad TEXT[]
 );
 
 insert:
-INSERT INTO myJson(data, datab) VALUES(
+INSERT INTO TestJson(data, datab) VALUES(
   json_build_object(:key, :value),
   jsonb_build_object('key', 'value')
 );
 
-buildJson:
-SELECT json_build_object('key', 'value'), jsonb_build_object('key', 'value');
+setJsonb:
+UPDATE TestJson
+SET datab = jsonb_set(datab, :path, :newValue) RETURNING datab;
+
+insertLiteral:
+INSERT INTO TestJson(data, datab, datac, datad) VALUES (?, ?, ?, ?);
+
+select:
+SELECT *
+FROM TestJson;
+
+selectJsonObjectOperators:
+SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab - 'b'
+FROM TestJson;
+
+selectJsonArrayIndexOperators:
+SELECT data -> 0, data ->> 1, data ->> 2, datab - 1
+FROM TestJson;
+
+selectJsonBooleanOperators:
+SELECT datab @> datac, datac <@ datab, datab ?? 'b', datab ??| datad, datab ??& datad, datab @@ '$.b[*] > 0'
+FROM TestJson;
+
+selectJsonConcatOperators:
+SELECT datab || datac
+FROM TestJson;
+
+selectJsonPretty:
+SELECT jsonb_pretty(datab)
+FROM TestJson;
+
+selectJsonbPath:
+SELECT *
+FROM TestJson
+WHERE datab @> ?;
+
+selectJsonPathEquals:
+SELECT *
+FROM TestJson
+WHERE data ->> 'a' = ? AND datab ->> 'b' = ?;
+
+selectJsonbContains:
+SELECT *
+FROM TestJson
+WHERE datab ?? ?;
