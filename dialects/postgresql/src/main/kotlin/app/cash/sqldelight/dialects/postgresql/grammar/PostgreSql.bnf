@@ -168,12 +168,16 @@ table_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
-create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name} LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
+gin_operator_class_stmt ::= 'array_ops' | 'jsonb_ops' | 'jsonb_path_ops' | 'tsvector_ops'
+
+create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
+ ( USING 'GIN' LP {indexed_column} [ gin_operator_class_stmt ] ( COMMA {indexed_column} [ gin_operator_class_stmt ] ) * RP | LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true
   pin = 6
 }
+
 
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
@@ -368,12 +372,13 @@ boolean_not_expression ::= NOT (boolean_literal | {column_name})
 
 boolean_literal ::= TRUE | FALSE
 
-json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
-jsona_binary_operator ::= '->' | '->>' | '#>'
-jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
+jsonb_binary_operator ::= '#-'
+jsonb_boolean_operator ::= '@@' | '@>' | '<@' | '@?' | '??|' | '??&' | '??'
 
 extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
