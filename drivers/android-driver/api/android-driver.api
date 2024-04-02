@@ -1,16 +1,17 @@
 public final class app/cash/sqldelight/driver/android/AndroidSqliteDriver : app/cash/sqldelight/db/SqlDriver {
 	public fun <init> (Landroidx/sqlite/db/SupportSQLiteDatabase;)V
 	public fun <init> (Landroidx/sqlite/db/SupportSQLiteDatabase;I)V
-	public synthetic fun <init> (Landroidx/sqlite/db/SupportSQLiteDatabase;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Landroidx/sqlite/db/SupportSQLiteDatabase;ILjava/lang/Long;)V
+	public synthetic fun <init> (Landroidx/sqlite/db/SupportSQLiteDatabase;ILjava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Landroidx/sqlite/db/SupportSQLiteOpenHelper;)V
-	public synthetic fun <init> (Landroidx/sqlite/db/SupportSQLiteOpenHelper;Landroidx/sqlite/db/SupportSQLiteDatabase;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;)V
 	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;)V
 	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;)V
 	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;)V
 	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;I)V
 	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;IZ)V
-	public synthetic fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;IZLjava/lang/Long;)V
+	public synthetic fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;IZLjava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 	public fun close ()V
 	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
