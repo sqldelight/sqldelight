@@ -173,12 +173,26 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       ),
     )
   } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
-    listOf(
-      Pair(
-        first = childOfType(SqlTypes.BIND_EXPR)!!.range,
-        second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" },
-      ),
-    )
+    buildList {
+      if (parent!!.columnNameList.isEmpty()) {
+        add(
+          Pair(
+            first = parent!!.tableName.range,
+            second = parent!!.columns.joinToString(
+              separator = ", ",
+              prefix = "${parent!!.tableName.text} (",
+              postfix = ")",
+            ) { it.name },
+          ),
+        )
+      }
+      add(
+        Pair(
+          first = childOfType(SqlTypes.BIND_EXPR)!!.range,
+          second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" },
+        ),
+      )
+    }
   } else {
     children.flatMap { it.rangesToReplace() }
   }

@@ -73,7 +73,9 @@ abstract class QueryGenerator(
         result.add(block)
       }
       result.endControlFlow()
-      if (generateAsync && query is NamedQuery) { result.endControlFlow() }
+      if (generateAsync && query is NamedQuery) {
+        result.endControlFlow()
+      }
     } else {
       result.add(executeBlock(query.statement, emptySet(), query.id).first)
     }
@@ -336,7 +338,9 @@ abstract class QueryGenerator(
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
-    if (query.javadoc != null) { builder.addKdoc(javadocText(query.javadoc)) }
+    if (query.javadoc != null) {
+      builder.addKdoc(javadocText(query.javadoc))
+    }
   }
 
   protected open fun awaiting(): Pair<String, String>? = "%L" to ".await()"

@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.intellij.lang.annotations.Language
 import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
@@ -28,7 +29,7 @@ class R2dbcDriver(
 ) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
@@ -52,7 +53,7 @@ class R2dbcDriver(
 
   override fun execute(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
@@ -163,6 +164,22 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
     }
   }
 
+  fun bindShort(index: Int, short: Short?) {
+    if (short == null) {
+      statement.bindNull(index, Short::class.javaObjectType)
+    } else {
+      statement.bind(index, short)
+    }
+  }
+
+  fun bindInt(index: Int, int: Int?) {
+    if (int == null) {
+      statement.bindNull(index, Int::class.javaObjectType)
+    } else {
+      statement.bind(index, int)
+    }
+  }
+
   override fun bindLong(index: Int, long: Long?) {
     if (long == null) {
       statement.bindNull(index, Long::class.javaObjectType)
@@ -264,6 +281,8 @@ internal constructor(private val results: AsyncPublisherIterator<List<Any?>>) : 
   }
 
   override fun getString(index: Int): String? = get(index)
+  fun getShort(index: Int): Short? = get<Number>(index)?.toShort()
+  fun getInt(index: Int): Int? = get<Number>(index)?.toInt()
 
   override fun getLong(index: Int): Long? = get<Number>(index)?.toLong()
 

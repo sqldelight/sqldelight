@@ -1,0 +1,3 @@
+Test.s line 33:9 - SELECT DISTINCT ON expressions must match initial ORDER BY expressions
+Test.s line 38:9 - SELECT DISTINCT ON expressions must match initial ORDER BY expressions
+Test.s line 43:15 - SELECT DISTINCT ON expressions must match initial ORDER BY expressions

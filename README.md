@@ -1,4 +1,4 @@
-# SQLDelight
+# <img src="docs/images/icon-sqldelight.svg" style="height: 1em; margin-bottom: -0.1em;"> SQLDelight
 
 See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
 
@@ -32,7 +32,7 @@ SQLite
 
 [MySQL (JVM)](https://cashapp.github.io/sqldelight/jvm_mysql/)
 
-[PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql) (Experimental)
+[PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql)
 
 [HSQL/H2 (JVM)](https://cashapp.github.io/sqldelight/jvm_h2) (Experimental)
 

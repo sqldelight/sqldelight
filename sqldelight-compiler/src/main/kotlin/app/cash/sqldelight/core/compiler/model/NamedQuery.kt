@@ -27,6 +27,7 @@ import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
+import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
@@ -140,6 +141,8 @@ data class NamedQuery(
   }
 
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
+
+  internal fun needsQuerySubType() = arguments.isNotEmpty() || statement is SqlDelightStmtClojureStmtList
 
   internal val tablesObserved: List<TableNameElement>? by lazy {
     if (queryable is SelectQueryable && queryable.select == queryable.statement) {

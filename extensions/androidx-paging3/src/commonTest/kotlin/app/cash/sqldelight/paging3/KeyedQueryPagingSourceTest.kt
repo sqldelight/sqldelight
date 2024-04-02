@@ -26,11 +26,11 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class KeyedQueryPagingSourceTest : BaseKeyedQueryPagingSourceTest() {

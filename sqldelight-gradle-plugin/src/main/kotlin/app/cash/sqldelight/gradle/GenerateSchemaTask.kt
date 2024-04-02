@@ -6,6 +6,11 @@ import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.util.ServiceLoader
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
@@ -21,11 +26,6 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.util.ServiceLoader
 
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {

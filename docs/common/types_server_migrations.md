@@ -7,7 +7,7 @@ that `UPDATE` statements correctly use the lock to perform updates.
 CREATE TABLE hockeyPlayer(
   id INT AS VALUE,
   version_number INT AS LOCK,
-  nmae VARCHAR(8)
+  name VARCHAR(8)
 );
 
 -- This will fail (and the IDE plugin will suggest rewriting to the below)

@@ -8,33 +8,40 @@ plugins {
 }
 
 kotlin {
+  // tier 1
+  linuxX64()
+  macosX64()
+  macosArm64()
+  iosSimulatorArm64()
   iosX64()
-  iosArm64()
-  tvosX64()
-  tvosArm64()
+
+  // tier 2
+  linuxArm64()
+  watchosSimulatorArm64()
   watchosX64()
   watchosArm32()
   watchosArm64()
-  macosX64()
-  mingwX64()
-  linuxX64()
-  macosArm64()
-  iosSimulatorArm64()
-  watchosSimulatorArm64()
   tvosSimulatorArm64()
+  tvosX64()
+  tvosArm64()
+  iosArm64()
+
+  // tier 3
+  // https://github.com/touchlab/SQLiter/issues/117
+  // androidNativeArm32()
+  // androidNativeArm64()
+  // androidNativeX86()
+  // androidNativeX64()
+  mingwX64()
+  watchosDeviceArm64()
 
   targetHierarchy.default { target ->
     target.group("native") {
       it.group("nativeLinuxLike") {
         it.withLinux()
-        // no withApple: https://github.com/cashapp/sqldelight/issues/4257
-        it.withIos()
-        it.withTvos()
-        it.withMacos()
-        it.withWatchosArm32()
-        it.withWatchosArm64()
-        it.withWatchosX64()
-        it.withWatchosSimulatorArm64()
+        it.withApple()
+        // https://github.com/touchlab/SQLiter/issues/117
+        // it.withAndroidNative()
       }
     }
   }

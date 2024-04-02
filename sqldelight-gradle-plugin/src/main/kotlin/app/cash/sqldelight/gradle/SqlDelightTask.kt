@@ -22,6 +22,7 @@ import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Success
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import java.util.ServiceLoader
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
@@ -40,7 +41,6 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.util.ServiceLoader
 
 @CacheableTask
 abstract class SqlDelightTask : SqlDelightWorkerTask() {

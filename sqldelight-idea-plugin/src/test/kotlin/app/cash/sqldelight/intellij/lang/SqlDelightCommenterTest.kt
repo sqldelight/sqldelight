@@ -34,6 +34,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
     myFixture.checkResult("SELECT *")
   }
 
+  @Suppress("FunctionName")
   fun testSingleLineComment_caretInTheMiddle() {
     myFixture.configureByText(SqlDelightFileType, "SEL<caret>ECT *")
     val commentAction = CommentByLineCommentAction()
@@ -45,6 +46,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
     myFixture.checkResult("SELECT *")
   }
 
+  @Suppress("FunctionName")
   fun testSingleLineComment_MultipleLines() {
     myFixture.configureByText(
       SqlDelightFileType,
@@ -78,6 +80,7 @@ class SqlDelightCommenterTest : SqlDelightFixtureTestCase() {
     )
   }
 
+  @Suppress("FunctionName")
   fun _testJavadoc() {
     myFixture.configureByText(
       SqlDelightFileType,

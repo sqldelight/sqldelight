@@ -9,18 +9,21 @@ import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseFileContext
 import co.touchlab.sqliter.JournalMode
-import co.touchlab.testhelp.concurrency.currentTimeMillis
 import co.touchlab.testhelp.concurrency.sleep
-import kotlin.native.concurrent.AtomicInt
+import kotlin.concurrent.AtomicInt
 import kotlin.native.concurrent.Worker
 import kotlin.test.AfterTest
+import kotlin.time.TimeSource
 
 abstract class BaseConcurrencyTest {
   fun countRows(myDriver: SqlDriver = driver): Long {
     return myDriver.executeQuery(
       0,
       "SELECT count(*) FROM test",
-      { it.next(); QueryResult.Value(it.getLong(0)!!) },
+      {
+        it.next()
+        QueryResult.Value(it.getLong(0)!!)
+      },
       0,
     ).value
   }
@@ -103,7 +106,10 @@ abstract class BaseConcurrencyTest {
   }
 
   enum class DbType {
-    RegularWal, RegularDelete, InMemoryShared, InMemorySingle
+    RegularWal,
+    RegularDelete,
+    InMemoryShared,
+    InMemorySingle,
   }
 
   fun createDriver(
@@ -141,12 +147,12 @@ abstract class BaseConcurrencyTest {
   }
 
   internal fun waitFor(timeout: Long = 10_000, block: () -> Boolean) {
-    val start = currentTimeMillis()
+    val start = TimeSource.Monotonic.markNow()
     var wasTimeout = false
 
     while (!block() && !wasTimeout) {
       sleep(200)
-      wasTimeout = (currentTimeMillis() - start) > timeout
+      wasTimeout = (TimeSource.Monotonic.markNow() - start).inWholeMilliseconds > timeout
     }
 
     if (wasTimeout) {

@@ -21,6 +21,10 @@ class MigrationQueryTest {
     checkFixtureCompiles("alter-table-rename-column", PostgreSqlDialect())
   }
 
+  @Test fun `alter table alter column statement`() {
+    checkFixtureCompiles("alter-table-alter-column", PostgreSqlDialect())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String, dialect: SqlDelightDialect = SqliteDialect()) {
     val result = FixtureCompiler.compileFixture(
       overrideDialect = dialect,

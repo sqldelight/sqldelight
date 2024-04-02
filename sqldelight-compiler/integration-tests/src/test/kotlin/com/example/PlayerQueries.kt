@@ -156,6 +156,34 @@ public class PlayerQueries(
     )
   }
 
+  public fun <T : Any> greaterThanNumberAndName(
+    number: Long,
+    name: Player.Name,
+    mapper: (
+      name: Player.Name,
+      number: Long,
+      team: Team.Name?,
+      shoots: Shoots,
+    ) -> T,
+  ): Query<T> = GreaterThanNumberAndNameQuery(number, name) { cursor ->
+    mapper(
+      Player.Name(cursor.getString(0)!!),
+      cursor.getLong(1)!!,
+      cursor.getString(2)?.let { Team.Name(it) },
+      playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
+    )
+  }
+
+  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> =
+      greaterThanNumberAndName(number, name) { name_, number_, team, shoots ->
+    Player(
+      name_,
+      number_,
+      team,
+      shoots
+    )
+  }
+
   public fun insertPlayer(
     name: Player.Name,
     number: Long,
@@ -279,5 +307,31 @@ public class PlayerQueries(
     }
 
     override fun toString(): String = "Player.sq:playersForNumbers"
+  }
+
+  private inner class GreaterThanNumberAndNameQuery<out T : Any>(
+    public val number: Long,
+    public val name: Player.Name,
+    mapper: (SqlCursor) -> T,
+  ) : Query<T>(mapper) {
+    override fun addListener(listener: Query.Listener) {
+      driver.addListener("player", listener = listener)
+    }
+
+    override fun removeListener(listener: Query.Listener) {
+      driver.removeListener("player", listener = listener)
+    }
+
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+        driver.executeQuery(-1_258_650_806, """
+    |SELECT *
+    |FROM player
+    |WHERE (number, name) > (?, ?)
+    """.trimMargin(), mapper, 2) {
+      bindLong(0, number)
+      bindString(1, name.name)
+    }
+
+    override fun toString(): String = "Player.sq:greaterThanNumberAndName"
   }
 }

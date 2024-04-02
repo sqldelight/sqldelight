@@ -9,12 +9,12 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.squareup.sqldelight.driver.test.TransacterTest
+import java.util.concurrent.Semaphore
+import kotlin.concurrent.thread
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.util.concurrent.Semaphore
-import kotlin.concurrent.thread
 
 @RunWith(RobolectricTestRunner::class)
 class AndroidTransacterTest : TransacterTest() {

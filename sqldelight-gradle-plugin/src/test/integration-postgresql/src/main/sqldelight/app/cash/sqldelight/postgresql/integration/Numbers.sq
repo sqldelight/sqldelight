@@ -1,0 +1,38 @@
+CREATE TABLE ints (
+  small SMALLINT,
+  reg INTEGER,
+  big BIGINT
+);
+
+insertInts:
+INSERT INTO ints
+VALUES (?, ?, ?);
+
+multiplyInts:
+SELECT small * small, reg * reg, big * big FROM ints;
+
+multiplyWithBigInts:
+SELECT small * big AS small, reg * big AS reg FROM ints;
+
+sumInts:
+SELECT sum(small) AS sumSmall, sum(reg) AS sumInt, sum(big) AS sumBig FROM ints;
+
+minInts:
+SELECT  min(small) AS minSmall, min(reg) AS minInt, min(big) AS minBig FROM ints;
+
+maxInts:
+SELECT  max(small) AS maxSmall, max(reg) AS maxInt, max(big) AS maxBig FROM ints;
+
+CREATE TABLE floats (
+  flo FLOAT
+);
+
+insertFloats:
+INSERT INTO floats
+VALUES (?);
+
+sumMinMaxFloat:
+SELECT sum(flo) AS sumFloat, min(flo) AS minFloat, max(flo) AS maxFloat FROM floats;
+
+multiplyFloatInt:
+SELECT flo * big AS mul FROM floats, ints;

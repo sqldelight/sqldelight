@@ -1,12 +1,12 @@
 package com.example.sqldelight.hockey.data
 
 import app.cash.sqldelight.ColumnAdapter
+import kotlin.math.floor
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSDate
 import platform.Foundation.NSDateComponents
 import platform.Foundation.dateWithTimeIntervalSince1970
 import platform.Foundation.timeIntervalSince1970
-import kotlin.math.floor
 
 actual class Date internal constructor(internal val nsDate: NSDate) {
   actual constructor(year: Int, month: Int, day: Int) : this(partsToDate(year, month + 1, day))

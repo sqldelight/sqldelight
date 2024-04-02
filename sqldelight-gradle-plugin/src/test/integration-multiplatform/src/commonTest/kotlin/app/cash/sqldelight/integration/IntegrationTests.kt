@@ -4,7 +4,6 @@ import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.Query
 import co.touchlab.stately.concurrency.AtomicInt
 import co.touchlab.stately.concurrency.value
-import co.touchlab.stately.freeze
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,7 +24,6 @@ class IntegrationTests {
     val database = createSqlDatabase()
 
     queryWrapper = QueryWrapper(database, NullableTypes.Adapter(ListAdapter))
-    queryWrapper.freeze()
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
     nullableTypesQueries = queryWrapper.nullableTypesQueries

@@ -3,7 +3,7 @@ package app.cash.sqldelight.driver.native
 import app.cash.sqldelight.db.Closeable
 import app.cash.sqldelight.driver.native.util.PoolLock
 import co.touchlab.stately.concurrency.AtomicBoolean
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicReference
 
 /**
  * A shared pool of connections. Borrowing is blocking when all connections are in use, and the pool has reached its
@@ -13,7 +13,7 @@ internal class Pool<T : Closeable>(internal val capacity: Int, private val produ
   /**
    * Hold a list of active connections. If it is null, it means the MultiPool has been closed.
    */
-  private val entriesRef = AtomicReference<List<Entry>?>(listOf<Entry>())
+  private val entriesRef = AtomicReference<List<Entry>?>(listOf())
   private val poolLock = PoolLock()
 
   /**

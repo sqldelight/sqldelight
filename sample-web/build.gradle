@@ -1,0 +1,51 @@
+plugins {
+  alias(libs.plugins.kotlin.multiplatform)
+  id("app.cash.sqldelight")
+}
+
+sqldelight {
+  databases {
+    HockeyDb {
+      packageName = "com.example.sqldelight.hockey"
+      generateAsync = true
+      srcDirs "src/jsMain/sqldelight"
+    }
+  }
+}
+
+
+kotlin {
+  js {
+    browser()
+    binaries.executable()
+    useCommonJs()
+  }
+
+  sourceSets {
+    jsMain {
+      dependencies {
+        implementation "app.cash.sqldelight:web-worker-driver"
+        implementation "app.cash.sqldelight:primitive-adapters"
+        implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.10.1"
+        implementation devNpm("copy-webpack-plugin", "9.1.0")
+        implementation npm('dateformat', '3.0.3')
+        implementation npm("sql.js", libs.versions.sqljs.get())
+
+        def sqljsWorker = file("${gradle.includedBuild('sqldelight').projectDir}/drivers/web-worker-driver/sqljs")
+        implementation npm("@cashapp/sqldelight-sqljs-worker", sqljsWorker)
+      }
+    }
+
+    jsTest {
+      dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-test'
+        implementation libs.kotlin.coroutines.test
+      }
+    }
+  }
+}
+
+// Workaround yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320
+tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask).configureEach {
+  args.addAll(["--mutex", "file:${file("../build/.yarn-mutex")}".toString()])
+}

@@ -7,6 +7,12 @@ import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.test.TestResult
@@ -14,12 +20,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.PostgreSQLR2DBCDatabaseContainer
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 class PostgreSqlTest {
 

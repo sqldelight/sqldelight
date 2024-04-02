@@ -17,7 +17,9 @@
 package app.cash.sqldelight.coroutines
 
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.sqljs.initSqlDriver
-import kotlinx.coroutines.await
+import app.cash.sqldelight.driver.worker.WebWorkerDriver
+import org.w3c.dom.Worker
 
-actual suspend fun testDriver(): SqlDriver = initSqlDriver().await()
+@Suppress("UnsafeCastFromDynamic")
+actual suspend fun testDriver(): SqlDriver =
+  WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))

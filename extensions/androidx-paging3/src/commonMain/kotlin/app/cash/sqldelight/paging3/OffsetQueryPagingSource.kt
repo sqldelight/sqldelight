@@ -28,14 +28,15 @@ import app.cash.sqldelight.SuspendingTransacter
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterBase
 import app.cash.sqldelight.TransactionCallbacks
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.withContext
 
 internal class OffsetQueryPagingSource<RowType : Any>(
   private val queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
   private val countQuery: Query<Int>,
   private val transacter: TransacterBase,
   private val context: CoroutineContext,
+  private val initialOffset: Int,
 ) : QueryPagingSource<Int, RowType>() {
 
   override val jumpingSupported get() = true
@@ -43,7 +44,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
   override suspend fun load(
     params: PagingSourceLoadParams<Int>,
   ): PagingSourceLoadResult<Int, RowType> = withContext(context) {
-    val key = params.key ?: 0
+    val key = params.key ?: initialOffset
     val limit = when (params) {
       is PagingSourceLoadParamsPrepend<*> -> minOf(key, params.loadSize)
       else -> params.loadSize

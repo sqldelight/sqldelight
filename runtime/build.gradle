@@ -16,22 +16,6 @@ apiValidation {
 }
 
 kotlin {
-  targetHierarchy.default {
-    it.group("testableNative") {
-      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
-      it.withIos()
-      it.withTvos()
-      it.withMacos()
-      it.withWatchosArm32()
-      it.withWatchosArm64()
-      it.withWatchosX64()
-      it.withWatchosSimulatorArm64()
-
-      it.withLinuxX64()
-      it.withMingw()
-    }
-  }
-
   sourceSets {
     commonMain {
     }
@@ -43,13 +27,6 @@ kotlin {
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
-        implementation libs.stately.collections
-      }
-    }
-    testableNativeTest {
-      dependencies {
-        implementation libs.stately.concurrency
-        implementation libs.stately.collections
       }
     }
   }

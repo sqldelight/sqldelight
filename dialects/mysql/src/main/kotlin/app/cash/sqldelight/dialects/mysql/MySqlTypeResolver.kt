@@ -9,6 +9,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.mysql.MySqlType.BIG_INT
 import app.cash.sqldelight.dialects.mysql.MySqlType.SMALL_INT
 import app.cash.sqldelight.dialects.mysql.MySqlType.TINY_INT
@@ -93,7 +94,36 @@ class MySqlTypeResolver(
   }
 
   private fun SqlFunctionExpr.mySqlFunctionType() = when (functionName.text.lowercase()) {
-    "greatest" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+    "greatest" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      TINY_INT,
+      SMALL_INT,
+      MySqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      MySqlType.TIMESTAMP,
+      MySqlType.DATE,
+      MySqlType.DATETIME,
+      MySqlType.TIME,
+      TEXT,
+      BLOB,
+    )
+    "least" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      BLOB,
+      TEXT,
+      MySqlType.TIME,
+      MySqlType.DATETIME,
+      MySqlType.DATE,
+      MySqlType.TIMESTAMP,
+      TINY_INT,
+      SMALL_INT,
+      INTEGER,
+      MySqlType.INTEGER,
+      BIG_INT,
+      REAL,
+    )
     "concat" -> encapsulatingType(exprList, TEXT)
     "last_insert_id" -> IntermediateType(INTEGER)
     "row_count" -> IntermediateType(INTEGER)
@@ -101,8 +131,8 @@ class MySqlTypeResolver(
       INTEGER,
     )
     "sin", "cos", "tan" -> IntermediateType(REAL)
-    "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
+    "max" -> encapsulatingTypePreferringKotlin(
       exprList,
       TINY_INT,
       SMALL_INT,
@@ -117,7 +147,7 @@ class MySqlTypeResolver(
       TEXT,
       BLOB,
     ).asNullable()
-    "min" -> encapsulatingType(
+    "min" -> encapsulatingTypePreferringKotlin(
       exprList,
       BLOB,
       TEXT,

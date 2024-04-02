@@ -15,6 +15,7 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
 import javax.sql.DataSource
+import org.intellij.lang.annotations.Language
 
 @JvmName("fromDataSource")
 fun DataSource.asJdbcDriver() = object : JdbcDriver() {
@@ -103,7 +104,9 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
 
   override var transaction: Transaction?
     get() = transactions.get()
-    set(value) { transactions.set(value) }
+    set(value) {
+      transactions.set(value)
+    }
 
   /**
    * Returns a [Connection] and handler which closes the connection after the transaction finished.
@@ -120,7 +123,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
 
   override fun execute(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
@@ -140,7 +143,7 @@ abstract class JdbcDriver : SqlDriver, ConnectionManager {
 
   override fun <R> executeQuery(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,

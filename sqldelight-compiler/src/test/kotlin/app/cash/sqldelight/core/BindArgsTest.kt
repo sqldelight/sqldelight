@@ -1,20 +1,23 @@
 package app.cash.sqldelight.core
 
+import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import app.cash.sqldelight.core.lang.util.isArrayParameter
 import app.cash.sqldelight.dialect.api.PrimitiveType
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
 import com.squareup.kotlinpoet.asClassName
+import java.time.Instant
+import kotlin.test.assertFailsWith
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import kotlin.test.assertFailsWith
 
 class BindArgsTest {
   @get:Rule val tempFolder = TemporaryFolder()
@@ -383,6 +386,122 @@ class BindArgsTest {
       assertThat(args[2].dialectType).isEqualTo(PrimitiveType.TEXT)
       assertThat(args[2].javaType).isEqualTo(String::class.asClassName())
       assertThat(args[2].name).isEqualTo("last_name")
+    }
+  }
+
+  @Test fun `bind arg type in binary expression can be inferred from column`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE data (
+        |  datum INTEGER NOT NULL
+        |);
+        |
+        |selectData:
+        |SELECT *
+        |FROM data
+        |WHERE datum > :datum1 - 2.5 AND datum < :datum2 + 2.5;
+      """.trimMargin(),
+      tempFolder,
+    )
+    val column = file.namedQueries.first()
+    column.parameters.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[0].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[0].name).isEqualTo("datum1")
+
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[1].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[1].name).isEqualTo("datum2")
+    }
+  }
+
+  @Test fun `bind arg in arithmetic binary expression can be cast as type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE data (
+        | datum INTEGER NOT NULL,
+        | point INTEGER NOT NULL
+        |);
+        |
+        |selectData:
+        |SELECT *, (datum + CAST(:datum1 AS REAL) * point) AS expected_datum
+        |FROM data;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val column = file.namedQueries.first()
+    column.parameters.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.REAL)
+      assertThat(args[0].javaType).isEqualTo(Double::class.asClassName().copy(nullable = true))
+      assertThat(args[0].name).isEqualTo("datum1")
+    }
+  }
+
+  @Test fun `bind arg in binary expression can be cast as type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE data (
+        |  datum INTEGER NOT NULL
+        |);
+        |
+        |selectData:
+        |SELECT CAST(:datum1 AS REAL) + CAST(:datum2 AS INTEGER) - 10.5
+        |FROM data;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val column = file.namedQueries.first()
+    column.parameters.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.REAL)
+      assertThat(args[0].javaType).isEqualTo(Double::class.asClassName().copy(nullable = true))
+      assertThat(args[0].name).isEqualTo("datum1")
+
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[1].javaType).isEqualTo(Long::class.asClassName().copy(nullable = true))
+      assertThat(args[1].name).isEqualTo("datum2")
+    }
+  }
+
+  @Test fun `bind arg in binary expression can be cast as custom type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |import java.time.Instant;
+        |
+        |CREATE TABLE session (
+        |  id UUID PRIMARY KEY,
+        |  created_at TIMESTAMP AS Instant NOT NULL,
+        |  updated_at TIMESTAMP AS Instant NOT NULL
+        |);
+        |
+        |selectSession1:
+        |SELECT *
+        |FROM session
+        |WHERE created_at = :createdAt - INTERVAL '2 days' OR updated_at = :updatedAt + INTERVAL '2 days';
+        |
+        |selectSession2:
+        |SELECT *
+        |FROM session
+        |WHERE created_at BETWEEN :createdAt - INTERVAL '2 days' AND :createdAt + INTERVAL '2 days';
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val selectSession1 = file.namedQueries[0]
+    selectSession1.parameters.let { args ->
+      assertThat(args[0].javaType).isEqualTo(Instant::class.asClassName())
+      assertThat(args[0].name).isEqualTo("createdAt")
+
+      assertThat(args[1].javaType).isEqualTo(Instant::class.asClassName())
+      assertThat(args[1].name).isEqualTo("updatedAt")
+    }
+
+    val selectSession2 = file.namedQueries[1]
+    selectSession2.parameters.let { args ->
+      assertThat(args[0].javaType).isEqualTo(Instant::class.asClassName())
+      assertThat(args[0].name).isEqualTo("createdAt")
     }
   }
 

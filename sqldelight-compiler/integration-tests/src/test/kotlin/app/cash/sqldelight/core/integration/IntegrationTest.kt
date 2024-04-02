@@ -14,12 +14,12 @@ import com.example.Team
 import com.example.TeamForCoach
 import com.example.TestDatabase
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 
 class IntegrationTest {
   private lateinit var driver: SqlDriver
@@ -89,6 +89,11 @@ class IntegrationTest {
         |  FROM player
         |  WHERE player.rowid = last_insert_rowid();
         |}
+        |
+        |greaterThanNumberAndName:
+        |SELECT *
+        |FROM player
+        |WHERE (number, name) > (?, ?);
         |
       """.trimMargin(),
       temporaryFolder,
@@ -330,5 +335,46 @@ class IntegrationTest {
 
       assertThat(brady.name).isEqualTo(Player.Name("Brady Tkachuk"))
     }
+  }
+
+  @Test fun `multi column expression select`() {
+    queryWrapper.playerQueries.insertPlayer(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT)
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("A")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(10, Player.Name("Z")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("A")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Brady Hockey"), 15, Team.Name("Ottawa Hockey Team"), LEFT),
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("C")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Ryan Getzlaf"), 15, Team.Name("Anaheim Ducks"), RIGHT),
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
+
+    assertThat(
+      queryWrapper.playerQueries.greaterThanNumberAndName(15, Player.Name("Z")).executeAsList(),
+    ).containsExactly(
+      Player(Player.Name("Erik Karlsson"), 65, Team.Name("Ottawa Senators"), RIGHT),
+    )
   }
 }

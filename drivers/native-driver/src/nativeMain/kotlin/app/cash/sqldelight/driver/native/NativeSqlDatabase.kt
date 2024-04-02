@@ -9,6 +9,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
+import app.cash.sqldelight.driver.native.util.PoolLock
 import co.touchlab.sqliter.DatabaseConfiguration
 import co.touchlab.sqliter.DatabaseConnection
 import co.touchlab.sqliter.DatabaseManager
@@ -136,10 +137,11 @@ class NativeSqliteDriver(
   // Once a transaction is started and connection borrowed, it will be here, but only for that
   // thread
   private val borrowedConnectionThread = ThreadLocalRef<Borrowed<ThreadConnection>>()
-  private val listeners = mutableMapOf<String, MutableMap<Query.Listener, Unit>>()
+  private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
+  private val lock = PoolLock(reentrant = true)
 
   init {
-    if (databaseManager.configuration.inMemory) {
+    if (databaseManager.configuration.isEphemeral) {
       // Single connection for transactions
       transactionPool = Pool(1) {
         ThreadConnection(databaseManager.createMultiThreadedConnection()) { _ ->
@@ -173,20 +175,26 @@ class NativeSqliteDriver(
   }
 
   override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
-    queryKeys.forEach {
-      listeners.getOrPut(it) { mutableMapOf() }.put(listener, Unit)
+    lock.withLock {
+      queryKeys.forEach {
+        listeners.getOrPut(it) { mutableSetOf() }.add(listener)
+      }
     }
   }
 
   override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
-    queryKeys.forEach {
-      listeners.get(it)?.remove(listener)
+    lock.withLock {
+      queryKeys.forEach {
+        listeners.get(it)?.remove(listener)
+      }
     }
   }
 
   override fun notifyListeners(vararg queryKeys: String) {
     val listenersToNotify = mutableSetOf<Query.Listener>()
-    queryKeys.forEach { key -> listeners.get(key)?.let { listenersToNotify.addAll(it.keys) } }
+    lock.withLock {
+      queryKeys.forEach { key -> listeners.get(key)?.let { listenersToNotify.addAll(it) } }
+    }
     listenersToNotify.forEach(Query.Listener::queryResultsChanged)
   }
 
@@ -404,4 +412,8 @@ internal class ThreadConnection(
       return QueryResult.Unit
     }
   }
+}
+
+private inline val DatabaseConfiguration.isEphemeral: Boolean get() {
+  return inMemory || (name?.isEmpty() == true && extendedConfig.basePath?.isEmpty() == true)
 }

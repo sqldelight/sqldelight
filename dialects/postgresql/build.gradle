@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.compiler")
+  id("java-test-fixtures")
 }
 
 grammarKit {
@@ -22,14 +23,12 @@ dependencies {
   }
   compileOnly libs.moshi
 
-  testImplementation(projects.sqldelightCompiler.environment) {
+  testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  testImplementation libs.junit
+  testFixturesApi testFixtures(libs.sqlPsi)
+
   testImplementation libs.truth
-  testImplementation(libs.sqlPsiTestFixtures) {
-    exclude group: "com.jetbrains.intellij.platform"
-  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
