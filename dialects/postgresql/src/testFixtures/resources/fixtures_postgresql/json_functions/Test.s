@@ -22,5 +22,5 @@ SELECT
   data @@ '$.b[*] > 0'
 FROM myTable;
 
-SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab || datab, datab - 'b', datab - 1
+SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab || datab, datab - 'b', datab - 1, datab @@ '$.b[*] > 0'
 FROM myTable;

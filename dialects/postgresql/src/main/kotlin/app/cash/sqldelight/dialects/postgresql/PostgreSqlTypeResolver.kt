@@ -69,6 +69,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         jsonDataType != null -> PostgreSqlType.JSON
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
+        tsvectorDataType != null -> PostgreSqlType.TSVECTOR
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )
@@ -178,6 +179,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "regexp_count", "regexp_instr" -> IntermediateType(INTEGER)
     "regexp_like" -> IntermediateType(BOOLEAN)
     "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
+    "to_tsquery" -> IntermediateType(TEXT)
+    "to_tsvector" -> IntermediateType(PostgreSqlType.TSVECTOR)
+    "ts_rank" -> encapsulatingType(exprList, REAL, TEXT)
+    "websearch_to_tsquery" -> IntermediateType(TEXT)
     else -> null
   }
 
@@ -240,6 +245,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           PostgreSqlType.TIMESTAMP_TIMEZONE,
           PostgreSqlType.TIMESTAMP,
           PostgreSqlType.JSON,
+          PostgreSqlType.TSVECTOR,
         )
       }
     }
@@ -268,6 +274,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         } else {
           IntermediateType(PostgreSqlType.JSON)
         }
+      }
+      matchOperatorExpression != null -> {
+        IntermediateType(BOOLEAN)
       }
       else -> parentResolver.resolvedType(this)
     }
