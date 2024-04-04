@@ -4821,7 +4821,7 @@ services to read from:</p>
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="n">migrationOutputDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="o">(</span><span class="s2">&quot;$buildDir/resources/main/migrations&quot;</span><span class="o">)</span>
+<span class="w">      </span><span class="n">migrationOutputDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">layout</span><span class="o">.</span><span class="na">buildDirectory</span><span class="o">.</span><span class="na">dir</span><span class="o">(</span><span class="s2">&quot;resources/main/migrations&quot;</span><span class="o">)</span>
 <span class="w">      </span><span class="n">migrationOutputFileFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.sql&quot;</span><span class="w"> </span><span class="c1">// Defaults to .sql</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
