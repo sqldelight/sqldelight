@@ -22,6 +22,7 @@ public final class app/cash/sqldelight/driver/jdbc/JdbcCursor : app/cash/sqldeli
 	public fun getBoolean (I)Ljava/lang/Boolean;
 	public final fun getByte (I)Ljava/lang/Byte;
 	public fun getBytes (I)[B
+	public final fun getDate (I)Ljava/sql/Date;
 	public fun getDouble (I)Ljava/lang/Double;
 	public final fun getFloat (I)Ljava/lang/Float;
 	public final fun getInt (I)Ljava/lang/Integer;
@@ -29,6 +30,8 @@ public final class app/cash/sqldelight/driver/jdbc/JdbcCursor : app/cash/sqldeli
 	public final fun getResultSet ()Ljava/sql/ResultSet;
 	public final fun getShort (I)Ljava/lang/Short;
 	public fun getString (I)Ljava/lang/String;
+	public final fun getTime (I)Ljava/sql/Time;
+	public final fun getTimestamp (I)Ljava/sql/Timestamp;
 	public synthetic fun next ()Lapp/cash/sqldelight/db/QueryResult;
 	public fun next-mlR-ZEE ()Ljava/lang/Object;
 }
@@ -58,14 +61,17 @@ public final class app/cash/sqldelight/driver/jdbc/JdbcPreparedStatement : app/c
 	public fun bindBoolean (ILjava/lang/Boolean;)V
 	public final fun bindByte (ILjava/lang/Byte;)V
 	public fun bindBytes (I[B)V
+	public final fun bindDate (ILjava/sql/Date;)V
 	public fun bindDouble (ILjava/lang/Double;)V
 	public final fun bindFloat (ILjava/lang/Float;)V
 	public final fun bindInt (ILjava/lang/Integer;)V
 	public fun bindLong (ILjava/lang/Long;)V
 	public final fun bindObject (ILjava/lang/Object;)V
-	public final fun bindObjectOther (ILjava/lang/Object;)V
+	public final fun bindObject (ILjava/lang/Object;I)V
 	public final fun bindShort (ILjava/lang/Short;)V
 	public fun bindString (ILjava/lang/String;)V
+	public final fun bindTime (ILjava/sql/Time;)V
+	public final fun bindTimestamp (ILjava/sql/Timestamp;)V
 	public final fun execute ()J
 	public final fun executeQuery (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }

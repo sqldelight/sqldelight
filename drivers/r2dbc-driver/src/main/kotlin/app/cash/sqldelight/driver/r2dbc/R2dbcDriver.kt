@@ -8,6 +8,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import java.math.BigDecimal
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -155,12 +156,28 @@ fun CoroutineScope.R2dbcDriver(
 }
 
 // R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
-class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
+class R2dbcPreparedStatement(val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       statement.bindNull(index, ByteArray::class.java)
     } else {
       statement.bind(index, bytes)
+    }
+  }
+
+  override fun bindBoolean(index: Int, boolean: Boolean?) {
+    if (boolean == null) {
+      statement.bindNull(index, Boolean::class.javaObjectType)
+    } else {
+      statement.bind(index, boolean)
+    }
+  }
+
+  fun bindByte(index: Int, byte: Byte?) {
+    if (byte == null) {
+      statement.bindNull(index, Byte::class.javaObjectType)
+    } else {
+      statement.bind(index, byte)
     }
   }
 
@@ -188,6 +205,14 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
     }
   }
 
+  fun bindFloat(index: Int, float: Float?) {
+    if (float == null) {
+      statement.bindNull(index, Float::class.javaObjectType)
+    } else {
+      statement.bind(index, float)
+    }
+  }
+
   override fun bindDouble(index: Int, double: Double?) {
     if (double == null) {
       statement.bindNull(index, Double::class.javaObjectType)
@@ -196,27 +221,36 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
     }
   }
 
+  fun bindBigDecimal(index: Int, decimal: BigDecimal?) {
+    if (decimal == null) {
+      statement.bindNull(index, BigDecimal::class.java)
+    } else {
+      statement.bind(index, decimal)
+    }
+  }
+
+  fun bindObject(index: Int, any: Any?, ignoredSqlType: Int = 0) {
+    if (any == null) {
+      statement.bindNull(index, Any::class.java)
+    } else {
+      statement.bind(index, any)
+    }
+  }
+
+  @JvmName("bindTypedObject")
+  inline fun <reified T : Any> bindObject(index: Int, any: T?) {
+    if (any == null) {
+      statement.bindNull(index, T::class.java)
+    } else {
+      statement.bind(index, any)
+    }
+  }
+
   override fun bindString(index: Int, string: String?) {
     if (string == null) {
       statement.bindNull(index, String::class.java)
     } else {
       statement.bind(index, string)
-    }
-  }
-
-  override fun bindBoolean(index: Int, boolean: Boolean?) {
-    if (boolean == null) {
-      statement.bindNull(index, Boolean::class.javaObjectType)
-    } else {
-      statement.bind(index, boolean)
-    }
-  }
-
-  fun bindObject(index: Int, any: Any?) {
-    if (any == null) {
-      statement.bindNull(index, Any::class.java)
-    } else {
-      statement.bind(index, any)
     }
   }
 }
