@@ -1,9 +1,11 @@
 CREATE TABLE test(
-  id SERIAL PRIMARY KEY
+  id SERIAL PRIMARY KEY,
+  id2 INTEGER
 );
 
 CREATE TABLE test2(
-  id2 SERIAL PRIMARY KEY
+  id2 SERIAL PRIMARY KEY,
+  other TEXT
 );
 
 UPDATE test
@@ -40,4 +42,8 @@ FROM (
   ON otherTest.id = test2.id2
 );
 
+UPDATE test
+SET id2 = t2.id2
+FROM test2 t2
+WHERE other = 'x';
 

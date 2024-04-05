@@ -784,6 +784,24 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testUpdateSetFromId() {
+    database.updatesQueries.insertTest(31)
+    database.updatesQueries.insertTest2("X")
+    with(database.updatesQueries.updateTestId().executeAsOne()) {
+      assertThat(this).isEqualTo(1)
+    }
+  }
+
+  @Test
+  fun testUpdateSetFromId2() {
+    database.updatesQueries.insertTest(31)
+    database.updatesQueries.insertTest2("X")
+    with(database.updatesQueries.updateTestId2("X").executeAsOne()) {
+      assertThat(id2).isEqualTo(1)
+    }
+  }
+
+  @Test
   fun testSelectTsVectorSearch() {
     database.textSearchQueries.insertLiteral("the rain in spain")
     with(database.textSearchQueries.search("rain").executeAsList()) {
