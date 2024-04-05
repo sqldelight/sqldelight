@@ -1125,7 +1125,7 @@ class SelectQueryFunctionTest {
       |  attr: kotlin.String?,
       |  ordering: kotlin.Long,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-602_300_915, arrayOf("testA"), driver, "Test.sq", "someSelect", ""${'"'}
-      ||SELECT id, status, attr, ordering
+      ||SELECT testA.id, testA.status, testA.attr, ordering
       ||FROM (
       ||  SELECT testA.id, testA.status, testA.attr, 1 AS ordering
       ||  FROM testA

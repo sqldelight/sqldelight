@@ -2012,4 +2012,56 @@ class SelectQueryTypeTest {
       """.trimMargin(),
     )
   }
+
+  @Test
+  fun `expand select star across join`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE `player`(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL,
+      |  team_id INTEGER NOT NULL
+      |);
+      |
+      |CREATE TABLE `team`(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |selectAll:
+      |SELECT *
+      |FROM `player`
+      |JOIN `team` ON team_id = `team`.id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val select = file.namedQueries.first()
+    val generator = SelectQueryGenerator(select)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectAllQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("player", "team", listener = listener)
+      |  }
+      |
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("player", "team", listener = listener)
+      |  }
+      |
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-585_795_480, ""${'"'}
+      |  |SELECT `player`.id, `player`.name, `player`.team_id, `team`.id, `team`.name
+      |  |FROM `player`
+      |  |JOIN `team` ON team_id = `team`.id
+      |  ""${'"'}.trimMargin(), mapper, 0)
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectAll"
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
 }
