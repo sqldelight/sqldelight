@@ -4493,150 +4493,160 @@
     </div>
    </div>
   </div>
-  <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle////PointingToDeclaration//1141795349">
+  <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.core.annotators////PointingToDeclaration//1141795349">
    <div class="overview">
-    <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>gradle</span></a>
+    <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.core.annotators/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>core.</span><wbr><span>annotators</span></a>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/DriverInitializer///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.core.annotators/OptimisticLockCompilerAnnotator///PointingToDeclaration//1141795349">
+    <div class="overview">
+     <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.core.annotators/-optimistic-lock-compiler-annotator/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Optimistic</span><wbr><span>Lock</span><wbr><span>Compiler</span><wbr><span><span>Annotator</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+  <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle////PointingToDeclaration//1141795349">
+   <div class="overview">
+    <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>gradle</span></a>
+   </div>
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/DriverInitializer///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-driver-initializer/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Driver</span><wbr><span><span>Initializer</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask///PointingToDeclaration//1141795349">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1-1&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-migration-output-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Migration</span><wbr><span>Output</span><wbr><span><span>Task</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2-1&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-migration-output-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Migration</span><wbr><span>Output</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-1-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask.GenerateMigration///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-1-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask.GenerateMigration///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-migration-output-task/-generate-migration/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span><span>Migration</span></span></span></span></a>
      </div>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-1-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-1-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateMigrationOutputTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-migration-output-task/-generate-schema-work-parameters/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Schema</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-2" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateSchemaTask///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-2" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateSchemaTask///PointingToDeclaration//1141795349">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1-2&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-schema-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Schema</span><wbr><span><span>Task</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2-2&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-schema-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Schema</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-2-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateSchemaTask.GenerateSchema///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-2-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateSchemaTask.GenerateSchema///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-schema-task/-generate-schema/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span><span>Schema</span></span></span></span></a>
      </div>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-2-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateSchemaTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-2-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/GenerateSchemaTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-generate-schema-task/-generate-schema-work-parameters/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Schema</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-3" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightCompilationUnitImpl///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-3" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightCompilationUnitImpl///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-compilation-unit-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Compilation</span><wbr><span>Unit</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-4" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabase///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-4" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabase///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Database</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-5" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabaseNameImpl///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-5" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabaseNameImpl///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database-name-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-6" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabasePropertiesImpl///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-6" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabasePropertiesImpl///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database-properties-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Properties</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-7" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDsl///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-7" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDsl///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-dsl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon annotation-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Dsl</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-8" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightExtension///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-8" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightExtension///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-extension/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Extension</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-9" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-9" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin///PointingToDeclaration//1141795349">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1-9&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-plugin/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Plugin</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2-9&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-plugin/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Plugin</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-9-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin.PropertiesModelBuilder///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-9-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin.PropertiesModelBuilder///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-plugin/-properties-model-builder/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Properties</span><wbr><span>Model</span><wbr><span><span>Builder</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-10" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPropertiesFileImpl///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-10" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPropertiesFileImpl///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-properties-file-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Properties</span><wbr><span>File</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-11" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightSourceFolderImpl///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-11" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightSourceFolderImpl///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-source-folder-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Source</span><wbr><span>Folder</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-12" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-12" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask///PointingToDeclaration//1141795349">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1-12&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Task</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2-12&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-12-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfaces///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-12-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfaces///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/-generate-interfaces/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span><span>Interfaces</span></span></span></span></a>
      </div>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-12-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfacesWorkParameters///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-12-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfacesWorkParameters///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/-generate-interfaces-work-parameters/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Interfaces</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-13" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightWorkerTask///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-13" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightWorkerTask///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-worker-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Sql</span><wbr><span>Delight</span><wbr><span>Worker</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-14" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-14" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask///PointingToDeclaration//1141795349">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-1-14&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Verify</span><wbr><span>Migration</span><wbr><span><span>Task</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2-14&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Verify</span><wbr><span>Migration</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-14-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationAction///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-14-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationAction///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/-verify-migration-action/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Verify</span><wbr><span>Migration</span><wbr><span><span>Action</span></span></span></span></a>
      </div>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-1-14-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationWorkParameters///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-14-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationWorkParameters///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/-verify-migration-work-parameters/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Verify</span><wbr><span>Migration</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>
     </div>
    </div>
   </div>
-  <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash////PointingToDeclaration//1141795349">
+  <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-3" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash////PointingToDeclaration//1141795349">
    <div class="overview">
-    <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>gradle.</span><wbr><span>squash</span></a>
+    <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-3&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/index.html"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>gradle.</span><wbr><span>squash</span></a>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/AnsiSqlMigrationSquasher///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-3-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/AnsiSqlMigrationSquasher///PointingToDeclaration//1141795349">
     <div class="overview">
      <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/-ansi-sql-migration-squasher/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class-kt"></span><span class="nav-link-child"><span>Ansi</span><wbr><span>Sql</span><wbr><span>Migration</span><wbr><span><span>Squasher</span></span></span></span></a>
     </div>
    </div>
-   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/MigrationSquashTask///PointingToDeclaration//1141795349">
+   <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-3-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/MigrationSquashTask///PointingToDeclaration//1141795349">
     <div class="overview">
-     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-2-1&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Migration</span><wbr><span>Squash</span><wbr><span><span>Task</span></span></span></span></a>
+     <span class="navButton" onclick="document.getElementById(&quot;sqldelight-gradle-plugin-nav-submenu-3-1&quot;).classList.toggle(&quot;hidden&quot;);"><span class="navButtonContent"></span></span><a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Migration</span><wbr><span>Squash</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-1-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/MigrationSquashTask.GenerateMigration///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-3-1-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/MigrationSquashTask.GenerateMigration///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/-migration-squash-task/-generate-migration/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon abstract-class-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span><span>Migration</span></span></span></span></a>
      </div>
     </div>
-    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-2-1-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/MigrationSquashTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
+    <div class="sideMenuPart" id="sqldelight-gradle-plugin-nav-submenu-3-1-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle.squash/MigrationSquashTask.GenerateSchemaWorkParameters///PointingToDeclaration//1141795349">
      <div class="overview">
       <a href="../sqldelight-gradle-plugin/app.cash.sqldelight.gradle.squash/-migration-squash-task/-generate-schema-work-parameters/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface-kt"></span><span class="nav-link-child"><span>Generate</span><wbr><span>Schema</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>

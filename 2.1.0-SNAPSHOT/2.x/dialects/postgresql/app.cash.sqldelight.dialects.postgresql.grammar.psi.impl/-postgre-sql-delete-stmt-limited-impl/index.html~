@@ -782,17 +782,17 @@
               </div>
             </div>
           </div>
-<a data-name="1317298729%2FFunctions%2F-128169639" anchor-label="getExprList" id="1317298729%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+<a data-name="-79586777%2FFunctions%2F-128169639" anchor-label="getExpr" id="-79586777%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1317298729%2FFunctions%2F-128169639"><span>get</span><wbr><span>Expr</span><wbr><span><span>List</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1317298729%2FFunctions%2F-128169639"></span>
+                  <div><a href="index.html#-79586777%2FFunctions%2F-128169639"><span>get</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-79586777%2FFunctions%2F-128169639"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1317298729%2FFunctions%2F-128169639"><span class="token function">getExprList</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-79586777%2FFunctions%2F-128169639"><span class="token function">getExpr</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -857,17 +857,17 @@
               </div>
             </div>
           </div>
-<a data-name="198647689%2FFunctions%2F-128169639" anchor-label="getLimitingTerm" id="198647689%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+<a data-name="-965891173%2FFunctions%2F-128169639" anchor-label="getLimitStmt" id="-965891173%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#198647689%2FFunctions%2F-128169639"><span>get</span><wbr><span>Limiting</span><wbr><span><span>Term</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="198647689%2FFunctions%2F-128169639"></span>
+                  <div><a href="index.html#-965891173%2FFunctions%2F-128169639"><span>get</span><wbr><span>Limit</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-965891173%2FFunctions%2F-128169639"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#198647689%2FFunctions%2F-128169639"><span class="token function">getLimitingTerm</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlLimitingTerm///PointingToDeclaration/">SqlLimitingTerm</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-965891173%2FFunctions%2F-128169639"><span class="token function">getLimitStmt</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlLimitStmt///PointingToDeclaration/">SqlLimitStmt</span></div></div></div>
                 </div>
               </div>
             </div>

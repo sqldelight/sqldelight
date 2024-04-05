@@ -78,7 +78,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-optimistic-lock-validator/index.html">OptimisticLockValidator</a> : <span data-unresolved-link="com.intellij.lang.annotation/Annotator///PointingToDeclaration/">Annotator</span>, <span data-unresolved-link="com.alecstrong.sql.psi.core/SqlCompilerAnnotator///PointingToDeclaration/">SqlCompilerAnnotator</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-optimistic-lock-validator/index.html">OptimisticLockValidator</a> : <span data-unresolved-link="com.intellij.lang.annotation/Annotator///PointingToDeclaration/">Annotator</span></div></div></div>
                 </div>
               </div>
             </div>
