@@ -791,13 +791,59 @@ class PostgreSqlTest {
       assertThat(this).isEqualTo(1)
     }
   }
-
+  
   @Test
   fun testUpdateSetFromId2() {
     database.updatesQueries.insertTest(31)
     database.updatesQueries.insertTest2("X")
     with(database.updatesQueries.updateTestId2("X").executeAsOne()) {
       assertThat(id2).isEqualTo(1)
+    }
+  }
+
+  @Test
+  fun testSelectTsVectorSearch() {
+    database.textSearchQueries.insertLiteral("the rain in spain")
+    with(database.textSearchQueries.search("rain").executeAsList()) {
+      assertThat(first()).isEqualTo("'in' 'rain' 'spain' 'the'")
+    }
+  }
+
+  @Test
+  fun testSelectTsVectorContains() {
+    database.textSearchQueries.insertLiteral("the rain in spain")
+    with(database.textSearchQueries.contains("rain").executeAsList()) {
+      assertThat(first()).isEqualTo(true)
+    }
+  }
+
+  @Test
+  fun testSelectTsQuery() {
+    with(database.textSearchQueries.tsQuery("the & rain & spain'").executeAsList()) {
+      assertThat(first()).isEqualTo("'rain' & 'spain'")
+    }
+  }
+
+  @Test
+  fun testSelectTsVector() {
+    with(database.textSearchQueries.tsVector("the rain in spain").executeAsList()) {
+      assertThat(first()).isEqualTo("'rain':2 'spain':4")
+    }
+  }
+
+  @Test
+  fun testContactTsVector() {
+    database.textSearchQueries.insertLiteral("the rain in spain")
+    with(database.textSearchQueries.concat("falls mainly on the plains").executeAsList()) {
+      assertThat(first()).isEqualTo("'fall':1 'in' 'main':2 'plain':5 'rain' 'spain' 'the'")
+    }
+  }
+
+  @Test
+  fun testContactTsVectorRank() {
+    database.textSearchQueries.insertLiteral("the rain in spain")
+    with(database.textSearchQueries.rank("rain | plain").executeAsList()) {
+      assertThat(first()).isEqualTo("0.030396355")
     }
   }
 }

@@ -146,7 +146,8 @@ type_name ::= (
   date_data_type |
   boolean_data_type |
   json_data_type |
-  blob_data_type
+  blob_data_type |
+  tsvector_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -209,6 +210,8 @@ boolean_data_type ::= 'BOOLEAN' | 'BOOL'
 json_data_type ::= 'JSON' | 'JSONB'
 
 blob_data_type ::= 'BYTEA'
+
+tsvector_data_type ::= 'TSVECTOR'
 
 interval_expression ::= 'INTERVAL' string_literal
 
@@ -358,7 +361,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= array_agg_stmt| string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
+extension_expr ::= match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -378,7 +381,13 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
 }
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
-jsonb_boolean_operator ::= '@@' | '@>' | '<@' | '@?' | '??|' | '??&' | '??'
+jsonb_boolean_operator ::= '@>' | '<@' | '@?' | '??|' | '??&' | '??'
+match_operator ::= '@@'
+
+match_operator_expression ::= ( {function_expr} | {column_expr} ) match_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.MatchOperatorExpressionMixin"
+  pin = 2
+}
 
 extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"

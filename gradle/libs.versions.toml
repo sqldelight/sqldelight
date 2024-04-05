@@ -64,7 +64,7 @@ intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.
 intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
-robolectric = { module = "org.robolectric:robolectric", version = "4.12" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.12.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.8" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.45.2.0" }
@@ -107,5 +107,5 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
-ksp = { id = "com.google.devtools.ksp", version = "1.9.23-1.0.19" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.23-1.0.20" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.14.0" }
