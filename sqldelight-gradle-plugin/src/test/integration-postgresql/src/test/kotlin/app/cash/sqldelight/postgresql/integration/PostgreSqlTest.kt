@@ -791,7 +791,7 @@ class PostgreSqlTest {
       assertThat(this).isEqualTo(1)
     }
   }
-  
+
   @Test
   fun testUpdateSetFromId2() {
     database.updatesQueries.insertTest(31)
