@@ -18,7 +18,7 @@ public class DataQueries(
 ) : TransacterImpl(driver) {
   public fun <T : Any> migrationSelect(mapper: (first: String, second: Int) -> T): Query<T> =
       Query(-1_568_224_787, arrayOf("test"), driver, "Data.sq", "migrationSelect", """
-  |SELECT *
+  |SELECT test.first, test.second
   |FROM test
   """.trimMargin()) { cursor ->
     check(cursor is JdbcCursor)
@@ -96,7 +96,8 @@ public class DataQueries(
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(-1_845_995_606,
-        """INSERT INTO test(first, second) VALUES (?, ?) RETURNING *""", mapper, 2) {
+        """INSERT INTO test(first, second) VALUES (?, ?) RETURNING test.first, test.second""",
+        mapper, 2) {
       check(this is JdbcPreparedStatement)
       bindString(0, first)
       bindInt(1, second)
@@ -110,8 +111,8 @@ public class DataQueries(
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_997_661_540, """DELETE FROM test WHERE first = ? RETURNING *""",
-        mapper, 1) {
+        driver.executeQuery(-1_997_661_540,
+        """DELETE FROM test WHERE first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
       bindString(0, first)
     }
@@ -124,8 +125,8 @@ public class DataQueries(
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_501_049_414, """UPDATE test SET first = ? RETURNING *""", mapper, 1)
-        {
+        driver.executeQuery(-1_501_049_414,
+        """UPDATE test SET first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
       bindString(0, first)
     }

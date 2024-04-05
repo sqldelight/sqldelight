@@ -43,6 +43,7 @@ import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
@@ -145,7 +146,9 @@ inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
 }
 
 private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
-  return if (this is ColumnTypeMixin && javaTypeName != null) {
+  return if (this is SqlCreateViewStmt) {
+    emptyList()
+  } else if (this is ColumnTypeMixin && javaTypeName != null) {
     listOf(
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
@@ -193,6 +196,28 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         ),
       )
     }
+  } else if (this is SqlResultColumn && this.expr == null) {
+    listOf(
+      this.range to this@rangesToReplace.queryExposed().flatMap { query ->
+        query.columns.map { column ->
+          val columnElement = column.element as? PsiNamedElement ?: return@rangesToReplace emptyList()
+
+          buildString {
+            if (query.table != null) {
+              append("${query.table!!.node.text}.")
+            } else {
+              val definition = columnElement.reference?.resolve()
+              if (definition?.parent is SqlCreateViewStmt) {
+                append("${(definition.parent as SqlCreateViewStmt).viewName.node.text}.")
+              } else if (definition?.parent?.parent is SqlCreateTableStmt) {
+                append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
+              }
+            }
+            append(columnElement.node.text)
+          }
+        }
+      }.joinToString(separator = ", "),
+    )
   } else {
     children.flatMap { it.rangesToReplace() }
   }

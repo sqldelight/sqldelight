@@ -202,7 +202,7 @@ class AsyncQueriesTypeTest {
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
-      |    |SELECT *
+      |    |SELECT data.id, data.value
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {

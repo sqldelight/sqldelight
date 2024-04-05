@@ -201,7 +201,7 @@ class QueriesTypeTest {
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
-      |    |SELECT *
+      |    |SELECT data.id, data.value
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
@@ -533,7 +533,7 @@ class QueriesTypeTest {
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
-      |    |SELECT *
+      |    |SELECT data.id, data.value
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
@@ -832,7 +832,7 @@ class QueriesTypeTest {
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(-988_424_235, ""${'"'}
-      |    |SELECT *
+      |    |SELECT soupView.token, soupView.soup_token, soupView.soup_broth, soupView.soup_name
       |    |FROM soupView
       |    |WHERE soup_token = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
