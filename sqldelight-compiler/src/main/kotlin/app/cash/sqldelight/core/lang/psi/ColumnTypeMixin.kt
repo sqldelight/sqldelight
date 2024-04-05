@@ -42,7 +42,7 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -84,10 +84,10 @@ internal abstract class ColumnTypeMixin(
       ?.columnNameList?.singleOrNull() // Foreign Column
 
     (tableForeignKeyClause ?: columnConstraint)?.reference?.resolve()?.let { resolvedKey -> // Resolved Column
-      val dialectType = resolvedKey.castSafelyTo<SqlColumnName>() // Column Name
-        ?.parent?.castSafelyTo<SqlColumnDef>() // Column Definition
-        ?.columnType?.castSafelyTo<ColumnTypeMixin>() // Column type
-        ?.type()?.dialectType?.castSafelyTo<ValueTypeDialectType>() ?: return@let // SqlDelight type
+      val dialectType = resolvedKey.asSafely<SqlColumnName>() // Column Name
+        ?.parent?.asSafely<SqlColumnDef>() // Column Definition
+        ?.columnType?.asSafely<ColumnTypeMixin>() // Column type
+        ?.type()?.dialectType?.asSafely<ValueTypeDialectType>() ?: return@let // SqlDelight type
       type = type.copy(
         dialectType = dialectType,
         javaType = dialectType.javaType,

@@ -2,7 +2,7 @@
 kotlin = "1.9.23"
 dokka = "1.9.20"
 kotlinCoroutines = "1.8.0"
-idea = "222.4459.24" # Flamingo | 2022.2.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.4.0"
 schemaCrawler = "16.19.2"
 sqliter = "1.3.1"
@@ -13,7 +13,7 @@ ktlint = "1.2.1"
 agp = "8.3.1"
 compileSdk = "34"
 minSdk = "21"
-sqlPsi = "0.4.8"
+sqlPsi = "0.4.9"
 testContainers = "1.19.7"
 
 [libraries]
@@ -64,6 +64,7 @@ intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.
 intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
 
 sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
+sqlPsiEnvironment = { module = "com.alecstrong.sql.psi:environment", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.12.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.8" }

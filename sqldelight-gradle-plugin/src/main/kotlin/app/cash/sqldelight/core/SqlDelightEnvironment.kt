@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core
 
+import app.cash.sqldelight.core.annotators.OptimisticLockCompilerAnnotator
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.DatabaseFileType
 import app.cash.sqldelight.core.lang.DatabaseFileViewProviderFactory
@@ -26,7 +27,6 @@ import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
-import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
@@ -132,7 +132,7 @@ class SqlDelightEnvironment(
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = sortedMapOf<Long, MutableList<String>>()
-    val extraAnnotators = listOf(OptimisticLockValidator())
+    val extraAnnotators = listOf(OptimisticLockCompilerAnnotator())
     annotate(
       extraAnnotators,
     ) { element, message ->

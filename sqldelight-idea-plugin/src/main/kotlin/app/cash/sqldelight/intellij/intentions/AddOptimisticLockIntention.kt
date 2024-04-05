@@ -45,9 +45,7 @@ class AddOptimisticLockIntention(
 
     val whereClause = when (updateElement) {
       is SqlUpdateStmt -> updateElement.expr
-      is SqlUpdateStmtLimited ->
-        updateElement.exprList
-          .single { it.node.treePrev.treePrev.text == "WHERE" }
+      is SqlUpdateStmtLimited -> updateElement.expr
       else -> throw IllegalStateException()
     }
 

@@ -76,35 +76,35 @@ tasks.named("shadowJar") {
    intellij-deps-fastutil-8.5.8-11.jar                                3.945,56 kb
    ide-222.4459.24.jar                                                3.860,40 kb
    util-222.4459.24.jar                                               2.385,63 kb
-   
+
    After minimizing: 43 MB, mostly due to minimizing ide-impl
-  */ 
+  */
   minimize {
     // Needed for MockProject and MockModule.
     exclude(dependency(libs.intellij.testFramework.get()))
-    
+
     // Needed for general utils like PsiTreeUtil.
     exclude(dependency(libs.intellij.util.get()))
-    
+
     // Base intellij platform.
     exclude(dependency(libs.intellij.core.get()))
     exclude(dependency(libs.intellij.coreImpl.get()))
-    
+
     // Base required language support.
     exclude(dependency(libs.intellij.lang.get()))
     exclude(dependency(libs.intellij.langImpl.get()))
-    
+
     // Base required analysis support, like resolve references.
     exclude(dependency(libs.intellij.analysis.get()))
     exclude(dependency(libs.intellij.analysisImpl.get()))
-    
+
     // Needed for resolving files and the file index.
     exclude(dependency(libs.intellij.projectModel.get()))
     exclude(dependency(libs.intellij.projectModelImpl.get()))
 
     // Don't minimize coroutines support.
     exclude(dependency(libs.intellij.utilEx.get()))
-    
+
     // Needed for Icon support.
     exclude(dependency(libs.intellij.utilUi.get()))
   }
