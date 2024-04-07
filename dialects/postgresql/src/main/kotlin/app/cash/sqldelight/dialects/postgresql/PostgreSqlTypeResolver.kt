@@ -275,7 +275,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           IntermediateType(PostgreSqlType.JSON)
         }
       }
-      matchOperatorExpression != null -> {
+      matchOperatorExpression != null || regexMatchOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
       else -> parentResolver.resolvedType(this)
