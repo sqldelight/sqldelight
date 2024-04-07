@@ -18,7 +18,7 @@ develocity {
     termsOfUseUrl = 'https://gradle.com/terms-of-service'
     termsOfUseAgree = 'yes'
     publishing {
-      onlyIf { System.getenv("CI") }
+      onlyIf { System.getenv("CI") != null }
     }
     tag "CI"
   }
