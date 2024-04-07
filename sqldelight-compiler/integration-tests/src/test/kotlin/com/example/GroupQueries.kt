@@ -17,7 +17,7 @@ public class GroupQueries(
 
   public fun <T : Any> selectFromTable2(mapper: (something: String?, nice: String?) -> T): Query<T>
       = Query(-620_576_550, arrayOf("myftstable2"), driver, "Group.sq", "selectFromTable2", """
-  |SELECT *
+  |SELECT myftstable2.something, myftstable2.nice
   |FROM myftstable2
   """.trimMargin()) { cursor ->
     mapper(

@@ -60,7 +60,7 @@ public class PlayerQueries(
     shoots: Shoots,
   ) -> T): Query<T> = Query(-1_634_440_035, arrayOf("player"), driver, "Player.sq", "allPlayers",
       """
-  |SELECT *
+  |SELECT player.name, player.number, player.team, player.shoots
   |FROM player
   """.trimMargin()) { cursor ->
     mapper(
@@ -248,7 +248,7 @@ public class PlayerQueries(
             bindString(3, playerAdapter.shootsAdapter.encode(shoots))
           }
       driver.executeQuery(-452_007_404, """
-          |SELECT *
+          |SELECT player.name, player.number, player.team, player.shoots
           |  FROM player
           |  WHERE player.rowid = last_insert_rowid()
           """.trimMargin(), mapper, 0)
@@ -271,7 +271,7 @@ public class PlayerQueries(
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(null, """
-    |SELECT *
+    |SELECT player.name, player.number, player.team, player.shoots
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
@@ -296,7 +296,7 @@ public class PlayerQueries(
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
-          |SELECT *
+          |SELECT player.name, player.number, player.team, player.shoots
           |FROM player
           |WHERE number IN $numberIndexes
           """.trimMargin(), mapper, number.size) {
@@ -324,7 +324,7 @@ public class PlayerQueries(
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(-1_258_650_806, """
-    |SELECT *
+    |SELECT player.name, player.number, player.team, player.shoots
     |FROM player
     |WHERE (number, name) > (?, ?)
     """.trimMargin(), mapper, 2) {
