@@ -109,7 +109,7 @@ public class TeamQueries(
 
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(null, """
-    |SELECT *
+    |SELECT team.name, team.captain, team.inner_type, team.coach
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {

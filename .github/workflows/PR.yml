@@ -97,6 +97,9 @@ jobs:
         if: matrix.os == 'macOS-14' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace --parallel
 
+      - name: Check for changed files
+        run: test -z "$(git status --porcelain)"
+
   verify_intellij:
     runs-on: ubuntu-latest
 
