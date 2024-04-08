@@ -169,16 +169,19 @@ table_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
-gin_operator_class_stmt ::= 'array_ops' | 'jsonb_ops' | 'jsonb_path_ops' | 'tsvector_ops'
+operator_class_stmt ::= {identifier} [ LP {identifier} EQ ( {identifier} | {numeric_literal} ) { RP ]
+storage_parameter ::= TRUE | FALSE | 'ON' | 'OFF' | {identifier} | {numeric_literal}
+storage_parameters ::= 'autosummarize' | 'buffering' | 'deduplicate_items' | 'fastupdate' | 'fillfactor' | 'gin_pending_list_limit' | 'pages_per_range'
+with_storage_parameter ::= WITH LP storage_parameters EQ ( storage_parameter ) ( COMMA storage_parameters EQ ( storage_parameter ) ) * RP
+index_method ::=  'BRIN' | 'BTREE' | 'GIN' | 'GIST' | 'HASH'
 
 create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
- ( USING 'GIN' LP {indexed_column} [ gin_operator_class_stmt ] ( COMMA {indexed_column} [ gin_operator_class_stmt ] ) * RP | LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] ) {
+ ( USING index_method LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ with_storage_parameter ] | LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ WHERE <<expr '-1'>> ] )  {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
-  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true
   pin = 6
 }
-
 
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
