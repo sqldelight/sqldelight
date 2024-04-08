@@ -62,7 +62,7 @@
   <div class="breadcrumbs"><a href="../../index.html">postgresql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.postgresql.grammar.psi.impl</a><span class="delimiter">/</span><span class="current">PostgreSqlCreateIndexStmtImpl</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">PostgreSqlCreateIndexStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlCreateIndexStmtImpl///PointingToDeclaration/">SqlCreateIndexStmtImpl</span>, <a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-create-index-stmt/index.html">PostgreSqlCreateIndexStmt</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">PostgreSqlCreateIndexStmtImpl</a> : <a href="../../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-index-mixin/index.html">CreateIndexMixin</a>, <a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-create-index-stmt/index.html">PostgreSqlCreateIndexStmt</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -99,6 +99,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-postgre-sql-alter-table-rules-impl/index.html#1700929631%2FProperties%2F-128169639">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1134720687%2FProperties%2F-128169639" anchor-label="Companion" id="-1134720687%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1134720687%2FProperties%2F-128169639"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1134720687%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="index.html#-1134720687%2FProperties%2F-128169639">Companion</a><span class="token operator">: </span><a href="../../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-index-mixin/-companion/index.html">CreateIndexMixin.Companion</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -392,17 +407,17 @@
               </div>
             </div>
           </div>
-<a data-name="1170655427%2FFunctions%2F-128169639" anchor-label="annotate" id="1170655427%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+<a data-name="2091431461%2FFunctions%2F-128169639" anchor-label="annotate" id="2091431461%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1170655427%2FFunctions%2F-128169639"><span><span>annotate</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1170655427%2FFunctions%2F-128169639"></span>
+                  <div><a href="index.html#1035742574%2FFunctions%2F-128169639"><span><span>annotate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2091431461%2FFunctions%2F-128169639"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1170655427%2FFunctions%2F-128169639"><span class="token function">annotate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">annotationHolder<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core/SqlAnnotationHolder///PointingToDeclaration/">SqlAnnotationHolder</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1035742574%2FFunctions%2F-128169639"><span class="token function">annotate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">annotationHolder<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core/SqlAnnotationHolder///PointingToDeclaration/">SqlAnnotationHolder</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1170655427%2FFunctions%2F-128169639"><span class="token function">annotate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">annotationHolder<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core/SqlAnnotationHolder///PointingToDeclaration/">SqlAnnotationHolder</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -872,21 +887,6 @@
               </div>
             </div>
           </div>
-<a data-name="-1270395348%2FFunctions%2F-128169639" anchor-label="getGinOperatorClassStmtList" id="-1270395348%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="get-gin-operator-class-stmt-list.html"><span>get</span><wbr><span>Gin</span><wbr><span>Operator</span><wbr><span>Class</span><wbr><span>Stmt</span><wbr><span><span>List</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1270395348%2FFunctions%2F-128169639"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-gin-operator-class-stmt-list.html"><span class="token function">getGinOperatorClassStmtList</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-gin-operator-class-stmt/index.html">PostgreSqlGinOperatorClassStmt</a><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
 <a data-name="1123357163%2FFunctions%2F-128169639" anchor-label="getGreenStub" id="1123357163%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -928,6 +928,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#850650928%2FFunctions%2F-128169639"><span class="token function">getIndexedColumnList</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlIndexedColumn///PointingToDeclaration/">SqlIndexedColumn</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1460096627%2FFunctions%2F-128169639" anchor-label="getIndexMethod" id="-1460096627%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-index-method.html"><span>get</span><wbr><span>Index</span><wbr><span><span>Method</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1460096627%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-index-method.html"><span class="token function">getIndexMethod</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-index-method/index.html">PostgreSqlIndexMethod</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -1063,6 +1078,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.mixins/-sql-insert-excluded-table-mixin/index.html#1096068674%2FFunctions%2F-128169639"><span class="token function">getOpaque</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html">V</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1860386854%2FFunctions%2F-128169639" anchor-label="getOperatorClassStmtList" id="1860386854%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-operator-class-stmt-list.html"><span>get</span><wbr><span>Operator</span><wbr><span>Class</span><wbr><span>Stmt</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1860386854%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-operator-class-stmt-list.html"><span class="token function">getOperatorClassStmtList</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-operator-class-stmt/index.html">PostgreSqlOperatorClassStmt</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -1438,6 +1468,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.mixins/-sql-insert-excluded-table-mixin/index.html#825306085%2FFunctions%2F-128169639"><span class="token function">getUseScope</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi.search/SearchScope///PointingToDeclaration/">SearchScope</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1700108666%2FFunctions%2F-128169639" anchor-label="getWithStorageParameter" id="-1700108666%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-with-storage-parameter.html"><span>get</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1700108666%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-with-storage-parameter.html"><span class="token function">getWithStorageParameter</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-with-storage-parameter/index.html">PostgreSqlWithStorageParameter</a></div></div></div>
                 </div>
               </div>
             </div>
