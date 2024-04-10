@@ -17,7 +17,7 @@ dependencies {
   implementation libs.postgresJdbc
   implementation libs.testContainers.postgres
   implementation libs.testContainers.r2dbc
-  implementation "org.postgresql:r2dbc-postgresql:1.0.4.RELEASE"
+  implementation "org.postgresql:r2dbc-postgresql:1.0.5.RELEASE"
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
