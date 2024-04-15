@@ -1138,6 +1138,36 @@
               </div>
             </div>
           </div>
+<a data-name="-1085933368%2FFunctions%2F-128169639" anchor-label="regex_match_operator_expression_real" id="-1085933368%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regex_match_operator_expression_real.html"><span><span>regex_match_operator_expression_real</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1085933368%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="regex_match_operator_expression_real.html"><span class="token function">regex_match_operator_expression_real</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder_<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level_<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1892642689%2FFunctions%2F-128169639" anchor-label="regex_match_operator_real" id="1892642689%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regex_match_operator_real.html"><span><span>regex_match_operator_real</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1892642689%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="regex_match_operator_real.html"><span class="token function">regex_match_operator_real</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder_<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level_<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="171624135%2FFunctions%2F-128169639" anchor-label="returning_clause_real" id="171624135%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">

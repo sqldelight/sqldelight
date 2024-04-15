@@ -1104,6 +1104,36 @@
               </div>
             </div>
           </div>
+<a data-name="711532039%2FProperties%2F-128169639" anchor-label="regex_match_operator" id="711532039%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regex_match_operator.html"><span><span>regex_match_operator</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="711532039%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="regex_match_operator.html">regex_match_operator</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1071928612%2FProperties%2F-128169639" anchor-label="regex_match_operator_expression" id="-1071928612%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regex_match_operator_expression.html"><span><span>regex_match_operator_expression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1071928612%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="regex_match_operator_expression.html">regex_match_operator_expression</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="936025089%2FProperties%2F-128169639" anchor-label="returning_clause" id="936025089%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -2664,6 +2694,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="override-sql-parser.html"><span class="token function">overrideSqlParser</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-275889168%2FFunctions%2F-128169639" anchor-label="regexMatchOperatorExpressionExt" id="-275889168%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regex-match-operator-expression-ext.html"><span>regex</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span>Expression</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-275889168%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="regex-match-operator-expression-ext.html"><span class="token function">regexMatchOperatorExpressionExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">regex_match_operator_expression<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2075315416%2FFunctions%2F-128169639" anchor-label="regexMatchOperatorExt" id="-2075315416%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regex-match-operator-ext.html"><span>regex</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2075315416%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="regex-match-operator-ext.html"><span class="token function">regexMatchOperatorExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">regex_match_operator<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
