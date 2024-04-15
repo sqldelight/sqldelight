@@ -846,4 +846,23 @@ class PostgreSqlTest {
       assertThat(first()).isEqualTo("0.030396355")
     }
   }
+
+  @Test
+  fun testMatchRegExOps() {
+    database.regExOpsQueries.insert("thomas")
+    with(database.regExOpsQueries.matchRegExOps("t.*ma", "T.*ma", "t.*max", "T.*ma").executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isTrue()
+      assertThat(first().expr__).isTrue()
+      assertThat(first().expr___).isFalse()
+    }
+  }
+
+  @Test
+  fun testMatchRegExWhere() {
+    database.regExOpsQueries.insert("thomas")
+    with(database.regExOpsQueries.matchRegExWhere("t.*ma").executeAsList()) {
+      assertThat(first()).isEqualTo("thomas")
+    }
+  }
 }
