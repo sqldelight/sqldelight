@@ -71,13 +71,12 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
     override fun execute() {
       val properties = parameters.properties.get()
       val environment = SqlDelightEnvironment(
+        properties = properties,
+        compilationUnit = parameters.compilationUnit.get(),
+        verifyMigrations = false,
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = parameters.moduleName.get(),
-        properties = properties,
-        verifyMigrations = false,
-        compilationUnit = parameters.compilationUnit.get(),
-        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
 
       val outputDirectory = parameters.outputDirectory.get().asFile

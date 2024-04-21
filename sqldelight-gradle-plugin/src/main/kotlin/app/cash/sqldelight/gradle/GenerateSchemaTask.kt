@@ -74,13 +74,12 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
 
     override fun execute() {
       val environment = SqlDelightEnvironment(
+        properties = parameters.properties.get(),
+        compilationUnit = parameters.compilationUnit.get(),
+        verifyMigrations = parameters.verifyMigrations.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = parameters.moduleName.get(),
-        properties = parameters.properties.get(),
-        verifyMigrations = parameters.verifyMigrations.get(),
-        compilationUnit = parameters.compilationUnit.get(),
-        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
 
       var maxVersion = 1L

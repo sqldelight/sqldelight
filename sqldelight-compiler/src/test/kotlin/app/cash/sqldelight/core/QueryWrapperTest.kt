@@ -29,11 +29,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-      |package com.example.testmodule
+      |package com.example.`impl`
       |
       |import app.cash.sqldelight.TransacterImpl
       |import app.cash.sqldelight.db.AfterVersion
@@ -109,11 +109,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -194,12 +194,12 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
 
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -289,11 +289,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -375,11 +375,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -459,11 +459,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -534,11 +534,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -630,11 +630,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -745,11 +745,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -858,11 +858,11 @@ class QueryWrapperTest {
 
     assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     assertThat(queryWrapperFile.toString()).apply {
       startsWith(
         """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion

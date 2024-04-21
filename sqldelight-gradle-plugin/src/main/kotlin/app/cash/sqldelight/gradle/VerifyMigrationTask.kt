@@ -100,13 +100,12 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
     private val environment by lazy {
       SqlDelightEnvironment(
+        properties = parameters.properties.get(),
+        compilationUnit = parameters.compilationUnit.get(),
+        verifyMigrations = parameters.verifyMigrations.get(),
+        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),
-        moduleName = parameters.projectName.get(),
-        properties = parameters.properties.get(),
-        verifyMigrations = parameters.verifyMigrations.get(),
-        compilationUnit = parameters.compilationUnit.get(),
-        dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )
     }
 

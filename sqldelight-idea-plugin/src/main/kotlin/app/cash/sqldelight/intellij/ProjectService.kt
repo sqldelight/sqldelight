@@ -147,7 +147,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
       invokeLater {
         runWriteAction {
           try {
-            SqlDelightCompiler.writeDatabaseInterface(module, file, module.name, fileAppender)
+            SqlDelightCompiler.writeDatabaseInterface(module, file, fileAppender)
           } catch (e: InvalidElementDetectedException) {
             // Since this is an IDE step, it's possible it happens during some element invalidation.
             // In those cases its okay to ignore this time and wait until the next attempt at

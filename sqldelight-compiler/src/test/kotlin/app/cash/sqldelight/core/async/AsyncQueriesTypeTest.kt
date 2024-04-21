@@ -48,11 +48,11 @@ class AsyncQueriesTypeTest {
     val insert = result.compiledFile.namedMutators.first()
     Truth.assertThat(result.errors).isEmpty()
 
-    val database = File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")
+    val database = File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")
     Truth.assertThat(result.compilerOutput).containsKey(database)
     Truth.assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |package com.example.testmodule
+      |package com.example.`impl`
       |
       |import app.cash.sqldelight.SuspendingTransacterImpl
       |import app.cash.sqldelight.db.AfterVersion

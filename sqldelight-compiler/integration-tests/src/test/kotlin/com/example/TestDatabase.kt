@@ -4,8 +4,8 @@ import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import com.example.testmodule.newInstance
-import com.example.testmodule.schema
+import com.example.`impl`.newInstance
+import com.example.`impl`.schema
 import kotlin.Unit
 
 public interface TestDatabase : Transacter {

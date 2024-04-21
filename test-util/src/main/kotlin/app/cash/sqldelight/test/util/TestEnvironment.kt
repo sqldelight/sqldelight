@@ -45,8 +45,6 @@ internal class TestEnvironment(
       },
       dialect = dialect,
       verifyMigrations = true,
-      // hyphen in the name tests that our module name sanitizing works correctly
-      moduleName = "test-module",
       compilationUnit = compilationUnit,
     )
     LanguageParserDefinitions.INSTANCE.forLanguage(SqlDelightLanguage).createParser(environment.project)
