@@ -32,6 +32,7 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlIsExpr
 import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
@@ -224,6 +225,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
+    is SqlIsExpr -> IntermediateType(BOOLEAN)
     is SqlBinaryExpr -> {
       if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
         IntermediateType(BOOLEAN)
@@ -241,9 +243,13 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           REAL,
           TEXT,
           BLOB,
+          BOOLEAN,
+          DATE,
+          PostgreSqlType.UUID,
           PostgreSqlType.INTERVAL,
           PostgreSqlType.TIMESTAMP_TIMEZONE,
           PostgreSqlType.TIMESTAMP,
+          PostgreSqlType.TIME,
           PostgreSqlType.JSON,
           PostgreSqlType.TSVECTOR,
         )

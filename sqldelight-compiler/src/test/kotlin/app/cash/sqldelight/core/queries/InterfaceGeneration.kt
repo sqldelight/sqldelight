@@ -1066,6 +1066,147 @@ class InterfaceGeneration {
     )
   }
 
+  @Test
+  fun `postgres SqlIsExpr returns boolean`() {
+    val result = FixtureCompiler.compileSql(
+      """
+    |CREATE TABLE test(
+    |big BIGINT,
+    |bol BOOLEAN,
+    |byt BYTEA,
+    |dte DATE,
+    |inr INTEGER,
+    |jsn JSON,
+    |jsb JSON,
+    |tim TIME,
+    |tms TIMESTAMP,
+    |tmz TIMESTAMPTZ,
+    |ser SERIAL,
+    |sml SMALLINT,
+    |tsv TSVECTOR,
+    |txt TEXT,
+    |uui UUID,
+    |var VARCHAR(100)
+    |);
+    |
+    |selectIsNotNull:
+    |SELECT
+    |big IS NOT NULL AS has_bigint,
+    |bol IS NOT NULL AS has_boolean,
+    |byt IS NOT NULL AS has_byte,
+    |dte IS NOT NULL AS has_date,
+    |inr IS NOT NULL AS has_integer,
+    |jsn IS NOT NULL AS has_json,
+    |jsb IS NOT NULL AS has_jsob,
+    |sml IS NOT NULL AS has_smallint,
+    |tim IS NOT NULL AS has_time,
+    |tms IS NOT NULL AS has_timestamp,
+    |tmz IS NOT NULL AS has_timestamptz,
+    |tsv IS NOT NULL AS has_tsvector,
+    |uui IS NOT NULL AS has_uuid,
+    |var IS NULL AS has_varchar
+    |FROM test;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "SqlIsExpr.sq",
+      overrideDialect = PostgreSqlDialect(),
+    )
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/SqlIsExprQueries.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+    |package com.example
+    |
+    |import app.cash.sqldelight.Query
+    |import app.cash.sqldelight.TransacterImpl
+    |import app.cash.sqldelight.db.SqlDriver
+    |import app.cash.sqldelight.driver.jdbc.JdbcCursor
+    |import kotlin.Any
+    |import kotlin.Boolean
+    |
+    |public class SqlIsExprQueries(
+    |  driver: SqlDriver,
+    |) : TransacterImpl(driver) {
+    |  public fun <T : Any> selectIsNotNull(mapper: (
+    |    has_bigint: Boolean,
+    |    has_boolean: Boolean,
+    |    has_byte: Boolean,
+    |    has_date: Boolean,
+    |    has_integer: Boolean,
+    |    has_json: Boolean,
+    |    has_jsob: Boolean,
+    |    has_smallint: Boolean,
+    |    has_time: Boolean,
+    |    has_timestamp: Boolean,
+    |    has_timestamptz: Boolean,
+    |    has_tsvector: Boolean,
+    |    has_uuid: Boolean,
+    |    has_varchar: Boolean,
+    |  ) -> T): Query<T> = Query(-1_574_646_250, arrayOf("test"), driver, "SqlIsExpr.sq",
+    |      "selectIsNotNull", ""${'"'}
+    |  |SELECT
+    |  |big IS NOT NULL AS has_bigint,
+    |  |bol IS NOT NULL AS has_boolean,
+    |  |byt IS NOT NULL AS has_byte,
+    |  |dte IS NOT NULL AS has_date,
+    |  |inr IS NOT NULL AS has_integer,
+    |  |jsn IS NOT NULL AS has_json,
+    |  |jsb IS NOT NULL AS has_jsob,
+    |  |sml IS NOT NULL AS has_smallint,
+    |  |tim IS NOT NULL AS has_time,
+    |  |tms IS NOT NULL AS has_timestamp,
+    |  |tmz IS NOT NULL AS has_timestamptz,
+    |  |tsv IS NOT NULL AS has_tsvector,
+    |  |uui IS NOT NULL AS has_uuid,
+    |  |var IS NULL AS has_varchar
+    |  |FROM test
+    |  ""${'"'}.trimMargin()) { cursor ->
+    |    check(cursor is JdbcCursor)
+    |    mapper(
+    |      cursor.getBoolean(0)!!,
+    |      cursor.getBoolean(1)!!,
+    |      cursor.getBoolean(2)!!,
+    |      cursor.getBoolean(3)!!,
+    |      cursor.getBoolean(4)!!,
+    |      cursor.getBoolean(5)!!,
+    |      cursor.getBoolean(6)!!,
+    |      cursor.getBoolean(7)!!,
+    |      cursor.getBoolean(8)!!,
+    |      cursor.getBoolean(9)!!,
+    |      cursor.getBoolean(10)!!,
+    |      cursor.getBoolean(11)!!,
+    |      cursor.getBoolean(12)!!,
+    |      cursor.getBoolean(13)!!
+    |    )
+    |  }
+    |
+    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull { has_bigint, has_boolean,
+    |      has_byte, has_date, has_integer, has_json, has_jsob, has_smallint, has_time, has_timestamp,
+    |      has_timestamptz, has_tsvector, has_uuid, has_varchar ->
+    |    SelectIsNotNull(
+    |      has_bigint,
+    |      has_boolean,
+    |      has_byte,
+    |      has_date,
+    |      has_integer,
+    |      has_json,
+    |      has_jsob,
+    |      has_smallint,
+    |      has_time,
+    |      has_timestamp,
+    |      has_timestamptz,
+    |      has_tsvector,
+    |      has_uuid,
+    |      has_varchar
+    |    )
+    |  }
+    |}
+    |
+      """.trimMargin(),
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
