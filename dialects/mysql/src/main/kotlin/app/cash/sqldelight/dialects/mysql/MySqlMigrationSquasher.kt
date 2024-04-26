@@ -36,6 +36,14 @@ internal class MySqlMigrationSquasher(
           .single { it.indexName.textMatches(indexName.text) }
         into.text.removeRange(createIndex.textRange.startOffset..createIndex.textRange.endOffset)
       }
+      alterTableRules.alterTableRenameIndex != null -> {
+        val indexNames = PsiTreeUtil.getChildrenOfTypeAsList(alterTableRules.alterTableRenameIndex, SqlIndexName::class.java)
+        val oldName = indexNames.first()
+        val createIndex = into.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }
+          .single { it.indexName.textMatches(oldName.text) }
+        val newName = indexNames.last()
+        into.text.replaceRange(createIndex.indexName.textRange.startOffset until createIndex.indexName.textRange.endOffset, newName.text)
+      }
       alterTableRules.alterTableAddColumn != null -> {
         val placement = alterTableRules.alterTableAddColumn!!.placementClause
         val columnDef = PsiTreeUtil.getChildOfType(alterTableRules.alterTableAddColumn!!, SqlColumnDef::class.java)!!

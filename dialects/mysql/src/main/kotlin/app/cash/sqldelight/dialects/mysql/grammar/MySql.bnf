@@ -46,6 +46,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
@@ -219,6 +220,7 @@ alter_table_rules ::= (
   | alter_table_modify_column
   | alter_table_add_index
   | alter_table_drop_index
+  | alter_table_rename_index
   | alter_table_drop_column
   | alter_table_convert_character_set
   | row_format_clause
@@ -255,6 +257,8 @@ alter_table_add_constraint ::= ADD table_constraint
 alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
 
 alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
+
+alter_table_rename_index ::= RENAME ( INDEX | KEY ) {index_name} TO {index_name}
 
 placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 
