@@ -12,8 +12,8 @@ kotlin {
   applyDefaultHierarchyTemplate {
     it.common {
       it.group("concurrent") {
-        it.withJvm()
-        it.withNative()
+        it.group("jvm") { }
+        it.group("native") { }
       }
     }
   }

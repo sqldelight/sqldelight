@@ -13,11 +13,11 @@ archivesBaseName = 'sqldelight-coroutines-extensions'
 kotlin {
   applyDefaultHierarchyTemplate {
     it.group("testableNative") {
-      it.withApple()
-      it.withLinux()
-      it.withMingw()
+      it.group("apple") { }
+      it.group("linux") { }
+      it.group("mingw") { }
       // https://github.com/touchlab/SQLiter/issues/117
-      // it.withAndroidNative()
+      // it.group("androidNative")
     }
   }
 

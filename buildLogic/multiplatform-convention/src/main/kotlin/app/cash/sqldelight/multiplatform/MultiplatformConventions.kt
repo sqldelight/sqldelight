@@ -2,6 +2,7 @@ package app.cash.sqldelight.multiplatform
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -21,10 +22,8 @@ class MultiplatformConventions : Plugin<Project> {
             }
           }
         }
-        compilations.configureEach {
-          it.kotlinOptions {
-            moduleKind = "umd"
-          }
+        compilerOptions {
+            moduleKind.set(JsModuleKind.MODULE_UMD)
         }
       }
 
