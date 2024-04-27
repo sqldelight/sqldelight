@@ -24,5 +24,14 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   internal fun workQueue(): WorkQueue =
     workerExecutor.processIsolation {
       it.classpath.from(classpath)
+
+      it.forkOptions { forkOptions ->
+        // Environment variables are not forwarded to worker processes by default,
+        // see https://github.com/gradle/gradle/issues/8030.
+        // This breaks retrieval of environment variables like temporary directories in the worker
+        // process, which are required for JDBC to work correctly.
+        // Therefore, we explicitly forward all environment variables to the worker process.
+        forkOptions.environment(System.getenv())
+      }
     }
 }
