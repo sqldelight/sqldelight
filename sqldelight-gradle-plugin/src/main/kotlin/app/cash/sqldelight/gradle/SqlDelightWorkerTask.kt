@@ -32,6 +32,9 @@ abstract class SqlDelightWorkerTask : SourceTask() {
         // process, which are required for JDBC to work correctly.
         // Therefore, we explicitly forward all environment variables to the worker process.
         forkOptions.environment(System.getenv())
+
+        // A heap size of 2G is reasonable (determined experimentally)
+        forkOptions.jvmArgs("-Xmx2G")
       }
     }
 }
