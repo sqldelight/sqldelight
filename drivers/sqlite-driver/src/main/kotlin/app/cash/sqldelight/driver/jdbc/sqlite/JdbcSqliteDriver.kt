@@ -115,7 +115,12 @@ private class ThreadedConnectionManager(
   override var transaction: Transaction?
     get() = transactions.get()
     set(value) {
+      val currentTransaction = transactions.get()
       transactions.set(value)
+
+      if (value == null && currentTransaction != null) {
+        closeConnection(currentTransaction.connection)
+      }
     }
 
   override fun getConnection() = connections.getOrSet {

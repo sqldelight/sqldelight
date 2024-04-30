@@ -1066,6 +1066,75 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `postgresql windows function generates correct result columns`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        |CREATE TABLE scores (
+        |  name TEXT NOT NULL,
+        |  points INTEGER NOT NULL
+        |);
+        |
+        |selectRank:
+        |SELECT
+        |  name,
+        |  RANK () OVER (
+        |  ORDER BY points DESC
+        |  ) rank
+        |FROM scores;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "WindowsFunctions.sq",
+      overrideDialect = PostgreSqlDialect(),
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/WindowsFunctionsQueries.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import app.cash.sqldelight.driver.jdbc.JdbcCursor
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class WindowsFunctionsQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectRank(mapper: (name: String, rank: Long) -> T): Query<T> =
+      |      Query(-1_725_152_245, arrayOf("scores"), driver, "WindowsFunctions.sq", "selectRank", ""${'"'}
+      |  |SELECT
+      |  |  name,
+      |  |  RANK () OVER (
+      |  |  ORDER BY points DESC
+      |  |  ) rank
+      |  |FROM scores
+      |  ""${'"'}.trimMargin()) { cursor ->
+      |    check(cursor is JdbcCursor)
+      |    mapper(
+      |      cursor.getString(0)!!,
+      |      cursor.getLong(1)!!
+      |    )
+      |  }
+      |
+      |  public fun selectRank(): Query<SelectRank> = selectRank { name, rank ->
+      |    SelectRank(
+      |      name,
+      |      rank
+      |    )
+      |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test
   fun `postgres SqlIsExpr returns boolean`() {
     val result = FixtureCompiler.compileSql(

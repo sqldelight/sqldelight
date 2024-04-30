@@ -136,7 +136,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "quote_nullable" -> IntermediateType(TEXT).asNullable()
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
     "date_part" -> IntermediateType(REAL)
-    "percentile_disc" -> IntermediateType(REAL).asNullable()
+    "percentile_disc", "cume_dist", "percent_rank" -> IntermediateType(REAL).asNullable()
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
     "corr", "covar_pop", "covar_samp", "regr_avgx", "regr_avgy", "regr_intercept",
     "regr_r2", "regr_slope", "regr_sxx", "regr_sxy", "regr_syy",
@@ -184,6 +184,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "to_tsvector" -> IntermediateType(PostgreSqlType.TSVECTOR)
     "ts_rank" -> encapsulatingType(exprList, REAL, TEXT)
     "websearch_to_tsquery" -> IntermediateType(TEXT)
+    "rank", "dense_rank", "row_number" -> IntermediateType(INTEGER)
+    "ntile" -> IntermediateType(INTEGER).asNullable()
+    "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     else -> null
   }
 

@@ -865,4 +865,34 @@ class PostgreSqlTest {
       assertThat(first()).isEqualTo("thomas")
     }
   }
+
+  @Test
+  fun testRankOver() {
+    database.windowFunctionsQueries.insert("t", 2)
+    database.windowFunctionsQueries.insert("q", 3)
+    database.windowFunctionsQueries.insert("p", 1)
+
+    with(database.windowFunctionsQueries.selectRank().executeAsList()) {
+      assertThat(first().name).isEqualTo("q")
+      assertThat(first().rank).isEqualTo(1)
+    }
+  }
+
+  @Test
+  fun testOver() {
+    database.windowFunctionsQueries.insert("a", 10)
+    database.windowFunctionsQueries.insert("b", 11)
+    database.windowFunctionsQueries.insert("c", 12)
+
+    with(database.windowFunctionsQueries.selectOver().executeAsList()) {
+      assertThat(first().name).isEqualTo("c")
+      assertThat(first().dense_rank).isEqualTo(1)
+      assertThat(first().row_num).isEqualTo(1)
+      assertThat(first().lag).isNull()
+      assertThat(first().lead).isEqualTo(11)
+      assertThat(first().ntile).isEqualTo(1)
+      assertThat(first().cume_dist).isEqualTo(0.3333333333333333)
+      assertThat(first().percent_rank).isEqualTo(0)
+    }
+  }
 }
