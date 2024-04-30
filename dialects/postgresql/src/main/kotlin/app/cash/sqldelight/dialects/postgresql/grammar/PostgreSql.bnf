@@ -13,8 +13,10 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
@@ -55,6 +57,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
@@ -63,11 +66,13 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
@@ -96,6 +101,7 @@ overrides ::= type_name
   | insert_stmt
   | update_stmt_limited
   | generated_clause
+  | result_column
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
@@ -370,8 +376,41 @@ extension_expr ::= regex_match_operator_expression | match_operator_expression |
   override = true
 }
 
-window_function_expr ::= {function_expr} 'WITHIN' GROUP LP ORDER BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP {
+window_function_expr ::= {function_expr}
+  ( ['FILTER' LP WHERE <<expr '-1'>> RP] 'OVER' ( window_defn | window_name) | 'WITHIN' GROUP LP ORDER BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin"
+}
+
+base_window_name ::= id
+window_name ::= id
+
+window_defn ::= LP [ base_window_name ]
+  [ PARTITION BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * ]
+  [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
+  [ frame_spec ]
+RP {
+  pin = 1
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowDefinitionMixin"
+}
+
+frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
+  (
+    BETWEEN (
+      'UNBOUNDED' 'PRECEDING' |
+      'CURRENT' ROW |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) AND (
+      'UNBOUNDED' 'FOLLOWING' |
+      'CURRENT' ROW |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) |
+    'UNBOUNDED' 'PRECEDING' |
+    'CURRENT' ROW |
+    <<expr '-1'>> 'PRECEDING'
+  ) [ 'EXCLUDE' NO 'OTHERS' | 'EXCLUDE' 'CURRENT' ROW | 'EXCLUDE' GROUP | 'EXCLUDE' 'TIES' ] {
+  pin = 1
 }
 
 boolean_not_expression ::= NOT (boolean_literal | {column_name})
