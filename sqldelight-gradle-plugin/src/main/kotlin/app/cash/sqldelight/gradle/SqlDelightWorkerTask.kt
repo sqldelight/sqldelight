@@ -2,9 +2,17 @@ package app.cash.sqldelight.gradle
 
 import javax.inject.Inject
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.MapProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.SourceTask
+import org.gradle.internal.jvm.Jvm
+import org.gradle.process.JavaForkOptions
+import org.gradle.workers.ClassLoaderWorkerSpec
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
@@ -18,23 +26,72 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   @get:Inject
   internal abstract val workerExecutor: WorkerExecutor
 
+  /** @see ClassLoaderWorkerSpec.getClasspath */
   @get:Classpath
   abstract val classpath: ConfigurableFileCollection
 
+  /** @see JavaForkOptions.getEnvironment */
+  @get:Input
+  @get:Optional
+  val environment: MapProperty<String, Any> =
+    project.objects.mapProperty(String::class.java, Any::class.java)
+      .convention(Jvm.getInheritableEnvironmentVariables(System.getenv()))
+
+  fun environment(name: String, value: Any): SqlDelightWorkerTask {
+    environment.put(name, value)
+    return this
+  }
+
+  fun environment(environmentVariables: Map<String, *>): SqlDelightWorkerTask {
+    environment.putAll(environmentVariables)
+    return this
+  }
+
+  /** @see JavaForkOptions.getSystemProperties */
+  @get:Input
+  @get:Optional
+  val systemProperties: MapProperty<String, Any> =
+    project.objects.mapProperty(String::class.java, Any::class.java)
+
+  /** @see JavaForkOptions.getMinHeapSize */
+  @get:Input
+  @get:Optional
+  val minHeapSize: Property<String> =
+    project.objects.property(String::class.java)
+
+  /** @see JavaForkOptions.getMaxHeapSize */
+  @get:Input
+  @get:Optional
+  val maxHeapSize: Property<String> =
+    project.objects.property(String::class.java).convention("512M")
+
+  /** @see JavaForkOptions.jvmArgs */
+  @get:Input
+  @get:Optional
+  val jvmArgs: ListProperty<String> =
+    project.objects.listProperty(String::class.java)
+
+  fun jvmArgs(arguments: Iterable<*>): SqlDelightWorkerTask {
+    jvmArgs.addAll(arguments.map { it.toString() })
+    return this
+  }
+
+  fun jvmArgs(vararg arguments: Any): SqlDelightWorkerTask {
+    this.jvmArgs(listOf(*arguments))
+    return this
+  }
+
   internal fun workQueue(): WorkQueue =
-    workerExecutor.processIsolation {
-      it.classpath.from(classpath)
+    workerExecutor.processIsolation { workerSpec ->
+      workerSpec.classpath.from(classpath)
 
-      it.forkOptions { forkOptions ->
-        // Environment variables are not forwarded to worker processes by default,
-        // see https://github.com/gradle/gradle/issues/8030.
-        // This breaks retrieval of environment variables like temporary directories in the worker
-        // process, which are required for JDBC to work correctly.
-        // Therefore, we explicitly forward all environment variables to the worker process.
-        forkOptions.environment(System.getenv())
-
-        // A heap size of 2G is reasonable (determined experimentally)
-        forkOptions.jvmArgs("-Xmx2G")
+      workerSpec.forkOptions { forkOptions ->
+        forkOptions.defaultCharacterEncoding = "UTF-8"
+        forkOptions.environment(environment.orNull)
+        forkOptions.systemProperties(systemProperties.orNull)
+        forkOptions.minHeapSize = minHeapSize.orNull
+        forkOptions.maxHeapSize = maxHeapSize.orNull
+        forkOptions.jvmArgs = jvmArgs.orNull
       }
     }
 }
