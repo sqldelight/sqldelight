@@ -4,7 +4,7 @@ CREATE TABLE test3 (
   value VARCHAR(8)
 );
 
-CREATE INDEX index1 ON test3(value);
+CREATE INDEX idx_value ON test3(value);
 
 
 CREATE VIEW view1 AS
