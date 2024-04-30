@@ -9,3 +9,6 @@ CREATE TABLE animals (
 ALTER TABLE animals
   RENAME INDEX `unq_name` TO `unq_animals_name`,
   RENAME KEY `idx_species` TO `idx_animals_species`;
+
+ALTER TABLE animals
+  DROP INDEX `unq_animals_name`;
