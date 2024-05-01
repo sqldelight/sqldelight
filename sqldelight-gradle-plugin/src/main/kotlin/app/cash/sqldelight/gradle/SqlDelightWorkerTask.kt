@@ -10,7 +10,6 @@ import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.SourceTask
-import org.gradle.internal.jvm.Jvm
 import org.gradle.process.JavaForkOptions
 import org.gradle.workers.ClassLoaderWorkerSpec
 import org.gradle.workers.WorkQueue
@@ -35,7 +34,7 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   @get:Optional
   val environment: MapProperty<String, Any> =
     project.objects.mapProperty(String::class.java, Any::class.java)
-      .convention(Jvm.getInheritableEnvironmentVariables(System.getenv()))
+      .convention(getInheritableEnvironmentVariables(System.getenv()))
 
   fun environment(name: String, value: Any): SqlDelightWorkerTask {
     environment.put(name, value)
@@ -94,4 +93,23 @@ abstract class SqlDelightWorkerTask : SourceTask() {
         forkOptions.jvmArgs = jvmArgs.orNull
       }
     }
+
+  /** Copied from Gradle's internal org.gradle.internal.jvm.Jvm.getInheritableEnvironmentVariables() */
+  private fun getInheritableEnvironmentVariables(envVars: Map<String, Any>): Map<String, Any> {
+    val appNameRegex = "APP_NAME_\\d+".toRegex()
+    val javaMainClassRegex = "JAVA_MAIN_CLASS_\\d+".toRegex()
+
+    val vars: MutableMap<String, Any> = HashMap()
+    for ((key, value) in envVars) {
+      // The following are known variables that can change between builds and should not be inherited
+      if (appNameRegex.matches(key)
+        || javaMainClassRegex.matches(key)
+        || key == "TERM_SESSION_ID"
+        || key == "ITERM_SESSION_ID") {
+        continue
+      }
+      vars[key] = value
+    }
+    return vars
+  }
 }
