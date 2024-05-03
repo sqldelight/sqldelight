@@ -124,7 +124,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
-current_timestamp_with_optional_interval ::= ( CURRENT_TIMESTAMP | 'NOW()' | interval_expression ) [ [ PLUS | MINUS ] interval_expression ] *
+current_timestamp_with_optional_interval ::= ( current_date_time_functions | 'NOW()' | interval_expression ) [ [ PLUS | MINUS ] interval_expression ] *
 default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
   current_timestamp_with_optional_interval |
   {signed_number} |
@@ -244,13 +244,18 @@ string_literal ::= string {
   override = true
 }
 
+precision_literal ::= ( '0' | '1' | '2' | '3' | '4' | '5' | '6' )
+current_date_time_functions ::= CURRENT_DATE
+  | 'CURRENT_TIME' [ LP precision_literal RP]
+  | 'CURRENT_TIMESTAMP' [ LP precision_literal RP]
+  | 'LOCALTIME' [ LP precision_literal RP]
+  | 'LOCALTIMESTAMP' [ LP precision_literal RP]
+
 literal_value ::= ( {numeric_literal}
                   | string_literal
                   | {blob_literal}
                   | NULL
-                  | CURRENT_TIME
-                  | CURRENT_DATE
-                  | CURRENT_TIMESTAMP
+                  | current_date_time_functions
                   | interval_expression ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
