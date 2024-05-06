@@ -1,9 +1,24 @@
 CREATE TABLE arrays(
   intArray INTEGER[] AS kotlin.Array<kotlin.UInt>,
-  textArray TEXT[]
+  textArray VARCHAR[],
+  vcharArray VARCHAR[]
 );
 
 insertAndReturn:
 INSERT INTO arrays
-VALUES (?, ?)
+VALUES (?, ?, ?)
 RETURNING *;
+
+contains:
+SELECT intArray @> ?, vcharArray <@ ?
+FROM arrays;
+
+containsFirst:
+SELECT *
+FROM arrays
+WHERE intArray @> ?;
+
+containsSecond:
+SELECT *
+FROM arrays
+WHERE vcharArray <@ ?;
