@@ -22,3 +22,8 @@ containsSecond:
 SELECT *
 FROM arrays
 WHERE vcharArray <@ ?;
+
+overlaps:
+SELECT *
+FROM arrays
+WHERE intArray && ?;

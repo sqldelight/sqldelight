@@ -408,6 +408,15 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testArrayOverlaps() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.overlaps(arrayOf(1u, 2u)).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
   @Test fun now() {
     val now = database.datesQueries.selectNow().executeAsOne()
     assertThat(now).isNotNull()

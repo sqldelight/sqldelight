@@ -13,3 +13,7 @@ WHERE a @> ?;
 SELECT *
 FROM T
 WHERE b <@ a;
+
+SELECT *
+FROM T
+WHERE b && a;

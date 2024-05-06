@@ -449,7 +449,7 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
 jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
-contains_operator ::= '@>' | '<@'
+contains_operator ::= '@>' | '<@' | '&&'
 match_operator ::= '@@'
 
 contains_operator_expression ::= ( {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
