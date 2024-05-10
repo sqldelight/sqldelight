@@ -15,11 +15,11 @@ expect suspend fun testDriver(): SqlDriver
 class TestDb(
   val db: SqlDriver,
 ) : SuspendingTransacterImpl(db) {
-  var aliceId = atomic(0L)
-  var bobId = atomic(0L)
-  var eveId = atomic(0L)
+  val aliceId = atomic(0L)
+  val bobId = atomic(0L)
+  val eveId = atomic(0L)
 
-  var isInitialized = atomic(false)
+  val isInitialized = atomic(false)
 
   private suspend fun init() {
     db.execute(null, "PRAGMA foreign_keys=ON", 0).await()
