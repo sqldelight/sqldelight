@@ -61,7 +61,7 @@ kotlin {
         implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
       }
     }
-    testableTest {
+    testableNativeTest {
       dependencies {
         implementation projects.drivers.nativeDriver
       }
