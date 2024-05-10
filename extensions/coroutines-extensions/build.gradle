@@ -16,8 +16,8 @@ kotlin {
     it.common {
       // not using commonTest due https://github.com/touchlab/SQLiter/issues/117
       it.group("testable") {
-        it.group("jvm") {}
-        it.group("js") {}
+        it.withJvm()
+        it.withJs()
         it.group("testableNative") {
           it.group("apple") {}
           it.group("linux") {}
