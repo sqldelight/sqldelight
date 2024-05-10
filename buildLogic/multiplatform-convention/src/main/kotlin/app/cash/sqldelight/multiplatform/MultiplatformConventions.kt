@@ -23,7 +23,7 @@ class MultiplatformConventions : Plugin<Project> {
           }
         }
         compilerOptions {
-            moduleKind.set(JsModuleKind.MODULE_UMD)
+          moduleKind.set(JsModuleKind.MODULE_UMD)
         }
       }
 
