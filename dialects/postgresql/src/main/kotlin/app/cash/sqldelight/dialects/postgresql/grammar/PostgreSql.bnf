@@ -108,6 +108,7 @@ overrides ::= type_name
   | extension_stmt
   | create_index_stmt
   | select_stmt
+  | ordering_term
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -532,3 +533,9 @@ set_timezone ::= 'TIME' 'ZONE'
 | 'LOCAL'
 | set_value
 )
+
+ordering_term ::= <<expr '-1'>> [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlOrderingTermImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlOrderingTerm"
+  override = true
+}
