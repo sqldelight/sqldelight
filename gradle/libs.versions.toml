@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.9.24"
 dokka = "1.9.20"
-kotlinCoroutines = "1.8.0"
+kotlinCoroutines = "1.8.1"
 idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.4.0"
 schemaCrawler = "16.19.2"
