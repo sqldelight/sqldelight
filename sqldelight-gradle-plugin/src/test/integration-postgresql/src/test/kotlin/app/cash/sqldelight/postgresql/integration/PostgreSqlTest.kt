@@ -908,4 +908,22 @@ class PostgreSqlTest {
       assertThat(b).isTrue()
     }
   }
+
+  @Test
+  fun testAtTimeZone() {
+    val ts = LocalDateTime.of(2001, 2, 16, 20, 38, 40)
+    val tstz = OffsetDateTime.of(2001, 2, 16, 20, 38, 40, 0, ZoneOffset.ofHours(0))
+    database.timeZoneQueries.insert(ts, tstz)
+
+    with(database.timeZoneQueries.select().executeAsOne()) {
+      assertThat(expr).isEqualTo(LocalDateTime.of(2024, 5, 9, 15, 28, 36))
+      assertThat(expr_).isEqualTo(OffsetDateTime.of(2001, 2, 17, 2, 38, 40, 0, ZoneOffset.ofHours(0)))
+      assertThat(expr__).isEqualTo(LocalDateTime.of(2001, 2, 16, 18, 38, 40))
+      assertThat(expr___).isEqualTo(OffsetDateTime.of(2001, 2, 17, 2, 38, 40, 0, ZoneOffset.ofHours(0)))
+      assertThat(expr____).isEqualTo(OffsetDateTime.of(2001, 2, 17, 2, 38, 40, 0, ZoneOffset.ofHours(0)))
+      assertThat(expr_____).isEqualTo(LocalDateTime.of(2001, 2, 16, 13, 38, 40))
+      assertThat(expr______).isGreaterThan(LocalDateTime.MIN)
+      assertThat(expr_______).isGreaterThan(LocalDateTime.MIN)
+    }
+  }
 }
