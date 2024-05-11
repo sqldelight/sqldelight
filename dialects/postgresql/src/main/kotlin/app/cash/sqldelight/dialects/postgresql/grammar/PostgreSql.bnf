@@ -226,6 +226,8 @@ tsvector_data_type ::= 'TSVECTOR'
 
 interval_expression ::= 'INTERVAL' string_literal
 
+timestamp_expression ::= 'TIMESTAMP' [ (WITH | WITHOUT) 'TIME' 'ZONE' ] {string_literal}
+
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlWithClauseAuxiliaryStmt"
@@ -259,7 +261,8 @@ literal_value ::= ( {numeric_literal}
                   | NULL
                   | boolean_literal
                   | current_date_time_functions
-                  | interval_expression ) {
+                  | interval_expression
+                  | timestamp_expression) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
@@ -378,7 +381,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= at_time_zone_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -446,7 +449,15 @@ regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_ma
   pin = 2
 }
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
+at_time_zone_operator ::= 'AT' 'TIME' 'ZONE' {string_literal}
+
+at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) at_time_zone_operator [ at_time_zone_operator ] *  {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin"
+  pin = 2
+}
+
+extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+ alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
