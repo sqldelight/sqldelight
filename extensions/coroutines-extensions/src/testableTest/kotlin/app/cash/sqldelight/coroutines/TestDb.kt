@@ -19,7 +19,7 @@ class TestDb(
   var bobId by atomic(0L)
   var eveId by atomic(0L)
 
-  val isInitialized = atomic(false)
+  val isInitialized by atomic(false)
 
   private suspend fun init() {
     db.execute(null, "PRAGMA foreign_keys=ON", 0).await()
@@ -34,7 +34,7 @@ class TestDb(
   }
 
   suspend fun use(block: suspend (TestDb) -> Unit) {
-    if (!isInitialized.value) {
+    if (!isInitialized) {
       init()
     }
 
