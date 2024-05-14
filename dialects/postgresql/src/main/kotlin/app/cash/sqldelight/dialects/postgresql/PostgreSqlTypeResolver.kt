@@ -39,6 +39,7 @@ import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -227,6 +228,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
 
   override fun resolvedType(expr: SqlExpr): IntermediateType {
     return expr.postgreSqlType()
+  }
+
+  override fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType {
+    return if (argument.parent is PostgreSqlAtTimeZoneOperator) {
+      IntermediateType(TEXT)
+    } else {
+      parentResolver.argumentType(parent, argument)
+    }
   }
 
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
