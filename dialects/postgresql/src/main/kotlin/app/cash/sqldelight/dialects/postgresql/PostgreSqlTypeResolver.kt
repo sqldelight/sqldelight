@@ -310,6 +310,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           if (acc.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
         } ?: if (timeStamp.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
       }
+      doubleColonCastOperatorExpression != null -> {
+        val lastTypeCast = doubleColonCastOperatorExpression!!.doubleColonCastOperatorList.last().typeName
+        definitionType(lastTypeCast)
+      }
       else -> parentResolver.resolvedType(this)
     }
 
