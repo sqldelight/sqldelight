@@ -107,17 +107,17 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1305147451%2FFunctions%2F-128169639" anchor-label="argumentType" id="1305147451%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+        <div class="table"><a data-name="1087063146%2FFunctions%2F-128169639" anchor-label="argumentType" id="1087063146%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1305147451%2FFunctions%2F-128169639"><span>argument</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1305147451%2FFunctions%2F-128169639"></span>
+                  <div><a href="argument-type.html"><span>argument</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1087063146%2FFunctions%2F-128169639"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1305147451%2FFunctions%2F-128169639"><span class="token function">argumentType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parent<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">, </span></span><span class="parameter ">argument<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="argument-type.html"><span class="token function">argumentType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parent<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">, </span></span><span class="parameter ">argument<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-intermediate-type/index.html">IntermediateType</a></div></div></div>
                 </div>
               </div>
             </div>
