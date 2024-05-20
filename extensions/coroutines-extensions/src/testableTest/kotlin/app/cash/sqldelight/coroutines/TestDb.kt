@@ -14,14 +14,12 @@ expect suspend fun testDriver(): SqlDriver
 
 class TestDb(
   val db: SqlDriver,
-) : SuspendingTransacterImpl(db) {
+) : SuspendingTransacterImpl(db), AutoCloseable {
   var aliceId by atomic(0L)
   var bobId by atomic(0L)
   var eveId by atomic(0L)
 
-  val isInitialized by atomic(false)
-
-  private suspend fun init() {
+  suspend fun init() {
     db.execute(null, "PRAGMA foreign_keys=ON", 0).await()
 
     db.execute(null, CREATE_EMPLOYEE, 0).await()
@@ -31,14 +29,6 @@ class TestDb(
 
     db.execute(null, CREATE_MANAGER, 0).await()
     manager(eveId, aliceId)
-  }
-
-  suspend fun use(block: suspend (TestDb) -> Unit) {
-    if (!isInitialized) {
-      init()
-    }
-
-    block(this)
   }
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
@@ -61,7 +51,7 @@ class TestDb(
     db.notifyListeners(key)
   }
 
-  fun close() {
+  override fun close() {
     db.close()
   }
 
