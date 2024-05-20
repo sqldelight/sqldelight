@@ -895,4 +895,17 @@ class PostgreSqlTest {
       assertThat(first().percent_rank).isEqualTo(0)
     }
   }
+
+  @Test
+  fun testBooleans() {
+    database.booleansQueries.insert(true)
+
+    with(database.booleansQueries.select().executeAsOne()) {
+      assertThat(expr).isTrue()
+      assertThat(expr_).isFalse()
+      assertThat(expr__).isFalse()
+      assertThat(expr___).isTrue()
+      assertThat(b).isTrue()
+    }
+  }
 }
