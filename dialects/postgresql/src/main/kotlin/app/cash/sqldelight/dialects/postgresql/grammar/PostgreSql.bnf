@@ -109,6 +109,7 @@ overrides ::= type_name
   | create_index_stmt
   | select_stmt
   | ordering_term
+  | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -256,6 +257,7 @@ literal_value ::= ( {numeric_literal}
                   | string_literal
                   | {blob_literal}
                   | NULL
+                  | boolean_literal
                   | current_date_time_functions
                   | interval_expression ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
@@ -376,7 +378,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
+extension_expr ::= regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true

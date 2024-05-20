@@ -259,6 +259,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
       }
     }
     is SqlLiteralExpr -> when {
+      literalValue.text == "TRUE" || literalValue.text == "FALSE" -> IntermediateType(BOOLEAN)
       literalValue.text == "CURRENT_DATE" -> IntermediateType(PostgreSqlType.DATE)
       literalValue.text == "CURRENT_TIME" -> IntermediateType(PostgreSqlType.TIME)
       literalValue.text == "CURRENT_TIMESTAMP" -> IntermediateType(PostgreSqlType.TIMESTAMP)
@@ -284,7 +285,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           IntermediateType(PostgreSqlType.JSON)
         }
       }
-      matchOperatorExpression != null || regexMatchOperatorExpression != null -> {
+      matchOperatorExpression != null || regexMatchOperatorExpression != null || booleanNotExpression != null -> {
         IntermediateType(BOOLEAN)
       }
       else -> parentResolver.resolvedType(this)
