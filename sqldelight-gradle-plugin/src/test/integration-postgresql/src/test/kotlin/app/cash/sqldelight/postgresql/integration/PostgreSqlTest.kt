@@ -966,6 +966,31 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testDataTypeCasts() {
+    database.dataTypeCastsQueries.insert("42", null)
+
+    with(database.dataTypeCastsQueries.select().executeAsOne()) {
+      assertThat(expr).isEqualTo("1")
+      assertThat(expr_).isEqualTo("3.14")
+      assertThat(expr__).isEqualTo(42)
+      assertThat(expr___).isFalse()
+      assertThat(expr____).isTrue()
+      assertThat(expr_____).isEqualTo(LocalDateTime.of(2023, 5, 1, 12, 34, 56))
+      assertThat(expr______).isEqualTo(java.util.UUID.fromString("6ba7b810-9dad-11d1-80b4-00c04fd430c8"))
+      assertThat(expr_______).isEqualTo("""{"a":42}""")
+      assertThat(expr________).isEqualTo(arrayOf(1, 2, 3))
+      assertThat(expr_________).isEqualTo(42L)
+      assertThat(expr__________).isEqualTo(3.14)
+      assertThat(expr___________).isFalse()
+      assertThat(expr____________).isEqualTo("hello")
+      assertThat(expr_____________).isEqualTo(OffsetDateTime.of(2023, 4, 25, 8, 30, 0, 0, ZoneOffset.ofHours(0)))
+      assertThat(expr______________).isEqualTo(LocalDate.of(2023, 4, 25))
+      assertThat(expr_______________).isEqualTo(42)
+      assertThat(expr________________).isNull()
+    }
+  }
+
+  @Test
   fun testXml() {
     val a = "<?xml version=\"1.0\"?><book><title>Manual</title><chapter>test</chapter></book>"
     val b = "<book><title>Manual</title><chapter>test</chapter></book>"
