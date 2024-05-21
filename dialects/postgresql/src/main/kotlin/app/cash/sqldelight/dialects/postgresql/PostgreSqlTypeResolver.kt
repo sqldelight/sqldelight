@@ -19,6 +19,7 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneOperator
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
@@ -311,8 +312,9 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         } ?: if (timeStamp.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
       }
       doubleColonCastOperatorExpression != null -> {
+        val expType: IntermediateType = (doubleColonCastOperatorExpression as DoubleColonCastOperatorExpressionMixin).expr.postgreSqlType()
         val lastTypeCast = doubleColonCastOperatorExpression!!.doubleColonCastOperatorList.last().typeName
-        definitionType(lastTypeCast)
+        definitionType(lastTypeCast).nullableIf(expType.javaType.isNullable)
       }
       else -> parentResolver.resolvedType(this)
     }
