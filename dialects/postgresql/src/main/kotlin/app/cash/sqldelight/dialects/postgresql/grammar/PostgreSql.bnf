@@ -465,7 +465,7 @@ regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_ma
 
 double_colon_cast_operator ::= '::' type_name
 
-double_colon_cast_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
+double_colon_cast_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin"
   pin = 2
 }

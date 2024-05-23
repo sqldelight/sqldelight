@@ -23,6 +23,7 @@ import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOpe
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneOperator
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDoubleColonCastOperatorExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
@@ -233,10 +234,16 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   override fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType {
-    return if (argument.parent is PostgreSqlAtTimeZoneOperator) {
-      IntermediateType(TEXT)
-    } else {
-      parentResolver.argumentType(parent, argument)
+    return when (argument.parent) {
+      is PostgreSqlAtTimeZoneOperator -> {
+        IntermediateType(TEXT)
+      }
+      is PostgreSqlDoubleColonCastOperatorExpression -> {
+        (argument.parent.parent as SqlExpr).postgreSqlType()
+      }
+      else -> {
+        parentResolver.argumentType(parent, argument)
+      }
     }
   }
 
