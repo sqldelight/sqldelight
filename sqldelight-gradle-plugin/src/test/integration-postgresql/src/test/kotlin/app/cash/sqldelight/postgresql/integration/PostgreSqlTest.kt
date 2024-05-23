@@ -969,7 +969,7 @@ class PostgreSqlTest {
   fun testDataTypeCasts() {
     database.dataTypeCastsQueries.insert("42", null)
 
-    with(database.dataTypeCastsQueries.select().executeAsOne()) {
+    with(database.dataTypeCastsQueries.select(42).executeAsOne()) {
       assertThat(expr).isEqualTo("1")
       assertThat(expr_).isEqualTo("3.14")
       assertThat(expr__).isEqualTo(42)
@@ -987,6 +987,7 @@ class PostgreSqlTest {
       assertThat(expr______________).isEqualTo(LocalDate.of(2023, 4, 25))
       assertThat(expr_______________).isEqualTo(42)
       assertThat(expr________________).isNull()
+      assertThat(expr_________________).isEqualTo(42)
     }
   }
 
