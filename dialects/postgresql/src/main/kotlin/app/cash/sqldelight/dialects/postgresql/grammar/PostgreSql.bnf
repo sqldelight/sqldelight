@@ -410,7 +410,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -595,4 +595,12 @@ ordering_term ::= <<expr '-1'>> [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] 
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlOrderingTermImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlOrderingTerm"
   override = true
+}
+
+extract_temporal_field ::= 'century' | 'day' | 'decade' | 'dow' | 'doy' | 'epoch' | 'hour' | 'microseconds' | 'millennium'
+ | 'milliseconds' | 'minute' | 'month' | 'quarter' | 'second' | 'timezone' | 'timezone_hour' | 'timezone_minute' | 'week' | 'year'
+
+extract_temporal_expression ::= 'EXTRACT' LP extract_temporal_field FROM <<expr '-1'>> RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin"
+  pin = 2
 }
