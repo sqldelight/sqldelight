@@ -281,8 +281,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     is SqlLiteralExpr -> when {
       literalValue.text == "TRUE" || literalValue.text == "FALSE" -> IntermediateType(BOOLEAN)
-      literalValue.text == "CURRENT_DATE" || literalValue.text == "DATE" -> IntermediateType(PostgreSqlType.DATE)
-      literalValue.text == "CURRENT_TIME" || literalValue.text == "TIME" -> IntermediateType(PostgreSqlType.TIME)
+      literalValue.text == "CURRENT_DATE" || literalValue.text.startsWith("DATE ") -> IntermediateType(PostgreSqlType.DATE)
+      literalValue.text == "CURRENT_TIME" || literalValue.text.startsWith("TIME ") -> IntermediateType(PostgreSqlType.TIME)
       literalValue.text.startsWith("CURRENT_TIMESTAMP") -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE)
       literalValue.text.startsWith("TIMESTAMP WITH TIME ZONE") -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE)
       literalValue.text.startsWith("TIMESTAMP WITHOUT TIME ZONE") -> IntermediateType(TIMESTAMP)

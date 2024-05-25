@@ -276,7 +276,7 @@ current_date_time_functions ::= CURRENT_DATE
   | 'LOCALTIMESTAMP' [ LP precision_literal RP]
 
 literal_value ::= ( {numeric_literal}
-                  | {string_literal}
+                  | string_literal
                   | {blob_literal}
                   | NULL
                   | boolean_literal
