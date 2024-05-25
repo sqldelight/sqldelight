@@ -1039,6 +1039,24 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testExtract() {
+    val sa = OffsetDateTime.of(2001, 2, 16, 19, 30, 0, 0, ZoneOffset.ofHours(0))
+    val ea = OffsetDateTime.of(2001, 2, 16, 20, 30, 0, 0, ZoneOffset.ofHours(0))
+    val cd = LocalDate.of(2001, 2, 16)
+
+    database.extractQueries.insert(sa, ea, cd)
+
+    with(database.extractQueries.select().executeAsOne()) {
+      assertThat(expr).isEqualTo(5)
+      assertThat(expr_).isEqualTo(2023)
+      assertThat(expr__).isEqualTo(93600)
+      assertThat(expr___).isEqualTo(20)
+      assertThat(expr____).isEqualTo(38)
+      assertThat(expr_____).isEqualTo(16)
+    }
+  }
+
+  @Test
   fun testSelectDistinctOn() {
     val studentExpected = Student(1000, "Test Student")
     val gradeExpected = Grade(4000, studentExpected.student_id, 5, LocalDateTime.of(1980, 1, 1, 1, 0, 0))
