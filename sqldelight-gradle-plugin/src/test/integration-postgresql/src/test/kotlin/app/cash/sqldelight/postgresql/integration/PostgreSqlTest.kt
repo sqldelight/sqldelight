@@ -423,6 +423,16 @@ class PostgreSqlTest {
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
   }
 
+  @Test fun testDateLiteral() {
+    val dateLiteral = database.datesQueries.selectDateLiteral().executeAsOne()
+    assertThat(dateLiteral).isEqualTo(LocalDate.of(2023, 5, 15))
+  }
+
+  @Test fun testTimeLiteral() {
+    val timeLiteral = database.datesQueries.selectTimeLiteral().executeAsOne()
+    assertThat(timeLiteral).isEqualTo(LocalTime.of(10, 30, 45, 0))
+  }
+
   @Test fun nowPlusInterval() {
     val selectNowInterval = database.datesQueries.selectNowInterval().executeAsOne()
     assertThat(selectNowInterval.now).isNotNull()
@@ -1053,6 +1063,8 @@ class PostgreSqlTest {
       assertThat(expr___).isEqualTo(20)
       assertThat(expr____).isEqualTo(38)
       assertThat(expr_____).isEqualTo(16)
+      assertThat(expr______).isEqualTo(5)
+      assertThat(expr_______).isEqualTo(10)
     }
   }
 
