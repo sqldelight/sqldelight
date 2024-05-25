@@ -240,9 +240,13 @@ tsvector_data_type ::= 'TSVECTOR'
 
 xml_data_type ::= 'XML'
 
-interval_expression ::= 'INTERVAL' string_literal
+interval_expression ::= 'INTERVAL' {string_literal}
 
 timestamp_expression ::= 'TIMESTAMP' [ (WITH | WITHOUT) 'TIME' 'ZONE' ] {string_literal}
+
+date_expression ::= 'DATE' {string_literal}
+
+time_expression ::= 'TIME' {string_literal}
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
@@ -272,13 +276,15 @@ current_date_time_functions ::= CURRENT_DATE
   | 'LOCALTIMESTAMP' [ LP precision_literal RP]
 
 literal_value ::= ( {numeric_literal}
-                  | string_literal
+                  | {string_literal}
                   | {blob_literal}
                   | NULL
                   | boolean_literal
                   | current_date_time_functions
                   | interval_expression
-                  | timestamp_expression) {
+                  | timestamp_expression
+                  | date_expression
+                  | time_expression ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
