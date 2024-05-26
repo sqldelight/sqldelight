@@ -73,7 +73,6 @@ internal actual class WorkerWrapper actual constructor(
         worker.removeEventListener("message", messageListener)
         worker.removeEventListener("error", errorListener)
       }
-
     }
   }
 

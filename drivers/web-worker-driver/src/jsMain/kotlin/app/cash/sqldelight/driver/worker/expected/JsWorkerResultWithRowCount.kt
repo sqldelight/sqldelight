@@ -5,9 +5,9 @@ import app.cash.sqldelight.driver.worker.api.WorkerResult
 import app.cash.sqldelight.driver.worker.api.WorkerResultWithRowCount
 
 internal class JsWorkerResultWithRowCount(
-    private val data: JsWorkerResponse,
+  private val data: JsWorkerResponse,
 ) :
-    WorkerResultWithRowCount {
+  WorkerResultWithRowCount {
   override val rowCount: Long by lazy {
     when {
       data.results.values.isEmpty() -> 0L

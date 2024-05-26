@@ -137,5 +137,4 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
       ),
     )
   }
-
 }

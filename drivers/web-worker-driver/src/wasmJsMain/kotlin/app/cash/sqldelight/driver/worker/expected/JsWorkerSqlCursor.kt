@@ -7,7 +7,7 @@ import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.get
 
 internal actual class JsWorkerSqlCursor actual constructor(
-    private val result: WorkerResult,
+  private val result: WorkerResult,
 ) : SqlCursor {
   private var currentRow = -1
   private val values: JsArray<JsArray<JsAny>> by lazy {

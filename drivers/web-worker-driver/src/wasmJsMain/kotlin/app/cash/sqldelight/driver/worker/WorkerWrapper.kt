@@ -90,5 +90,4 @@ internal actual class WorkerWrapper actual constructor(
   actual fun terminate() {
     worker.terminate()
   }
-
 }
