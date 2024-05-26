@@ -603,8 +603,9 @@ ordering_term ::= <<expr '-1'>> [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] 
   override = true
 }
 
-extract_temporal_field ::= 'century' | 'day' | 'decade' | 'dow' | 'doy' | 'epoch' | 'hour' | 'microseconds' | 'millennium'
- | 'milliseconds' | 'minute' | 'month' | 'quarter' | 'second' | 'timezone' | 'timezone_hour' | 'timezone_minute' | 'week' | 'year'
+extract_temporal_field ::= 'century' | 'day' | 'decade' | 'dow' | 'doy' | 'epoch' | 'hour' | 'isodow' | 'isoyear' | 'julian'
+ | 'microseconds' | 'millennium' | 'milliseconds' | 'minute' | 'month' | 'quarter' | 'second' | 'timezone' | 'timezone_hour'
+ | 'timezone_minute' | 'week' | 'year'
 
 extract_temporal_expression ::= 'EXTRACT' LP extract_temporal_field FROM <<expr '-1'>> RP {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin"
