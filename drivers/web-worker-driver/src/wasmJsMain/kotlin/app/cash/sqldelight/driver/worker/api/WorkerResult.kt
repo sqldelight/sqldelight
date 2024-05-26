@@ -3,7 +3,7 @@ package app.cash.sqldelight.driver.worker.api
 /**
  * The results of a SQL operation in the worker.
  */
-internal external interface WorkerResult : JsAny {
+internal actual external interface WorkerResult : JsAny {
   /**
    * The "table" of values in the result, as rows of columns.
    * i.e. `values[row][col]`

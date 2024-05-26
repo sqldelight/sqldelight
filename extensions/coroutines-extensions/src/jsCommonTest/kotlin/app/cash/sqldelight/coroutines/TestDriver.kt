@@ -17,7 +17,7 @@
 package app.cash.sqldelight.coroutines
 
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.worker.createWebWorkerDriver
+import app.cash.sqldelight.driver.worker.createDefaultWebWorkerDriver
 
 actual suspend fun testDriver(): SqlDriver =
-  createWebWorkerDriver()
+  createDefaultWebWorkerDriver()

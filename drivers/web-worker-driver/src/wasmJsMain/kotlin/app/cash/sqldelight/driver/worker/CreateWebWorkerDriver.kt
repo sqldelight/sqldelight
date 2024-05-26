@@ -3,7 +3,7 @@ package app.cash.sqldelight.driver.worker
 import app.cash.sqldelight.db.SqlDriver
 import org.w3c.dom.Worker
 
-actual fun createWebWorkerDriver(): SqlDriver {
+actual fun createDefaultWebWorkerDriver(): SqlDriver {
   return WebWorkerDriver(jsWorker())
 }
 

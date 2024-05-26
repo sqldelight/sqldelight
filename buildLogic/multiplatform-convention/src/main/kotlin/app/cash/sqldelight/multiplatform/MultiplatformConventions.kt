@@ -14,6 +14,7 @@ class MultiplatformConventions : Plugin<Project> {
     project.plugins.apply("org.jetbrains.kotlin.multiplatform")
 
     (project.kotlinExtension as KotlinMultiplatformExtension).apply {
+      @OptIn(ExperimentalKotlinGradlePluginApi::class)
       compilerOptions {
         this.freeCompilerArgs.addAll(
           "-Xexpect-actual-classes",

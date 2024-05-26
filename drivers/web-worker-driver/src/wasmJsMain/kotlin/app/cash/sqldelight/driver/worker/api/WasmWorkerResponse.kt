@@ -3,11 +3,11 @@ package app.cash.sqldelight.driver.worker.api
 /**
  * Data returned by the worker after posting a message.
  */
-internal external interface JsWorkerResponse {
+internal external interface WasmWorkerResponse : JsAny {
   /**
    * An error returned by the worker, could be undefined.
    */
-  var error: String?
+  var error: JsString?
 
   /**
    * The id of the message that this data is in response to. Matches the value that was posted in [WorkerRequest.id].

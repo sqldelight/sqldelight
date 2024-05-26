@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
@@ -16,20 +18,18 @@ kotlin {
   }
   applyDefaultHierarchyTemplate {
     it.common {
-      it.group("jsCommon") {
-        it.withJs()
-        it.withWasm()
-      }
+      it.withJs()
+      it.withWasm()
     }
   }
 
   sourceSets {
-    jsCommonMain.dependencies {
+    commonMain.dependencies {
       api projects.runtime
       implementation libs.kotlin.coroutines.core
     }
 
-    jsCommonTest.dependencies {
+    commonTest.dependencies {
       implementation libs.kotlin.test
       implementation npm("sql.js", libs.versions.sqljs.get())
       implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
@@ -37,6 +37,12 @@ kotlin {
       implementation libs.kotlin.coroutines.test
       implementation project(":extensions:async-extensions")
     }
+  }
+}
+
+tasks.withType(KotlinCompilation.class).configureEach {
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 }
 
