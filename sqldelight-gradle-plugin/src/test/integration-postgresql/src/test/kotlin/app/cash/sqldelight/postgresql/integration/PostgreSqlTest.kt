@@ -1065,6 +1065,7 @@ class PostgreSqlTest {
       assertThat(expr_____).isEqualTo(16)
       assertThat(expr______).isEqualTo(5)
       assertThat(expr_______).isEqualTo(10)
+      assertThat(expr________).isEqualTo(3)
     }
   }
 
