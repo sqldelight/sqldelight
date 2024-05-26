@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   id("app.cash.sqldelight")
@@ -25,22 +28,13 @@ kotlin {
     binaries.executable()
     useCommonJs()
   }
-  applyDefaultHierarchyTemplate {
-    it.common {
-      it.group("jsCommon") {
-        it.withJs()
-        it.withWasm()
-      }
-    }
-  }
 
   sourceSets {
     commonMain.dependencies {
-      implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
+      implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.6.0"
       implementation "app.cash.sqldelight:primitive-adapters"
       implementation "org.jetbrains.kotlinx:kotlinx-html:0.11.0"
-    }
-    jsCommonMain.dependencies {
+
       implementation "app.cash.sqldelight:web-worker-driver"
       implementation devNpm("copy-webpack-plugin", "9.1.0")
       implementation npm("sql.js", libs.versions.sqljs.get())
@@ -49,14 +43,20 @@ kotlin {
       implementation npm("@cashapp/sqldelight-sqljs-worker", sqljsWorker)
     }
 
-    jsCommonTest.dependencies {
+    commonTest.dependencies {
       implementation 'org.jetbrains.kotlin:kotlin-test'
       implementation libs.kotlin.coroutines.test
     }
   }
 }
 
+tasks.withType(KotlinCompilation.class).configureEach {
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
+  }
+}
+
 // Workaround yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320
-tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask).configureEach {
+tasks.withType(KotlinNpmInstallTask.class).configureEach {
   args.addAll(["--mutex", "file:${file("../build/.yarn-mutex")}".toString()])
 }
