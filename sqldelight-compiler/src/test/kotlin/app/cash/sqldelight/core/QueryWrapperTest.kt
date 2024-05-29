@@ -53,7 +53,8 @@ class QueryWrapperTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |) : TransacterImpl(driver), TestDatabase {
+      |) : TransacterImpl(driver),
+      |    TestDatabase {
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
       |    override val version: Long
       |      get() = 1
@@ -141,7 +142,8 @@ class QueryWrapperTest {
         |  driver: SqlDriver,
         |  test_table2Adapter: Test_table2.Adapter,
         |  test_tableAdapter: Test_table.Adapter,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  override val testQueries: TestQueries = TestQueries(driver, test_tableAdapter, test_table2Adapter)
         |
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
@@ -219,7 +221,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 1
@@ -313,7 +316,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 1
@@ -399,7 +403,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 1
@@ -483,7 +488,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 1
@@ -558,7 +564,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 1
@@ -654,7 +661,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 3
@@ -770,7 +778,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  override val queryQueries: QueryQueries = QueryQueries(driver)
         |
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
@@ -883,7 +892,8 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
         |    override val version: Long
         |      get() = 1
