@@ -259,7 +259,8 @@ class MigrationTest {
       """
       |private class DatabaseImpl(
       |  driver: SqlDriver,
-      |) : TransacterImpl(driver), Database {
+      |) : TransacterImpl(driver),
+      |    Database {
       |  override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
