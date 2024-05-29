@@ -88,9 +88,8 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
     override fun execute() {
       parameters.outputDirectory.get().asFile.deleteRecursively()
       val environment = SqlDelightEnvironment(
-        compilationUnit = parameters.compilationUnit.get(),
         properties = parameters.properties.get(),
-        moduleName = parameters.projectName.get(),
+        compilationUnit = parameters.compilationUnit.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
       )

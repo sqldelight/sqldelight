@@ -63,7 +63,6 @@ class SqlDelightEnvironment(
   private val compilationUnit: SqlDelightCompilationUnit,
   private val verifyMigrations: Boolean,
   override var dialect: SqlDelightDialect,
-  moduleName: String,
   private val sourceFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && !it.dependency }
     .map { it.folder },
@@ -74,7 +73,6 @@ class SqlDelightEnvironment(
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
-  private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
   init {
     project.registerService(SqlDelightProjectService::class.java, this)
@@ -176,15 +174,15 @@ class SqlDelightEnvironment(
           output = writer,
           includeAll = true,
         )
-        SqlDelightCompiler.writeImplementations(module, migrationFile, moduleName, writer)
+        SqlDelightCompiler.writeImplementations(module, migrationFile, writer)
       }
       logger("----- END ${migrationFile.name} in $timeTaken ms ------")
     }
 
     sourceFile?.let {
-      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
+      SqlDelightCompiler.writeDatabaseInterface(module, it, writer)
       if (it is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+        SqlDelightCompiler.writeImplementations(module, it, writer)
       }
     }
 

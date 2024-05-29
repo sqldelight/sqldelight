@@ -1,4 +1,4 @@
-package com.example.testmodule
+package com.example.`impl`
 
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.AfterVersion

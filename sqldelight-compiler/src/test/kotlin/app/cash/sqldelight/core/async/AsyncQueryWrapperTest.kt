@@ -49,11 +49,11 @@ class AsyncQueryWrapperTest {
 
     Truth.assertThat(result.errors).isEmpty()
 
-    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/impl/TestDatabaseImpl.kt")]
     Truth.assertThat(queryWrapperFile).isNotNull()
     Truth.assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |package com.example.`impl`
         |
         |import app.cash.sqldelight.SuspendingTransacterImpl
         |import app.cash.sqldelight.db.AfterVersion

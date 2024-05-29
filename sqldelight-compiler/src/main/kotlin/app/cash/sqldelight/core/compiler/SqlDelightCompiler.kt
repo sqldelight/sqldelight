@@ -66,20 +66,18 @@ object SqlDelightCompiler {
   fun writeDatabaseInterface(
     module: Module,
     file: SqlDelightFile,
-    implementationFolder: String,
     output: FileAppender,
   ) {
-    writeQueryWrapperInterface(module, file, implementationFolder, output)
+    writeQueryWrapperInterface(module, file, output)
   }
 
   fun writeImplementations(
     module: Module,
     sourceFile: SqlDelightFile,
-    implementationFolder: String,
     output: FileAppender,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
-    val packageName = "${fileIndex.packageName}.$implementationFolder"
+    val packageName = "${fileIndex.packageName}.impl"
     val databaseImplementationType = DatabaseGenerator(module, sourceFile).type()
     val exposer = DatabaseExposerGenerator(databaseImplementationType, fileIndex, sourceFile.generateAsync)
 
@@ -98,7 +96,6 @@ object SqlDelightCompiler {
   private fun writeQueryWrapperInterface(
     module: Module,
     sourceFile: SqlDelightFile,
-    implementationFolder: String,
     output: FileAppender,
   ) {
     val fileIndex = SqlDelightFileIndex.getInstance(module)
@@ -106,7 +103,7 @@ object SqlDelightCompiler {
     val queryWrapperType = DatabaseGenerator(module, sourceFile).interfaceType()
     val fileSpec = FileSpec.builder(packageName, queryWrapperType.name!!)
       // TODO: Remove these when kotlinpoet supports top level types.
-      .addImport("$packageName.$implementationFolder", "newInstance", "schema")
+      .addImport("$packageName.impl", "newInstance", "schema")
       .apply {
         var index = 0
         fileIndex.dependencies.forEach {
