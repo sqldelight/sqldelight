@@ -3,7 +3,7 @@ kotlin = "2.0.20"
 dokka = "1.9.20"
 kotlinCoroutines = "1.9.0"
 idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
-androidxSqlite = "2.4.0"
+androidxSqlite = "2.5.0-alpha03"
 schemaCrawler = "16.19.2"
 sqliter = "1.3.1"
 sqljs = "1.8.0"
@@ -28,6 +28,7 @@ kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 androidx-test-core = "androidx.test:core:1.6.1"
 androidx-test-runner = "androidx.test:runner:1.6.1"
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
+androidx-sqliteBundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
 app-cash-paging-runtime-uikit = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-mpp" }
@@ -78,6 +79,8 @@ schemaCrawler-sqlite = { module = "us.fatehi:schemacrawler-sqlite", version.ref 
 objectDiff = { module = "de.danielbechler:java-object-diff", version = "0.95" }
 sqliter = { module = "co.touchlab:sqliter-driver", version.ref = "sqliter" }
 stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2.1.0" }
+
+cache4k = "io.github.reactivecircus.cache4k:cache4k:0.13.0"
 
 testhelp = { module = "co.touchlab:testhelp", version = "0.6.12" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
