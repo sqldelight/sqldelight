@@ -1,0 +1,23 @@
+public final class app/cash/sqldelight/driver/kmp/KmpSqliteDriver : app/cash/sqldelight/db/SqlDriver {
+	public fun <init> (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;I)V
+	public synthetic fun <init> (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
+	public fun close ()V
+	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
+	public fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
+	public synthetic fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
+	public fun executeQuery-0yMERmw (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun newTransaction ()Lapp/cash/sqldelight/db/QueryResult;
+	public fun notifyListeners ([Ljava/lang/String;)V
+	public fun removeListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
+}
+
+public final class app/cash/sqldelight/driver/kmp/KmpSqliteDriver$Transaction : app/cash/sqldelight/Transacter$Transaction {
+	public fun <init> (Lapp/cash/sqldelight/driver/kmp/KmpSqliteDriver;Lapp/cash/sqldelight/Transacter$Transaction;)V
+}
+
+public final class app/cash/sqldelight/driver/kmp/KmpSqliteSchemaKt {
+	public static final fun KmpSqliteDriver (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;Lapp/cash/sqldelight/db/SqlSchema;ZI[Lapp/cash/sqldelight/db/AfterVersion;)Lapp/cash/sqldelight/driver/kmp/KmpSqliteDriver;
+	public static synthetic fun KmpSqliteDriver$default (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;Lapp/cash/sqldelight/db/SqlSchema;ZI[Lapp/cash/sqldelight/db/AfterVersion;ILjava/lang/Object;)Lapp/cash/sqldelight/driver/kmp/KmpSqliteDriver;
+}
+
