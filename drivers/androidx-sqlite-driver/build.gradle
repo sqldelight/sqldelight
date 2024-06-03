@@ -1,0 +1,101 @@
+plugins {
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
+}
+
+archivesBaseName = 'sqldelight-kmp-driver'
+
+kotlin {
+  // tier 1
+  androidTarget()
+  jvm()
+//  linuxX64()
+//  macosX64()
+//  macosArm64()
+//  iosSimulatorArm64()
+//  iosX64()
+
+  // tier 2
+//  linuxArm64()
+//  watchosSimulatorArm64()
+//  watchosX64()
+//  watchosArm32()
+//  watchosArm64()
+//  tvosSimulatorArm64()
+//  tvosX64()
+//  tvosArm64()
+//  iosArm64()
+
+  // tier 3
+  // https://github.com/touchlab/SQLiter/issues/117
+  // androidNativeArm32()
+  // androidNativeArm64()
+  // androidNativeX86()
+  // androidNativeX64()
+  // https://developer.android.com/kotlin/multiplatform/sqlite#driver_implementations
+  // mingwX64()
+  // watchosDeviceArm64()
+
+  sourceSets {
+    commonMain {
+      dependencies {
+        api projects.runtime
+        api libs.androidx.sqlite
+
+        implementation libs.cache4k
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation libs.kotlin.test
+        implementation libs.testhelp
+        implementation projects.drivers.driverTest
+      }
+    }
+
+    androidUnitTest {
+      dependencies {
+        implementation libs.junit
+        implementation libs.androidx.test.core
+        implementation libs.robolectric
+        implementation libs.androidx.sqliteFramework
+      }
+    }
+
+    jvmTest {
+      dependencies {
+        implementation libs.androidx.sqliteBundled
+      }
+    }
+  }
+}
+
+android {
+  compileSdk libs.versions.compileSdk.get() as int
+  namespace = "app.cash.sqldelight.driver.kmp"
+
+  lint {
+    textReport true
+    textOutput file("$reportsDir/lint-results.txt")
+  }
+
+  defaultConfig {
+    minSdk libs.versions.minSdk.get() as int
+  }
+
+  buildFeatures {
+    buildConfig = false
+  }
+
+  testOptions  {
+    unitTests {
+      includeAndroidResources = true
+    }
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
