@@ -16,18 +16,16 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class AndroidxSqliteDriverTest : DriverTest() {
+class AndroidxSqliteFrameworkDriverTest : DriverTest() {
   override fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver {
     val database = getApplicationContext<Context>().getDatabasePath("test.db")
     database.parentFile?.mkdirs()
-    return AndroidxSqliteDriver(AndroidSQLiteDriver(), database.absolutePath, schema)
+    return AndroidxSqliteDriver(AndroidSQLiteDriver(), ":memory:", schema)
   }
 
   @Test
   fun `cached statement can be reused`() {
-    val database = getApplicationContext<Context>().getDatabasePath("test.db")
-    database.parentFile?.mkdirs()
-    val driver = AndroidxSqliteDriver(AndroidSQLiteDriver(), database.absolutePath, schema, cacheSize = 1)
+    val driver = AndroidxSqliteDriver(AndroidSQLiteDriver(), ":memory:", schema, cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
     driver.executeQuery(1, "SELECT * FROM test", { QueryResult.Unit }, 0, { bindable = this })
 
@@ -46,7 +44,7 @@ class AndroidxSqliteDriverTest : DriverTest() {
   fun `cached statement is evicted and closed`() {
     val database = getApplicationContext<Context>().getDatabasePath("test.db")
     database.parentFile?.mkdirs()
-    val driver = AndroidxSqliteDriver(AndroidSQLiteDriver(), database.absolutePath, schema, cacheSize = 1)
+    val driver = AndroidxSqliteDriver(AndroidSQLiteDriver(), ":memory:", schema, cacheSize = 1)
     lateinit var bindable: SqlPreparedStatement
     driver.executeQuery(1, "SELECT * FROM test", { QueryResult.Unit }, 0, { bindable = this })
 
@@ -67,7 +65,7 @@ class AndroidxSqliteDriverTest : DriverTest() {
   fun `uncached statement is closed`() {
     val database = getApplicationContext<Context>().getDatabasePath("test.db")
     database.parentFile?.mkdirs()
-    val driver = AndroidxSqliteDriver(AndroidSQLiteDriver(), database.absolutePath, schema, cacheSize = 1)
+    val driver = AndroidxSqliteDriver(AndroidSQLiteDriver(), ":memory:", schema, cacheSize = 1)
     lateinit var bindable: AndroidxStatement
     driver.execute(null, "SELECT * FROM test", 0) {
       bindable = this as AndroidxStatement

@@ -30,6 +30,10 @@ class AndroidxSqliteDriver(
     .eventListener { event ->
       if (event is CacheEvent.Evicted) {
         event.value.close()
+      } else if (event is CacheEvent.Updated) {
+        if (event.oldValue != event.newValue) {
+          event.oldValue.close()
+        }
       }
     }
     .build()
@@ -99,6 +103,11 @@ class AndroidxSqliteDriver(
     var statement: AndroidxStatement? = null
     if (identifier != null) {
       statement = statements.get(identifier)
+
+      // remove temporarily from the cache
+      if (statement != null) {
+        statements.invalidate(identifier)
+      }
     }
     if (statement == null) {
       statement = createStatement()
@@ -136,6 +145,7 @@ class AndroidxSqliteDriver(
     execute(identifier, { AndroidxQuery(sql, connection, parameters) }, binders) { executeQuery(mapper) }
 
   override fun close() {
+    statements.asMap().values.forEach { it.close() }
     statements.invalidateAll()
     return connection.close()
   }
