@@ -11,30 +11,12 @@ import app.cash.sqldelight.driver.kmp.KmpSqliteDriver
 import com.squareup.sqldelight.driver.test.TransacterTest
 import java.util.concurrent.Semaphore
 import kotlin.concurrent.thread
-import org.junit.After
 import org.junit.Assert.assertThrows
-import org.junit.ClassRule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
 
 class KmpTransacterTest : TransacterTest() {
-  companion object {
-    @JvmField
-    @ClassRule
-    val globalFolder: TemporaryFolder = TemporaryFolder().apply {
-      create()
-    }
-
-    val database = globalFolder.newFile("test.db")
-  }
-
-  @After
-  fun cleanupDatabase() {
-    KmpDriverTest.database.delete()
-  }
-
   override fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver {
-    return KmpSqliteDriver(BundledSQLiteDriver(), database.absolutePath, schema)
+    return KmpSqliteDriver(BundledSQLiteDriver(), "", schema)
   }
 
   @Test fun `detect the afterRollback call has escaped the original transaction thread in transaction()`() {
