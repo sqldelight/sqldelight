@@ -13,6 +13,13 @@ import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import io.github.reactivecircus.cache4k.Cache
 import io.github.reactivecircus.cache4k.CacheEvent
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
+
+internal expect class TransactionsThreadLocal() {
+  internal fun get(): Transacter.Transaction?
+  internal fun set(transaction: Transacter.Transaction?)
+}
 
 internal const val DEFAULT_CACHE_SIZE = 20
 
@@ -28,7 +35,7 @@ class AndroidxSqliteDriver(
   name: String?,
   cacheSize: Int = DEFAULT_CACHE_SIZE,
 ) : SqlDriver {
-  private val transactions = ThreadLocal<Transacter.Transaction>()
+  private val transactions = TransactionsThreadLocal()
   private val connection by lazy {
     driver.open(name ?: ":memory:")
   }
@@ -46,10 +53,11 @@ class AndroidxSqliteDriver(
     }
     .build()
 
+  private val listenersLock = SynchronizedObject()
   private val listeners = linkedMapOf<String, MutableSet<Query.Listener>>()
 
   override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
-    synchronized(listeners) {
+    synchronized(listenersLock) {
       queryKeys.forEach {
         listeners.getOrPut(it) { linkedSetOf() }.add(listener)
       }
@@ -57,7 +65,7 @@ class AndroidxSqliteDriver(
   }
 
   override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
-    synchronized(listeners) {
+    synchronized(listenersLock) {
       queryKeys.forEach {
         listeners[it]?.remove(listener)
       }
@@ -66,7 +74,7 @@ class AndroidxSqliteDriver(
 
   override fun notifyListeners(vararg queryKeys: String) {
     val listenersToNotify = linkedSetOf<Query.Listener>()
-    synchronized(listeners) {
+    synchronized(listenersLock) {
       queryKeys.forEach { listeners[it]?.let(listenersToNotify::addAll) }
     }
     listenersToNotify.forEach(Query.Listener::queryResultsChanged)

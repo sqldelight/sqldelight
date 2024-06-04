@@ -1,27 +1,22 @@
 package app.cash.sqldelight.driver.androidx.sqlite
 
 import androidx.sqlite.SQLiteException
-import androidx.sqlite.driver.AndroidSQLiteDriver
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.db.use
-import com.squareup.sqldelight.driver.test.DriverTest
-import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertSame
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import kotlin.test.Test
+import kotlin.test.assertNotSame
+import kotlin.test.assertSame
 
-@RunWith(RobolectricTestRunner::class)
-class AndroidxSqliteDriverTest : DriverTest() {
+class AndroidxSqliteDriverTest : CommonDriverTest() {
   override fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver {
-    return AndroidxSqliteDriver(AndroidSQLiteDriver(), name = null, schema)
+    return AndroidxSqliteDriver(androidxSqliteTestDriver(), name = null, schema)
   }
 
   private fun useSingleItemCacheDriver(block: (AndroidxSqliteDriver) -> Unit) {
-    AndroidxSqliteDriver(AndroidSQLiteDriver(), name = null, schema, cacheSize = 1).use(block)
+    AndroidxSqliteDriver(androidxSqliteTestDriver(), name = null, schema, cacheSize = 1).use(block)
   }
 
   @Test

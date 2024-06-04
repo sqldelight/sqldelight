@@ -5,40 +5,22 @@ plugins {
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
+  alias(libs.plugins.atomicfu)
 }
 
 archivesBaseName = 'sqldelight-kmp-driver'
 
 kotlin {
-  // tier 1
+  // there is only tier 1 support for androidx.sqlite:sqlite-bundled
+  // https://maven.google.com/web/index.html?q=bundled#androidx.sqlite
   androidTarget()
   jvm()
-//  linuxX64()
-//  macosX64()
-//  macosArm64()
-//  iosSimulatorArm64()
-//  iosX64()
-
-  // tier 2
-//  linuxArm64()
-//  watchosSimulatorArm64()
-//  watchosX64()
-//  watchosArm32()
-//  watchosArm64()
-//  tvosSimulatorArm64()
-//  tvosX64()
-//  tvosArm64()
-//  iosArm64()
-
-  // tier 3
-  // https://github.com/touchlab/SQLiter/issues/117
-  // androidNativeArm32()
-  // androidNativeArm64()
-  // androidNativeX86()
-  // androidNativeX64()
-  // https://developer.android.com/kotlin/multiplatform/sqlite#driver_implementations
-  // mingwX64()
-  // watchosDeviceArm64()
+  linuxX64()
+  macosX64()
+  macosArm64()
+  iosSimulatorArm64()
+  iosArm64()
+  iosX64()
 
   sourceSets {
     commonMain {
@@ -67,6 +49,12 @@ kotlin {
     }
 
     jvmTest {
+      dependencies {
+        implementation libs.androidx.sqliteBundled
+      }
+    }
+
+    nativeTest {
       dependencies {
         implementation libs.androidx.sqliteBundled
       }
