@@ -10,19 +10,27 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import app.cash.sqldelight.db.SqlSchema
 import io.github.reactivecircus.cache4k.Cache
 import io.github.reactivecircus.cache4k.CacheEvent
 
 internal const val DEFAULT_CACHE_SIZE = 20
 
+/**
+ * @param name Name of the database file, or null for an in-memory database.
+ *
+ * @see AndroidxSqliteDriver
+ * @see SqlSchema.create
+ * @see SqlSchema.migrate
+ */
 class AndroidxSqliteDriver(
   driver: SQLiteDriver,
-  name: String,
+  name: String?,
   cacheSize: Int = DEFAULT_CACHE_SIZE,
 ) : SqlDriver {
   private val transactions = ThreadLocal<Transacter.Transaction>()
   private val connection by lazy {
-    driver.open(name)
+    driver.open(name ?: ":memory:")
   }
 
   private val statements = Cache.Builder<Int, AndroidxStatement>()
