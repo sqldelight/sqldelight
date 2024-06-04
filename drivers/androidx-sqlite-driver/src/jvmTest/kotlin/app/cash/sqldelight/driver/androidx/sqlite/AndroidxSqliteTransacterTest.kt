@@ -15,7 +15,7 @@ import org.junit.Test
 
 class AndroidxSqliteTransacterTest : TransacterTest() {
   override fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver {
-    return AndroidxSqliteDriver(BundledSQLiteDriver(), "", schema)
+    return AndroidxSqliteDriver(BundledSQLiteDriver(), name = null, schema)
   }
 
   @Test fun `detect the afterRollback call has escaped the original transaction thread in transaction()`() {

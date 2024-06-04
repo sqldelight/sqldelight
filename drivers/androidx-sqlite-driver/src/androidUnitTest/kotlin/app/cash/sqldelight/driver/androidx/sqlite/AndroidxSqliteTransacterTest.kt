@@ -1,8 +1,6 @@
 package app.cash.sqldelight.driver.androidx.sqlite
 
-import android.content.Context
 import androidx.sqlite.driver.AndroidSQLiteDriver
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransactionWithReturn
 import app.cash.sqldelight.TransactionWithoutReturn
@@ -20,9 +18,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class AndroidxSqliteTransacterTest : TransacterTest() {
   override fun setupDatabase(schema: SqlSchema<QueryResult.Value<Unit>>): SqlDriver {
-    val database = getApplicationContext<Context>().getDatabasePath("test.db")
-    database.parentFile?.mkdirs()
-    return AndroidxSqliteDriver(AndroidSQLiteDriver(), database.absolutePath, schema)
+    return AndroidxSqliteDriver(AndroidSQLiteDriver(), name = null, schema)
   }
 
   @Test fun `detect the afterRollback call has escaped the original transaction thread in transaction()`() {

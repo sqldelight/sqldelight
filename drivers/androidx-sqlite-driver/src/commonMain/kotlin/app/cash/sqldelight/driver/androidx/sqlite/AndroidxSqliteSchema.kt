@@ -13,13 +13,15 @@ import app.cash.sqldelight.db.SqlSchema
  * Each of the [callbacks] are executed during the migration whenever the upgrade to the version specified by
  * [AfterVersion.afterVersion] has been completed.
  *
+ * @param name Name of the database file, or null for an in-memory database.
+ *
  * @see AndroidxSqliteDriver
  * @see SqlSchema.create
  * @see SqlSchema.migrate
  */
 fun AndroidxSqliteDriver(
   driver: SQLiteDriver,
-  name: String,
+  name: String?,
   schema: SqlSchema<QueryResult.Value<Unit>>,
   migrateEmptySchema: Boolean = false,
   cacheSize: Int = DEFAULT_CACHE_SIZE,

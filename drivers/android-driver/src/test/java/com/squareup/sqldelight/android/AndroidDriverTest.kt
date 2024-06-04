@@ -5,6 +5,7 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
+import app.cash.sqldelight.db.use
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import app.cash.sqldelight.driver.android.AndroidStatement
 import com.squareup.sqldelight.driver.test.DriverTest
@@ -22,54 +23,61 @@ class AndroidDriverTest : DriverTest() {
     return AndroidSqliteDriver(schema, getApplicationContext())
   }
 
+  private fun useSingleItemCacheDriver(block: (AndroidSqliteDriver) -> Unit) {
+    AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1).use(block)
+  }
+
   @Test
   fun `cached statement can be reused`() {
-    val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
-    lateinit var bindable: SqlPreparedStatement
-    driver.executeQuery(1, "SELECT * FROM test", { QueryResult.Unit }, 0, { bindable = this })
+    useSingleItemCacheDriver { driver ->
+      lateinit var bindable: SqlPreparedStatement
+      driver.executeQuery(1, "SELECT * FROM test", { QueryResult.Unit }, 0, { bindable = this })
 
-    driver.executeQuery(
-      1,
-      "SELECT * FROM test",
-      { QueryResult.Unit },
-      0,
-      {
-        assertSame(bindable, this)
-      },
-    )
+      driver.executeQuery(
+        1,
+        "SELECT * FROM test",
+        { QueryResult.Unit },
+        0,
+        {
+          assertSame(bindable, this)
+        },
+      )
+    }
   }
 
   @Test
   fun `cached statement is evicted and closed`() {
-    val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
-    lateinit var bindable: SqlPreparedStatement
-    driver.executeQuery(1, "SELECT * FROM test", { QueryResult.Unit }, 0, { bindable = this })
+    useSingleItemCacheDriver { driver ->
+      lateinit var bindable: SqlPreparedStatement
+      driver.executeQuery(1, "SELECT * FROM test", { QueryResult.Unit }, 0, { bindable = this })
 
-    driver.executeQuery(2, "SELECT * FROM test", { QueryResult.Unit }, 0)
+      driver.executeQuery(2, "SELECT * FROM test", { QueryResult.Unit }, 0)
 
-    driver.executeQuery(
-      1,
-      "SELECT * FROM test",
-      { QueryResult.Unit },
-      0,
-      {
-        assertNotSame(bindable, this)
-      },
-    )
+      driver.executeQuery(
+        1,
+        "SELECT * FROM test",
+        { QueryResult.Unit },
+        0,
+        {
+          assertNotSame(bindable, this)
+        },
+      )
+    }
   }
 
   @Test
   fun `uncached statement is closed`() {
-    val driver = AndroidSqliteDriver(schema, getApplicationContext(), cacheSize = 1)
-    lateinit var bindable: AndroidStatement
-    driver.execute(null, "SELECT * FROM test", 0) {
-      bindable = this as AndroidStatement
-    }
+    useSingleItemCacheDriver { driver ->
+      lateinit var bindable: AndroidStatement
+      driver.execute(null, "SELECT * FROM test", 0) {
+        bindable = this as AndroidStatement
+      }
 
-    try {
-      bindable.execute()
-      throw AssertionError("Expected an IllegalStateException (attempt to re-open an already-closed object)")
-    } catch (ignored: IllegalStateException) {
+      try {
+        bindable.execute()
+        throw AssertionError("Expected an IllegalStateException (attempt to re-open an already-closed object)")
+      } catch (ignored: IllegalStateException) {
+      }
     }
   }
 
@@ -82,10 +90,10 @@ class AndroidDriverTest : DriverTest() {
       factory = factory,
       name = "name",
       useNoBackupDirectory = true,
-    )
-
-    assertTrue(factory.lastConfiguration.useNoBackupDirectory)
-    assertSame("name", factory.lastConfiguration.name)
+    ).use {
+      assertTrue(factory.lastConfiguration.useNoBackupDirectory)
+      assertSame("name", factory.lastConfiguration.name)
+    }
   }
 
   @Test
@@ -96,9 +104,9 @@ class AndroidDriverTest : DriverTest() {
       context = getApplicationContext(),
       factory = factory,
       useNoBackupDirectory = false,
-    )
-
-    assertFalse(factory.lastConfiguration.useNoBackupDirectory)
+    ).use {
+      assertFalse(factory.lastConfiguration.useNoBackupDirectory)
+    }
   }
 
   @Test
@@ -111,6 +119,6 @@ class AndroidDriverTest : DriverTest() {
           db.execSQL("PRAGMA foreign_keys=ON;")
         }
       },
-    )
+    ).close()
   }
 }
