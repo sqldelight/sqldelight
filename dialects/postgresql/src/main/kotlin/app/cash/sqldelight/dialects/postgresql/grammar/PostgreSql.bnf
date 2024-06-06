@@ -75,6 +75,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REGEXP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RESTRICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
@@ -327,6 +328,7 @@ alter_table_rules ::= (
   {alter_table_add_column}
   | {alter_table_rename_table}
   | alter_table_rename_column
+  | alter_table_drop_constraint
   | alter_table_drop_column
   | alter_table_add_constraint
   | alter_table_alter_column
@@ -358,6 +360,10 @@ alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
 
 alter_table_add_constraint ::= ADD table_constraint {
     mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddConstraintMixin"
+}
+
+alter_table_drop_constraint ::= DROP CONSTRAINT [ IF EXISTS ] {identifier} [ RESTRICT | CASCADE ] {
+  pin = 2
 }
 
 type_clause ::= 'TYPE'
