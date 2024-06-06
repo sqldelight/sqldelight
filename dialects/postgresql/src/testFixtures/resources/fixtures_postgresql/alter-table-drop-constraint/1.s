@@ -1,0 +1,27 @@
+CREATE TABLE test (
+  external_event_id TEXT
+);
+
+ALTER TABLE test
+  ADD CONSTRAINT idx_external_event_id
+  UNIQUE (external_event_id);
+
+CREATE TABLE t1 (
+  c1 INTEGER,
+  t1 TEXT,
+  t2 VARCHAR(255),
+  t3 CHAR(10)
+);
+
+ALTER TABLE t1
+  ADD CONSTRAINT chk_c1 CHECK (c1 > 0),
+  ADD CONSTRAINT chk_t2 CHECK (CHAR_LENGTH(t2) > 0);
+
+ALTER TABLE t1
+  DROP CONSTRAINT chk_c1;
+
+ALTER TABLE t1
+  DROP CONSTRAINT chk_t2 RESTRICT;
+
+ALTER TABLE test
+  DROP CONSTRAINT IF EXISTS idx_external_event_id CASCADE;
