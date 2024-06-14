@@ -915,4 +915,44 @@ class QueriesTypeTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `issue 5298 INSERT OTHER`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE "order" (
+      |  data_id INTEGER NOT NULL
+      |);
+      |selectForId:
+      |INSERT INTO "order" VALUES ?;
+      """.trimMargin(),
+      temporaryFolder,
+//      overrideDialect = PostgreSqlDialect()
+    )
+
+    val database = File(result.outputDirectory, "com/example/TestQueries.kt")
+    assertThat(result.compilerOutput).containsKey(database)
+    println(result.compilerOutput[database].toString())
+    assertThat(result.compilerOutput[database].toString()).isEqualTo(
+      """
+        package com.example
+
+        import app.cash.sqldelight.TransacterImpl
+        import app.cash.sqldelight.db.SqlDriver
+
+        public class TestQueries(
+          driver: SqlDriver,
+        ) : TransacterImpl(driver) {
+          public fun selectForId(order: Order) {
+            driver.execute(-304_025_397, ""${'"'}INSERT INTO "order" (data_id) VALUES (?)""${'"'}, 1) {
+                  bindLong(0, order.data_id)
+                }
+            notifyQueries(-304_025_397) { emit ->
+              emit("order")
+            }
+          }
+        }
+
+      """.trimIndent())
+
+  }
 }

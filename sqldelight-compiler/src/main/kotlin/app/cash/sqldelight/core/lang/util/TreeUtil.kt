@@ -183,7 +183,7 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
             first = parent!!.tableName.range,
             second = parent!!.columns.joinToString(
               separator = ", ",
-              prefix = "${parent!!.tableName.text} (",
+              prefix = "${parent!!.tableName.node.text} (",
               postfix = ")",
             ) { it.name },
           ),
