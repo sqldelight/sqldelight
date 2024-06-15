@@ -10,9 +10,11 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 class QueriesTypeTest {
-  @get:Rule val temporaryFolder = TemporaryFolder()
+  @get:Rule
+  val temporaryFolder = TemporaryFolder()
 
-  @Test fun `queries file is generated properly via compilation`() {
+  @Test
+  fun `queries file is generated properly via compilation`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE TABLE data (
@@ -217,7 +219,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `queries file is generated properly with adapter`() {
+  @Test
+  fun `queries file is generated properly with adapter`() {
     val result = FixtureCompiler.compileSql(
       """
       |import foo.S;
@@ -326,7 +329,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `unused adapters are not passed to the database constructor`() {
+  @Test
+  fun `unused adapters are not passed to the database constructor`() {
     val result = FixtureCompiler.compileSql(
       """
       |import kotlin.Int;
@@ -393,7 +397,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `queries file is generated properly via compilation1a`() {
+  @Test
+  fun `queries file is generated properly via compilation1a`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE VIRTUAL TABLE data USING fts5(
@@ -552,7 +557,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `queries file is generated properly via compilation with offsets`() {
+  @Test
+  fun `queries file is generated properly via compilation with offsets`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE VIRTUAL TABLE search USING fts3(
@@ -708,7 +714,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `adapter through view resolves correctly`() {
+  @Test
+  fun `adapter through view resolves correctly`() {
     FixtureCompiler.writeSql(
       """
       |import com.chicken.SoupBase.Broth;
@@ -852,7 +859,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `grouped statement with return and no arguments gets a query type`() {
+  @Test
+  fun `grouped statement with return and no arguments gets a query type`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE TABLE data (
@@ -916,7 +924,8 @@ class QueriesTypeTest {
     )
   }
 
-  @Test fun `issue 5298 INSERT OTHER`() {
+  @Test
+  fun `SQL keywords can be used as table names when escaped`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE TABLE "order" (
@@ -926,13 +935,11 @@ class QueriesTypeTest {
       |INSERT INTO "order" VALUES ?;
       """.trimMargin(),
       temporaryFolder,
-//      overrideDialect = PostgreSqlDialect()
     )
 
-    val database = File(result.outputDirectory, "com/example/TestQueries.kt")
-    assertThat(result.compilerOutput).containsKey(database)
-    println(result.compilerOutput[database].toString())
-    assertThat(result.compilerOutput[database].toString()).isEqualTo(
+    val dataQueries = File(result.outputDirectory, "com/example/TestQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
         package com.example
 
@@ -952,7 +959,7 @@ class QueriesTypeTest {
           }
         }
 
-      """.trimIndent())
-
+      """.trimIndent(),
+    )
   }
 }
