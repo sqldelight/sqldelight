@@ -13,8 +13,7 @@ class QueriesTypeTest {
   @get:Rule
   val temporaryFolder = TemporaryFolder()
 
-  @Test
-  fun `queries file is generated properly via compilation`() {
+  @Test fun `queries file is generated properly via compilation`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE TABLE data (
@@ -219,8 +218,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `queries file is generated properly with adapter`() {
+  @Test fun `queries file is generated properly with adapter`() {
     val result = FixtureCompiler.compileSql(
       """
       |import foo.S;
@@ -329,8 +327,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `unused adapters are not passed to the database constructor`() {
+  @Test fun `unused adapters are not passed to the database constructor`() {
     val result = FixtureCompiler.compileSql(
       """
       |import kotlin.Int;
@@ -397,8 +394,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `queries file is generated properly via compilation1a`() {
+  @Test fun `queries file is generated properly via compilation1a`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE VIRTUAL TABLE data USING fts5(
@@ -557,8 +553,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `queries file is generated properly via compilation with offsets`() {
+  @Test fun `queries file is generated properly via compilation with offsets`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE VIRTUAL TABLE search USING fts3(
@@ -714,8 +709,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `adapter through view resolves correctly`() {
+  @Test fun `adapter through view resolves correctly`() {
     FixtureCompiler.writeSql(
       """
       |import com.chicken.SoupBase.Broth;
@@ -859,8 +853,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `grouped statement with return and no arguments gets a query type`() {
+  @Test fun `grouped statement with return and no arguments gets a query type`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE TABLE data (
@@ -924,8 +917,7 @@ class QueriesTypeTest {
     )
   }
 
-  @Test
-  fun `SQL keywords can be used as table names when escaped`() {
+  @Test fun `SQL keywords can be used as table names when escaped`() {
     val result = FixtureCompiler.compileSql(
       """
       |CREATE TABLE "order" (
