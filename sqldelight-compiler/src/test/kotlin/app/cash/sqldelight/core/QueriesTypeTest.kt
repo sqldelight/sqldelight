@@ -10,8 +10,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 class QueriesTypeTest {
-  @get:Rule
-  val temporaryFolder = TemporaryFolder()
+  @get:Rule val temporaryFolder = TemporaryFolder()
 
   @Test fun `queries file is generated properly via compilation`() {
     val result = FixtureCompiler.compileSql(
