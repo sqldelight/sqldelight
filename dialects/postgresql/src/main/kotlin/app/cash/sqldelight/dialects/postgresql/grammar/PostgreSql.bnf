@@ -106,6 +106,7 @@ overrides ::= type_name
   | update_stmt_limited
   | generated_clause
   | result_column
+  | alter_table_add_column
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
@@ -366,6 +367,14 @@ data_clause ::= 'DATA'
 
 column_not_null_clause ::= (SET | DROP) NOT NULL
 column_default_clause ::= SET {default_constraint} | DROP DEFAULT
+
+if_not_exists ::= IF NOT EXISTS
+alter_table_add_column ::= ADD [ COLUMN ] [ if_not_exists
+ ] {column_def} {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddColumnMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn"
+  override = true
+}
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 ( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
