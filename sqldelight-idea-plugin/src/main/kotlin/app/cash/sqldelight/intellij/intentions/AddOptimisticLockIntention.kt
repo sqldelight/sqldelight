@@ -18,7 +18,9 @@ import org.jetbrains.kotlin.idea.inspections.findExistingEditor
 class AddOptimisticLockIntention(
   private val updateElement: PsiElement,
   private val lock: ColumnDefMixin,
-) : BaseElementAtCaretIntentionAction(), HintAction, QuestionAction {
+) : BaseElementAtCaretIntentionAction(),
+  HintAction,
+  QuestionAction {
   override fun getFamilyName() = INTENTIONS_FAMILY_NAME_LOCK_FIX
 
   override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {

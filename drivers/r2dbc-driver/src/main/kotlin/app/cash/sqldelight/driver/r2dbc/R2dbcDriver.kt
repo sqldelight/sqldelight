@@ -299,7 +299,9 @@ internal class AsyncPublisherIterator<T : Any>(
 }
 
 class R2dbcCursor
-internal constructor(private val results: AsyncPublisherIterator<List<Any?>>) : SqlCursor {
+internal constructor(
+  private val results: AsyncPublisherIterator<List<Any?>>,
+) : SqlCursor {
   private lateinit var currentRow: List<Any?>
 
   override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {

@@ -13,7 +13,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
 internal abstract class DistinctOnExpressionMixin(node: ASTNode) :
-  SqlCompositeElementImpl(node), PostgreSqlDistinctOnExpr {
+  SqlCompositeElementImpl(node),
+  PostgreSqlDistinctOnExpr {
 
   private val distinctOnColumns get() = children.filterIsInstance<SqlResultColumn>()
 

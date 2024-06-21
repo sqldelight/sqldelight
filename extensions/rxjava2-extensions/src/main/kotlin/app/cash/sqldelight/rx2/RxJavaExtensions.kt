@@ -40,7 +40,9 @@ private class QueryOnSubscribe<T : Any>(
 private class QueryListenerAndDisposable<T : Any>(
   private val emitter: ObservableEmitter<Query<T>>,
   private val query: Query<T>,
-) : AtomicBoolean(), Query.Listener, Disposable {
+) : AtomicBoolean(),
+  Query.Listener,
+  Disposable {
   override fun queryResultsChanged() {
     emitter.onNext(query)
   }
