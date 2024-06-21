@@ -37,8 +37,10 @@ internal abstract class InsertStmtMixin(
         insertOr != null && insertOr.elementType == SqlTypes.OR -> {
           val type = insertOr.treeNext.elementType
           check(
-            type == SqlTypes.ROLLBACK || type == SqlTypes.ABORT ||
-              type == SqlTypes.FAIL || type == SqlTypes.IGNORE,
+            type == SqlTypes.ROLLBACK ||
+              type == SqlTypes.ABORT ||
+              type == SqlTypes.FAIL ||
+              type == SqlTypes.IGNORE,
           )
           type
         }
