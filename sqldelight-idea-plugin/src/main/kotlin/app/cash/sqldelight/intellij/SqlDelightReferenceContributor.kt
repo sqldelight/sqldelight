@@ -36,8 +36,7 @@ internal class SqlDelightReferenceContributor : PsiReferenceContributor() {
     )
   }
 
-  internal class JavaTypeReference(element: JavaTypeMixin) :
-    PsiReferenceBase<JavaTypeMixin>(element, element.lastChild.textRangeInParent) {
+  internal class JavaTypeReference(element: JavaTypeMixin) : PsiReferenceBase<JavaTypeMixin>(element, element.lastChild.textRangeInParent) {
 
     override fun handleElementRename(newElementName: String): PsiElement {
       return element.setName(newElementName)
