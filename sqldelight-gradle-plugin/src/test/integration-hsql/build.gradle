@@ -13,7 +13,7 @@ sqldelight {
 }
 
 dependencies {
-    implementation "org.hsqldb:hsqldb:2.7.2"
+    implementation "org.hsqldb:hsqldb:2.7.3"
     implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
     implementation libs.truth
 }

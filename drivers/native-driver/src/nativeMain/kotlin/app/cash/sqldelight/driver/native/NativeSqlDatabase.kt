@@ -100,7 +100,8 @@ sealed class ConnectionWrapper : SqlDriver {
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager,
   maxReaderConnections: Int = 1,
-) : ConnectionWrapper(), SqlDriver {
+) : ConnectionWrapper(),
+  SqlDriver {
   constructor(
     configuration: DatabaseConfiguration,
     maxReaderConnections: Int = 1,

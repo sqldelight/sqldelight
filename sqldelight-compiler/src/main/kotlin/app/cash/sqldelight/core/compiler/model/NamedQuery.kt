@@ -192,7 +192,8 @@ data class NamedQuery(
 
     if (typeOne.column !== typeTwo.column &&
       typeOne.asNonNullable().cursorGetter(0) != typeTwo.asNonNullable().cursorGetter(0) &&
-      typeOne.column != null && typeTwo.column != null
+      typeOne.column != null &&
+      typeTwo.column != null
     ) {
       // Incompatible adapters. Revert to unadapted java type.
       return if (typeOne.javaType.copy(nullable = false) == typeTwo.javaType.copy(nullable = false)) {

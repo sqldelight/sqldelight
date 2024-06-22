@@ -74,7 +74,9 @@ interface ConnectionManager {
   }
 }
 
-abstract class JdbcDriver : SqlDriver, ConnectionManager {
+abstract class JdbcDriver :
+  SqlDriver,
+  ConnectionManager {
   override fun close() {
   }
 

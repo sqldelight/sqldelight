@@ -5,7 +5,9 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.impl.SqlColumnDefImpl
 import com.intellij.lang.ASTNode
 
-internal open class ColumnDefMixin(node: ASTNode) : SqlColumnDefImpl(node), SqlColumnDef {
+internal open class ColumnDefMixin(node: ASTNode) :
+  SqlColumnDefImpl(node),
+  SqlColumnDef {
 
   override fun hasDefaultValue(): Boolean {
     return isSerial() || super.hasDefaultValue()

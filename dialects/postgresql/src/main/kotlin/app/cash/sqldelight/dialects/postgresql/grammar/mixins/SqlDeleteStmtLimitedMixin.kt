@@ -10,7 +10,8 @@ import com.intellij.psi.PsiElement
 
 internal abstract class SqlDeleteStmtLimitedMixin(
   node: ASTNode,
-) : SqlDeleteStmtLimitedImpl(node), PostgreSqlDeleteStmtLimited {
+) : SqlDeleteStmtLimitedImpl(node),
+  PostgreSqlDeleteStmtLimited {
 
   override fun tablesAvailable(child: PsiElement): Collection<LazyQuery> {
     val tablesAvailable = super.tablesAvailable(child)

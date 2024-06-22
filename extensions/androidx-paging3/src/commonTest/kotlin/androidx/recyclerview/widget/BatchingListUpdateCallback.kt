@@ -67,7 +67,8 @@ class BatchingListUpdateCallback(callback: ListUpdateCallback) : ListUpdateCallb
   }
 
   override fun onInserted(position: Int, count: Int) {
-    if (mLastEventType == TYPE_ADD && position >= mLastEventPosition &&
+    if (mLastEventType == TYPE_ADD &&
+      position >= mLastEventPosition &&
       position <= mLastEventPosition + mLastEventCount
     ) {
       mLastEventCount += count
@@ -81,7 +82,8 @@ class BatchingListUpdateCallback(callback: ListUpdateCallback) : ListUpdateCallb
   }
 
   override fun onRemoved(position: Int, count: Int) {
-    if (mLastEventType == TYPE_REMOVE && mLastEventPosition >= position &&
+    if (mLastEventType == TYPE_REMOVE &&
+      mLastEventPosition >= position &&
       mLastEventPosition <= position + count
     ) {
       mLastEventCount += count
@@ -103,7 +105,8 @@ class BatchingListUpdateCallback(callback: ListUpdateCallback) : ListUpdateCallb
     if (mLastEventType == TYPE_CHANGE &&
       !(
         position > mLastEventPosition + mLastEventCount ||
-          position + count < mLastEventPosition || mLastEventPayload != payload
+          position + count < mLastEventPosition ||
+          mLastEventPayload != payload
         )
     ) {
       // take potential overlap into account

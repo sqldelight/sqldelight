@@ -17,7 +17,9 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.PsiBuilder
 import com.intellij.psi.PsiElement
 
-internal abstract class TableOrSubqueryMixin(node: ASTNode?) : SqlTableOrSubqueryImpl(node), SqliteJsonTableOrSubquery {
+internal abstract class TableOrSubqueryMixin(node: ASTNode?) :
+  SqlTableOrSubqueryImpl(node),
+  SqliteJsonTableOrSubquery {
   private val queryExposed = ModifiableFileLazy lazy@{
     if (jsonFunctionName != null) {
       return@lazy listOf(
@@ -44,7 +46,10 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode?) : SqlTableOrSubquer
   }
 }
 
-internal abstract class JsonFunctionNameMixin(node: ASTNode) : SqlNamedElementImpl(node), SqlTableName, ExposableType {
+internal abstract class JsonFunctionNameMixin(node: ASTNode) :
+  SqlNamedElementImpl(node),
+  SqlTableName,
+  ExposableType {
   override fun getId(): PsiElement? = null
   override fun getString(): PsiElement? = null
   override val parseRule: (PsiBuilder, Int) -> Boolean = JsonParser::json_function_name_real

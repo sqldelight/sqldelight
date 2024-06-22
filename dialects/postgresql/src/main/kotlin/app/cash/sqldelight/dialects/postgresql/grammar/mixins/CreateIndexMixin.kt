@@ -14,12 +14,12 @@ import com.intellij.psi.PsiElement
  * brin = [autosummarize (on|off|true|false), pages_per_range (1-2147483647) ]
  */
 internal abstract class CreateIndexMixin(node: ASTNode) :
-  SqlCreateIndexStmtImpl(node), PostgreSqlCreateIndexStmt {
+  SqlCreateIndexStmtImpl(node),
+  PostgreSqlCreateIndexStmt {
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     withStorageParameter?.let { wsp ->
-      wsp.storageParametersList.zip(wsp.storageParameterList).forEach {
-          sp ->
+      wsp.storageParametersList.zip(wsp.storageParameterList).forEach { sp ->
         indexMethod?.let { im ->
           when (im.text.lowercase()) {
             "brin" -> when (sp.first.text) {
