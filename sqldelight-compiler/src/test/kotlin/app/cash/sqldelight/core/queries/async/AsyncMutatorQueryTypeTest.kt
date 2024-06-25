@@ -144,7 +144,7 @@ class AsyncMutatorQueryTypeTest {
     )
   }
 
-  @Test fun `Bind parameters`() {
+  @Test fun `Async Postgresql INSERT VALUES use correct bind parameter with the table data class`() {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE data (
