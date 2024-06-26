@@ -26,8 +26,10 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
@@ -176,6 +178,9 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       ),
     )
   } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
+    val generateAsync = this.sqFile().generateAsync
+    val bindExpr = childOfType(SqlTypes.BIND_EXPR) as SqlBindExpr
+    val bindParameterMixin = bindExpr.bindParameter as BindParameterMixin
     buildList {
       if (parent!!.columnNameList.isEmpty()) {
         add(
@@ -191,8 +196,8 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       }
       add(
         Pair(
-          first = childOfType(SqlTypes.BIND_EXPR)!!.range,
-          second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" },
+          first = bindExpr.range,
+          second = (1..parent!!.columns.size).joinToString(separator = ", ", prefix = "(", postfix = ")") { bindParameterMixin.replaceWith(generateAsync, it) },
         ),
       )
     }
