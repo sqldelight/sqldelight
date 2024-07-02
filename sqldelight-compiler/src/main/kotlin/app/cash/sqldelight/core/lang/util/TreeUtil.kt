@@ -300,7 +300,7 @@ private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt
   this.forEach { table ->
     graph.addVertex(table)
     table.columnDefList.forEach { column ->
-      column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }.forEach { fk ->
+      (column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable } + table.tableConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }).forEach { fk ->
         try {
           val foreignTable = namedStatements[fk.name]
           graph.apply {
