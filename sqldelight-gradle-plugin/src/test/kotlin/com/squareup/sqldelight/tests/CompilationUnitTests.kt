@@ -47,7 +47,7 @@ class CompilationUnitTests {
           SqlDelightCompilationUnitImpl(
             name = "main",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)),
-            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb")
+            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/main")
           )
         )
       }
@@ -95,7 +95,7 @@ class CompilationUnitTests {
               SqlDelightCompilationUnitImpl(
                 name = "main",
                 sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)),
-                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/main"),
               )
             ),
             dependencies = emptyList(),
@@ -112,7 +112,7 @@ class CompilationUnitTests {
                   SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/otherdb"), false),
                   SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
                 ),
-                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/OtherDb"),
+                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/OtherDb/main"),
               )
             ),
             dependencies = emptyList(),
@@ -170,7 +170,7 @@ class CompilationUnitTests {
           SqlDelightCompilationUnitImpl(
             name = "commonMain",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), false)),
-            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb")
+            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/commonMain")
           )
         )
       }
@@ -249,7 +249,7 @@ class CompilationUnitTests {
           SqlDelightCompilationUnitImpl(
             name = "commonMain",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), false)),
-            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/commonMain"),
           )
         )
       }

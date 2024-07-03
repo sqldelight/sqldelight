@@ -188,6 +188,22 @@ class IntegrationTest {
   }
 
   @Test
+  fun integrationTestsAndroidSingleVariant() {
+    val projectLocation = File("src/test/integration-android-variants")
+    val outputDir = File(projectLocation, "build/generated/sqldelight/code/QueryWrapper")
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(projectLocation)
+      .forwardOutput()
+
+    val generateDebugResult = runner
+      .withArguments("clean", "generateDebugQueryWrapperInterface", "-PdebugOnly=true")
+      .build()
+    assertThat(generateDebugResult.output).contains("BUILD SUCCESSFUL")
+
+    assertThat(File(outputDir, "debug").exists()).isTrue()
+  }
+
+  @Test
   @Category(Instrumentation::class)
   fun integrationTestsAndroidLibrary() {
     val integrationRoot = File("src/test/integration-android-library")

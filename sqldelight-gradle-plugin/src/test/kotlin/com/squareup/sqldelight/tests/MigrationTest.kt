@@ -158,7 +158,7 @@ class MigrationTest {
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
-    val generatedDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/com/example/sqldelightmigrations/DatabaseImpl.kt")
+    val generatedDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/main/com/example/sqldelightmigrations/DatabaseImpl.kt")
     assertThat(generatedDatabase.exists()).isTrue()
     assertThat(generatedDatabase.readText()).contains(
       """
