@@ -928,4 +928,15 @@ class PostgreSqlTest {
       assertThat(expr_________).isEqualTo(OffsetDateTime.of(2001, 2, 17, 2, 38, 40, 0, ZoneOffset.ofHours(0)))
     }
   }
+
+  @Test
+  fun testXml() {
+    val a = "<?xml version=\"1.0\"?><book><title>Manual</title><chapter>test</chapter></book>"
+    val b = "<book><title>Manual</title><chapter>test</chapter></book>"
+    database.xmlQueries.insert(a, b)
+    with(database.xmlQueries.select().executeAsOne()) {
+      assertThat(x1).isEqualTo(b) // results are returned without <?xml...?>
+      assertThat(x2).isEqualTo(b)
+    }
+  }
 }
