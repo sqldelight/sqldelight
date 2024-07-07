@@ -44,6 +44,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GLOB"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
@@ -54,8 +55,10 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIKE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MATCH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
@@ -69,6 +72,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.REGEXP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
@@ -109,6 +113,7 @@ overrides ::= type_name
   | create_index_stmt
   | select_stmt
   | ordering_term
+  | binary_like_operator
   | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
@@ -189,6 +194,12 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
   override = true
   pin = 6
+}
+
+binary_like_operator ::= ( 'ILIKE' | LIKE | GLOB | REGEXP | MATCH ) {
+   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBinaryLikeOperatorImpl"
+   implements = "com.alecstrong.sql.psi.core.psi.SqlBinaryLikeOperator"
+   override = true
 }
 
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
@@ -442,7 +453,7 @@ match_operator_expression ::= ( {function_expr} | {column_expr} ) match_operator
   pin = 2
 }
 
-regex_match_operator ::= '~*' | '~' | '!~*' | '!~'
+regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
 
 regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_match_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RegExMatchOperatorExpressionMixin"
