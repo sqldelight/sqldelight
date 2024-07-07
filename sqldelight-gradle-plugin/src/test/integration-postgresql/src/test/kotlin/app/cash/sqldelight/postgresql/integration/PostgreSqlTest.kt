@@ -867,6 +867,42 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testLike() {
+    database.likeQueries.insert("testing")
+
+    with(database.likeQueries.selectWhereLike("test%").executeAsList()) {
+      assertThat(first()).isEqualTo("testing")
+    }
+
+    with(database.likeQueries.selectWhereLikeRegex().executeAsList()) {
+      assertThat(first()).isEqualTo("testing")
+    }
+
+    with(database.likeQueries.selectLikeRegex().executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isFalse()
+    }
+  }
+
+  @Test
+  fun testILike() {
+    database.likeQueries.insert("TESTING")
+
+    with(database.likeQueries.selectWhereILike("test%").executeAsList()) {
+      assertThat(first()).isEqualTo("TESTING")
+    }
+
+    with(database.likeQueries.selectWhereILikeRegex().executeAsList()) {
+      assertThat(first()).isEqualTo("TESTING")
+    }
+
+    with(database.likeQueries.selectILikeRegex().executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isFalse()
+    }
+  }
+
+  @Test
   fun testRankOver() {
     database.windowFunctionsQueries.insert("t", 2)
     database.windowFunctionsQueries.insert("q", 3)
