@@ -74,6 +74,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         tsvectorDataType != null -> PostgreSqlType.TSVECTOR
+        xmlDataType != null -> PostgreSqlType.XML
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )
