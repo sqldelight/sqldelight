@@ -448,6 +448,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1646785725%2FProperties%2F-128169639" anchor-label="BINARY_LIKE_OPERATOR" id="-1646785725%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-i-n-a-r-y_-l-i-k-e_-o-p-e-r-a-t-o-r.html"><span><span>BINARY_LIKE_OPERATOR</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1646785725%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-i-n-a-r-y_-l-i-k-e_-o-p-e-r-a-t-o-r.html">BINARY_LIKE_OPERATOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1645759210%2FProperties%2F-128169639" anchor-label="BIND_PARAMETER" id="1645759210%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1468,6 +1483,21 @@
               </div>
             </div>
           </div>
+<a data-name="634632601%2FProperties%2F-128169639" anchor-label="GLOB" id="634632601%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-l-o-b.html"><span><span>GLOB</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="634632601%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-g-l-o-b.html">GLOB</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-366224278%2FProperties%2F-128169639" anchor-label="GROUP" id="-366224278%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1753,6 +1783,21 @@
               </div>
             </div>
           </div>
+<a data-name="1110954074%2FProperties%2F-128169639" anchor-label="LIKE" id="1110954074%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-l-i-k-e.html"><span><span>LIKE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1110954074%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-l-i-k-e.html">LIKE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-273505618%2FProperties%2F-128169639" anchor-label="LIMIT" id="-273505618%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1794,6 +1839,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-l-p.html">LP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-847178780%2FProperties%2F-128169639" anchor-label="MATCH" id="-847178780%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-a-t-c-h.html"><span><span>MATCH</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-847178780%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-m-a-t-c-h.html">MATCH</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -2109,6 +2169,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-e-g-e-x_-m-a-t-c-h_-o-p-e-r-a-t-o-r_-e-x-p-r-e-s-s-i-o-n.html">REGEX_MATCH_OPERATOR_EXPRESSION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-936818136%2FProperties%2F-128169639" anchor-label="REGEXP" id="-936818136%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-g-e-x-p.html"><span><span>REGEXP</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-936818136%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-e-g-e-x-p.html">REGEXP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
