@@ -1732,6 +1732,11 @@
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-with-storage-parameter/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface"></span><span class="nav-link-child"><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameter</span></span></span></span></a>
     </div>
    </div>
+   <div class="sideMenuPart" id="postgresql-nav-submenu-3-117" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlXmlDataType///PointingToDeclaration//-128169639">
+    <div class="overview">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-xml-data-type/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon interface"></span><span class="nav-link-child"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Xml</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
+    </div>
+   </div>
   </div>
   <div class="sideMenuPart" id="postgresql-nav-submenu-4" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl////PointingToDeclaration//-128169639">
    <div class="overview">
@@ -2310,6 +2315,11 @@
    <div class="sideMenuPart" id="postgresql-nav-submenu-4-114" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithStorageParameterImpl///PointingToDeclaration//-128169639">
     <div class="overview">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-with-storage-parameter-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class"></span><span class="nav-link-child"><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="sideMenuPart" id="postgresql-nav-submenu-4-115" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlXmlDataTypeImpl///PointingToDeclaration//-128169639">
+    <div class="overview">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-xml-data-type-impl/index.html"><span class="nav-link-grid"><span class="nav-link-child nav-icon class"></span><span class="nav-link-child"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Xml</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
   </div>
