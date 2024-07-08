@@ -25,6 +25,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONFLICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CREATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CROSS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_DATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
@@ -52,8 +53,11 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEXED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INNER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIKE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
@@ -61,6 +65,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MATCH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NATURAL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
@@ -69,6 +74,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OUTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
@@ -106,9 +112,12 @@ overrides ::= type_name
   | insert_stmt
   | update_stmt_limited
   | generated_clause
+  | join_operator
+  | join_clause
   | result_column
   | alter_table_add_column
   | alter_table_rules
+  | table_or_subquery
   | compound_select_stmt
   | extension_expr
   | extension_stmt
@@ -408,6 +417,19 @@ select_stmt ::= SELECT ( distinct_on_expr | [ DISTINCT | ALL ] ) {result_column}
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
   pin = 1
+}
+
+lateral ::= 'LATERAL'
+join_operator ::= ( COMMA [ lateral ]
+                  | [ NATURAL ] [ ( {left_join_operator} | {right_join_operator} | {full_join_operator} ) [ OUTER ] | INNER | CROSS ] JOIN [ lateral ] ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlJoinOperatorImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlJoinOperator"
+  override = true
+}
+
+join_clause ::= {table_or_subquery} ( {join_operator} {table_or_subquery} [ {join_constraint} ] ) * {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlJoinClauseMixin"
+  override = true
 }
 
 compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | COMMA ) {limiting_term} ] [ FOR UPDATE [ 'SKIP' 'LOCKED' ] ] {
