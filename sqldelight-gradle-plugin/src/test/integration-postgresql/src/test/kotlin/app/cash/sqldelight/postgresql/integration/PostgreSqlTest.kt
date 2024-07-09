@@ -375,9 +375,45 @@ class PostgreSqlTest {
   }
 
   @Test fun testArrays() {
-    with(database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two")).executeAsOne()) {
+    with(database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()) {
       assertThat(intArray!!.asList()).containsExactly(1u, 2u).inOrder()
       assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayContains() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.contains(arrayOf(1u, 2u), arrayOf("a", "b")).executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isTrue()
+    }
+  }
+
+  @Test fun testArrayContainsFirst() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.containsFirst(arrayOf(1u, 2u)).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayContainsSecond() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.containsSecond(arrayOf("a", "b")).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayOverlaps() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.overlaps(arrayOf(1u, 2u)).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
     }
   }
 
