@@ -19,9 +19,11 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneOperator
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDoubleColonCastOperatorExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
@@ -232,10 +234,16 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   override fun argumentType(parent: PsiElement, argument: SqlExpr): IntermediateType {
-    return if (argument.parent is PostgreSqlAtTimeZoneOperator) {
-      IntermediateType(TEXT)
-    } else {
-      parentResolver.argumentType(parent, argument)
+    return when (argument.parent) {
+      is PostgreSqlAtTimeZoneOperator -> {
+        IntermediateType(TEXT)
+      }
+      is PostgreSqlDoubleColonCastOperatorExpression -> {
+        (argument.parent.parent as SqlExpr).postgreSqlType()
+      }
+      else -> {
+        parentResolver.argumentType(parent, argument)
+      }
     }
   }
 
@@ -309,6 +317,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         atTimeZoneOperatorExpression?.atTimeZoneOperatorList?.fold(timeStamp) { acc, _ ->
           if (acc.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
         } ?: if (timeStamp.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
+      }
+      doubleColonCastOperatorExpression != null -> {
+        val expType: IntermediateType = (doubleColonCastOperatorExpression as DoubleColonCastOperatorExpressionMixin).expr.postgreSqlType()
+        val lastTypeCast = doubleColonCastOperatorExpression!!.doubleColonCastOperatorList.last().typeName
+        definitionType(lastTypeCast).nullableIf(expType.javaType.isNullable)
       }
       else -> parentResolver.resolvedType(this)
     }

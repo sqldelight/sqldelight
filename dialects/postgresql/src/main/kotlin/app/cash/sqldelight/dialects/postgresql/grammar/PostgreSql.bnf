@@ -75,6 +75,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REGEXP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RESTRICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
@@ -106,6 +107,7 @@ overrides ::= type_name
   | update_stmt_limited
   | generated_clause
   | result_column
+  | alter_table_add_column
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
@@ -327,6 +329,7 @@ alter_table_rules ::= (
   {alter_table_add_column}
   | {alter_table_rename_table}
   | alter_table_rename_column
+  | alter_table_drop_constraint
   | alter_table_drop_column
   | alter_table_add_constraint
   | alter_table_alter_column
@@ -360,12 +363,24 @@ alter_table_add_constraint ::= ADD table_constraint {
     mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddConstraintMixin"
 }
 
+alter_table_drop_constraint ::= DROP CONSTRAINT [ IF EXISTS ] {identifier} [ RESTRICT | CASCADE ] {
+  pin = 2
+}
+
 type_clause ::= 'TYPE'
 
 data_clause ::= 'DATA'
 
 column_not_null_clause ::= (SET | DROP) NOT NULL
 column_default_clause ::= SET {default_constraint} | DROP DEFAULT
+
+if_not_exists ::= IF NOT EXISTS
+alter_table_add_column ::= ADD [ COLUMN ] [ if_not_exists
+ ] {column_def} {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddColumnMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn"
+  override = true
+}
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 ( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
@@ -395,7 +410,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -466,6 +481,13 @@ regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '
 
 regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_match_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RegExMatchOperatorExpressionMixin"
+  pin = 2
+}
+
+double_colon_cast_operator ::= '::' type_name
+
+double_colon_cast_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin"
   pin = 2
 }
 
