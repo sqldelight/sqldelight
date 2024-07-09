@@ -178,6 +178,21 @@
               </div>
             </div>
           </div>
+<a data-name="-2129547357%2FProperties%2F-128169639" anchor-label="ALTER_TABLE_ADD_COLUMN" id="-2129547357%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-l-u-m-n.html"><span><span>ALTER_TABLE_ADD_COLUMN</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2129547357%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-l-u-m-n.html">ALTER_TABLE_ADD_COLUMN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1224545028%2FProperties%2F-128169639" anchor-label="ALTER_TABLE_ADD_CONSTRAINT" id="-1224545028%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1228,6 +1243,36 @@
               </div>
             </div>
           </div>
+<a data-name="-174302565%2FProperties%2F-128169639" anchor-label="DOUBLE_COLON_CAST_OPERATOR" id="-174302565%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-o-u-b-l-e_-c-o-l-o-n_-c-a-s-t_-o-p-e-r-a-t-o-r.html"><span><span>DOUBLE_COLON_CAST_OPERATOR</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-174302565%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-o-u-b-l-e_-c-o-l-o-n_-c-a-s-t_-o-p-e-r-a-t-o-r.html">DOUBLE_COLON_CAST_OPERATOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2141839928%2FProperties%2F-128169639" anchor-label="DOUBLE_COLON_CAST_OPERATOR_EXPRESSION" id="-2141839928%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-o-u-b-l-e_-c-o-l-o-n_-c-a-s-t_-o-p-e-r-a-t-o-r_-e-x-p-r-e-s-s-i-o-n.html"><span><span>DOUBLE_COLON_CAST_OPERATOR_EXPRESSION</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2141839928%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-o-u-b-l-e_-c-o-l-o-n_-c-a-s-t_-o-p-e-r-a-t-o-r_-e-x-p-r-e-s-s-i-o-n.html">DOUBLE_COLON_CAST_OPERATOR_EXPRESSION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1756152834%2FProperties%2F-128169639" anchor-label="DROP" id="1756152834%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1584,6 +1629,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-f.html">IF</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2067264161%2FProperties%2F-128169639" anchor-label="IF_NOT_EXISTS" id="-2067264161%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-f_-n-o-t_-e-x-i-s-t-s.html"><span><span>IF_NOT_EXISTS</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2067264161%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-f_-n-o-t_-e-x-i-s-t-s.html">IF_NOT_EXISTS</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>

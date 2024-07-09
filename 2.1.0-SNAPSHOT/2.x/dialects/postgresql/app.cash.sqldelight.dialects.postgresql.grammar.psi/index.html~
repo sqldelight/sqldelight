@@ -98,6 +98,21 @@
               </div>
             </div>
           </div>
+<a data-name="-129526264%2FClasslikes%2F-128169639" anchor-label="PostgreSqlAlterTableAddColumn" id="-129526264%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-alter-table-add-column/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Column</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-129526264%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-alter-table-add-column/index.html">PostgreSqlAlterTableAddColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAlterTableAddColumn///PointingToDeclaration/">SqlAlterTableAddColumn</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1779788513%2FClasslikes%2F-128169639" anchor-label="PostgreSqlAlterTableAddConstraint" id="1779788513%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -833,6 +848,36 @@
               </div>
             </div>
           </div>
+<a data-name="1497655798%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDoubleColonCastOperator" id="1497655798%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-double-colon-cast-operator/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Double</span><wbr><span>Colon</span><wbr><span>Cast</span><wbr><span><span>Operator</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1497655798%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-double-colon-cast-operator/index.html">PostgreSqlDoubleColonCastOperator</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1731966978%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDoubleColonCastOperatorExpression" id="-1731966978%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-double-colon-cast-operator-expression/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Double</span><wbr><span>Colon</span><wbr><span>Cast</span><wbr><span>Operator</span><wbr><span><span>Expression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1731966978%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-double-colon-cast-operator-expression/index.html">PostgreSqlDoubleColonCastOperatorExpression</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="63760527%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDropExtensionStmt" id="63760527%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -964,6 +1009,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-identity-clause/index.html">PostgreSqlIdentityClause</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="536770517%2FClasslikes%2F-128169639" anchor-label="PostgreSqlIfNotExists" id="536770517%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-if-not-exists/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span>Not</span><wbr><span><span>Exists</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="536770517%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-if-not-exists/index.html">PostgreSqlIfNotExists</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>

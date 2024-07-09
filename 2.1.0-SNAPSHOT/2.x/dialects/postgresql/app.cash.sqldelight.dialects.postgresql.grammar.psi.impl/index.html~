@@ -98,6 +98,21 @@
               </div>
             </div>
           </div>
+<a data-name="2064432180%2FClasslikes%2F-128169639" anchor-label="PostgreSqlAlterTableAddColumnImpl" id="2064432180%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-alter-table-add-column-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2064432180%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-alter-table-add-column-impl/index.html">PostgreSqlAlterTableAddColumnImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-alter-table-add-column-mixin/index.html">AlterTableAddColumnMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-alter-table-add-column/index.html">PostgreSqlAlterTableAddColumn</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1842128525%2FClasslikes%2F-128169639" anchor-label="PostgreSqlAlterTableAddConstraintImpl" id="1842128525%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -833,6 +848,36 @@
               </div>
             </div>
           </div>
+<a data-name="-512936406%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDoubleColonCastOperatorExpressionImpl" id="-512936406%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-double-colon-cast-operator-expression-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Double</span><wbr><span>Colon</span><wbr><span>Cast</span><wbr><span>Operator</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-512936406%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-double-colon-cast-operator-expression-impl/index.html">PostgreSqlDoubleColonCastOperatorExpressionImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-double-colon-cast-operator-expression-mixin/index.html">DoubleColonCastOperatorExpressionMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-double-colon-cast-operator-expression/index.html">PostgreSqlDoubleColonCastOperatorExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="546050850%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDoubleColonCastOperatorImpl" id="546050850%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-double-colon-cast-operator-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Double</span><wbr><span>Colon</span><wbr><span>Cast</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="546050850%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-double-colon-cast-operator-impl/index.html">PostgreSqlDoubleColonCastOperatorImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-double-colon-cast-operator/index.html">PostgreSqlDoubleColonCastOperator</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-783516101%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDropExtensionStmtImpl" id="-783516101%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -964,6 +1009,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-identity-clause-impl/index.html">PostgreSqlIdentityClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-identity-clause/index.html">PostgreSqlIdentityClause</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1546689409%2FClasslikes%2F-128169639" anchor-label="PostgreSqlIfNotExistsImpl" id="1546689409%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-if-not-exists-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span>Not</span><wbr><span>Exists</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1546689409%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-if-not-exists-impl/index.html">PostgreSqlIfNotExistsImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-if-not-exists/index.html">PostgreSqlIfNotExists</a></div></div></div>
                 </div>
               </div>
             </div>
