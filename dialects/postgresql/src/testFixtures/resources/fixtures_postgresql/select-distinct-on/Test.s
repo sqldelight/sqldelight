@@ -4,28 +4,38 @@ CREATE TABLE person (
     created_at TIMESTAMPTZ
 );
 
-SELECT DISTINCT ON (name) *
+SELECT DISTINCT ON (person.name) *
 FROM person;
 
 SELECT DISTINCT ON (name) *
-FROM person
-ORDER BY name, created_at DESC;
+FROM person;
 
-SELECT DISTINCT ON (id, name) id, name
-FROM person
-ORDER BY name DESC;
+CREATE TABLE student(
+    student_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
 
-SELECT DISTINCT ON (name, id) id, name, created_at
-FROM person
-ORDER BY id DESC;
+CREATE TABLE grade(
+    grade_id INTEGER PRIMARY KEY,
+    student_id INTEGER REFERENCES student(student_id),
+    grade INT NOT NULL,
+    grade_date TIMESTAMP NOT NULL
+);
 
-SELECT DISTINCT ON (name, id) id, name
-FROM person
-ORDER BY id, name ASC;
+SELECT DISTINCT ON (grade.student_id) grade.*, student.*
+FROM grade
+JOIN student USING (student_id)
+ORDER BY grade.student_id, grade_date;
 
-SELECT DISTINCT ON (name, id) id, name
-FROM person
-ORDER BY id, name, created_at ASC;
+SELECT DISTINCT ON (grade.student_id, grade.grade_date) grade.*, student.*
+FROM grade
+JOIN student USING (student_id)
+ORDER BY grade.student_id, grade_date;
+
+SELECT DISTINCT ON (student_id) *
+FROM grade
+JOIN student USING (student_id)
+ORDER BY student_id, grade_date;
 
 -- fail
 SELECT DISTINCT ON (name) *
