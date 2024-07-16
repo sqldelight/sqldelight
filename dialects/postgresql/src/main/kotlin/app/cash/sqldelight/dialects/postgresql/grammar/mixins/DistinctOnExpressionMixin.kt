@@ -21,12 +21,12 @@ internal abstract class DistinctOnExpressionMixin(node: ASTNode) :
   private val distinctOnColumns get() = children.filterIsInstance<SqlResultColumn>()
 
   override fun queryAvailable(child: PsiElement): Collection<QueryElement.QueryResult> {
-    val distinctOnColumnsWithTablePrefix: List<NamedElement?> =
+    val distinctOnColumnsWithTablePrefix: List<NamedElement> =
       distinctOnColumns.mapNotNull { PsiTreeUtil.findChildOfType(it, SqlTableName::class.java) }
     return if (distinctOnColumnsWithTablePrefix.isEmpty()) {
       (parent as SqlSelectStmt).queryExposed()
     } else {
-      distinctOnColumnsWithTablePrefix.flatMap { tableAvailable(child, it!!.name) }.associateBy { it.table }.values
+      distinctOnColumnsWithTablePrefix.flatMap { tableAvailable(child, it.name) }.associateBy { it.table }.values
     }
   }
 
