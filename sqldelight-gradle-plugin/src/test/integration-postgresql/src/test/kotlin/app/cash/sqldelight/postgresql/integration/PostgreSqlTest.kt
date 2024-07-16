@@ -1037,4 +1037,28 @@ class PostgreSqlTest {
       assertThat(x2).isEqualTo(b)
     }
   }
+
+  @Test
+  fun testSelectDistinctOn() {
+    val studentExpected = Student(1000, "Test Student")
+    val gradeExpected = Grade(4000, studentExpected.student_id, 5, LocalDateTime.of(1980, 1, 1, 1, 0, 0))
+    database.distinctOnQueries.insertStudent(studentExpected)
+    database.distinctOnQueries.insertGrade(gradeExpected)
+
+    with(database.distinctOnQueries.selectDistinctOnStudent().executeAsOne()) {
+      assertThat(student_id).isEqualTo(studentExpected.student_id)
+      assertThat(name).isEqualTo(studentExpected.name)
+      assertThat(grade_id).isEqualTo(gradeExpected.grade_id)
+      assertThat(grade).isEqualTo(gradeExpected.grade)
+      assertThat(grade_date).isEqualTo(gradeExpected.grade_date)
+    }
+
+    with(database.distinctOnQueries.selectDistinctOnStudentGradeDate().executeAsOne()) {
+      assertThat(student_id).isEqualTo(studentExpected.student_id)
+      assertThat(name).isEqualTo(studentExpected.name)
+      assertThat(grade_id).isEqualTo(gradeExpected.grade_id)
+      assertThat(grade).isEqualTo(gradeExpected.grade)
+      assertThat(grade_date).isEqualTo(gradeExpected.grade_date)
+    }
+  }
 }
