@@ -423,6 +423,16 @@ class PostgreSqlTest {
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
   }
 
+  @Test fun testDateLiteral() {
+    val dateLiteral = database.datesQueries.selectDateLiteral().executeAsOne()
+    assertThat(dateLiteral).isEqualTo(LocalDate.of(2023, 5, 15))
+  }
+
+  @Test fun testTimeLiteral() {
+    val timeLiteral = database.datesQueries.selectTimeLiteral().executeAsOne()
+    assertThat(timeLiteral).isEqualTo(LocalTime.of(10, 30, 45, 0))
+  }
+
   @Test fun nowPlusInterval() {
     val selectNowInterval = database.datesQueries.selectNowInterval().executeAsOne()
     assertThat(selectNowInterval.now).isNotNull()
@@ -1035,6 +1045,27 @@ class PostgreSqlTest {
     with(database.xmlQueries.select().executeAsOne()) {
       assertThat(x1).isEqualTo(b) // results are returned without <?xml...?>
       assertThat(x2).isEqualTo(b)
+    }
+  }
+
+  @Test
+  fun testExtract() {
+    val sa = OffsetDateTime.of(2001, 2, 16, 19, 30, 0, 0, ZoneOffset.ofHours(0))
+    val ea = OffsetDateTime.of(2001, 2, 16, 20, 30, 0, 0, ZoneOffset.ofHours(0))
+    val cd = LocalDate.of(2001, 2, 16)
+
+    database.extractQueries.insert(sa, ea, cd)
+
+    with(database.extractQueries.select().executeAsOne()) {
+      assertThat(expr).isEqualTo(5)
+      assertThat(expr_).isEqualTo(2023)
+      assertThat(expr__).isEqualTo(93600)
+      assertThat(expr___).isEqualTo(20)
+      assertThat(expr____).isEqualTo(38)
+      assertThat(expr_____).isEqualTo(16)
+      assertThat(expr______).isEqualTo(5)
+      assertThat(expr_______).isEqualTo(10)
+      assertThat(expr________).isEqualTo(3)
     }
   }
 

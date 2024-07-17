@@ -1,0 +1,21 @@
+CREATE TABLE Events(
+  start_at TIMESTAMPTZ NOT NULL CHECK(date_part('minute', start_at) IN (00,30)),
+  end_at TIMESTAMPTZ NOT NULL CHECK(date_part('minute', end_at) IN (00,30)),
+  duration INT GENERATED ALWAYS AS (EXTRACT(epoch FROM end_at - start_at)/ 60) stored,
+  created_date DATE
+);
+
+select:
+SELECT EXTRACT(DOW FROM TIMESTAMP '2001-02-16 20:38:40'),
+  EXTRACT(YEAR FROM TIMESTAMP '2023-05-15 10:30:45'),
+  EXTRACT(EPOCH FROM INTERVAL '1 day 2 hours'),
+  EXTRACT(CENTURY FROM TIMESTAMP '2000-12-16 12:21:13'),
+  EXTRACT(MINUTE FROM TIMESTAMP WITH TIME ZONE '2001-02-16 20:38:40-08'),
+  EXTRACT(DAY FROM created_date),
+  EXTRACT(MONTH FROM DATE '2023-05-15'),
+  EXTRACT(HOUR FROM TIME '10:30:45'),
+  EXTRACT(MONTH FROM INTERVAL '2 years 3 months')
+FROM Events;
+
+insert:
+INSERT INTO Events (start_at, end_at, created_date) VALUES (?, ?, ?);
