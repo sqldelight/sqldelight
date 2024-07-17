@@ -14,7 +14,7 @@ agp = "8.5.1"
 compileSdk = "34"
 minSdk = "21"
 sqlPsi = "0.4.9"
-testContainers = "1.19.8"
+testContainers = "1.20.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
