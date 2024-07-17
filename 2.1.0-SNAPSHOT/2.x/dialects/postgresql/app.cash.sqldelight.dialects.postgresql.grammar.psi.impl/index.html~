@@ -833,6 +833,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1748860215%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDateExpressionImpl" id="-1748860215%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-date-expression-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Date</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1748860215%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-date-expression-impl/index.html">PostgreSqlDateExpressionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-date-expression/index.html">PostgreSqlDateExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1681217269%2FClasslikes%2F-128169639" anchor-label="PostgreSqlDefaultConstraintImpl" id="1681217269%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -994,6 +1009,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-extension-version-impl/index.html">PostgreSqlExtensionVersionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-extension-version/index.html">PostgreSqlExtensionVersion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="493741912%2FClasslikes%2F-128169639" anchor-label="PostgreSqlExtractTemporalExpressionImpl" id="493741912%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-extract-temporal-expression-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Extract</span><wbr><span>Temporal</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="493741912%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-extract-temporal-expression-impl/index.html">PostgreSqlExtractTemporalExpressionImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-extract-temporal-expression-mixin/index.html">ExtractTemporalExpressionMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-extract-temporal-expression/index.html">PostgreSqlExtractTemporalExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="485724888%2FClasslikes%2F-128169639" anchor-label="PostgreSqlExtractTemporalFieldImpl" id="485724888%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-extract-temporal-field-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Extract</span><wbr><span>Temporal</span><wbr><span>Field</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="485724888%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-extract-temporal-field-impl/index.html">PostgreSqlExtractTemporalFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-extract-temporal-field/index.html">PostgreSqlExtractTemporalField</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -1654,6 +1699,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-table-constraint-impl/index.html">PostgreSqlTableConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTableConstraintImpl///PointingToDeclaration/">SqlTableConstraintImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-constraint/index.html">PostgreSqlTableConstraint</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1319234250%2FClasslikes%2F-128169639" anchor-label="PostgreSqlTimeExpressionImpl" id="1319234250%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-time-expression-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Time</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1319234250%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-time-expression-impl/index.html">PostgreSqlTimeExpressionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-time-expression/index.html">PostgreSqlTimeExpression</a></div></div></div>
                 </div>
               </div>
             </div>

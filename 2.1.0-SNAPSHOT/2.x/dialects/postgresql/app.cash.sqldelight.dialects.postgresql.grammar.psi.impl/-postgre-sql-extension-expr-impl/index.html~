@@ -857,6 +857,21 @@
               </div>
             </div>
           </div>
+<a data-name="-467501925%2FFunctions%2F-128169639" anchor-label="getExtractTemporalExpression" id="-467501925%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-extract-temporal-expression.html"><span>get</span><wbr><span>Extract</span><wbr><span>Temporal</span><wbr><span><span>Expression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-467501925%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-extract-temporal-expression.html"><span class="token function">getExtractTemporalExpression</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-extract-temporal-expression/index.html">PostgreSqlExtractTemporalExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1791918399%2FFunctions%2F-128169639" anchor-label="getFirstChild" id="-1791918399%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">

@@ -478,6 +478,21 @@
               </div>
             </div>
           </div>
+<a data-name="85569016%2FFunctions%2F-128169639" anchor-label="getDateExpression" id="85569016%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-date-expression.html"><span>get</span><wbr><span>Date</span><wbr><span><span>Expression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="85569016%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-date-expression.html"><span class="token function">getDateExpression</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="../-postgre-sql-date-expression/index.html">PostgreSqlDateExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1717534015%2FFunctions%2F-128169639" anchor-label="getFirstChild" id="-1717534015%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -864,6 +879,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.mixins/-window-definition-mixin/index.html#-1333419410%2FFunctions%2F-128169639"><span class="token function">getTextRangeInParent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.openapi.util/TextRange///PointingToDeclaration/">TextRange</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="371670649%2FFunctions%2F-128169639" anchor-label="getTimeExpression" id="371670649%2FFunctions%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-time-expression.html"><span>get</span><wbr><span>Time</span><wbr><span><span>Expression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="371670649%2FFunctions%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-time-expression.html"><span class="token function">getTimeExpression</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="../-postgre-sql-time-expression/index.html">PostgreSqlTimeExpression</a></div></div></div>
                 </div>
               </div>
             </div>
