@@ -4921,7 +4921,7 @@ Each target platform has its own driver implementation.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kotlin</label><label for="__tabbed_2_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">kotlin</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="n">kotlin</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">sourceSets</span><span class="p">.</span><span class="na">androidMain</span><span class="p">.</span><span class="na">dependencies</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:android-driver:2.1.0-SNAPSHOT&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">}</span>
@@ -4938,7 +4938,7 @@ Each target platform has its own driver implementation.</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">kotlin</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="n">kotlin</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="n">sourceSets</span><span class="o">.</span><span class="na">androidMain</span><span class="o">.</span><span class="na">dependencies</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">implementation</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:android-driver:2.1.0-SNAPSHOT&quot;</span>
 <span class="w">  </span><span class="o">}</span>
@@ -4957,7 +4957,7 @@ Each target platform has its own driver implementation.</p>
 </div>
 </div>
 <h2 id="constructing-driver-instances">Constructing Driver Instances<a class="headerlink" href="#constructing-driver-instances" title="Permanent link">&para;</a></h2>
-<p>Create a common factory class or method to obtain a <code>SqlDriver</code> instance. </p>
+<p>Create a common factory class or method to obtain a <code>SqlDriver</code> instance.</p>
 <div class="highlight"><span class="filename">src/commonMain/kotlin</span><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">com.example.Database</span>
 
 <span class="kd">expect</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
@@ -4977,7 +4977,7 @@ Each target platform has its own driver implementation.</p>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="p">(</span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">actual</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AndroidSqliteDriver</span><span class="p">(</span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test.db&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4993,8 +4993,7 @@ Each target platform has its own driver implementation.</p>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kd">actual</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DriverFactory</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">actual</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createDriver</span><span class="p">():</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">)</span>
-<span class="w">    </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="s">&quot;jdbc:sqlite:test.db&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Properties</span><span class="p">(),</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">driver</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>

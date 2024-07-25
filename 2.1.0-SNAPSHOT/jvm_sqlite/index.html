@@ -4916,19 +4916,17 @@ your project.</p>
 </div>
 </div>
 </div>
-<p>An instance of the driver can be constructed as shown below. The constructor accepts a JDBC 
+<p>An instance of the driver can be constructed as shown below. The constructor accepts a JDBC
 connection string that specifies the location of the database file. The <code>IN_MEMORY</code>
 constant can also be passed to the constructor to create an in-memory database.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">On-Disk</label><label for="__tabbed_3_2">In-Memory</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="s">&quot;jdbc:sqlite:test.db&quot;</span><span class="p">)</span>
-<span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="s">&quot;jdbc:sqlite:test.db&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Properties</span><span class="p">(),</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">)</span>
-<span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">driver</span><span class="p">:</span><span class="w"> </span><span class="n">SqlDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JdbcSqliteDriver</span><span class="p">(</span><span class="n">JdbcSqliteDriver</span><span class="p">.</span><span class="na">IN_MEMORY</span><span class="p">,</span><span class="w"> </span><span class="n">Properties</span><span class="p">(),</span><span class="w"> </span><span class="n">Database</span><span class="p">.</span><span class="na">Schema</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
