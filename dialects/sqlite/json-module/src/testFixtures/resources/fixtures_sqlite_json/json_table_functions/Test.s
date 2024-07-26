@@ -60,3 +60,8 @@ SELECT DISTINCT json_extract(big.json,'$.id')
      )
    WHERE (uidle_since >= ? AND uidle_since <= ?)
    AND is_deleted = 0;
+
+SELECT json_extract(child.value, '$.d') FROM user, json_each(user.name, '$.a.b') AS parent, json_each(parent.value, '$.c') AS child;
+
+
+

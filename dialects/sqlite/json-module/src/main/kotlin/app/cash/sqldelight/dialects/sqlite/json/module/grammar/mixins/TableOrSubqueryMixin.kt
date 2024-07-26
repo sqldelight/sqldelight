@@ -24,7 +24,7 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode?) :
     if (jsonFunctionName != null) {
       return@lazy listOf(
         QueryResult(
-          table = jsonFunctionName!!,
+          table = tableAlias ?: jsonFunctionName!!,
           columns = emptyList(),
           synthesizedColumns = listOf(
             SynthesizedColumn(jsonFunctionName!!, acceptableValues = listOf("key", "value", "type", "atom", "id", "parent", "fullkey", "path", "json", "root")),
