@@ -8,7 +8,7 @@ plugins {
   alias(libs.plugins.atomicfu)
 }
 
-archivesBaseName = 'sqldelight-kmp-driver'
+archivesBaseName = 'sqldelight-androidx-sqlite-driver'
 
 kotlin {
   // there is only tier 1 support for androidx.sqlite:sqlite-bundled
@@ -65,7 +65,7 @@ kotlin {
 
 android {
   compileSdk libs.versions.compileSdk.get() as int
-  namespace = "app.cash.sqldelight.driver.kmp"
+  namespace = "app.cash.sqldelight.driver.androidx.sqlite"
 
   lint {
     textReport true
