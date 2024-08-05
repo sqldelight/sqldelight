@@ -69,6 +69,7 @@ interface ConnectionManager {
             connectionManager.apply { connection.rollbackTransaction() }
           }
         }
+      // properly rotate the transaction even if there are uncaught errors
       } finally {
         connectionManager.transaction = enclosingTransaction
       }
