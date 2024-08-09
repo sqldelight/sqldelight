@@ -230,7 +230,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun <T : kotlin.Any> selectForId(mapper: (id: kotlin.Long, value_: kotlin.collections.List) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectForId", ""${'"'}
-      ||SELECT *
+      ||SELECT data.id, data.value
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  mapper(
@@ -263,7 +263,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun selectData(): app.cash.sqldelight.Query<kotlin.Long> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
+      ||SELECT data.id
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  cursor.getLong(0)!!
@@ -308,7 +308,7 @@ class SelectQueryFunctionTest {
       |    val goodIndexes = createArguments(count = good.size)
       |    val badIndexes = createArguments(count = bad.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |        |SELECT *
+      |        |SELECT data.id
       |        |FROM data
       |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |        ""${'"'}.trimMargin(), mapper, good.size + bad.size) {
@@ -394,7 +394,7 @@ class SelectQueryFunctionTest {
       |  }
       |
       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  |SELECT person._id, person.first_name, person.last_name
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
@@ -429,7 +429,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun selectData(): app.cash.sqldelight.Query<kotlin.Double> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
+      ||SELECT data.value
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  cursor.getDouble(0)!!
@@ -459,7 +459,7 @@ class SelectQueryFunctionTest {
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
       |public fun selectData(): app.cash.sqldelight.Query<kotlin.ByteArray> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
+      ||SELECT data.value
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  cursor.getBytes(0)!!
@@ -556,7 +556,7 @@ class SelectQueryFunctionTest {
       |  bigint2: kotlin.String,
       |  bigint3: kotlin.String?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
+      ||SELECT data.boolean0, data.boolean1, data.boolean2, data.boolean3, data.tinyint0, data.tinyint1, data.tinyint2, data.tinyint3, data.smallint0, data.smallint1, data.smallint2, data.smallint3, data.int0, data.int1, data.int2, data.int3, data.bigint0, data.bigint1, data.bigint2, data.bigint3
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
@@ -665,7 +665,7 @@ class SelectQueryFunctionTest {
       |  timestamp0: kotlinx.datetime.Instant,
       |  timestamp1: kotlinx.datetime.Instant?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
+      ||SELECT data.boolean0, data.boolean1, data.boolean2, data.boolean3, data.bit0, data.bit1, data.bit2, data.bit3, data.tinyint0, data.tinyint1, data.tinyint2, data.tinyint3, data.smallint0, data.smallint1, data.smallint2, data.smallint3, data.int0, data.int1, data.int2, data.int3, data.bigint0, data.bigint1, data.bigint2, data.bigint3, data.timestamp0, data.timestamp1
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
@@ -760,7 +760,7 @@ class SelectQueryFunctionTest {
       |  timestamp0: kotlinx.datetime.Instant,
       |  timestamp1: kotlinx.datetime.Instant?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("data"), driver, "Test.sq", "selectData", ""${'"'}
-      ||SELECT *
+      ||SELECT data.intArray, data.smallint0, data.smallint1, data.smallint2, data.smallint3, data.int0, data.int1, data.int2, data.int3, data.bigint0, data.bigint1, data.bigint2, data.bigint3, data.uuid, data.timestamp0, data.timestamp1
       ||FROM data
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is ${dialect.dialect.runtimeTypes.cursorType})
@@ -930,7 +930,7 @@ class SelectQueryFunctionTest {
       |  val29: kotlin.Long?,
       |  val30: kotlin.Long?,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-1_626_977_671, arrayOf("bigTable"), driver, "Test.sq", "select", ""${'"'}
-      ||SELECT *
+      ||SELECT bigTable.val1, bigTable.val2, bigTable.val3, bigTable.val4, bigTable.val5, bigTable.val6, bigTable.val7, bigTable.val8, bigTable.val9, bigTable.val10, bigTable.val11, bigTable.val12, bigTable.val13, bigTable.val14, bigTable.val15, bigTable.val16, bigTable.val17, bigTable.val18, bigTable.val19, bigTable.val20, bigTable.val21, bigTable.val22, bigTable.val23, bigTable.val24, bigTable.val25, bigTable.val26, bigTable.val27, bigTable.val28, bigTable.val29, bigTable.val30
       ||FROM bigTable
       |""${'"'}.trimMargin()) { cursor ->
       |  mapper(
@@ -1125,15 +1125,15 @@ class SelectQueryFunctionTest {
       |  attr: kotlin.String?,
       |  ordering: kotlin.Long,
       |) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-602_300_915, arrayOf("testA"), driver, "Test.sq", "someSelect", ""${'"'}
-      ||SELECT *
+      ||SELECT testA.id, testA.status, testA.attr, ordering
       ||FROM (
-      ||  SELECT *, 1 AS ordering
+      ||  SELECT testA.id, testA.status, testA.attr, 1 AS ordering
       ||  FROM testA
       ||  WHERE testA.attr IS NOT NULL
       ||
       ||  UNION
       ||
-      ||  SELECT *, 2 AS ordering
+      ||  SELECT testA.id, testA.status, testA.attr, 2 AS ordering
       ||         FROM testA
       ||  WHERE testA.attr IS NULL
       ||)
@@ -1386,7 +1386,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("category"), driver, "Test.sq", "selectAll", "SELECT * FROM category") { cursor ->
+      |public fun <T : kotlin.Any> selectAll(mapper: (accent_color: kotlin.String?, other_thing: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("category"), driver, "Test.sq", "selectAll", "SELECT category.accent_color, category.other_thing FROM category") { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
       |    cursor.getString(0),

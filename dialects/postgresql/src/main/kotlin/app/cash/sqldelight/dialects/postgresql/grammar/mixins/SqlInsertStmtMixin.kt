@@ -10,7 +10,8 @@ import com.intellij.psi.PsiElement
 
 internal abstract class SqlInsertStmtMixin(
   node: ASTNode,
-) : SqlInsertStmtImpl(node), PostgreSqlInsertStmt {
+) : SqlInsertStmtImpl(node),
+  PostgreSqlInsertStmt {
 
   override fun tablesAvailable(child: PsiElement): Collection<LazyQuery> {
     val tablesAvailable = super.tablesAvailable(child)

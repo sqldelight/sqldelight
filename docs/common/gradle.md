@@ -214,7 +214,7 @@ Defaults to `false`.
 
 Type: `Property<Boolean>`
 
-If set to true, SQLDelight will generate suspending query methods for us with asynchronous drivers.
+If set to true, SQLDelight will generate suspending query methods for use with asynchronous drivers.
 
 Defaults to `false`.
 

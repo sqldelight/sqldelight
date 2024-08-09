@@ -15,6 +15,7 @@
  */
 package app.cash.sqldelight.core
 
+import app.cash.sqldelight.core.annotators.OptimisticLockCompilerAnnotator
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.DatabaseFileType
 import app.cash.sqldelight.core.lang.DatabaseFileViewProviderFactory
@@ -26,7 +27,6 @@ import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
-import app.cash.sqldelight.core.lang.validation.OptimisticLockValidator
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
@@ -132,7 +132,7 @@ class SqlDelightEnvironment(
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
     val errors = sortedMapOf<Long, MutableList<String>>()
-    val extraAnnotators = listOf(OptimisticLockValidator())
+    val extraAnnotators = listOf(OptimisticLockCompilerAnnotator())
     annotate(
       extraAnnotators,
     ) { element, message ->
@@ -229,13 +229,15 @@ class SqlDelightEnvironment(
     val maxDigits = (log10(context.lineEnd.toDouble()) + 1).toInt()
     for (line in context.lineStart..context.lineEnd) {
       if (!tokenizer.hasMoreTokens()) break
-      result.append(("%0${maxDigits}d    %s\n").format(line, tokenizer.nextToken()))
+      val lineValue = tokenizer.nextToken()
+      result.append(("%0${maxDigits}d    %s\n").format(line, lineValue))
       if (element.lineStart == element.lineEnd && element.lineStart == line) {
-        // If its an error on a single line highlight where on the line.
+        // If it's an error on a single line highlight where on the line.
         result.append(("%${maxDigits}s    ").format(""))
-        if (element.charPositionInLine > 0) {
-          result.append(("%${element.charPositionInLine}s").format(""))
-        }
+        // Print tabs when you see it, spaces for everything else.
+        lineValue.subSequence(0 until element.charPositionInLine)
+          .map { char -> if (char != '\t') " " else char }
+          .forEach(result::append)
         result.append(("%s\n").format("^".repeat(element.textLength)))
       }
     }

@@ -11,6 +11,8 @@ plugins {
 archivesBaseName = 'sqldelight-androidx-paging3'
 
 kotlin {
+  macosX64()
+  macosArm64()
   iosX64()
   iosArm64()
   iosSimulatorArm64()
@@ -54,7 +56,7 @@ kotlin {
     }
   }
 
-  configure([targets.iosX64, targets.iosArm64, targets.iosSimulatorArm64]) {
+  configure([targets.iosX64, targets.iosArm64, targets.iosSimulatorArm64, targets.macosX64, targets.macosArm64]) {
     binaries.configureEach {
       // we only need to link sqlite for the test binaries
       if (outputKind == NativeOutputKind.TEST) {

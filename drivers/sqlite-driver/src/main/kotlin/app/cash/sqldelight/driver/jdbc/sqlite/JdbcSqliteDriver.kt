@@ -34,7 +34,8 @@ class JdbcSqliteDriver constructor(
    */
   url: String,
   properties: Properties = Properties(),
-) : JdbcDriver(), ConnectionManager by connectionManager(url, properties) {
+) : JdbcDriver(),
+  ConnectionManager by connectionManager(url, properties) {
   private val listeners = linkedMapOf<String, MutableSet<Query.Listener>>()
 
   override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
@@ -115,7 +116,12 @@ private class ThreadedConnectionManager(
   override var transaction: Transaction?
     get() = transactions.get()
     set(value) {
+      val currentTransaction = transactions.get()
       transactions.set(value)
+
+      if (value == null && currentTransaction != null) {
+        closeConnection(currentTransaction.connection)
+      }
     }
 
   override fun getConnection() = connections.getOrSet {

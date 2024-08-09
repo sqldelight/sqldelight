@@ -26,8 +26,10 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
+import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
@@ -43,6 +45,7 @@ import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
@@ -145,7 +148,9 @@ inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
 }
 
 private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
-  return if (this is ColumnTypeMixin && javaTypeName != null) {
+  return if (this is SqlCreateViewStmt) {
+    emptyList()
+  } else if (this is ColumnTypeMixin && javaTypeName != null) {
     listOf(
       Pair(
         first = (typeName.node.startOffset + typeName.node.textLength) until
@@ -173,6 +178,9 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       ),
     )
   } else if (this is InsertStmtValuesMixin && parent?.acceptsTableInterface() == true) {
+    val generateAsync = this.sqFile().generateAsync
+    val bindExpr = childOfType(SqlTypes.BIND_EXPR) as SqlBindExpr
+    val bindParameterMixin = bindExpr.bindParameter as BindParameterMixin
     buildList {
       if (parent!!.columnNameList.isEmpty()) {
         add(
@@ -188,11 +196,33 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       }
       add(
         Pair(
-          first = childOfType(SqlTypes.BIND_EXPR)!!.range,
-          second = parent!!.columns.joinToString(separator = ", ", prefix = "(", postfix = ")") { "?" },
+          first = bindExpr.range,
+          second = (1..parent!!.columns.size).joinToString(separator = ", ", prefix = "(", postfix = ")") { bindParameterMixin.replaceWith(generateAsync, it) },
         ),
       )
     }
+  } else if (this is SqlResultColumn && this.expr == null) {
+    listOf(
+      this.range to this@rangesToReplace.queryExposed().flatMap { query ->
+        query.columns.map { column ->
+          val columnElement = column.element as? PsiNamedElement ?: return@rangesToReplace emptyList()
+
+          buildString {
+            if (query.table != null) {
+              append("${query.table!!.node.text}.")
+            } else {
+              val definition = columnElement.reference?.resolve()
+              if (definition?.parent is SqlCreateViewStmt) {
+                append("${(definition.parent as SqlCreateViewStmt).viewName.node.text}.")
+              } else if (definition?.parent?.parent is SqlCreateTableStmt) {
+                append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
+              }
+            }
+            append(columnElement.node.text)
+          }
+        }
+      }.joinToString(separator = ", "),
+    )
   } else {
     children.flatMap { it.rangesToReplace() }
   }
@@ -270,7 +300,7 @@ private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt
   this.forEach { table ->
     graph.addVertex(table)
     table.columnDefList.forEach { column ->
-      column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }.forEach { fk ->
+      (column.columnConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable } + table.tableConstraintList.mapNotNull { it.foreignKeyClause?.foreignTable }).forEach { fk ->
         try {
           val foreignTable = namedStatements[fk.name]
           graph.apply {

@@ -28,6 +28,8 @@ spotless {
     ktlint(libs.versions.ktlint.get()).editorConfigOverride([
       "ktlint_standard_discouraged-comment-location": "disabled",
       "ktlint_standard_package-name": "disabled",
+      // Making something an expression body should be a choice around readability.
+      'ktlint_standard_function-expression-body': 'disabled',
     ])
   }
 }
@@ -87,7 +89,4 @@ tasks.named("dokkaHtmlMultiModule") {
       "customStyleSheets": ["${file("docs/css/logo-styles.css")}"]
     }
   """])
-
-  // https://github.com/Kotlin/dokka/issues/2954
-  dependsOn(":sqldelight-compiler:dokkaHtmlMultiModule")
 }

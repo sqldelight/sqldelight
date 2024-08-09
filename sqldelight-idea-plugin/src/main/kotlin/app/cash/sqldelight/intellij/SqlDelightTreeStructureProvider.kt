@@ -91,7 +91,7 @@ internal class SqlDelightTreeStructureProvider(
     return virtualFile
   }
 
-  override fun getData(selected: MutableCollection<AbstractTreeNode<*>>, dataId: String): Any? {
+  override fun getData(selected: MutableCollection<out AbstractTreeNode<*>>, dataId: String): Any? {
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.`is`(dataId)) {
       if (selected.any { it is SqlDelightPackageNode }) {
         return SqlDelightDeleteProvider(selected)

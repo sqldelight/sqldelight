@@ -53,6 +53,8 @@ class SqlDelightParserDefinition : SqlParserDefinition() {
   }
 
   companion object {
-    private val FILE = ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage)
+    private val FILE = object : ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage) {
+      override fun getExternalId(): String = "SqlDelight"
+    }
   }
 }

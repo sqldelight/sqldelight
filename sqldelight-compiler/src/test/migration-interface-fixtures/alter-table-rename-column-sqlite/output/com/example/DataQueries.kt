@@ -10,7 +10,7 @@ public class DataQueries(
 ) : TransacterImpl(driver) {
   public fun select(): Query<String> = Query(-1_042_942_063, arrayOf("test"), driver, "Data.sq",
       "select", """
-  |SELECT *
+  |SELECT test.alpha
   |  FROM test
   """.trimMargin()) { cursor ->
     cursor.getString(0)!!

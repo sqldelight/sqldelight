@@ -17,8 +17,7 @@ class JsonModule : SqlDelightModule {
   }
 }
 
-private class JsonTypeResolver(private val parentResolver: TypeResolver) :
-  TypeResolver by parentResolver {
+private class JsonTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
     when (functionExpr.functionName.text) {
       "json_array", "json", "json_insert", "json_replace", "json_set", "json_object", "json_patch",

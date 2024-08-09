@@ -13,8 +13,10 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
@@ -42,6 +44,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GLOB"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
@@ -52,9 +55,12 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIKE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MATCH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
@@ -63,11 +69,15 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.REGEXP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RESTRICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
@@ -96,12 +106,17 @@ overrides ::= type_name
   | insert_stmt
   | update_stmt_limited
   | generated_clause
+  | result_column
+  | alter_table_add_column
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
   | extension_stmt
   | create_index_stmt
   | select_stmt
+  | ordering_term
+  | binary_like_operator
+  | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
@@ -118,7 +133,7 @@ column_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
-current_timestamp_with_optional_interval ::= ( CURRENT_TIMESTAMP | 'NOW()' | interval_expression ) [ [ PLUS | MINUS ] interval_expression ] *
+current_timestamp_with_optional_interval ::= ( current_date_time_functions | 'NOW()' | interval_expression ) [ [ PLUS | MINUS ] interval_expression ] *
 default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
   current_timestamp_with_optional_interval |
   {signed_number} |
@@ -146,7 +161,9 @@ type_name ::= (
   date_data_type |
   boolean_data_type |
   json_data_type |
-  blob_data_type
+  blob_data_type |
+  tsvector_data_type |
+  xml_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -168,11 +185,24 @@ table_constraint ::= [ CONSTRAINT {identifier} ] (
   override = true
 }
 
-create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name} LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
+operator_class_stmt ::= {identifier} [ LP {identifier} EQ ( {identifier} | {numeric_literal} ) { RP ]
+storage_parameter ::= TRUE | FALSE | 'ON' | 'OFF' | {identifier} | {numeric_literal}
+storage_parameters ::= 'autosummarize' | 'buffering' | 'deduplicate_items' | 'fastupdate' | 'fillfactor' | 'gin_pending_list_limit' | 'pages_per_range'
+with_storage_parameter ::= WITH LP storage_parameters EQ ( storage_parameter ) ( COMMA storage_parameters EQ ( storage_parameter ) ) * RP
+index_method ::=  'BRIN' | 'BTREE' | 'GIN' | 'GIST' | 'HASH'
+
+create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
+ ( USING index_method LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ with_storage_parameter ] | LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ WHERE <<expr '-1'>> ] )  {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
-  implements = "com.alecstrong.sql.psi.core.psi.SqlGeneratedClause"
   override = true
   pin = 6
+}
+
+binary_like_operator ::= ( 'ILIKE' | LIKE | GLOB | REGEXP | MATCH ) {
+   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBinaryLikeOperatorImpl"
+   implements = "com.alecstrong.sql.psi.core.psi.SqlBinaryLikeOperator"
+   override = true
 }
 
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
@@ -206,7 +236,17 @@ json_data_type ::= 'JSON' | 'JSONB'
 
 blob_data_type ::= 'BYTEA'
 
-interval_expression ::= 'INTERVAL' string_literal
+tsvector_data_type ::= 'TSVECTOR'
+
+xml_data_type ::= 'XML'
+
+interval_expression ::= 'INTERVAL' {string_literal}
+
+timestamp_expression ::= 'TIMESTAMP' [ (WITH | WITHOUT) 'TIME' 'ZONE' ] {string_literal}
+
+date_expression ::= 'DATE' {string_literal}
+
+time_expression ::= 'TIME' {string_literal}
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
@@ -228,14 +268,23 @@ string_literal ::= string {
   override = true
 }
 
+precision_literal ::= ( '0' | '1' | '2' | '3' | '4' | '5' | '6' )
+current_date_time_functions ::= CURRENT_DATE
+  | 'CURRENT_TIME' [ LP precision_literal RP]
+  | 'CURRENT_TIMESTAMP' [ LP precision_literal RP]
+  | 'LOCALTIME' [ LP precision_literal RP]
+  | 'LOCALTIMESTAMP' [ LP precision_literal RP]
+
 literal_value ::= ( {numeric_literal}
                   | string_literal
                   | {blob_literal}
                   | NULL
-                  | CURRENT_TIME
-                  | CURRENT_DATE
-                  | CURRENT_TIMESTAMP
-                  | interval_expression ) {
+                  | boolean_literal
+                  | current_date_time_functions
+                  | interval_expression
+                  | timestamp_expression
+                  | date_expression
+                  | time_expression ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
@@ -286,6 +335,7 @@ alter_table_rules ::= (
   {alter_table_add_column}
   | {alter_table_rename_table}
   | alter_table_rename_column
+  | alter_table_drop_constraint
   | alter_table_drop_column
   | alter_table_add_constraint
   | alter_table_alter_column
@@ -319,12 +369,24 @@ alter_table_add_constraint ::= ADD table_constraint {
     mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddConstraintMixin"
 }
 
+alter_table_drop_constraint ::= DROP CONSTRAINT [ IF EXISTS ] {identifier} [ RESTRICT | CASCADE ] {
+  pin = 2
+}
+
 type_clause ::= 'TYPE'
 
 data_clause ::= 'DATA'
 
 column_not_null_clause ::= (SET | DROP) NOT NULL
 column_default_clause ::= SET {default_constraint} | DROP DEFAULT
+
+if_not_exists ::= IF NOT EXISTS
+alter_table_add_column ::= ADD [ COLUMN ] [ if_not_exists
+ ] {column_def} {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddColumnMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn"
+  override = true
+}
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 ( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
@@ -341,7 +403,7 @@ distinct_on_expr ::= DISTINCT ON LP {result_column} ( COMMA {result_column} ) * 
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
 }
 
-select_stmt ::= SELECT ( [ distinct_on_expr ] | [ DISTINCT | ALL ] ) {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [HAVING <<expr '-1'>>] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+select_stmt ::= SELECT ( distinct_on_expr | [ DISTINCT | ALL ] ) {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [HAVING <<expr '-1'>>] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
@@ -354,28 +416,98 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= array_agg_stmt| string_agg_stmt | json_expression | boolean_literal | boolean_not_expression | window_function_expr {
+extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
 }
 
-window_function_expr ::= {function_expr} 'WITHIN' GROUP LP ORDER BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP {
+window_function_expr ::= {function_expr}
+  ( ['FILTER' LP WHERE <<expr '-1'>> RP] 'OVER' ( window_defn | window_name) | 'WITHIN' GROUP LP ORDER BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin"
+}
+
+base_window_name ::= id
+window_name ::= id
+
+window_defn ::= LP [ base_window_name ]
+  [ PARTITION BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * ]
+  [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
+  [ frame_spec ]
+RP {
+  pin = 1
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowDefinitionMixin"
+}
+
+frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
+  (
+    BETWEEN (
+      'UNBOUNDED' 'PRECEDING' |
+      'CURRENT' ROW |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) AND (
+      'UNBOUNDED' 'FOLLOWING' |
+      'CURRENT' ROW |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) |
+    'UNBOUNDED' 'PRECEDING' |
+    'CURRENT' ROW |
+    <<expr '-1'>> 'PRECEDING'
+  ) [ 'EXCLUDE' NO 'OTHERS' | 'EXCLUDE' 'CURRENT' ROW | 'EXCLUDE' GROUP | 'EXCLUDE' 'TIES' ] {
+  pin = 1
 }
 
 boolean_not_expression ::= NOT (boolean_literal | {column_name})
 
 boolean_literal ::= TRUE | FALSE
 
-json_expression ::= {column_name} ( jsona_binary_operator | jsonb_binary_operator ) <<expr '-1'>> {
+json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
-jsona_binary_operator ::= '->' | '->>' | '#>'
-jsonb_binary_operator ::= '@>' | '<@' | '?|' | '?&' | '?' | '#-'
+jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
+jsonb_binary_operator ::= '#-'
+jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+contains_operator ::= '@>' | '<@' | '&&'
+match_operator ::= '@@'
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt | alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
+contains_operator_expression ::= ( {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ContainsOperatorExpressionMixin"
+  pin = 2
+}
+
+match_operator_expression ::= ( {function_expr} | {column_expr} ) match_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.MatchOperatorExpressionMixin"
+  pin = 2
+}
+
+regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
+
+regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_match_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RegExMatchOperatorExpressionMixin"
+  pin = 2
+}
+
+double_colon_cast_operator ::= '::' type_name
+
+double_colon_cast_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin"
+  pin = 2
+}
+
+at_time_zone_operator ::= 'AT' 'TIME' 'ZONE' <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorMixin"
+}
+
+at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) at_time_zone_operator [ at_time_zone_operator ] *  {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin"
+  pin = 2
+}
+
+extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+ alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
@@ -464,3 +596,18 @@ set_timezone ::= 'TIME' 'ZONE'
 | 'LOCAL'
 | set_value
 )
+
+ordering_term ::= <<expr '-1'>> [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlOrderingTermImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlOrderingTerm"
+  override = true
+}
+
+extract_temporal_field ::= 'century' | 'day' | 'decade' | 'dow' | 'doy' | 'epoch' | 'hour' | 'isodow' | 'isoyear' | 'julian'
+ | 'microseconds' | 'millennium' | 'milliseconds' | 'minute' | 'month' | 'quarter' | 'second' | 'timezone' | 'timezone_hour'
+ | 'timezone_minute' | 'week' | 'year'
+
+extract_temporal_expression ::= 'EXTRACT' LP extract_temporal_field FROM <<expr '-1'>> RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin"
+  pin = 2
+}

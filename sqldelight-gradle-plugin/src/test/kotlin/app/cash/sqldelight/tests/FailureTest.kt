@@ -26,4 +26,23 @@ class FailureTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `errors with tabs in line underline properly`() {
+    val fixtureRoot = File("src/test/bad-underlines")
+
+    val output = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .buildAndFail()
+
+    assertThat(output.output).contains(
+      """
+      |Test1.sq: (2, 7): <type name real> expected, got 'BIGINT'
+      |1    CREATE TABLE test1(
+      |2    	value	BIGINT
+      |     	     	^^^^^^
+      |3    )
+      """.trimMargin(),
+    )
+  }
 }

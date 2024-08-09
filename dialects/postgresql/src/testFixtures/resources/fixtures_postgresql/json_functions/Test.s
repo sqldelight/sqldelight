@@ -3,31 +3,24 @@ CREATE TABLE myTable(
     datab JSONB NOT NULL
 );
 
-SELECT *
-FROM myTable
-WHERE
-  data -> 'sup' AND
-  data ->> 'sup' AND
-  data #> 'sup' AND
+SELECT
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data @> 'sup' AND
+  data #- '{"a"}',
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data <@ 'sup' AND
+  data @> datab,
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data ? 'sup' AND
+  data <@ datab,
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data ?| 'sup' AND
+  data ?? 'b',
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data ?& 'sup' AND
+  data ??| '{"a","b"}',
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data #- 'sup' AND
-  datab -> 'sup' AND
-  datab ->> 'sup' AND
-  datab #> 'sup' AND
-  datab @> 'sup' AND
-  datab <@ 'sup' AND
-  datab ? 'sup' AND
-  datab ?| 'sup' AND
-  datab ?& 'sup' AND
-  datab #- 'sup'
-;
+  data ??& '{"a"}',
+--error[col 2]: Left side of jsonb expression must be a jsonb column.
+  data @? '$.a[*]',
+--error[col 2]: Left side of jsonb expression must be a jsonb column.
+  data @@ '$.b[*] > 0'
+FROM myTable;
+
+SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab || datab, datab - 'b', datab - 1, datab @@ '$.b[*] > 0'
+FROM myTable;

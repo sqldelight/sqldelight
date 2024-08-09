@@ -24,10 +24,8 @@ jobs:
   build:
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
-      # macOS-latest (Intel) is required to run Android simulator tests (instrumentation)
-      # due to nested virtualization not supported on M1
       matrix:
-        os: [ macOS-14, macOS-latest, windows-latest, ubuntu-latest ]
+        os: [ macOS-14, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
@@ -35,10 +33,6 @@ jobs:
           - os: windows-latest
             job: gradle-plugin-tests
           - os: ubuntu-latest
-            job: gradle-plugin-tests
-          - os: macOS-latest
-            job: test
-          - os: macOS-latest
             job: gradle-plugin-tests
           - os: macOS-14
             job: instrumentation
@@ -56,7 +50,7 @@ jobs:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-home-cache-cleanup: true
 
@@ -84,8 +78,14 @@ jobs:
         run: ./gradlew linuxX64Test --no-parallel
 
       # android tests
+      - name: Enable KVM group perms
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
       - name: Run instrumentation tests
-        if: matrix.os == 'macOS-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -97,22 +97,8 @@ jobs:
         if: matrix.os == 'macOS-14' && matrix.job == 'test'
         run: ./gradlew iosX64Test --stacktrace --parallel
 
-      # Build the samples
-      - name: Build the mobile sample
-        if: matrix.os == 'macOS-14' && matrix.job == 'test'
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: build --stacktrace --parallel
-          build-root-directory: sample
-          gradle-home-cache-cleanup: true
-
-      - name: Build the web sample
-        if: matrix.os == 'macOS-14' && matrix.job == 'test'
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: kotlinUpgradeYarnLock build --stacktrace --parallel
-          build-root-directory: sample-web
-          gradle-home-cache-cleanup: true
+      - name: Check for changed files
+        run: test -z "$(git status --porcelain)"
 
   verify_intellij:
     runs-on: ubuntu-latest
@@ -124,9 +110,8 @@ jobs:
       matrix:
         # https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
         idea:
-          - 'IC-2022.3.3' # AS: Giraffe | 2022.3.1
-          - 'IC-2023.1'   # IC
-          - 'IC-2023.2'   # IC
+          - 'IC-2023.2.5'   # IC / Iguana
+          - 'IC-2024.1'   # IC
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -142,6 +127,36 @@ jobs:
     steps:
       - name: Success!
         run: echo "All IntelliJ plugin verification checks passed!"
+
+  buildSample:
+    runs-on: macos-14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.ci-java-version
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
+      - run: ./gradlew -p sample build --stacktrace --parallel
+
+  buildWebSample:
+    runs-on: macos-14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.ci-java-version
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
+      - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
 
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
