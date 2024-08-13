@@ -1250,14 +1250,14 @@ class InterfaceGeneration {
     |      cursor.getBoolean(10)!!,
     |      cursor.getBoolean(11)!!,
     |      cursor.getBoolean(12)!!,
-    |      cursor.getBoolean(13)!!
+    |      cursor.getBoolean(13)!!,
     |      cursor.getBoolean(14)!!
     |    )
     |  }
     |
     |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull { has_bigint, has_boolean,
-    |      has_byte, has_date, has_integer, has_json, has_jsob, has_num, has_smallint, has_time, has_timestamp,
-    |      has_timestamptz, has_tsvector, has_uuid, has_varchar ->
+    |      has_byte, has_date, has_integer, has_json, has_jsob, has_num, has_smallint, has_time,
+    |      has_timestamp, has_timestamptz, has_tsvector, has_uuid, has_varchar ->
     |    SelectIsNotNull(
     |      has_bigint,
     |      has_boolean,
