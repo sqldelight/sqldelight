@@ -50,7 +50,7 @@ jobs:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
 
@@ -138,7 +138,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
       - run: ./gradlew -p sample build --stacktrace --parallel
@@ -153,7 +153,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
       - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
