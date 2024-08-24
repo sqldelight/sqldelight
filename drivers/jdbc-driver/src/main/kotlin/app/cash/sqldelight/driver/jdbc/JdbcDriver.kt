@@ -61,14 +61,18 @@ interface ConnectionManager {
     val connection: Connection,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          connectionManager.apply { connection.endTransaction() }
-        } else {
-          connectionManager.apply { connection.rollbackTransaction() }
+      try {
+        if (enclosingTransaction == null) {
+          if (successful) {
+            connectionManager.apply { connection.endTransaction() }
+          } else {
+            connectionManager.apply { connection.rollbackTransaction() }
+          }
         }
+        // properly rotate the transaction even if there are uncaught errors
+      } finally {
+        connectionManager.transaction = enclosingTransaction
       }
-      connectionManager.transaction = enclosingTransaction
       return QueryResult.Unit
     }
   }
