@@ -43,3 +43,9 @@ android {
     exclude 'LICENSE.txt'
   }
 }
+
+androidComponents {
+  beforeVariants(selector().withBuildType("release")) {
+    enable = project.properties["debugOnly"] != "true"
+  }
+}
