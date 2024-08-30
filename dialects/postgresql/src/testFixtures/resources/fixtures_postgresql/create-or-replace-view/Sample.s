@@ -1,0 +1,9 @@
+CREATE TABLE abc (
+    a INTEGER PRIMARY KEY,
+    b TEXT NOT NULL,
+    c NUMERIC NOT NULL
+);
+
+CREATE VIEW viewabc AS SELECT a, b FROM abc;
+
+CREATE OR REPLACE VIEW viewabc AS SELECT a, b, c FROM abc;
