@@ -53,6 +53,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
+      - name: Print home size
+        run: du -sh ~/.gradle
 
       # Linux tests
       - name: Run gradle tests
@@ -88,7 +90,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 30
           arch: x86_64
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace --parallel
 
