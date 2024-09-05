@@ -58,14 +58,14 @@ jobs:
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         run: |
-          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test -x dokkaHtml
       - name: Run gradle plugin tests
         if: matrix.os == 'macOS-14' && matrix.job == 'gradle-plugin-tests'
-        run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --parallel
+        run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --parallel -x dokkaHtml
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        run: ./gradlew :sqldelight-idea-plugin:build --stacktrace
+        run: ./gradlew :sqldelight-idea-plugin:build --stacktrace -x dokkaHtml
 
       # Windows tests
       - name: Run windows tests
@@ -75,7 +75,7 @@ jobs:
       - name: Run linux tests
         if: matrix.os == 'ubuntu-latest'
         # not parallel otherwise NativeTransacterTest fails.
-        run: ./gradlew linuxX64Test --no-parallel
+        run: ./gradlew linuxX64Test --no-parallel -x dokkaHtml
 
       # android tests
       - name: Enable KVM group perms
@@ -90,7 +90,7 @@ jobs:
         with:
           api-level: 29
           arch: x86_64
-          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace --parallel
+          script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace --parallel -x dokkaHtml
 
       # ios tests
       - name: Run ios tests
