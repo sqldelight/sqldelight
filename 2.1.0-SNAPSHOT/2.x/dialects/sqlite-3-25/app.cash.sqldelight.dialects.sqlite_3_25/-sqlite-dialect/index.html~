@@ -227,17 +227,17 @@
               </div>
             </div>
           </div>
-<a data-name="-301776419%2FFunctions%2F1849874135" anchor-label="typeResolver" id="-301776419%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+<a data-name="498759134%2FFunctions%2F1849874135" anchor-label="typeResolver" id="498759134%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-301776419%2FFunctions%2F1849874135"><span>type</span><wbr><span><span>Resolver</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-301776419%2FFunctions%2F1849874135"></span>
+                  <div><a href="type-resolver.html"><span>type</span><wbr><span><span>Resolver</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="498759134%2FFunctions%2F1849874135"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-301776419%2FFunctions%2F1849874135"><span class="token function">typeResolver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="type-resolver.html"><span class="token function">typeResolver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentResolver<span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-type-resolver/index.html">TypeResolver</a></div></div></div>
                 </div>
               </div>
             </div>

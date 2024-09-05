@@ -128,6 +128,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1377134835%2FClasslikes%2F1849874135" anchor-label="SqliteExtensionExpr" id="-1377134835%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sqlite-extension-expr/index.html"><span>Sqlite</span><wbr><span>Extension</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1377134835%2FClasslikes%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sqlite-extension-expr/index.html">SqliteExtensionExpr</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionExpr///PointingToDeclaration/">SqlExtensionExpr</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="753911193%2FClasslikes%2F1849874135" anchor-label="SqliteFrameSpec" id="753911193%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -154,21 +169,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sqlite-overrides/index.html">SqliteOverrides</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="125606030%2FClasslikes%2F1849874135" anchor-label="SqliteResultColumn" id="125606030%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-sqlite-result-column/index.html"><span>Sqlite</span><wbr><span>Result</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="125606030%2FClasslikes%2F1849874135"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sqlite-result-column/index.html">SqliteResultColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlResultColumn///PointingToDeclaration/">SqlResultColumn</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -233,32 +233,17 @@
               </div>
             </div>
           </div>
-<a data-name="1022870189%2FClasslikes%2F1849874135" anchor-label="SqliteWindowFunc" id="1022870189%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+<a data-name="-1218453596%2FClasslikes%2F1849874135" anchor-label="SqliteWindowFunctionExpr" id="-1218453596%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-sqlite-window-func/index.html"><span>Sqlite</span><wbr><span>Window</span><wbr><span><span>Func</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1022870189%2FClasslikes%2F1849874135"></span>
+                  <div><a href="-sqlite-window-function-expr/index.html"><span>Sqlite</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1218453596%2FClasslikes%2F1849874135"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sqlite-window-func/index.html">SqliteWindowFunc</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="307150697%2FClasslikes%2F1849874135" anchor-label="SqliteWindowFunctionInvocation" id="307150697%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-sqlite-window-function-invocation/index.html"><span>Sqlite</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span><span>Invocation</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="307150697%2FClasslikes%2F1849874135"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sqlite-window-function-invocation/index.html">SqliteWindowFunctionInvocation</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sqlite-window-function-expr/index.html">SqliteWindowFunctionExpr</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlFunctionExpr///PointingToDeclaration/">SqlFunctionExpr</span></div></div></div>
                 </div>
               </div>
             </div>

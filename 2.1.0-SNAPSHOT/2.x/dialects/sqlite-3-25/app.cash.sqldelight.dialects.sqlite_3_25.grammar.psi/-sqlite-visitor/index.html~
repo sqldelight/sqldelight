@@ -257,6 +257,21 @@
               </div>
             </div>
           </div>
+<a data-name="-689940386%2FFunctions%2F1849874135" anchor-label="visitExtensionExpr" id="-689940386%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-extension-expr.html"><span>visit</span><wbr><span>Extension</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-689940386%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-extension-expr.html"><span class="token function">visitExtensionExpr</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-extension-expr/index.html">SqliteExtensionExpr</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-2046136272%2FFunctions%2F1849874135" anchor-label="visitFile" id="-2046136272%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -347,21 +362,6 @@
               </div>
             </div>
           </div>
-<a data-name="1348840336%2FFunctions%2F1849874135" anchor-label="visitResultColumn" id="1348840336%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="visit-result-column.html"><span>visit</span><wbr><span>Result</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1348840336%2FFunctions%2F1849874135"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-result-column.html"><span class="token function">visitResultColumn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-result-column/index.html">SqliteResultColumn</a></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
 <a data-name="-1519812688%2FFunctions%2F1849874135" anchor-label="visitSelectStmt" id="-1519812688%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -407,17 +407,32 @@
               </div>
             </div>
           </div>
-<a data-name="1536405081%2FFunctions%2F1849874135" anchor-label="visitSqlResultColumn" id="1536405081%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+<a data-name="-784096791%2FFunctions%2F1849874135" anchor-label="visitSqlExtensionExpr" id="-784096791%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="visit-sql-result-column.html"><span>visit</span><wbr><span>Sql</span><wbr><span>Result</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1536405081%2FFunctions%2F1849874135"></span>
+                  <div><a href="visit-sql-extension-expr.html"><span>visit</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-784096791%2FFunctions%2F1849874135"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-sql-result-column.html"><span class="token function">visitSqlResultColumn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlResultColumn///PointingToDeclaration/">SqlResultColumn</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-sql-extension-expr.html"><span class="token function">visitSqlExtensionExpr</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionExpr///PointingToDeclaration/">SqlExtensionExpr</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="694855449%2FFunctions%2F1849874135" anchor-label="visitSqlFunctionExpr" id="694855449%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-sql-function-expr.html"><span>visit</span><wbr><span>Sql</span><wbr><span>Function</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="694855449%2FFunctions%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-sql-function-expr.html"><span class="token function">visitSqlFunctionExpr</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlFunctionExpr///PointingToDeclaration/">SqlFunctionExpr</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -467,32 +482,17 @@
               </div>
             </div>
           </div>
-<a data-name="-1115058768%2FFunctions%2F1849874135" anchor-label="visitWindowFunc" id="-1115058768%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+<a data-name="865666000%2FFunctions%2F1849874135" anchor-label="visitWindowFunctionExpr" id="865666000%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="visit-window-func.html"><span>visit</span><wbr><span>Window</span><wbr><span><span>Func</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1115058768%2FFunctions%2F1849874135"></span>
+                  <div><a href="visit-window-function-expr.html"><span>visit</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="865666000%2FFunctions%2F1849874135"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-window-func.html"><span class="token function">visitWindowFunc</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-window-func/index.html">SqliteWindowFunc</a></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="415625328%2FFunctions%2F1849874135" anchor-label="visitWindowFunctionInvocation" id="415625328%2FFunctions%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="visit-window-function-invocation.html"><span>visit</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span><span>Invocation</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="415625328%2FFunctions%2F1849874135"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-window-function-invocation.html"><span class="token function">visitWindowFunctionInvocation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-window-function-invocation/index.html">SqliteWindowFunctionInvocation</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-window-function-expr.html"><span class="token function">visitWindowFunctionExpr</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-window-function-expr/index.html">SqliteWindowFunctionExpr</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>

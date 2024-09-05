@@ -128,6 +128,21 @@
               </div>
             </div>
           </div>
+<a data-name="-29570315%2FClasslikes%2F1849874135" anchor-label="SqliteExtensionExprImpl" id="-29570315%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sqlite-extension-expr-impl/index.html"><span>Sqlite</span><wbr><span>Extension</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-29570315%2FClasslikes%2F1849874135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-extension-expr-impl/index.html">SqliteExtensionExprImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlExtensionExprImpl///PointingToDeclaration/">SqlExtensionExprImpl</span>, <a href="../app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi/-sqlite-extension-expr/index.html">SqliteExtensionExpr</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1408116609%2FClasslikes%2F1849874135" anchor-label="SqliteFrameSpecImpl" id="1408116609%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -154,21 +169,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-overrides-impl/index.html">SqliteOverridesImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi/-sqlite-overrides/index.html">SqliteOverrides</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1249042086%2FClasslikes%2F1849874135" anchor-label="SqliteResultColumnImpl" id="1249042086%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-sqlite-result-column-impl/index.html"><span>Sqlite</span><wbr><span>Result</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1249042086%2FClasslikes%2F1849874135"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-result-column-impl/index.html">SqliteResultColumnImpl</a> : <a href="../../../dialects/sqlite-3-25/app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins/-result-column-mixin/index.html">ResultColumnMixin</a>, <a href="../app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi/-sqlite-result-column/index.html">SqliteResultColumn</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -203,32 +203,17 @@
               </div>
             </div>
           </div>
-<a data-name="-1540180155%2FClasslikes%2F1849874135" anchor-label="SqliteWindowFuncImpl" id="-1540180155%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
+<a data-name="1336092860%2FClasslikes%2F1849874135" anchor-label="SqliteWindowFunctionExprImpl" id="1336092860%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-sqlite-window-func-impl/index.html"><span>Sqlite</span><wbr><span>Window</span><wbr><span>Func</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1540180155%2FClasslikes%2F1849874135"></span>
+                  <div><a href="-sqlite-window-function-expr-impl/index.html"><span>Sqlite</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1336092860%2FClasslikes%2F1849874135"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-window-func-impl/index.html">SqliteWindowFuncImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi/-sqlite-window-func/index.html">SqliteWindowFunc</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1516332031%2FClasslikes%2F1849874135" anchor-label="SqliteWindowFunctionInvocationImpl" id="-1516332031%2FClasslikes%2F1849874135" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-25:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-25:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-sqlite-window-function-invocation-impl/index.html"><span>Sqlite</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span>Invocation</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1516332031%2FClasslikes%2F1849874135"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-window-function-invocation-impl/index.html">SqliteWindowFunctionInvocationImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi/-sqlite-window-function-invocation/index.html">SqliteWindowFunctionInvocation</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-25:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-window-function-expr-impl/index.html">SqliteWindowFunctionExprImpl</a> : <a href="../../../dialects/sqlite-3-25/app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins/-sqlite-window-function-mixin/index.html">SqliteWindowFunctionMixin</a>, <a href="../app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi/-sqlite-window-function-expr/index.html">SqliteWindowFunctionExpr</a></div></div></div>
                 </div>
               </div>
             </div>

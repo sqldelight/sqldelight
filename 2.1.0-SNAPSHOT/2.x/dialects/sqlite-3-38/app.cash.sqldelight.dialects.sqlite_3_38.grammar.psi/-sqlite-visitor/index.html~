@@ -317,21 +317,6 @@
               </div>
             </div>
           </div>
-<a data-name="-1281309689%2FFunctions%2F-2033522955" anchor-label="visitSqlExtensionExpr" id="-1281309689%2FFunctions%2F-2033522955" data-filterable-set=":dialects:sqlite-3-38:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:sqlite-3-38:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-38:dokkaHtmlPartial/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="visit-sql-extension-expr.html"><span>visit</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span><span>Expr</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1281309689%2FFunctions%2F-2033522955"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-38:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-sql-extension-expr.html"><span class="token function">visitSqlExtensionExpr</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionExpr///PointingToDeclaration/">SqlExtensionExpr</span></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
 <a data-name="1356965038%2FFunctions%2F-2033522955" anchor-label="visitWhiteSpace" id="1356965038%2FFunctions%2F-2033522955" data-filterable-set=":dialects:sqlite-3-38:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-38:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-38:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
