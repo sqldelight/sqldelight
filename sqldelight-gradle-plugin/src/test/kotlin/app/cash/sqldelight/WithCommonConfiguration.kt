@@ -11,5 +11,5 @@ internal fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunn
       |
     """.trimMargin(),
   )
-  return withProjectDir(projectRoot)
+  return withProjectDir(projectRoot).withTestKitDir(File("build/gradle-test-kit").absoluteFile)
 }
