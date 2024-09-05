@@ -953,4 +953,43 @@ class QueriesTypeTest {
       """.trimIndent(),
     )
   }
+
+  @Test fun `pragma statement returns results`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |pragmaVersion:
+      |PRAGMA get_version;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Data.sq",
+    )
+
+    val query = result.compiledFile.namedQueries.first()
+    assertThat(result.errors).isEmpty()
+
+    val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.ExecutableQuery
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.String
+      |
+      |public class DataQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun pragmaVersion(): ExecutableQuery<String> = Query(${query.id.withUnderscores}, driver, "Data.sq",
+      |      "pragmaVersion", "PRAGMA get_version") { cursor ->
+      |    cursor.getString(0)!!
+      |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
 }

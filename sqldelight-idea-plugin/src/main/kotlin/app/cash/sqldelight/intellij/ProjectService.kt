@@ -58,7 +58,9 @@ import kotlin.reflect.jvm.jvmName
 import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import timber.log.Timber
 
-class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
+class ProjectService(val project: Project) :
+  SqlDelightProjectService,
+  Disposable {
   private var fileIndexes: FileIndexMap?
   private val loggingTree = LoggerTree(Logger.getInstance("SQLDelight[${project.name}]"))
 

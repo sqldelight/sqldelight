@@ -1,0 +1,11 @@
+CREATE TABLE Xml_Test(
+  x1 XML NOT NULL,
+  x2 XML
+);
+
+insert:
+INSERT INTO Xml_Test (x1, x2) VALUES (?, ?);
+
+select:
+SELECT x1, x2
+FROM Xml_Test;

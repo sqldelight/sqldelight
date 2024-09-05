@@ -32,7 +32,8 @@ import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
 class FileIndexingNotification(
   private val project: Project,
-) : DumbAware, EditorNotificationProvider {
+) : DumbAware,
+  EditorNotificationProvider {
   internal var unconfiguredReason: UnconfiguredReason = GradleSyncing
     set(value) {
       field = value

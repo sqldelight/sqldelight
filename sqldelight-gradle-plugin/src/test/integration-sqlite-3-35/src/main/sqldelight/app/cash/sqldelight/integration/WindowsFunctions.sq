@@ -1,0 +1,46 @@
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c TEXT);
+
+CREATE TABLE t2(a TEXT, b TEXT);
+
+insert:
+INSERT INTO t2 VALUES('a', 'one'),
+                     ('a', 'two'),
+                     ('a', 'three'),
+                     ('b', 'four'),
+                     ('c', 'five'),
+                     ('c', 'six');
+
+insertGroup:
+INSERT INTO t1 VALUES   (1, 'A', 'one'  ),
+                        (2, 'B', 'two'  ),
+                        (3, 'C', 'three'),
+                        (4, 'D', 'one'  ),
+                        (5, 'E', 'two'  ),
+                        (6, 'F', 'three'),
+                        (7, 'G', 'one'  );
+
+select:
+SELECT a                        AS a,
+       row_number() OVER win    AS row_number,
+       rank() OVER win          AS rank,
+       dense_rank() OVER win    AS dense_rank,
+       percent_rank() OVER win  AS percent_rank,
+       cume_dist() OVER win     AS cume_dist,
+       ntile(2) OVER win        AS ntile
+FROM t2
+WINDOW win AS (ORDER BY a);
+
+selectExpr:
+SELECT b                          AS b,
+       lead(b, 2, 'n/a') OVER win AS lead,
+       lag(b) OVER win            AS lag,
+       first_value(b) OVER win    AS first_value,
+       last_value(b) OVER win     AS last_value,
+       nth_value(b, 3) OVER win   AS nth_value
+FROM t2
+WINDOW win AS (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW);
+
+selectGroup:
+SELECT a, b, group_concat(b, '.') OVER (
+  ORDER BY a ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+) AS group_concat FROM t1;
