@@ -44,6 +44,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FOREIGN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.FROM"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GENERATED"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.GLOB"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.HAVING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ID"
@@ -54,8 +55,10 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIKE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.MATCH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MINUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.MULTIPLY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NO"
@@ -69,8 +72,10 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.REGEXP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RESTRICT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
@@ -102,6 +107,7 @@ overrides ::= type_name
   | update_stmt_limited
   | generated_clause
   | result_column
+  | alter_table_add_column
   | alter_table_rules
   | compound_select_stmt
   | extension_expr
@@ -109,6 +115,7 @@ overrides ::= type_name
   | create_index_stmt
   | select_stmt
   | ordering_term
+  | binary_like_operator
   | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
@@ -155,7 +162,8 @@ type_name ::= (
   boolean_data_type |
   json_data_type |
   blob_data_type |
-  tsvector_data_type
+  tsvector_data_type |
+  xml_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -191,6 +199,12 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   pin = 6
 }
 
+binary_like_operator ::= ( 'ILIKE' | LIKE | GLOB | REGEXP | MATCH ) {
+   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBinaryLikeOperatorImpl"
+   implements = "com.alecstrong.sql.psi.core.psi.SqlBinaryLikeOperator"
+   override = true
+}
+
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]
 
 generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (ALWAYS | BY DEFAULT) AS identity_clause ) ) {
@@ -224,9 +238,15 @@ blob_data_type ::= 'BYTEA'
 
 tsvector_data_type ::= 'TSVECTOR'
 
-interval_expression ::= 'INTERVAL' string_literal
+xml_data_type ::= 'XML'
+
+interval_expression ::= 'INTERVAL' {string_literal}
 
 timestamp_expression ::= 'TIMESTAMP' [ (WITH | WITHOUT) 'TIME' 'ZONE' ] {string_literal}
+
+date_expression ::= 'DATE' {string_literal}
+
+time_expression ::= 'TIME' {string_literal}
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
@@ -262,7 +282,9 @@ literal_value ::= ( {numeric_literal}
                   | boolean_literal
                   | current_date_time_functions
                   | interval_expression
-                  | timestamp_expression) {
+                  | timestamp_expression
+                  | date_expression
+                  | time_expression ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
@@ -313,6 +335,7 @@ alter_table_rules ::= (
   {alter_table_add_column}
   | {alter_table_rename_table}
   | alter_table_rename_column
+  | alter_table_drop_constraint
   | alter_table_drop_column
   | alter_table_add_constraint
   | alter_table_alter_column
@@ -346,12 +369,24 @@ alter_table_add_constraint ::= ADD table_constraint {
     mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddConstraintMixin"
 }
 
+alter_table_drop_constraint ::= DROP CONSTRAINT [ IF EXISTS ] {identifier} [ RESTRICT | CASCADE ] {
+  pin = 2
+}
+
 type_clause ::= 'TYPE'
 
 data_clause ::= 'DATA'
 
 column_not_null_clause ::= (SET | DROP) NOT NULL
 column_default_clause ::= SET {default_constraint} | DROP DEFAULT
+
+if_not_exists ::= IF NOT EXISTS
+alter_table_add_column ::= ADD [ COLUMN ] [ if_not_exists
+ ] {column_def} {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableAddColumnMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn"
+  override = true
+}
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
 ( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
@@ -381,7 +416,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -434,18 +469,31 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
 }
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
-jsonb_boolean_operator ::= '@>' | '<@' | '@?' | '??|' | '??&' | '??'
+jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+contains_operator ::= '@>' | '<@' | '&&'
 match_operator ::= '@@'
+
+contains_operator_expression ::= ( {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ContainsOperatorExpressionMixin"
+  pin = 2
+}
 
 match_operator_expression ::= ( {function_expr} | {column_expr} ) match_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.MatchOperatorExpressionMixin"
   pin = 2
 }
 
-regex_match_operator ::= '~*' | '~' | '!~*' | '!~'
+regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
 
 regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_match_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RegExMatchOperatorExpressionMixin"
+  pin = 2
+}
+
+double_colon_cast_operator ::= '::' type_name
+
+double_colon_cast_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin"
   pin = 2
 }
 
@@ -553,4 +601,13 @@ ordering_term ::= <<expr '-1'>> [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] 
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlOrderingTermImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlOrderingTerm"
   override = true
+}
+
+extract_temporal_field ::= 'century' | 'day' | 'decade' | 'dow' | 'doy' | 'epoch' | 'hour' | 'isodow' | 'isoyear' | 'julian'
+ | 'microseconds' | 'millennium' | 'milliseconds' | 'minute' | 'month' | 'quarter' | 'second' | 'timezone' | 'timezone_hour'
+ | 'timezone_minute' | 'week' | 'year'
+
+extract_temporal_expression ::= 'EXTRACT' LP extract_temporal_field FROM <<expr '-1'>> RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin"
+  pin = 2
 }

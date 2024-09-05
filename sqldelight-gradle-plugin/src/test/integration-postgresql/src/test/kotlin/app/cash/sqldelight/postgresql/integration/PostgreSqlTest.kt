@@ -375,9 +375,45 @@ class PostgreSqlTest {
   }
 
   @Test fun testArrays() {
-    with(database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two")).executeAsOne()) {
+    with(database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()) {
       assertThat(intArray!!.asList()).containsExactly(1u, 2u).inOrder()
       assertThat(textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayContains() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.contains(arrayOf(1u, 2u), arrayOf("a", "b")).executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isTrue()
+    }
+  }
+
+  @Test fun testArrayContainsFirst() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.containsFirst(arrayOf(1u, 2u)).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayContainsSecond() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.containsSecond(arrayOf("a", "b")).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayOverlaps() {
+    database.arraysQueries.insertAndReturn(arrayOf(1u, 2u), arrayOf("one", "two"), arrayOf("a", "b")).executeAsOne()
+    with(database.arraysQueries.overlaps(arrayOf(1u, 2u)).executeAsList()) {
+      assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
+      assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
+      assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
     }
   }
 
@@ -385,6 +421,16 @@ class PostgreSqlTest {
     val now = database.datesQueries.selectNow().executeAsOne()
     assertThat(now).isNotNull()
     assertThat(now).isGreaterThan(OffsetDateTime.MIN)
+  }
+
+  @Test fun testDateLiteral() {
+    val dateLiteral = database.datesQueries.selectDateLiteral().executeAsOne()
+    assertThat(dateLiteral).isEqualTo(LocalDate.of(2023, 5, 15))
+  }
+
+  @Test fun testTimeLiteral() {
+    val timeLiteral = database.datesQueries.selectTimeLiteral().executeAsOne()
+    assertThat(timeLiteral).isEqualTo(LocalTime.of(10, 30, 45, 0))
   }
 
   @Test fun nowPlusInterval() {
@@ -867,6 +913,42 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testLike() {
+    database.likeQueries.insert("testing")
+
+    with(database.likeQueries.selectWhereLike("test%").executeAsList()) {
+      assertThat(first()).isEqualTo("testing")
+    }
+
+    with(database.likeQueries.selectWhereLikeRegex().executeAsList()) {
+      assertThat(first()).isEqualTo("testing")
+    }
+
+    with(database.likeQueries.selectLikeRegex().executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isFalse()
+    }
+  }
+
+  @Test
+  fun testILike() {
+    database.likeQueries.insert("TESTING")
+
+    with(database.likeQueries.selectWhereILike("test%").executeAsList()) {
+      assertThat(first()).isEqualTo("TESTING")
+    }
+
+    with(database.likeQueries.selectWhereILikeRegex().executeAsList()) {
+      assertThat(first()).isEqualTo("TESTING")
+    }
+
+    with(database.likeQueries.selectILikeRegex().executeAsList()) {
+      assertThat(first().expr).isTrue()
+      assertThat(first().expr_).isFalse()
+    }
+  }
+
+  @Test
   fun testRankOver() {
     database.windowFunctionsQueries.insert("t", 2)
     database.windowFunctionsQueries.insert("q", 3)
@@ -926,6 +1008,88 @@ class PostgreSqlTest {
       assertThat(expr_______).isGreaterThan(LocalDateTime.MIN)
       assertThat(expr________).isEqualTo(LocalDateTime.of(2001, 2, 16, 14, 38, 40))
       assertThat(expr_________).isEqualTo(OffsetDateTime.of(2001, 2, 17, 2, 38, 40, 0, ZoneOffset.ofHours(0)))
+    }
+  }
+
+  @Test
+  fun testDataTypeCasts() {
+    database.dataTypeCastsQueries.insert("42", null)
+
+    with(database.dataTypeCastsQueries.select(42).executeAsOne()) {
+      assertThat(expr).isEqualTo("1")
+      assertThat(expr_).isEqualTo("3.14")
+      assertThat(expr__).isEqualTo(42)
+      assertThat(expr___).isFalse()
+      assertThat(expr____).isTrue()
+      assertThat(expr_____).isEqualTo(LocalDateTime.of(2023, 5, 1, 12, 34, 56))
+      assertThat(expr______).isEqualTo(java.util.UUID.fromString("6ba7b810-9dad-11d1-80b4-00c04fd430c8"))
+      assertThat(expr_______).isEqualTo("""{"a":42}""")
+      assertThat(expr________).isEqualTo(arrayOf(1, 2, 3))
+      assertThat(expr_________).isEqualTo(42L)
+      assertThat(expr__________).isEqualTo(3.14)
+      assertThat(expr___________).isFalse()
+      assertThat(expr____________).isEqualTo("hello")
+      assertThat(expr_____________).isEqualTo(OffsetDateTime.of(2023, 4, 25, 8, 30, 0, 0, ZoneOffset.ofHours(0)))
+      assertThat(expr______________).isEqualTo(LocalDate.of(2023, 4, 25))
+      assertThat(expr_______________).isEqualTo(42)
+      assertThat(expr________________).isNull()
+      assertThat(expr_________________).isEqualTo(42)
+    }
+  }
+
+  @Test
+  fun testXml() {
+    val a = "<?xml version=\"1.0\"?><book><title>Manual</title><chapter>test</chapter></book>"
+    val b = "<book><title>Manual</title><chapter>test</chapter></book>"
+    database.xmlQueries.insert(a, b)
+    with(database.xmlQueries.select().executeAsOne()) {
+      assertThat(x1).isEqualTo(b) // results are returned without <?xml...?>
+      assertThat(x2).isEqualTo(b)
+    }
+  }
+
+  @Test
+  fun testExtract() {
+    val sa = OffsetDateTime.of(2001, 2, 16, 19, 30, 0, 0, ZoneOffset.ofHours(0))
+    val ea = OffsetDateTime.of(2001, 2, 16, 20, 30, 0, 0, ZoneOffset.ofHours(0))
+    val cd = LocalDate.of(2001, 2, 16)
+
+    database.extractQueries.insert(sa, ea, cd)
+
+    with(database.extractQueries.select().executeAsOne()) {
+      assertThat(expr).isEqualTo(5)
+      assertThat(expr_).isEqualTo(2023)
+      assertThat(expr__).isEqualTo(93600)
+      assertThat(expr___).isEqualTo(20)
+      assertThat(expr____).isEqualTo(38)
+      assertThat(expr_____).isEqualTo(16)
+      assertThat(expr______).isEqualTo(5)
+      assertThat(expr_______).isEqualTo(10)
+      assertThat(expr________).isEqualTo(3)
+    }
+  }
+
+  @Test
+  fun testSelectDistinctOn() {
+    val studentExpected = Student(1000, "Test Student")
+    val gradeExpected = Grade(4000, studentExpected.student_id, 5, LocalDateTime.of(1980, 1, 1, 1, 0, 0))
+    database.distinctOnQueries.insertStudent(studentExpected)
+    database.distinctOnQueries.insertGrade(gradeExpected)
+
+    with(database.distinctOnQueries.selectDistinctOnStudent().executeAsOne()) {
+      assertThat(student_id).isEqualTo(studentExpected.student_id)
+      assertThat(name).isEqualTo(studentExpected.name)
+      assertThat(grade_id).isEqualTo(gradeExpected.grade_id)
+      assertThat(grade).isEqualTo(gradeExpected.grade)
+      assertThat(grade_date).isEqualTo(gradeExpected.grade_date)
+    }
+
+    with(database.distinctOnQueries.selectDistinctOnStudentGradeDate().executeAsOne()) {
+      assertThat(student_id).isEqualTo(studentExpected.student_id)
+      assertThat(name).isEqualTo(studentExpected.name)
+      assertThat(grade_id).isEqualTo(gradeExpected.grade_id)
+      assertThat(grade).isEqualTo(gradeExpected.grade)
+      assertThat(grade_date).isEqualTo(gradeExpected.grade_date)
     }
   }
 }

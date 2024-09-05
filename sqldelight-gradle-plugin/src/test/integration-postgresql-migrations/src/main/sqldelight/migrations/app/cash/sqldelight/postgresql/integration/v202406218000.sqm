@@ -1,0 +1,5 @@
+CREATE TABLE X (
+	id INT NOT NULL,
+	txt TEXT NOT NULL
+);
+
