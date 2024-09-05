@@ -33,7 +33,9 @@ import com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.kotlin.psi.psiUtil.endOffset
 import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 
-class SqlDelightFoldingBuilder : FoldingBuilder, DumbAware {
+class SqlDelightFoldingBuilder :
+  FoldingBuilder,
+  DumbAware {
 
   override fun buildFoldRegions(root: ASTNode, document: Document) =
     root.createFoldingDescriptors()

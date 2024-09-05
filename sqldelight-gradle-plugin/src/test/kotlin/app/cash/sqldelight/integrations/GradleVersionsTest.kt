@@ -21,6 +21,7 @@ import com.google.common.truth.Truth.assertThat
 import java.io.File
 import java.nio.file.Files
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.util.GradleVersion
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -32,9 +33,11 @@ class GradleVersionsTest(private val gradleVersion: String) {
     @Parameters(name = "{0}")
     @JvmStatic
     fun kotlinVersions() = listOf(
+      // MIN_GRADLE_VERSION,
+      // We use version catalogs in tests too but this feature is only stable since 7.4.
+      // Test MIN_GRADLE_VERSION too if MIN_GRADLE_VERSION is higher than 7.4.
       MIN_GRADLE_VERSION,
-      "8.1",
-      "8.6",
+      GradleVersion.current().version,
     )
   }
 
