@@ -916,6 +916,44 @@ class QueriesTypeTest {
     )
   }
 
+  @Test fun `SQL keywords can be used as table names when escaped`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE "order" (
+      |  data_id INTEGER NOT NULL
+      |);
+      |selectForId:
+      |INSERT INTO "order" VALUES ?;
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/TestQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+        package com.example
+
+        import app.cash.sqldelight.TransacterImpl
+        import app.cash.sqldelight.db.SqlDriver
+
+        public class TestQueries(
+          driver: SqlDriver,
+        ) : TransacterImpl(driver) {
+          public fun selectForId(order: Order) {
+            driver.execute(-304_025_397, ""${'"'}INSERT INTO "order" (data_id) VALUES (?)""${'"'}, 1) {
+                  bindLong(0, order.data_id)
+                }
+            notifyQueries(-304_025_397) { emit ->
+              emit("order")
+            }
+          }
+        }
+
+      """.trimIndent(),
+    )
+  }
+
   @Test fun `pragma statement returns results`() {
     val result = FixtureCompiler.compileSql(
       """
