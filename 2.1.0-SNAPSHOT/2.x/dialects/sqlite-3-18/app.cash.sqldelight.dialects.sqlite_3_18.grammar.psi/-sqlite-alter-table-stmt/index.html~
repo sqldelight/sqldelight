@@ -73,13 +73,13 @@
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-18:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-18:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#1700929631%2FProperties%2F-4936845"><span><span>ARRAY_FACTORY</span></span></a></div>
+                  <div><a href="../-sqlite-blob-data-type/index.html#1700929631%2FProperties%2F-4936845"><span><span>ARRAY_FACTORY</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1700929631%2FProperties%2F-4936845"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#1700929631%2FProperties%2F-4936845">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-blob-data-type/index.html#1700929631%2FProperties%2F-4936845">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -88,13 +88,13 @@
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-18:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-18:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#702897020%2FProperties%2F-4936845"><span><span>EMPTY_ARRAY</span></span></a></div>
+                  <div><a href="../-sqlite-blob-data-type/index.html#702897020%2FProperties%2F-4936845"><span><span>EMPTY_ARRAY</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702897020%2FProperties%2F-4936845"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#702897020%2FProperties%2F-4936845">EMPTY_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-blob-data-type/index.html#702897020%2FProperties%2F-4936845">EMPTY_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -103,13 +103,13 @@
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-18:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-18:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#904140966%2FProperties%2F-4936845"><span><span>ICON_FLAG_READ_STATUS</span></span></a></div>
+                  <div><a href="../-sqlite-blob-data-type/index.html#904140966%2FProperties%2F-4936845"><span><span>ICON_FLAG_READ_STATUS</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="904140966%2FProperties%2F-4936845"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#904140966%2FProperties%2F-4936845">ICON_FLAG_READ_STATUS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-blob-data-type/index.html#904140966%2FProperties%2F-4936845">ICON_FLAG_READ_STATUS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -118,13 +118,13 @@
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-18:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-18:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#1410006311%2FProperties%2F-4936845"><span><span>ICON_FLAG_VISIBILITY</span></span></a></div>
+                  <div><a href="../-sqlite-blob-data-type/index.html#1410006311%2FProperties%2F-4936845"><span><span>ICON_FLAG_VISIBILITY</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1410006311%2FProperties%2F-4936845"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#1410006311%2FProperties%2F-4936845">ICON_FLAG_VISIBILITY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-blob-data-type/index.html#1410006311%2FProperties%2F-4936845">ICON_FLAG_VISIBILITY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -752,13 +752,13 @@
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-18:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-18:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#170921600%2FFunctions%2F-4936845"><span>get</span><wbr><span><span>Stub</span></span></a></div>
+                  <div><a href="index.html#170921600%2FFunctions%2F-4936845"><span>get</span><wbr><span><span>Stub</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="170921600%2FFunctions%2F-4936845"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_18.grammar.psi.impl/-sqlite-alter-table-stmt-impl/index.html#170921600%2FFunctions%2F-4936845"><span class="token function">getStub</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToGenericParameters(0)/">Stub</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-18:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#170921600%2FFunctions%2F-4936845"><span class="token function">getStub</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToGenericParameters(0)/">Stub</span></div></div></div>
                 </div>
               </div>
             </div>
