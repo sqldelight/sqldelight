@@ -7,15 +7,20 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 abstract class ToolchainConventions(private val targetJdkVersion: String) : Plugin<Project> {
   override fun apply(project: Project) {
-    project.kotlinExtension.jvmToolchain { spec ->
-      spec.languageVersion.set(JavaLanguageVersion.of(BUILD_JDK))
-      spec.vendor.set(JvmVendorSpec.AZUL)
+    if (JavaVersion.current() != BUILD_JAVA_VERSION) {
+      project.kotlinExtension.jvmToolchain { spec ->
+        spec.languageVersion.set(
+          JavaLanguageVersion.of(BUILD_JDK),
+        )
+        spec.vendor.set(JvmVendorSpec.AZUL)
+      }
     }
 
     project.tasks.withType(KotlinCompile::class.java).configureEach { task ->
@@ -36,7 +41,20 @@ abstract class ToolchainConventions(private val targetJdkVersion: String) : Plug
   }
 
   companion object {
-    const val BUILD_JDK = 17
+    private val HIGHEST_SUPPORTED_JAVA_VERSION: JavaVersion = when {
+      GradleVersion.current() < GradleVersion.version("8.3") -> JavaVersion.VERSION_17
+      else -> JavaVersion.VERSION_20
+    }
+
+    private val LOWEST_SUPPORTED_JAVA_VERSION: JavaVersion = JavaVersion.VERSION_17
+
+    private val BUILD_JAVA_VERSION: JavaVersion = when {
+      JavaVersion.current() < LOWEST_SUPPORTED_JAVA_VERSION -> LOWEST_SUPPORTED_JAVA_VERSION
+      JavaVersion.current() > HIGHEST_SUPPORTED_JAVA_VERSION -> HIGHEST_SUPPORTED_JAVA_VERSION
+      else -> JavaVersion.current()
+    }
+
+    val BUILD_JDK = BUILD_JAVA_VERSION.majorVersion.toInt()
   }
 }
 
