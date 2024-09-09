@@ -14,7 +14,8 @@ expect suspend fun testDriver(): SqlDriver
 
 class TestDb(
   val db: SqlDriver,
-) : SuspendingTransacterImpl(db), AutoCloseable {
+) : SuspendingTransacterImpl(db),
+  AutoCloseable {
   var aliceId by atomic(0L)
   var bobId by atomic(0L)
   var eveId by atomic(0L)
