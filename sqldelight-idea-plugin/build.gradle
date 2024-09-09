@@ -41,7 +41,7 @@ intellijPlatform {
     }
     ideaVersion {
       sinceBuild.set("231.9392.1")
-      untilBuild.set("")
+      untilBuild.set(null)
     }
   }
   pluginVerification {
