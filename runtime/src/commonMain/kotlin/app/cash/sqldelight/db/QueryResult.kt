@@ -9,20 +9,8 @@ import kotlin.jvm.JvmInline
  * [await] method. See [AsyncValue].
  */
 sealed interface QueryResult<T> {
-  val value: T
-
-  suspend fun await(): T
-
-  @JvmInline
-  value class Value<T>(override val value: T) : QueryResult<T> {
-    override suspend fun await() = value
-  }
-
-  @JvmInline
-  value class AsyncValue<T>(private val getter: suspend () -> T) : QueryResult<T> {
-    override suspend fun await() = getter()
-    override val value: Nothing get() = throw IllegalStateException(
-      """
+  val value: T get() = throw IllegalStateException(
+    """
       The driver used with SQLDelight is asynchronous, so SQLDelight should be configured for
       asynchronous usage:
 
@@ -33,8 +21,19 @@ sealed interface QueryResult<T> {
           }
         }
       }
-      """.trimIndent(),
-    )
+    """.trimIndent(),
+  )
+
+  suspend fun await(): T
+
+  @JvmInline
+  value class Value<T>(override val value: T) : QueryResult<T> {
+    override suspend fun await() = value
+  }
+
+  @JvmInline
+  value class AsyncValue<T>(private inline val getter: suspend () -> T) : QueryResult<T> {
+    override suspend fun await() = getter()
   }
 
   companion object {

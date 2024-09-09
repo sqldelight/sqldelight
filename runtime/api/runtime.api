@@ -142,9 +142,8 @@ public final class app/cash/sqldelight/db/QueryResult$AsyncValue : app/cash/sqld
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Z
-	public synthetic fun getValue ()Ljava/lang/Object;
-	public fun getValue ()Ljava/lang/Void;
-	public static fun getValue-impl (Lkotlin/jvm/functions/Function1;)Ljava/lang/Void;
+	public fun getValue ()Ljava/lang/Object;
+	public static fun getValue-impl (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Lkotlin/jvm/functions/Function1;)I
 	public fun toString ()Ljava/lang/String;
@@ -154,6 +153,10 @@ public final class app/cash/sqldelight/db/QueryResult$AsyncValue : app/cash/sqld
 
 public final class app/cash/sqldelight/db/QueryResult$Companion {
 	public final fun getUnit-mlR-ZEE ()Ljava/lang/Object;
+}
+
+public final class app/cash/sqldelight/db/QueryResult$DefaultImpls {
+	public static fun getValue (Lapp/cash/sqldelight/db/QueryResult;)Ljava/lang/Object;
 }
 
 public final class app/cash/sqldelight/db/QueryResult$Value : app/cash/sqldelight/db/QueryResult {
