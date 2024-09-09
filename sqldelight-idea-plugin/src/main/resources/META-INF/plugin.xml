@@ -3,7 +3,6 @@
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
-  <idea-version since-build="231.9392.1"/>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>

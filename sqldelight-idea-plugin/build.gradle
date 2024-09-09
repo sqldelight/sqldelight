@@ -1,4 +1,4 @@
-import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
 import app.cash.sqldelight.toolchain.BugsnagKey
 
 plugins {
@@ -9,50 +9,60 @@ plugins {
   id("app.cash.sqldelight.toolchain.compiler")
 }
 
-intellij {
-  updateSinceUntilBuild = false
+intellijPlatform {
+  buildSearchableOptions = false
 
-  // Comment version and uncomment localPath to test a local IDE build.
-  version = "IC-${libs.versions.idea.get()}"
-//  localPath = "/Applications/Android Studio.app"
+  pluginConfiguration {
+    name = 'SQLDelight'
+    dependencies {
+      intellijPlatform {
+        intellijIdeaCommunity(libs.versions.idea, false)
+        bundledPlugin("org.jetbrains.kotlin")
+        bundledPlugin("com.intellij.gradle")
+        bundledPlugin("com.intellij.java")
+        bundledPlugin("org.jetbrains.android")
 
-  pluginName = 'SQLDelight'
-  plugins = [
-      "org.jetbrains.kotlin",
-      "com.intellij.gradle",
-      "com.intellij.java",
-      "org.jetbrains.android"
-  ]
-  if (!project.version.endsWith("SNAPSHOT")) {
-    tasks.named('patchPluginXml') {
-      changeNotes = (provider { changelog.get(project.version).toHTML() })
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform.INSTANCE, libs.versions.idea.get())
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Plugin.Java.INSTANCE, libs.versions.idea.get())
+      }
     }
-  } else {
-    tasks.named('patchPluginXml') {
-      version = "$VERSION_NAME-${System.currentTimeMillis()}"
+    if (!project.version.endsWith("SNAPSHOT")) {
+      tasks.named('patchPluginXml') {
+        changeNotes = provider { changelog.get(project.version).toHTML() }
+      }
+    } else {
+      tasks.named('patchPluginXml') {
+        version = "$VERSION_NAME-${System.currentTimeMillis()}"
+      }
     }
+    ideaVersion {
+      sinceBuild.set("231.9392.1")
+    }
+  }
+  pluginVerification {
+    // See: the verify_intellij job in .github/workflows/PR.yml
+    def version = providers.systemProperty("ideaVersion").getOrElse(null)
+    if (version != null) {
+      ide(IntelliJPlatformType.IntellijIdeaCommunity, version)
+    }
+
+    def customFailureLevel = FailureLevel.ALL
+    customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
+    customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
+    customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
+    customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
+    customFailureLevel.remove(FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES)
+
+    failureLevel = customFailureLevel
   }
 }
 
 tasks.named('runIde') {
   maxHeapSize = "4g"
-}
-
-tasks.named('runPluginVerifier') {
-  // See: the verify_intellij job in .github/workflows/PR.yml
-  def version = providers.systemProperty("ideaVersion").getOrElse(null)
-  if (version != null) {
-    ideVersions = [version]
-  }
-
-  def customFailureLevel = FailureLevel.ALL
-  customFailureLevel.remove(FailureLevel.DEPRECATED_API_USAGES)
-  customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
-  customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
-  customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
-  customFailureLevel.remove(FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES)
-
-  failureLevel = customFailureLevel
 }
 
 changelog {
@@ -73,7 +83,9 @@ tasks.named('publishPlugin') {
 }
 
 repositories {
-  maven { url = uri("https://repo.gradle.org/gradle/libs-releases") }
+  intellijPlatform {
+    defaultRepositories()
+  }
 }
 
 dependencies {
@@ -94,11 +106,10 @@ dependencies {
 configurations.named("runtimeClasspath") {
   exclude group: "org.slf4j"
   exclude group: "org.jetbrains.kotlin"
+  exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines"
 }
 
 def bugsnagKey = tasks.register('bugsnagKey', BugsnagKey)
 sourceSets.main {
   kotlin.srcDir(bugsnagKey)
 }
-
-tasks.named('buildSearchableOptions') { enabled = false }
