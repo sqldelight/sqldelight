@@ -22,9 +22,9 @@ internal fun partsToDate(year: Int, month: Int, day: Int): NSDate {
 }
 
 actual class DateAdapter actual constructor() : ColumnAdapter<Date, Long> {
-  override fun decode(databaseValue: Long): Date =
+  actual override fun decode(databaseValue: Long): Date =
     Date(NSDate.dateWithTimeIntervalSince1970(databaseValue.toDouble() / 1000))
 
-  override fun encode(value: Date): Long =
+  actual override fun encode(value: Date): Long =
     floor(value.nsDate.timeIntervalSince1970 * 1000L).toLong()
 }
