@@ -1,0 +1,14 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <app.cash.sqldelight:coroutines-extensions>
+final fun <#A: kotlin/Any> (app.cash.sqldelight/Query<#A>).app.cash.sqldelight.coroutines/asFlow(): kotlinx.coroutines.flow/Flow<app.cash.sqldelight/Query<#A>> // app.cash.sqldelight.coroutines/asFlow|asFlow@app.cash.sqldelight.Query<0:0>(){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlinx.coroutines.flow/Flow<app.cash.sqldelight/Query<#A>>).app.cash.sqldelight.coroutines/mapToList(kotlin.coroutines/CoroutineContext): kotlinx.coroutines.flow/Flow<kotlin.collections/List<#A>> // app.cash.sqldelight.coroutines/mapToList|mapToList@kotlinx.coroutines.flow.Flow<app.cash.sqldelight.Query<0:0>>(kotlin.coroutines.CoroutineContext){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlinx.coroutines.flow/Flow<app.cash.sqldelight/Query<#A>>).app.cash.sqldelight.coroutines/mapToOne(kotlin.coroutines/CoroutineContext): kotlinx.coroutines.flow/Flow<#A> // app.cash.sqldelight.coroutines/mapToOne|mapToOne@kotlinx.coroutines.flow.Flow<app.cash.sqldelight.Query<0:0>>(kotlin.coroutines.CoroutineContext){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlinx.coroutines.flow/Flow<app.cash.sqldelight/Query<#A>>).app.cash.sqldelight.coroutines/mapToOneNotNull(kotlin.coroutines/CoroutineContext): kotlinx.coroutines.flow/Flow<#A> // app.cash.sqldelight.coroutines/mapToOneNotNull|mapToOneNotNull@kotlinx.coroutines.flow.Flow<app.cash.sqldelight.Query<0:0>>(kotlin.coroutines.CoroutineContext){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlinx.coroutines.flow/Flow<app.cash.sqldelight/Query<#A>>).app.cash.sqldelight.coroutines/mapToOneOrDefault(#A, kotlin.coroutines/CoroutineContext): kotlinx.coroutines.flow/Flow<#A> // app.cash.sqldelight.coroutines/mapToOneOrDefault|mapToOneOrDefault@kotlinx.coroutines.flow.Flow<app.cash.sqldelight.Query<0:0>>(0:0;kotlin.coroutines.CoroutineContext){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlinx.coroutines.flow/Flow<app.cash.sqldelight/Query<#A>>).app.cash.sqldelight.coroutines/mapToOneOrNull(kotlin.coroutines/CoroutineContext): kotlinx.coroutines.flow/Flow<#A?> // app.cash.sqldelight.coroutines/mapToOneOrNull|mapToOneOrNull@kotlinx.coroutines.flow.Flow<app.cash.sqldelight.Query<0:0>>(kotlin.coroutines.CoroutineContext){0§<kotlin.Any>}[0]

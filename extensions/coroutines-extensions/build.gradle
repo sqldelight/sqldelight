@@ -8,8 +8,6 @@ plugins {
   alias(libs.plugins.binaryCompatibilityValidator)
 }
 
-archivesBaseName = 'sqldelight-coroutines-extensions'
-
 kotlin {
   applyDefaultHierarchyTemplate {
     it.group("testableNative") {
@@ -96,3 +94,5 @@ kotlin {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+apiValidation.klib.enabled = true

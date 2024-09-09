@@ -6,8 +6,6 @@ plugins {
   alias(libs.plugins.binaryCompatibilityValidator)
 }
 
-archivesBaseName = 'sqldelight-primitive-adapters'
-
 kotlin {
   sourceSets {
     commonMain {
@@ -24,3 +22,5 @@ kotlin {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+apiValidation.klib.enabled = true

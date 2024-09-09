@@ -1,0 +1,19 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Alias: native => [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <app.cash.sqldelight:async-extensions>
+final suspend fun (app.cash.sqldelight.db/SqlDriver).app.cash.sqldelight.async.coroutines/await(kotlin/Int?, kotlin/String, kotlin/Int, kotlin/Function1<app.cash.sqldelight.db/SqlPreparedStatement, kotlin/Unit>? = ...): kotlin/Long // app.cash.sqldelight.async.coroutines/await|await@app.cash.sqldelight.db.SqlDriver(kotlin.Int?;kotlin.String;kotlin.Int;kotlin.Function1<app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit>?){}[0]
+final suspend fun (app.cash.sqldelight.db/SqlSchema<*>).app.cash.sqldelight.async.coroutines/awaitCreate(app.cash.sqldelight.db/SqlDriver) // app.cash.sqldelight.async.coroutines/awaitCreate|awaitCreate@app.cash.sqldelight.db.SqlSchema<*>(app.cash.sqldelight.db.SqlDriver){}[0]
+final suspend fun (app.cash.sqldelight.db/SqlSchema<*>).app.cash.sqldelight.async.coroutines/awaitMigrate(app.cash.sqldelight.db/SqlDriver, kotlin/Long, kotlin/Long) // app.cash.sqldelight.async.coroutines/awaitMigrate|awaitMigrate@app.cash.sqldelight.db.SqlSchema<*>(app.cash.sqldelight.db.SqlDriver;kotlin.Long;kotlin.Long){}[0]
+final suspend fun <#A: kotlin/Any> (app.cash.sqldelight/ExecutableQuery<#A>).app.cash.sqldelight.async.coroutines/awaitAsList(): kotlin.collections/List<#A> // app.cash.sqldelight.async.coroutines/awaitAsList|awaitAsList@app.cash.sqldelight.ExecutableQuery<0:0>(){0§<kotlin.Any>}[0]
+final suspend fun <#A: kotlin/Any> (app.cash.sqldelight/ExecutableQuery<#A>).app.cash.sqldelight.async.coroutines/awaitAsOne(): #A // app.cash.sqldelight.async.coroutines/awaitAsOne|awaitAsOne@app.cash.sqldelight.ExecutableQuery<0:0>(){0§<kotlin.Any>}[0]
+final suspend fun <#A: kotlin/Any> (app.cash.sqldelight/ExecutableQuery<#A>).app.cash.sqldelight.async.coroutines/awaitAsOneOrNull(): #A? // app.cash.sqldelight.async.coroutines/awaitAsOneOrNull|awaitAsOneOrNull@app.cash.sqldelight.ExecutableQuery<0:0>(){0§<kotlin.Any>}[0]
+final suspend fun <#A: kotlin/Any?> (app.cash.sqldelight.db/SqlDriver).app.cash.sqldelight.async.coroutines/awaitQuery(kotlin/Int?, kotlin/String, kotlin.coroutines/SuspendFunction1<app.cash.sqldelight.db/SqlCursor, #A>, kotlin/Int, kotlin/Function1<app.cash.sqldelight.db/SqlPreparedStatement, kotlin/Unit>? = ...): #A // app.cash.sqldelight.async.coroutines/awaitQuery|awaitQuery@app.cash.sqldelight.db.SqlDriver(kotlin.Int?;kotlin.String;kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.db.SqlCursor,0:0>;kotlin.Int;kotlin.Function1<app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit>?){0§<kotlin.Any?>}[0]
+
+// Targets: [native]
+final fun (app.cash.sqldelight.db/SqlSchema<app.cash.sqldelight.db/QueryResult.AsyncValue<kotlin/Unit>>).app.cash.sqldelight.async.coroutines/synchronous(): app.cash.sqldelight.db/SqlSchema<app.cash.sqldelight.db/QueryResult.Value<kotlin/Unit>> // app.cash.sqldelight.async.coroutines/synchronous|synchronous@app.cash.sqldelight.db.SqlSchema<app.cash.sqldelight.db.QueryResult.AsyncValue<kotlin.Unit>>(){}[0]

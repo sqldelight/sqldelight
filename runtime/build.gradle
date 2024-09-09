@@ -33,3 +33,5 @@ kotlin {
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+apiValidation.klib.enabled = true
