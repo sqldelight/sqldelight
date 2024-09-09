@@ -1,0 +1,231 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <app.cash.sqldelight:runtime>
+abstract interface <#A: app.cash.sqldelight.db/QueryResult<kotlin/Unit>> app.cash.sqldelight.db/SqlSchema { // app.cash.sqldelight.db/SqlSchema|null[0]
+    abstract val version // app.cash.sqldelight.db/SqlSchema.version|{}version[0]
+        abstract fun <get-version>(): kotlin/Long // app.cash.sqldelight.db/SqlSchema.version.<get-version>|<get-version>(){}[0]
+
+    abstract fun create(app.cash.sqldelight.db/SqlDriver): #A // app.cash.sqldelight.db/SqlSchema.create|create(app.cash.sqldelight.db.SqlDriver){}[0]
+    abstract fun migrate(app.cash.sqldelight.db/SqlDriver, kotlin/Long, kotlin/Long, kotlin/Array<out app.cash.sqldelight.db/AfterVersion>...): #A // app.cash.sqldelight.db/SqlSchema.migrate|migrate(app.cash.sqldelight.db.SqlDriver;kotlin.Long;kotlin.Long;kotlin.Array<out|app.cash.sqldelight.db.AfterVersion>...){}[0]
+}
+
+abstract interface <#A: kotlin/Any, #B: kotlin/Any?> app.cash.sqldelight/ColumnAdapter { // app.cash.sqldelight/ColumnAdapter|null[0]
+    abstract fun decode(#B): #A // app.cash.sqldelight/ColumnAdapter.decode|decode(1:1){}[0]
+    abstract fun encode(#A): #B // app.cash.sqldelight/ColumnAdapter.encode|encode(1:0){}[0]
+}
+
+abstract interface <#A: kotlin/Any?> app.cash.sqldelight/SuspendingTransactionWithReturn : app.cash.sqldelight/TransactionCallbacks { // app.cash.sqldelight/SuspendingTransactionWithReturn|null[0]
+    abstract fun rollback(#A): kotlin/Nothing // app.cash.sqldelight/SuspendingTransactionWithReturn.rollback|rollback(1:0){}[0]
+    abstract suspend fun <#A1: kotlin/Any?> transaction(kotlin.coroutines/SuspendFunction1<app.cash.sqldelight/SuspendingTransactionWithReturn<#A1>, #A1>): #A1 // app.cash.sqldelight/SuspendingTransactionWithReturn.transaction|transaction(kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.SuspendingTransactionWithReturn<0:0>,0:0>){0§<kotlin.Any?>}[0]
+}
+
+abstract interface <#A: kotlin/Any?> app.cash.sqldelight/TransactionWithReturn : app.cash.sqldelight/TransactionCallbacks { // app.cash.sqldelight/TransactionWithReturn|null[0]
+    abstract fun <#A1: kotlin/Any?> transaction(kotlin/Function1<app.cash.sqldelight/TransactionWithReturn<#A1>, #A1>): #A1 // app.cash.sqldelight/TransactionWithReturn.transaction|transaction(kotlin.Function1<app.cash.sqldelight.TransactionWithReturn<0:0>,0:0>){0§<kotlin.Any?>}[0]
+    abstract fun rollback(#A): kotlin/Nothing // app.cash.sqldelight/TransactionWithReturn.rollback|rollback(1:0){}[0]
+}
+
+abstract interface app.cash.sqldelight.db/Closeable { // app.cash.sqldelight.db/Closeable|null[0]
+    abstract fun close() // app.cash.sqldelight.db/Closeable.close|close(){}[0]
+}
+
+abstract interface app.cash.sqldelight.db/SqlCursor { // app.cash.sqldelight.db/SqlCursor|null[0]
+    abstract fun getBoolean(kotlin/Int): kotlin/Boolean? // app.cash.sqldelight.db/SqlCursor.getBoolean|getBoolean(kotlin.Int){}[0]
+    abstract fun getBytes(kotlin/Int): kotlin/ByteArray? // app.cash.sqldelight.db/SqlCursor.getBytes|getBytes(kotlin.Int){}[0]
+    abstract fun getDouble(kotlin/Int): kotlin/Double? // app.cash.sqldelight.db/SqlCursor.getDouble|getDouble(kotlin.Int){}[0]
+    abstract fun getLong(kotlin/Int): kotlin/Long? // app.cash.sqldelight.db/SqlCursor.getLong|getLong(kotlin.Int){}[0]
+    abstract fun getString(kotlin/Int): kotlin/String? // app.cash.sqldelight.db/SqlCursor.getString|getString(kotlin.Int){}[0]
+    abstract fun next(): app.cash.sqldelight.db/QueryResult<kotlin/Boolean> // app.cash.sqldelight.db/SqlCursor.next|next(){}[0]
+}
+
+abstract interface app.cash.sqldelight.db/SqlDriver : app.cash.sqldelight.db/Closeable { // app.cash.sqldelight.db/SqlDriver|null[0]
+    abstract fun <#A1: kotlin/Any?> executeQuery(kotlin/Int?, kotlin/String, kotlin/Function1<app.cash.sqldelight.db/SqlCursor, app.cash.sqldelight.db/QueryResult<#A1>>, kotlin/Int, kotlin/Function1<app.cash.sqldelight.db/SqlPreparedStatement, kotlin/Unit>? = ...): app.cash.sqldelight.db/QueryResult<#A1> // app.cash.sqldelight.db/SqlDriver.executeQuery|executeQuery(kotlin.Int?;kotlin.String;kotlin.Function1<app.cash.sqldelight.db.SqlCursor,app.cash.sqldelight.db.QueryResult<0:0>>;kotlin.Int;kotlin.Function1<app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit>?){0§<kotlin.Any?>}[0]
+    abstract fun addListener(kotlin/Array<out kotlin/String>..., app.cash.sqldelight/Query.Listener) // app.cash.sqldelight.db/SqlDriver.addListener|addListener(kotlin.Array<out|kotlin.String>...;app.cash.sqldelight.Query.Listener){}[0]
+    abstract fun currentTransaction(): app.cash.sqldelight/Transacter.Transaction? // app.cash.sqldelight.db/SqlDriver.currentTransaction|currentTransaction(){}[0]
+    abstract fun execute(kotlin/Int?, kotlin/String, kotlin/Int, kotlin/Function1<app.cash.sqldelight.db/SqlPreparedStatement, kotlin/Unit>? = ...): app.cash.sqldelight.db/QueryResult<kotlin/Long> // app.cash.sqldelight.db/SqlDriver.execute|execute(kotlin.Int?;kotlin.String;kotlin.Int;kotlin.Function1<app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit>?){}[0]
+    abstract fun newTransaction(): app.cash.sqldelight.db/QueryResult<app.cash.sqldelight/Transacter.Transaction> // app.cash.sqldelight.db/SqlDriver.newTransaction|newTransaction(){}[0]
+    abstract fun notifyListeners(kotlin/Array<out kotlin/String>...) // app.cash.sqldelight.db/SqlDriver.notifyListeners|notifyListeners(kotlin.Array<out|kotlin.String>...){}[0]
+    abstract fun removeListener(kotlin/Array<out kotlin/String>..., app.cash.sqldelight/Query.Listener) // app.cash.sqldelight.db/SqlDriver.removeListener|removeListener(kotlin.Array<out|kotlin.String>...;app.cash.sqldelight.Query.Listener){}[0]
+}
+
+abstract interface app.cash.sqldelight.db/SqlPreparedStatement { // app.cash.sqldelight.db/SqlPreparedStatement|null[0]
+    abstract fun bindBoolean(kotlin/Int, kotlin/Boolean?) // app.cash.sqldelight.db/SqlPreparedStatement.bindBoolean|bindBoolean(kotlin.Int;kotlin.Boolean?){}[0]
+    abstract fun bindBytes(kotlin/Int, kotlin/ByteArray?) // app.cash.sqldelight.db/SqlPreparedStatement.bindBytes|bindBytes(kotlin.Int;kotlin.ByteArray?){}[0]
+    abstract fun bindDouble(kotlin/Int, kotlin/Double?) // app.cash.sqldelight.db/SqlPreparedStatement.bindDouble|bindDouble(kotlin.Int;kotlin.Double?){}[0]
+    abstract fun bindLong(kotlin/Int, kotlin/Long?) // app.cash.sqldelight.db/SqlPreparedStatement.bindLong|bindLong(kotlin.Int;kotlin.Long?){}[0]
+    abstract fun bindString(kotlin/Int, kotlin/String?) // app.cash.sqldelight.db/SqlPreparedStatement.bindString|bindString(kotlin.Int;kotlin.String?){}[0]
+}
+
+abstract interface app.cash.sqldelight/SuspendingTransacter : app.cash.sqldelight/TransacterBase { // app.cash.sqldelight/SuspendingTransacter|null[0]
+    abstract suspend fun <#A1: kotlin/Any?> transactionWithResult(kotlin/Boolean = ..., kotlin.coroutines/SuspendFunction1<app.cash.sqldelight/SuspendingTransactionWithReturn<#A1>, #A1>): #A1 // app.cash.sqldelight/SuspendingTransacter.transactionWithResult|transactionWithResult(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.SuspendingTransactionWithReturn<0:0>,0:0>){0§<kotlin.Any?>}[0]
+    abstract suspend fun transaction(kotlin/Boolean = ..., kotlin.coroutines/SuspendFunction1<app.cash.sqldelight/SuspendingTransactionWithoutReturn, kotlin/Unit>) // app.cash.sqldelight/SuspendingTransacter.transaction|transaction(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.SuspendingTransactionWithoutReturn,kotlin.Unit>){}[0]
+}
+
+abstract interface app.cash.sqldelight/SuspendingTransactionWithoutReturn : app.cash.sqldelight/TransactionCallbacks { // app.cash.sqldelight/SuspendingTransactionWithoutReturn|null[0]
+    abstract fun rollback(): kotlin/Nothing // app.cash.sqldelight/SuspendingTransactionWithoutReturn.rollback|rollback(){}[0]
+    abstract suspend fun transactionWithResult(kotlin.coroutines/SuspendFunction1<app.cash.sqldelight/SuspendingTransactionWithoutReturn, kotlin/Unit>) // app.cash.sqldelight/SuspendingTransactionWithoutReturn.transactionWithResult|transactionWithResult(kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.SuspendingTransactionWithoutReturn,kotlin.Unit>){}[0]
+}
+
+abstract interface app.cash.sqldelight/Transacter : app.cash.sqldelight/TransacterBase { // app.cash.sqldelight/Transacter|null[0]
+    abstract fun <#A1: kotlin/Any?> transactionWithResult(kotlin/Boolean = ..., kotlin/Function1<app.cash.sqldelight/TransactionWithReturn<#A1>, #A1>): #A1 // app.cash.sqldelight/Transacter.transactionWithResult|transactionWithResult(kotlin.Boolean;kotlin.Function1<app.cash.sqldelight.TransactionWithReturn<0:0>,0:0>){0§<kotlin.Any?>}[0]
+    abstract fun transaction(kotlin/Boolean = ..., kotlin/Function1<app.cash.sqldelight/TransactionWithoutReturn, kotlin/Unit>) // app.cash.sqldelight/Transacter.transaction|transaction(kotlin.Boolean;kotlin.Function1<app.cash.sqldelight.TransactionWithoutReturn,kotlin.Unit>){}[0]
+
+    abstract class Transaction : app.cash.sqldelight/TransactionCallbacks { // app.cash.sqldelight/Transacter.Transaction|null[0]
+        constructor <init>() // app.cash.sqldelight/Transacter.Transaction.<init>|<init>(){}[0]
+
+        abstract val enclosingTransaction // app.cash.sqldelight/Transacter.Transaction.enclosingTransaction|{}enclosingTransaction[0]
+            abstract fun <get-enclosingTransaction>(): app.cash.sqldelight/Transacter.Transaction? // app.cash.sqldelight/Transacter.Transaction.enclosingTransaction.<get-enclosingTransaction>|<get-enclosingTransaction>(){}[0]
+
+        abstract fun endTransaction(kotlin/Boolean): app.cash.sqldelight.db/QueryResult<kotlin/Unit> // app.cash.sqldelight/Transacter.Transaction.endTransaction|endTransaction(kotlin.Boolean){}[0]
+        open fun afterCommit(kotlin/Function0<kotlin/Unit>) // app.cash.sqldelight/Transacter.Transaction.afterCommit|afterCommit(kotlin.Function0<kotlin.Unit>){}[0]
+        open fun afterRollback(kotlin/Function0<kotlin/Unit>) // app.cash.sqldelight/Transacter.Transaction.afterRollback|afterRollback(kotlin.Function0<kotlin.Unit>){}[0]
+    }
+}
+
+abstract interface app.cash.sqldelight/TransactionCallbacks { // app.cash.sqldelight/TransactionCallbacks|null[0]
+    abstract fun afterCommit(kotlin/Function0<kotlin/Unit>) // app.cash.sqldelight/TransactionCallbacks.afterCommit|afterCommit(kotlin.Function0<kotlin.Unit>){}[0]
+    abstract fun afterRollback(kotlin/Function0<kotlin/Unit>) // app.cash.sqldelight/TransactionCallbacks.afterRollback|afterRollback(kotlin.Function0<kotlin.Unit>){}[0]
+}
+
+abstract interface app.cash.sqldelight/TransactionWithoutReturn : app.cash.sqldelight/TransactionCallbacks { // app.cash.sqldelight/TransactionWithoutReturn|null[0]
+    abstract fun rollback(): kotlin/Nothing // app.cash.sqldelight/TransactionWithoutReturn.rollback|rollback(){}[0]
+    abstract fun transaction(kotlin/Function1<app.cash.sqldelight/TransactionWithoutReturn, kotlin/Unit>) // app.cash.sqldelight/TransactionWithoutReturn.transaction|transaction(kotlin.Function1<app.cash.sqldelight.TransactionWithoutReturn,kotlin.Unit>){}[0]
+}
+
+sealed interface <#A: kotlin/Any?> app.cash.sqldelight.db/QueryResult { // app.cash.sqldelight.db/QueryResult|null[0]
+    open val value // app.cash.sqldelight.db/QueryResult.value|{}value[0]
+        open fun <get-value>(): #A // app.cash.sqldelight.db/QueryResult.value.<get-value>|<get-value>(){}[0]
+
+    abstract suspend fun await(): #A // app.cash.sqldelight.db/QueryResult.await|await(){}[0]
+
+    final value class <#A1: kotlin/Any?> AsyncValue : app.cash.sqldelight.db/QueryResult<#A1> { // app.cash.sqldelight.db/QueryResult.AsyncValue|null[0]
+        constructor <init>(kotlin.coroutines/SuspendFunction0<#A1>) // app.cash.sqldelight.db/QueryResult.AsyncValue.<init>|<init>(kotlin.coroutines.SuspendFunction0<1:0>){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // app.cash.sqldelight.db/QueryResult.AsyncValue.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // app.cash.sqldelight.db/QueryResult.AsyncValue.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // app.cash.sqldelight.db/QueryResult.AsyncValue.toString|toString(){}[0]
+        final suspend fun await(): #A1 // app.cash.sqldelight.db/QueryResult.AsyncValue.await|await(){}[0]
+    }
+
+    final value class <#A1: kotlin/Any?> Value : app.cash.sqldelight.db/QueryResult<#A1> { // app.cash.sqldelight.db/QueryResult.Value|null[0]
+        constructor <init>(#A1) // app.cash.sqldelight.db/QueryResult.Value.<init>|<init>(1:0){}[0]
+
+        final val value // app.cash.sqldelight.db/QueryResult.Value.value|{}value[0]
+            final fun <get-value>(): #A1 // app.cash.sqldelight.db/QueryResult.Value.value.<get-value>|<get-value>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // app.cash.sqldelight.db/QueryResult.Value.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // app.cash.sqldelight.db/QueryResult.Value.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // app.cash.sqldelight.db/QueryResult.Value.toString|toString(){}[0]
+        final suspend fun await(): #A1 // app.cash.sqldelight.db/QueryResult.Value.await|await(){}[0]
+    }
+
+    final object Companion { // app.cash.sqldelight.db/QueryResult.Companion|null[0]
+        final val Unit // app.cash.sqldelight.db/QueryResult.Companion.Unit|{}Unit[0]
+            final fun <get-Unit>(): app.cash.sqldelight.db/QueryResult.Value<kotlin/Unit> // app.cash.sqldelight.db/QueryResult.Companion.Unit.<get-Unit>|<get-Unit>(){}[0]
+    }
+}
+
+sealed interface app.cash.sqldelight/TransacterBase // app.cash.sqldelight/TransacterBase|null[0]
+
+abstract class <#A: out kotlin/Any> app.cash.sqldelight/ExecutableQuery { // app.cash.sqldelight/ExecutableQuery|null[0]
+    constructor <init>(kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A>) // app.cash.sqldelight/ExecutableQuery.<init>|<init>(kotlin.Function1<app.cash.sqldelight.db.SqlCursor,1:0>){}[0]
+
+    final val mapper // app.cash.sqldelight/ExecutableQuery.mapper|{}mapper[0]
+        final fun <get-mapper>(): kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A> // app.cash.sqldelight/ExecutableQuery.mapper.<get-mapper>|<get-mapper>(){}[0]
+
+    abstract fun <#A1: kotlin/Any?> execute(kotlin/Function1<app.cash.sqldelight.db/SqlCursor, app.cash.sqldelight.db/QueryResult<#A1>>): app.cash.sqldelight.db/QueryResult<#A1> // app.cash.sqldelight/ExecutableQuery.execute|execute(kotlin.Function1<app.cash.sqldelight.db.SqlCursor,app.cash.sqldelight.db.QueryResult<0:0>>){0§<kotlin.Any?>}[0]
+    final fun executeAsList(): kotlin.collections/List<#A> // app.cash.sqldelight/ExecutableQuery.executeAsList|executeAsList(){}[0]
+    final fun executeAsOne(): #A // app.cash.sqldelight/ExecutableQuery.executeAsOne|executeAsOne(){}[0]
+    final fun executeAsOneOrNull(): #A? // app.cash.sqldelight/ExecutableQuery.executeAsOneOrNull|executeAsOneOrNull(){}[0]
+}
+
+abstract class <#A: out kotlin/Any> app.cash.sqldelight/Query : app.cash.sqldelight/ExecutableQuery<#A> { // app.cash.sqldelight/Query|null[0]
+    constructor <init>(kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A>) // app.cash.sqldelight/Query.<init>|<init>(kotlin.Function1<app.cash.sqldelight.db.SqlCursor,1:0>){}[0]
+
+    abstract fun addListener(app.cash.sqldelight/Query.Listener) // app.cash.sqldelight/Query.addListener|addListener(app.cash.sqldelight.Query.Listener){}[0]
+    abstract fun removeListener(app.cash.sqldelight/Query.Listener) // app.cash.sqldelight/Query.removeListener|removeListener(app.cash.sqldelight.Query.Listener){}[0]
+
+    abstract fun interface Listener { // app.cash.sqldelight/Query.Listener|null[0]
+        abstract fun queryResultsChanged() // app.cash.sqldelight/Query.Listener.queryResultsChanged|queryResultsChanged(){}[0]
+    }
+}
+
+abstract class app.cash.sqldelight/BaseTransacterImpl { // app.cash.sqldelight/BaseTransacterImpl|null[0]
+    constructor <init>(app.cash.sqldelight.db/SqlDriver) // app.cash.sqldelight/BaseTransacterImpl.<init>|<init>(app.cash.sqldelight.db.SqlDriver){}[0]
+
+    final val driver // app.cash.sqldelight/BaseTransacterImpl.driver|{}driver[0]
+        final fun <get-driver>(): app.cash.sqldelight.db/SqlDriver // app.cash.sqldelight/BaseTransacterImpl.driver.<get-driver>|<get-driver>(){}[0]
+
+    final fun <#A1: kotlin/Any?> postTransactionCleanup(app.cash.sqldelight/Transacter.Transaction, app.cash.sqldelight/Transacter.Transaction?, kotlin/Throwable?, #A1?): #A1 // app.cash.sqldelight/BaseTransacterImpl.postTransactionCleanup|postTransactionCleanup(app.cash.sqldelight.Transacter.Transaction;app.cash.sqldelight.Transacter.Transaction?;kotlin.Throwable?;0:0?){0§<kotlin.Any?>}[0]
+    final fun createArguments(kotlin/Int): kotlin/String // app.cash.sqldelight/BaseTransacterImpl.createArguments|createArguments(kotlin.Int){}[0]
+    final fun notifyQueries(kotlin/Int, kotlin/Function1<kotlin/Function1<kotlin/String, kotlin/Unit>, kotlin/Unit>) // app.cash.sqldelight/BaseTransacterImpl.notifyQueries|notifyQueries(kotlin.Int;kotlin.Function1<kotlin.Function1<kotlin.String,kotlin.Unit>,kotlin.Unit>){}[0]
+}
+
+abstract class app.cash.sqldelight/SuspendingTransacterImpl : app.cash.sqldelight/BaseTransacterImpl, app.cash.sqldelight/SuspendingTransacter { // app.cash.sqldelight/SuspendingTransacterImpl|null[0]
+    constructor <init>(app.cash.sqldelight.db/SqlDriver) // app.cash.sqldelight/SuspendingTransacterImpl.<init>|<init>(app.cash.sqldelight.db.SqlDriver){}[0]
+
+    open suspend fun <#A1: kotlin/Any?> transactionWithResult(kotlin/Boolean, kotlin.coroutines/SuspendFunction1<app.cash.sqldelight/SuspendingTransactionWithReturn<#A1>, #A1>): #A1 // app.cash.sqldelight/SuspendingTransacterImpl.transactionWithResult|transactionWithResult(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.SuspendingTransactionWithReturn<0:0>,0:0>){0§<kotlin.Any?>}[0]
+    open suspend fun transaction(kotlin/Boolean, kotlin.coroutines/SuspendFunction1<app.cash.sqldelight/SuspendingTransactionWithoutReturn, kotlin/Unit>) // app.cash.sqldelight/SuspendingTransacterImpl.transaction|transaction(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<app.cash.sqldelight.SuspendingTransactionWithoutReturn,kotlin.Unit>){}[0]
+}
+
+abstract class app.cash.sqldelight/TransacterImpl : app.cash.sqldelight/BaseTransacterImpl, app.cash.sqldelight/Transacter { // app.cash.sqldelight/TransacterImpl|null[0]
+    constructor <init>(app.cash.sqldelight.db/SqlDriver) // app.cash.sqldelight/TransacterImpl.<init>|<init>(app.cash.sqldelight.db.SqlDriver){}[0]
+
+    open fun <#A1: kotlin/Any?> transactionWithResult(kotlin/Boolean, kotlin/Function1<app.cash.sqldelight/TransactionWithReturn<#A1>, #A1>): #A1 // app.cash.sqldelight/TransacterImpl.transactionWithResult|transactionWithResult(kotlin.Boolean;kotlin.Function1<app.cash.sqldelight.TransactionWithReturn<0:0>,0:0>){0§<kotlin.Any?>}[0]
+    open fun transaction(kotlin/Boolean, kotlin/Function1<app.cash.sqldelight/TransactionWithoutReturn, kotlin/Unit>) // app.cash.sqldelight/TransacterImpl.transaction|transaction(kotlin.Boolean;kotlin.Function1<app.cash.sqldelight.TransactionWithoutReturn,kotlin.Unit>){}[0]
+}
+
+final class <#A: kotlin/Enum<#A>> app.cash.sqldelight/EnumColumnAdapter : app.cash.sqldelight/ColumnAdapter<#A, kotlin/String> { // app.cash.sqldelight/EnumColumnAdapter|null[0]
+    constructor <init>(kotlin/Array<out #A>) // app.cash.sqldelight/EnumColumnAdapter.<init>|<init>(kotlin.Array<out|1:0>){}[0]
+
+    final fun decode(kotlin/String): #A // app.cash.sqldelight/EnumColumnAdapter.decode|decode(kotlin.String){}[0]
+    final fun encode(#A): kotlin/String // app.cash.sqldelight/EnumColumnAdapter.encode|encode(1:0){}[0]
+}
+
+final class app.cash.sqldelight.db/AfterVersion { // app.cash.sqldelight.db/AfterVersion|null[0]
+    constructor <init>(kotlin/Long, kotlin/Function1<app.cash.sqldelight.db/SqlDriver, kotlin/Unit>) // app.cash.sqldelight.db/AfterVersion.<init>|<init>(kotlin.Long;kotlin.Function1<app.cash.sqldelight.db.SqlDriver,kotlin.Unit>){}[0]
+
+    final val afterVersion // app.cash.sqldelight.db/AfterVersion.afterVersion|{}afterVersion[0]
+        final fun <get-afterVersion>(): kotlin/Long // app.cash.sqldelight.db/AfterVersion.afterVersion.<get-afterVersion>|<get-afterVersion>(){}[0]
+    final val block // app.cash.sqldelight.db/AfterVersion.block|{}block[0]
+        final fun <get-block>(): kotlin/Function1<app.cash.sqldelight.db/SqlDriver, kotlin/Unit> // app.cash.sqldelight.db/AfterVersion.block.<get-block>|<get-block>(){}[0]
+}
+
+final class app.cash.sqldelight.db/OptimisticLockException : kotlin/IllegalStateException { // app.cash.sqldelight.db/OptimisticLockException|null[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable? = ...) // app.cash.sqldelight.db/OptimisticLockException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+}
+
+final class app.cash.sqldelight.logs/LogSqliteDriver : app.cash.sqldelight.db/SqlDriver { // app.cash.sqldelight.logs/LogSqliteDriver|null[0]
+    constructor <init>(app.cash.sqldelight.db/SqlDriver, kotlin/Function1<kotlin/String, kotlin/Unit>) // app.cash.sqldelight.logs/LogSqliteDriver.<init>|<init>(app.cash.sqldelight.db.SqlDriver;kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+
+    final fun <#A1: kotlin/Any?> executeQuery(kotlin/Int?, kotlin/String, kotlin/Function1<app.cash.sqldelight.db/SqlCursor, app.cash.sqldelight.db/QueryResult<#A1>>, kotlin/Int, kotlin/Function1<app.cash.sqldelight.db/SqlPreparedStatement, kotlin/Unit>?): app.cash.sqldelight.db/QueryResult<#A1> // app.cash.sqldelight.logs/LogSqliteDriver.executeQuery|executeQuery(kotlin.Int?;kotlin.String;kotlin.Function1<app.cash.sqldelight.db.SqlCursor,app.cash.sqldelight.db.QueryResult<0:0>>;kotlin.Int;kotlin.Function1<app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit>?){0§<kotlin.Any?>}[0]
+    final fun addListener(kotlin/Array<out kotlin/String>..., app.cash.sqldelight/Query.Listener) // app.cash.sqldelight.logs/LogSqliteDriver.addListener|addListener(kotlin.Array<out|kotlin.String>...;app.cash.sqldelight.Query.Listener){}[0]
+    final fun close() // app.cash.sqldelight.logs/LogSqliteDriver.close|close(){}[0]
+    final fun currentTransaction(): app.cash.sqldelight/Transacter.Transaction? // app.cash.sqldelight.logs/LogSqliteDriver.currentTransaction|currentTransaction(){}[0]
+    final fun execute(kotlin/Int?, kotlin/String, kotlin/Int, kotlin/Function1<app.cash.sqldelight.db/SqlPreparedStatement, kotlin/Unit>?): app.cash.sqldelight.db/QueryResult<kotlin/Long> // app.cash.sqldelight.logs/LogSqliteDriver.execute|execute(kotlin.Int?;kotlin.String;kotlin.Int;kotlin.Function1<app.cash.sqldelight.db.SqlPreparedStatement,kotlin.Unit>?){}[0]
+    final fun newTransaction(): app.cash.sqldelight.db/QueryResult<app.cash.sqldelight/Transacter.Transaction> // app.cash.sqldelight.logs/LogSqliteDriver.newTransaction|newTransaction(){}[0]
+    final fun notifyListeners(kotlin/Array<out kotlin/String>...) // app.cash.sqldelight.logs/LogSqliteDriver.notifyListeners|notifyListeners(kotlin.Array<out|kotlin.String>...){}[0]
+    final fun removeListener(kotlin/Array<out kotlin/String>..., app.cash.sqldelight/Query.Listener) // app.cash.sqldelight.logs/LogSqliteDriver.removeListener|removeListener(kotlin.Array<out|kotlin.String>...;app.cash.sqldelight.Query.Listener){}[0]
+}
+
+final class app.cash.sqldelight.logs/StatementParameterInterceptor : app.cash.sqldelight.db/SqlPreparedStatement { // app.cash.sqldelight.logs/StatementParameterInterceptor|null[0]
+    constructor <init>() // app.cash.sqldelight.logs/StatementParameterInterceptor.<init>|<init>(){}[0]
+
+    final fun bindBoolean(kotlin/Int, kotlin/Boolean?) // app.cash.sqldelight.logs/StatementParameterInterceptor.bindBoolean|bindBoolean(kotlin.Int;kotlin.Boolean?){}[0]
+    final fun bindBytes(kotlin/Int, kotlin/ByteArray?) // app.cash.sqldelight.logs/StatementParameterInterceptor.bindBytes|bindBytes(kotlin.Int;kotlin.ByteArray?){}[0]
+    final fun bindDouble(kotlin/Int, kotlin/Double?) // app.cash.sqldelight.logs/StatementParameterInterceptor.bindDouble|bindDouble(kotlin.Int;kotlin.Double?){}[0]
+    final fun bindLong(kotlin/Int, kotlin/Long?) // app.cash.sqldelight.logs/StatementParameterInterceptor.bindLong|bindLong(kotlin.Int;kotlin.Long?){}[0]
+    final fun bindString(kotlin/Int, kotlin/String?) // app.cash.sqldelight.logs/StatementParameterInterceptor.bindString|bindString(kotlin.Int;kotlin.String?){}[0]
+    final fun getAndClearParameters(): kotlin.collections/List<kotlin/Any?> // app.cash.sqldelight.logs/StatementParameterInterceptor.getAndClearParameters|getAndClearParameters(){}[0]
+}
+
+final fun <#A: kotlin/Any> app.cash.sqldelight/Query(kotlin/Int, app.cash.sqldelight.db/SqlDriver, kotlin/String, kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A>): app.cash.sqldelight/ExecutableQuery<#A> // app.cash.sqldelight/Query|Query(kotlin.Int;app.cash.sqldelight.db.SqlDriver;kotlin.String;kotlin.Function1<app.cash.sqldelight.db.SqlCursor,0:0>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> app.cash.sqldelight/Query(kotlin/Int, app.cash.sqldelight.db/SqlDriver, kotlin/String, kotlin/String, kotlin/String, kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A>): app.cash.sqldelight/ExecutableQuery<#A> // app.cash.sqldelight/Query|Query(kotlin.Int;app.cash.sqldelight.db.SqlDriver;kotlin.String;kotlin.String;kotlin.String;kotlin.Function1<app.cash.sqldelight.db.SqlCursor,0:0>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> app.cash.sqldelight/Query(kotlin/Int, kotlin/Array<out kotlin/String>, app.cash.sqldelight.db/SqlDriver, kotlin/String, kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A>): app.cash.sqldelight/Query<#A> // app.cash.sqldelight/Query|Query(kotlin.Int;kotlin.Array<out|kotlin.String>;app.cash.sqldelight.db.SqlDriver;kotlin.String;kotlin.Function1<app.cash.sqldelight.db.SqlCursor,0:0>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> app.cash.sqldelight/Query(kotlin/Int, kotlin/Array<out kotlin/String>, app.cash.sqldelight.db/SqlDriver, kotlin/String, kotlin/String, kotlin/String, kotlin/Function1<app.cash.sqldelight.db/SqlCursor, #A>): app.cash.sqldelight/Query<#A> // app.cash.sqldelight/Query|Query(kotlin.Int;kotlin.Array<out|kotlin.String>;app.cash.sqldelight.db.SqlDriver;kotlin.String;kotlin.String;kotlin.String;kotlin.Function1<app.cash.sqldelight.db.SqlCursor,0:0>){0§<kotlin.Any>}[0]
+final inline fun <#A: app.cash.sqldelight.db/Closeable?, #B: kotlin/Any?> (#A).app.cash.sqldelight.db/use(kotlin/Function1<#A, #B>): #B // app.cash.sqldelight.db/use|use@0:0(kotlin.Function1<0:0,0:1>){0§<app.cash.sqldelight.db.Closeable?>;1§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Enum<#A>> app.cash.sqldelight/EnumColumnAdapter(): app.cash.sqldelight/EnumColumnAdapter<#A> // app.cash.sqldelight/EnumColumnAdapter|EnumColumnAdapter(){0§<kotlin.Enum<0:0>>}[0]

@@ -1,0 +1,22 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <app.cash.sqldelight:primitive-adapters>
+final object app.cash.sqldelight.adapter.primitive/FloatColumnAdapter : app.cash.sqldelight/ColumnAdapter<kotlin/Float, kotlin/Double> { // app.cash.sqldelight.adapter.primitive/FloatColumnAdapter|null[0]
+    final fun decode(kotlin/Double): kotlin/Float // app.cash.sqldelight.adapter.primitive/FloatColumnAdapter.decode|decode(kotlin.Double){}[0]
+    final fun encode(kotlin/Float): kotlin/Double // app.cash.sqldelight.adapter.primitive/FloatColumnAdapter.encode|encode(kotlin.Float){}[0]
+}
+
+final object app.cash.sqldelight.adapter.primitive/IntColumnAdapter : app.cash.sqldelight/ColumnAdapter<kotlin/Int, kotlin/Long> { // app.cash.sqldelight.adapter.primitive/IntColumnAdapter|null[0]
+    final fun decode(kotlin/Long): kotlin/Int // app.cash.sqldelight.adapter.primitive/IntColumnAdapter.decode|decode(kotlin.Long){}[0]
+    final fun encode(kotlin/Int): kotlin/Long // app.cash.sqldelight.adapter.primitive/IntColumnAdapter.encode|encode(kotlin.Int){}[0]
+}
+
+final object app.cash.sqldelight.adapter.primitive/ShortColumnAdapter : app.cash.sqldelight/ColumnAdapter<kotlin/Short, kotlin/Long> { // app.cash.sqldelight.adapter.primitive/ShortColumnAdapter|null[0]
+    final fun decode(kotlin/Long): kotlin/Short // app.cash.sqldelight.adapter.primitive/ShortColumnAdapter.decode|decode(kotlin.Long){}[0]
+    final fun encode(kotlin/Short): kotlin/Long // app.cash.sqldelight.adapter.primitive/ShortColumnAdapter.encode|encode(kotlin.Short){}[0]
+}
