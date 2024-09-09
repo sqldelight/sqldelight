@@ -47,7 +47,9 @@ intellijPlatform {
     // See: the verify_intellij job in .github/workflows/PR.yml
     def version = providers.systemProperty("ideaVersion").getOrElse(null)
     if (version != null) {
-      ide(IntelliJPlatformType.IntellijIdeaCommunity, version)
+      ides {
+        ide(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity, version)
+      }
     }
 
     def customFailureLevel = FailureLevel.ALL
