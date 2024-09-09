@@ -121,13 +121,14 @@ jobs:
         idea:
           - 'IC-2023.2.5'   # IC / Iguana
           - 'IC-2024.1'   # IC
+          - 'IC-2024.2'   # IC
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - run: ./gradlew -DideaVersion=${{matrix.idea}} :sqldelight-idea-plugin:runPluginVerifier
+      - run: ./gradlew -DideaVersion=${{matrix.idea}} :sqldelight-idea-plugin:verifyPlugin
 
   verify_intellij_check:
     runs-on: ubuntu-latest
