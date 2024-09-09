@@ -42,6 +42,15 @@ jobs:
       contents: read
 
     steps:
+      # https://github.com/actions/runner-images/issues/10511
+      # We only use Xcode 15.4, the default version
+      - name: Remove unused Xcode installations
+        run: |
+          df -hI /dev/disk3s1s1
+          find /Applications -type d -name "Xcode_*.app" | grep -v "Xcode_15.4.app" | xargs sudo rm -rf
+          df -hI /dev/disk3s1s1
+        if: matrix.os == 'macOS-14'
+
       - name: Checkout the repo
         uses: actions/checkout@v4
       - name: Set up Java
