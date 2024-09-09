@@ -228,6 +228,10 @@
     <liveTemplateMacro implementation="app.cash.sqldelight.intellij.macro.PkMacro"/>
   </extensions>
 
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <supportsKotlinPluginMode supportsK2="true" />
+  </extensions>
+
   <actions>
     <action id="SQDelight.CopyAsSqlite" class="app.cash.sqldelight.intellij.actions.CopyAsSqliteAction" text="Copy as SQLite">
       <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="$Copy"/>
