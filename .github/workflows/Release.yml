@@ -15,7 +15,7 @@ jobs:
   publish_archives:
     strategy:
       matrix:
-        os: [macOS-14, windows-latest, ubuntu-latest]
+        os: [macOS-14, windows-latest, ubuntu-24.04]
 
     runs-on: ${{matrix.os}}
     if: github.repository == 'cashapp/sqldelight'
@@ -50,7 +50,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
         run: ./gradlew publishMingwX64PublicationToMavenCentralRepository --no-parallel
       - name: Publish the linux artifact
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
@@ -58,7 +58,7 @@ jobs:
         run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository --no-parallel
 
   publish_plugin:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.repository == 'cashapp/sqldelight'
     permissions:
       contents: read
@@ -93,7 +93,7 @@ jobs:
         run: ./gradlew publishPlugin --stacktrace --no-parallel
 
   publish_npm_packages:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.repository == 'cashapp/sqldelight'
     permissions:
       contents: read

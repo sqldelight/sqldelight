@@ -10,7 +10,7 @@ on:
 
 jobs:
   spotless:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -25,14 +25,14 @@ jobs:
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
       matrix:
-        os: [ macOS-14, windows-latest, ubuntu-latest ]
+        os: [ macOS-14, windows-latest, ubuntu-24.04 ]
         job: [ instrumentation, test, gradle-plugin-tests ]
         exclude:
           - os: windows-latest
             job: instrumentation
           - os: windows-latest
             job: gradle-plugin-tests
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             job: gradle-plugin-tests
           - os: macOS-14
             job: instrumentation
@@ -65,7 +65,7 @@ jobs:
 
       # Linux tests
       - name: Run gradle tests
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
+        if: matrix.os == 'ubuntu-24.04' && matrix.job == 'test'
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test -x dokkaHtml
       - name: Run gradle plugin tests
@@ -73,7 +73,7 @@ jobs:
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --parallel -x dokkaHtml
 
       - name: Run the IntelliJ plugin
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-24.04' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build --stacktrace -x dokkaHtml
 
       # Windows tests
@@ -82,19 +82,19 @@ jobs:
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel -x dokkaHtml
 
       # android tests
       - name: Enable KVM group perms
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-24.04' && matrix.job == 'instrumentation'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Run instrumentation tests
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
+        if: matrix.os == 'ubuntu-24.04' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -110,7 +110,7 @@ jobs:
         run: test -z "$(git status --porcelain)"
 
   verify_intellij:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     permissions:
       contents: read
@@ -131,7 +131,7 @@ jobs:
       - run: ./gradlew -DideaVersion=${{matrix.idea}} :sqldelight-idea-plugin:verifyPlugin
 
   verify_intellij_check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     needs: verify_intellij
     steps:
