@@ -35,7 +35,7 @@ jobs:
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-cleanup: always
 
       - name: Set up Python
         uses: actions/setup-python@v5
