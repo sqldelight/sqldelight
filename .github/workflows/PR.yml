@@ -61,7 +61,7 @@ jobs:
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-disabled: true
 
       # Linux tests
       - name: Run gradle tests
@@ -82,7 +82,7 @@ jobs:
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel -x dokkaHtml
 
@@ -97,8 +97,11 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          arch: x86_64
+          api-level: 30
+          arch: x86
+          target: aosp_atd
+          profile: Nexus One
+          disk-size: 2048M
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace --parallel -x dokkaHtml
 
       # ios tests
@@ -150,7 +153,7 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-cleanup: always
       - run: ./gradlew -p sample build --stacktrace --parallel
 
   buildWebSample:
@@ -165,7 +168,7 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-cleanup: always
       - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
 
 env:
