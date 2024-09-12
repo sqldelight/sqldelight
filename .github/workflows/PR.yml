@@ -61,7 +61,7 @@ jobs:
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          cache-cleanup: always
+          cache-disabled: true
 
       # Linux tests
       - name: Run gradle tests
