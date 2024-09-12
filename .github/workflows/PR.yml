@@ -82,7 +82,7 @@ jobs:
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
 
       - name: Run linux tests
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel -x dokkaHtml
 
