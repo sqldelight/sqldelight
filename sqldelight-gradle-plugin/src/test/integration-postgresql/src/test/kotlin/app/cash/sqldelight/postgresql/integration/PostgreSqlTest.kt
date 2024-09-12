@@ -5,6 +5,7 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.OptimisticLockException
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
+import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.time.Instant
@@ -1090,6 +1091,18 @@ class PostgreSqlTest {
       assertThat(grade_id).isEqualTo(gradeExpected.grade_id)
       assertThat(grade).isEqualTo(gradeExpected.grade)
       assertThat(grade_date).isEqualTo(gradeExpected.grade_date)
+    }
+  }
+
+  @Test
+  fun testLateralJoin() {
+    database.lateralQueries.insertSales()
+    with(database.lateralQueries.selectSales().executeAsList()) {
+      assertThat(first().salesperson_id).isEqualTo(1)
+      assertThat(first().full_name).isEqualTo("A D")
+      assertThat(first().home_region_id).isEqualTo(1)
+      assertThat(first().home_region_name).isEqualTo("North America")
+      assertThat(first().total_sales).isEqualTo(BigDecimal("1000.50"))
     }
   }
 }

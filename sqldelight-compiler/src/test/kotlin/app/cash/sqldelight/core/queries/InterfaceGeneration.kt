@@ -1394,6 +1394,108 @@ class InterfaceGeneration {
     )
   }
 
+  @Test
+  fun `postgres lateral sub select has correct result columns`() {
+    val result = FixtureCompiler.compileSql(
+      """
+    |CREATE TABLE Test (
+    |    p INTEGER,
+    |    f NUMERIC,
+    |    b INTEGER,
+    |    l NUMERIC,
+    |    d NUMERIC,
+    |    g INTEGER
+    |);
+    |
+    |select:
+    |SELECT *
+    |FROM Test,
+    |LATERAL (SELECT p / f AS pf) _pf,
+    |LATERAL (SELECT pf / b AS pfb) _pfb,
+    |LATERAL (SELECT g / f AS gf) _gf,
+    |LATERAL (SELECT gf - pf AS gfpf) _gfpf,
+    |LATERAL (SELECT (d - l) / 60000.00 AS dl) _dl;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Lateral.sq",
+      overrideDialect = PostgreSqlDialect(),
+    )
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/LateralQueries.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+    |package com.example
+    |
+    |import app.cash.sqldelight.Query
+    |import app.cash.sqldelight.TransacterImpl
+    |import app.cash.sqldelight.db.SqlDriver
+    |import app.cash.sqldelight.driver.jdbc.JdbcCursor
+    |import java.math.BigDecimal
+    |import kotlin.Any
+    |import kotlin.Int
+    |
+    |public class LateralQueries(
+    |  driver: SqlDriver,
+    |) : TransacterImpl(driver) {
+    |  public fun <T : Any> select(mapper: (
+    |    p: Int?,
+    |    f: BigDecimal?,
+    |    b: Int?,
+    |    l: BigDecimal?,
+    |    d: BigDecimal?,
+    |    g: Int?,
+    |    pf: BigDecimal?,
+    |    pfb: BigDecimal?,
+    |    gf: BigDecimal?,
+    |    gfpf: BigDecimal?,
+    |    dl: BigDecimal?,
+    |  ) -> T): Query<T> = Query(89_549_764, arrayOf("Test"), driver, "Lateral.sq", "select", ""${'"'}
+    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, pf, pfb, gf, gfpf, dl
+    |  |FROM Test,
+    |  |LATERAL (SELECT p / f AS pf) _pf,
+    |  |LATERAL (SELECT pf / b AS pfb) _pfb,
+    |  |LATERAL (SELECT g / f AS gf) _gf,
+    |  |LATERAL (SELECT gf - pf AS gfpf) _gfpf,
+    |  |LATERAL (SELECT (d - l) / 60000.00 AS dl) _dl
+    |  ""${'"'}.trimMargin()) { cursor ->
+    |    check(cursor is JdbcCursor)
+    |    mapper(
+    |      cursor.getInt(0),
+    |      cursor.getBigDecimal(1),
+    |      cursor.getInt(2),
+    |      cursor.getBigDecimal(3),
+    |      cursor.getBigDecimal(4),
+    |      cursor.getInt(5),
+    |      cursor.getBigDecimal(6),
+    |      cursor.getBigDecimal(7),
+    |      cursor.getBigDecimal(8),
+    |      cursor.getBigDecimal(9),
+    |      cursor.getBigDecimal(10)
+    |    )
+    |  }
+    |
+    |  public fun select(): Query<Select> = select { p, f, b, l, d, g, pf, pfb, gf, gfpf, dl ->
+    |    Select(
+    |      p,
+    |      f,
+    |      b,
+    |      l,
+    |      d,
+    |      g,
+    |      pf,
+    |      pfb,
+    |      gf,
+    |      gfpf,
+    |      dl
+    |    )
+    |  }
+    |}
+    |
+      """.trimMargin(),
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
