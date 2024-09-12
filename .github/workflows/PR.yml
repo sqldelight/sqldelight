@@ -101,6 +101,7 @@ jobs:
           arch: x86
           target: aosp_atd
           profile: Nexus One
+          disk-size: 2048M
           script: ./gradlew connectedCheck :sqldelight-gradle-plugin:instrumentationTest --stacktrace --parallel -x dokkaHtml
 
       # ios tests
