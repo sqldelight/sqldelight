@@ -61,7 +61,7 @@ jobs:
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-cleanup: always
 
       # Linux tests
       - name: Run gradle tests
@@ -153,7 +153,7 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-cleanup: always
       - run: ./gradlew -p sample build --stacktrace --parallel
 
   buildWebSample:
@@ -168,7 +168,7 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-home-cache-cleanup: true
+          cache-cleanup: always
       - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
 
 env:
