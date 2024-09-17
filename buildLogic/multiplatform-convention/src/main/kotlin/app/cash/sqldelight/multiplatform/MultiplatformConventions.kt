@@ -3,18 +3,21 @@ package app.cash.sqldelight.multiplatform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.konan.target.HostManager
 
+@OptIn(
+  ExperimentalKotlinGradlePluginApi::class,
+  ExperimentalWasmDsl::class,
+)
 class MultiplatformConventions : Plugin<Project> {
   override fun apply(project: Project) {
     project.plugins.apply("org.jetbrains.kotlin.multiplatform")
 
     (project.kotlinExtension as KotlinMultiplatformExtension).apply {
-      @OptIn(ExperimentalKotlinGradlePluginApi::class)
       compilerOptions {
         this.freeCompilerArgs.addAll(
           "-Xexpect-actual-classes",
@@ -23,7 +26,6 @@ class MultiplatformConventions : Plugin<Project> {
 
       jvm()
 
-      @OptIn(ExperimentalWasmDsl::class)
       listOf(js(), wasmJs()).forEach {
         it.browser {
           testTask {
@@ -32,17 +34,16 @@ class MultiplatformConventions : Plugin<Project> {
             }
           }
         }
-        compilerOptions {
+        it.compilerOptions {
           moduleKind.set(JsModuleKind.MODULE_UMD)
         }
       }
 
-      @OptIn(ExperimentalKotlinGradlePluginApi::class)
       applyDefaultHierarchyTemplate {
         common {
           group("jsCommon") {
             withJs()
-            withWasm()
+            withWasmJs()
           }
         }
       }
