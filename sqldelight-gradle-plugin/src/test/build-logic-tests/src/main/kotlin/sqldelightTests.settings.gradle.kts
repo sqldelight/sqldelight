@@ -3,7 +3,12 @@ pluginManagement {
         maven(url = "file://${settingsDir.absolutePath}/../../../../build/localMaven")
         mavenCentral()
         google()
+        gradlePluginPortal()
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention")
 }
 
 dependencyResolutionManagement {

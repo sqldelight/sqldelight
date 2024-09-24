@@ -1,0 +1,48 @@
+CREATE TABLE Regions (
+  id INTEGER,
+  name VARCHAR(255)
+);
+
+CREATE TABLE Sales_People (
+  id INTEGER,
+  full_name VARCHAR(255),
+  home_region_id INTEGER
+);
+
+CREATE TABLE Sales (
+  id INTEGER,
+  amount NUMERIC,
+  product_id INTEGER,
+  sales_person_id INTEGER,
+  region_id INTEGER
+);
+
+insertSales {
+INSERT INTO Regions (id, name) VALUES (1, 'North America');
+INSERT INTO Regions (id, name) VALUES (2, 'Europe');
+INSERT INTO Regions (id, name) VALUES (3, 'Asia');
+
+INSERT INTO Sales_People (id, full_name, home_region_id) VALUES (1, 'A D', 1);
+INSERT INTO Sales_People (id, full_name, home_region_id) VALUES (2, 'L S', 2);
+INSERT INTO Sales_People (id, full_name, home_region_id) VALUES (3, 'M J', 3);
+
+INSERT INTO Sales (id, amount, product_id, sales_person_id, region_id) VALUES (1, 1000.50, 101, 1, 1);
+INSERT INTO Sales (id, amount, product_id, sales_person_id, region_id) VALUES (2, 2500.75, 102, 2, 2);
+INSERT INTO Sales (id, amount, product_id, sales_person_id, region_id) VALUES (3, 1250.25, 103, 3, 3);
+}
+
+selectSales:
+SELECT
+  sp.id salesperson_id,
+  sp.full_name,
+  sp.home_region_id,
+  rg.name AS home_region_name,
+  home_region_sales.total_sales
+FROM Sales_People AS sp
+  JOIN Regions rg ON sp.home_region_id = rg.id
+  JOIN LATERAL (
+    SELECT SUM(amount) AS total_sales
+    FROM Sales AS s
+    WHERE s.sales_person_id = sp.id
+      AND s.region_id = sp.home_region_id
+  ) home_region_sales ON TRUE;

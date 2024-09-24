@@ -1,7 +1,6 @@
 package com.example.sqldelight.hockey
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 
 /**
@@ -19,7 +18,6 @@ expect suspend fun closeDriver()
  */
 expect fun getDb(): HockeyDb
 
-@OptIn(ExperimentalCoroutinesApi::class)
 fun testing(block: suspend CoroutineScope.(HockeyDb) -> Unit) = runTest {
   createDriver()
   block(getDb())

@@ -15,11 +15,13 @@
  */
 package app.cash.sqldelight.integrations
 
+import app.cash.sqldelight.gradle.MIN_GRADLE_VERSION
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import java.nio.file.Files
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.util.GradleVersion
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -34,9 +36,8 @@ class GradleVersionsTest(private val gradleVersion: String) {
       // MIN_GRADLE_VERSION,
       // We use version catalogs in tests too but this feature is only stable since 7.4.
       // Test MIN_GRADLE_VERSION too if MIN_GRADLE_VERSION is higher than 7.4.
-      "7.4.2",
-      "7.6.1",
-      "8.0.2",
+      MIN_GRADLE_VERSION,
+      GradleVersion.current().version,
     )
   }
 

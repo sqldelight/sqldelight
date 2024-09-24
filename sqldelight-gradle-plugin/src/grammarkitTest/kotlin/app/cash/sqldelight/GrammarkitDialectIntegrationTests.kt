@@ -33,6 +33,6 @@ class GrammarkitDialectIntegrationTests {
       |
       """.trimMargin(),
     )
-    return withProjectDir(projectRoot)
+    return withProjectDir(projectRoot).withTestKitDir(File("build/gradle-test-kit").absoluteFile)
   }
 }

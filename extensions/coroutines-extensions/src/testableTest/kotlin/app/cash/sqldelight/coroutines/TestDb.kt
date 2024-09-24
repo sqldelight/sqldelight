@@ -8,39 +8,28 @@ import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_MANAGER
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import co.touchlab.stately.concurrency.AtomicBoolean
-import co.touchlab.stately.concurrency.AtomicLong
-import co.touchlab.stately.concurrency.value
+import kotlinx.atomicfu.atomic
 
 expect suspend fun testDriver(): SqlDriver
 
 class TestDb(
   val db: SqlDriver,
-) : SuspendingTransacterImpl(db) {
-  var aliceId = AtomicLong(0)
-  var bobId = AtomicLong(0)
-  var eveId = AtomicLong(0)
+) : SuspendingTransacterImpl(db),
+  AutoCloseable {
+  var aliceId by atomic(0L)
+  var bobId by atomic(0L)
+  var eveId by atomic(0L)
 
-  var isInitialized = AtomicBoolean(false)
-
-  private suspend fun init() {
+  suspend fun init() {
     db.execute(null, "PRAGMA foreign_keys=ON", 0).await()
 
     db.execute(null, CREATE_EMPLOYEE, 0).await()
-    aliceId.value = employee(Employee("alice", "Alice Allison"))
-    bobId.value = employee(Employee("bob", "Bob Bobberson"))
-    eveId.value = employee(Employee("eve", "Eve Evenson"))
+    aliceId = employee(Employee("alice", "Alice Allison"))
+    bobId = employee(Employee("bob", "Bob Bobberson"))
+    eveId = employee(Employee("eve", "Eve Evenson"))
 
     db.execute(null, CREATE_MANAGER, 0).await()
-    manager(eveId.value, aliceId.value)
-  }
-
-  suspend fun use(block: suspend (TestDb) -> Unit) {
-    if (!isInitialized.value) {
-      init()
-    }
-
-    block(this)
+    manager(eveId, aliceId)
   }
 
   fun <T : Any> createQuery(key: String, query: String, mapper: (SqlCursor) -> T): Query<T> {
@@ -63,7 +52,7 @@ class TestDb(
     db.notifyListeners(key)
   }
 
-  fun close() {
+  override fun close() {
     db.close()
   }
 
