@@ -1,6 +1,6 @@
 # <img src="docs/images/icon-sqldelight.svg" style="height: 1em; margin-bottom: -0.1em;"> SQLDelight
 
-See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
+See the [project website](https://sqldelight.github.io/sqldelight/) for documentation and APIs
 
 SQLDelight generates typesafe Kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
