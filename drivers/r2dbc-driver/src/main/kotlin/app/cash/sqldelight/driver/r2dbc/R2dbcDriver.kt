@@ -131,6 +131,17 @@ class R2dbcDriver(
       transaction = enclosingTransaction
     }
   }
+
+  override fun createArguments(count: Int): String {
+    if (count == 0) return "()"
+    return buildString(count * 2 + 1) {
+      append("($1")
+      repeat(count - 1) { index ->
+        append(",$${index + 2}")
+      }
+      append(')')
+    }
+  }
 }
 
 /**
