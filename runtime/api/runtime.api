@@ -186,6 +186,7 @@ public abstract interface class app/cash/sqldelight/db/SqlCursor {
 
 public abstract interface class app/cash/sqldelight/db/SqlDriver : java/io/Closeable {
 	public abstract fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
+	public abstract fun createArguments (I)Ljava/lang/String;
 	public abstract fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
 	public abstract fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public abstract fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
@@ -195,6 +196,7 @@ public abstract interface class app/cash/sqldelight/db/SqlDriver : java/io/Close
 }
 
 public final class app/cash/sqldelight/db/SqlDriver$DefaultImpls {
+	public static fun createArguments (Lapp/cash/sqldelight/db/SqlDriver;I)Ljava/lang/String;
 	public static synthetic fun execute$default (Lapp/cash/sqldelight/db/SqlDriver;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lapp/cash/sqldelight/db/QueryResult;
 	public static synthetic fun executeQuery$default (Lapp/cash/sqldelight/db/SqlDriver;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lapp/cash/sqldelight/db/QueryResult;
 }
@@ -217,6 +219,7 @@ public final class app/cash/sqldelight/logs/LogSqliteDriver : app/cash/sqldeligh
 	public fun <init> (Lapp/cash/sqldelight/db/SqlDriver;Lkotlin/jvm/functions/Function1;)V
 	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 	public fun close ()V
+	public fun createArguments (I)Ljava/lang/String;
 	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
 	public fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
