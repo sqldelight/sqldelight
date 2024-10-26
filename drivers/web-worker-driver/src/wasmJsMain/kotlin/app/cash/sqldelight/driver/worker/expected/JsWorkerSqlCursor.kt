@@ -14,20 +14,20 @@ internal actual class JsWorkerSqlCursor actual constructor(
     result.values!!
   }
 
-  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(++currentRow < values.length)
+  actual override fun next(): QueryResult<Boolean> = QueryResult.Value(++currentRow < values.length)
 
-  override fun getString(index: Int): String? {
+  actual override fun getString(index: Int): String? {
     val currentRow = values[currentRow] ?: return null
     return currentRow[index]?.unsafeCast<JsString>()?.toString()
   }
 
-  override fun getLong(index: Int): Long? {
+  actual override fun getLong(index: Int): Long? {
     return getColumn(index) {
       it.unsafeCast<JsNumber>().toDouble().toLong()
     }
   }
 
-  override fun getBytes(index: Int): ByteArray? {
+  actual override fun getBytes(index: Int): ByteArray? {
     return getColumn(index) {
       val array = it.unsafeCast<Uint8Array>()
       // TODO: avoid copying somehow?
@@ -35,11 +35,11 @@ internal actual class JsWorkerSqlCursor actual constructor(
     }
   }
 
-  override fun getDouble(index: Int): Double? {
+  actual override fun getDouble(index: Int): Double? {
     return getColumn(index) { it.unsafeCast<JsNumber>().toDouble() }
   }
 
-  override fun getBoolean(index: Int): Boolean? {
+  actual override fun getBoolean(index: Int): Boolean? {
     return getColumn(index) { it.unsafeCast<JsBoolean>().toBoolean() }
   }
 

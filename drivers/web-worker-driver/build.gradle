@@ -23,6 +23,10 @@ kotlin {
     }
   }
 
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
+  }
+
   sourceSets {
     commonMain.dependencies {
       api projects.runtime
@@ -37,12 +41,6 @@ kotlin {
       implementation libs.kotlin.coroutines.test
       implementation project(":extensions:async-extensions")
     }
-  }
-}
-
-tasks.withType(KotlinCompilation.class).configureEach {
-  compilerOptions {
-    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 }
 
