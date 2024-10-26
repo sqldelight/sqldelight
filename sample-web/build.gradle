@@ -29,9 +29,13 @@ kotlin {
     useCommonJs()
   }
 
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
+  }
+
   sourceSets {
     commonMain.dependencies {
-      implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.6.0"
+      implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.6.1"
       implementation "app.cash.sqldelight:primitive-adapters"
       implementation "org.jetbrains.kotlinx:kotlinx-html:0.11.0"
 
@@ -47,12 +51,6 @@ kotlin {
       implementation 'org.jetbrains.kotlin:kotlin-test'
       implementation libs.kotlin.coroutines.test
     }
-  }
-}
-
-tasks.withType(KotlinCompilation.class).configureEach {
-  compilerOptions {
-    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 }
 
