@@ -5138,7 +5138,12 @@
 <hr />
 <h3 id="linksqlite"><code>linkSqlite</code><a class="headerlink" href="#linksqlite" title="Permanent link">&para;</a></h3>
 <p>Type: <code>Property&lt;Boolean&gt;</code></p>
-<p>For native targets. Whether sqlite should be automatically linked.</p>
+<p>For native targets. Whether sqlite should be automatically linked.
+This adds the necessary metadata for linking sqlite when the project is compiled to a dynamic framework (which is the default in recent versions of KMP).</p>
+<p>Note that for a static framework, this flag has no effect.
+The XCode build that imports the project should add <code>-lsqlite3</code> to the linker flags.
+Alternatively <a href="https://kotlinlang.org/docs/native-cocoapods-libraries.html">add a project dependency</a> on the <a href="https://cocoapods.org/pods/sqlite3">sqlite3</a> pod via the cocoapods plugin.
+Another option that may work is adding <code>sqlite3</code> to the cocoapods <a href="https://guides.cocoapods.org/syntax/podspec.html#libraries"><code>spec.libraries</code> setting</a> e.g. in Gradle Kotlin DSL: <code>extraSpecAttributes["libraries"] = "'c++', 'sqlite3'".</code></p>
 <p>Defaults to <code>true</code>.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kotlin</label><label for="__tabbed_2_2">Groovy</label></div>
 <div class="tabbed-content">
