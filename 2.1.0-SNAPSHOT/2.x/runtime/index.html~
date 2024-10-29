@@ -46,9 +46,10 @@
         </div>
         <div class="filter-section" id="filter-section">
                 <button class="platform-tag platform-selector common-like" data-active="" data-filter=":runtime:dokkaHtmlPartial/commonMain">common</button>
-                <button class="platform-tag platform-selector js-like" data-active="" data-filter=":runtime:dokkaHtmlPartial/jsMain">js</button>
                 <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":runtime:dokkaHtmlPartial/jvmMain">jvm</button>
                 <button class="platform-tag platform-selector common-like" data-active="" data-filter=":runtime:dokkaHtmlPartial/nativeMain">native</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":runtime:dokkaHtmlPartial/nonJvmMain">nonJvm</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":runtime:dokkaHtmlPartial/webMain">web</button>
         </div>
     </div>
     <div class="navigation-controls">
@@ -61,7 +62,7 @@
                 <div class="sidebar--inner" id="sideMenu"></div>
             </div>
             <div id="main">
-<div class="main-content" id="content" pageids="runtime::////PointingToDeclaration//-61506522">
+<div class="main-content" id="content" pageids="runtime::////PointingToDeclaration//1000716353">
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>runtime</span></span></h1>
@@ -85,41 +86,40 @@
         <div></div>
       </div>
     </div>
-<a data-name="292161465%2FPackages%2F-61506522" anchor-label="app.cash.sqldelight.db" id="292161465%2FPackages%2F-61506522" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain,:runtime:dokkaHtmlPartial/jsMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain"></a>
-    <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain,:runtime:dokkaHtmlPartial/jsMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain,:runtime:dokkaHtmlPartial/jsMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain">
+<a data-name="292161465%2FPackages%2F530373001" anchor-label="app.cash.sqldelight.db" id="292161465%2FPackages%2F530373001" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nonJvmMain"></a>
+    <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/commonMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nonJvmMain" data-filterable-set=":runtime:dokkaHtmlPartial/commonMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nonJvmMain">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="app.cash.sqldelight.db/index.html">app.cash.sqldelight.db</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="292161465%2FPackages%2F-61506522"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="292161465%2FPackages%2F530373001"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right">
             <div class="platform-tags no-gutters">
               <div class="platform-tag common-like">common</div>
-              <div class="platform-tag js-like">js</div>
               <div class="platform-tag jvm-like">jvm</div>
-              <div class="platform-tag common-like">native</div>
+              <div class="platform-tag common-like">nonJvm</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="1569348216%2FPackages%2F848708935" anchor-label="app.cash.sqldelight.internal" id="1569348216%2FPackages%2F848708935" data-filterable-set=":runtime:dokkaHtmlPartial/jsMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain"></a>
-    <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/jsMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain" data-filterable-set=":runtime:dokkaHtmlPartial/jsMain,:runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain">
+<a data-name="1569348216%2FPackages%2F1086367105" anchor-label="app.cash.sqldelight.internal" id="1569348216%2FPackages%2F1086367105" data-filterable-set=":runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain,:runtime:dokkaHtmlPartial/webMain"></a>
+    <div class="table-row" data-filterable-current=":runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain,:runtime:dokkaHtmlPartial/webMain" data-filterable-set=":runtime:dokkaHtmlPartial/jvmMain,:runtime:dokkaHtmlPartial/nativeMain,:runtime:dokkaHtmlPartial/webMain">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="app.cash.sqldelight.internal.html">app.cash.sqldelight.internal</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1569348216%2FPackages%2F848708935"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1569348216%2FPackages%2F1086367105"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right">
             <div class="platform-tags no-gutters">
-              <div class="platform-tag js-like">js</div>
               <div class="platform-tag jvm-like">jvm</div>
               <div class="platform-tag common-like">native</div>
+              <div class="platform-tag common-like">web</div>
             </div>
           </div>
         </div>
