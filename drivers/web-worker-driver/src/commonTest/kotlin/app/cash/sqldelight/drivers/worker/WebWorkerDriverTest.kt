@@ -10,8 +10,8 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import app.cash.sqldelight.driver.worker.WebWorkerException
+import app.cash.sqldelight.driver.worker.createDefaultWebWorkerDriver
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -19,12 +19,9 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.w3c.dom.Worker
 
 typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class WebWorkerDriverTest {
   private val schema = object : SqlSchema<AsyncValue<Unit>> {
     override val version: Long = 1
@@ -64,9 +61,9 @@ class WebWorkerDriverTest {
   }
 
   private fun runTest(block: suspend (SqlDriver) -> Unit) = kotlinx.coroutines.test.runTest {
-    @Suppress("UnsafeCastFromDynamic")
-    val driver = WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))
-      .also { schema.awaitCreate(it) }
+    val driver =
+      createDefaultWebWorkerDriver()
+        .also { schema.awaitCreate(it) }
     block(driver)
     driver.close()
   }
@@ -279,9 +276,9 @@ class WebWorkerDriverTest {
   @Test
   fun bad_worker_results_values_throws_error() = kotlinx.coroutines.test.runTest {
     val exception = assertFailsWith<IllegalStateException> {
-      @Suppress("UnsafeCastFromDynamic")
-      val driver = WebWorkerDriver(Worker(js("""new URL("./bad.worker.js", import.meta.url)""")))
-        .also { schema.awaitCreate(it) }
+      val driver =
+        createBadWebWorkerDriver()
+          .also { schema.awaitCreate(it) }
       driver.close()
     }
 
