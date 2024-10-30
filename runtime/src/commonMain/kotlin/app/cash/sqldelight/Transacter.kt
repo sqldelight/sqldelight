@@ -328,15 +328,7 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
    * For internal use, creates a string in the format (?, ?, ?) where there are [count] question marks.
    */
   protected fun createArguments(count: Int): String {
-    if (count == 0) return "()"
-
-    return buildString(count * 2 + 1) {
-      append("(?")
-      repeat(count - 1) {
-        append(",?")
-      }
-      append(')')
-    }
+    return driver.createArguments(count)
   }
 }
 
