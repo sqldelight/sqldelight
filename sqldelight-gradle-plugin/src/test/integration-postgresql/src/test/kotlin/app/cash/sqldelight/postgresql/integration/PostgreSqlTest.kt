@@ -1105,4 +1105,34 @@ class PostgreSqlTest {
       assertThat(first().total_sales).isEqualTo(BigDecimal("1000.50"))
     }
   }
+
+  @Test
+  fun testSelectAppointments() {
+    val slotBegin = LocalDateTime.of(2009, 1, 1, 9, 0).atOffset(ZoneOffset.UTC)
+    val slotEnd = slotBegin.plusMinutes(30)
+
+    database.temporalRangesQueries.insert("[$slotBegin, $slotEnd)")
+    database.temporalRangesQueries.insert("[$slotEnd, ${slotEnd.plusMinutes(30)})")
+
+    with(database.temporalRangesQueries.appointments().executeAsList()) {
+      assertThat(first().begin).isEqualTo(slotBegin)
+      assertThat(first().end).isEqualTo(slotEnd)
+    }
+
+    val multiRangeSlots = "{[$slotBegin, $slotEnd), [$slotEnd, ${slotEnd.plusMinutes(30)})}"
+    with(database.temporalRangesQueries.selectAvailableAppointments(multiRangeSlots, "[$slotBegin, $slotEnd)").executeAsList()) {
+      assertThat(first()).isEqualTo("""{["2009-01-01 09:30:00+00","2009-01-01 10:00:00+00")}""")
+    }
+
+    with(database.temporalRangesQueries.selectAppointmentContainsRange().executeAsList()) {
+      assertThat(first()).isFalse()
+    }
+  }
+
+  @Test
+  fun testSelectContainsTemporalRange() {
+    with(database.temporalRangesQueries.selectMultiRangeContainsTimestamp().executeAsList()) {
+      assertThat(first()).isTrue()
+    }
+  }
 }
