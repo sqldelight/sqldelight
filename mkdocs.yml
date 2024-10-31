@@ -1,7 +1,7 @@
 site_name: SQLDelight
-site_url: https://cashapp.github.io/sqldelight/
+site_url: https://sqldelight.github.io/sqldelight/
 repo_name: sqldelight
-repo_url: https://github.com/cashapp/sqldelight
+repo_url: https://github.com/sqldelight/sqldelight
 site_description: "SQLDelight - Generates typesafe Kotlin APIs from SQL"
 site_author: Square, Inc.
 copyright: 'Copyright &copy; 2023 Square, Inc.'

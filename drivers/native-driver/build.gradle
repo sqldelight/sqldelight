@@ -35,13 +35,15 @@ kotlin {
   mingwX64()
   watchosDeviceArm64()
 
-  targetHierarchy.default { target ->
-    target.group("native") {
-      it.group("nativeLinuxLike") {
-        it.withLinux()
-        it.withApple()
-        // https://github.com/touchlab/SQLiter/issues/117
-        // it.withAndroidNative()
+  applyDefaultHierarchyTemplate {
+    it.common { target ->
+      target.group("native") {
+        it.group("nativeLinuxLike") {
+          it.group("linux") { }
+          it.group("apple") { }
+          // https://github.com/touchlab/SQLiter/issues/117
+          // it.group("androidNative")
+        }
       }
     }
   }

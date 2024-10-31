@@ -6,8 +6,8 @@ import java.util.GregorianCalendar
 actual typealias Date = GregorianCalendar
 
 actual class DateAdapter actual constructor() : ColumnAdapter<Date, Long> {
-  override fun encode(value: Date) = value.timeInMillis
-  override fun decode(databaseValue: Long) = Date.getInstance().apply {
+  actual override fun encode(value: Date) = value.timeInMillis
+  actual override fun decode(databaseValue: Long) = Date.getInstance().apply {
     timeInMillis = databaseValue
   } as Date
 }
