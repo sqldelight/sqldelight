@@ -10,6 +10,8 @@ import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
+import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
+import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -22,8 +24,11 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
@@ -58,6 +63,7 @@ abstract class QueryGenerator(
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
+    val notifyBlock = notifyQueriesBlock()
     if (query.statement is SqlDelightStmtClojureStmtList) {
       if (query is NamedQuery) {
         result
@@ -72,12 +78,20 @@ abstract class QueryGenerator(
         handledArrayArgs.addAll(additionalArrayArgs)
         result.add(block)
       }
-      result.endControlFlow()
+      if (query is NamedQuery && notifyBlock.isNotEmpty()) {
+        result.nextControlFlow(".also")
+        result.add(notifyBlock)
+        result.endControlFlow()
+      } else {
+        result.endControlFlow()
+        result.add(notifyBlock)
+      }
       if (generateAsync && query is NamedQuery) {
         result.endControlFlow()
       }
     } else {
       result.add(executeBlock(query.statement, emptySet(), query.id).first)
+      result.add(notifyBlock)
     }
 
     return result.build()
@@ -327,6 +341,54 @@ abstract class QueryGenerator(
     }
 
     return Pair(result.build(), seenArrayArguments)
+  }
+
+  internal open fun tablesUpdated(): List<TableNameElement> {
+    if (query.statement is SqlDelightStmtClojureStmtList) {
+      return PsiTreeUtil.findChildrenOfAnyType(
+        query.statement,
+        SqlUpdateStmtLimited::class.java,
+        SqlDeleteStmtLimited::class.java,
+        SqlInsertStmt::class.java,
+      ).flatMap {
+        MutatorQueryGenerator(
+          when (it) {
+            is SqlUpdateStmtLimited -> NamedMutator.Update(it, query.identifier as StmtIdentifierMixin)
+            is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
+            is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
+            else -> throw IllegalArgumentException("Unexpected statement $it")
+          },
+        ).tablesUpdated()
+      }.distinctBy { it.name }
+    }
+    return emptyList()
+  }
+
+  protected fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
+    return addCode(
+      notifyQueriesBlock(),
+    )
+  }
+
+  protected fun notifyQueriesBlock(): CodeBlock {
+    val tablesUpdated = tablesUpdated()
+
+    if (tablesUpdated.isEmpty()) return CodeBlock.builder().build()
+
+    // The list of affected tables:
+    // notifyQueries { emit ->
+    //     emit("players")
+    //     emit("teams")
+    // }
+    return CodeBlock.builder()
+      .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
+      .apply {
+        tablesUpdated.sortedBy { it.name }.forEach {
+          addStatement("emit(\"${it.name}\")")
+        }
+      }
+      .endControlFlow()
+      .build()
   }
 
   private fun PsiElement.leftWhitspace(): String {
