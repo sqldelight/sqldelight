@@ -98,11 +98,14 @@ class OptimisticLockTest {
     val generator = MutatorQueryGenerator(mutator)
     assertThat(generator.function().toString()).isEqualTo(
       """
+      |/**
+      | * @return The number of rows updated.
+      | */
       |public fun updateText(
       |  text: kotlin.String,
       |  version: com.example.Test.Version,
       |  id: com.example.Test.Id,
-      |) {
+      |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
       |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET
@@ -122,6 +125,7 @@ class OptimisticLockTest {
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
