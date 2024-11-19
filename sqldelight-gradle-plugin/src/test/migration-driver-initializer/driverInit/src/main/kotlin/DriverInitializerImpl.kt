@@ -1,6 +1,5 @@
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.gradle.DriverInitializer
-import java.io.File
 import java.sql.Connection
 import java.sql.Driver
 import java.sql.DriverManager
