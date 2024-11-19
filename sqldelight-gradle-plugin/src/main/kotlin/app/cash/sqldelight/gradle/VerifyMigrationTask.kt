@@ -213,7 +213,7 @@ interface DriverInitializer {
   fun execute(properties: SqlDelightDatabaseProperties, driverProperties: Properties)
 }
 
-fun MapProperty<String, String>.toProperties(): Properties {
+internal fun MapProperty<String, String>.toProperties(): Properties {
   val properties = Properties()
   get().forEach { (key, value) ->
     properties[key] = value
