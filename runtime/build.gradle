@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
+
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
@@ -16,6 +18,16 @@ apiValidation {
 }
 
 kotlin {
+  metadata {
+    compilations.configureEach {
+      compileTaskProvider.configure {
+        if (it instanceof KotlinCompileCommon) {
+          moduleName = "${project.group}:${project.name}_$name"
+        }
+      }
+    }
+  }
+
   applyDefaultHierarchyTemplate {
     it.common {
       it.group("nonJvm") {
