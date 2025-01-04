@@ -15,6 +15,7 @@ sqldelight {
 dependencies {
   implementation libs.postgresJdbc
   implementation libs.testContainers.postgres
+  implementation libs.jts
   implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
 }

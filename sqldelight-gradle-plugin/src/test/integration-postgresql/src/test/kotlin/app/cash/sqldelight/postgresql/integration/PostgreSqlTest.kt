@@ -1105,4 +1105,13 @@ class PostgreSqlTest {
       assertThat(first().total_sales).isEqualTo(BigDecimal("1000.50"))
     }
   }
+
+  @Test
+  fun testInsertPostgis() {
+    assertThat("a").isEqualTo("b")
+    database.postgisQueries.insert()
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+    }
+  }
 }

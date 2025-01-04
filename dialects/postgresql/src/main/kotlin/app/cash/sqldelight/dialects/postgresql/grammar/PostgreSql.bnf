@@ -172,7 +172,8 @@ type_name ::= (
   json_data_type |
   blob_data_type |
   tsvector_data_type |
-  xml_data_type
+  xml_data_type |
+  geometry_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -248,6 +249,8 @@ blob_data_type ::= 'BYTEA'
 tsvector_data_type ::= 'TSVECTOR'
 
 xml_data_type ::= 'XML'
+
+geometry_data_type ::= 'GEOMETRY' [ LP 'Point' COMMA {signed_number} RP ]
 
 interval_expression ::= 'INTERVAL' {string_literal}
 

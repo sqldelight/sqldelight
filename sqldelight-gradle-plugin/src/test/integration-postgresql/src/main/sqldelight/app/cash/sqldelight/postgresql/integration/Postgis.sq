@@ -1,0 +1,23 @@
+-- 4326 is the SRID for WGS 84
+CREATE TABLE locations (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  location GEOMETRY(Point, 4326)
+);
+
+insert:
+INSERT INTO locations (name, location)
+VALUES ('New York', ST_SetSRID(ST_MakePoint(-74.0060, 40.7128), 4326));
+
+select:
+SELECT *
+FROM locations;
+
+selectLocation:
+SELECT location
+FROM locations;
+
+--selectLocationByDistance:
+--SELECT id, name
+--FROM locations
+--WHERE ST_DWithin(location::geography, ST_GeographyFromText('SRID=4326;POINT(-74.0060 40.7128)'), 50000);

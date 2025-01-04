@@ -78,6 +78,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         blobDataType != null -> BLOB
         tsvectorDataType != null -> PostgreSqlType.TSVECTOR
         xmlDataType != null -> PostgreSqlType.XML
+        geometryDataType != null -> PostgreSqlType.GEOMETRY
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )

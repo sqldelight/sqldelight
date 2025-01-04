@@ -24,6 +24,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
   JSON(STRING),
   TSVECTOR(STRING),
   XML(STRING),
+  GEOMETRY(STRING),
   ;
 
   override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
@@ -36,7 +37,6 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         columnIndex,
         value,
       )
-
       NUMERIC -> CodeBlock.of("bindBigDecimal(%L, %L)\n", columnIndex, value)
       JSON, TSVECTOR -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
@@ -45,6 +45,12 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         MemberName(ClassName("java.sql", "Types"), "OTHER"),
       )
       XML -> CodeBlock.of(
+        "bindObject(%L, %L, %M)\n",
+        columnIndex,
+        value,
+        MemberName(ClassName("java.sql", "Types"), "SQLXML"),
+      )
+      GEOMETRY -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,
         value,
@@ -61,7 +67,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         BIG_INT -> "$cursorName.getLong($columnIndex)"
         DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-        JSON, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
+        JSON, TSVECTOR, XML, GEOMETRY -> "$cursorName.getString($columnIndex)"
       },
       javaType,
     )
