@@ -15,8 +15,8 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
-import net.postgis.jdbc.geometry.binary.BinaryParser
 import net.postgis.jdbc.geometry.Point
+import net.postgis.jdbc.geometry.binary.BinaryParser
 import net.postgis.jdbc.geometry.binary.BinaryWriter
 import org.junit.After
 import org.junit.Assert
@@ -67,13 +67,13 @@ class PostgreSqlTest {
       pointAdapter = object : ColumnAdapter<Point, String> {
         override fun encode(value: Point) = BinaryWriter().writeHexed(value)
         override fun decode(databaseValue: String) = BinaryParser().parse(databaseValue) as Point
-      }
+      },
     ),
   )
 
   @Before fun before() {
     driver.execute(null, "SET timezone TO UTC", 0)
-    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS postgis;", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS postgis", 0)
     MyDatabase.Schema.create(driver)
   }
 
