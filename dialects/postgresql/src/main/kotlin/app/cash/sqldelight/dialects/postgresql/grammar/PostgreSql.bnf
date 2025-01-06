@@ -172,6 +172,10 @@ type_name ::= (
   json_data_type |
   blob_data_type |
   tsvector_data_type |
+  tstzrange |
+  tsrange |
+  tsmultirange |
+  tstzmultirange |
   xml_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
@@ -184,8 +188,12 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
 }
+
+constraint_exclude_operators ::= '&&' | '='
+
 table_constraint ::= [ CONSTRAINT {identifier} ] (
   ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  'EXCLUDE' USING index_method LP <<expr '-1'>> WITH constraint_exclude_operators ( COMMA <<expr '-1'>> WITH constraint_exclude_operators ) * RP [ WHERE LP <<expr '-1'>> RP ] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -256,6 +264,14 @@ timestamp_expression ::= 'TIMESTAMP' [ (WITH | WITHOUT) 'TIME' 'ZONE' ] {string_
 date_expression ::= 'DATE' {string_literal}
 
 time_expression ::= 'TIME' {string_literal}
+
+tsrange ::= 'TSRANGE'
+
+tstzrange ::= 'TSTZRANGE'
+
+tsmultirange ::= 'TSMULTIRANGE'
+
+tstzmultirange ::= 'TSTZMULTIRANGE'
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
@@ -438,7 +454,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -485,29 +501,42 @@ boolean_not_expression ::= NOT (boolean_literal | {column_name})
 
 boolean_literal ::= TRUE | FALSE
 
+jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
+jsonb_binary_operator ::= '#-'
+jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+
 json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
-jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
-jsonb_binary_operator ::= '#-'
-jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
-contains_operator ::= '@>' | '<@' | '&&'
-match_operator ::= '@@'
 
-contains_operator_expression ::= ( {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
+contains_operator ::= '@>' | '<@'
+match_operator ::= '@@'
+overlaps_operator ::= '&&'
+range_boolean_operator ::= '<<' | '>>' | '&>' | '&<' | '-|-'
+regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
+
+contains_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ContainsOperatorExpressionMixin"
   pin = 2
 }
 
-match_operator_expression ::= ( {function_expr} | {column_expr} ) match_operator <<expr '-1'>> {
+match_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) match_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.MatchOperatorExpressionMixin"
   pin = 2
 }
 
-regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
+overlaps_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) overlaps_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.OverlapsOperatorExpressionMixin"
+  pin = 2
+}
 
-regex_match_operator_expression ::= ( {function_expr} | {column_expr} ) regex_match_operator <<expr '-1'>> {
+range_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) range_boolean_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RangeOperatorExpressionMixin"
+  pin = 2
+}
+
+regex_match_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) regex_match_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RegExMatchOperatorExpressionMixin"
   pin = 2
 }

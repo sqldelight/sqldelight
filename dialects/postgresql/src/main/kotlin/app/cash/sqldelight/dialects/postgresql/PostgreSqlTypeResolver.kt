@@ -77,6 +77,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         tsvectorDataType != null -> PostgreSqlType.TSVECTOR
+        tsrange != null -> PostgreSqlType.TSRANGE
+        tstzrange != null -> PostgreSqlType.TSTZRANGE
+        tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
+        tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
@@ -133,6 +137,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "lower", "upper" -> {
+      val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
+      when (exprType.dialectType) {
+        PostgreSqlType.TSRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP).nullableIf(exprType.javaType.isNullable)
+        PostgreSqlType.TSTZRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE).nullableIf(exprType.javaType.isNullable)
+        else -> exprType
+      }
+    }
     "sum" -> {
       val type = resolvedType(exprList.single())
       when (type.dialectType) {
@@ -196,6 +208,19 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "rank", "dense_rank", "row_number" -> IntermediateType(INTEGER)
     "ntile" -> IntermediateType(INTEGER).asNullable()
     "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "isempty", "lower_inc", "upper_inc", "lower_inf", "upper_inf" -> IntermediateType(BOOLEAN)
+    "range_merge" -> encapsulatingTypePreferringKotlin(exprList, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE, PostgreSqlType.TSMULTIRANGE, PostgreSqlType.TSTZRANGE)
+    "tsrange" -> IntermediateType(PostgreSqlType.TSRANGE)
+    "tstzrange" -> IntermediateType(PostgreSqlType.TSTZRANGE)
+    "tsmultirange" -> IntermediateType(PostgreSqlType.TSMULTIRANGE)
+    "tstzmultirange" -> IntermediateType(PostgreSqlType.TSTZMULTIRANGE)
+    "range_agg" -> {
+      when (resolvedType(exprList[0]).dialectType) {
+        PostgreSqlType.TSRANGE, PostgreSqlType.TSMULTIRANGE -> IntermediateType(PostgreSqlType.TSMULTIRANGE)
+        PostgreSqlType.TSTZRANGE, PostgreSqlType.TSTZMULTIRANGE -> IntermediateType(PostgreSqlType.TSTZMULTIRANGE)
+        else -> error("type not supported for range_agg, use TSRANGE, TSMULTIRANGE, TSTZRANGE, TSTZMULTIRANGE")
+      }
+    }
     else -> null
   }
 
@@ -270,7 +295,6 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           PostgreSqlType.NUMERIC,
           TEXT,
           BLOB,
-          BOOLEAN,
           DATE,
           PostgreSqlType.UUID,
           PostgreSqlType.INTERVAL,
@@ -279,6 +303,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           PostgreSqlType.TIME,
           PostgreSqlType.JSON,
           PostgreSqlType.TSVECTOR,
+          PostgreSqlType.TSRANGE,
+          PostgreSqlType.TSTZRANGE,
+          PostgreSqlType.TSMULTIRANGE,
+          PostgreSqlType.TSTZMULTIRANGE,
+          BOOLEAN,
         )
       }
     }
@@ -313,7 +342,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           IntermediateType(PostgreSqlType.JSON)
         }
       }
-      matchOperatorExpression != null || regexMatchOperatorExpression != null || containsOperatorExpression != null || booleanNotExpression != null -> {
+      rangeOperatorExpression != null -> {
+        IntermediateType(BOOLEAN)
+      }
+      matchOperatorExpression != null ||
+        regexMatchOperatorExpression != null ||
+        booleanNotExpression != null ||
+        containsOperatorExpression != null ||
+        overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
       atTimeZoneOperatorExpression != null -> {

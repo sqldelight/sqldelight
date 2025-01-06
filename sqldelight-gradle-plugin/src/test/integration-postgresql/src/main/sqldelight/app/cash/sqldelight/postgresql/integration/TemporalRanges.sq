@@ -1,0 +1,28 @@
+CREATE TABLE Appointment(
+  slot TSTZRANGE NOT NULL CHECK( date_part('minute', LOWER(slot)) IN (0, 30) AND date_part('minute', UPPER(slot)) IN (0, 30)),
+  duration INT NOT NULL GENERATED ALWAYS AS ( EXTRACT (epoch FROM UPPER(slot) - LOWER(slot)) / 60 ) STORED CHECK(duration IN (30, 60, 90, 120)),
+  EXCLUDE USING GIST(slot WITH &&)
+);
+
+appointments:
+SELECT LOWER(slot) AS begin, UPPER(slot) AS end, duration
+FROM Appointment;
+
+insert:
+INSERT INTO Appointment (slot) VALUES(?);
+
+selectAvailableAppointments:
+SELECT tstzmultirange(?::tstzmultirange) - range_agg(slot) AS availability
+FROM Appointment
+WHERE slot && tstzrange(?::tstzrange);
+
+selectAppointmentContainsRange:
+SELECT slot <@ tstzrange(CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '2 day') AS isContained
+FROM Appointment;
+
+selectMultiRangeContainsTimestamp:
+SELECT tstzmultirange(
+  tstzrange(CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '2 day' ),
+  tstzrange(CURRENT_TIMESTAMP + INTERVAL '3 day' , CURRENT_TIMESTAMP + INTERVAL '6 day'))
+  @> CURRENT_TIMESTAMP + INTERVAL '1 day';
+
