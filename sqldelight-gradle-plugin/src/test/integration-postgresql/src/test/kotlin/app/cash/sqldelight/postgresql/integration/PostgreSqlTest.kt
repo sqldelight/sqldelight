@@ -1123,7 +1123,7 @@ class PostgreSqlTest {
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
       assertThat(first().point.x).isEqualTo(-74.0060)
-      assertThat(first().point.y).isEqualTo(-40.7128)
+      assertThat(first().point.y).isEqualTo(40.7128)
     }
   }
 }
