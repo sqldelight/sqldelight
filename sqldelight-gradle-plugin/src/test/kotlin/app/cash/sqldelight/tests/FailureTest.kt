@@ -18,7 +18,7 @@ class FailureTest {
     assertThat(output.output).contains("Compiling with dialect app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect")
     assertThat(output.output).contains(
       """
-      |NoPackage.sq: (1, 0): SqlDelight files must be placed in a package directory.
+      |NoPackage.sq:1:0 SqlDelight files must be placed in a package directory.
       |1    CREATE TABLE test (
       |2      value TEXT
       |3    );
@@ -37,7 +37,7 @@ class FailureTest {
 
     assertThat(output.output).contains(
       """
-      |Test1.sq: (2, 7): <type name real> expected, got 'BIGINT'
+      |Test1.sq:2:7 <type name real> expected, got 'BIGINT'
       |1    CREATE TABLE test1(
       |2    	value	BIGINT
       |     	     	^^^^^^

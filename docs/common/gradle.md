@@ -36,6 +36,12 @@ Container for databases. Configures SQLDelight to create each database with the 
 Type: `Property<Boolean>`
 
 For native targets. Whether sqlite should be automatically linked.
+This adds the necessary metadata for linking sqlite when the project is compiled to a dynamic framework (which is the default in recent versions of KMP).
+
+Note that for a static framework, this flag has no effect.
+The XCode build that imports the project should add `-lsqlite3` to the linker flags.
+Alternatively [add a project dependency](https://kotlinlang.org/docs/native-cocoapods-libraries.html) on the [sqlite3](https://cocoapods.org/pods/sqlite3) pod via the cocoapods plugin.
+Another option that may work is adding `sqlite3` to the cocoapods [`spec.libraries` setting](https://guides.cocoapods.org/syntax/podspec.html#libraries) e.g. in Gradle Kotlin DSL: `extraSpecAttributes["libraries"] = "'c++', 'sqlite3'".`
 
 Defaults to `true`.
 
