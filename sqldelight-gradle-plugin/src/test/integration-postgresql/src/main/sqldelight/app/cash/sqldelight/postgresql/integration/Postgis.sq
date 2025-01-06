@@ -1,20 +1,22 @@
+import net.postgis.jdbc.geometry.Point;
+
 -- 4326 is the SRID for WGS 84
 CREATE TABLE locations (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255),
-  location GEOMETRY(Point, 4326)
+  name VARCHAR(255) NOT NULL,
+  point GEOMETRY(Point, 4326) AS Point NOT NULL
 );
 
 insert:
-INSERT INTO locations (name, location)
+INSERT INTO locations (name, point)
 VALUES ('New York', ST_SetSRID(ST_MakePoint(-74.0060, 40.7128), 4326));
 
 select:
 SELECT *
 FROM locations;
 
-selectLocation:
-SELECT location
+selectPoints:
+SELECT point
 FROM locations;
 
 --selectLocationByDistance:

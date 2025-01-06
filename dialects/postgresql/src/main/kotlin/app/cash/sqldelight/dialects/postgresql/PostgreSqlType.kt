@@ -32,6 +32,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
       SMALL_INT -> CodeBlock.of("bindShort(%L, %L)\n", columnIndex, value)
       INTEGER -> CodeBlock.of("bindInt(%L, %L)\n", columnIndex, value)
       BIG_INT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
+      GEOMETRY -> CodeBlock.of("bindString(%L, %L)\n", columnIndex, value)
       DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> CodeBlock.of(
         "bindObject(%L, %L)\n",
         columnIndex,
@@ -45,12 +46,6 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         MemberName(ClassName("java.sql", "Types"), "OTHER"),
       )
       XML -> CodeBlock.of(
-        "bindObject(%L, %L, %M)\n",
-        columnIndex,
-        value,
-        MemberName(ClassName("java.sql", "Types"), "SQLXML"),
-      )
-      GEOMETRY -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,
         value,

@@ -15,6 +15,9 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import net.postgis.jdbc.geometry.binary.BinaryParser
+import net.postgis.jdbc.geometry.Point
+import net.postgis.jdbc.geometry.binary.BinaryWriter
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -59,6 +62,12 @@ class PostgreSqlTest {
           return databaseValue.toInstant(ZoneOffset.UTC)
         }
       },
+    ),
+    locationsAdapter = Locations.Adapter(
+      pointAdapter = object : ColumnAdapter<Point, String> {
+        override fun encode(value: Point) = BinaryWriter().writeHexed(value)
+        override fun decode(databaseValue: String) = BinaryParser().parse(databaseValue) as Point
+      }
     ),
   )
 
@@ -1108,10 +1117,12 @@ class PostgreSqlTest {
 
   @Test
   fun testInsertPostgis() {
-    assertThat("a").isEqualTo("b")
     database.postgisQueries.insert()
+
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point.x).isEqualTo(-74.0060)
+      assertThat(first().point.y).isEqualTo(-40.7128)
     }
   }
 }
