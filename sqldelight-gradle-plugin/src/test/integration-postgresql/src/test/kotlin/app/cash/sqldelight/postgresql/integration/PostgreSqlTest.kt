@@ -24,7 +24,7 @@ import org.junit.Before
 import org.junit.Test
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
+  val conn = DriverManager.getConnection("jdbc:tc:postgis:latest:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -73,6 +73,7 @@ class PostgreSqlTest {
 
   @Before fun before() {
     driver.execute(null, "SET timezone TO UTC", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS postgis;", 0)
     MyDatabase.Schema.create(driver)
   }
 
