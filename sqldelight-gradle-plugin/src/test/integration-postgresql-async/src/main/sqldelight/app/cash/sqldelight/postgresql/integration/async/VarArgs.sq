@@ -1,0 +1,11 @@
+CREATE TABLE varArgs(
+  a INTEGER
+);
+
+insert:
+INSERT INTO varArgs (a) VALUES (?);
+
+select:
+SELECT *
+FROM varArgs
+WHERE a IN ?;
