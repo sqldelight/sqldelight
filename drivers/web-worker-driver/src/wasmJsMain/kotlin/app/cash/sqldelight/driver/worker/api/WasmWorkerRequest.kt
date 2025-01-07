@@ -3,10 +3,10 @@ package app.cash.sqldelight.driver.worker.api
 /**
  * Messages sent by the SQLDelight driver to the worker.
  */
-internal external interface WorkerRequest {
+internal external interface WasmWorkerRequest : JsAny {
   /**
    * A unique identifier used to identify responses to this message
-   * @see WorkerResponse.id
+   * @see WasmWorkerResponse.id
    */
   var id: Int
 
@@ -24,5 +24,5 @@ internal external interface WorkerRequest {
   /**
    * SQL parameters to bind to the given [sql]
    */
-  var params: Array<Any?>?
+  var params: JsArray<JsAny?>?
 }
