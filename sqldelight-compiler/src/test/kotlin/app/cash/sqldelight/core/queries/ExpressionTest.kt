@@ -239,6 +239,142 @@ class ExpressionTest {
     assertThat(query.resultColumns.single().javaType).isEqualTo(LONG)
   }
 
+  @Test fun `aggregate function not referencing a row returns a nullable type for other columns if there's no group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       COUNT(*)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG.copy(nullable = true),
+      LONG,
+    ).inOrder()
+  }
+
+  @Test fun `aggregate function not referencing a row returns a non null type for other non null columns if there's a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       COUNT(*)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      LONG,
+    ).inOrder()
+  }
+
+  @Test fun `aggregate function not referencing a row returns a nullable type for other nullable columns if there's a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       COUNT(*)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG.copy(nullable = true),
+      LONG,
+    ).inOrder()
+  }
+
+  @Test fun `aggregate function referencing a row returns a nullable type for other non null columns if there's no group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       MAX(id)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG.copy(nullable = true),
+      LONG.copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `aggregate function referencing a row returns a non nullable type for other non null columns if there's a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       MAX(id)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      LONG,
+    ).inOrder()
+  }
+
+  @Test fun `aggregate function referencing a row returns a nullable type for other nullable columns if there's a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       MAX(id)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG.copy(nullable = true),
+      LONG,
+    ).inOrder()
+  }
+
   @Test fun `instr function returns nullable int if any of the args are null`() {
     val file = FixtureCompiler.parseSql(
       """
