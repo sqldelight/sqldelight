@@ -1,0 +1,90 @@
+plugins {
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
+  alias(libs.plugins.atomicfu)
+}
+
+archivesBaseName = 'sqldelight-androidx-sqlite-driver'
+
+kotlin {
+  // there is only tier 1 support for androidx.sqlite:sqlite-bundled
+  // https://maven.google.com/web/index.html?q=bundled#androidx.sqlite
+  androidTarget()
+  jvm()
+  linuxX64()
+  linuxArm64()
+  macosX64()
+  macosArm64()
+  iosSimulatorArm64()
+  iosArm64()
+  iosX64()
+
+  sourceSets {
+    commonMain {
+      dependencies {
+        api projects.runtime
+        api libs.androidx.sqlite
+
+        implementation libs.cache4k
+      }
+    }
+    commonTest {
+      dependencies {
+        implementation libs.kotlin.test
+        implementation libs.testhelp
+        implementation projects.drivers.driverTest
+      }
+    }
+
+    androidUnitTest {
+      dependencies {
+        implementation libs.junit
+        implementation libs.androidx.test.core
+        implementation libs.robolectric
+        implementation libs.androidx.sqliteFramework
+      }
+    }
+
+    jvmTest {
+      dependencies {
+        implementation libs.androidx.sqliteBundled
+      }
+    }
+
+    nativeTest {
+      dependencies {
+        implementation libs.androidx.sqliteBundled
+      }
+    }
+  }
+}
+
+android {
+  compileSdk libs.versions.compileSdk.get() as int
+  namespace = "app.cash.sqldelight.driver.androidx.sqlite"
+
+  lint {
+    textReport true
+    textOutput file("$reportsDir/lint-results.txt")
+  }
+
+  defaultConfig {
+    minSdk libs.versions.minSdk.get() as int
+  }
+
+  buildFeatures {
+    buildConfig = false
+  }
+
+  testOptions  {
+    unitTests {
+      includeAndroidResources = true
+    }
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
