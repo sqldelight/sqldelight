@@ -300,6 +300,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     is PostgreSqlAtTimeZoneOperator -> IntermediateType(TEXT)
     is PostgreSqlExtensionExpr -> when {
+      jsonFunctionStmt != null -> IntermediateType(PostgreSqlType.JSON)
+
       arrayAggStmt != null -> {
         val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
         arrayIntermediateType(typeForArray)

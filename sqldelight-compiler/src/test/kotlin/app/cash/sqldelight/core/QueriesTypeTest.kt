@@ -954,6 +954,47 @@ class QueriesTypeTest {
     )
   }
 
+  @Test fun `SQL keywords are escaped when used with insert object column names`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE Examples (
+      |  id TEXT NOT NULL PRIMARY KEY,
+      |  `index` INTEGER NOT NULL
+      |);
+      |
+      |insertObject:
+      |INSERT INTO Examples VALUES ?;
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/TestQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+        package com.example
+
+        import app.cash.sqldelight.TransacterImpl
+        import app.cash.sqldelight.db.SqlDriver
+
+        public class TestQueries(
+          driver: SqlDriver,
+        ) : TransacterImpl(driver) {
+          public fun insertObject(Examples: Examples) {
+            driver.execute(-1_876_170_987, ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
+                  bindString(0, Examples.id)
+                  bindLong(1, Examples.index)
+                }
+            notifyQueries(-1_876_170_987) { emit ->
+              emit("Examples")
+            }
+          }
+        }
+
+      """.trimIndent(),
+    )
+  }
+
   @Test fun `pragma statement returns results`() {
     val result = FixtureCompiler.compileSql(
       """

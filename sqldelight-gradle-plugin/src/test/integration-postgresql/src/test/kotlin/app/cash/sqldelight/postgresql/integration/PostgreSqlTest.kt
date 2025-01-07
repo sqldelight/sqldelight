@@ -841,6 +841,17 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testSelectJsonFuncs() {
+    database.jsonQueries.insertJsonFunc(1, "a")
+    with(database.jsonQueries.selectJsonFunc(1).executeAsOne()) {
+      assertThat(expr).isEqualTo("""{"id":1,"t":"a"}""")
+      assertThat(to_json).isEqualTo(""""a"""")
+      assertThat(expr_).isEqualTo("""{"t": "a", "id": 1}""")
+      assertThat(expr__).isEqualTo("""{"id":1,"t":"a"}""")
+    }
+  }
+
+  @Test
   fun testUpdateSetFromId() {
     database.updatesQueries.insertTest(31)
     database.updatesQueries.insertTest2("X")

@@ -190,7 +190,7 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
               separator = ", ",
               prefix = "${parent!!.tableName.node.text} (",
               postfix = ")",
-            ) { it.name },
+            ) { it.node.text },
           ),
         )
       }
