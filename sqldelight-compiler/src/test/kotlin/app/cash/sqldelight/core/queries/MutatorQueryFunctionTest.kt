@@ -39,8 +39,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(customTextValue: kotlin.String?) {
-      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(customTextValue: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
@@ -49,6 +52,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -75,8 +79,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Long?, value_: kotlin.collections.List?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(id: kotlin.Long?, value_: kotlin.collections.List?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -86,6 +93,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -112,11 +120,15 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData() {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM data""${'"'}, 0)
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteData(): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM data""${'"'}, 0)
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -143,8 +155,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(data_: com.example.Data_) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(data_: com.example.Data_): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -154,6 +169,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -181,8 +197,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |  driver.execute(null, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(null, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
@@ -193,6 +212,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(380_313_360) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -219,8 +239,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(nullAsUnknownGenerator.function().toString()).isEqualTo(
       """
-      |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?) {
-      |  driver.execute(${nullAsUnknownUpdate.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun updateData(newValue: kotlin.collections.List?, oldValue: kotlin.collections.List?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${nullAsUnknownUpdate.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE value = ?
@@ -231,6 +254,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(380_313_360) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -257,8 +281,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(data_: com.example.Data_) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(data_: com.example.Data_): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -268,6 +295,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -294,8 +322,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(data_: com.example.Data_) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(data_: com.example.Data_): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
@@ -304,6 +335,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -330,8 +362,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Long?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(id: kotlin.Long?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
@@ -340,6 +375,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -367,9 +403,12 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun updateData(value_: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>) {
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun updateData(value_: kotlin.collections.List?, id: kotlin.collections.Collection<kotlin.Long>): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
       |  val idIndexes = createArguments(count = id.size)
-      |  driver.execute(null, ""${'"'}
+      |  val result = driver.execute(null, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id IN ${"$"}idIndexes
@@ -382,6 +421,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -410,8 +450,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun updateWithInnerSelect(some_column: kotlin.Long?) {
-      |  driver.execute(${update.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun updateWithInnerSelect(some_column: kotlin.Long?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${update.id.withUnderscores}, ""${'"'}
       |      |UPDATE some_table
       |      |SET some_column = (
       |      |  SELECT CASE WHEN ? IS NULL THEN some_column ELSE ? END
@@ -424,6 +467,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("some_table")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -457,13 +501,16 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(mutator)
     assertThat(generator.function().toString()).isEqualTo(
       """
+      |/**
+      | * @return The number of rows updated.
+      | */
       |public fun update(
       |  a: kotlin.String?,
       |  b: kotlin.String?,
       |  c: kotlin.collections.List<kotlin.String>?,
       |  d: kotlin.collections.List<kotlin.String>?,
-      |) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE paymentHistoryConfig
       |      |SET a = ?,
       |      |    b = ?,
@@ -478,6 +525,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(-1_559_802_298) { emit ->
       |    emit("paymentHistoryConfig")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -508,13 +556,16 @@ class MutatorQueryFunctionTest {
     val generator = MutatorQueryGenerator(mutator)
     assertThat(generator.function().toString()).isEqualTo(
       """
+      |/**
+      | * @return The number of rows updated.
+      | */
       |public fun update(
       |  a: kotlin.String?,
       |  b: kotlin.String?,
       |  c: kotlin.collections.List<kotlin.String>?,
       |  d: kotlin.collections.List<kotlin.String>?,
-      |) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE paymentHistoryConfig
       |      |SET (a, b, c, d) = (?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 4) {
@@ -526,6 +577,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(-1_559_802_298) { emit ->
       |    emit("paymentHistoryConfig")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -552,8 +604,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertNullableType(nullableTypes: com.example.NullableTypes) {
-      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertNullableType(nullableTypes: com.example.NullableTypes): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO nullableTypes (val1, val2)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -563,6 +618,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(-871_418_479) { emit ->
       |    emit("nullableTypes")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -591,12 +647,15 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
+      |/**
+      | * @return The number of rows updated.
+      | */
       |public fun save(
       |  id: kotlin.String,
       |  name: kotlin.String,
       |  description: kotlin.String,
-      |) {
-      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT OR REPLACE
       |      |INTO category (rowid, id, name, description)
       |      |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
@@ -609,6 +668,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(-368_176_582) { emit ->
       |    emit("category")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -638,8 +698,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-    |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?) {
-    |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
+    |/**
+    | * @return The number of rows updated.
+    | */
+    |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+    |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
     |        val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
     |        bindString(0, id)
     |        bindString(1, data__)
@@ -648,6 +711,7 @@ class MutatorQueryFunctionTest {
     |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
     |    emit("example")
     |  }
+      |  return result
     |}
     |
       """.trimMargin(),
@@ -675,8 +739,11 @@ class MutatorQueryFunctionTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertAnnotation(annotation_: com.example.Annotation_) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertAnnotation(annotation_: com.example.Annotation_): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO annotation (id, name)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -686,6 +753,7 @@ class MutatorQueryFunctionTest {
       |  notifyQueries(1_295_352_605) { emit ->
       |    emit("annotation")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
