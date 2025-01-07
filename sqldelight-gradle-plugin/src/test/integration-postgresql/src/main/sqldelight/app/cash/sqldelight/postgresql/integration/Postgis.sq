@@ -9,7 +9,15 @@ CREATE TABLE locations (
 
 insert:
 INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_MakePoint(-74.0060, 40.7128), 4326));
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:longitude, :latitude), :srid));
+
+--selectWithin:
+--SELECT ST_DWithin(
+--  ST_GeographyFromText('SRID=4326;POINT(13.405 52.52)'),
+--  ST_GeographyFromText('SRID=4326;POINT(19.945 50.0647)'),
+--  :distance,
+--  :spheroid
+--);
 
 select:
 SELECT *
@@ -22,4 +30,4 @@ FROM locations;
 --selectLocationByDistance:
 --SELECT id, name
 --FROM locations
---WHERE ST_DWithin(location::geography, ST_GeographyFromText('SRID=4326;POINT(-74.0060 40.7128)'), 50000);
+--WHERE ST_DWithin(point::geography, ST_GeographyFromText('SRID=4326;POINT(-74.0060 40.7128)'), 50000);

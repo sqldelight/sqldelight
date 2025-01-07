@@ -1117,13 +1117,35 @@ class PostgreSqlTest {
   }
 
   @Test
-  fun testInsertPostgis() {
-    database.postgisQueries.insert()
+  fun testPostgisInsert() {
+    val longitude = -74.0060
+    val latitude = 40.7128
+
+    database.postgisQueries.insert(
+      longitude = longitude,
+      latitude = latitude,
+      srid = 4326,
+    )
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isEqualTo(-74.0060)
-      assertThat(first().point.y).isEqualTo(40.7128)
+      assertThat(first().point.x).isEqualTo(longitude)
+      assertThat(first().point.y).isEqualTo(latitude)
     }
   }
+
+  // @Test
+  // fun testPostgisSelectWithin() {
+  //   val distance = 530200
+  //
+  //   assertThat(database.postgisQueries.selectWithin(
+  //       distance = distance,
+  //       spheroid = true,
+  //   ).executeAsOne()).isFalse(),
+  //
+  //   assertThat(database.postgisQueries.selectWithin(
+  //       distance = distance,
+  //       spheroid = false,
+  //   ).executeAsOne()).isTrue(),
+  // }
 }

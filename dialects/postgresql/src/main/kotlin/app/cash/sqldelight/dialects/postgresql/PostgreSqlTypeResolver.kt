@@ -132,6 +132,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         })
       }
     }
+    "st_makepoint" -> IntermediateType(REAL)
+    "st_setsrid" -> IntermediateType(INTEGER) // This should not be right though since st_setsrid parameters are different.
+    "st_geographyfromtext" -> IntermediateType(TEXT)
+    "st_dwithin" -> error("How can I say 3rd parameter must be of integer, 4th optional and of boolean?")
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "sum" -> {
