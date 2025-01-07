@@ -5,7 +5,7 @@ buildscript {
         strictly '4.4.1'
       }
     }
-    classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.24.0")
+    classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.25.0")
   }
 }
 
