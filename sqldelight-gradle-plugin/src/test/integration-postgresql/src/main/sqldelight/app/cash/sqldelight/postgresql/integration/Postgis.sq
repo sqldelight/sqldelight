@@ -7,17 +7,37 @@ CREATE TABLE locations (
   point GEOMETRY(Point, 4326) AS Point NOT NULL
 );
 
-insert:
+insertMakePoint:
 INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_MakePoint(:longitude, :latitude), :srid));
+VALUES ('New York', ST_MakePoint(:x, :y));
 
---selectWithin:
---SELECT ST_DWithin(
---  ST_GeographyFromText('SRID=4326;POINT(13.405 52.52)'),
---  ST_GeographyFromText('SRID=4326;POINT(19.945 50.0647)'),
---  :distance,
---  :spheroid
---);
+insertMakePointM:
+INSERT INTO locations (name, point)
+VALUES ('New York', ST_SetSRID(ST_MakePointM(:x, :y, :m), :srid));
+
+insertPoint:
+INSERT INTO locations (name, point)
+VALUES ('New York', ST_SetSRID(ST_Point(:x, :y, :srid)));
+
+insertPointZ:
+INSERT INTO locations (name, point)
+VALUES ('New York', ST_SetSRID(ST_PointZ(:x, :y, :z, :srid)));
+
+insertPointM:
+INSERT INTO locations (name, point)
+VALUES ('New York', ST_SetSRID(ST_PointM(:x, :y, :m, :srid)));
+
+insertPointZM:
+INSERT INTO locations (name, point)
+VALUES ('New York', ST_SetSRID(ST_PointZM(:x, :y, :z, :m, :srid)));
+
+selectWithin:
+SELECT ST_DWithin(
+  ST_GeographyFromText('SRID=4326;POINT(13.405 52.52)'),
+  ST_GeographyFromText('SRID=4326;POINT(19.945 50.0647)'),
+  :distanceMeters,
+  :useSpheroid
+);
 
 select:
 SELECT *
@@ -27,7 +47,12 @@ selectPoints:
 SELECT point
 FROM locations;
 
---selectLocationByDistance:
---SELECT id, name
---FROM locations
---WHERE ST_DWithin(point::geography, ST_GeographyFromText('SRID=4326;POINT(-74.0060 40.7128)'), 50000);
+selectLocationByDistance:
+SELECT id, name
+FROM locations
+WHERE ST_DWithin(point::geography, :geometry, :distanceMeters, :useSpheroid);
+
+selectLocationByDistanceHardcoded:
+SELECT id, name
+FROM locations
+WHERE ST_DWithin(point::geography, ST_GeographyFromText('SRID=4326;POINT(-74.0060 40.7128)'), :distanceMeters);

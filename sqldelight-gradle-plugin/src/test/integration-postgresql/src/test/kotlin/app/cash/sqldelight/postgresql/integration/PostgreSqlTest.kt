@@ -1128,35 +1128,140 @@ class PostgreSqlTest {
   }
 
   @Test
-  fun testPostgisInsert() {
-    val longitude = -74.0060
-    val latitude = 40.7128
+  fun testPostgisInsertMakePoint() {
+    val x = -74.0060
+    val y = 40.7128
 
-    database.postgisQueries.insert(
-      longitude = longitude,
-      latitude = latitude,
-      srid = 4326,
-    )
+    database.postgisQueries.insertMakePoint(x = x, y = y)
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isEqualTo(longitude)
-      assertThat(first().point.y).isEqualTo(latitude)
+      assertThat(first().point.x).isEqualTo(x)
+      assertThat(first().point.y).isEqualTo(y)
+      assertThat(first().point.m).isEqualTo(0.0)
+      assertThat(first().point.z).isEqualTo(0.0)
+    }
+
+    with(database.postgisQueries.selectLocationByDistanceHardcoded(distanceMeters = 0.0).executeAsList()) {
+      assertThat(size).isEqualTo(1)
+    }
+
+    val point = database.postgisQueries.selectPoints.executeAsList().first()
+
+    with(database.postgisQueries.selectLocationByDistance(
+      geometry = point,
+      distanceMeters = 0.0,
+      useSpheroid = true,
+    ).executeAsList()) {
+      assertThat(size).isEqualTo(1)
     }
   }
 
-  // @Test
-  // fun testPostgisSelectWithin() {
-  //   val distance = 530200
-  //
-  //   assertThat(database.postgisQueries.selectWithin(
-  //       distance = distance,
-  //       spheroid = true,
-  //   ).executeAsOne()).isFalse(),
-  //
-  //   assertThat(database.postgisQueries.selectWithin(
-  //       distance = distance,
-  //       spheroid = false,
-  //   ).executeAsOne()).isTrue(),
-  // }
+  @Test
+  fun testPostgisInsertMakePointM() {
+    val x = -74.0060
+    val y = 40.7128
+    val m = 3.0
+
+    database.postgisQueries.insertMakePointM(x = x, y = y, m = m)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point.x).isEqualTo(x)
+      assertThat(first().point.y).isEqualTo(y)
+      assertThat(first().point.m).isEqualTo(m)
+      assertThat(first().point.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPoint() {
+    val x = -74.0060
+    val y = 40.7128
+
+    database.postgisQueries.insertPoint(x = x, y = y, srid = 4326)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point.x).isEqualTo(x)
+      assertThat(first().point.y).isEqualTo(y)
+      assertThat(first().point.m).isEqualTo(0.0)
+      assertThat(first().point.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointZ() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 3.0
+
+    database.postgisQueries.insertPointZ(x = x, y = y, z = z, srid = 4326)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point.x).isEqualTo(x)
+      assertThat(first().point.y).isEqualTo(y)
+      assertThat(first().point.m).isEqualTo(0.0)
+      assertThat(first().point.z).isEqualTo(z)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointM() {
+    val x = -74.0060
+    val y = 40.7128
+    val m = 3.0
+
+    database.postgisQueries.insertPointM(x = x, y = y, m = m, srid = 4326)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point.x).isEqualTo(x)
+      assertThat(first().point.y).isEqualTo(y)
+      assertThat(first().point.m).isEqualTo(m)
+      assertThat(first().point.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointZM() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 3.0
+    val m = 0.2
+
+    database.postgisQueries.insertPointZM(x = x, y = y, z = z, m = m, srid = 4326)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point.x).isEqualTo(x)
+      assertThat(first().point.y).isEqualTo(y)
+      assertThat(first().point.m).isEqualTo(m)
+      assertThat(first().point.z).isEqualTo(z)
+    }
+  }
+
+  @Test
+  fun testPostgisSelectWithin() {
+    assertThat(database.postgisQueries.selectWithin(
+      distanceMeters = 530100.0,
+      useSpheroid = false,
+    ).executeAsOne()).isFalse(),
+
+    assertThat(database.postgisQueries.selectWithin(
+      distanceMeters = 530200.0,
+      useSpheroid = false,
+    ).executeAsOne()).isTrue(),
+
+    assertThat(database.postgisQueries.selectWithin(
+      distanceMeters = 531400.0,
+      useSpheroid = true,
+    ).executeAsOne()).isFalse(),
+
+    assertThat(database.postgisQueries.selectWithin(
+      distanceMeters = 531500.0,
+      useSpheroid = true,
+    ).executeAsOne()).isTrue(),
+  }
 }
