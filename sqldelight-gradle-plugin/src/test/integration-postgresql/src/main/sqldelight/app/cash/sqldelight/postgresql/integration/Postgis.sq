@@ -4,32 +4,43 @@ import net.postgis.jdbc.geometry.Point;
 CREATE TABLE locations (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  point GEOMETRY(Point, 4326) AS Point NOT NULL
+  point GEOMETRY(Point, 4326) AS Point,
+  pointM GEOMETRY(PointM, 4326) AS Point,
+  pointZ GEOMETRY(PointZ, 4326) AS Point,
+  pointZM GEOMETRY(PointZM, 4326) AS Point
 );
 
 insertMakePoint:
 INSERT INTO locations (name, point)
-VALUES ('New York', ST_MakePoint(:x::REAL, :y::REAL));
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::REAL, :y::REAL), :srid::INTEGER));
 
 insertMakePointM:
-INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_FORCE2D(ST_MakePointM(:x::REAL, :y::REAL, :m::REAL)), :srid::INTEGER));
+INSERT INTO locations (name, pointM)
+VALUES ('New York', ST_SetSRID(ST_MakePointM(:x::REAL, :y::REAL, :m::REAL), :srid::INTEGER));
+
+insertMakePointZ:
+INSERT INTO locations (name, pointZ)
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::REAL, :y::REAL, :z::REAL), :srid::INTEGER));
+
+insertMakePointZM:
+INSERT INTO locations (name, pointZM)
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::REAL, :y::REAL, :z::REAL, :m::REAL), :srid::INTEGER));
 
 insertPoint:
 INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_Point(:x::REAL, :y::REAL), :srid::INTEGER));
-
-insertPointZ:
-INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_FORCE2D(ST_PointZ(:x::REAL, :y::REAL, :z::REAL)), :srid::INTEGER));
+VALUES ('New York', ST_Point(:x::REAL, :y::REAL, :srid::INTEGER));
 
 insertPointM:
-INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_FORCE2D(ST_PointM(:x::REAL, :y::REAL, :m::REAL)), :srid::INTEGER));
+INSERT INTO locations (name, pointM)
+VALUES ('New York', ST_PointM(:x::REAL, :y::REAL, :m::REAL, :srid::INTEGER));
+
+insertPointZ:
+INSERT INTO locations (name, pointZ)
+VALUES ('New York', ST_PointZ(:x::REAL, :y::REAL, :z::REAL, :srid::INTEGER));
 
 insertPointZM:
-INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_FORCE2D(ST_PointZM(:x::REAL, :y::REAL, :z::REAL, :m::REAL)), :srid::INTEGER));
+INSERT INTO locations (name, pointZM)
+VALUES ('New York', ST_PointZM(:x::REAL, :y::REAL, :z::REAL, :m::REAL, :srid::INTEGER));
 
 selectWithin:
 SELECT ST_DWithin(
@@ -43,9 +54,15 @@ select:
 SELECT *
 FROM locations;
 
+selectSingleForce2d:
+SELECT ST_FORCE2D(pointZM)
+FROM locations
+LIMIT 1;
+
 selectPoints:
 SELECT point
-FROM locations;
+FROM locations
+WHERE point IS NOT NULL;
 
 selectLocationByDistance:
 SELECT id, name

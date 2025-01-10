@@ -251,9 +251,9 @@ tsvector_data_type ::= 'TSVECTOR'
 
 xml_data_type ::= 'XML'
 
-geometry_data_type ::= 'GEOMETRY' [ LP 'Point' COMMA {signed_number} RP ]
+geometry_data_type ::= 'GEOMETRY' [ LP ( 'Point' | 'PointM' | 'PointZ' | 'PointZM' ) COMMA {signed_number} RP ]
 
-geography_data_type ::= 'GEOGRAPHY' [ LP 'Point' COMMA {signed_number} RP ]
+geography_data_type ::= 'GEOGRAPHY' [ LP ( 'Point' | 'PointM' | 'PointZ' | 'PointZM' ) COMMA {signed_number} RP ]
 
 interval_expression ::= 'INTERVAL' {string_literal}
 

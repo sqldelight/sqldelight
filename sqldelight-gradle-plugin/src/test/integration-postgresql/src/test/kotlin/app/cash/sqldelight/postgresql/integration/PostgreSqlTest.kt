@@ -32,6 +32,12 @@ class PostgreSqlTest {
     override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
     override fun notifyListeners(vararg queryKeys: String) = Unit
   }
+
+  private val pointAdapter = object : ColumnAdapter<Point, String> {
+    override fun encode(value: Point) = BinaryWriter().writeHexed(value)
+    override fun decode(databaseValue: String) = BinaryParser().parse(databaseValue) as Point
+  }
+
   val database = MyDatabase(
     driver,
     arraysAdapter = Arrays.Adapter(
@@ -64,10 +70,10 @@ class PostgreSqlTest {
       },
     ),
     locationsAdapter = Locations.Adapter(
-      pointAdapter = object : ColumnAdapter<Point, String> {
-        override fun encode(value: Point) = BinaryWriter().writeHexed(value)
-        override fun decode(databaseValue: String) = BinaryParser().parse(databaseValue) as Point
-      },
+      pointAdapter = pointAdapter,
+      pointMAdapter = pointAdapter,
+      pointZAdapter = pointAdapter,
+      pointZMAdapter = pointAdapter,
     ),
   )
 
@@ -1131,15 +1137,17 @@ class PostgreSqlTest {
   fun testPostgisInsertMakePoint() {
     val x = -74.0060
     val y = 40.7128
+    val srid = 4326
 
-    database.postgisQueries.insertMakePoint(x = x, y = y)
+    database.postgisQueries.insertMakePoint(x = x, y = y, srid = srid)
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isWithin(1.0e-5).of(x)
-      assertThat(first().point.y).isWithin(1.0e-5).of(y)
-      assertThat(first().point.m).isEqualTo(0.0)
-      assertThat(first().point.z).isEqualTo(0.0)
+      assertThat(first().point?.srid).isEqualTo(srid)
+      assertThat(first().point?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().point?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().point?.m).isEqualTo(0.0)
+      assertThat(first().point?.z).isEqualTo(0.0)
     }
 
     with(database.postgisQueries.selectLocationByDistanceHardcoded(distanceMeters = 0.0).executeAsList()) {
@@ -1150,7 +1158,7 @@ class PostgreSqlTest {
 
     with(
       database.postgisQueries.selectLocationByDistance(
-        geometry = point.toString(),
+        geometry = pointAdapter.encode(point),
         distanceMeters = 0.0,
         useSpheroid = true,
       ).executeAsList(),
@@ -1164,15 +1172,56 @@ class PostgreSqlTest {
     val x = -74.0060
     val y = 40.7128
     val m = 3.0
+    val srid = 4326
 
-    database.postgisQueries.insertMakePointM(x = x, y = y, m = m, srid = 4326)
+    database.postgisQueries.insertMakePointM(x = x, y = y, m = m, srid = srid)
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isWithin(1.0e-5).of(x)
-      assertThat(first().point.y).isWithin(1.0e-5).of(y)
-      assertThat(first().point.m).isEqualTo(0.0)
-      assertThat(first().point.z).isEqualTo(0.0)
+      assertThat(first().pointM?.srid).isEqualTo(srid)
+      assertThat(first().pointM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointM?.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertMakePointZ() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 50.0
+    val srid = 4326
+
+    database.postgisQueries.insertMakePointZ(x = x, y = y, z = z, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZ?.srid).isEqualTo(srid)
+      assertThat(first().pointZ?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZ?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZ?.m).isEqualTo(0.0)
+      assertThat(first().pointZ?.z).isWithin(1.0e-5).of(z)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertMakePointZM() {
+    val x = -74.0060
+    val y = 40.7128
+    val m = 3.0
+    val z = 50.0
+    val srid = 4326
+
+    database.postgisQueries.insertMakePointZM(x = x, y = y, z = z, m = m, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZM?.srid).isEqualTo(srid)
+      assertThat(first().pointZM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointZM?.z).isWithin(1.0e-5).of(z)
     }
   }
 
@@ -1180,32 +1229,17 @@ class PostgreSqlTest {
   fun testPostgisInsertPoint() {
     val x = -74.0060
     val y = 40.7128
+    val srid = 4326
 
-    database.postgisQueries.insertPoint(x = x, y = y, srid = 4326)
-
-    with(database.postgisQueries.select().executeAsList()) {
-      assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isWithin(1.0e-5).of(x)
-      assertThat(first().point.y).isWithin(1.0e-5).of(y)
-      assertThat(first().point.m).isEqualTo(0.0)
-      assertThat(first().point.z).isEqualTo(0.0)
-    }
-  }
-
-  @Test
-  fun testPostgisInsertPointZ() {
-    val x = -74.0060
-    val y = 40.7128
-    val z = 3.0
-
-    database.postgisQueries.insertPointZ(x = x, y = y, z = z, srid = 4326)
+    database.postgisQueries.insertPoint(x = x, y = y, srid = srid)
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isWithin(1.0e-5).of(x)
-      assertThat(first().point.y).isWithin(1.0e-5).of(y)
-      assertThat(first().point.m).isEqualTo(0.0)
-      assertThat(first().point.z).isEqualTo(0.0)
+      assertThat(first().point?.srid).isEqualTo(4326)
+      assertThat(first().point?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().point?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().point?.m).isEqualTo(0.0)
+      assertThat(first().point?.z).isEqualTo(0.0)
     }
   }
 
@@ -1214,15 +1248,36 @@ class PostgreSqlTest {
     val x = -74.0060
     val y = 40.7128
     val m = 3.0
+    val srid = 4326
 
-    database.postgisQueries.insertPointM(x = x, y = y, m = m, srid = 4326)
+    database.postgisQueries.insertPointM(x = x, y = y, m = m, srid = srid)
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isWithin(1.0e-5).of(x)
-      assertThat(first().point.y).isWithin(1.0e-5).of(y)
-      assertThat(first().point.m).isEqualTo(0.0)
-      assertThat(first().point.z).isEqualTo(0.0)
+      assertThat(first().pointM?.srid).isEqualTo(4326)
+      assertThat(first().pointM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointM?.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointZ() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 3.0
+    val srid = 4326
+
+    database.postgisQueries.insertPointZ(x = x, y = y, z = z, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZ?.srid).isEqualTo(4326)
+      assertThat(first().pointZ?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZ?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZ?.m).isEqualTo(0.0)
+      assertThat(first().pointZ?.z).isWithin(1.0e-5).of(z)
     }
   }
 
@@ -1232,15 +1287,26 @@ class PostgreSqlTest {
     val y = 40.7128
     val z = 3.0
     val m = 0.2
+    val srid = 4326
 
-    database.postgisQueries.insertPointZM(x = x, y = y, z = z, m = m, srid = 4326)
+    database.postgisQueries.insertPointZM(x = x, y = y, z = z, m = m, srid = srid)
 
     with(database.postgisQueries.select().executeAsList()) {
       assertThat(first().name).isEqualTo("New York")
-      assertThat(first().point.x).isWithin(1.0e-5).of(x)
-      assertThat(first().point.y).isWithin(1.0e-5).of(y)
-      assertThat(first().point.m).isEqualTo(0.0)
-      assertThat(first().point.z).isEqualTo(0.0)
+      assertThat(first().pointZM?.srid).isEqualTo(4326)
+      assertThat(first().pointZM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointZM?.z).isWithin(1.0e-5).of(z)
+    }
+
+    with(database.postgisQueries.selectSingleForce2d().executeAsOne()) {
+      assertThat(srid).isEqualTo(4326)
+      assertThat(x).isWithin(1.0e-5).of(x)
+      assertThat(y).isWithin(1.0e-5).of(y)
+      // https://postgis.net/docs/ST_Force2D.html supports 3d and will not drop the z-index.
+      assertThat(m).isWithin(1.0e-5).of(m)
+      assertThat(z).isWithin(1.0e-5).of(z)
     }
   }
 
