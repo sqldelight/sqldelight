@@ -1151,7 +1151,7 @@ class PostgreSqlTest {
     }
 
     with(database.postgisQueries.selectLocationByDistanceHardcoded(distanceMeters = 0.0).executeAsList()) {
-      assertThat(size).isEqualTo(0)
+      assertThat(size).isEqualTo(1)
     }
 
     val point = database.postgisQueries.selectPoints().executeAsList().first()

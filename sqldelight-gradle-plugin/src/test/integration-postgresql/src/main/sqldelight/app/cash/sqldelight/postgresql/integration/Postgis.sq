@@ -12,35 +12,35 @@ CREATE TABLE locations (
 
 insertMakePoint:
 INSERT INTO locations (name, point)
-VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::REAL, :y::REAL), :srid::INTEGER));
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::FLOAT, :y::FLOAT), :srid::INTEGER));
 
 insertMakePointM:
 INSERT INTO locations (name, pointM)
-VALUES ('New York', ST_SetSRID(ST_MakePointM(:x::REAL, :y::REAL, :m::REAL), :srid::INTEGER));
+VALUES ('New York', ST_SetSRID(ST_MakePointM(:x::FLOAT, :y::FLOAT, :m::FLOAT), :srid::INTEGER));
 
 insertMakePointZ:
 INSERT INTO locations (name, pointZ)
-VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::REAL, :y::REAL, :z::REAL), :srid::INTEGER));
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::FLOAT, :y::FLOAT, :z::FLOAT), :srid::INTEGER));
 
 insertMakePointZM:
 INSERT INTO locations (name, pointZM)
-VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::REAL, :y::REAL, :z::REAL, :m::REAL), :srid::INTEGER));
+VALUES ('New York', ST_SetSRID(ST_MakePoint(:x::FLOAT, :y::FLOAT, :z::FLOAT, :m::FLOAT), :srid::INTEGER));
 
 insertPoint:
 INSERT INTO locations (name, point)
-VALUES ('New York', ST_Point(:x::REAL, :y::REAL, :srid::INTEGER));
+VALUES ('New York', ST_Point(:x::FLOAT, :y::FLOAT, :srid::INTEGER));
 
 insertPointM:
 INSERT INTO locations (name, pointM)
-VALUES ('New York', ST_PointM(:x::REAL, :y::REAL, :m::REAL, :srid::INTEGER));
+VALUES ('New York', ST_PointM(:x::FLOAT, :y::FLOAT, :m::FLOAT, :srid::INTEGER));
 
 insertPointZ:
 INSERT INTO locations (name, pointZ)
-VALUES ('New York', ST_PointZ(:x::REAL, :y::REAL, :z::REAL, :srid::INTEGER));
+VALUES ('New York', ST_PointZ(:x::FLOAT, :y::FLOAT, :z::FLOAT, :srid::INTEGER));
 
 insertPointZM:
 INSERT INTO locations (name, pointZM)
-VALUES ('New York', ST_PointZM(:x::REAL, :y::REAL, :z::REAL, :m::REAL, :srid::INTEGER));
+VALUES ('New York', ST_PointZM(:x::FLOAT, :y::FLOAT, :z::FLOAT, :m::FLOAT, :srid::INTEGER));
 
 selectWithin:
 SELECT ST_DWithin(
