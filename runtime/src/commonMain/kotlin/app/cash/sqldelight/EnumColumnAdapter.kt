@@ -15,11 +15,21 @@
  */
 package app.cash.sqldelight
 
+import kotlin.enums.EnumEntries
+import kotlin.enums.enumEntries
+
 /** A [ColumnAdapter] which maps the enum class `T` to a string in the database. */
 class EnumColumnAdapter<T : Enum<T>> @PublishedApi internal constructor(
-  private val enumValues: Array<out T>,
+  private val enumEntries: EnumEntries<out T>,
 ) : ColumnAdapter<T, String> {
-  override fun decode(databaseValue: String): T = enumValues.first { it.name == databaseValue }
+  override fun decode(databaseValue: String): T {
+    for (i in enumEntries.indices) {
+      val entry = enumEntries[i]
+      if (entry.name == databaseValue) return entry
+    }
+
+    throw NoSuchElementException("Collection contains no element matching the predicate.")
+  }
 
   override fun encode(value: T) = value.name
 }
@@ -27,5 +37,5 @@ class EnumColumnAdapter<T : Enum<T>> @PublishedApi internal constructor(
 /** A [ColumnAdapter] which maps the enum class `T` to a string in the database. */
 @Suppress("FunctionName") // Emulating a constructor.
 inline fun <reified T : Enum<T>> EnumColumnAdapter(): EnumColumnAdapter<T> {
-  return EnumColumnAdapter(enumValues())
+  return EnumColumnAdapter(enumEntries<T>())
 }
