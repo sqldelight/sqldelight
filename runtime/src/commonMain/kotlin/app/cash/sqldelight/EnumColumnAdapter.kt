@@ -22,7 +22,14 @@ import kotlin.enums.enumEntries
 class EnumColumnAdapter<T : Enum<T>> @PublishedApi internal constructor(
   private val enumEntries: EnumEntries<out T>,
 ) : ColumnAdapter<T, String> {
-  override fun decode(databaseValue: String): T = enumEntries.first { it.name == databaseValue }
+  override fun decode(databaseValue: String): T {
+    for (i in enumEntries.indices) {
+      val entry = enumEntries[i]
+      if (entry.name == databaseValue) return entry
+    }
+
+    throw NoSuchElementException("Collection contains no element matching the predicate.")
+  }
 
   override fun encode(value: T) = value.name
 }
