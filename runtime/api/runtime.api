@@ -12,7 +12,7 @@ public abstract interface class app/cash/sqldelight/ColumnAdapter {
 }
 
 public final class app/cash/sqldelight/EnumColumnAdapter : app/cash/sqldelight/ColumnAdapter {
-	public fun <init> ([Ljava/lang/Enum;)V
+	public fun <init> (Lkotlin/enums/EnumEntries;)V
 	public synthetic fun decode (Ljava/lang/Object;)Ljava/lang/Object;
 	public fun decode (Ljava/lang/String;)Ljava/lang/Enum;
 	public fun encode (Ljava/lang/Enum;)Ljava/lang/String;
