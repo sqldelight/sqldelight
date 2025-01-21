@@ -18,7 +18,7 @@ jobs:
         os: [macOS-14, windows-latest, ubuntu-latest]
 
     runs-on: ${{matrix.os}}
-    if: github.repository == 'cashapp/sqldelight'
+    if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
 
@@ -59,7 +59,7 @@ jobs:
 
   publish_plugin:
     runs-on: ubuntu-latest
-    if: github.repository == 'cashapp/sqldelight'
+    if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
     needs: publish_archives
@@ -94,7 +94,7 @@ jobs:
 
   publish_npm_packages:
     runs-on: ubuntu-latest
-    if: github.repository == 'cashapp/sqldelight'
+    if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
 
