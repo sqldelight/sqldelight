@@ -40,6 +40,16 @@ abstract class QueryGenerator(
   protected val generateAsync = query.statement.sqFile().generateAsync
 
   /**
+   * Whether the mutator should return a value to the caller.
+   *
+   * Mutators (`INSERT`, `UPDATE`, `DELETE`) typically return the number of rows modified.
+   * However, when combined with something like a `RETURNING` clause, we treat mutators as a query.
+   * SQLDelight also support mutators with multiple expressions (think trying to make your own `UPSERT`).
+   * These types of mutators do not return a value.
+   */
+  protected val mutatorReturns = query.statement !is SqlDelightStmtClojureStmtList
+
+  /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
    * arguments to it. This code block does not make any use of class fields, and only populates a
    * single variable [STATEMENT_NAME]
@@ -301,7 +311,7 @@ abstract class QueryGenerator(
         statementId,
         *arguments.toTypedArray(),
       )
-    } else if (optimisticLock != null) {
+    } else if (optimisticLock != null || mutatorReturns) {
       result.addStatement(
         "val result = $DRIVER_NAME.execute(%L, %P, %L)$binder",
         statementId,
