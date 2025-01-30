@@ -272,18 +272,18 @@ class JdbcPreparedStatement(
   }
 
   fun bindDate(index: Int, date: java.sql.Date?) {
-    preparedStatement.setDate(index, date)
+    preparedStatement.setDate(index + 1, date)
   }
 
   fun bindTime(index: Int, date: java.sql.Time?) {
-    preparedStatement.setTime(index, date)
+    preparedStatement.setTime(index + 1, date)
   }
 
   fun bindTimestamp(index: Int, timestamp: java.sql.Timestamp?, calendar: java.util.Calendar? = null) {
     if (calendar == null) {
-      preparedStatement.setTimestamp(index, timestamp)
+      preparedStatement.setTimestamp(index + 1, timestamp)
     } else {
-      preparedStatement.setTimestamp(index, timestamp, calendar)
+      preparedStatement.setTimestamp(index + 1, timestamp, calendar)
     }
   }
 
