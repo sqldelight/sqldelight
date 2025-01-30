@@ -283,6 +283,10 @@ class JdbcPreparedStatement(
     preparedStatement.setTimestamp(index, timestamp)
   }
 
+  fun bindTimestamp(index: Int, timestamp: java.sql.Timestamp?, calendar: java.util.Calendar) {
+    preparedStatement.setTimestamp(index, timestamp, calendar)
+  }
+
   fun <R> executeQuery(mapper: (SqlCursor) -> R): R {
     try {
       return preparedStatement.executeQuery()
