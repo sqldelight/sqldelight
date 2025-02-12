@@ -176,8 +176,11 @@ class AsyncQueriesTypeTest {
       |    )
       |  }
       |
-      |  public suspend fun insertData(id: Long?, value_: List?) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public suspend fun insertData(id: Long?, value_: List?): Long {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
@@ -187,6 +190,7 @@ class AsyncQueriesTypeTest {
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
+      |    return result
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
