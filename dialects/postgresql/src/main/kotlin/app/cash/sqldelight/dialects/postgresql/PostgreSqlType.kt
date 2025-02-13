@@ -18,7 +18,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
   TIME(ClassName("java.time", "LocalTime")),
   TIMESTAMP(ClassName("java.time", "LocalDateTime")),
   TIMESTAMP_TIMEZONE(ClassName("java.time", "OffsetDateTime")),
-  INTERVAL(ClassName("org.postgresql.util", "PGInterval")),
+  INTERVAL(STRING),
   UUID(ClassName("java.util", "UUID")),
   NUMERIC(ClassName("java.math", "BigDecimal")),
   JSON(STRING),
@@ -31,14 +31,14 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
       SMALL_INT -> CodeBlock.of("bindShort(%L, %L)\n", columnIndex, value)
       INTEGER -> CodeBlock.of("bindInt(%L, %L)\n", columnIndex, value)
       BIG_INT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
-      DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> CodeBlock.of(
+      DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> CodeBlock.of(
         "bindObject(%L, %L)\n",
         columnIndex,
         value,
       )
 
       NUMERIC -> CodeBlock.of("bindBigDecimal(%L, %L)\n", columnIndex, value)
-      JSON, TSVECTOR -> CodeBlock.of(
+      INTERVAL, JSON, TSVECTOR -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,
         value,
@@ -59,9 +59,9 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         SMALL_INT -> "$cursorName.getShort($columnIndex)"
         INTEGER -> "$cursorName.getInt($columnIndex)"
         BIG_INT -> "$cursorName.getLong($columnIndex)"
-        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject<%T>($columnIndex)"
+        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-        JSON, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
+        JSON, INTERVAL, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
       },
       javaType,
     )
