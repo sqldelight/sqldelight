@@ -86,4 +86,15 @@ interface SqlDriver : Closeable {
   fun removeListener(vararg queryKeys: String, listener: Query.Listener)
 
   fun notifyListeners(vararg queryKeys: String)
+
+  fun createArguments(count: Int): String {
+    if (count == 0) return "()"
+    return buildString(count * 2 + 1) {
+      append("(?")
+      repeat(count - 1) {
+        append(",?")
+      }
+      append(')')
+    }
+  }
 }
