@@ -38,8 +38,9 @@ internal class RecordingObserver(val numberOfColumns: Int) : DisposableObserver<
   override fun onNext(value: Query<*>) {
     val allRows = value.execute { cursor ->
       val data = mutableListOf<List<String?>>()
-      while (cursor.next().value)
+      while (cursor.next().value) {
         data.add((0 until numberOfColumns).map(cursor::getString))
+      }
       QueryResult.Value(data)
     }.value
     events.add(allRows)

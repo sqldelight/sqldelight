@@ -58,10 +58,11 @@ internal class SqlDelightInspectionSuppressor : InspectionSuppressor {
     } ?: return false
 
     val matcher = commentPattern.matcher(comment.text)
-    return matcher.matches() && SuppressionUtil.isInspectionToolIdMentioned(
-      matcher.group(1),
-      toolId,
-    )
+    return matcher.matches() &&
+      SuppressionUtil.isInspectionToolIdMentioned(
+        matcher.group(1),
+        toolId,
+      )
   }
 
   override fun getSuppressActions(element: PsiElement?, toolId: String): Array<SuppressQuickFix> {

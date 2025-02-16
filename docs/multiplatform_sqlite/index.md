@@ -9,16 +9,16 @@ Each target platform has its own driver implementation.
 
 === "Kotlin"
     ```kotlin
-    kotlin { 
+    kotlin {
       sourceSets.androidMain.dependencies {
         implementation("app.cash.sqldelight:android-driver:{{ versions.sqldelight }}")
       }
-    
+
       // or iosMain, windowsMain, etc.
       sourceSets.nativeMain.dependencies {
         implementation("app.cash.sqldelight:native-driver:{{ versions.sqldelight }}")
       }
-    
+
       sourceSets.jvmMain.dependencies {
         implementation("app.cash.sqldelight:sqlite-driver:{{ versions.sqldelight }}")
       }
@@ -26,16 +26,16 @@ Each target platform has its own driver implementation.
     ```
 === "Groovy"
     ```groovy
-    kotlin { 
+    kotlin {
       sourceSets.androidMain.dependencies {
         implementation "app.cash.sqldelight:android-driver:{{ versions.sqldelight }}"
       }
-    
+
       // or iosMain, windowsMain, etc.
       sourceSets.nativeMain.dependencies {
         implementation "app.cash.sqldelight:native-driver:{{ versions.sqldelight }}"
       }
-    
+
       sourceSets.jvmMain.dependencies {
         implementation "app.cash.sqldelight:sqlite-driver:{{ versions.sqldelight }}"
       }
@@ -44,7 +44,7 @@ Each target platform has its own driver implementation.
 
 ## Constructing Driver Instances
 
-Create a common factory class or method to obtain a `SqlDriver` instance. 
+Create a common factory class or method to obtain a `SqlDriver` instance.
 
 ```kotlin title="src/commonMain/kotlin"
 import com.example.Database
@@ -67,7 +67,7 @@ Then implement this for each target platform:
     ```kotlin
     actual class DriverFactory(private val context: Context) {
       actual fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(Database.Schema, context, "test.db") 
+        return AndroidSqliteDriver(Database.Schema, context, "test.db")
       }
     }
     ```
@@ -83,8 +83,7 @@ Then implement this for each target platform:
     ```kotlin
     actual class DriverFactory {
       actual fun createDriver(): SqlDriver {
-        val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-        Database.Schema.create(driver)
+        val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:test.db", Properties(), Database.Schema)
         return driver
       }
     }

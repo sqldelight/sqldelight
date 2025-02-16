@@ -83,7 +83,8 @@ internal abstract class ColumnTypeMixin(
     }.singleOrNull() // Foreign Key
       ?.columnNameList?.singleOrNull() // Foreign Column
 
-    (tableForeignKeyClause ?: columnConstraint)?.reference?.resolve()?.let { resolvedKey -> // Resolved Column
+    (tableForeignKeyClause ?: columnConstraint)?.reference?.resolve()?.let { resolvedKey ->
+      // Resolved Column
       val dialectType = resolvedKey.asSafely<SqlColumnName>() // Column Name
         ?.parent?.asSafely<SqlColumnDef>() // Column Definition
         ?.columnType?.asSafely<ColumnTypeMixin>() // Column type

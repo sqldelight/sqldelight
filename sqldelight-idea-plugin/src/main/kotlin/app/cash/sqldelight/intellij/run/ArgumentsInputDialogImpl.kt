@@ -18,7 +18,8 @@ internal interface ArgumentsInputDialog {
 internal class ArgumentsInputDialogImpl(
   project: Project,
   private val parameters: List<SqlParameter>,
-) : DialogWrapper(project), ArgumentsInputDialog {
+) : DialogWrapper(project),
+  ArgumentsInputDialog {
 
   init {
     init()

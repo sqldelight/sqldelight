@@ -4,7 +4,9 @@ import com.alecstrong.sql.psi.core.psi.SqlBindParameter
 import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
 import com.intellij.lang.ASTNode
 
-abstract class BindParameterMixin(node: ASTNode) : SqlCompositeElementImpl(node), SqlBindParameter {
+abstract class BindParameterMixin(node: ASTNode) :
+  SqlCompositeElementImpl(node),
+  SqlBindParameter {
   /**
    * Overwrite, if the user provided sql parameter should be overwritten by sqldelight with [replaceWith].
    *

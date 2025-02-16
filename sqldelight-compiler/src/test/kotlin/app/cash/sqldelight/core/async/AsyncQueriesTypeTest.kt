@@ -80,7 +80,8 @@ class AsyncQueriesTypeTest {
       |  driver: SqlDriver,
       |  data_Adapter: Data_.Adapter,
       |  otherAdapter: Other.Adapter,
-      |) : SuspendingTransacterImpl(driver), TestDatabase {
+      |) : SuspendingTransacterImpl(driver),
+      |    TestDatabase {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
