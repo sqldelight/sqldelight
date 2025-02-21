@@ -33,8 +33,11 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Long {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -44,6 +47,7 @@ class AsyncMutatorQueryTypeTest {
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -77,8 +81,11 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Long {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -88,6 +95,7 @@ class AsyncMutatorQueryTypeTest {
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -127,8 +135,11 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public suspend fun insertData(id: kotlin.Int?, value_: kotlin.collections.List<kotlin.String>?): kotlin.Long {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
@@ -138,6 +149,7 @@ class AsyncMutatorQueryTypeTest {
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
