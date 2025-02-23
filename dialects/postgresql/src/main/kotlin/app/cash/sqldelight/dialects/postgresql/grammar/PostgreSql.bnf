@@ -453,6 +453,41 @@ join_operator ::= ( COMMA [ lateral ]
   override = true
 }
 
+unnest_table_function ::= 'unnest' {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.TableFunctionNameMixin"
+  implements = [
+         "com.alecstrong.sql.psi.core.psi.NamedElement";
+         "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+       ]
+}
+
+table_function_column_alias ::= ID | STRING {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.TableFunctionColumnAliasMixin"
+  implements = [
+       "com.alecstrong.sql.psi.core.psi.NamedElement";
+       "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+     ]
+}
+
+table_function_table_alias ::= ID | STRING {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.TableFunctionTableAliasMixin"
+  implements = [
+       "com.alecstrong.sql.psi.core.psi.NamedElement";
+       "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+     ]
+}
+
+table_function_alias_name ::= table_function_table_alias [ LP table_function_column_alias ( COMMA table_function_column_alias ) * RP ]
+
+table_or_subquery ::= ( unnest_table_function LP <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP [ AS table_function_alias_name ]
+                      | [ {database_name} DOT ] {table_name} [ [ AS ] {table_alias} ] [ INDEXED BY {index_name} | NOT INDEXED ]
+                      | LP ( {table_or_subquery} ( COMMA {table_or_subquery} ) * | {join_clause} ) RP
+                      | LP {compound_select_stmt} RP [ [ AS ] {table_alias} ] ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.TableOrSubqueryMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery"
+  override = true
+}
+
 join_clause ::= {table_or_subquery} ( {join_operator} {table_or_subquery} [ {join_constraint} ] ) * {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.SqlJoinClauseMixin"
   override = true
