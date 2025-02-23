@@ -196,6 +196,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "rank", "dense_rank", "row_number" -> IntermediateType(INTEGER)
     "ntile" -> IntermediateType(INTEGER).asNullable()
     "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "unnest" -> unNestType(exprList[0].postgreSqlType())
     else -> null
   }
 
@@ -366,18 +367,26 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
 
     private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
-        object : DialectType {
-          override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
-          override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
-            CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
-          override fun cursorGetter(columnIndex: Int, cursorName: String) =
-            CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
-        },
+        ArrayDialectType(type),
       )
     }
 
     private fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
+    }
+
+    // ArrayDialectType stores the original IntermediateType as parameterizedType so that the type can be returned by unnested
+    private class ArrayDialectType(val parameterizedType: IntermediateType) : DialectType {
+      override val javaType = Array::class.asTypeName().parameterizedBy(parameterizedType.javaType)
+      override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
+        CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+      override fun cursorGetter(columnIndex: Int, cursorName: String) =
+        CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
+    }
+
+    // assumes that arrayIntermediateType is ArrayDialectType
+    private fun unNestType(arrayIntermediateType: IntermediateType): IntermediateType {
+      return (arrayIntermediateType.dialectType as ArrayDialectType).parameterizedType
     }
   }
 }
