@@ -1116,4 +1116,54 @@ class PostgreSqlTest {
       assertThat(first().total_sales).isEqualTo(BigDecimal("1000.50"))
     }
   }
+
+  @Test
+  fun testUnnestSelect() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(76, 12, 18))
+    with(database.unnestQueries.selectHeadcount().executeAsList()) {
+      assertThat(first().headcount).isEqualTo(76)
+    }
+  }
+
+  @Test
+  fun testUnnestSelectFrom() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(6, 12, 18))
+    with(database.unnestQueries.selectBusinesses().executeAsList()) {
+      assertThat(first().name).isEqualTo("Ok Burger")
+      assertThat(first().zipcode).isEqualTo("A12345")
+      assertThat(first().headcount).isEqualTo(6)
+    }
+    with(database.unnestQueries.selectLocation("AB5522").executeAsList()) {
+      assertThat(first().name).isEqualTo("Ok Burger")
+    }
+  }
+
+  @Test
+  fun testUnnestInsertSelect() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Aaaa")
+      assertThat(first().age).isEqualTo(32)
+    }
+  }
+
+  @Test
+  fun testUnnestUpdate() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    database.unnestQueries.updateUsersAge(arrayOf("Aaaa"), arrayOf(39))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Aaaa")
+      assertThat(first().age).isEqualTo(39)
+    }
+  }
+
+  @Test
+  fun testUnnestDelete() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    database.unnestQueries.deleteUsers(arrayOf("Aaaa"), arrayOf(32))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Bbbb")
+      assertThat(first().age).isEqualTo(21)
+    }
+  }
 }
