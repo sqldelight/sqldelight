@@ -10,7 +10,8 @@ import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 
-internal enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
+enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
+  BIT(STRING),
   SMALL_INT(SHORT),
   INTEGER(INT),
   BIG_INT(LONG),
@@ -28,6 +29,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
 
   override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
     return when (this) {
+      BIT -> CodeBlock.of("bindString(%L, %L)\n", columnIndex, value)
       SMALL_INT -> CodeBlock.of("bindShort(%L, %L)\n", columnIndex, value)
       INTEGER -> CodeBlock.of("bindInt(%L, %L)\n", columnIndex, value)
       BIG_INT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
@@ -61,7 +63,7 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         BIG_INT -> "$cursorName.getLong($columnIndex)"
         DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-        JSON, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
+        BIT, JSON, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
       },
       javaType,
     )
