@@ -157,6 +157,7 @@ default_constraint ::= [ NOT NULL | NULL ] DEFAULT (
 }
 
 type_name ::= (
+  bit_data_type |
   small_int_data_type |
   int_data_type |
   big_int_data_type |
@@ -222,6 +223,7 @@ generated_clause ::= GENERATED ( (ALWAYS AS LP <<expr '-1'>> RP 'STORED') | ( (A
   override = true
 }
 
+bit_data_type ::= 'BIT' [ LP {signed_number} RP ]
 small_int_data_type ::= 'SMALLINT' | 'INT2'
 int_data_type ::= 'INTEGER' | 'INT' | 'INT4'
 big_int_data_type ::= 'BIGINT' | 'INT8'
