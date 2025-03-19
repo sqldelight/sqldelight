@@ -46,3 +46,11 @@ WHERE (name, age) IN (
   SELECT *
   FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS u(name, age)
 );
+
+selectBusinessExists:
+SELECT *
+FROM Business
+WHERE EXISTS (
+   SELECT 1
+   FROM UNNEST(Business.zipcodes) AS location(zipcode)
+   WHERE LOWER(location.zipcode) LIKE '%' || LOWER(?) || '%');

@@ -1143,4 +1143,13 @@ class PostgreSqlTest {
       assertThat(first()).isTrue()
     }
   }
+
+  @Test
+  fun testUnnestWhere() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(6, 12, 18))
+    database.unnestQueries.insertBusiness("Donut Hut", arrayOf("N12345", "QB7536", "P31879"), arrayOf(6, 12, 18))
+    with(database.unnestQueries.selectBusinessExists("P31879").executeAsList()) {
+      assertThat(first().name).isEqualTo("Donut Hut")
+    }
+  }
 }
