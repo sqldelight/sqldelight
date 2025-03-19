@@ -42,3 +42,7 @@ WHERE EXISTS (
    SELECT 1
    FROM UNNEST(U.aa) AS r(a)
    WHERE LOWER(r.a) LIKE '%' || LOWER('a') || '%');
+
+SELECT DISTINCT b.*
+FROM U b
+JOIN LATERAL UNNEST(b.aa) AS r(a) ON r.a ILIKE '%' || 'a' || '%';
