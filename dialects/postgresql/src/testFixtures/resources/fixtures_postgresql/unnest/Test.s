@@ -35,3 +35,10 @@ WHERE (a, b) IN (
   SELECT *
   FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS d(a, b)
 );
+
+SELECT *
+FROM U
+WHERE EXISTS (
+   SELECT 1
+   FROM UNNEST(U.aa) AS r(a)
+   WHERE LOWER(r.a) LIKE '%' || LOWER('a') || '%');
