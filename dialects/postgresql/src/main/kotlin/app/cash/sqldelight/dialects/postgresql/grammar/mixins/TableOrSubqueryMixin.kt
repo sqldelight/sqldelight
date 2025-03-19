@@ -101,7 +101,7 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode) :
         // In a JOIN, tables mentioned earlier are available to later parts
         val availableTables = parent.tableOrSubqueryList.takeWhile { it != this }
         if (availableTables.isNotEmpty()) {
-          return availableTables.flatMap { it.queryExposed() } + super.queryAvailable(child)
+          return availableTables.flatMap { it.queryExposed() }
         }
       }
 
