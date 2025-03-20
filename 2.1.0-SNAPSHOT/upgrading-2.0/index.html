@@ -4856,7 +4856,7 @@
 
 <h1 id="upgrading-to-20">Upgrading to 2.0<a class="headerlink" href="#upgrading-to-20" title="Permanent link">&para;</a></h1>
 <p>SQLDelight 2.0 makes some breaking changes to the gradle plugin and runtime APIs.</p>
-<p>This page lists those breaking changes and their new 2.0 equivalents. 
+<p>This page lists those breaking changes and their new 2.0 equivalents.
 For a full list of new features and other changes, see the <a href="../changelog">changelog</a>.</p>
 <h2 id="new-package-name-and-artifact-group">New Package Name and Artifact Group<a class="headerlink" href="#new-package-name-and-artifact-group" title="Permanent link">&para;</a></h2>
 <p>All instances of <code>com.squareup.sqldelight</code> need to be replaced with <code>app.cash.sqldelight</code>.</p>
@@ -4868,6 +4868,14 @@ For a full list of new features and other changes, see the <a href="../changelog
 dependencies {
 <span class="gd">-  implementation(&quot;com.squareup.sqldelight:sqlite-driver:2.1.0-SNAPSHOT&quot;)</span>
 <span class="gi">+  implementation(&quot;app.cash.sqldelight:sqlite-driver:2.1.0-SNAPSHOT&quot;)</span>
+}
+
+For pure-Android SqlDelight 1.x projects, use android-driver and coroutine-extensions-jvm:
+dependencies {
+<span class="gd">-  implementation(&quot;com.squareup.sqldelight:android-driver:2.1.0-SNAPSHOT&quot;)</span>
+<span class="gi">+  implementation(&quot;app.cash.sqldelight:android-driver:2.1.0-SNAPSHOT&quot;)</span>
+<span class="gd">-  implementation(&quot;com.squareup.sqldelight:coroutines-extensions:2.1.0-SNAPSHOT&quot;)</span>
+<span class="gi">+  implementation(&quot;app.cash.sqldelight:coroutines-extensions-jvm:2.1.0-SNAPSHOT&quot;)</span>
 }
 </code></pre></div>
 <div class="highlight"><span class="filename">In Code</span><pre><span></span><code><span class="gd">-import com.squareup.sqldelight.db.SqlDriver</span>
@@ -4911,8 +4919,37 @@ dependencies {
 </div>
 </li>
 <li>
-<p>The SQL dialect of your database is now specified using a Gradle dependency.</p>
+<p>The sourceFolders setting has been renamed srcDirs</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kotlin</label><label for="__tabbed_2_2">Groovy</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">create</span><span class="o">(</span><span class="s2">&quot;MyDatabase&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s2">&quot;com.example&quot;</span><span class="o">)</span>
+<span class="w">      </span><span class="n">srcDirs</span><span class="o">.</span><span class="na">setFrom</span><span class="o">(</span><span class="s2">&quot;src/main/sqldelight&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">MyDatabase</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
+<span class="w">      </span><span class="n">srcDirs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s1">&#39;src/main/sqldelight&#39;</span><span class="o">]</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>The SQL dialect of your database is now specified using a Gradle dependency.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Kotlin</label><label for="__tabbed_3_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
@@ -4923,8 +4960,8 @@ dependencies {
 
 <span class="w">      </span><span class="c1">// Version catalogs also work!</span>
 <span class="w">      </span><span class="n">dialect</span><span class="o">(</span><span class="n">libs</span><span class="o">.</span><span class="na">sqldelight</span><span class="o">.</span><span class="na">dialects</span><span class="o">.</span><span class="na">mysql</span><span class="o">)</span>
-<span class="w">    </span><span class="o">}</span><span class="w">  </span>
-<span class="w">  </span><span class="o">}</span><span class="w">  </span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 </div>
@@ -4937,8 +4974,8 @@ dependencies {
 
 <span class="w">      </span><span class="c1">// Version catalogs also work!</span>
 <span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="n">libs</span><span class="o">.</span><span class="na">sqldelight</span><span class="o">.</span><span class="na">dialects</span><span class="o">.</span><span class="na">mysql</span>
-<span class="w">    </span><span class="o">}</span><span class="w">  </span>
-<span class="w">  </span><span class="o">}</span><span class="w">  </span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 </div>
