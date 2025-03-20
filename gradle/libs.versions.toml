@@ -15,6 +15,7 @@ compileSdk = "34"
 minSdk = "21"
 sqlPsi = "0.4.9"
 testContainers = "1.20.2"
+moshi = "1.15.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,8 +43,9 @@ truth = { module = "com.google.truth:truth", version = "1.4.4" }
 turbine = { module = "app.cash.turbine:turbine", version = "1.1.0" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.7.2" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.7.0" }
-moshi = { module = "com.squareup.moshi:moshi", version = "1.15.1" }
-moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version = "1.15.1" }
+
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 
 intellij-core = { module = "com.jetbrains.intellij.platform:core", version.ref = "idea" }
 intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
