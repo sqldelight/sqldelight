@@ -10,7 +10,6 @@ sqldelight {
   databases {
     HockeyDb {
       packageName = "com.example.sqldelight.hockey"
-      dialect("app.cash.sqldelight:sqlite-3-18-dialect")
     }
   }
   linkSqlite = true
