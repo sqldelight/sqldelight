@@ -22,6 +22,18 @@ class NativeDriverTest : DriverTest() {
 
   @Test
   fun canExecuteDriverWithInsertUpdateDeleteUsingReturning() {
+
+    val versionMapper = { cursor: SqlCursor ->
+       cursor.next()
+       QueryResult.Value(cursor.getString(0)!!)
+    }
+
+    val sqliteVersion = driver.executeQuery(-1, "SELECT replace(sqlite_version(), '.', '');", versionMapper, 0).value
+
+    println(sqliteVersion)
+
+    if(sqliteVersion.toInt() < 3350) return
+
     fun insert(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> QueryResult<Unit>) {
       driver.executeQuery(1, "INSERT INTO test VALUES (?, ?) RETURNING id, value;", mapper, 2, binders)
     }
