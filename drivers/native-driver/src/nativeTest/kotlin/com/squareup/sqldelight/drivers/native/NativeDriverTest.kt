@@ -29,8 +29,6 @@ class NativeDriverTest : DriverTest() {
 
     val sqliteVersion = driver.executeQuery(-1, "SELECT replace(sqlite_version(), '.', '');", versionMapper, 0).value
 
-    println(sqliteVersion)
-
     if (sqliteVersion.toInt() < 3350) return
 
     fun insert(binders: SqlPreparedStatement.() -> Unit, mapper: (SqlCursor) -> QueryResult<Unit>) {
