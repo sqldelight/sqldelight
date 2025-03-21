@@ -130,7 +130,6 @@ class ProjectService(val project: Project) :
   }
 
   override fun clearIndex() {
-    fileIndexes?.close()
     fileIndexes = null
   }
 
