@@ -13,7 +13,7 @@ ktlint = "1.3.1"
 agp = "8.9.0"
 compileSdk = "35"
 minSdk = "21"
-sqlPsi = "0.4.9"
+sqlPsi = "0.5.0"
 testContainers = "1.20.6"
 moshi = "1.15.2"
 
@@ -65,8 +65,8 @@ intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.
 intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "idea" }
 intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
 
-sqlPsi = { module = "com.alecstrong.sql.psi:core", version.ref = "sqlPsi" }
-sqlPsiEnvironment = { module = "com.alecstrong.sql.psi:environment", version.ref = "sqlPsi" }
+sqlPsi = { module = "app.cash.sql-psi:core", version.ref = "sqlPsi" }
+sqlPsiEnvironment = { module = "app.cash.sql-psi:environment", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.14.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.10" }
