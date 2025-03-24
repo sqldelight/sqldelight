@@ -128,9 +128,9 @@ overrides ::= type_name
   | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  [ NOT ] NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  [ NOT ] NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   generated_clause |
   default_constraint |
@@ -185,7 +185,7 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   override = true
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP [ {conflict_clause} ] [comment_type] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -481,7 +481,7 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
   pin = 1
 }
 
-boolean_not_expression ::= NOT (boolean_literal | {column_name})
+boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_name} )
 
 boolean_literal ::= TRUE | FALSE
 
