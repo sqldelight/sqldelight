@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.idea.configuration.GRADLE_SYSTEM_ID
 internal class FileIndexMap {
   private val fileIndices = mutableMapOf<String, SqlDelightFileIndex>()
 
-
   operator fun get(module: Module): SqlDelightFileIndex {
     // Check if Gradle needs to be synced
     if (GradleSyncState.getInstance(module.project).isSyncNeeded() != ThreeState.NO) return defaultIndex
