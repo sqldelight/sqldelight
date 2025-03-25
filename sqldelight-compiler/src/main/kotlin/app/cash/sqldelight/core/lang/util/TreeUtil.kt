@@ -237,15 +237,17 @@ private val IntRange.length: Int
 fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
-  return (replacements + rangesToReplace())
+  val x = (replacements + rangesToReplace())
     .sortedBy { it.first.first }
     .map { (range, replacement) -> (range - node.startOffset) to replacement }
-    .fold(
-      0 to text,
-      { (totalRemoved, sqlText), (range, replacement) ->
-        (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      },
-    ).second
+
+  val y = x.fold(
+    0 to text,
+    { (totalRemoved, sqlText), (range, replacement) ->
+      (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
+    },
+  ).second
+  return y
 }
 
 val PsiElement.range: IntRange
