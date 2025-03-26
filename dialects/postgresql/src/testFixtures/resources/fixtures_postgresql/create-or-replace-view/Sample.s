@@ -4,6 +4,4 @@ CREATE TABLE abc (
     c NUMERIC NOT NULL
 );
 
-CREATE VIEW viewabc AS SELECT a, b FROM abc;
-
 CREATE OR REPLACE VIEW viewabc AS SELECT a, b, c FROM abc;
