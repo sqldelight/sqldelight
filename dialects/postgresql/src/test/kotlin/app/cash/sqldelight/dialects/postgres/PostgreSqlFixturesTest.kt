@@ -27,10 +27,32 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
   }
 
   companion object {
+
+    val removeNonCompatibleTriggers = listOf(
+      "create-if-not-exists",
+      "create-or-replace-trigger",
+      "create-trigger-collision",
+      "create-trigger-docic",
+      "create-trigger-docid",
+      "create-trigger-raise",
+      "create-trigger-success",
+      "create-trigger-validation-failures",
+      "timestamp-with-precission",
+      "localtimestamp-with-precission",
+      "localtimestamp-literals",
+      "rowid-triggers",
+      "timestamp-literals",
+      "trigger-migration",
+      "trigger-new-in-expression",
+      "update-view-with-trigger",
+    )
+
     @Suppress("unused")
     // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
     @JvmStatic
-    fun parameters() = PostgresqlTestFixtures.fixtures + ansiFixtures
+    fun parameters() = PostgresqlTestFixtures.fixtures + ansiFixtures.filterNot {
+      it.first() in removeNonCompatibleTriggers
+    }
   }
 }
