@@ -3,7 +3,7 @@ package app.cash.sqldelight.drivers.worker
 import app.cash.sqldelight.SuspendingTransacter
 import app.cash.sqldelight.SuspendingTransacterImpl
 import app.cash.sqldelight.async.coroutines.awaitCreate
-import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -23,7 +23,7 @@ class WebWorkerTransacterTest {
       driver: SqlDriver,
       oldVersion: Long,
       newVersion: Long,
-      vararg callbacks: AfterVersion,
+      vararg callbacks: MigrationCallback,
     ): QueryResult.Value<Unit> = QueryResult.Unit
   }
 

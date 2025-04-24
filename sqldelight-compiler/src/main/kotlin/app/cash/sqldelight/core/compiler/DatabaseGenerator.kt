@@ -17,11 +17,11 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.core.SqlDelightFileIndex
-import app.cash.sqldelight.core.lang.AFTER_VERSION_TYPE
 import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
 import app.cash.sqldelight.core.lang.DATABASE_SCHEMA_TYPE
 import app.cash.sqldelight.core.lang.DRIVER_NAME
 import app.cash.sqldelight.core.lang.DRIVER_TYPE
+import app.cash.sqldelight.core.lang.MIGRATION_CALLBACK_TYPE
 import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_IMPL_TYPE
 import app.cash.sqldelight.core.lang.SUSPENDING_TRANSACTER_TYPE
 import app.cash.sqldelight.core.lang.SqlDelightFile
@@ -290,7 +290,7 @@ internal class DatabaseGenerator(
   private fun migrateImplementation(hasMigrations: Boolean): FunSpec {
     val oldVersion = ParameterSpec.builder("oldVersion", LONG).build()
     val newVersion = ParameterSpec.builder("newVersion", LONG).build()
-    val callbacks = ParameterSpec.builder("callbacks", AFTER_VERSION_TYPE).addModifiers(VARARG).build()
+    val callbacks = ParameterSpec.builder("callbacks", MIGRATION_CALLBACK_TYPE).addModifiers(VARARG).build()
 
     val migrateFunction = FunSpec.builder("migrate")
       .addModifiers(OVERRIDE)
@@ -308,12 +308,13 @@ internal class DatabaseGenerator(
           addCode(
             """var lastVersion = oldVersion
               |
-              |callbacks.filter { it.afterVersion in oldVersion until newVersion }
-              |.sortedBy { it.afterVersion }
+              |callbacks.filter { it.version in oldVersion until newVersion }
+              |.sortedBy { it.version }
               |.forEach { callback ->
-              |  migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)${if (generateAsync) ".await()" else ""}
-              |  callback.block(driver)
-              |  lastVersion = callback.afterVersion + 1
+              |  callback.beforeMigration(driver)
+              |  migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.version + 1)${if (generateAsync) ".await()" else ""}
+              |  callback.afterMigration(driver)
+              |  lastVersion = callback.version + 1
               |}
               |
               |if (lastVersion < newVersion) {

@@ -2,7 +2,7 @@ package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransacterImpl
-import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -54,7 +54,7 @@ abstract class DriverTest {
       driver: SqlDriver,
       oldVersion: Long,
       newVersion: Long,
-      vararg callbacks: AfterVersion,
+      vararg callbacks: MigrationCallback,
     ) = QueryResult.Unit
   }
   private var transacter = AtomicReference<Transacter?>(null)

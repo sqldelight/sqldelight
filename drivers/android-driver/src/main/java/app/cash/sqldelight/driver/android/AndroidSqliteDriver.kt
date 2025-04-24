@@ -16,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteStatement
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -198,7 +198,7 @@ class AndroidSqliteDriver private constructor(
 
   open class Callback(
     private val schema: SqlSchema<QueryResult.Value<Unit>>,
-    private vararg val callbacks: AfterVersion,
+    private vararg val callbacks: MigrationCallback,
   ) : SupportSQLiteOpenHelper.Callback(
     if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
   ) {

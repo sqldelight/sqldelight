@@ -318,16 +318,17 @@ class MigrationTest {
       |      driver: SqlDriver,
       |      oldVersion: Long,
       |      newVersion: Long,
-      |      vararg callbacks: AfterVersion,
+      |      vararg callbacks: MigrationCallback,
       |    ): QueryResult.Value<Unit> {
       |      var lastVersion = oldVersion
       |
-      |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
-      |      .sortedBy { it.afterVersion }
+      |      callbacks.filter { it.version in oldVersion until newVersion }
+      |      .sortedBy { it.version }
       |      .forEach { callback ->
-      |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1)
-      |        callback.block(driver)
-      |        lastVersion = callback.afterVersion + 1
+      |        callback.beforeMigration(driver)
+      |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.version + 1)
+      |        callback.afterMigration(driver)
+      |        lastVersion = callback.version + 1
       |      }
       |
       |      if (lastVersion < newVersion) {

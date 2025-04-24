@@ -41,9 +41,18 @@ interface SqlSchema<T : QueryResult<Unit>> {
   /**
    * Use [driver] to migrate from schema [oldVersion] to [newVersion].
    * Each of the [callbacks] are executed during the migration whenever the upgrade to the version specified by
-   * [AfterVersion.afterVersion] has been completed.
+   * [MigrationCallback.version] has been completed.
    */
-  fun migrate(driver: SqlDriver, oldVersion: Long, newVersion: Long, vararg callbacks: AfterVersion): T
+  fun migrate(driver: SqlDriver, oldVersion: Long, newVersion: Long, vararg callbacks: MigrationCallback): T
+}
+
+/**
+ * API for executing code during a migration, just before and just after [version].
+ */
+interface MigrationCallback {
+  val version: Long
+  fun beforeMigration(driver: SqlDriver) {}
+  fun afterMigration(driver: SqlDriver) {}
 }
 
 /**
@@ -53,4 +62,23 @@ interface SqlSchema<T : QueryResult<Unit>> {
 class AfterVersion(
   val afterVersion: Long,
   val block: (SqlDriver) -> Unit,
-)
+) : MigrationCallback {
+  override val version = afterVersion
+  override fun afterMigration(driver: SqlDriver) {
+    block(driver)
+  }
+}
+
+/**
+ * Represents a block of code [block] that should be executed during a migration before the migration
+ * has started migrating to [beforeVersion].
+ */
+class BeforeVersion(
+  val beforeVersion: Long,
+  val block: (SqlDriver) -> Unit,
+) : MigrationCallback {
+  override val version = beforeVersion
+  override fun beforeMigration(driver: SqlDriver) {
+    block(driver)
+  }
+}

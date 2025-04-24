@@ -56,7 +56,7 @@ class AsyncQueryWrapperTest {
         |package com.example.testmodule
         |
         |import app.cash.sqldelight.SuspendingTransacterImpl
-        |import app.cash.sqldelight.db.AfterVersion
+        |import app.cash.sqldelight.db.MigrationCallback
         |import app.cash.sqldelight.db.QueryResult
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
@@ -113,17 +113,17 @@ class AsyncQueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Long,
         |      newVersion: Long,
-        |      vararg callbacks: AfterVersion,
+        |      vararg callbacks: MigrationCallback,
         |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
         |      var lastVersion = oldVersion
         |
-        |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
-        |      .sortedBy { it.afterVersion }
+        |      callbacks.filter { it.version in oldVersion until newVersion }
+        |      .sortedBy { it.version }
         |      .forEach { callback ->
-        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion +
-        |          1).await()
-        |        callback.block(driver)
-        |        lastVersion = callback.afterVersion + 1
+        |        callback.beforeMigration(driver)
+        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.version + 1).await()
+        |        callback.afterMigration(driver)
+        |        lastVersion = callback.version + 1
         |      }
         |
         |      if (lastVersion < newVersion) {

@@ -18,7 +18,7 @@ internal val VALUE_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("Value")
 internal val ASYNC_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("AsyncValue")
 internal val UNIT_RESULT_TYPE = QUERY_RESULT_TYPE.nestedClass("Unit")
 
-internal val AFTER_VERSION_TYPE = ClassName("app.cash.sqldelight.db", "AfterVersion")
+internal val MIGRATION_CALLBACK_TYPE = ClassName("app.cash.sqldelight.db", "MigrationCallback")
 
 internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
 

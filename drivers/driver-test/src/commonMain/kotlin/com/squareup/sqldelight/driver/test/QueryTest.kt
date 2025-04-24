@@ -1,7 +1,7 @@
 package com.squareup.sqldelight.driver.test
 
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -49,7 +49,7 @@ abstract class QueryTest {
           driver: SqlDriver,
           oldVersion: Long,
           newVersion: Long,
-          vararg callbacks: AfterVersion,
+          vararg callbacks: MigrationCallback,
         ): QueryResult.Value<Unit> {
           // No-op.
           return QueryResult.Unit
