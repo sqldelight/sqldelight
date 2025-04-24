@@ -3,7 +3,6 @@ package com.squareup.sqldelight.logs
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.SuspendingTransacterImpl
 import app.cash.sqldelight.Transacter.Transaction
-import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
