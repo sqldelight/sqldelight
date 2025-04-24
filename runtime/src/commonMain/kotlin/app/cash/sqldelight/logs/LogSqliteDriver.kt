@@ -63,7 +63,7 @@ class LogSqliteDriver(
         }
       }
       is QueryResult.Value<Transacter.Transaction> -> {
-        val transaction = sqlDriver.newTransaction().value.also { it.attachLogHooks() }
+        val transaction = queryResult.value.also { it.attachLogHooks() }
         return QueryResult.Value(transaction)
       }
     }
