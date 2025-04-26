@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.sqldelight)
@@ -15,6 +17,11 @@ sqldelight {
 dependencies {
   implementation libs.postgresJdbc
   implementation libs.testContainers.postgres
+  implementation libs.postgis.geometry
   implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
+}
+
+tasks.withType(Test).configureEach {
+  testLogging.exceptionFormat = TestExceptionFormat.FULL
 }
