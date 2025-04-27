@@ -10,7 +10,7 @@ import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 
-internal enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
+enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
   SMALL_INT(SHORT),
   INTEGER(INT),
   BIG_INT(LONG),
