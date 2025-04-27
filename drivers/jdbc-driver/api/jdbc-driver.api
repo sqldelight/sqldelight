@@ -41,6 +41,7 @@ public abstract class app/cash/sqldelight/driver/jdbc/JdbcDriver : app/cash/sqld
 	public fun beginTransaction (Ljava/sql/Connection;)V
 	public fun close ()V
 	public final fun connectionAndClose ()Lkotlin/Pair;
+	public fun createArguments (I)Ljava/lang/String;
 	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
 	public fun endTransaction (Ljava/sql/Connection;)V
 	public fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
