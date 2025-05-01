@@ -55,7 +55,7 @@ class AsyncQueriesTypeTest {
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.SuspendingTransacterImpl
-      |import app.cash.sqldelight.db.AfterVersion
+      |import app.cash.sqldelight.db.MigrationCallback
       |import app.cash.sqldelight.db.QueryResult
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
@@ -107,7 +107,7 @@ class AsyncQueriesTypeTest {
       |      driver: SqlDriver,
       |      oldVersion: Long,
       |      newVersion: Long,
-      |      vararg callbacks: AfterVersion,
+      |      vararg callbacks: MigrationCallback,
       |    ): QueryResult.AsyncValue<Unit> = QueryResult.AsyncValue {
       |    }
       |  }

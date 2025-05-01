@@ -2,8 +2,8 @@ package app.cash.sqldelight.driver.native
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
-import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.Closeable
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
@@ -118,7 +118,7 @@ class NativeSqliteDriver(
     name: String,
     maxReaderConnections: Int = 1,
     onConfiguration: (DatabaseConfiguration) -> DatabaseConfiguration = { it },
-    vararg callbacks: AfterVersion,
+    vararg callbacks: MigrationCallback,
   ) : this(
     configuration = DatabaseConfiguration(
       name = name,

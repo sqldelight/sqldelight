@@ -3,7 +3,7 @@ package app.cash.sqldelight.drivers.worker
 import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitQuery
-import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.QueryResult.AsyncValue
 import app.cash.sqldelight.db.SqlCursor
@@ -59,7 +59,7 @@ class WebWorkerDriverTest {
       driver: SqlDriver,
       oldVersion: Long,
       newVersion: Long,
-      vararg callbacks: AfterVersion,
+      vararg callbacks: MigrationCallback,
     ) = QueryResult.AsyncValue {}
   }
 

@@ -113,14 +113,37 @@ public abstract interface class app/cash/sqldelight/TransactionWithoutReturn : a
 	public abstract fun transaction (Lkotlin/jvm/functions/Function1;)V
 }
 
-public final class app/cash/sqldelight/db/AfterVersion {
+public final class app/cash/sqldelight/db/AfterVersion : app/cash/sqldelight/db/MigrationCallback {
 	public fun <init> (JLkotlin/jvm/functions/Function1;)V
+	public fun afterMigration (Lapp/cash/sqldelight/db/SqlDriver;)V
+	public fun beforeMigration (Lapp/cash/sqldelight/db/SqlDriver;)V
 	public final fun getAfterVersion ()J
 	public final fun getBlock ()Lkotlin/jvm/functions/Function1;
+	public fun getVersion ()J
+}
+
+public final class app/cash/sqldelight/db/BeforeVersion : app/cash/sqldelight/db/MigrationCallback {
+	public fun <init> (JLkotlin/jvm/functions/Function1;)V
+	public fun afterMigration (Lapp/cash/sqldelight/db/SqlDriver;)V
+	public fun beforeMigration (Lapp/cash/sqldelight/db/SqlDriver;)V
+	public final fun getBeforeVersion ()J
+	public final fun getBlock ()Lkotlin/jvm/functions/Function1;
+	public fun getVersion ()J
 }
 
 public final class app/cash/sqldelight/db/CloseableKt {
 	public static final fun use (Ljava/io/Closeable;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public abstract interface class app/cash/sqldelight/db/MigrationCallback {
+	public abstract fun afterMigration (Lapp/cash/sqldelight/db/SqlDriver;)V
+	public abstract fun beforeMigration (Lapp/cash/sqldelight/db/SqlDriver;)V
+	public abstract fun getVersion ()J
+}
+
+public final class app/cash/sqldelight/db/MigrationCallback$DefaultImpls {
+	public static fun afterMigration (Lapp/cash/sqldelight/db/MigrationCallback;Lapp/cash/sqldelight/db/SqlDriver;)V
+	public static fun beforeMigration (Lapp/cash/sqldelight/db/MigrationCallback;Lapp/cash/sqldelight/db/SqlDriver;)V
 }
 
 public final class app/cash/sqldelight/db/OptimisticLockException : java/lang/IllegalStateException {
@@ -210,7 +233,7 @@ public abstract interface class app/cash/sqldelight/db/SqlPreparedStatement {
 public abstract interface class app/cash/sqldelight/db/SqlSchema {
 	public abstract fun create (Lapp/cash/sqldelight/db/SqlDriver;)Lapp/cash/sqldelight/db/QueryResult;
 	public abstract fun getVersion ()J
-	public abstract fun migrate (Lapp/cash/sqldelight/db/SqlDriver;JJ[Lapp/cash/sqldelight/db/AfterVersion;)Lapp/cash/sqldelight/db/QueryResult;
+	public abstract fun migrate (Lapp/cash/sqldelight/db/SqlDriver;JJ[Lapp/cash/sqldelight/db/MigrationCallback;)Lapp/cash/sqldelight/db/QueryResult;
 }
 
 public final class app/cash/sqldelight/logs/LogSqliteDriver : app/cash/sqldelight/db/SqlDriver {

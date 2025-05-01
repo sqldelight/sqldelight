@@ -1,6 +1,6 @@
 package com.squareup.sqldelight.drivers.native.connectionpool
 
-import app.cash.sqldelight.db.AfterVersion
+import app.cash.sqldelight.db.MigrationCallback
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
@@ -138,7 +138,7 @@ abstract class BaseConcurrencyTest {
           driver: SqlDriver,
           oldVersion: Long,
           newVersion: Long,
-          vararg callbacks: AfterVersion,
+          vararg callbacks: MigrationCallback,
         ) = QueryResult.Unit
       },
       dbType,
