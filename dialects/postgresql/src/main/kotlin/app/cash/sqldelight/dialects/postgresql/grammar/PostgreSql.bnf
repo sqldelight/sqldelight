@@ -128,9 +128,9 @@ overrides ::= type_name
   | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  [ NOT ] NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  [ NOT ] NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   generated_clause |
   default_constraint |
@@ -185,7 +185,7 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   override = true
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP [ {conflict_clause} ] [comment_type] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -438,7 +438,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -481,7 +481,7 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
   pin = 1
 }
 
-boolean_not_expression ::= NOT (boolean_literal | {column_name})
+boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_name} )
 
 boolean_literal ::= TRUE | FALSE
 
@@ -596,6 +596,8 @@ truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
 truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
+
+json_function_stmt ::= ( 'row_to_json' | 'json_agg' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {

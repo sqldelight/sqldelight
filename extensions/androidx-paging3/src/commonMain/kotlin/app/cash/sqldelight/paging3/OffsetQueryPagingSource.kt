@@ -54,7 +54,7 @@ internal class OffsetQueryPagingSource<RowType : Any>(
       val offset = when (params) {
         is PagingSourceLoadParamsPrepend<*> -> maxOf(0, key - params.loadSize)
         is PagingSourceLoadParamsAppend<*> -> key
-        is PagingSourceLoadParamsRefresh<*> -> if (key >= count) maxOf(0, count - params.loadSize) else key
+        is PagingSourceLoadParamsRefresh<*> -> if (key >= count - params.loadSize) maxOf(0, count - params.loadSize) else key
         else -> error("Unknown PagingSourceLoadParams ${params::class}")
       }
       val data = queryProvider(limit, offset)
