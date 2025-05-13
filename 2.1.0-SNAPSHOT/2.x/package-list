@@ -94,6 +94,7 @@ module:sqlite-driver
 app.cash.sqldelight.driver.jdbc.sqlite
 module:web-worker-driver
 app.cash.sqldelight.driver.worker
+app.cash.sqldelight.driver.worker.expected
 module:androidx-paging3
 app.cash.sqldelight.paging3
 module:async-extensions
