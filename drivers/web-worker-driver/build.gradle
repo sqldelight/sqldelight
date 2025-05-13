@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
@@ -5,8 +7,8 @@ plugins {
 }
 
 kotlin {
-  js {
-    browser {
+  [js(), wasmJs()].forEach {
+    it.browser {
       testTask {
         useKarma {
           useChromeHeadless()
@@ -14,24 +16,30 @@ kotlin {
       }
     }
   }
+  applyDefaultHierarchyTemplate {
+    it.common {
+      it.withJs()
+      it.withWasmJs()
+    }
+  }
+
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
+  }
 
   sourceSets {
-    jsMain {
-      dependencies {
-        api projects.runtime
-        implementation libs.kotlin.coroutines.core
-      }
+    commonMain.dependencies {
+      api projects.runtime
+      implementation libs.kotlin.coroutines.core
     }
 
-    jsTest {
-      dependencies {
-        implementation libs.kotlin.test.js
-        implementation npm("sql.js", libs.versions.sqljs.get())
-        implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
-        implementation devNpm("copy-webpack-plugin", "9.1.0")
-        implementation libs.kotlin.coroutines.test
-        implementation project(":extensions:async-extensions")
-      }
+    commonTest.dependencies {
+      implementation libs.kotlin.test
+      implementation npm("sql.js", libs.versions.sqljs.get())
+      implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
+      implementation devNpm("copy-webpack-plugin", "9.1.0")
+      implementation libs.kotlin.coroutines.test
+      implementation project(":extensions:async-extensions")
     }
   }
 }
@@ -39,5 +47,5 @@ kotlin {
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
 tasks.named("dokkaHtmlMultiModule") {
- dependsOn(rootProject.tasks.named("dokkaHtmlMultiModule"))
+  dependsOn(rootProject.tasks.named("dokkaHtmlMultiModule"))
 }
