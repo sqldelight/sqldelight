@@ -48,7 +48,7 @@ interface SqlDelightDatabaseProperties : Serializable {
  */
 interface SqlDelightCompilationUnit : Serializable {
   val name: String
-  val sourceFolders: List<SqlDelightSourceFolder>
+  val sourceFolders: Set<SqlDelightSourceFolder>
   val outputDirectoryFile: File
 }
 
