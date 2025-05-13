@@ -31,6 +31,7 @@ import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.SelectQueryable
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
@@ -137,10 +138,12 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     "avg" -> IntermediateType(REAL).asNullable()
     "abs" -> encapsulatingType(exprList, INTEGER, REAL)
     "iif" -> exprList[1].type()
-    "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
     "nullif" -> exprList[0].type().asNullable()
-    "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB, BOOLEAN).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL, BOOLEAN).asNullable()
+    "max" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, BOOLEAN).asNullable()
+    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, INTEGER, REAL, BOOLEAN).asNullable()
     else -> null
   }
 
@@ -232,10 +235,10 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
     } else {
       typeResolver.encapsulatingType(
         exprList = getExprList(),
-        nullableIfAny = (
-          this is SqlBinaryAddExpr || this is SqlBinaryMultExpr ||
-            this is SqlBinaryPipeExpr
-          ),
+        nullability = { exprListNullability ->
+          (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
+            exprListNullability.any { it }
+        },
         INTEGER,
         REAL,
         TEXT,

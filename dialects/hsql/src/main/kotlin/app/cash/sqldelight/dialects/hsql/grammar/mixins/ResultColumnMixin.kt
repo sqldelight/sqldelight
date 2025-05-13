@@ -7,7 +7,9 @@ import com.alecstrong.sql.psi.core.psi.QueryElement.QueryResult
 import com.alecstrong.sql.psi.core.psi.impl.SqlResultColumnImpl
 import com.intellij.lang.ASTNode
 
-internal abstract class ResultColumnMixin(node: ASTNode) : SqlResultColumnImpl(node), HsqlResultColumn {
+internal abstract class ResultColumnMixin(node: ASTNode) :
+  SqlResultColumnImpl(node),
+  HsqlResultColumn {
   private val queryExposed = ModifiableFileLazy lazy@{
     if (windowFunctionInvocation != null) {
       var column = QueryElement.QueryColumn(this)

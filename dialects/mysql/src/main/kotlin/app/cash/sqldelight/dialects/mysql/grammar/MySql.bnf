@@ -46,6 +46,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
@@ -97,9 +98,9 @@ enum_set_type
 }
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   'AUTO_INCREMENT' |
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  [ NOT ] NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  [ NOT ] NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   default_constraint |
   COLLATE {collation_name} |
@@ -120,7 +121,7 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   override = true
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP [ {conflict_clause} ] [comment_type] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -222,6 +223,7 @@ alter_table_rules ::= (
   | alter_table_drop_foreign_key
   | alter_table_drop_primary_key
   | alter_table_drop_column
+  | alter_table_rename_index
   | alter_table_convert_character_set
   | row_format_clause
   | alter_table_add_constraint
@@ -262,6 +264,8 @@ alter_table_drop_foreign_key ::= DROP FOREIGN KEY {column_name} {
   pin = 2
 }
 alter_table_drop_primary_key ::= DROP PRIMARY KEY
+
+alter_table_rename_index ::= RENAME ( INDEX | KEY ) {index_name} TO {index_name}
 
 placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 

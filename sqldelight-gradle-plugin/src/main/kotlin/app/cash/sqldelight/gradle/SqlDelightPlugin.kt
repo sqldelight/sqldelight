@@ -21,6 +21,8 @@ import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.android.packageName
 import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.tooling.provider.model.ToolingModelBuilder
@@ -28,10 +30,8 @@ import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
 
-internal const val MIN_GRADLE_VERSION = "7.0"
+internal const val MIN_GRADLE_VERSION = "8.0"
 
 abstract class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)

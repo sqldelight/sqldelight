@@ -24,8 +24,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.ide.CopyPasteManager
-import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 import java.awt.datatransfer.StringSelection
+import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 
 class CopyAsSqliteAction : AnAction() {
   override fun actionPerformed(e: AnActionEvent) {

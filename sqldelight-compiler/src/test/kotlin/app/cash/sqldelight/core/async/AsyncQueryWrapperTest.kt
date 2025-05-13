@@ -2,10 +2,10 @@ package app.cash.sqldelight.core.async
 
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class AsyncQueryWrapperTest {
   @get:Rule val tempFolder = TemporaryFolder()
@@ -73,7 +73,8 @@ class AsyncQueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : SuspendingTransacterImpl(driver), TestDatabase {
+        |) : SuspendingTransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
         |    override val version: Long
         |      get() = 3

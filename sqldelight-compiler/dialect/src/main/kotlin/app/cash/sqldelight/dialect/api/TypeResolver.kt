@@ -44,15 +44,25 @@ interface TypeResolver {
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
   vararg typeOrder: DialectType,
-) = encapsulatingType(exprList = exprList, nullableIfAny = false, typeOrder = typeOrder)
+) = encapsulatingType(exprList = exprList, nullability = null, typeOrder = typeOrder)
+
+/**
+ * @return the type from the expr list which is the highest order in the typeOrder list
+ */
+fun TypeResolver.encapsulatingTypePreferringKotlin(
+  exprList: List<SqlExpr>,
+  vararg typeOrder: DialectType,
+  nullability: ((List<Boolean>) -> Boolean)? = null,
+) = encapsulatingType(exprList = exprList, nullability = nullability, preferKotlinType = true, typeOrder = typeOrder)
 
 /**
  * @return the type from the expr list which is the highest order in the typeOrder list
  */
 fun TypeResolver.encapsulatingType(
   exprList: List<SqlExpr>,
-  nullableIfAny: Boolean,
+  nullability: ((List<Boolean>) -> Boolean)?,
   vararg typeOrder: DialectType,
+  preferKotlinType: Boolean = false,
 ): IntermediateType {
   val types = exprList.map { resolvedType(it) }
   val sqlTypes = types.map { it.dialectType }
@@ -68,12 +78,20 @@ fun TypeResolver.encapsulatingType(
     error("The Kotlin type of the argument cannot be inferred, use CAST instead.")
   }
 
-  val type = typeOrder.last { it in sqlTypes }
-
-  if (!nullableIfAny && types.all { it.javaType.isNullable } ||
-    nullableIfAny && types.any { it.javaType.isNullable }
-  ) {
-    return IntermediateType(type).asNullable()
+  // stripping nullability because that shouldn't affect the type comparison
+  val isTypesHomogeneous = types.map { it.dialectType to it.javaType.copy(nullable = false) }.distinct().size == 1
+  val type = if (preferKotlinType && isTypesHomogeneous) {
+    types.first()
+  } else {
+    IntermediateType(typeOrder.last { it in sqlTypes })
   }
-  return IntermediateType(type)
+
+  val exprListNullability = types.map { it.javaType.isNullable }
+  return when (nullability) {
+    null -> when {
+      exprListNullability.all { it } -> type.asNullable()
+      else -> type
+    }
+    else -> type.nullableIf(nullability(exprListNullability))
+  }
 }

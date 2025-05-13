@@ -12,7 +12,7 @@ import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.google.common.truth.Truth.assertThat
 import com.intellij.psi.PsiReferenceExpression
 import com.intellij.usageView.UsageInfo
-import org.jetbrains.kotlin.idea.findUsages.KotlinReferenceUsageInfo
+import org.jetbrains.kotlin.idea.base.searching.usages.KotlinReferenceUsageInfo
 import org.jetbrains.kotlin.psi.KtReferenceExpression
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 

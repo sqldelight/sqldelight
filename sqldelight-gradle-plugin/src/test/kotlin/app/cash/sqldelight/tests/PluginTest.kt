@@ -2,9 +2,9 @@ package app.cash.sqldelight.tests
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class PluginTest {
   @Test

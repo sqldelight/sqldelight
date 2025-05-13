@@ -16,8 +16,5 @@
 package app.cash.sqldelight.paging3
 
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.sqljs.initSqlDriver
-import kotlinx.coroutines.await
 
-actual suspend fun provideDbDriver(): SqlDriver =
-  initSqlDriver().await()
+actual suspend fun provideDbDriver(): SqlDriver = TODO()

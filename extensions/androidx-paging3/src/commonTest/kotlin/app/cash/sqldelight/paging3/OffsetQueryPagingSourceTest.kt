@@ -35,8 +35,6 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -46,6 +44,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 
 @ExperimentalCoroutinesApi
 class OffsetQueryPagingSourceTest : BaseOffsetQueryPagingSourceTest() {
@@ -157,6 +157,15 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
   fun invalidInitialKey_keyTooLarge_returnsLastPage() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.refresh(key = 101) as PagingSourceLoadResultPage<Int, TestItem>
+
+    // should load the last page
+    assertContentEquals(ITEMS_LIST.subList(85, 100), result.data)
+  }
+
+  @Test
+  fun invalidInitialKey_keyOnLastPage_returnsLastPage() = runDbTest {
+    insertItems(ITEMS_LIST)
+    val result = pagingSource.refresh(key = 90) as PagingSourceLoadResultPage<Int, TestItem>
 
     // should load the last page
     assertContentEquals(ITEMS_LIST.subList(85, 100), result.data)

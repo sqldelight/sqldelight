@@ -79,7 +79,7 @@ class MutatorQueryTypeTest {
       """
     |public fun insertData(data_: com.example.Data_) {
     |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
-    |      |INSERT INTO data
+    |      |INSERT INTO data (id, value)
     |      |VALUES (?, ?)
     |      ""${'"'}.trimMargin(), 2) {
     |        bindLong(0, data_Adapter.idAdapter.encode(data_.id))
@@ -715,14 +715,14 @@ class MutatorQueryTypeTest {
       |      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 12) {
       |        check(this is ${dialect.dialect.runtimeTypes.preparedStatementType})
-      |        bindLong(0, smallint0.toLong())
-      |        bindLong(1, smallint1?.let { it.toLong() })
-      |        bindLong(2, data_Adapter.smallint2Adapter.encode(smallint2).toLong())
-      |        bindLong(3, smallint3?.let { data_Adapter.smallint3Adapter.encode(it).toLong() })
-      |        bindLong(4, int0.toLong())
-      |        bindLong(5, int1?.let { it.toLong() })
-      |        bindLong(6, data_Adapter.int2Adapter.encode(int2).toLong())
-      |        bindLong(7, int3?.let { data_Adapter.int3Adapter.encode(it).toLong() })
+      |        bindShort(0, smallint0)
+      |        bindShort(1, smallint1)
+      |        bindShort(2, data_Adapter.smallint2Adapter.encode(smallint2))
+      |        bindShort(3, smallint3?.let { data_Adapter.smallint3Adapter.encode(it) })
+      |        bindInt(4, int0)
+      |        bindInt(5, int1)
+      |        bindInt(6, data_Adapter.int2Adapter.encode(int2))
+      |        bindInt(7, int3?.let { data_Adapter.int3Adapter.encode(it) })
       |        bindLong(8, bigint0)
       |        bindLong(9, bigint1)
       |        bindLong(10, data_Adapter.bigint2Adapter.encode(bigint2))

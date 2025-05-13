@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
 }
 
 archivesBaseName = 'sqldelight-sqlite-driver'

@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
 }
 
 archivesBaseName = 'sqldelight-primitive-adapters'

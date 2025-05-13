@@ -66,7 +66,7 @@ class TreeUtilTest {
 
     assertThat(insert2.rawSqlText()).isEqualTo(
       """
-      |INSERT INTO test
+      |INSERT INTO test (value, other_value, a_third_value)
       |VALUES (?, ?, ?)
       """.trimMargin(),
     )

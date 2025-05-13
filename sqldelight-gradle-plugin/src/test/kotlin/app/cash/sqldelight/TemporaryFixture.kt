@@ -8,9 +8,9 @@ import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightPropertiesFileImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.tooling.GradleConnector
-import java.io.File
 
 internal class TemporaryFixture : AutoCloseable {
   val fixtureRoot = File("src/test/temporary-fixture-${System.identityHashCode(this)}").absoluteFile

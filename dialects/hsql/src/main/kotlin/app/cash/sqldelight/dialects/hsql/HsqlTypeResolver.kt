@@ -7,7 +7,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
-import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.hsql.HsqlType.BIG_INT
 import app.cash.sqldelight.dialects.hsql.HsqlType.SMALL_INT
 import app.cash.sqldelight.dialects.hsql.HsqlType.TINY_INT
@@ -42,9 +42,33 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
   }
 
   private fun SqlFunctionExpr.hsqlFunctionType() = when (functionName.text.lowercase()) {
-    "coalesce", "ifnull" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB)
-    "max" -> encapsulatingType(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, HsqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
+    "greatest" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      TINY_INT,
+      SMALL_INT,
+      HsqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      TEXT,
+      BLOB,
+    )
+    "least" -> encapsulatingTypePreferringKotlin(
+      exprList,
+      BLOB,
+      TEXT,
+      TINY_INT,
+      SMALL_INT,
+      INTEGER,
+      HsqlType.INTEGER,
+      BIG_INT,
+      REAL,
+    )
+    "max" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
+    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, HsqlType.INTEGER, BIG_INT, REAL).asNullable()
     "length", "char_length", "character_length" -> IntermediateType(BIG_INT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     else -> null
   }

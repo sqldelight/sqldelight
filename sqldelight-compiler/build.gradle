@@ -1,3 +1,5 @@
+import app.cash.sqldelight.toolchain.PluginVersion
+
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.grammarKitComposer)
@@ -14,10 +16,6 @@ tasks.named('test') {
     showStackTraces true
     showCauses true
   }
-}
-
-sourceSets {
-  main.java.srcDir "gen"
 }
 
 grammarKit {
@@ -42,6 +40,7 @@ dependencies {
 
   testImplementation libs.kotlin.test.junit
   testImplementation libs.truth
+  testImplementation projects.sqldelightGradlePlugin
   testImplementation projects.testUtil
   testImplementation projects.dialects.hsql
   testImplementation projects.dialects.mysql
@@ -55,39 +54,10 @@ dependencies {
   testImplementation projects.dialects.sqlite338
 }
 
-tasks.register('pluginVersion') {
-  def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-      commandLine 'git', 'rev-parse', '--short', 'HEAD'
-      standardOutput = stdout
-    }
-    return stdout.toString().trim()
-  }
+TaskProvider<PluginVersion> pluginVersion = tasks.register('pluginVersion', PluginVersion)
 
-  def outputDir = file("gen")
-
-  inputs.property 'version', version
-  outputs.dir outputDir
-
-  def versionFile = file("$outputDir/app.cash.sqldelight/Version.kt")
-
-  doLast {
-    versionFile.parentFile.mkdirs()
-    versionFile.text = """// Generated file. Do not edit!
-package app.cash.sqldelight
-
-val VERSION = "${version}"
-val GIT_SHA = "${getGitHash}"
-"""
-  }
+sourceSets.main {
+  kotlin.srcDir(pluginVersion)
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
-
-afterEvaluate {
-  tasks.named('compileKotlin') { dependsOn('pluginVersion') }
-  tasks.named('dokkaHtml') { dependsOn('pluginVersion') }
-  tasks.named('dokkaHtmlPartial') { dependsOn('pluginVersion') }
-  tasks.named('javaSourcesJar') { dependsOn('pluginVersion') }
-}

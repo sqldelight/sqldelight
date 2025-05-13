@@ -17,18 +17,18 @@ pluginManagement {
 }
 
 plugins {
-    id "com.gradle.enterprise" version "3.14.1"
-    id "org.gradle.toolchains.foojay-resolver-convention" version "0.6.0"
+    id "com.gradle.develocity" version "3.19.2"
+    id "org.gradle.toolchains.foojay-resolver-convention" version "0.9.0"
 }
 
-gradleEnterprise {
+develocity {
   buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
-    if (System.getenv("CI")) {
-      publishAlways()
-      tag "CI"
+    termsOfUseUrl = 'https://gradle.com/terms-of-service'
+    termsOfUseAgree = 'yes'
+    publishing {
+      onlyIf { System.getenv("CI") != null }
     }
+    tag "CI"
   }
 }
 
@@ -51,7 +51,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include ':android'
 include ':common'
-include ':web'
 
 includeBuild('..') {
   dependencySubstitution {
@@ -59,7 +58,6 @@ includeBuild('..') {
     substitute module("app.cash.sqldelight:sqlite-driver") using project(":drivers:sqlite-driver")
     substitute module("app.cash.sqldelight:android-driver") using project(":drivers:android-driver")
     substitute module("app.cash.sqldelight:native-driver") using project(":drivers:native-driver")
-    substitute module("app.cash.sqldelight:sqljs-driver") using project(":drivers:sqljs-driver")
     substitute module("app.cash.sqldelight:runtime") using project(":runtime")
     substitute module("app.cash.sqldelight:runtime-jvm") using project(":runtime")
     substitute module("app.cash.sqldelight:gradle-plugin") using project(":sqldelight-gradle-plugin")

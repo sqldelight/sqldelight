@@ -1,10 +1,15 @@
 package app.cash.sqldelight.dialects.sqlite_3_35
 
+import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTestFixtures as Sqlite_3_18SqliteTestFixtures
+import app.cash.sqldelight.dialects.sqlite_3_24.SqliteTestFixtures as Sqlite_3_24SqliteTestFixtures
+import app.cash.sqldelight.dialects.sqlite_3_25.SqliteTestFixtures as Sqlite_3_25SqliteTestFixtures
+import app.cash.sqldelight.dialects.sqlite_3_30.SqliteTestFixtures as Sqlite_3_30SqliteTestFixtures
+import app.cash.sqldelight.dialects.sqlite_3_33.SqliteTestFixtures as Sqlite_3_33SqliteTestFixtures
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
+import java.io.File
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import java.io.File
 
 @RunWith(Parameterized::class)
 class Sqlite335FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
@@ -17,16 +22,16 @@ class Sqlite335FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
   }
 
   companion object {
-    private val fixtures = arrayOf("../sqlite-3-18/src/test/fixtures_sqlite_3_18", "../sqlite-3-24/src/test/fixtures_sqlite_3_24", "../sqlite-3-25/src/test/fixtures_sqlite_3_25", "../sqlite-3-30/src/test/fixtures_sqlite_3_30", "src/test/fixtures_sqlite_3_35")
-
     @Suppress("unused")
     // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
     @JvmStatic
-    fun parameters() = fixtures.flatMap { fixtureFolder ->
-      File(fixtureFolder).listFiles()!!
-        .filter { it.isDirectory }
-        .map { arrayOf(it.name, it) }
-    } + ansiFixtures
+    fun parameters() =
+      Sqlite_3_18SqliteTestFixtures.fixtures_sqlite_3_18 +
+        Sqlite_3_24SqliteTestFixtures.fixtures +
+        Sqlite_3_25SqliteTestFixtures.fixtures +
+        Sqlite_3_30SqliteTestFixtures.fixtures +
+        Sqlite_3_33SqliteTestFixtures.fixtures +
+        SqliteTestFixtures.fixtures + ansiFixtures
   }
 }

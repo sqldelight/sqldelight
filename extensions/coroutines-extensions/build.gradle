@@ -5,24 +5,26 @@ plugins {
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
+  id("kotlinx-atomicfu")
 }
 
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
-  targetHierarchy.default {
-    it.group("testableNative") {
-      // no withApple: https://github.com/cashapp/sqldelight/issues/4257
-      it.withIos()
-      it.withTvos()
-      it.withMacos()
-      it.withWatchosArm32()
-      it.withWatchosArm64()
-      it.withWatchosX64()
-      it.withWatchosSimulatorArm64()
-
-      it.withLinuxX64()
-      it.withMingw()
+  applyDefaultHierarchyTemplate {
+    it.common {
+      // not using commonTest due https://github.com/touchlab/SQLiter/issues/117
+      it.group("testable") {
+        it.withJvm()
+        it.withJs()
+        it.group("testableNative") {
+          it.group("apple") {}
+          it.group("linux") {}
+          it.group("mingw") {}
+          // it.group("androidNative")
+        }
+      }
     }
   }
 
@@ -62,7 +64,6 @@ kotlin {
     testableNativeTest {
       dependencies {
         implementation projects.drivers.nativeDriver
-        implementation libs.stately.concurrency
       }
     }
   }

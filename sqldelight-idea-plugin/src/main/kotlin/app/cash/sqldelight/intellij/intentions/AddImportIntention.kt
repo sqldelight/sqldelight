@@ -26,14 +26,16 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import com.intellij.ui.popup.list.ListPopupImpl
-import org.jetbrains.kotlin.idea.inspections.findExistingEditor
 import javax.swing.Icon
+import org.jetbrains.kotlin.idea.inspections.findExistingEditor
 
 internal class AddImportIntention(
   private val element: PsiElement,
   private val classes: List<ImportableType>,
   private val isAvailable: Boolean,
-) : BaseElementAtCaretIntentionAction(), HintAction, QuestionAction {
+) : BaseElementAtCaretIntentionAction(),
+  HintAction,
+  QuestionAction {
 
   override fun getFamilyName(): String = INTENTIONS_FAMILY_NAME_IMPORTS
 

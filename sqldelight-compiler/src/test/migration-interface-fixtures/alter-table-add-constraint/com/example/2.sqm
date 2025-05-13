@@ -1,0 +1,3 @@
+ALTER TABLE TestSingle ADD PRIMARY KEY (first);
+ALTER TABLE TestCompound ADD CONSTRAINT pk_first_second PRIMARY KEY (first, second);
+

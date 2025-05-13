@@ -10,10 +10,13 @@ import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.asClassName
+import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
@@ -376,6 +379,85 @@ class ExpressionTest {
     ).inOrder()
   }
 
+  @Test fun `coalesce returns the kotlin type for given homogeneous argument types`(dialect: TestDialect) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  bar INTEGER AS Foo
+      |);
+      |
+      |someSelect:
+      |SELECT coalesce(foo, bar),
+      |       coalesce(bar, bar),
+      |       coalesce(foo, bar),
+      |       coalesce(bar, foo)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      ClassName("com.example", "Foo"),
+      ClassName("com.example", "Foo").copy(nullable = true),
+      ClassName("com.example", "Foo"),
+      ClassName("com.example", "Foo"),
+    ).inOrder()
+  }
+
+  @Test fun `coalesce returns the dialect type for given heterogeneous argument types`(dialect: TestDialect) {
+    val dialectTextType = when {
+      dialect.dialect.isSqlite -> "TEXT"
+      else -> "VARCHAR(1)"
+    }
+
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |import com.example.Bar;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  foo2 REAL AS Foo NOT NULL,
+      |  bar INTEGER AS Bar,
+      |  baz $dialectTextType
+      |);
+      |
+      |someSelect:
+      |SELECT coalesce(foo, bar),
+      |       coalesce(foo, foo2),
+      |       coalesce(foo, baz),
+      |       coalesce(bar, baz),
+      |       coalesce(bar, foo),
+      |       coalesce(foo, bar, baz),
+      |       coalesce(baz, bar, foo)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      integerKotlinType,
+      DOUBLE,
+      STRING,
+      STRING.copy(nullable = true),
+      integerKotlinType,
+      STRING,
+      STRING,
+    ).inOrder()
+  }
+
   @Test fun `max takes the proper type`(dialect: TestDialect) {
     val file = FixtureCompiler.parseSql(
       """
@@ -411,6 +493,144 @@ class ExpressionTest {
       String::class.asClassName().copy(nullable = true),
       DOUBLE.copy(nullable = true),
       integerKotlinType.copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `max returns the kotlin type for given homogeneous argument types`(dialect: TestDialect) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  bar INTEGER AS Foo
+      |);
+      |
+      |someSelect:
+      |SELECT max(foo),
+      |       max(foo, bar)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      ClassName("com.example", "Foo").copy(nullable = true),
+      ClassName("com.example", "Foo").copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `max returns the dialect type for given heterogeneous argument types`(dialect: TestDialect) {
+    val dialectTextType = when {
+      dialect.dialect.isSqlite -> "TEXT"
+      else -> "VARCHAR(1)"
+    }
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |import com.example.Bar;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  foo2 REAL AS Foo NOT NULL,
+      |  bar INTEGER AS Bar,
+      |  baz $dialectTextType
+      |);
+      |
+      |someSelect:
+      |SELECT max(foo, bar),
+      |       max(foo, foo2),
+      |       max(foo, baz),
+      |       max(bar, baz),
+      |       max(foo, bar, baz)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      integerKotlinType.copy(nullable = true),
+      DOUBLE.copy(nullable = true),
+      STRING.copy(nullable = true),
+      STRING.copy(nullable = true),
+      STRING.copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `greatest returns the kotlin type for given homogeneous argument types`(dialect: TestDialect) {
+    assumeFalse(dialect.dialect.isSqlite)
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  bar INTEGER AS Foo
+      |);
+      |
+      |someSelect:
+      |SELECT greatest(foo),
+      |       greatest(foo, bar)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      ClassName("com.example", "Foo"),
+      ClassName("com.example", "Foo"),
+    ).inOrder()
+  }
+
+  @Test fun `greatest returns the dialect type for given heterogeneous argument types`(dialect: TestDialect) {
+    assumeFalse(dialect.dialect.isSqlite)
+    val file = FixtureCompiler.parseSql(
+      """
+                |import com.example.Foo;
+                |import com.example.Bar;
+                |
+                |CREATE TABLE test (
+                |  foo INTEGER AS Foo NOT NULL,
+                |  foo2 REAL AS Foo NOT NULL,
+                |  bar INTEGER AS Bar,
+                |  baz VARCHAR(1)
+                |);
+                |
+                |someSelect:
+                |SELECT greatest(foo, bar),
+                |       greatest(foo, foo2),
+                |       greatest(foo, baz),
+                |       greatest(bar, baz),
+                |       greatest(foo, bar, baz)
+                |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      integerKotlinType,
+      DOUBLE,
+      STRING,
+      STRING.copy(nullable = true),
+      STRING,
     ).inOrder()
   }
 
@@ -469,6 +689,144 @@ class ExpressionTest {
       DOUBLE.copy(nullable = true),
       String::class.asClassName().copy(nullable = true),
       ByteArray::class.asClassName().copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `min returns the kotlin type for given homogeneous argument types`(dialect: TestDialect) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  bar INTEGER AS Foo
+      |);
+      |
+      |someSelect:
+      |SELECT min(foo),
+      |       min(foo, bar)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      ClassName("com.example", "Foo").copy(nullable = true),
+      ClassName("com.example", "Foo").copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `min returns the dialect type for given heterogeneous argument types`(dialect: TestDialect) {
+    val dialectTextType = when {
+      dialect.dialect.isSqlite -> "TEXT"
+      else -> "VARCHAR(1)"
+    }
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |import com.example.Bar;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  foo2 REAL AS Foo NOT NULL,
+      |  bar INTEGER AS Bar,
+      |  baz $dialectTextType
+      |);
+      |
+      |someSelect:
+      |SELECT min(foo, bar),
+      |       min(foo, foo2),
+      |       min(foo, baz),
+      |       min(bar, baz),
+      |       min(foo, bar, baz)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      integerKotlinType.copy(nullable = true),
+      DOUBLE.copy(nullable = true),
+      integerKotlinType.copy(nullable = true),
+      integerKotlinType.copy(nullable = true),
+      integerKotlinType.copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `least returns the kotlin type for given homogeneous argument types`(dialect: TestDialect) {
+    assumeFalse(dialect.dialect.isSqlite)
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  bar INTEGER AS Foo
+      |);
+      |
+      |someSelect:
+      |SELECT least(foo),
+      |       least(foo, bar)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      ClassName("com.example", "Foo"),
+      ClassName("com.example", "Foo"),
+    ).inOrder()
+  }
+
+  @Test fun `least returns the dialect type for given heterogeneous argument types`(dialect: TestDialect) {
+    assumeFalse(dialect.dialect.isSqlite)
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |import com.example.Bar;
+      |
+      |CREATE TABLE test (
+      |  foo INTEGER AS Foo NOT NULL,
+      |  foo2 REAL AS Foo NOT NULL,
+      |  bar INTEGER AS Bar,
+      |  baz VARCHAR(1)
+      |);
+      |
+      |someSelect:
+      |SELECT least(foo, bar),
+      |       least(foo, foo2),
+      |       least(foo, baz),
+      |       least(bar, baz),
+      |       least(foo, bar, baz)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      integerKotlinType,
+      DOUBLE,
+      integerKotlinType,
+      integerKotlinType.copy(nullable = true),
+      integerKotlinType,
     ).inOrder()
   }
 

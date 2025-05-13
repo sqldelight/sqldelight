@@ -8,6 +8,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import java.math.BigDecimal
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.intellij.lang.annotations.Language
 import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
@@ -28,7 +30,7 @@ class R2dbcDriver(
 ) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
@@ -52,7 +54,7 @@ class R2dbcDriver(
 
   override fun execute(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
@@ -154,36 +156,12 @@ fun CoroutineScope.R2dbcDriver(
 }
 
 // R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
-class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
+class R2dbcPreparedStatement(val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       statement.bindNull(index, ByteArray::class.java)
     } else {
       statement.bind(index, bytes)
-    }
-  }
-
-  override fun bindLong(index: Int, long: Long?) {
-    if (long == null) {
-      statement.bindNull(index, Long::class.javaObjectType)
-    } else {
-      statement.bind(index, long)
-    }
-  }
-
-  override fun bindDouble(index: Int, double: Double?) {
-    if (double == null) {
-      statement.bindNull(index, Double::class.javaObjectType)
-    } else {
-      statement.bind(index, double)
-    }
-  }
-
-  override fun bindString(index: Int, string: String?) {
-    if (string == null) {
-      statement.bindNull(index, String::class.java)
-    } else {
-      statement.bind(index, string)
     }
   }
 
@@ -195,11 +173,84 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
     }
   }
 
-  fun bindObject(index: Int, any: Any?) {
+  fun bindByte(index: Int, byte: Byte?) {
+    if (byte == null) {
+      statement.bindNull(index, Byte::class.javaObjectType)
+    } else {
+      statement.bind(index, byte)
+    }
+  }
+
+  fun bindShort(index: Int, short: Short?) {
+    if (short == null) {
+      statement.bindNull(index, Short::class.javaObjectType)
+    } else {
+      statement.bind(index, short)
+    }
+  }
+
+  fun bindInt(index: Int, int: Int?) {
+    if (int == null) {
+      statement.bindNull(index, Int::class.javaObjectType)
+    } else {
+      statement.bind(index, int)
+    }
+  }
+
+  override fun bindLong(index: Int, long: Long?) {
+    if (long == null) {
+      statement.bindNull(index, Long::class.javaObjectType)
+    } else {
+      statement.bind(index, long)
+    }
+  }
+
+  fun bindFloat(index: Int, float: Float?) {
+    if (float == null) {
+      statement.bindNull(index, Float::class.javaObjectType)
+    } else {
+      statement.bind(index, float)
+    }
+  }
+
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) {
+      statement.bindNull(index, Double::class.javaObjectType)
+    } else {
+      statement.bind(index, double)
+    }
+  }
+
+  fun bindBigDecimal(index: Int, decimal: BigDecimal?) {
+    if (decimal == null) {
+      statement.bindNull(index, BigDecimal::class.java)
+    } else {
+      statement.bind(index, decimal)
+    }
+  }
+
+  fun bindObject(index: Int, any: Any?, ignoredSqlType: Int = 0) {
     if (any == null) {
       statement.bindNull(index, Any::class.java)
     } else {
       statement.bind(index, any)
+    }
+  }
+
+  @JvmName("bindTypedObject")
+  inline fun <reified T : Any> bindObject(index: Int, any: T?) {
+    if (any == null) {
+      statement.bindNull(index, T::class.java)
+    } else {
+      statement.bind(index, any)
+    }
+  }
+
+  override fun bindString(index: Int, string: String?) {
+    if (string == null) {
+      statement.bindNull(index, String::class.java)
+    } else {
+      statement.bind(index, string)
     }
   }
 }
@@ -248,7 +299,9 @@ internal class AsyncPublisherIterator<T : Any>(
 }
 
 class R2dbcCursor
-internal constructor(private val results: AsyncPublisherIterator<List<Any?>>) : SqlCursor {
+internal constructor(
+  private val results: AsyncPublisherIterator<List<Any?>>,
+) : SqlCursor {
   private lateinit var currentRow: List<Any?>
 
   override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
@@ -264,6 +317,8 @@ internal constructor(private val results: AsyncPublisherIterator<List<Any?>>) : 
   }
 
   override fun getString(index: Int): String? = get(index)
+  fun getShort(index: Int): Short? = get<Number>(index)?.toShort()
+  fun getInt(index: Int): Int? = get<Number>(index)?.toInt()
 
   override fun getLong(index: Int): Long? = get<Number>(index)?.toLong()
 

@@ -1,0 +1,2 @@
+ALTER TABLE test_3 RENAME TO test3;
+ALTER TABLE test3 RENAME COLUMN first TO alpha;

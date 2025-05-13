@@ -1,0 +1,4 @@
+CREATE TABLE test (
+  first TEXT NOT NULL,
+  second INT NOT NULL
+);

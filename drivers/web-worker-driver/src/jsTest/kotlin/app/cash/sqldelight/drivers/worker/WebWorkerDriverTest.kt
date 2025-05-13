@@ -12,8 +12,6 @@ import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import app.cash.sqldelight.driver.worker.WebWorkerException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.w3c.dom.Worker
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -21,6 +19,8 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.w3c.dom.Worker
 
 typealias InsertFunction = suspend (SqlPreparedStatement.() -> Unit) -> Unit
 
@@ -100,7 +100,13 @@ class WebWorkerDriverTest {
       assertFalse(it.next().await())
     }
 
-    assertEquals(1, changes { it.next(); it.getLong(0) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        it.getLong(0)
+      },
+    )
 
     query {
       assertTrue(it.next().await())
@@ -112,7 +118,13 @@ class WebWorkerDriverTest {
       bindLong(0, 2)
       bindString(1, "Jake")
     }
-    assertEquals(1, changes { it.next(); it.getLong(0) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        it.getLong(0)
+      },
+    )
 
     query {
       assertTrue(it.next().await())
@@ -124,7 +136,13 @@ class WebWorkerDriverTest {
     }
 
     driver.await(5, "DELETE FROM test", 0)
-    assertEquals(2, changes { it.next(); it.getLong(0) })
+    assertEquals(
+      2,
+      changes {
+        it.next()
+        it.getLong(0)
+      },
+    )
 
     query {
       assertFalse(it.next().await())
@@ -146,12 +164,24 @@ class WebWorkerDriverTest {
       bindLong(0, 1)
       bindString(1, "Alec")
     }
-    assertEquals(1, changes { it.next(); it.getLong(0) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        it.getLong(0)
+      },
+    )
     insert {
       bindLong(0, 2)
       bindString(1, "Jake")
     }
-    assertEquals(1, changes { it.next(); it.getLong(0) })
+    assertEquals(
+      1,
+      changes {
+        it.next()
+        it.getLong(0)
+      },
+    )
 
     suspend fun query(binders: SqlPreparedStatement.() -> Unit, mapper: suspend (SqlCursor) -> Unit) {
       driver.awaitQuery(6, "SELECT * FROM test WHERE value = ?", mapper, 1, binders)
@@ -207,7 +237,10 @@ class WebWorkerDriverTest {
       assertNull(it.getDouble(4))
     }
     driver.awaitQuery(8, "SELECT * FROM nullability_test", mapper, 0)
-    changes { it.next(); it.getLong(0) }
+    changes {
+      it.next()
+      it.getLong(0)
+    }
   }
 
   @Test
