@@ -66,9 +66,9 @@ type_name ::= (
 }
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   'AUTO_INCREMENT' |
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  NOT NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  NOT NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   generated_clause |
   {default_constraint} |
