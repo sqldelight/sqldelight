@@ -92,7 +92,7 @@ jobs:
       - name: Publish the plugin artifacts
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
-          ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.ORG_GRADLE_PROJECT_intellijPublishToken }}
+          ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.JETBRAINS_MARKETPLACE_SQUARE_PLUGINS }}
         run: ./gradlew publishPlugin --stacktrace --no-parallel
 
   publish_npm_packages:
