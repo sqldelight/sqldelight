@@ -949,6 +949,7 @@ class InterfaceGeneration {
       |import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
       |import kotlin.Any
       |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.String
       |
       |public class SubscriptionQueries(
@@ -959,8 +960,11 @@ class InterfaceGeneration {
       |    cursor.getInt(0)!!
       |  }
       |
-      |  public fun insertSubscription(user_id2: Int) {
-      |    driver.execute(${result.compiledFile.namedMutators[0].id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public fun insertSubscription(user_id2: Int): QueryResult<Long> {
+      |    val result = driver.execute(${result.compiledFile.namedMutators[0].id.withUnderscores}, ""${'"'}
       |        |INSERT INTO subscriptionEntity(user_id2)
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
@@ -970,6 +974,7 @@ class InterfaceGeneration {
       |    notifyQueries(${result.compiledFile.namedMutators[0].id.withUnderscores}) { emit ->
       |      emit("subscriptionEntity")
       |    }
+      |    return result
       |  }
       |
       |  private inner class InsertUserQuery<out T : Any>(

@@ -2,7 +2,9 @@ package com.example
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransacterImpl
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
+import kotlin.Long
 import kotlin.String
 
 public class DataQueries(
@@ -15,12 +17,16 @@ public class DataQueries(
     cursor.getString(0)!!
   }
 
-  public fun insert(alpha: String) {
-    driver.execute(-1_320_712_882, """INSERT INTO test (alpha) VALUES (?)""", 1) {
+  /**
+   * @return The number of rows updated.
+   */
+  public fun insert(alpha: String): QueryResult<Long> {
+    val result = driver.execute(-1_320_712_882, """INSERT INTO test (alpha) VALUES (?)""", 1) {
           bindString(0, alpha)
         }
     notifyQueries(-1_320_712_882) { emit ->
       emit("test")
     }
+    return result
   }
 }

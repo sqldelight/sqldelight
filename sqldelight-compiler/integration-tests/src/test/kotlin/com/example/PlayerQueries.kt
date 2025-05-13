@@ -177,13 +177,16 @@ public class PlayerQueries(
     )
   }
 
+  /**
+   * @return The number of rows updated.
+   */
   public fun insertPlayer(
     name: Player.Name,
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ) {
-    driver.execute(-1_595_716_666, """
+  ): QueryResult<Long> {
+    val result = driver.execute(-1_595_716_666, """
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
@@ -195,11 +198,15 @@ public class PlayerQueries(
     notifyQueries(-1_595_716_666) { emit ->
       emit("player")
     }
+    return result
   }
 
-  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>) {
+  /**
+   * @return The number of rows updated.
+   */
+  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>): QueryResult<Long> {
     val numberIndexes = createArguments(count = number.size)
-    driver.execute(null, """
+    val result = driver.execute(null, """
         |UPDATE player
         |SET team = ?
         |WHERE number IN $numberIndexes
@@ -212,14 +219,23 @@ public class PlayerQueries(
     notifyQueries(-636_585_613) { emit ->
       emit("player")
     }
+    return result
   }
 
-  public fun foreignKeysOn() {
-    driver.execute(-1_596_558_949, """PRAGMA foreign_keys = 1""", 0)
+  /**
+   * @return The number of rows updated.
+   */
+  public fun foreignKeysOn(): QueryResult<Long> {
+    val result = driver.execute(-1_596_558_949, """PRAGMA foreign_keys = 1""", 0)
+    return result
   }
 
-  public fun foreignKeysOff() {
-    driver.execute(2_046_279_987, """PRAGMA foreign_keys = 0""", 0)
+  /**
+   * @return The number of rows updated.
+   */
+  public fun foreignKeysOff(): QueryResult<Long> {
+    val result = driver.execute(2_046_279_987, """PRAGMA foreign_keys = 0""", 0)
+    return result
   }
 
   private inner class InsertAndReturnQuery<out T : Any>(
