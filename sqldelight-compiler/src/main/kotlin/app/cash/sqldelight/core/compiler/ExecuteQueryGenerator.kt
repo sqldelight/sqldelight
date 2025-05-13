@@ -2,10 +2,10 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.model.NamedExecute
-import app.cash.sqldelight.core.compiler.model.NamedMutator
-import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
+import app.cash.sqldelight.core.lang.argumentType
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.KModifier.SUSPEND
