@@ -14,5 +14,5 @@ internal fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunn
   File(projectRoot, "local.properties").apply {
     if (!exists()) writeText("sdk.dir=${androidHome()}\n")
   }
-  return withProjectDir(projectRoot)
+  return withProjectDir(projectRoot).withTestKitDir(File("build/gradle-test-kit").absoluteFile)
 }

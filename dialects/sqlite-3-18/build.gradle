@@ -24,6 +24,8 @@ dependencies {
   testFixturesApi testFixtures(libs.sqlPsi)
 
   testImplementation libs.truth
+  // Remove with next sql-psi release https://github.com/AlecKazakova/sql-psi/pull/619
+  testImplementation libs.sqlPsiEnvironment
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

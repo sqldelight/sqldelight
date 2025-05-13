@@ -140,7 +140,7 @@ class MigrationTest {
 
     assertThat(output.output).contains(
       """
-      |1.sqm: (1, 5): TABLE expected, got 'TABE'
+      |1.sqm:1:5 TABLE expected, got 'TABE'
       |1    ALTER TABE test ADD COLUMN value2 TEXT
       """.trimMargin(),
     )
@@ -154,7 +154,7 @@ class MigrationTest {
 
     assertThat(output.output).contains(
       """
-      |1.sqm: (5, 22): No column found with name new_column
+      |1.sqm:5:22 No column found with name new_column
       |5    INSERT INTO test (id, new_column)
       |                           ^^^^^^^^^^
       |6    VALUES ("hello", "world")
@@ -240,7 +240,7 @@ class MigrationTest {
       .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
       .buildAndFail()
 
-    assertThat(output.output).contains("1.sqm: (1, 12): No table found with name test")
+    assertThat(output.output).contains("1.sqm:1:12 No table found with name test")
   }
 
   @Test fun `compilation succeeds when verifyMigrations is set to false but the migrations are incomplete`() {
@@ -259,7 +259,8 @@ class MigrationTest {
       """
       |private class DatabaseImpl(
       |  driver: SqlDriver,
-      |) : TransacterImpl(driver), Database {
+      |) : TransacterImpl(driver),
+      |    Database {
       |  override val testQueries: TestQueries = TestQueries(driver)
       |
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {

@@ -42,3 +42,10 @@ SELECT max(date) FROM dates;
 
 selectMinDate:
 SELECT min(date) FROM dates;
+
+selectDateLiteral:
+SELECT DATE '2023-05-15';
+
+selectTimeLiteral:
+SELECT TIME '10:30:45';
+

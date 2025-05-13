@@ -73,7 +73,8 @@ class AsyncQueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : SuspendingTransacterImpl(driver), TestDatabase {
+        |) : SuspendingTransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
         |    override val version: Long
         |      get() = 3

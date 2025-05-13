@@ -2,7 +2,7 @@
 
 SQLDelight 2.0 makes some breaking changes to the gradle plugin and runtime APIs.
 
-This page lists those breaking changes and their new 2.0 equivalents. 
+This page lists those breaking changes and their new 2.0 equivalents.
 For a full list of new features and other changes, see the [changelog](../changelog).
 
 ## New Package Name and Artifact Group
@@ -19,6 +19,14 @@ dependencies {
 -  implementation("com.squareup.sqldelight:sqlite-driver:{{ versions.sqldelight }}")
 +  implementation("app.cash.sqldelight:sqlite-driver:{{ versions.sqldelight }}")
 }
+
+For pure-Android SqlDelight 1.x projects, use android-driver and coroutine-extensions-jvm:
+dependencies {
+-  implementation("com.squareup.sqldelight:android-driver:{{ versions.sqldelight }}")
++  implementation("app.cash.sqldelight:android-driver:{{ versions.sqldelight }}")
+-  implementation("com.squareup.sqldelight:coroutines-extensions:{{ versions.sqldelight }}")
++  implementation("app.cash.sqldelight:coroutines-extensions-jvm:{{ versions.sqldelight }}")
+}
 ```
 
 ```diff title="In Code"
@@ -32,7 +40,7 @@ dependencies {
 * The SQLDelight configuration API now uses managed properties and a `DomainObjectCollection` for the databases.
 
     === "Kotlin"
-        ```kotlin 
+        ```kotlin
         sqldelight {
           databases { // (1)!
             create("Database") {
@@ -41,7 +49,7 @@ dependencies {
           }
         }
         ```
-        
+
         1. New `DomainObjectCollection` wrapper.
         2. Now a `Property<String>`.
     === "Groovy"
@@ -54,8 +62,33 @@ dependencies {
           }
         }
         ```
-        
+
         1. New `DomainObjectCollection` wrapper.
+
+* The sourceFolders setting has been renamed srcDirs
+
+    === "Kotlin"
+        ```groovy
+        sqldelight {
+          databases {
+            create("MyDatabase") {
+              packageName.set("com.example")
+              srcDirs.setFrom("src/main/sqldelight")
+            }
+          }
+        }
+        ```
+    === "Groovy"
+        ```groovy
+        sqldelight {
+          databases {
+            MyDatabase {
+              packageName = "com.example"
+              srcDirs = ['src/main/sqldelight']
+            }
+          }
+        }
+        ```
 
 * The SQL dialect of your database is now specified using a Gradle dependency.
 
@@ -66,11 +99,11 @@ dependencies {
             create("MyDatabase") {
               packageName.set("com.example")
               dialect("app.cash.sqldelight:mysql-dialect:{{ versions.sqldelight }}")
-              
+
               // Version catalogs also work!
               dialect(libs.sqldelight.dialects.mysql)
-            }  
-          }  
+            }
+          }
         }
         ```
     === "Groovy"
@@ -80,14 +113,14 @@ dependencies {
             MyDatabase {
               packageName = "com.example"
               dialect "app.cash.sqldelight:mysql-dialect:{{ versions.sqldelight }}"
-              
+
               // Version catalogs also work!
               dialect libs.sqldelight.dialects.mysql
-            }  
-          }  
+            }
+          }
         }
         ```
-    
+
     The currently supported dialects are `mysql-dialect`, `postgresql-dialect`, `hsql-dialect`, `sqlite-3-18-dialect`, `sqlite-3-24-dialect`, `sqlite-3-25-dialect`, `sqlite-3-30-dialect`, `sqlite-3-35-dialect`, and `sqlite-3-38-dialect`
 
 ## Runtime Changes
@@ -96,7 +129,7 @@ dependencies {
 
     ```diff
     +{++import kotlin.Boolean;++}
-    
+
     CREATE TABLE HockeyPlayer (
       name TEXT NOT NULL,
       good INTEGER {==AS Boolean==}
@@ -128,7 +161,7 @@ dependencies {
     -val schema: {--SqlDriver.Schema--}
     +val schema: {++SqlSchema++}
     ```
-  
+
 * The [paging3 extension API](../2.x/extensions/androidx-paging3/app.cash.sqldelight.paging3/) has changed to only allow int types for the count.
 * The [coroutines extension API](../2.x/extensions/coroutines-extensions/app.cash.sqldelight.coroutines/) now requires a dispatcher to be explicitly passed in.
     ```diff

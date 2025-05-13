@@ -271,7 +271,8 @@ private class AndroidQuery(
   private val database: SupportSQLiteDatabase,
   override val argCount: Int,
   private val windowSizeBytes: Long?,
-) : SupportSQLiteQuery, AndroidStatement {
+) : SupportSQLiteQuery,
+  AndroidStatement {
   private val binds = MutableList<((SupportSQLiteProgram) -> Unit)?>(argCount) { null }
 
   override fun bindBytes(index: Int, bytes: ByteArray?) {

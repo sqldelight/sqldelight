@@ -31,7 +31,7 @@ import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 
-internal const val MIN_GRADLE_VERSION = "7.0"
+internal const val MIN_GRADLE_VERSION = "8.0"
 
 abstract class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)
