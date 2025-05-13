@@ -26,7 +26,7 @@ class InterfaceGeneration {
     checkFixtureCompiles("query-requires-type")
   }
 
-  @Test fun `left joins apply nullability to columns`() {
+  @Test fun `left joins apply nullability to val2`() {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE A(
@@ -49,6 +49,68 @@ class InterfaceGeneration {
       """
       |public data class LeftJoin(
       |  public val val1: kotlin.String,
+      |  public val val2: kotlin.String?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `right joins apply nullability to val1`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A(
+      |  val1 TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE B(
+      |  val2 TEXT NOT NULL
+      |);
+      |
+      |rightJoin:
+      |SELECT *
+      |FROM A RIGHT OUTER JOIN B ON A.val1 = B.val2;
+      """.trimMargin(),
+      temporaryFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class RightJoin(
+      |  public val val1: kotlin.String?,
+      |  public val val2: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `full joins apply nullability to val1 and val2`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A(
+      |  val1 TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE B(
+      |  val2 TEXT NOT NULL
+      |);
+      |
+      |fullJoin:
+      |SELECT *
+      |FROM A FULL OUTER JOIN B ON A.val1 = B.val2;
+      """.trimMargin(),
+      temporaryFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class FullJoin(
+      |  public val val1: kotlin.String?,
       |  public val val2: kotlin.String?,
       |)
       |
