@@ -43,8 +43,7 @@ public class PlayerQueries(
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots) { name_, number_, team_,
-      shoots_ ->
+  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots) { name_, number_, team_, shoots_ ->
     Player(
       name_,
       number_,
@@ -58,8 +57,7 @@ public class PlayerQueries(
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ) -> T): Query<T> = Query(-1_634_440_035, arrayOf("player"), driver, "Player.sq", "allPlayers",
-      """
+  ) -> T): Query<T> = Query(-1_634_440_035, arrayOf("player"), driver, "Player.sq", "allPlayers", """
   |SELECT player.name, player.number, player.team, player.shoots
   |FROM player
   """.trimMargin()) { cursor ->
@@ -94,8 +92,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team) { name, number,
-      team_, shoots ->
+  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team) { name, number, team_, shoots ->
     Player(
       name,
       number,
@@ -118,8 +115,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForNumbers(number: Collection<Long>): Query<Player> =
-      playersForNumbers(number) { name, number_, team, shoots ->
+  public fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number) { name, number_, team, shoots ->
     Player(
       name,
       number_,
@@ -128,8 +124,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> =
-      Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
+  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> = Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )
@@ -141,8 +136,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> =
-      Query(-976_770_036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> = Query(-976_770_036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -174,8 +168,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> =
-      greaterThanNumberAndName(number, name) { name_, number_, team, shoots ->
+  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> = greaterThanNumberAndName(number, name) { name_, number_, team, shoots ->
     Player(
       name_,
       number_,
@@ -236,8 +229,7 @@ public class PlayerQueries(
     public val shoots: Shoots,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        transactionWithResult {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = transactionWithResult {
       driver.execute(-452_007_405, """
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
@@ -273,8 +265,7 @@ public class PlayerQueries(
       driver.removeListener("player", listener = listener)
     }
 
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(null, """
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(null, """
     |SELECT player.name, player.number, player.team, player.shoots
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
@@ -326,8 +317,7 @@ public class PlayerQueries(
       driver.removeListener("player", listener = listener)
     }
 
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_258_650_806, """
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_258_650_806, """
     |SELECT player.name, player.number, player.team, player.shoots
     |FROM player
     |WHERE (number, name) > (?, ?)
