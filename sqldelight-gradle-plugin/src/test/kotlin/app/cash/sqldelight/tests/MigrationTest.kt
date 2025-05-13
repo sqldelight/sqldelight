@@ -44,6 +44,7 @@ class MigrationTest {
       .build()
 
     assertThat(output.output).contains("DriverInitializerImpl executed!")
+    assertThat(output.output).contains("CustomDriver is used for connection.")
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
