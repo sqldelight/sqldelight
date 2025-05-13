@@ -102,10 +102,11 @@ abstract class SqlDelightWorkerTask : SourceTask() {
     val vars: MutableMap<String, Any> = HashMap()
     for ((key, value) in envVars) {
       // The following are known variables that can change between builds and should not be inherited
-      if (appNameRegex.matches(key)
-        || javaMainClassRegex.matches(key)
-        || key == "TERM_SESSION_ID"
-        || key == "ITERM_SESSION_ID") {
+      if (appNameRegex.matches(key) ||
+        javaMainClassRegex.matches(key) ||
+        key == "TERM_SESSION_ID" ||
+        key == "ITERM_SESSION_ID"
+      ) {
         continue
       }
       vars[key] = value
