@@ -19,6 +19,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CHECK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLUMN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
@@ -78,6 +79,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PLUS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RECURSIVE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REGEXP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
@@ -96,6 +98,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIEW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
@@ -122,15 +125,16 @@ overrides ::= type_name
   | extension_expr
   | extension_stmt
   | create_index_stmt
+  | create_view_stmt
   | select_stmt
   | ordering_term
   | binary_like_operator
   | literal_value
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  [ NOT ] NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  [ NOT ] NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   generated_clause |
   default_constraint |
@@ -185,7 +189,7 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   override = true
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  ( PRIMARY KEY | UNIQUE ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP [ {conflict_clause} ] [comment_type] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -204,6 +208,12 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
  ( USING index_method LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ with_storage_parameter ] | LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ WHERE <<expr '-1'>> ] )  {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexMixin"
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  override = true
+  pin = 6
+}
+
+create_view_stmt ::= CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] [ RECURSIVE ] VIEW [ {database_name} DOT ] {view_name} [ LP {column_alias} ( COMMA {column_alias} ) * RP ] AS {compound_select_stmt} [ WITH [ 'CASCADED' | 'LOCAL' ] CHECK 'OPTION' ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateOrReplaceViewMixin"
   override = true
   pin = 6
 }
@@ -438,7 +448,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -481,7 +491,7 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
   pin = 1
 }
 
-boolean_not_expression ::= NOT (boolean_literal | {column_name})
+boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_name} )
 
 boolean_literal ::= TRUE | FALSE
 
@@ -596,6 +606,8 @@ truncate_descendant ::= {table_name} ['*'] ( COMMA {table_name} ['*'] ) *
 truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
+
+json_function_stmt ::= ( 'row_to_json' | 'json_agg' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {

@@ -219,7 +219,7 @@ class SqlDelightEnvironment(
   }
 
   private fun errorMessage(element: PsiElement, message: String): String =
-    "${element.containingFile.virtualFile.path}: (${element.lineStart}, ${element.charPositionInLine}): $message\n${detailText(element)}"
+    "${element.containingFile.virtualFile.path}:${element.lineStart}:${element.charPositionInLine} $message\n${detailText(element)}"
 
   private fun detailText(element: PsiElement) = try {
     val context = context(element) ?: element

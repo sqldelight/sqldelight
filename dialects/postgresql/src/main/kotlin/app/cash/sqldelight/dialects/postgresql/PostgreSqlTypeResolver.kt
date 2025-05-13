@@ -48,7 +48,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.asTypeName
 
-class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
+open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun definitionType(typeName: SqlTypeName): IntermediateType = with(typeName) {
     check(this is PostgreSqlTypeName)
     val type = IntermediateType(
@@ -250,6 +250,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
   }
 
+  // dialects or modules would need to extend this if they add types that use operators in binaryExprChildTypesResolvingToBool
+  protected open fun booleanBinaryExprTypes(): Array<DialectType> {
+    return booleanBinaryExprTypes
+  }
+
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
     is SqlIsExpr -> IntermediateType(BOOLEAN)
     is SqlBinaryExpr -> {
@@ -262,23 +267,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
               exprListNullability.any { it }
           },
-          SMALL_INT,
-          PostgreSqlType.INTEGER,
-          INTEGER,
-          BIG_INT,
-          REAL,
-          PostgreSqlType.NUMERIC,
-          TEXT,
-          BLOB,
-          BOOLEAN,
-          DATE,
-          PostgreSqlType.UUID,
-          PostgreSqlType.INTERVAL,
-          PostgreSqlType.TIMESTAMP_TIMEZONE,
-          PostgreSqlType.TIMESTAMP,
-          PostgreSqlType.TIME,
-          PostgreSqlType.JSON,
-          PostgreSqlType.TSVECTOR,
+          typeOrder = booleanBinaryExprTypes(),
         )
       }
     }
@@ -295,6 +284,8 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     is PostgreSqlAtTimeZoneOperator -> IntermediateType(TEXT)
     is PostgreSqlExtensionExpr -> when {
+      jsonFunctionStmt != null -> IntermediateType(PostgreSqlType.JSON)
+
       arrayAggStmt != null -> {
         val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
         arrayIntermediateType(typeForArray)
@@ -341,6 +332,26 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   companion object {
+
+    private val booleanBinaryExprTypes: Array<DialectType> = arrayOf(
+      SMALL_INT,
+      PostgreSqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      PostgreSqlType.NUMERIC,
+      TEXT,
+      BLOB,
+      DATE,
+      PostgreSqlType.UUID,
+      PostgreSqlType.INTERVAL,
+      PostgreSqlType.TIMESTAMP_TIMEZONE,
+      PostgreSqlType.TIMESTAMP,
+      PostgreSqlType.TIME,
+      PostgreSqlType.JSON,
+      PostgreSqlType.TSVECTOR,
+      BOOLEAN, // is last as expected that boolean expression resolve to boolean
+    )
     private val binaryExprChildTypesResolvingToBool = TokenSet.create(
       SqlTypes.EQ,
       SqlTypes.EQ2,

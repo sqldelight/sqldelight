@@ -1,0 +1,7 @@
+CREATE TABLE test (
+  a TEXT,
+  b INTEGER,
+  c NUMERIC,
+  d TEXT,
+  e INTEGER
+);

@@ -876,7 +876,8 @@ class QueriesTypeTest {
 
     val dataQueries = File(result.outputDirectory, "com/example/DataQueries.kt")
     assertThat(result.compilerOutput).containsKey(dataQueries)
-    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+    val queryString = result.compilerOutput[dataQueries].toString()
+    assertThat(queryString).isEqualTo(
       """
       |package com.example
       |
@@ -906,6 +907,10 @@ class QueriesTypeTest {
       |          |  VALUES (NULL)
       |          ""${'"'}.trimMargin(), 0)
       |      driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
+      |    } .also {
+      |      notifyQueries(${query.id.withUnderscores}) { emit ->
+      |        emit("data")
+      |      }
       |    }
       |
       |    override fun toString(): String = "Data.sq:insertAndReturn"
@@ -946,6 +951,47 @@ class QueriesTypeTest {
                 }
             notifyQueries(-304_025_397) { emit ->
               emit("order")
+            }
+          }
+        }
+
+      """.trimIndent(),
+    )
+  }
+
+  @Test fun `SQL keywords are escaped when used with insert object column names`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE Examples (
+      |  id TEXT NOT NULL PRIMARY KEY,
+      |  `index` INTEGER NOT NULL
+      |);
+      |
+      |insertObject:
+      |INSERT INTO Examples VALUES ?;
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    val dataQueries = File(result.outputDirectory, "com/example/TestQueries.kt")
+    assertThat(result.compilerOutput).containsKey(dataQueries)
+    assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
+      """
+        package com.example
+
+        import app.cash.sqldelight.TransacterImpl
+        import app.cash.sqldelight.db.SqlDriver
+
+        public class TestQueries(
+          driver: SqlDriver,
+        ) : TransacterImpl(driver) {
+          public fun insertObject(Examples: Examples) {
+            driver.execute(-1_876_170_987, ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
+                  bindString(0, Examples.id)
+                  bindLong(1, Examples.index)
+                }
+            notifyQueries(-1_876_170_987) { emit ->
+              emit("Examples")
             }
           }
         }
