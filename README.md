@@ -1,6 +1,6 @@
 # <img src="docs/images/icon-sqldelight.svg" style="height: 1em; margin-bottom: -0.1em;"> SQLDelight
 
-See the [project website](https://cashapp.github.io/sqldelight/) for documentation and APIs
+See the [project website](https://sqldelight.github.io/sqldelight/) for documentation and APIs
 
 SQLDelight generates typesafe Kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
@@ -24,24 +24,24 @@ SQLDelight supports a variety of dialects and platforms:
 
 SQLite
 
-* [Android](https://cashapp.github.io/sqldelight/android_sqlite)
-* [Native (iOS, macOS, or Windows)](https://cashapp.github.io/sqldelight/native_sqlite)
-* [JVM](https://cashapp.github.io/sqldelight/jvm_sqlite)
-* [Javascript](https://cashapp.github.io/sqldelight/js_sqlite)
-* [Multiplatform](https://cashapp.github.io/sqldelight/multiplatform_sqlite)
+* [Android](https://sqldelight.github.io/sqldelight/android_sqlite)
+* [Native (iOS, macOS, or Windows)](https://sqldelight.github.io/sqldelight/native_sqlite)
+* [JVM](https://sqldelight.github.io/sqldelight/jvm_sqlite)
+* [Javascript](https://sqldelight.github.io/sqldelight/js_sqlite)
+* [Multiplatform](https://sqldelight.github.io/sqldelight/multiplatform_sqlite)
 
-[MySQL (JVM)](https://cashapp.github.io/sqldelight/jvm_mysql/)
+[MySQL (JVM)](https://sqldelight.github.io/sqldelight/jvm_mysql/)
 
-[PostgreSQL (JVM)](https://cashapp.github.io/sqldelight/jvm_postgresql)
+[PostgreSQL (JVM)](https://sqldelight.github.io/sqldelight/jvm_postgresql)
 
-[HSQL/H2 (JVM)](https://cashapp.github.io/sqldelight/jvm_h2) (Experimental)
+[HSQL/H2 (JVM)](https://sqldelight.github.io/sqldelight/jvm_h2) (Experimental)
 
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
 [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/). Note that the coordinates are all app.cash.sqldelight instead of com.squareup.cash for the 2.0.0+ SNAPSHOTs.
 
-Documentation pages for the latest snapshot version can be [found here](https://cashapp.github.io/sqldelight/snapshot).
+Documentation pages for the latest snapshot version can be [found here](https://sqldelight.github.io/sqldelight/snapshot).
 
 License
 =======

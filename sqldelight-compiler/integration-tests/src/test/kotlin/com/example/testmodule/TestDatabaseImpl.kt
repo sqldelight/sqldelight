@@ -28,7 +28,8 @@ private class TestDatabaseImpl(
   driver: SqlDriver,
   playerAdapter: Player.Adapter,
   teamAdapter: Team.Adapter,
-) : TransacterImpl(driver), TestDatabase {
+) : TransacterImpl(driver),
+    TestDatabase {
   override val groupQueries: GroupQueries = GroupQueries(driver)
 
   override val playerQueries: PlayerQueries = PlayerQueries(driver, playerAdapter)

@@ -1,5 +1,44 @@
 # Change Log
 
+## [2.0.2] - 2024-04-05
+
+### Added
+- [PostgreSQL Dialect] Add PostgreSQL STRING_AGG function (#4950 by [André Danielsson][anddani])
+- [PostgreSQL Dialect] Add SET statement to pg dialect (#4927 by [Bastien de Luca][de-luca])
+- [PostgreSQL Dialect] Add PostgreSql alter column sequence parameters (#4916 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgresql alter column default support for insert statement (#4912 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add PostgreSql alter sequence and drop sequence (#4920 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add Postgres Regex function definitions (#5025 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add grammar for GIN (#5027 by [Griffio][griffio])
+
+### Changed
+- [IDE Plugin] Minimum version of 2023.1 / Android Studio Iguana
+- [Compiler] Allow overriding the type nullability in encapsulatingType (#4882 by [Eliezer Graber][eygraber])
+- [Compiler] Inline the column names for SELECT *
+- [Gradle Plugin] switch to processIsolation (#5068 by [Emeka Nwagu][nwagu])
+- [Android Runtime] Increase Android minSDK to 21 (#5094 by [Philip Wedemann][hfhbd])
+- [Drivers] Expose more JDBC/R2DBC statement methods for dialect authors (#5098 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [PostgreSQL Dialect] Fix postgresql alter table alter column (#4868 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4448 missing import for table model (#4885 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 4932 postgresql default constraint functions (#4934 by [Griffio][griffio])
+- [PostgreSQL Dialect] fixes 4879 postgresql class-cast error in alter table rename column during migrations (#4880 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4474 PostgreSql create extension (#4541 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5018 PostgreSql add Primary Key not nullable types (#5020 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 4703 aggregate expressions (#5071 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5028 PostgreSql json (#5030 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5040 PostgreSql json operators (#5041 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes json operator binding for 5040 (#5100 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5082 tsvector (#5104 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5032 column adjacency for PostgreSql UPDATE FROM statement (#5035 by [Griffio][griffio])
+- [SQLite Dialect] fixes 4897 sqlite alter table rename column (#4899 by [Griffio][griffio])
+- [IDE Plugin] Fix error handler crash (#4988 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] BugSnag fails to init in IDEA 2023.3 (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] PluginException when opening .sq file in IntelliJ via plugin (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Dont bundle the kotlin lib into the intellij plugin as its already a plugin dependency (#5126)
+- [IDE Plugin] Use the extensions array instead of stream (#5127)
+
 ## [2.0.1] - 2023-12-01
 
 ### Added
@@ -1042,3 +1081,4 @@ Initial release.
   [BoD]: https://github.com/BoD
   [de-luca]: https://github.com/de-luca
   [MohamadJaara]: https://github.com/MohamadJaara
+  [nwagu]: https://github.com/nwagu

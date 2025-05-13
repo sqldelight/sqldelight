@@ -80,7 +80,8 @@ class AsyncQueriesTypeTest {
       |  driver: SqlDriver,
       |  data_Adapter: Data_.Adapter,
       |  otherAdapter: Other.Adapter,
-      |) : SuspendingTransacterImpl(driver), TestDatabase {
+      |) : SuspendingTransacterImpl(driver),
+      |    TestDatabase {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
@@ -206,7 +207,7 @@ class AsyncQueriesTypeTest {
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
       |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
-      |    |SELECT *
+      |    |SELECT data.id, data.value
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {

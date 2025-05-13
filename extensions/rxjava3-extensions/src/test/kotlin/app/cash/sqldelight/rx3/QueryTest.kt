@@ -64,8 +64,8 @@ class QueryTest {
       .test()
       .assertValue(
         listOf(
-          Employee("alice", "Alice Allison"), //
-          Employee("bob", "Bob Bobberson"), //
+          Employee("alice", "Alice Allison"),
+          Employee("bob", "Bob Bobberson"),
           Employee("eve", "Eve Evenson"),
         ),
       )

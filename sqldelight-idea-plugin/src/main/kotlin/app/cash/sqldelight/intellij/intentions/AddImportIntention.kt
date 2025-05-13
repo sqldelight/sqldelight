@@ -33,7 +33,9 @@ internal class AddImportIntention(
   private val element: PsiElement,
   private val classes: List<ImportableType>,
   private val isAvailable: Boolean,
-) : BaseElementAtCaretIntentionAction(), HintAction, QuestionAction {
+) : BaseElementAtCaretIntentionAction(),
+  HintAction,
+  QuestionAction {
 
   override fun getFamilyName(): String = INTENTIONS_FAMILY_NAME_IMPORTS
 

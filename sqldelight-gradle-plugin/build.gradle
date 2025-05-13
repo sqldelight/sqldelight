@@ -42,6 +42,7 @@ gradlePlugin {
 
 dependencies {
   api projects.sqldelightCompiler
+
   compileOnly(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
@@ -51,6 +52,7 @@ dependencies {
     targetConfiguration = "shadow"
   }
 
+  implementation libs.sqlPsiEnvironment
   implementation libs.kotlin.plugin
   compileOnly libs.android.plugin
 
@@ -104,7 +106,7 @@ tasks.named('test') {
     languageVersion = JavaLanguageVersion.of(ToolchainConventions.BUILD_JDK)
   }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
-  
+
   if (System.getenv("CI")) {
     reports.html.required = false
     reports.junitXml.required = false
@@ -141,7 +143,7 @@ tasks.named("grammarkitTest") {
       ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
       ":runtime:publishJvmPublicationToInstallLocallyRepository",
       ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
-      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",    
+      ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",

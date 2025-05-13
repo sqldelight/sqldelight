@@ -16,12 +16,23 @@ apiValidation {
 }
 
 kotlin {
+  applyDefaultHierarchyTemplate {
+    it.common {
+      it.group("nonJvm") {
+        it.withJs()
+        it.withWasmJs()
+        it.withNative()
+      }
+    }
+  }
+
   sourceSets {
     commonMain {
     }
     commonTest {
       dependencies {
         implementation libs.kotlin.test
+        implementation libs.kotlin.coroutines.test
       }
     }
     jvmTest {

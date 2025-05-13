@@ -64,8 +64,17 @@ sealed class ConnectionWrapper : SqlDriver {
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
-  ): QueryResult<R> = accessStatement(true, identifier, sql, binders) { statement ->
-    mapper(SqliterSqlCursor(statement.query()))
+  ): QueryResult<R> {
+    val checkSqlStatement = sql.trimStart().uppercase()
+    val useReadOnly = !(
+      checkSqlStatement.startsWith("UPDATE") ||
+        checkSqlStatement.startsWith("INSERT") ||
+        checkSqlStatement.startsWith("DELETE")
+      )
+
+    return accessStatement(useReadOnly, identifier, sql, binders) { statement ->
+      mapper(SqliterSqlCursor(statement.query()))
+    }
   }
 }
 
@@ -100,7 +109,8 @@ sealed class ConnectionWrapper : SqlDriver {
 class NativeSqliteDriver(
   private val databaseManager: DatabaseManager,
   maxReaderConnections: Int = 1,
-) : ConnectionWrapper(), SqlDriver {
+) : ConnectionWrapper(),
+  SqlDriver {
   constructor(
     configuration: DatabaseConfiguration,
     maxReaderConnections: Int = 1,

@@ -71,3 +71,38 @@ SELECT breed,
 FROM dog
 GROUP BY breed
 ORDER BY breed;
+
+selectDogsStringAggNameOrderBy:
+SELECT breed,
+       string_agg(DISTINCT name, ',' ORDER BY name)
+FROM dog
+GROUP BY breed
+ORDER BY breed;
+
+selectDogsArrayAggName:
+SELECT breed,
+       array_agg(name)
+FROM dog
+GROUP BY breed
+ORDER BY breed;
+
+selectDogsCoalesceArrayAggName:
+SELECT breed,
+       coalesce(array_agg(name))
+FROM dog
+GROUP BY breed
+ORDER BY breed;
+
+selectDogsArrayAggNameOrderBy:
+SELECT breed,
+       array_agg(DISTINCT name ORDER BY name ASC)
+FROM dog
+GROUP BY breed
+ORDER BY breed;
+
+selectDogsArrayAggNameOrderByWhereFilter:
+SELECT breed,
+       array_agg(DISTINCT name ORDER BY name DESC) FILTER (WHERE is_good = 1)
+FROM dog
+GROUP BY breed
+ORDER BY breed;

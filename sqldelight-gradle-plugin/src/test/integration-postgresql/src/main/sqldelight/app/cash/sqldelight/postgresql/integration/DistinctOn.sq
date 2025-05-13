@@ -1,0 +1,29 @@
+CREATE TABLE student(
+    student_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE grade(
+    grade_id INTEGER PRIMARY KEY,
+    student_id INTEGER REFERENCES student(student_id),
+    grade INT NOT NULL,
+    grade_date TIMESTAMP NOT NULL
+);
+
+insertStudent:
+INSERT INTO student VALUES ?;
+
+insertGrade:
+INSERT INTO grade VALUES ?;
+
+selectDistinctOnStudent:
+SELECT DISTINCT ON (student_id) *
+FROM grade
+JOIN student USING (student_id)
+ORDER BY student_id, grade_date;
+
+selectDistinctOnStudentGradeDate:
+SELECT DISTINCT ON (grade.student_id, grade.grade_date) grade.*, student.*
+FROM grade
+JOIN student USING (student_id)
+ORDER BY grade.student_id, grade_date;
