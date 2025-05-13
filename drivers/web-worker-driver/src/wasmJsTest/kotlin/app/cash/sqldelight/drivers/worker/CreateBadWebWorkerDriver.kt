@@ -8,5 +8,4 @@ actual fun createBadWebWorkerDriver(): SqlDriver {
   return WebWorkerDriver(badJsWorker())
 }
 
-fun badJsWorker(): Worker =
-  js("""new Worker(new URL("./bad.worker.js", import.meta.url))""")
+fun badJsWorker(): Worker = js("""new Worker(new URL("./bad.worker.js", import.meta.url))""")

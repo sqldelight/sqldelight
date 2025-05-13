@@ -33,11 +33,9 @@ class PostgreSqlTest {
     driver,
     arraysAdapter = Arrays.Adapter(
       object : ColumnAdapter<Array<UInt>, Array<Int>> {
-        override fun decode(databaseValue: Array<Int>): Array<UInt> =
-          databaseValue.map { it.toUInt() }.toTypedArray()
+        override fun decode(databaseValue: Array<Int>): Array<UInt> = databaseValue.map { it.toUInt() }.toTypedArray()
 
-        override fun encode(value: Array<UInt>): Array<Int> =
-          value.map { it.toInt() }.toTypedArray()
+        override fun encode(value: Array<UInt>): Array<Int> = value.map { it.toInt() }.toTypedArray()
       },
     ),
     data_Adapter = Data_.Adapter(
