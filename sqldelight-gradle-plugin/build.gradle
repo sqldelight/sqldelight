@@ -133,6 +133,9 @@ tasks.named('dockerTest') {
       ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
       ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
   )
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(11)
+  }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
 }
 

@@ -5,6 +5,8 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.SourceTask
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
@@ -18,11 +20,19 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   @get:Inject
   internal abstract val workerExecutor: WorkerExecutor
 
+  @get:Inject
+  internal abstract val jvmToolchain: JavaToolchainService
+
   @get:Classpath
   abstract val classpath: ConfigurableFileCollection
 
   internal fun workQueue(): WorkQueue =
     workerExecutor.processIsolation {
       it.classpath.from(classpath)
+      it.forkOptions {
+        it.executable = jvmToolchain.launcherFor {
+          it.languageVersion.set(JavaLanguageVersion.of(17))
+        }.get().executablePath.toString()
+      }
     }
 }
