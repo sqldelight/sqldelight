@@ -25,37 +25,69 @@
 <link href="../../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../../styles/logo-styles.css" rel="Stylesheet">
 <link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
 <script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
 <script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script>
 <script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
     <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
 <a class="library-name--link" href="../../../../index.html">
-                            SQLDelight
-                    </a>            </div>
-            <div class="library-version">2.1.0-SNAPSHOT
+                    SQLDelight
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">2.1.0-SNAPSHOT
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:mysql:dokkaHtmlPartial/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":dialects:mysql:dokkaHtmlPartial/main" data-filter=":dialects:mysql:dokkaHtmlPartial/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:mysql:dokkaHtmlPartial/main">jvm</button>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
         </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
+    </nav>
         <div id="container">
             <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    SQLDelight
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
             </div>
             <div id="main">
 <div class="main-content" data-page-type="classlike" id="content" pageids="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypes///PointingToDeclaration//666177779">
@@ -122,7 +154,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-l-u-m-n.html"><span><span>ALTER_TABLE_ADD_COLUMN</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ADD_</span><wbr><span>COLUMN</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="308359643%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -137,7 +169,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-n-s-t-r-a-i-n-t.html"><span><span>ALTER_TABLE_ADD_CONSTRAINT</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-n-s-t-r-a-i-n-t.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ADD_</span><wbr><span>CONSTRAINT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="869700404%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -152,7 +184,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-i-n-d-e-x.html"><span><span>ALTER_TABLE_ADD_INDEX</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ADD_</span><wbr><span>INDEX</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1581854697%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -167,7 +199,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-c-h-a-n-g-e_-c-o-l-u-m-n.html"><span><span>ALTER_TABLE_CHANGE_COLUMN</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-c-h-a-n-g-e_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>CHANGE_</span><wbr><span>COLUMN</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="946723558%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -182,7 +214,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-c-o-n-v-e-r-t_-c-h-a-r-a-c-t-e-r_-s-e-t.html"><span><span>ALTER_TABLE_CONVERT_CHARACTER_SET</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-c-o-n-v-e-r-t_-c-h-a-r-a-c-t-e-r_-s-e-t.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>CONVERT_</span><wbr><span>CHARACTER_</span><wbr><span>SET</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="921963435%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -197,7 +229,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-c-o-l-u-m-n.html"><span><span>ALTER_TABLE_DROP_COLUMN</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>DROP_</span><wbr><span>COLUMN</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1439988133%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -212,7 +244,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-i-n-d-e-x.html"><span><span>ALTER_TABLE_DROP_INDEX</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>DROP_</span><wbr><span>INDEX</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-298424563%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -227,7 +259,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-m-o-d-i-f-y_-c-o-l-u-m-n.html"><span><span>ALTER_TABLE_MODIFY_COLUMN</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-m-o-d-i-f-y_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>MODIFY_</span><wbr><span>COLUMN</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2122606608%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -242,7 +274,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-r-e-n-a-m-e_-i-n-d-e-x.html"><span><span>ALTER_TABLE_RENAME_INDEX</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-r-e-n-a-m-e_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>RENAME_</span><wbr><span>INDEX</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1480178594%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -257,7 +289,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-r-u-l-e-s.html"><span><span>ALTER_TABLE_RULES</span></span></a></div>
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-r-u-l-e-s.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>RULES</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1397324012%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -272,7 +304,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-p-p-r-o-x-i-m-a-t-e_-n-u-m-e-r-i-c_-d-a-t-a_-t-y-p-e.html"><span><span>APPROXIMATE_NUMERIC_DATA_TYPE</span></span></a></div>
+                  <div><a href="-a-p-p-r-o-x-i-m-a-t-e_-n-u-m-e-r-i-c_-d-a-t-a_-t-y-p-e.html"><span>APPROXIMATE_</span><wbr><span>NUMERIC_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-243299937%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -332,7 +364,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-s-s-i-g-n-m-e-n-t_-l-i-s-t.html"><span><span>ASSIGNMENT_LIST</span></span></a></div>
+                  <div><a href="-a-s-s-i-g-n-m-e-n-t_-l-i-s-t.html"><span>ASSIGNMENT_</span><wbr><span>LIST</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1155847455%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -347,7 +379,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-a-s-s-i-g-n-m-e-n-t_-v-a-l-u-e.html"><span><span>ASSIGNMENT_VALUE</span></span></a></div>
+                  <div><a href="-a-s-s-i-g-n-m-e-n-t_-v-a-l-u-e.html"><span>ASSIGNMENT_</span><wbr><span>VALUE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="275895754%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -362,7 +394,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-b-i-g_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span><span>BIG_INT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-b-i-g_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>BIG_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1868243345%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -377,7 +409,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-b-i-n-a-r-y_-d-a-t-a_-t-y-p-e.html"><span><span>BINARY_DATA_TYPE</span></span></a></div>
+                  <div><a href="-b-i-n-a-r-y_-d-a-t-a_-t-y-p-e.html"><span>BINARY_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1864638328%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -392,7 +424,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-b-i-n-d_-p-a-r-a-m-e-t-e-r.html"><span><span>BIND_PARAMETER</span></span></a></div>
+                  <div><a href="-b-i-n-d_-p-a-r-a-m-e-t-e-r.html"><span>BIND_</span><wbr><span>PARAMETER</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1001814750%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -407,7 +439,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-b-i-t_-d-a-t-a_-t-y-p-e.html"><span><span>BIT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-b-i-t_-d-a-t-a_-t-y-p-e.html"><span>BIT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="438160756%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -422,7 +454,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-b-l-o-b_-l-i-t-e-r-a-l.html"><span><span>BLOB_LITERAL</span></span></a></div>
+                  <div><a href="-b-l-o-b_-l-i-t-e-r-a-l.html"><span>BLOB_</span><wbr><span>LITERAL</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1118006012%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -452,7 +484,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-c-h-a-r-a-c-t-e-r_-t-y-p-e.html"><span><span>CHARACTER_TYPE</span></span></a></div>
+                  <div><a href="-c-h-a-r-a-c-t-e-r_-t-y-p-e.html"><span>CHARACTER_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1170021223%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -497,7 +529,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-c-o-l-u-m-n_-c-o-n-s-t-r-a-i-n-t.html"><span><span>COLUMN_CONSTRAINT</span></span></a></div>
+                  <div><a href="-c-o-l-u-m-n_-c-o-n-s-t-r-a-i-n-t.html"><span>COLUMN_</span><wbr><span>CONSTRAINT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1813609227%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -527,7 +559,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-c-o-m-m-e-n-t_-t-y-p-e.html"><span><span>COMMENT_TYPE</span></span></a></div>
+                  <div><a href="-c-o-m-m-e-n-t_-t-y-p-e.html"><span>COMMENT_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="197952591%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -542,7 +574,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-c-o-m-p-o-u-n-d_-s-e-l-e-c-t_-s-t-m-t.html"><span><span>COMPOUND_SELECT_STMT</span></span></a></div>
+                  <div><a href="-c-o-m-p-o-u-n-d_-s-e-l-e-c-t_-s-t-m-t.html"><span>COMPOUND_</span><wbr><span>SELECT_</span><wbr><span>STMT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1842486382%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -572,7 +604,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p.html"><span><span>CURRENT_TIMESTAMP</span></span></a></div>
+                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p.html"><span>CURRENT_</span><wbr><span>TIMESTAMP</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="972217121%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -587,7 +619,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p_-w-i-t-h_-o-p-t-i-o-n-a-l_-n-u-m-b-e-r.html"><span><span>CURRENT_TIMESTAMP_WITH_OPTIONAL_NUMBER</span></span></a></div>
+                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p_-w-i-t-h_-o-p-t-i-o-n-a-l_-n-u-m-b-e-r.html"><span>CURRENT_</span><wbr><span>TIMESTAMP_</span><wbr><span>WITH_</span><wbr><span>OPTIONAL_</span><wbr><span>NUMBER</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-177154005%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -602,7 +634,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-d-a-t-e_-d-a-t-a_-t-y-p-e.html"><span><span>DATE_DATA_TYPE</span></span></a></div>
+                  <div><a href="-d-a-t-e_-d-a-t-a_-t-y-p-e.html"><span>DATE_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-215866453%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -632,7 +664,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-d-e-f-a-u-l-t_-c-o-n-s-t-r-a-i-n-t.html"><span><span>DEFAULT_CONSTRAINT</span></span></a></div>
+                  <div><a href="-d-e-f-a-u-l-t_-c-o-n-s-t-r-a-i-n-t.html"><span>DEFAULT_</span><wbr><span>CONSTRAINT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1825193198%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -707,7 +739,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-d-r-o-p_-t-a-b-l-e_-s-t-m-t.html"><span><span>DROP_TABLE_STMT</span></span></a></div>
+                  <div><a href="-d-r-o-p_-t-a-b-l-e_-s-t-m-t.html"><span>DROP_</span><wbr><span>TABLE_</span><wbr><span>STMT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-872567096%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -722,7 +754,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-e-n-u-m_-s-e-t_-t-y-p-e.html"><span><span>ENUM_SET_TYPE</span></span></a></div>
+                  <div><a href="-e-n-u-m_-s-e-t_-t-y-p-e.html"><span>ENUM_</span><wbr><span>SET_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1219065924%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -767,7 +799,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-e-x-t-e-n-s-i-o-n_-e-x-p-r.html"><span><span>EXTENSION_EXPR</span></span></a></div>
+                  <div><a href="-e-x-t-e-n-s-i-o-n_-e-x-p-r.html"><span>EXTENSION_</span><wbr><span>EXPR</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1278183636%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -782,7 +814,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-e-x-t-e-n-s-i-o-n_-s-t-m-t.html"><span><span>EXTENSION_STMT</span></span></a></div>
+                  <div><a href="-e-x-t-e-n-s-i-o-n_-s-t-m-t.html"><span>EXTENSION_</span><wbr><span>STMT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="587816545%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -797,7 +829,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-f-i-x-e-d_-p-o-i-n-t_-d-a-t-a_-t-y-p-e.html"><span><span>FIXED_POINT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-f-i-x-e-d_-p-o-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>FIXED_</span><wbr><span>POINT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1074140516%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -872,7 +904,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-f_-e-x-p-r.html"><span><span>IF_EXPR</span></span></a></div>
+                  <div><a href="-i-f_-e-x-p-r.html"><span>IF_</span><wbr><span>EXPR</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="366043066%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -932,7 +964,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-d-e-x_-h-i-n-t.html"><span><span>INDEX_HINT</span></span></a></div>
+                  <div><a href="-i-n-d-e-x_-h-i-n-t.html"><span>INDEX_</span><wbr><span>HINT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="579662805%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -947,7 +979,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-d-e-x_-h-i-n-t_-l-i-s-t.html"><span><span>INDEX_HINT_LIST</span></span></a></div>
+                  <div><a href="-i-n-d-e-x_-h-i-n-t_-l-i-s-t.html"><span>INDEX_</span><wbr><span>HINT_</span><wbr><span>LIST</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-689506360%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -962,7 +994,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-d-e-x_-l-i-s-t.html"><span><span>INDEX_LIST</span></span></a></div>
+                  <div><a href="-i-n-d-e-x_-l-i-s-t.html"><span>INDEX_</span><wbr><span>LIST</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-429794914%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -992,7 +1024,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-s-e-r-t_-s-t-m-t.html"><span><span>INSERT_STMT</span></span></a></div>
+                  <div><a href="-i-n-s-e-r-t_-s-t-m-t.html"><span>INSERT_</span><wbr><span>STMT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1859711005%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1007,7 +1039,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-t_-d-a-t-a_-t-y-p-e.html"><span><span>INT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="631715666%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1022,7 +1054,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-t-e-r-v-a-l_-e-x-p-r-e-s-s-i-o-n.html"><span><span>INTERVAL_EXPRESSION</span></span></a></div>
+                  <div><a href="-i-n-t-e-r-v-a-l_-e-x-p-r-e-s-s-i-o-n.html"><span>INTERVAL_</span><wbr><span>EXPRESSION</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="906791839%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1037,7 +1069,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-n-t-e-r-v-a-l_-u-n-i-t.html"><span><span>INTERVAL_UNIT</span></span></a></div>
+                  <div><a href="-i-n-t-e-r-v-a-l_-u-n-i-t.html"><span>INTERVAL_</span><wbr><span>UNIT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2091401805%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1082,7 +1114,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-j-s-o-n_-b-i-n-a-r-y_-o-p-e-r-a-t-o-r.html"><span><span>JSON_BINARY_OPERATOR</span></span></a></div>
+                  <div><a href="-j-s-o-n_-b-i-n-a-r-y_-o-p-e-r-a-t-o-r.html"><span>JSON_</span><wbr><span>BINARY_</span><wbr><span>OPERATOR</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1322877730%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1097,7 +1129,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-j-s-o-n_-d-a-t-a_-t-y-p-e.html"><span><span>JSON_DATA_TYPE</span></span></a></div>
+                  <div><a href="-j-s-o-n_-d-a-t-a_-t-y-p-e.html"><span>JSON_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="887671857%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1112,7 +1144,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-j-s-o-n_-e-x-p-r-e-s-s-i-o-n.html"><span><span>JSON_EXPRESSION</span></span></a></div>
+                  <div><a href="-j-s-o-n_-e-x-p-r-e-s-s-i-o-n.html"><span>JSON_</span><wbr><span>EXPRESSION</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="149856322%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1187,7 +1219,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-m-e-d-i-u-m_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span><span>MEDIUM_INT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-m-e-d-i-u-m_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>MEDIUM_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="837897972%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1292,7 +1324,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-p-l-a-c-e-m-e-n-t_-c-l-a-u-s-e.html"><span><span>PLACEMENT_CLAUSE</span></span></a></div>
+                  <div><a href="-p-l-a-c-e-m-e-n-t_-c-l-a-u-s-e.html"><span>PLACEMENT_</span><wbr><span>CLAUSE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1466853952%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1322,7 +1354,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-q-u-a-l-i-f-i-e-d_-t-a-b-l-e_-n-a-m-e.html"><span><span>QUALIFIED_TABLE_NAME</span></span></a></div>
+                  <div><a href="-q-u-a-l-i-f-i-e-d_-t-a-b-l-e_-n-a-m-e.html"><span>QUALIFIED_</span><wbr><span>TABLE_</span><wbr><span>NAME</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-587582198%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1367,7 +1399,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-r-o-w_-f-o-r-m-a-t_-c-l-a-u-s-e.html"><span><span>ROW_FORMAT_CLAUSE</span></span></a></div>
+                  <div><a href="-r-o-w_-f-o-r-m-a-t_-c-l-a-u-s-e.html"><span>ROW_</span><wbr><span>FORMAT_</span><wbr><span>CLAUSE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-574951937%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1412,7 +1444,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-s-m-a-l-l_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span><span>SMALL_INT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-s-m-a-l-l_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>SMALL_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-483479894%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1442,7 +1474,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-a-b-l-e_-c-o-n-s-t-r-a-i-n-t.html"><span><span>TABLE_CONSTRAINT</span></span></a></div>
+                  <div><a href="-t-a-b-l-e_-c-o-n-s-t-r-a-i-n-t.html"><span>TABLE_</span><wbr><span>CONSTRAINT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1643679483%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1457,7 +1489,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-a-b-l-e_-o-p-t-i-o-n.html"><span><span>TABLE_OPTION</span></span></a></div>
+                  <div><a href="-t-a-b-l-e_-o-p-t-i-o-n.html"><span>TABLE_</span><wbr><span>OPTION</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1193728797%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1472,7 +1504,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-a-b-l-e_-o-r_-s-u-b-q-u-e-r-y.html"><span><span>TABLE_OR_SUBQUERY</span></span></a></div>
+                  <div><a href="-t-a-b-l-e_-o-r_-s-u-b-q-u-e-r-y.html"><span>TABLE_</span><wbr><span>OR_</span><wbr><span>SUBQUERY</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="187742142%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1487,7 +1519,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-i-n-y_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span><span>TINY_INT_DATA_TYPE</span></span></a></div>
+                  <div><a href="-t-i-n-y_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>TINY_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1671898121%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1517,7 +1549,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-r-u-n-c-a-t-e_-s-t-m-t.html"><span><span>TRUNCATE_STMT</span></span></a></div>
+                  <div><a href="-t-r-u-n-c-a-t-e_-s-t-m-t.html"><span>TRUNCATE_</span><wbr><span>STMT</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-342573872%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1532,7 +1564,7 @@
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-t-y-p-e_-n-a-m-e.html"><span><span>TYPE_NAME</span></span></a></div>
+                  <div><a href="-t-y-p-e_-n-a-m-e.html"><span>TYPE_</span><wbr><span>NAME</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1812714561%2FProperties%2F666177779"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
@@ -1623,12 +1655,18 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2025 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
             </div>
         </div>
     </div>
 </body>
 </html>
-

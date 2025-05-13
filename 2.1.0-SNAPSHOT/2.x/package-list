@@ -1,7 +1,6 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-$dokka.location:app.cash.sqldelight.driver.native.util////PointingToDeclaration/native-driver/app.cash.sqldelight.driver.native.util.html
-$dokka.location:app.cash.sqldelight.internal////PointingToDeclaration/runtime/app.cash.sqldelight.internal.html
+
 module:runtime
 app.cash.sqldelight
 app.cash.sqldelight.db
