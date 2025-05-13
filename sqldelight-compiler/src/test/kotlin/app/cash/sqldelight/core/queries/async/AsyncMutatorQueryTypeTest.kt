@@ -179,8 +179,11 @@ class AsyncMutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertData(data_: com.example.Data_) {
-      |  driver.execute(208_179_736, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public suspend fun insertData(data_: com.example.Data_): kotlin.Long {
+      |  val result = driver.execute(208_179_736, ""${'"'}
       |      |INSERT INTO data (id, value)
       |      |VALUES (${'$'}1, ${'$'}2)
       |      ""${'"'}.trimMargin(), 2) {
@@ -191,6 +194,7 @@ class AsyncMutatorQueryTypeTest {
       |  notifyQueries(208_179_736) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),

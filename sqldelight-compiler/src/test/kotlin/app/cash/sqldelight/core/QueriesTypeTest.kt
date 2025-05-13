@@ -958,18 +958,24 @@ class QueriesTypeTest {
         package com.example
 
         import app.cash.sqldelight.TransacterImpl
+        import app.cash.sqldelight.db.QueryResult
         import app.cash.sqldelight.db.SqlDriver
+        import kotlin.Long
 
         public class TestQueries(
           driver: SqlDriver,
         ) : TransacterImpl(driver) {
-          public fun selectForId(order: Order) {
-            driver.execute(-304_025_397, ""${'"'}INSERT INTO "order" (data_id) VALUES (?)""${'"'}, 1) {
+          /**
+           * @return The number of rows updated.
+           */
+          public fun selectForId(order: Order): QueryResult<Long> {
+            val result = driver.execute(-304_025_397, ""${'"'}INSERT INTO "order" (data_id) VALUES (?)""${'"'}, 1) {
                   bindLong(0, order.data_id)
                 }
             notifyQueries(-304_025_397) { emit ->
               emit("order")
             }
+            return result
           }
         }
 
@@ -998,19 +1004,26 @@ class QueriesTypeTest {
         package com.example
 
         import app.cash.sqldelight.TransacterImpl
+        import app.cash.sqldelight.db.QueryResult
         import app.cash.sqldelight.db.SqlDriver
+        import kotlin.Long
 
         public class TestQueries(
           driver: SqlDriver,
         ) : TransacterImpl(driver) {
-          public fun insertObject(Examples: Examples) {
-            driver.execute(-1_876_170_987, ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
+          /**
+           * @return The number of rows updated.
+           */
+          public fun insertObject(Examples: Examples): QueryResult<Long> {
+            val result = driver.execute(-1_876_170_987,
+                ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
                   bindString(0, Examples.id)
                   bindLong(1, Examples.index)
                 }
             notifyQueries(-1_876_170_987) { emit ->
               emit("Examples")
             }
+            return result
           }
         }
 
