@@ -443,20 +443,19 @@ class PostgreSqlTest {
   @Test fun interval() {
     val interval = database.datesQueries.selectInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
+    assertThat(interval).isEqualTo("1 day")
   }
 
   @Test fun intervalBinaryMultiplyExpression() {
     val interval = database.datesQueries.selectMultiplyInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(31)
+    assertThat(interval).isEqualTo("31 days")
   }
 
   @Test fun intervalBinaryAddExpression() {
     val interval = database.datesQueries.selectAddInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
-    assertThat(interval.getHours()).isEqualTo(3)
+    assertThat(interval).isEqualTo("1 day 03:00:00")
   }
 
   @Test fun successfulOptimisticLock() {
