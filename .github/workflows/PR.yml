@@ -124,7 +124,7 @@ jobs:
         idea:
           - '2023.2.5'   # IC / Iguana
           - '2024.1'   # IC
-          - '2024.2'   # IC
+          # - '2024.2'   # IC - This is failing trying to get the android plugin dependency for unknown reasons.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
