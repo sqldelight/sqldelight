@@ -7,13 +7,12 @@ import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.worker.WebWorkerDriver
+import app.cash.sqldelight.driver.worker.createDefaultWebWorkerDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.fail
-import org.w3c.dom.Worker
 
 class WebWorkerTransacterTest {
   private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
@@ -29,9 +28,12 @@ class WebWorkerTransacterTest {
 
   private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) =
     kotlinx.coroutines.test.runTest {
-      @Suppress("UnsafeCastFromDynamic")
-      val driver = WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))
-        .also { schema.awaitCreate(it) }
+      val driver =
+        createDefaultWebWorkerDriver()
+          .also {
+            schema.awaitCreate(it)
+          }
+
       val transacter = object : SuspendingTransacterImpl(driver) {}
       block(driver, transacter)
 
@@ -180,8 +182,7 @@ class WebWorkerTransacterTest {
       }
     }
 
-  @Test
-  fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() =
+  @Test fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() =
     runTest { _, transacter ->
       class ExceptionA : RuntimeException()
       class ExceptionB : RuntimeException()
