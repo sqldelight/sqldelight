@@ -63,7 +63,7 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
         SMALL_INT -> "$cursorName.getShort($columnIndex)"
         INTEGER -> "$cursorName.getInt($columnIndex)"
         BIG_INT -> "$cursorName.getLong($columnIndex)"
-        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject<%T>($columnIndex)"
+        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
         INTERVAL, JSON, TSVECTOR, TSTZRANGE, TSRANGE, TSMULTIRANGE, TSTZMULTIRANGE, XML -> "$cursorName.getString($columnIndex)"
       },
