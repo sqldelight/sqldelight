@@ -23,6 +23,10 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
   NUMERIC(ClassName("java.math", "BigDecimal")),
   JSON(STRING),
   TSVECTOR(STRING),
+  TSTZRANGE(STRING),
+  TSRANGE(STRING),
+  TSMULTIRANGE(STRING),
+  TSTZMULTIRANGE(STRING),
   XML(STRING),
   ;
 
@@ -38,7 +42,7 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
       )
 
       NUMERIC -> CodeBlock.of("bindBigDecimal(%L, %L)\n", columnIndex, value)
-      INTERVAL, JSON, TSVECTOR -> CodeBlock.of(
+      INTERVAL, JSON, TSVECTOR, TSTZRANGE, TSRANGE, TSMULTIRANGE, TSTZMULTIRANGE -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,
         value,
@@ -61,7 +65,7 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
         BIG_INT -> "$cursorName.getLong($columnIndex)"
         DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-        JSON, INTERVAL, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
+        INTERVAL, JSON, TSVECTOR, TSTZRANGE, TSRANGE, TSMULTIRANGE, TSTZMULTIRANGE, XML -> "$cursorName.getString($columnIndex)"
       },
       javaType,
     )

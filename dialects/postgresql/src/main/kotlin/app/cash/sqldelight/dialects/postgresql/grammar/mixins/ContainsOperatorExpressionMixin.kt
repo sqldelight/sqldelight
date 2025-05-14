@@ -10,9 +10,9 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.intellij.lang.ASTNode
 
 /**
- * The "@>" and "<@" contains operators are used by Array, TsVector and Jsonb
+ * The "@> <@" contain operators is used by Array, TsVector, Jsonb (not Json), TsRange, TsTzRange, TsMultiRange, TsTzMultiRange
  * The type annotation is performed here for these types
- * For additional json operators see JsonExpressionMixin
+ * For other json operators see JsonExpressionMixin
  */
 internal abstract class ContainsOperatorExpressionMixin(node: ASTNode) :
   SqlCompositeElementImpl(node),
@@ -22,11 +22,16 @@ internal abstract class ContainsOperatorExpressionMixin(node: ASTNode) :
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     val columnType = ((firstChild.firstChild.reference?.resolve() as? SqlColumnName)?.parent as? SqlColumnDef)?.columnType?.typeName?.text
     when {
-      columnType == null -> super.annotate(annotationHolder)
-      columnType.endsWith("[]") -> super.annotate(annotationHolder)
-      columnType == "JSONB" -> super.annotate(annotationHolder)
+      columnType == null ||
+        columnType == "JSONB" ||
+        columnType == "TSVECTOR" ||
+        columnType == "TSRANGE" ||
+        columnType == "TSTZRANGE" ||
+        columnType == "TSMULTIRANGE" ||
+        columnType == "TSTZMULTIRANGE" ||
+        columnType.endsWith("[]") -> super.annotate(annotationHolder)
       columnType == "JSON" -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of jsonb expression must be a jsonb column.")
-      columnType != "TSVECTOR" -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of match expression must be a tsvector column.")
+      else -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "expression must be ARRAY, JSONB, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.")
     }
     super.annotate(annotationHolder)
   }
