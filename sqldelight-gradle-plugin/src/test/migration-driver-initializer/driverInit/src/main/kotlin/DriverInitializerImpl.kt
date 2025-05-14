@@ -30,8 +30,7 @@ class CustomDriver : Driver {
 
   private val wrappedDriver: JDBC = JDBC()
 
-  override fun acceptsURL(url: String?): Boolean =
-    wrappedDriver.acceptsURL(url)
+  override fun acceptsURL(url: String?): Boolean = wrappedDriver.acceptsURL(url)
 
   override fun connect(url: String?, props: Properties?): Connection {
     // test that we use the registered custom driver to connect to sqlite dbs during gradle tasks
@@ -40,18 +39,13 @@ class CustomDriver : Driver {
     return connection
   }
 
-  override fun getMajorVersion(): Int =
-    wrappedDriver.majorVersion
+  override fun getMajorVersion(): Int = wrappedDriver.majorVersion
 
-  override fun getMinorVersion(): Int =
-    wrappedDriver.minorVersion
+  override fun getMinorVersion(): Int = wrappedDriver.minorVersion
 
-  override fun getPropertyInfo(url: String?, info: Properties?): Array<DriverPropertyInfo> =
-    wrappedDriver.getPropertyInfo(url, info)
+  override fun getPropertyInfo(url: String?, info: Properties?): Array<DriverPropertyInfo> = wrappedDriver.getPropertyInfo(url, info)
 
-  override fun jdbcCompliant(): Boolean =
-    wrappedDriver.jdbcCompliant()
+  override fun jdbcCompliant(): Boolean = wrappedDriver.jdbcCompliant()
 
-  override fun getParentLogger(): Logger =
-    wrappedDriver.parentLogger
+  override fun getParentLogger(): Logger = wrappedDriver.parentLogger
 }
