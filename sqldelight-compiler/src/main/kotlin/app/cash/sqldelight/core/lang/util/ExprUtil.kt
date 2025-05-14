@@ -78,8 +78,7 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     return functionExpr.typeReturned()
   }
 
-  override fun definitionType(typeName: SqlTypeName) =
-    throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
+  override fun definitionType(typeName: SqlTypeName) = throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
 
   override fun argumentType(
     parent: PsiElement,

@@ -271,12 +271,11 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved.isNullOrEmpty()) {
-      EXECUTABLE_QUERY_TYPE
-    } else {
-      QUERY_TYPE
-    }
+  private fun NamedQuery.supertype() = if (tablesObserved.isNullOrEmpty()) {
+    EXECUTABLE_QUERY_TYPE
+  } else {
+    QUERY_TYPE
+  }
 
   /**
    * The private query subtype for this specific query.

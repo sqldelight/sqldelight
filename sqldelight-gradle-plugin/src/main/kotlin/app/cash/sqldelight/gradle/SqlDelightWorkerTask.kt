@@ -21,8 +21,7 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   @get:Classpath
   abstract val classpath: ConfigurableFileCollection
 
-  internal fun workQueue(): WorkQueue =
-    workerExecutor.processIsolation {
-      it.classpath.from(classpath)
-    }
+  internal fun workQueue(): WorkQueue = workerExecutor.processIsolation {
+    it.classpath.from(classpath)
+  }
 }
