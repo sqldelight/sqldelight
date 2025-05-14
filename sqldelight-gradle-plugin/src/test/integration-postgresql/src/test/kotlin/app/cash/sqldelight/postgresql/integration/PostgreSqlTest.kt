@@ -33,11 +33,9 @@ class PostgreSqlTest {
     driver,
     arraysAdapter = Arrays.Adapter(
       object : ColumnAdapter<Array<UInt>, Array<Int>> {
-        override fun decode(databaseValue: Array<Int>): Array<UInt> =
-          databaseValue.map { it.toUInt() }.toTypedArray()
+        override fun decode(databaseValue: Array<Int>): Array<UInt> = databaseValue.map { it.toUInt() }.toTypedArray()
 
-        override fun encode(value: Array<UInt>): Array<Int> =
-          value.map { it.toInt() }.toTypedArray()
+        override fun encode(value: Array<UInt>): Array<Int> = value.map { it.toInt() }.toTypedArray()
       },
     ),
     data_Adapter = Data_.Adapter(
@@ -443,20 +441,19 @@ class PostgreSqlTest {
   @Test fun interval() {
     val interval = database.datesQueries.selectInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
+    assertThat(interval).isEqualTo("1 day")
   }
 
   @Test fun intervalBinaryMultiplyExpression() {
     val interval = database.datesQueries.selectMultiplyInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(31)
+    assertThat(interval).isEqualTo("31 days")
   }
 
   @Test fun intervalBinaryAddExpression() {
     val interval = database.datesQueries.selectAddInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
-    assertThat(interval.getHours()).isEqualTo(3)
+    assertThat(interval).isEqualTo("1 day 03:00:00")
   }
 
   @Test fun successfulOptimisticLock() {

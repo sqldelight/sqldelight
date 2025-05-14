@@ -7,13 +7,12 @@ import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import app.cash.sqldelight.driver.worker.WebWorkerDriver
+import app.cash.sqldelight.driver.worker.createDefaultWebWorkerDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.fail
-import org.w3c.dom.Worker
 
 class WebWorkerTransacterTest {
   private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
@@ -27,16 +26,18 @@ class WebWorkerTransacterTest {
     ): QueryResult.Value<Unit> = QueryResult.Unit
   }
 
-  private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) =
-    kotlinx.coroutines.test.runTest {
-      @Suppress("UnsafeCastFromDynamic")
-      val driver = WebWorkerDriver(Worker(js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")))
-        .also { schema.awaitCreate(it) }
-      val transacter = object : SuspendingTransacterImpl(driver) {}
-      block(driver, transacter)
+  private fun runTest(block: suspend (SqlDriver, SuspendingTransacter) -> Unit) = kotlinx.coroutines.test.runTest {
+    val driver =
+      createDefaultWebWorkerDriver()
+        .also {
+          schema.awaitCreate(it)
+        }
 
-      driver.close()
-    }
+    val transacter = object : SuspendingTransacterImpl(driver) {}
+    block(driver, transacter)
+
+    driver.close()
+  }
 
   @Test fun afterCommit_runs_after_transaction_commits() = runTest { _, transacter ->
     var counter = 0
@@ -76,40 +77,38 @@ class WebWorkerTransacterTest {
     assertEquals(2, counter)
   }
 
-  @Test fun afterCommit_does_not_run_in_nested_transaction_when_enclosing_rolls_back() =
-    runTest { _, transacter ->
-      var counter = 0
-      transacter.transaction {
+  @Test fun afterCommit_does_not_run_in_nested_transaction_when_enclosing_rolls_back() = runTest { _, transacter ->
+    var counter = 0
+    transacter.transaction {
+      afterCommit { counter++ }
+      assertEquals(0, counter)
+
+      transactionWithResult {
         afterCommit { counter++ }
-        assertEquals(0, counter)
+      }
 
-        transactionWithResult {
-          afterCommit { counter++ }
-        }
+      rollback()
+    }
 
+    assertEquals(0, counter)
+  }
+
+  @Test fun afterCommit_does_not_run_in_nested_transaction_when_nested_rolls_back() = runTest { _, transacter ->
+    var counter = 0
+    transacter.transaction {
+      afterCommit { counter++ }
+      assertEquals(0, counter)
+
+      transactionWithResult {
+        afterCommit { counter++ }
         rollback()
       }
 
-      assertEquals(0, counter)
+      throw AssertionError()
     }
 
-  @Test fun afterCommit_does_not_run_in_nested_transaction_when_nested_rolls_back() =
-    runTest { _, transacter ->
-      var counter = 0
-      transacter.transaction {
-        afterCommit { counter++ }
-        assertEquals(0, counter)
-
-        transactionWithResult {
-          afterCommit { counter++ }
-          rollback()
-        }
-
-        throw AssertionError()
-      }
-
-      assertEquals(0, counter)
-    }
+    assertEquals(0, counter)
+  }
 
   @Test fun afterRollback_no_ops_if_the_transaction_never_rolls_back() = runTest { _, transacter ->
     var counter = 0
@@ -143,18 +142,17 @@ class WebWorkerTransacterTest {
     assertEquals(1, counter)
   }
 
-  @Test fun afterRollback_runs_in_an_inner_transaction_when_the_outer_transaction_rolls_back() =
-    runTest { _, transacter ->
-      var counter = 0
-      transacter.transaction {
-        transactionWithResult {
-          afterRollback { counter++ }
-        }
-        rollback()
+  @Test fun afterRollback_runs_in_an_inner_transaction_when_the_outer_transaction_rolls_back() = runTest { _, transacter ->
+    var counter = 0
+    transacter.transaction {
+      transactionWithResult {
+        afterRollback { counter++ }
       }
-
-      assertEquals(1, counter)
+      rollback()
     }
+
+    assertEquals(1, counter)
+  }
 
   @Test fun transactions_close_themselves_out_properly() = runTest { _, transacter ->
     var counter = 0
@@ -169,37 +167,34 @@ class WebWorkerTransacterTest {
     assertEquals(2, counter)
   }
 
-  @Test fun setting_no_enclosing_fails_if_there_is_a_currently_running_transaction() =
-    runTest { _, transacter ->
-      transacter.transaction(noEnclosing = true) {
-        assertFailsWith<IllegalStateException> {
-          transacter.transaction(noEnclosing = true) {
-            throw AssertionError()
-          }
+  @Test fun setting_no_enclosing_fails_if_there_is_a_currently_running_transaction() = runTest { _, transacter ->
+    transacter.transaction(noEnclosing = true) {
+      assertFailsWith<IllegalStateException> {
+        transacter.transaction(noEnclosing = true) {
+          throw AssertionError()
         }
       }
     }
+  }
 
-  @Test
-  fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() =
-    runTest { _, transacter ->
-      class ExceptionA : RuntimeException()
-      class ExceptionB : RuntimeException()
-      try {
-        transacter.transaction {
-          afterRollback {
-            throw ExceptionA()
-          }
-          throw ExceptionB()
+  @Test fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() = runTest { _, transacter ->
+    class ExceptionA : RuntimeException()
+    class ExceptionB : RuntimeException()
+    try {
+      transacter.transaction {
+        afterRollback {
+          throw ExceptionA()
         }
-        fail("Should have thrown!")
-      } catch (e: Throwable) {
-        assertTrue("Exception thrown in body not in message($e)") {
-          e.toString().contains("ExceptionA")
-        }
-        assertTrue("Exception thrown in rollback not in message($e)") {
-          e.toString().contains("ExceptionB")
-        }
+        throw ExceptionB()
+      }
+      fail("Should have thrown!")
+    } catch (e: Throwable) {
+      assertTrue("Exception thrown in body not in message($e)") {
+        e.toString().contains("ExceptionA")
+      }
+      assertTrue("Exception thrown in rollback not in message($e)") {
+        e.toString().contains("ExceptionB")
       }
     }
+  }
 }

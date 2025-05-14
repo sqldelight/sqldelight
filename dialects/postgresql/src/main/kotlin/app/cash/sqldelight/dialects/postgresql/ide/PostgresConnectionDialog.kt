@@ -83,7 +83,6 @@ internal class PostgresConnectionDialog(
   }
 }
 
-private fun validateNonEmpty(message: String): ValidationInfoBuilder.(JTextField) -> ValidationInfo? =
-  {
-    if (it.text.isNullOrEmpty()) error(message) else null
-  }
+private fun validateNonEmpty(message: String): ValidationInfoBuilder.(JTextField) -> ValidationInfo? = {
+  if (it.text.isNullOrEmpty()) error(message) else null
+}
