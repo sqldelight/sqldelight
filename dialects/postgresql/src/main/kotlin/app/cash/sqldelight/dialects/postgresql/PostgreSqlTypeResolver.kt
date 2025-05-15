@@ -221,6 +221,8 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         else -> error("type not supported for range_agg, use TSRANGE, TSMULTIRANGE, TSTZRANGE, TSTZMULTIRANGE")
       }
     }
+    "unnest" -> unNestType(exprList[0].postgreSqlType())
+
     else -> null
   }
 
@@ -411,16 +413,24 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
 
     private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
-        object : DialectType {
-          override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
-          override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
-          override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
-        },
+        ArrayDialectType(type),
       )
     }
 
     private fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
+    }
+
+    // ArrayDialectType stores the original IntermediateType as parameterizedType so that the type can be returned by unnested
+    private class ArrayDialectType(val parameterizedType: IntermediateType) : DialectType {
+      override val javaType = Array::class.asTypeName().parameterizedBy(parameterizedType.javaType)
+      override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+      override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
+    }
+
+    // assumes that arrayIntermediateType is ArrayDialectType
+    private fun unNestType(arrayIntermediateType: IntermediateType): IntermediateType {
+      return (arrayIntermediateType.dialectType as ArrayDialectType).parameterizedType
     }
   }
 }
