@@ -36,7 +36,7 @@ androidx-paging3-runtime = { module = "androidx.paging:paging-runtime", version.
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.4.0" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
-kotlinPoet = { module = "com.squareup:kotlinpoet", version = "1.18.1" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version = "2.1.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
 jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.2" }
 truth = { module = "com.google.truth:truth", version = "1.4.4" }
