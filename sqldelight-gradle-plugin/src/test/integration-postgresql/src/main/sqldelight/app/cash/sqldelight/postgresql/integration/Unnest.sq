@@ -20,7 +20,7 @@ FROM Business, UNNEST(zipcodes, headcounts) AS location(zipcode, headcount);
 selectLocation:
 SELECT name, location.zipcode
 FROM Business, UNNEST(zipcodes) AS location(zipcode)
-  WHERE LOWER(location.zipcode) LIKE '%' || LOWER(:zipcode) || '%';
+  WHERE LOWER(location.zipcode) LIKE '%' || LOWER(:zipcode::TEXT) || '%';
 
 selectHeadcount:
 SELECT name, UNNEST(headcounts) AS headcount
@@ -53,4 +53,4 @@ FROM Business
 WHERE EXISTS (
    SELECT 1
    FROM UNNEST(Business.zipcodes) AS location(zipcode)
-   WHERE LOWER(location.zipcode) LIKE '%' || LOWER(?) || '%');
+   WHERE LOWER(location.zipcode) LIKE '%' || LOWER(?::TEXT) || '%');
