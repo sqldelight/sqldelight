@@ -1,0 +1,56 @@
+CREATE TABLE Business(
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    zipcodes TEXT[] NOT NULL,
+    headcounts INTEGER[] NOT NULL
+);
+
+CREATE TABLE UserProfile (
+   name TEXT NOT NULL,
+   age INTEGER NOT NULL
+);
+
+insertBusiness:
+INSERT INTO Business (name, zipcodes, headcounts) VALUES (?, ?, ?);
+
+selectBusinesses:
+SELECT name, location.headcount, location.zipcode
+FROM Business, UNNEST(zipcodes, headcounts) AS location(zipcode, headcount);
+
+selectLocation:
+SELECT name, location.zipcode
+FROM Business, UNNEST(zipcodes) AS location(zipcode)
+  WHERE LOWER(location.zipcode) LIKE '%' || LOWER(:zipcode::TEXT) || '%';
+
+selectHeadcount:
+SELECT name, UNNEST(headcounts) AS headcount
+FROM Business
+ORDER BY headcount DESC;
+
+selectUserProfiles:
+SELECT * FROM UserProfile ORDER BY name;
+
+insertUsers:
+INSERT INTO UserProfile (name, age)
+SELECT * FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS u(name, age);
+
+updateUsersAge:
+UPDATE UserProfile
+SET age = updates.updated_age
+FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS updates(name, updated_age)
+WHERE UserProfile.name = updates.name;
+
+deleteUsers:
+DELETE FROM UserProfile
+WHERE (name, age) IN (
+  SELECT *
+  FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS u(name, age)
+);
+
+selectBusinessExists:
+SELECT *
+FROM Business
+WHERE EXISTS (
+   SELECT 1
+   FROM UNNEST(Business.zipcodes) AS location(zipcode)
+   WHERE LOWER(location.zipcode) LIKE '%' || LOWER(?::TEXT) || '%');
