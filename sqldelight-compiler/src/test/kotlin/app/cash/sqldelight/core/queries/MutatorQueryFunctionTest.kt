@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.TestDialect
+import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.textType
@@ -53,6 +54,48 @@ class MutatorQueryFunctionTest {
       |    emit("data")
       |  }
       |  return result
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `mutator lambda generates proper method signature`(dialect: TestDialect) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  value ${dialect.textType}
+      |);
+      |
+      |insertData {
+      |  INSERT INTO data
+      |  VALUES (:customTextValue);
+      |}
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val insert = file.namedExecutes.first()
+    val generator = ExecuteQueryGenerator(insert)
+
+    assertThat(generator.function().toString()).isEqualTo(
+      """
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(customTextValue: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${insert.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        ${dialect.binderCheck}bindString(0, customTextValue)
+      |      }
+      |} .also {
+      |  notifyQueries(${insert.id.withUnderscores}) { emit ->
+      |    emit("data")
+      |  }
       |}
       |
       """.trimMargin(),

@@ -38,10 +38,8 @@ open class ExecuteQueryGenerator(
         },
       )
       .apply {
-        if (mutatorReturns) {
-          val type = if (generateAsync) LONG else QUERY_RESULT_TYPE.parameterizedBy(LONG)
-          returns(type, CodeBlock.of("The number of rows updated."))
-        }
+        val type = if (generateAsync) LONG else QUERY_RESULT_TYPE.parameterizedBy(LONG)
+        returns(type, CodeBlock.of("The number of rows updated."))
       }
   }
 

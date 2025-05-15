@@ -984,20 +984,22 @@ class MutatorQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun delete(ids: kotlin.collections.Collection<Int>) {
-      |  transaction {
-      |    val idsIndexes = createArguments(count = ids.size)
-      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.size) {
-      |          ids.forEachIndexed { index, ids_ ->
-      |            bindLong(index, data_Adapter.idAdapter.encode(ids_))
-      |          }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun delete(ids: kotlin.collections.Collection<Int>): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  val idsIndexes = createArguments(count = ids.size)
+      |  driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.size) {
+      |        ids.forEachIndexed { index, ids_ ->
+      |          bindLong(index, data_Adapter.idAdapter.encode(ids_))
       |        }
-      |    driver.execute(null, ""${'"'}DELETE FROM data WHERE other IN ${'$'}idsIndexes""${'"'}, ids.size) {
-      |          ids.forEachIndexed { index, ids_ ->
-      |            bindLong(index, data_Adapter.idAdapter.encode(ids_))
-      |          }
+      |      }
+      |  driver.execute(null, ""${'"'}DELETE FROM data WHERE other IN ${'$'}idsIndexes""${'"'}, ids.size) {
+      |        ids.forEachIndexed { index, ids_ ->
+      |          bindLong(index, data_Adapter.idAdapter.encode(ids_))
       |        }
-      |  }
+      |      }
+      |} .also {
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
