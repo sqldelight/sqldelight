@@ -75,20 +75,16 @@ abstract class QueryGenerator(
 
     val notifyBlock = notifyQueriesBlock()
     if (query.statement is SqlDelightStmtClojureStmtList) {
-      if (query is NamedQuery) {
-        result
-          .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
-          .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
-      } else {
-        result.beginControlFlow("transaction")
-      }
+      result
+        .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
+        .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
       val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         val (block, additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
         handledArrayArgs.addAll(additionalArrayArgs)
         result.add(block)
       }
-      if (query is NamedQuery && notifyBlock.isNotEmpty()) {
+      if (notifyBlock.isNotEmpty()) {
         result.nextControlFlow(".also")
         result.add(notifyBlock)
         result.endControlFlow()
@@ -96,7 +92,7 @@ abstract class QueryGenerator(
         result.endControlFlow()
         result.add(notifyBlock)
       }
-      if (generateAsync && query is NamedQuery) {
+      if (generateAsync) {
         result.endControlFlow()
       }
     } else {
