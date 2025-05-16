@@ -26,8 +26,8 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import org.junit.rules.TemporaryFolder
 import java.io.File
+import org.junit.rules.TemporaryFolder
 
 private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 
@@ -60,6 +60,7 @@ object FixtureCompiler {
     val srcRootDir = temporaryFolder.fixtureRoot().apply { mkdirs() }
     val fixtureSrcDir = File(srcRootDir, "com/example").apply { mkdirs() }
     File(fixtureSrcDir, fileName).apply {
+      parentFile.mkdirs()
       createNewFile()
       writeText(sql)
     }
@@ -157,15 +158,13 @@ object FixtureCompiler {
 
   private fun createAnnotationHolder(
     errors: MutableList<String>,
-  ) = object : SqlAnnotationHolder {
-    override fun createErrorAnnotation(element: PsiElement, s: String) {
-      val documentManager = PsiDocumentManager.getInstance(element.project)
-      val name = element.containingFile.name
-      val document = documentManager.getDocument(element.containingFile)!!
-      val lineNum = document.getLineNumber(element.textOffset)
-      val offsetInLine = element.textOffset - document.getLineStartOffset(lineNum)
-      errors += "$name: (${lineNum + 1}, $offsetInLine): $s"
-    }
+  ) = SqlAnnotationHolder { element, message ->
+    val documentManager = PsiDocumentManager.getInstance(element.project)
+    val name = element.containingFile.name
+    val document = documentManager.getDocument(element.containingFile)!!
+    val lineNum = document.getLineNumber(element.textOffset)
+    val offsetInLine = element.textOffset - document.getLineStartOffset(lineNum)
+    errors += "$name: (${lineNum + 1}, $offsetInLine): $message"
   }
 
   private fun PsiFile.log(sourceFiles: StringBuilder) {

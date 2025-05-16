@@ -33,14 +33,14 @@ internal enum class HsqlType(override val javaType: TypeName) : DialectType {
   },
   ;
 
-  override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
+  override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
     return CodeBlock.builder()
       .add(
         when (this) {
           TINY_INT, SMALL_INT, INTEGER, BIG_INT, BOOL -> "bindLong"
         },
       )
-      .add("($columnIndex, %L)\n", value)
+      .add("(%L, %L)\n", columnIndex, value)
       .build()
   }
 

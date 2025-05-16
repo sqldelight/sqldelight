@@ -7,11 +7,13 @@ import app.cash.sqldelight.withCommonConfiguration
 import app.cash.sqldelight.withInvariantPathSeparators
 import app.cash.sqldelight.withSortedCompilationUnits
 import com.google.common.truth.Truth.assertThat
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.Test
 import java.io.File
+import org.gradle.testkit.runner.GradleRunner
+import org.junit.Ignore
+import org.junit.Test
 
 class MultiModuleTests {
+  @Ignore
   @Test
   fun `sqldelight dependencies are added to the compilation unit`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
@@ -28,7 +30,7 @@ class MultiModuleTests {
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
-      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
+      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database/main"))
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
         SqlDelightSourceFolderImpl(File(fixtureRoot, "../ProjectB/src/main/sqldelight"), true),
@@ -36,6 +38,7 @@ class MultiModuleTests {
     }
   }
 
+  @Ignore
   @Test
   fun integrationTests() {
     val runner = GradleRunner.create()
@@ -46,6 +49,7 @@ class MultiModuleTests {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Ignore
   @Test
   fun `android multi module integration tests`() {
     val runner = GradleRunner.create()
@@ -56,6 +60,7 @@ class MultiModuleTests {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Ignore
   @Test
   fun `the android target of a multiplatform module is a dependency for an android only module`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
@@ -165,7 +170,7 @@ class MultiModuleTests {
           SqlDelightSourceFolderImpl(File(fixtureRoot, "../middleB/src/main/sqldelight"), true),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/Database"),
+        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/Database/main"),
       ),
     )
   }

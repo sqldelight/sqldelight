@@ -1,6 +1,5 @@
 package app.cash.sqldelight.gradle.squash
 
-import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -12,6 +11,8 @@ import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightWorkerTask
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.psi.PsiFileFactory
+import java.io.File
+import java.util.ServiceLoader
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
@@ -24,21 +25,14 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.util.ServiceLoader
 
 @CacheableTask
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
-  @Suppress("unused")
-  // Required to invalidate the task on version updates.
-  @Input
-  val pluginVersion = VERSION
+  @get:Input abstract val projectName: Property<String>
 
-  @Input val projectName: Property<String> = project.objects.property(String::class.java)
+  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
 
-  @Nested lateinit var properties: SqlDelightDatabasePropertiesImpl
-
-  @Nested lateinit var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @TaskAction
   fun generateSquashedMigrationFile() {
@@ -92,7 +86,7 @@ abstract class MigrationSquashTask : SqlDelightWorkerTask() {
       var newMigrations = fileFromText("")
 
       // Generate the new files.
-      var topVersion = 0
+      var topVersion = 0L
       lateinit var migrationDirectory: File
       environment.forMigrationFiles { migrationFile ->
         if (migrationFile.version > topVersion) {

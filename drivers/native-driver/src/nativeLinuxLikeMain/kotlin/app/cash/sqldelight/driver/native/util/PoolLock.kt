@@ -1,6 +1,7 @@
 package app.cash.sqldelight.driver.native.util
 
 import co.touchlab.stately.concurrency.AtomicBoolean
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.free
 import kotlinx.cinterop.nativeHeap
@@ -20,6 +21,7 @@ import platform.posix.pthread_mutexattr_init
 import platform.posix.pthread_mutexattr_settype
 import platform.posix.pthread_mutexattr_t
 
+@OptIn(ExperimentalForeignApi::class)
 internal actual class PoolLock actual constructor(reentrant: Boolean) {
   private val isActive = AtomicBoolean(true)
   private val attr = nativeHeap.alloc<pthread_mutexattr_t>()
@@ -81,14 +83,6 @@ internal actual class PoolLock actual constructor(reentrant: Boolean) {
       }
 
       return result
-    }
-
-    actual fun loopUntilConditionalResult(block: () -> Boolean) {
-      check(isActive.value)
-
-      while (!block()) {
-        pthread_cond_wait(cond.ptr, mutex.ptr)
-      }
     }
   }
 }

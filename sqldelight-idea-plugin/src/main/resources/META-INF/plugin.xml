@@ -3,7 +3,6 @@
   <name>SQLDelight</name>
   <category>Custom Languages</category>
   <vendor url="https://github.com/square">Square, Inc.</vendor>
-  <idea-version since-build="222.4459.24"/>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
@@ -47,13 +46,14 @@
         implementation="app.cash.sqldelight.intellij.GradleSystemListener"/>
 
     <defaultLiveTemplates file="liveTemplates/SqlDelight.xml"/>
-    <liveTemplateContext implementation="app.cash.sqldelight.intellij.SqlDelightLiveTemplateContextType"/>
+    <liveTemplateContext implementation="app.cash.sqldelight.intellij.SqlDelightLiveTemplateContextType"
+      contextId="SQLDELIGHT"/>
 
     <fileIconProvider implementation="app.cash.sqldelight.intellij.SqlDelightFileIconProvider" />
     <errorHandler implementation="app.cash.sqldelight.intellij.SqlDelightErrorHandler"/>
 
     <stubIndex implementation="com.alecstrong.sql.psi.core.psi.SchemaContributorIndexImpl"/>
-    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes"/>
+    <stubElementTypeHolder class="com.alecstrong.sql.psi.core.psi.SqlTypes" externalIdPrefix="SqlDelight.TYPES"/>
 
     <treeStructureProvider
         implementation="app.cash.sqldelight.intellij.SqlDelightTreeStructureProvider"/>
@@ -153,7 +153,7 @@
         level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.UnusedImportInspection"
         displayName="Unused import inspection"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -162,7 +162,7 @@
         runForWholeFile="true"
         implementationClass="app.cash.sqldelight.intellij.inspections.UnusedQueryInspection"
         displayName="Unused query inspection"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -171,7 +171,7 @@
         runForWholeFile="true"
         implementationClass="app.cash.sqldelight.intellij.inspections.UnusedColumnInspection"
         displayName="Unused column inspection"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -179,7 +179,7 @@
         level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.MismatchJoinColumnInspection"
         displayName="Incorrect join column inspection"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -187,7 +187,7 @@
         level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.RedundantNullCheckInspection"
         displayName="Redundant null check inspection"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -195,7 +195,7 @@
         level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.MixedNamedAndPositionalParamsInspection"
         displayName="Mixed named and positional arguments inspection"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -203,7 +203,15 @@
         level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.NullEqualityInspection"
         displayName="Null comparison"
-        groupName="Declaration redundancy"/>
+        groupName="SqlDelight"/>
+
+    <localInspection
+        enabledByDefault="false"
+        language="SqlDelight"
+        level="WARNING"
+        implementationClass="app.cash.sqldelight.intellij.inspections.MissingWhereInspection"
+        displayName="Missing where clause on DELETE or UPDATE statement"
+        groupName="SqlDelight"/>
 
     <localInspection
         enabledByDefault="true"
@@ -211,13 +219,17 @@
         level="WARNING"
         implementationClass="app.cash.sqldelight.intellij.inspections.SchemaNeedsMigrationInspection"
         displayName="Schema needs migration inspection"
-        groupName="Migrations"/>
+        groupName="SqlDelight"/>
 
     <codeInsight.parameterInfo language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightParameterInfoHandler"/>
     <codeInsight.parameterNameHints language="SqlDelight" implementationClass="app.cash.sqldelight.intellij.SqlDelightInlayParameterHintsProvider"/>
 
     <liveTemplateMacro implementation="app.cash.sqldelight.intellij.macro.DbColumnsMacro"/>
     <liveTemplateMacro implementation="app.cash.sqldelight.intellij.macro.PkMacro"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <supportsKotlinPluginMode supportsK2="true" />
   </extensions>
 
   <actions>

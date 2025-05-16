@@ -26,7 +26,9 @@ class FooDialect : SqlDelightDialect by SqliteDialect() {
     }
 
     override fun definitionType(typeName: SqlTypeName): IntermediateType {
-      return when (typeName) { else -> IntermediateType(ExtensionType) }
+      return when (typeName) {
+        else -> IntermediateType(ExtensionType)
+      }
     }
   }
 
@@ -42,7 +44,7 @@ class FooDialect : SqlDelightDialect by SqliteDialect() {
         .build()
     }
 
-    override fun prepareStatementBinder(columnIndex: String, value: CodeBlock): CodeBlock {
+    override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
       return CodeBlock.of("""TODO("Not yet implemented")""")
     }
   }

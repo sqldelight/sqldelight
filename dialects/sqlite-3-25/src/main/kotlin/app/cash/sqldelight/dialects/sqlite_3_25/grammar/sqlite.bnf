@@ -36,7 +36,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WINDOW"
   ]
 }
-overrides ::= alter_table_rules | result_column | select_stmt
+overrides ::= alter_table_rules | extension_expr | select_stmt
 
 alter_table_rules ::= (
   {alter_table_add_column}
@@ -47,28 +47,38 @@ alter_table_rules ::= (
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
   override = true
 }
-result_column ::= ( MULTIPLY
-                  | {table_name} DOT MULTIPLY
-                  | (window_function_invocation | <<expr '-1'>>) [ [ AS ] {column_alias} ] ) {
-  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.ResultColumnMixin"
-  implements = "com.alecstrong.sql.psi.core.psi.SqlResultColumn"
-  override = true
-}
-select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [ GROUP BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * [ HAVING <<expr '-1'>> ] ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
+
+select_stmt ::= SELECT [ DISTINCT | ALL ] {result_column} ( COMMA {result_column} ) * [ FROM {join_clause} ] [ WHERE <<expr '-1'>> ] [{group_by}] [ HAVING <<expr '-1'>> ] [ WINDOW window_name AS window_defn ( COMMA window_name AS window_defn ) * ] | VALUES {values_expression} ( COMMA {values_expression} ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlSelectStmt"
   override = true
-  pin = 1
+  pin = 2
 }
 
-alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
+alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO alter_table_column_alias {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableRenameColumnMixin"
   pin = 1
 }
 
-window_function_invocation ::=
-  window_func LP [ MULTIPLY | ( <<expr '-1'>> ( COMMA <<expr '-1'>> ) * ) ] RP [ 'FILTER' LP WHERE <<expr '-1'>> RP] 'OVER' ( window_defn | window_name ) {
-  pin = 6
+alter_table_column_alias ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableColumnAliasMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.AliasElement";
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+    "com.alecstrong.sql.psi.core.psi.SqlColumnName"
+  ]
+}
+
+extension_expr ::= window_function_expr {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+  override = true
+}
+
+window_function_expr ::= {function_expr} [ 'FILTER' LP WHERE <<expr '-1'>> RP] 'OVER' ( window_defn | window_name ) {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.SqliteWindowFunctionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlFunctionExpr"
 }
 
 window_defn ::= LP [ base_window_name ]
@@ -77,6 +87,7 @@ window_defn ::= LP [ base_window_name ]
   [ frame_spec ]
 RP {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.SqliteWindowDefinitionMixin"
+  pin = 1
 }
 
 frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
@@ -99,6 +110,5 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
   pin = 1
 }
 
-window_func ::= id
 window_name ::= id
 base_window_name ::= id

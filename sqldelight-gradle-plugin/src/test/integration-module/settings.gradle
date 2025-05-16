@@ -1,3 +1,9 @@
-apply from: "../settings.gradle"
+pluginManagement {
+    includeBuild("../build-logic-tests")
+}
+
+plugins {
+    id("sqldelightTests")
+}
 
 rootProject.name = 'integration-module'

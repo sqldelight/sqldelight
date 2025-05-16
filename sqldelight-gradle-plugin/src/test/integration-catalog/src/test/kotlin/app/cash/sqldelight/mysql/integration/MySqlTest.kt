@@ -5,10 +5,6 @@ import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.time.LocalDate
@@ -17,6 +13,10 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
 
 class MySqlTest {
   lateinit var connection: Connection
@@ -26,13 +26,13 @@ class MySqlTest {
 
   @Before
   fun before() {
-    connection = DriverManager.getConnection("jdbc:tc:mysql:///myDb")
+    connection = DriverManager.getConnection("jdbc:tc:mysql:8.0:///myDb")
     driver = object : JdbcDriver() {
       override fun getConnection() = connection
       override fun closeConnection(connection: Connection) = Unit
-      override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-      override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-      override fun notifyListeners(queryKeys: Array<String>) = Unit
+      override fun addListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+      override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+      override fun notifyListeners(vararg queryKeys: String) = Unit
     }
     val database = MyDatabase(driver)
 

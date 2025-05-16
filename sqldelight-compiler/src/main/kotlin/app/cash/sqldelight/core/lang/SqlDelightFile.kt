@@ -45,14 +45,18 @@ abstract class SqlDelightFile(
     get() = SqlDelightProjectService.getInstance(project).generateAsync
 
   internal val typeResolver: TypeResolver by lazy {
-    var parentResolver: TypeResolver = AnsiSqlTypeResolver
+    var resolver: TypeResolver = dialect.typeResolver(AnsiSqlTypeResolver)
     ServiceLoader.load(SqlDelightModule::class.java, dialect::class.java.classLoader).forEach {
-      parentResolver = it.typeResolver(parentResolver)
+      resolver = it.typeResolver(resolver)
     }
-    dialect.typeResolver(parentResolver)
+    resolver
   }
 
-  abstract val packageName: String?
+  val packageName: String? by lazy {
+    module?.let { module ->
+      SqlDelightFileIndex.getInstance(module).packageName(this)
+    }
+  }
 
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile

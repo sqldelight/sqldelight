@@ -35,20 +35,24 @@ class PgInsertOnConflictTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-            |public fun upsertCols(id: kotlin.Int?, c1: kotlin.String?): kotlin.Unit {
-            |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+            |/**
+            | * @return The number of rows updated.
+            | */
+            |public fun upsertCols(id: kotlin.Int?, c1: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+            |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?
             |      ""${'"'}.trimMargin(), 3) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindLong(0, id?.let { it.toLong() })
+            |        bindInt(0, id)
             |        bindString(1, c1)
             |        bindString(2, c1)
             |      }
             |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
             |  }
+            |  return result
             |}
             |
       """.trimMargin(),
@@ -80,19 +84,22 @@ class PgInsertOnConflictTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
+            |/**
+            | * @return The number of rows updated.
+            | */
             |public fun upsertCols(
             |  id: kotlin.Int?,
             |  c1: kotlin.String?,
             |  c2: kotlin.String?,
             |  c3: kotlin.String?,
-            |): kotlin.Unit {
-            |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+            |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+            |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?
             |      ""${'"'}.trimMargin(), 6) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindLong(0, id?.let { it.toLong() })
+            |        bindInt(0, id)
             |        bindString(1, c1)
             |        bindString(2, c2)
             |        bindString(3, c3)
@@ -102,6 +109,7 @@ class PgInsertOnConflictTest {
             |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
             |  }
+            |  return result
             |}
             |
       """.trimMargin(),
@@ -133,19 +141,22 @@ class PgInsertOnConflictTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
+            |/**
+            | * @return The number of rows updated.
+            | */
             |public fun upsertCols(
             |  id: kotlin.Int?,
             |  c1: kotlin.String?,
             |  c2: kotlin.String?,
             |  c3: kotlin.String?,
-            |): kotlin.Unit {
-            |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+            |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+            |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
             |      |INSERT INTO data
             |      |VALUES (?, ?, ?, ?)
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?, col3 = ?
             |      ""${'"'}.trimMargin(), 7) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindLong(0, id?.let { it.toLong() })
+            |        bindInt(0, id)
             |        bindString(1, c1)
             |        bindString(2, c2)
             |        bindString(3, c3)
@@ -156,6 +167,7 @@ class PgInsertOnConflictTest {
             |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
             |  }
+            |  return result
             |}
             |
       """.trimMargin(),

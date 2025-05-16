@@ -51,7 +51,8 @@ abstract class StmtIdentifierMixin(
   }
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
-    if (name != null && (containingFile as SqlDelightQueriesFile).sqlStatements()
+    if (name != null &&
+      (containingFile as SqlDelightQueriesFile).sqlStatements()
         .filterNot { it.identifier == this }
         .any { it.identifier.name == name }
     ) {

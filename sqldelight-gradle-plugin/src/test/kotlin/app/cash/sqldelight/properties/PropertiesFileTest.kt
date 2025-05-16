@@ -7,9 +7,9 @@ import app.cash.sqldelight.withCommonConfiguration
 import app.cash.sqldelight.withInvariantPathSeparators
 import app.cash.sqldelight.withTemporaryFixture
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class PropertiesFileTest {
   @Test fun `properties file generates correctly`() {
@@ -26,7 +26,7 @@ class PropertiesFileTest {
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
-      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database"))
+      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database/main"))
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
       )
@@ -50,13 +50,11 @@ class PropertiesFileTest {
     withTemporaryFixture {
       gradleFile(
         """|
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.sqldelight)
+        |  alias(libs.plugins.android.library)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'app.cash.sqldelight'
-        |apply plugin: 'com.android.library'
         |
         |archivesBaseName = 'Test'
         |
@@ -95,7 +93,7 @@ class PropertiesFileTest {
           sourceFolders = listOf(
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false),
           ),
-          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase"),
+          outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase/commonMain"),
         ),
       )
     }

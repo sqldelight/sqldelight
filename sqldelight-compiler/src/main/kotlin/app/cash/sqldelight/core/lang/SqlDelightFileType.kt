@@ -23,8 +23,6 @@ const val SQLDELIGHT_EXTENSION = "sq"
 object SqlDelightFileType : LanguageFileType(SqlDelightLanguage) {
   private val ICON = AllIcons.Providers.Sqlite
 
-  const val FOLDER_NAME = "sqldelight"
-
   override fun getName() = "SqlDelight"
   override fun getDescription() = "SqlDelight"
   override fun getDefaultExtension() = SQLDELIGHT_EXTENSION

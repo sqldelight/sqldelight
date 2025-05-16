@@ -4,11 +4,11 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.fixtureRoot
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import kotlin.test.assertFailsWith
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import kotlin.test.assertFailsWith
 
 class QueryWrapperTest {
   @get:Rule val tempFolder = TemporaryFolder()
@@ -41,7 +41,7 @@ class QueryWrapperTest {
       |import app.cash.sqldelight.db.SqlDriver
       |import app.cash.sqldelight.db.SqlSchema
       |import com.example.TestDatabase
-      |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.Unit
       |import kotlin.reflect.KClass
       |
@@ -53,12 +53,13 @@ class QueryWrapperTest {
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
-      |) : TransacterImpl(driver), TestDatabase {
+      |) : TransacterImpl(driver),
+      |    TestDatabase {
       |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-      |    public override val version: Int
+      |    override val version: Long
       |      get() = 1
       |
-      |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+      |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
       |      driver.execute(null, ""${'"'}
       |          |CREATE TABLE test_table(
       |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -72,10 +73,10 @@ class QueryWrapperTest {
       |      return QueryResult.Unit
       |    }
       |
-      |    public override fun migrate(
+      |    override fun migrate(
       |      driver: SqlDriver,
-      |      oldVersion: Int,
-      |      newVersion: Int,
+      |      oldVersion: Long,
+      |      newVersion: Long,
       |      vararg callbacks: AfterVersion,
       |    ): QueryResult.Value<Unit> = QueryResult.Unit
       |  }
@@ -124,7 +125,7 @@ class QueryWrapperTest {
         |import com.example.TestQueries
         |import com.example.Test_table
         |import com.example.Test_table2
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -141,15 +142,15 @@ class QueryWrapperTest {
         |  driver: SqlDriver,
         |  test_table2Adapter: Test_table2.Adapter,
         |  test_tableAdapter: Test_table.Adapter,
-        |) : TransacterImpl(driver), TestDatabase {
-        |  public override val testQueries: TestQueries = TestQueries(driver, test_tableAdapter,
-        |      test_table2Adapter)
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
+        |  override val testQueries: TestQueries = TestQueries(driver, test_tableAdapter, test_table2Adapter)
         |
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test_table(
         |          |  _id INTEGER NOT NULL PRIMARY KEY,
@@ -165,10 +166,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
@@ -208,7 +209,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -220,12 +221,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -239,10 +241,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
@@ -302,7 +304,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -314,12 +316,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY,
@@ -335,10 +338,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
@@ -388,7 +391,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -400,12 +403,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE parent(
         |          |  id INTEGER PRIMARY KEY
@@ -432,10 +436,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
@@ -472,7 +476,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -484,12 +488,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE VIEW A AS
         |          |SELECT 1
@@ -502,10 +507,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
@@ -547,7 +552,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -559,12 +564,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value TEXT
@@ -581,10 +587,89 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
+        |      vararg callbacks: AfterVersion,
+        |    ): QueryResult.Value<Unit> = QueryResult.Unit
+        |  }
+        |}
+        |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `queryWrapper puts foreign key constraint in correct order`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        CREATE TABLE child(
+          parent_id INTEGER,
+
+          FOREIGN KEY (parent_id) REFERENCES parent(id)
+        );
+
+        CREATE TABLE parent(
+          id INTEGER PRIMARY KEY
+        );
+      """.trimIndent(),
+      tempFolder,
+      overrideDialect = PostgreSqlDialect(),
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).isEqualTo(
+      """
+        |package com.example.testmodule
+        |
+        |import app.cash.sqldelight.TransacterImpl
+        |import app.cash.sqldelight.db.AfterVersion
+        |import app.cash.sqldelight.db.QueryResult
+        |import app.cash.sqldelight.db.SqlDriver
+        |import app.cash.sqldelight.db.SqlSchema
+        |import com.example.TestDatabase
+        |import kotlin.Long
+        |import kotlin.Unit
+        |import kotlin.reflect.KClass
+        |
+        |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
+        |  get() = TestDatabaseImpl.Schema
+        |
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
+        |    TestDatabaseImpl(driver)
+        |
+        |private class TestDatabaseImpl(
+        |  driver: SqlDriver,
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
+        |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
+        |    override val version: Long
+        |      get() = 1
+        |
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE parent(
+        |          |  id INTEGER PRIMARY KEY
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      driver.execute(null, ""${'"'}
+        |          |CREATE TABLE child(
+        |          |  parent_id INTEGER,
+        |          |
+        |          |  FOREIGN KEY (parent_id) REFERENCES parent(id)
+        |          |)
+        |          ""${'"'}.trimMargin(), 0)
+        |      return QueryResult.Unit
+        |    }
+        |
+        |    override fun migrate(
+        |      driver: SqlDriver,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }
@@ -643,7 +728,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -655,12 +740,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 3
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
         |          |  value1 TEXT,
@@ -673,8 +759,8 @@ class QueryWrapperTest {
         |
         |    private fun migrateInternal(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |    ): QueryResult.Value<Unit> {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
@@ -692,10 +778,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> {
         |      var lastVersion = oldVersion
@@ -759,7 +845,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.QueryQueries
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |
@@ -771,14 +857,15 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
-        |  public override val queryQueries: QueryQueries = QueryQueries(driver)
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
+        |  override val queryQueries: QueryQueries = QueryQueries(driver)
         |
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, "PRAGMA journal_mode=wal", 0)
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE test (
@@ -790,8 +877,8 @@ class QueryWrapperTest {
         |
         |    private fun migrateInternal(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |    ): QueryResult.Value<Unit> {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, "PRAGMA journal_mode=wal", 0)
@@ -804,10 +891,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> {
         |      var lastVersion = oldVersion
@@ -871,7 +958,7 @@ class QueryWrapperTest {
         |import app.cash.sqldelight.db.SqlDriver
         |import app.cash.sqldelight.db.SqlSchema
         |import com.example.TestDatabase
-        |import kotlin.Int
+        |import kotlin.Long
         |import kotlin.Unit
         |import kotlin.reflect.KClass
         |import kotlin.text.buildString
@@ -884,12 +971,13 @@ class QueryWrapperTest {
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
-        |) : TransacterImpl(driver), TestDatabase {
+        |) : TransacterImpl(driver),
+        |    TestDatabase {
         |  public object Schema : SqlSchema<QueryResult.Value<Unit>> {
-        |    public override val version: Int
+        |    override val version: Long
         |      get() = 1
         |
-        |    public override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
+        |    override fun create(driver: SqlDriver): QueryResult.Value<Unit> {
         |      driver.execute(null, ""${'"'}
         |          |CREATE TABLE class_ability_test (
         |          |  id TEXT PRIMARY KEY NOT NULL,
@@ -921,10 +1009,10 @@ class QueryWrapperTest {
         |      return QueryResult.Unit
         |    }
         |
-        |    public override fun migrate(
+        |    override fun migrate(
         |      driver: SqlDriver,
-        |      oldVersion: Int,
-        |      newVersion: Int,
+        |      oldVersion: Long,
+        |      newVersion: Long,
         |      vararg callbacks: AfterVersion,
         |    ): QueryResult.Value<Unit> = QueryResult.Unit
         |  }

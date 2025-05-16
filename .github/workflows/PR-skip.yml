@@ -1,0 +1,42 @@
+# Matches paths that are skipped by PR.yml, to ensure that CI isn't constantly pending.
+# See https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/troubleshooting-required-status-checks#handling-skipped-but-required-checks
+
+name: Test
+
+on:
+  pull_request:
+    # Ensure paths match paths-ignore in PR.yml
+    paths:
+      - 'docs/**'
+      - '*.md'
+      - 'mkdocs.yml'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ macOS-14, windows-latest, ubuntu-latest ]
+        job: [ instrumentation, test, gradle-plugin-tests ]
+        exclude:
+          - os: windows-latest
+            job: instrumentation
+          - os: windows-latest
+            job: gradle-plugin-tests
+          - os: ubuntu-latest
+            job: gradle-plugin-tests
+          - os: macOS-14
+            job: instrumentation
+    # We don't actually need to run on `{{matrix.os}}` for this to work
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'
+
+  spotless:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'
+
+  verify_intellij_check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'

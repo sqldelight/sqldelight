@@ -191,7 +191,8 @@ private class RollbackException(val value: Any? = null) : Throwable()
 
 private class TransactionWrapper<R>(
   val transaction: Transaction,
-) : TransactionWithoutReturn, TransactionWithReturn<R> {
+) : TransactionWithoutReturn,
+  TransactionWithReturn<R> {
   override fun rollback(): Nothing {
     transaction.checkThreadConfinement()
     throw RollbackException()
@@ -226,7 +227,8 @@ private class TransactionWrapper<R>(
 
 private class SuspendingTransactionWrapper<R>(
   val transaction: Transaction,
-) : SuspendingTransactionWithoutReturn, SuspendingTransactionWithReturn<R> {
+) : SuspendingTransactionWithoutReturn,
+  SuspendingTransactionWithReturn<R> {
   override fun rollback(): Nothing {
     transaction.checkThreadConfinement()
     throw RollbackException()
@@ -275,7 +277,7 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
         transaction.postRollbackHooks.clear()
       } else {
         if (transaction.pendingTables.isNotEmpty()) {
-          driver.notifyListeners(transaction.pendingTables.toTypedArray())
+          driver.notifyListeners(queryKeys = transaction.pendingTables.toTypedArray())
         }
         transaction.pendingTables.clear()
         transaction.registeredQueries.clear()
@@ -318,17 +320,17 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
     } else {
       val tableKeys = mutableSetOf<String>()
       tableProvider { tableKeys.add(it) }
-      driver.notifyListeners(tableKeys.toTypedArray())
+      driver.notifyListeners(queryKeys = tableKeys.toTypedArray())
     }
   }
 
   /**
-   * For internal use, creates a string in the format (?, ?, ?) where there are [count] offset.
+   * For internal use, creates a string in the format (?, ?, ?) where there are [count] question marks.
    */
   protected fun createArguments(count: Int): String {
     if (count == 0) return "()"
 
-    return buildString(count + 2) {
+    return buildString(count * 2 + 1) {
       append("(?")
       repeat(count - 1) {
         append(",?")
@@ -341,7 +343,9 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), Transacter {
+abstract class TransacterImpl(driver: SqlDriver) :
+  BaseTransacterImpl(driver),
+  Transacter {
   override fun transaction(
     noEnclosing: Boolean,
     body: TransactionWithoutReturn.() -> Unit,
@@ -378,7 +382,9 @@ abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), T
   }
 }
 
-abstract class SuspendingTransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), SuspendingTransacter {
+abstract class SuspendingTransacterImpl(driver: SqlDriver) :
+  BaseTransacterImpl(driver),
+  SuspendingTransacter {
   override suspend fun <R> transactionWithResult(
     noEnclosing: Boolean,
     bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,

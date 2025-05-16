@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFileFilter
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import java.util.ArrayList
 import org.jetbrains.kotlin.konan.file.File
 
 internal class SqlDelightTreeStructureProvider(
@@ -90,7 +91,7 @@ internal class SqlDelightTreeStructureProvider(
     return virtualFile
   }
 
-  override fun getData(selected: MutableCollection<AbstractTreeNode<*>>, dataId: String): Any? {
+  override fun getData(selected: MutableCollection<out AbstractTreeNode<*>>, dataId: String): Any? {
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.`is`(dataId)) {
       if (selected.any { it is SqlDelightPackageNode }) {
         return SqlDelightDeleteProvider(selected)
@@ -102,8 +103,16 @@ internal class SqlDelightTreeStructureProvider(
   private class SqlDelightDeleteProvider(
     selected: Collection<AbstractTreeNode<*>>,
   ) : DeleteProvider {
+    private val elements = ArrayList<PsiElement>().apply {
+      selected.forEach {
+        if (it is SqlDelightPackageNode) {
+          addAll(it.elements)
+        } else if (it.value is PsiElement) {
+          add(it.value as PsiElement)
+        }
+      }
+    }.toTypedArray()
 
-    private val elements = collectPsiElements(selected)
     override fun deleteElement(dataContext: DataContext) {
       val project = CommonDataKeys.PROJECT.getData(dataContext)
       DeleteHandler.deletePsiElement(elements, project)
@@ -112,29 +121,15 @@ internal class SqlDelightTreeStructureProvider(
     override fun canDeleteElement(dataContext: DataContext): Boolean {
       return DeleteHandler.shouldEnableDeleteAction(elements)
     }
-
-    private fun collectPsiElements(selected: Collection<AbstractTreeNode<*>>): Array<PsiElement> {
-      val result = mutableSetOf<PsiElement>()
-      for (node in selected) {
-        if (node is SqlDelightPackageNode) {
-          result.addAll(node.children.map { it.value as PsiElement })
-          generateSequence(node.value) { it.parent }
-            .takeWhile { it.name != node.srcDirName }
-            .forEach { result.add(it) }
-        } else if (node.value is PsiElement) {
-          result.add(node.value as PsiElement)
-        }
-      }
-      return result.toTypedArray()
-    }
   }
 
   private class SqlDelightPackageNode(
-    val srcDirName: String,
+    private val srcDirName: String,
     project: Project,
     value: PsiDirectory,
     viewSettings: ViewSettings?,
   ) : PsiDirectoryNode(project, value, viewSettings) {
+    val elements = collectPsiElements()
 
     override fun updateImpl(data: PresentationData) {
       data.presentableText = value.virtualFile.path.substringAfterLast(srcDirName)
@@ -143,6 +138,15 @@ internal class SqlDelightTreeStructureProvider(
       data.locationString =
         ProjectViewDirectoryHelper.getInstance(project).getLocationString(value, false, false)
       data.setIcon(AllIcons.Nodes.Package)
+    }
+
+    private fun collectPsiElements(): Array<PsiElement> {
+      val result = mutableSetOf<PsiElement>()
+      result.addAll(children.map { it.value as PsiElement })
+      generateSequence(value) { it.parent }
+        .takeWhile { it.name != srcDirName }
+        .forEach { result.add(it) }
+      return result.toTypedArray()
     }
   }
 }

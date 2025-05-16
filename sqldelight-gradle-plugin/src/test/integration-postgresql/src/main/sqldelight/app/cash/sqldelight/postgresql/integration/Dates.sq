@@ -13,5 +13,39 @@ RETURNING *;
 selectDateTrunc:
 SELECT date_trunc('hour', timestamp), date_trunc('hour', timestamp_with_timezone) FROM dates;
 
+selectDatePart:
+SELECT date_part('hour', timestamp), date_part('hour', timestamp_with_timezone) FROM dates;
+
 selectNow:
 SELECT NOW();
+
+selectNowInterval:
+SELECT NOW() AS now, NOW() + INTERVAL '1 day' AS nowPlusOneDay;
+
+selectInterval:
+SELECT INTERVAL '1 day';
+
+selectMultiplyInterval:
+SELECT 31 * INTERVAL '1 day';
+
+selectAddInterval:
+SELECT INTERVAL '1 day' + INTERVAL '3 hour';
+
+selectMax:
+SELECT max(timestamp) FROM dates;
+
+selectMin:
+SELECT min(timestamp_with_timezone) FROM dates;
+
+selectMaxDate:
+SELECT max(date) FROM dates;
+
+selectMinDate:
+SELECT min(date) FROM dates;
+
+selectDateLiteral:
+SELECT DATE '2023-05-15';
+
+selectTimeLiteral:
+SELECT TIME '10:30:45';
+

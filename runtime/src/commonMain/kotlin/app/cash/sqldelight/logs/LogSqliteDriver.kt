@@ -56,10 +56,22 @@ class LogSqliteDriver(
 
   override fun newTransaction(): QueryResult<Transacter.Transaction> {
     logger("TRANSACTION BEGIN")
-    val transaction = sqlDriver.newTransaction().value
-    transaction.afterCommit { logger("TRANSACTION COMMIT") }
-    transaction.afterRollback { logger("TRANSACTION ROLLBACK") }
-    return QueryResult.Value(transaction)
+    when (val queryResult = sqlDriver.newTransaction()) {
+      is QueryResult.AsyncValue<Transacter.Transaction> -> {
+        return QueryResult.AsyncValue {
+          queryResult.await().also { it.attachLogHooks() }
+        }
+      }
+      is QueryResult.Value<Transacter.Transaction> -> {
+        val transaction = queryResult.value.also { it.attachLogHooks() }
+        return QueryResult.Value(transaction)
+      }
+    }
+  }
+
+  private fun Transacter.Transaction.attachLogHooks() {
+    afterCommit { logger("TRANSACTION COMMIT") }
+    afterRollback { logger("TRANSACTION ROLLBACK") }
   }
 
   override fun close() {
@@ -67,19 +79,19 @@ class LogSqliteDriver(
     sqlDriver.close()
   }
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) {
     logger("BEGIN $listener LISTENING TO [${queryKeys.joinToString()}]")
-    sqlDriver.addListener(listener, queryKeys)
+    sqlDriver.addListener(queryKeys = queryKeys, listener)
   }
 
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) {
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) {
     logger("END $listener LISTENING TO [${queryKeys.joinToString()}]")
-    sqlDriver.removeListener(listener, queryKeys)
+    sqlDriver.removeListener(queryKeys = queryKeys, listener)
   }
 
-  override fun notifyListeners(queryKeys: Array<String>) {
+  override fun notifyListeners(vararg queryKeys: String) {
     logger("NOTIFYING LISTENERS OF [${queryKeys.joinToString()}]")
-    sqlDriver.notifyListeners(queryKeys)
+    sqlDriver.notifyListeners(queryKeys = queryKeys)
   }
 
   private fun logParameters(binders: (SqlPreparedStatement.() -> Unit)?) {

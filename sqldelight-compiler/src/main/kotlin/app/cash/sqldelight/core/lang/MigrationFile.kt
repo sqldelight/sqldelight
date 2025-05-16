@@ -7,27 +7,24 @@ import com.intellij.psi.FileViewProvider
 class MigrationFile(
   viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, MigrationLanguage) {
-  val version: Int by lazy {
+  val version: Long by lazy {
     name.substringBeforeLast(".$MIGRATION_EXTENSION")
-      .filter { it in '0'..'9' }.toIntOrNull() ?: 0
+      .filter { it in '0'..'9' }.toLongOrNull() ?: 0
   }
 
   internal fun sqlStatements() = sqlStmtList!!.stmtList
-
-  override val packageName
-    get() = module?.let { module -> SqlDelightFileIndex.getInstance(module).packageName(this) }
 
   override val order
     get() = version
 
   override fun getFileType() = MigrationFileType
 
-  override fun baseContributorFile(): SqlFileBase? {
+  override fun baseContributorFiles(): List<SqlFileBase> {
     val module = module
     if (module == null || SqlDelightFileIndex.getInstance(module).deriveSchemaFromMigrations) {
-      return null
+      return emptyList()
     }
 
-    return findDbFile()
+    return listOfNotNull(findDbFile())
   }
 }

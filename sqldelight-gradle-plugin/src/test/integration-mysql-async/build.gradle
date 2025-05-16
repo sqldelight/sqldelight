@@ -1,9 +1,7 @@
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   databases {
@@ -19,7 +17,7 @@ dependencies {
   implementation libs.mysqlJdbc
   implementation libs.testContainers.mysql
   implementation libs.testContainers.r2dbc
-  implementation "org.mariadb:r2dbc-mariadb:1.1.4"
+  implementation "org.mariadb:r2dbc-mariadb:1.3.0"
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth

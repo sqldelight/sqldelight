@@ -4,7 +4,6 @@ import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.Query
 import co.touchlab.stately.concurrency.AtomicInt
 import co.touchlab.stately.concurrency.value
-import co.touchlab.stately.freeze
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +15,7 @@ class IntegrationTests {
   private lateinit var nullableTypesQueries: NullableTypesQueries
   private lateinit var bigTableQueries: BigTableQueries
 
-  private object listAdapter : ColumnAdapter<List<String>, String> {
+  private object ListAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> = databaseValue.split(",")
     override fun encode(value: List<String>): String = value.joinToString(",")
   }
@@ -24,8 +23,7 @@ class IntegrationTests {
   @BeforeTest fun before() {
     val database = createSqlDatabase()
 
-    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(listAdapter))
-    queryWrapper.freeze()
+    queryWrapper = QueryWrapper(database, NullableTypes.Adapter(ListAdapter))
     personQueries = queryWrapper.personQueries
     keywordsQueries = queryWrapper.sqliteKeywordsQueries
     nullableTypesQueries = queryWrapper.nullableTypesQueries

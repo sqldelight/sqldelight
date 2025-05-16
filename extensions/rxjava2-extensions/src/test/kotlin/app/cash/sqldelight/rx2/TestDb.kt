@@ -37,17 +37,17 @@ class TestDb(
       }
 
       override fun addListener(listener: Listener) {
-        db.addListener(listener, arrayOf(key))
+        db.addListener(key, listener = listener)
       }
 
       override fun removeListener(listener: Listener) {
-        db.removeListener(listener, arrayOf(key))
+        db.removeListener(key, listener = listener)
       }
     }
   }
 
   fun notify(key: String) {
-    db.notifyListeners(arrayOf(key))
+    db.notifyListeners(key)
   }
 
   fun close() {

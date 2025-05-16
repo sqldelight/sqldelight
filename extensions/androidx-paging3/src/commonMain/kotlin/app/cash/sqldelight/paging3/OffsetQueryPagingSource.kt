@@ -24,15 +24,19 @@ import app.cash.paging.PagingSourceLoadResultInvalid
 import app.cash.paging.PagingSourceLoadResultPage
 import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
+import app.cash.sqldelight.SuspendingTransacter
 import app.cash.sqldelight.Transacter
-import kotlinx.coroutines.withContext
+import app.cash.sqldelight.TransacterBase
+import app.cash.sqldelight.TransactionCallbacks
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.withContext
 
 internal class OffsetQueryPagingSource<RowType : Any>(
   private val queryProvider: (limit: Int, offset: Int) -> Query<RowType>,
   private val countQuery: Query<Int>,
-  private val transacter: Transacter,
+  private val transacter: TransacterBase,
   private val context: CoroutineContext,
+  private val initialOffset: Int,
 ) : QueryPagingSource<Int, RowType>() {
 
   override val jumpingSupported get() = true
@@ -40,17 +44,17 @@ internal class OffsetQueryPagingSource<RowType : Any>(
   override suspend fun load(
     params: PagingSourceLoadParams<Int>,
   ): PagingSourceLoadResult<Int, RowType> = withContext(context) {
-    val key = params.key ?: 0
+    val key = params.key ?: initialOffset
     val limit = when (params) {
       is PagingSourceLoadParamsPrepend<*> -> minOf(key, params.loadSize)
       else -> params.loadSize
     }
-    val loadResult = transacter.transactionWithResult {
+    val getPagingSourceLoadResult: TransactionCallbacks.() -> PagingSourceLoadResultPage<Int, RowType> = {
       val count = countQuery.executeAsOne()
       val offset = when (params) {
         is PagingSourceLoadParamsPrepend<*> -> maxOf(0, key - params.loadSize)
         is PagingSourceLoadParamsAppend<*> -> key
-        is PagingSourceLoadParamsRefresh<*> -> if (key >= count) maxOf(0, count - params.loadSize) else key
+        is PagingSourceLoadParamsRefresh<*> -> if (key >= count - params.loadSize) maxOf(0, count - params.loadSize) else key
         else -> error("Unknown PagingSourceLoadParams ${params::class}")
       }
       val data = queryProvider(limit, offset)
@@ -65,9 +69,12 @@ internal class OffsetQueryPagingSource<RowType : Any>(
         itemsAfter = maxOf(0, count - nextPosToLoad),
       )
     }
+    val loadResult = when (transacter) {
+      is Transacter -> transacter.transactionWithResult(bodyWithReturn = getPagingSourceLoadResult)
+      is SuspendingTransacter -> transacter.transactionWithResult(bodyWithReturn = getPagingSourceLoadResult)
+    }
     (if (invalid) PagingSourceLoadResultInvalid<Int, RowType>() else loadResult) as PagingSourceLoadResult<Int, RowType>
   }
 
-  override fun getRefreshKey(state: PagingState<Int, RowType>) =
-    state.anchorPosition?.let { maxOf(0, it - (state.config.initialLoadSize / 2)) }
+  override fun getRefreshKey(state: PagingState<Int, RowType>) = state.anchorPosition?.let { maxOf(0, it - (state.config.initialLoadSize / 2)) }
 }

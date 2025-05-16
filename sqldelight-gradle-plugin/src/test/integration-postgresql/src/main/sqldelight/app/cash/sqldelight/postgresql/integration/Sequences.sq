@@ -1,0 +1,21 @@
+CREATE SEQUENCE serial START 200;
+
+CREATE TABLE sigma (
+    id INTEGER PRIMARY KEY
+);
+
+insertNextVal:
+INSERT INTO sigma VALUES (nextval('serial'))
+RETURNING id;
+
+selectNextVal:
+SELECT nextval('serial');
+
+selectCurrentVal:
+SELECT currval('serial');
+
+selectLastVal:
+SELECT lastval();
+
+selectSetVal:
+SELECT setval('serial', 200, TRUE);

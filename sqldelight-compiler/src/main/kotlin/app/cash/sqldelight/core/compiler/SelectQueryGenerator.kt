@@ -223,7 +223,7 @@ class SelectQueryGenerator(
     }
     mapperLambda.unindent().add("}\n")
 
-    if (query.arguments.isEmpty()) {
+    if (!query.needsQuerySubType()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
       val tablesObserved = query.tablesObserved
@@ -271,12 +271,11 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved.isNullOrEmpty()) {
-      EXECUTABLE_QUERY_TYPE
-    } else {
-      QUERY_TYPE
-    }
+  private fun NamedQuery.supertype() = if (tablesObserved.isNullOrEmpty()) {
+    EXECUTABLE_QUERY_TYPE
+  } else {
+    QUERY_TYPE
+  }
 
   /**
    * The private query subtype for this specific query.
@@ -343,14 +342,14 @@ class SelectQueryGenerator(
           FunSpec.builder("addListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.addListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
+            .addStatement("driver.addListener(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}, listener = listener)")
             .build(),
         )
         .addFunction(
           FunSpec.builder("removeListener")
             .addModifiers(OVERRIDE)
             .addParameter("listener", QUERY_LISTENER_TYPE)
-            .addStatement("driver.removeListener(listener, arrayOf(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}))")
+            .addStatement("driver.removeListener(${query.tablesObserved!!.joinToString { "\"${it.name}\"" }}, listener = listener)")
             .build(),
         )
     }

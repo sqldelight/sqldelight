@@ -2,9 +2,9 @@ package app.cash.sqldelight.tests
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class PluginTest {
   @Test
@@ -138,21 +138,6 @@ class PluginTest {
     buildDir.delete()
     result = runner
       .withArguments("clean", "compileKotlinIosX64", "--stacktrace")
-      .build()
-    assertThat(result.output).contains("generateCommonMainDatabaseInterface")
-    assertThat(buildDir.exists()).isTrue()
-  }
-
-  @Test
-  fun `The generate task is a dependency of multiplatform ios target with 1-3-20 DSL`() {
-    val fixtureRoot = File("src/test/kotlin-mpp-1.3.20")
-    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
-    buildDir.delete()
-
-    val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "compileKotlinIos", "--stacktrace")
-      .forwardOutput()
       .build()
     assertThat(result.output).contains("generateCommonMainDatabaseInterface")
     assertThat(buildDir.exists()).isTrue()

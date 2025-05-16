@@ -1,7 +1,7 @@
 site_name: SQLDelight
-site_url: https://cashapp.github.io/sqldelight/
+site_url: https://sqldelight.github.io/sqldelight/
 repo_name: sqldelight
-repo_url: https://github.com/cashapp/sqldelight
+repo_url: https://github.com/sqldelight/sqldelight
 site_description: "SQLDelight - Generates typesafe Kotlin APIs from SQL"
 site_author: Square, Inc.
 copyright: 'Copyright &copy; 2023 Square, Inc.'
@@ -32,7 +32,6 @@ nav:
     - 'Testing': android_sqlite/testing.md
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
     - 'Gradle': android_sqlite/gradle.md
-    - 'Upgrading Pre-1.0': android_sqlite/upgrading.md
     - '2.x API':
         - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
         - 'rxjava2-extensions': 2.x/extensions/rxjava2-extensions/index.html
@@ -54,6 +53,7 @@ nav:
           - 'Grouping Statements': multiplatform_sqlite/grouping_statements.md
       - 'Extensions':
           - 'Coroutines': multiplatform_sqlite/coroutines.md
+          - 'AndroidX Paging': multiplatform_sqlite/androidx_paging.md
       - 'Migrations': multiplatform_sqlite/migrations.md
       - 'IntelliJ Plugin': multiplatform_sqlite/intellij_plugin.md
       - 'Gradle': multiplatform_sqlite/gradle.md
@@ -70,6 +70,8 @@ nav:
           - 'Types': jvm_mysql/types.md
           - 'Transactions': jvm_mysql/transactions.md
           - 'Grouping Statements': jvm_mysql/grouping_statements.md
+      - 'Extensions':
+          - 'AndroidX Paging': jvm_mysql/androidx_paging.md
       - 'Migrations': jvm_mysql/migrations.md
       - 'IntelliJ Plugin': jvm_mysql/intellij_plugin.md
       - 'Gradle': jvm_mysql/gradle.md
@@ -85,6 +87,8 @@ nav:
           - 'Types': jvm_postgresql/types.md
           - 'Transactions': jvm_postgresql/transactions.md
           - 'Grouping Statements': jvm_postgresql/grouping_statements.md
+      - 'Extensions':
+          - 'AndroidX Paging': jvm_postgresql/androidx_paging.md
       - 'Migrations': jvm_postgresql/migrations.md
       - 'IntelliJ Plugin': jvm_postgresql/intellij_plugin.md
       - 'Gradle': jvm_postgresql/gradle.md
@@ -100,6 +104,8 @@ nav:
           - 'Types': jvm_h2/types.md
           - 'Transactions': jvm_h2/transactions.md
           - 'Grouping Statements': jvm_h2/grouping_statements.md
+      - 'Extensions':
+          - 'AndroidX Paging': jvm_h2/androidx_paging.md
       - 'Migrations': jvm_h2/migrations.md
       - 'IntelliJ Plugin': jvm_h2/intellij_plugin.md
       - 'Gradle': jvm_h2/gradle.md
@@ -118,6 +124,7 @@ nav:
         - 'Grouping Statements': native_sqlite/grouping_statements.md
     - 'Extensions':
         - 'Coroutines': native_sqlite/coroutines.md
+        - 'AndroidX Paging': native_sqlite/androidx_paging.md
     - 'Migrations': native_sqlite/migrations.md
     - 'IntelliJ Plugin': native_sqlite/intellij_plugin.md
     - 'Gradle': native_sqlite/gradle.md
@@ -138,6 +145,7 @@ nav:
     - 'Extensions':
         - 'RxJava': jvm_sqlite/rxjava.md
         - 'Coroutines': jvm_sqlite/coroutines.md
+        - 'AndroidX Paging': jvm_sqlite/androidx_paging.md
     - 'Migrations': jvm_sqlite/migrations.md
     - 'IntelliJ Plugin': jvm_sqlite/intellij_plugin.md
     - 'Gradle': jvm_sqlite/gradle.md
@@ -151,7 +159,9 @@ nav:
   - 'SQLite (JS)':
       - 'Getting Started': js_sqlite/index.md
       - 'Multiplatform': js_sqlite/multiplatform.md
-      - 'Web Workers': js_sqlite/worker.md
+      - 'Web Workers':
+          - SQL.js Worker: js_sqlite/sqljs_worker.md
+          - Custom Workers: js_sqlite/custom_worker.md
       - 'SQL':
           - 'Type Projections': js_sqlite/custom_projections.md
           - 'Arguments': js_sqlite/query_arguments.md
@@ -160,6 +170,7 @@ nav:
           - 'Grouping Statements': js_sqlite/grouping_statements.md
       - 'Extensions':
           - 'Coroutines': js_sqlite/coroutines.md
+          - 'AndroidX Paging': js_sqlite/androidx_paging.md
       - 'Migrations': js_sqlite/migrations.md
       - 'IntelliJ Plugin': js_sqlite/intellij_plugin.md
       - 'Gradle': js_sqlite/gradle.md
@@ -173,13 +184,14 @@ nav:
 theme:
   name: 'material'
   favicon: images/icon-cashapp.png
-  logo: images/icon-cashapp.png
+  logo: images/icon-sqldelight.svg
+  custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
       media: "(prefers-color-scheme: light)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -187,8 +199,8 @@ theme:
     # Palette toggle for dark mode
     - scheme: slate
       media: "(prefers-color-scheme: dark)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -197,6 +209,7 @@ theme:
     - content.tabs.link
     - content.code.annotate
     - content.action.view
+    - announce.dismiss
 
 extra_css:
   - 'css/app.css'

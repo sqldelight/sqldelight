@@ -1,15 +1,14 @@
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   databases {
     Database {
       packageName = "com.example"
       verifyMigrations = true
+      schemaOutputDirectory = file('src/main/sqldelight/databases')
 
       dependencies.add(configurationName, project(":driverInit"))
     }

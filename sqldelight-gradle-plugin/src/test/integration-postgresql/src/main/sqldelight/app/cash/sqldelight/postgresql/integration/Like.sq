@@ -1,0 +1,24 @@
+CREATE TABLE Test_Like (
+   txt TEXT NOT NULL
+);
+
+insert:
+INSERT INTO Test_Like (txt) VALUES(?);
+
+selectWhereLike:
+SELECT * FROM Test_Like WHERE txt LIKE ?;
+
+selectWhereILike:
+SELECT * FROM Test_Like WHERE txt ILIKE ?;
+
+selectWhereLikeRegex:
+SELECT * FROM Test_Like WHERE txt ~~ 'testin%';
+
+selectWhereILikeRegex:
+SELECT * FROM Test_Like WHERE txt ~~* '%esting%';
+
+selectLikeRegex:
+SELECT txt ~~ 'testing%', txt !~~ 'testing%' FROM Test_Like;
+
+selectILikeRegex:
+SELECT txt ~~* 'testing%', txt !~~* 'testing%' FROM Test_Like;

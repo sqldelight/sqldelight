@@ -6,10 +6,12 @@ plugins {
 dependencies {
   api projects.sqldelightCompiler
   api projects.dialects.sqlite318
+  api libs.sqlPsiEnvironment
 
   implementation libs.sqlPsi
   implementation(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
+  implementation projects.sqldelightGradlePlugin
   implementation libs.junit
 }

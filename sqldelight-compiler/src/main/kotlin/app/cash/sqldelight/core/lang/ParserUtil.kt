@@ -12,7 +12,7 @@ import com.intellij.openapi.project.Project
 import java.util.ServiceLoader
 
 internal class ParserUtil {
-  private var dialect: Class<out SqlDelightDialect>? = null
+  internal var dialect: Class<out SqlDelightDialect>? = null
 
   fun initializeDialect(project: Project) {
     val newDialect = SqlDelightProjectService.getInstance(project).dialect

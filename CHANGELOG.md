@@ -1,5 +1,189 @@
 # Change Log
 
+## [2.0.2] - 2024-04-05
+
+### Added
+- [PostgreSQL Dialect] Add PostgreSQL STRING_AGG function (#4950 by [André Danielsson][anddani])
+- [PostgreSQL Dialect] Add SET statement to pg dialect (#4927 by [Bastien de Luca][de-luca])
+- [PostgreSQL Dialect] Add PostgreSql alter column sequence parameters (#4916 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgresql alter column default support for insert statement (#4912 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add PostgreSql alter sequence and drop sequence (#4920 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add Postgres Regex function definitions (#5025 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add grammar for GIN (#5027 by [Griffio][griffio])
+
+### Changed
+- [IDE Plugin] Minimum version of 2023.1 / Android Studio Iguana
+- [Compiler] Allow overriding the type nullability in encapsulatingType (#4882 by [Eliezer Graber][eygraber])
+- [Compiler] Inline the column names for SELECT *
+- [Gradle Plugin] switch to processIsolation (#5068 by [Emeka Nwagu][nwagu])
+- [Android Runtime] Increase Android minSDK to 21 (#5094 by [Philip Wedemann][hfhbd])
+- [Drivers] Expose more JDBC/R2DBC statement methods for dialect authors (#5098 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [PostgreSQL Dialect] Fix postgresql alter table alter column (#4868 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4448 missing import for table model (#4885 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 4932 postgresql default constraint functions (#4934 by [Griffio][griffio])
+- [PostgreSQL Dialect] fixes 4879 postgresql class-cast error in alter table rename column during migrations (#4880 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4474 PostgreSql create extension (#4541 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5018 PostgreSql add Primary Key not nullable types (#5020 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 4703 aggregate expressions (#5071 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5028 PostgreSql json (#5030 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5040 PostgreSql json operators (#5041 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes json operator binding for 5040 (#5100 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5082 tsvector (#5104 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fixes 5032 column adjacency for PostgreSql UPDATE FROM statement (#5035 by [Griffio][griffio])
+- [SQLite Dialect] fixes 4897 sqlite alter table rename column (#4899 by [Griffio][griffio])
+- [IDE Plugin] Fix error handler crash (#4988 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] BugSnag fails to init in IDEA 2023.3 (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] PluginException when opening .sq file in IntelliJ via plugin (by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Dont bundle the kotlin lib into the intellij plugin as its already a plugin dependency (#5126)
+- [IDE Plugin] Use the extensions array instead of stream (#5127)
+
+## [2.0.1] - 2023-12-01
+
+### Added
+- [Compiler] Add support multi-column-expr when doing a SELECT (#4453 by [Adriel Martinez][Adriel-M])
+- [PostgreSQL Dialect] Add support for PostgreSQL CREATE INDEX CONCURRENTLY (#4531 by [Griffio][griffio])
+- [PostgreSQL Dialect] Allow PostgreSQL CTEs auxiliary statements to reference each other (#4493 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for PostgreSQL types for binary expr and sum (#4539 by [Adriel Martinez][Adriel-M])
+- [PostgreSQL Dialect] Add support for PostgreSQL SELECT DISTINCT ON syntax (#4584 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for PostgreSQL JSON functions in SELECT statements (#4590 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add generate_series PostgreSQL function (#4717 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add additional Postgres String function definitions (#4752 by [Marius Volkhart][MariusV])
+- [PostgreSQL Dialect] Add DATE PostgreSQL type to min and max aggregate functions (#4816 by [André Danielsson][anddani])
+- [PostgreSQL Dialect] Add PostgreSql temporal types to SqlBinaryExpr (#4657 by [Griifio][griffio])
+- [PostgreSQL Dialect] Add TRUNCATE to postgres dialect (#4817 by [Bastien de Luca][de-luca])
+- [SQLite 3.35 Dialect] Allow multiple ON CONFLICT clauses that are evaluated in order (#4551 by [Griffio][griffio])
+- [JDBC Driver] Add Language annotations for more pleasant SQL editing (#4602 by [Marius Volkhart][MariusV])
+- [Native Driver] Native-driver: add support for linuxArm64 (#4792 by [Philip Wedemann][hfhbd])
+- [Android Driver] Add a windowSizeBytes parameter to AndroidSqliteDriver (#4804 by [Benoit Lubek][BoD])
+- [Paging3 Extension] feat: add initialOffset for OffsetQueryPagingSource (#4802 by [Mohamad Jaara][MohamadJaara])
+
+### Changed
+- [Compiler] Prefer Kotlin types where appropriate (#4517 by [Eliezer Graber][eygraber])
+- [Compiler] When doing a value type insert always include the column names (#4864)
+- [PostgreSQL Dialect] Remove experimental status from PostgreSQL dialect (#4443 by [Philip Wedemann][hfhbd])
+- [PostgreSQL Dialect] Update docs for PostgreSQL types (#4569 by [Marius Volkhart][MariusV])
+- [R2DBC Driver] Optimize performance when handling integer data types in PostgreSQL (#4588 by [Marius Volkhart][MariusV])
+
+### Removed
+- [SQLite Javascript Driver] Remove sqljs-driver (#4613, #4670 by [Derek Ellis][dellisd])
+
+### Fixed
+- [Compiler] Fix compilation of grouped statements with returns and no parameters (#4699 by [Griffio][griffio])
+- [Compiler] Bind arguments with SqlBinaryExpr (#4604 by [Griffio][griffio])
+- [IDE Plugin] Use IDEA Project JDK if set (#4689 by [Griffio][griffio])
+- [IDE Plugin] Fix "Unknown element type: TYPE_NAME" error in IDEA 2023.2 and greater (#4727)
+- [IDE Plugin] Fixed some compatibility issues with 2023.2
+- [Gradle Plugin] Correct documentation of verifyMigrationTask Gradle task (#4713 by [Josh Friend][joshfriend])
+- [Gradle Plugin] Add Gradle task output message to help users generate a database before verifying a database (#4684 by [Jingwei][jingwei99])
+- [PostgreSQL Dialect] Fix the renaming of PostgreSQL columns multiple times (#4566 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4714 postgresql alter column nullability (#4831 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4837 alter table alter column (#4846 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix 4501 PostgreSql sequence (#4528 by [Griffio][griffio])
+- [SQLite Dialect] Allow JSON binary operator to be used on a column expression (#4776 by [Eliezer Graber][eygraber])
+- [SQLite Dialect] Update From false positive for multiple columns found with name (#4777 by [Eliezer Graber][eygraber])
+- [Native Driver] Support named in-memory databases (#4662 by [Matthew Nelson][05nelsonm])
+- [Native Driver] Ensure thread safety for query listener collection (#4567 by [Kevin Galligan][kpgalligan])
+- [JDBC Driver] Fix a connection leak in the ConnectionManager (#4589 by [Marius Volkhart][MariusV])
+- [JDBC Driver] Fix JdbcSqliteDriver url parsing when choosing ConnectionManager type (#4656 by [Matthew Nelson][05nelsonm])
+
+## [2.0.0] - 2023-07-26
+
+### Added
+- [MySQL Dialect] MySQL: support timestamp/bigint in IF expression (#4329 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] MySQL: Add now (#4431 by [Philip Wedemann][hfhbd])
+- [Web Driver] Enable NPM package publishing (#4364)
+- [IDE Plugin] Allow users to show the stacktrace when the gradle tooling connect fails (#4383)
+
+### Changed
+- [Sqlite Driver] Simplify using schema migrations for JdbcSqliteDriver (#3737 by [Lukáš Moravec][morki])
+- [R2DBC Driver] Real async R2DBC cursor (#4387 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [IDE Plugin] Dont instantiate the database project service until needed (#4382)
+- [IDE Plugin] Handle process cancellation during find usages (#4340)
+- [IDE Plugin] Fix IDE generation of async code (#4406)
+- [IDE Plugin] Move assembly of the package structure to be one-time computed and off the EDT (#4417)
+- [IDE Plugin] Use the correct stub index key for kotlin type resolution on 2023.2 (#4416)
+- [IDE Plugin] Wait for the index to be ready before performing a search (#4419)
+- [IDE Plugin] Dont perform a goto if the index is unavailable (#4420)
+- [Compiler] Fix result expression for grouped statements (#4378)
+- [Compiler] Don't use virtual table as interface type (#4427 by [Philip Wedemann][hfhbd])
+
+## [2.0.0-rc02] - 2023-06-27
+
+### Added
+- [MySQL Dialect] support lowercase date types and min and max on date types (#4243 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] support mysql types for binary expr and sum (#4254 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] support unsigned ints without display width (#4306 by [Mike Gershunovsky][shellderp])
+- [MySQL Dialect] Support LOCK IN SHARED MODE
+- [PostgreSQL Dialect] Add boolean and Timestamp to min max (#4245 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgres: Add window function support (#4283 by [Philip Wedemann][hfhbd])
+- [Runtime] Add linuxArm64, androidNative and watchosDeviceArm targets to runtime (#4258 by [Philip Wedemann][hfhbd])
+- [Paging Extension] Add linux and mingw x64 target to the paging extension (#4280 by [Cedric Hippmann][chippman])
+
+### Changed
+- [Gradle Plugin] Add automatic dialect support for Android API 34 (#4251)
+- [Paging Extension] Add support for SuspendingTransacter in QueryPagingSource (#4292 by [Ilya Polenov][daio])
+- [Runtime] Improve addListener api (#4244 by [Philip Wedemann][hfhbd])
+- [Runtime] Use Long as migration version (#4297 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [Gradle Plugin] Use stable output path for generated source (#4269 by [Josh Friend][joshfriend])
+- [Gradle Plugin] Gradle tweaks (#4222 by [Matthew Haughton][3flex])
+
+## [2.0.0-rc01] - 2023-05-29
+
+### Added
+- [Paging] Add js browser target to paging extensions (#3843 by [Sean Proctor][sproctor])
+- [Paging] Add iosSimulatorArm64 target to androidx-paging3 extension (#4117)
+- [PostgreSQL Dialect] add support and test for gen_random_uuid() (#3855 by [David Wheeler][davidwheeler123])
+- [PostgreSQL Dialect] Alter table add constraint postgres (#4116 by [Griffio][griffio])
+- [PostgreSQL Dialect] Alter table add constraint check (#4120 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql character length functions (#4121 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql column default interval (#4142 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql interval column result (#4152 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add postgreSql Alter Column (#4165 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSQL: Add date_part (#4198 by [Philip Wedemann][hfhbd])
+- [MySQL Dialect] Add sql char length functions (#4134 by [Griffio][griffio])
+- [IDE Plugin] Add sqldelight directory suggestions (#3976 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Compact middle packages in project tree (#3992 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Add join clause completion (#4086 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Create view intention and live template (#4074 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Warn about missing WHERE inside DELETE or UPDATE (#4058 by [Alexander Perfilyev][aperfilyev])
+- [Gradle Plugin] Enable typesafe project accessors (#4005 by [Philip Wedemann][hfhbd])
+
+### Changed
+- [Gradle Plugin] Allow registering DriverInitializer for VerifyMigrationTask with ServiceLoader mechanism (#3986 by [Alex Doubov][C2H6O])
+- [Gradle Plugin] Create explicit compiler env (#4079 by [Philip Wedemann][hfhbd])
+- [JS Driver] Split web worker driver into separate artifact
+- [JS Driver] Don't expose JsWorkerSqlCursor (#3874 by [Philip Wedemann][hfhbd])
+- [JS Driver] Disable publication of the sqljs driver (#4108)
+- [Runtime] Enforce that synchronous drivers require a synchronous schema initializer (#4013)
+- [Runtime] Improve async support for Cursors (#4102)
+- [Runtime] Remove deprecated targets (#4149 by [Philip Wedemann][hfhbd])
+- [Runtime] Remove support for old MM (#4148 by [Philip Wedemann][hfhbd])
+
+### Fixed
+- [R2DBC Driver] R2DBC: Await closing the driver (#4139 by [Philip Wedemann][hfhbd])
+- [Compiler] Include PRAGMAs from migrations in database create(SqlDriver) (#3845 by [Marius Volkhart][MariusV])
+- [Compiler] Fix codegen for RETURNING clause (#3872 by [Marius Volkhart][MariusV])
+- [Compiler] Dont generate types for virtual tables (#4015)
+- [Gradle Plugin] Small Gradle plugin QoL improvements (#3930 by [Zac Sweers][zacsweers])
+- [IDE Plugin] Fix unresolved kotlin types (#3924 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix for expand wildcard intention to work with qualifier (#3979 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Use available jdk if java home is missing (#3925 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix find usages on package names (#4010)
+- [IDE Plugin] Dont show auto imports for invalid elements (#4008)
+- [IDE Plugin] Do not resolve if a dialect is missing (#4009)
+- [IDE Plugin] Ignore IDE runs of the compiler during an invalidated state (#4016)
+- [IDE Plugin] Add support for IntelliJ 2023.1 (#4037 by [Madis Pink][madisp])
+- [IDE Plugin] Rename named argument usage on column rename (#4027 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Fix add migration popup (#4105 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Disable SchemaNeedsMigrationInspection in migration files (#4106 by [Alexander Perfilyev][aperfilyev])
+- [IDE Plugin] Use sql column name for migration generation instead of type name (#4112 by [Alexander Perfilyev][aperfilyev])
+
 ## [2.0.0-alpha05] - 2023-01-20
 
 ### Added
@@ -882,3 +1066,19 @@ Initial release.
   [jeffdgr8]: https://github.com/jeffdgr8
   [bellatoris]: https://github.com/bellatoris
   [sachera]: https://github.com/sachera
+  [sproctor]: https://github.com/sproctor
+  [davidwheeler123]: https://github.com/davidwheeler123
+  [C2H6O]: https://github.com/C2H6O
+  [griffio]: https://github.com/griffio
+  [shellderp]: https://github.com/shellderp
+  [joshfriend]: https://github.com/joshfriend
+  [daio]: https://github.com/daio
+  [morki]: https://github.com/morki
+  [Adriel-M]: https://github.com/Adriel-M
+  [05nelsonm]: https://github.com/05nelsonm
+  [jingwei99]: https://github.com/jingwei99
+  [anddani]: https://github.com/anddani
+  [BoD]: https://github.com/BoD
+  [de-luca]: https://github.com/de-luca
+  [MohamadJaara]: https://github.com/MohamadJaara
+  [nwagu]: https://github.com/nwagu

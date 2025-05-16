@@ -16,7 +16,9 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.util.PsiTreeUtil
 
 internal abstract class ReturningClauseMixin(node: ASTNode) :
-  SqlCompositeElementImpl(node), PostgreSqlReturningClause, FromQuery {
+  SqlCompositeElementImpl(node),
+  PostgreSqlReturningClause,
+  FromQuery {
 
   private val queryExposed = ModifiableFileLazy {
     listOf(

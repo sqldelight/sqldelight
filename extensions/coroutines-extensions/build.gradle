@@ -1,29 +1,50 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
+
 plugins {
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
+  id("kotlinx-atomicfu")
 }
 
 archivesBaseName = 'sqldelight-coroutines-extensions'
 
 kotlin {
+  applyDefaultHierarchyTemplate {
+    it.common {
+      // not using commonTest due https://github.com/touchlab/SQLiter/issues/117
+      it.group("testable") {
+        it.withJvm()
+        it.group("testableWeb") {
+          it.withJs()
+          it.withWasmJs()
+        }
+        it.group("testableNative") {
+          it.group("apple") {}
+          it.group("linux") {}
+          it.group("mingw") {}
+          // it.group("androidNative")
+        }
+      }
+    }
+  }
+
   sourceSets {
-    commonMain {
-      dependencies {
-        api projects.runtime
-        api libs.kotlin.coroutines.core
-        implementation project(":extensions:async-extensions")
-      }
+    commonMain.dependencies {
+      api projects.runtime
+      api libs.kotlin.coroutines.core
+      implementation project(":extensions:async-extensions")
     }
-    commonTest {
-      dependencies {
-        implementation libs.kotlin.coroutines.test
-        implementation libs.kotlin.test
-        implementation libs.turbine
-        implementation libs.stately.concurrency
-      }
+
+    commonTest.dependencies {
+      implementation libs.kotlin.coroutines.test
+      implementation libs.kotlin.test
+      implementation libs.turbine
+      implementation libs.stately.concurrency
     }
+
     jvmTest {
       dependencies {
         implementation libs.kotlin.test.junit
@@ -33,32 +54,46 @@ kotlin {
         optIn('kotlinx.coroutines.ExperimentalCoroutinesApi')
       }
     }
-    jsTest {
-      dependencies {
-        implementation projects.drivers.sqljsDriver
-      }
+    testableWebTest.dependencies {
+      implementation  projects.drivers.webWorkerDriver
+      implementation npm("sql.js", libs.versions.sqljs.get())
+      implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
     }
-    nativeTest {
-      dependencies {
-        implementation projects.drivers.nativeDriver
-      }
+
+    testableNativeTest.dependencies {
+      implementation projects.drivers.nativeDriver
     }
   }
 
   configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
     binaries.configureEach {
-      linkerOpts += ['-lsqlite3']
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-lsqlite3"]
+      }
     }
   }
+
   configure([targets.linuxX64]) {
-    binaries.configureEach {
-      linkerOpts += ["-L$rootDir/libs/linux".toString(), "-lsqlite3"]
+    compilations.configureEach {
+      if (name == "test") {
+        cinterops {
+          sqlite {
+            // use sqlite3 amalgamation on linux tests to prevent linking issues on new linux distros with dependency libraries which are to recent (for example glibc)
+            // see: https://github.com/touchlab/SQLiter/pull/38#issuecomment-867171789
+            defFile = new File("$rootDir/libs/linux/cinterop/sqlite3.def")
+          }
+        }
+      }
     }
   }
 
   configure([targets.mingwX64]) {
     binaries.configureEach {
-      linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      // we only need to link sqlite for the test binaries
+      if (outputKind == NativeOutputKind.TEST) {
+        linkerOpts += ["-Lc:\\msys64\\mingw64\\lib", "-L$rootDir\\libs\\windows".toString(), "-lsqlite3"]
+      }
     }
   }
 }

@@ -1,9 +1,7 @@
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'org.jetbrains.kotlin.multiplatform'
-apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   databases {
@@ -26,7 +24,6 @@ kotlin {
     commonTest {
       dependencies {
         implementation libs.kotlin.test
-        implementation libs.stately.core
         implementation libs.stately.concurrency
         implementation "app.cash.sqldelight:runtime:${app.cash.sqldelight.VersionKt.VERSION}"
       }

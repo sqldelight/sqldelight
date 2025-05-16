@@ -1,0 +1,36 @@
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+
+plugins {
+  alias(libs.plugins.dokka)
+}
+
+def packageJsonTask = tasks.register("writePackageJson") {
+  def tmpLocation = layout.buildDirectory.file("tmp/package.json")
+  outputs.file(tmpLocation)
+
+  doLast {
+    def version = rootProject.version
+    if (version.contains("SNAPSHOT")) {
+      version = "${version}.${System.currentTimeMillis()}"
+    }
+    def content = new String(Files.readAllBytes(file("package.json").toPath()), StandardCharsets.UTF_8)
+    content = content.replace("0.0.0", version)
+    Files.write(tmpLocation.get().asFile.toPath(), content.getBytes(StandardCharsets.UTF_8))
+  }
+}
+
+tasks.register("assemblePackage", Copy) {
+  from packageJsonTask.map {it.outputs.files }
+  from "sqljs.worker.js"
+  from rootProject.file("LICENSE.txt")
+  from rootProject.file("README.md")
+  from rootProject.file(".npmrc")
+
+  into layout.buildDirectory.file("package")
+}
+
+// Dokka forces us to apply the plugin to this module even though there's no code
+tasks.named("dokkaHtmlPartial") {
+  enabled = false
+}

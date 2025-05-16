@@ -10,6 +10,8 @@ import app.cash.sqldelight.core.lang.MAPPER_NAME
 import app.cash.sqldelight.core.lang.PREPARED_STATEMENT_TYPE
 import app.cash.sqldelight.core.lang.encodedJavaType
 import app.cash.sqldelight.core.lang.preparedStatementBinder
+import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
+import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
@@ -22,8 +24,11 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
@@ -38,6 +43,16 @@ abstract class QueryGenerator(
   protected val dialect = query.statement.sqFile().dialect
   protected val treatNullAsUnknownForEquality = query.statement.sqFile().treatNullAsUnknownForEquality
   protected val generateAsync = query.statement.sqFile().generateAsync
+
+  /**
+   * Whether the mutator should return a value to the caller.
+   *
+   * Mutators (`INSERT`, `UPDATE`, `DELETE`) typically return the number of rows modified.
+   * However, when combined with something like a `RETURNING` clause, we treat mutators as a query.
+   * SQLDelight also support mutators with multiple expressions (think trying to make your own `UPSERT`).
+   * These types of mutators do not return a value.
+   */
+  protected val mutatorReturns = query.statement !is SqlDelightStmtClojureStmtList
 
   /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
@@ -58,24 +73,31 @@ abstract class QueryGenerator(
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
+    val notifyBlock = notifyQueriesBlock()
     if (query.statement is SqlDelightStmtClojureStmtList) {
-      if (query is NamedQuery) {
-        result
-          .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
-          .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
-      } else {
-        result.beginControlFlow("transaction")
-      }
+      result
+        .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
+        .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
       val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         val (block, additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
         handledArrayArgs.addAll(additionalArrayArgs)
         result.add(block)
       }
-      result.endControlFlow()
-      if (generateAsync && query is NamedQuery) { result.endControlFlow() }
+      if (notifyBlock.isNotEmpty()) {
+        result.nextControlFlow(".also")
+        result.add(notifyBlock)
+        result.endControlFlow()
+      } else {
+        result.endControlFlow()
+        result.add(notifyBlock)
+      }
+      if (generateAsync) {
+        result.endControlFlow()
+      }
     } else {
       result.add(executeBlock(query.statement, emptySet(), query.id).first)
+      result.add(notifyBlock)
     }
 
     return result.build()
@@ -165,7 +187,14 @@ abstract class QueryGenerator(
         // id.forEachIndex { index, parameter ->
         //   statement.bindLong(previousArray.size + index, parameter)
         // }
-        val indexCalculator = "index + $offset".replace(" + 0", "")
+        val indexCalculator = CodeBlock.of(
+          if (offset == "0") {
+            "index"
+          } else {
+            "index + %L"
+          },
+          offset,
+        )
         val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.add(
           """
@@ -204,7 +233,7 @@ abstract class QueryGenerator(
 
           // Binds each parameter to the statement:
           // statement.bindLong(0, id)
-          bindStatements.add(type.preparedStatementBinder(offset, extractedVariables[type]))
+          bindStatements.add(type.preparedStatementBinder(CodeBlock.of(offset), extractedVariables[type]))
 
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects
@@ -272,6 +301,13 @@ abstract class QueryGenerator(
       }
     }
 
+    // Extract value from the result of a grouped statement in async,
+    // because the transaction is put in an QueryResult.AsyncValue block.
+    if (generateAsync && isNamedQuery && query.statement is SqlDelightStmtClojureStmtList) {
+      binder += "%L"
+      arguments.add(".await()")
+    }
+
     val statementId = if (needsFreshStatement) CodeBlock.of("null") else CodeBlock.of("%L", id)
 
     if (isNamedQuery) {
@@ -285,7 +321,7 @@ abstract class QueryGenerator(
         statementId,
         *arguments.toTypedArray(),
       )
-    } else if (optimisticLock != null) {
+    } else if (optimisticLock != null || mutatorReturns) {
       result.addStatement(
         "val result = $DRIVER_NAME.execute(%L, %P, %L)$binder",
         statementId,
@@ -313,6 +349,54 @@ abstract class QueryGenerator(
     return Pair(result.build(), seenArrayArguments)
   }
 
+  internal open fun tablesUpdated(): List<TableNameElement> {
+    if (query.statement is SqlDelightStmtClojureStmtList) {
+      return PsiTreeUtil.findChildrenOfAnyType(
+        query.statement,
+        SqlUpdateStmtLimited::class.java,
+        SqlDeleteStmtLimited::class.java,
+        SqlInsertStmt::class.java,
+      ).flatMap {
+        MutatorQueryGenerator(
+          when (it) {
+            is SqlUpdateStmtLimited -> NamedMutator.Update(it, query.identifier as StmtIdentifierMixin)
+            is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
+            is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
+            else -> throw IllegalArgumentException("Unexpected statement $it")
+          },
+        ).tablesUpdated()
+      }.distinctBy { it.name }
+    }
+    return emptyList()
+  }
+
+  protected fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
+    return addCode(
+      notifyQueriesBlock(),
+    )
+  }
+
+  protected fun notifyQueriesBlock(): CodeBlock {
+    val tablesUpdated = tablesUpdated()
+
+    if (tablesUpdated.isEmpty()) return CodeBlock.builder().build()
+
+    // The list of affected tables:
+    // notifyQueries { emit ->
+    //     emit("players")
+    //     emit("teams")
+    // }
+    return CodeBlock.builder()
+      .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
+      .apply {
+        tablesUpdated.sortedBy { it.name }.forEach {
+          addStatement("emit(\"${it.name}\")")
+        }
+      }
+      .endControlFlow()
+      .build()
+  }
+
   private fun PsiElement.leftWhitspace(): String {
     return if (prevSibling is PsiWhiteSpace) "" else " "
   }
@@ -322,7 +406,9 @@ abstract class QueryGenerator(
   }
 
   protected fun addJavadoc(builder: FunSpec.Builder) {
-    if (query.javadoc != null) { builder.addKdoc(javadocText(query.javadoc)) }
+    if (query.javadoc != null) {
+      builder.addKdoc(javadocText(query.javadoc))
+    }
   }
 
   protected open fun awaiting(): Pair<String, String>? = "%L" to ".await()"

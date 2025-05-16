@@ -3,20 +3,20 @@ package app.cash.sqldelight.hsql.integration
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
+import java.sql.Connection
+import java.sql.DriverManager
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
 
 class HsqlTest {
   val conn = DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb;shutdown=true")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
-    override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-    override fun notifyListeners(queryKeys: Array<String>) = Unit
+    override fun addListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+    override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+    override fun notifyListeners(vararg queryKeys: String) = Unit
   }
   val database = MyDatabase(driver)
 

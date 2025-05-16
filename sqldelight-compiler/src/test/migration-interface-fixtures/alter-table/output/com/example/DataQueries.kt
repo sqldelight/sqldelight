@@ -14,7 +14,7 @@ public class DataQueries(
 ) : TransacterImpl(driver) {
   public fun <T : Any> migrationSelect(mapper: (first: String, second: List<Int>?) -> T): Query<T> =
       Query(-561_113_227, arrayOf("new_test"), driver, "Data.sq", "migrationSelect", """
-  |SELECT *
+  |SELECT new_test.first, new_test.second
   |FROM new_test
   """.trimMargin()) { cursor ->
     mapper(

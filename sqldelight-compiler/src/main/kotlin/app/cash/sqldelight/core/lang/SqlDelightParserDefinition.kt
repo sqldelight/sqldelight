@@ -18,8 +18,10 @@ package app.cash.sqldelight.core.lang
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.SqlParser
 import com.alecstrong.sql.psi.core.SqlParserDefinition
+import com.intellij.lang.ASTNode
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.PsiFileStub
 import com.intellij.psi.tree.ILightStubFileElementType
 
@@ -30,12 +32,29 @@ class SqlDelightParserDefinition : SqlParserDefinition() {
   override fun getFileNodeType() = FILE
   override fun getLanguage() = SqlDelightLanguage
 
+  override fun createElement(node: ASTNode): PsiElement {
+    try {
+      return super.createElement(node)
+    } catch (e: Throwable) {
+      throw IllegalStateException(
+        """
+        Failed to create element for node ${node.text}
+          Element type was ${node.elementType}
+          Dialect is currently ${parserUtil.dialect}
+        """.trimIndent(),
+        e,
+      )
+    }
+  }
+
   override fun createParser(project: Project): SqlParser {
     parserUtil.initializeDialect(project)
     return super.createParser(project)
   }
 
   companion object {
-    private val FILE = ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage)
+    private val FILE = object : ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage) {
+      override fun getExternalId(): String = "SqlDelight"
+    }
   }
 }

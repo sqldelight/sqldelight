@@ -1,0 +1,1 @@
+CREATE OR REPLACE VIEW v_test AS SELECT a, b, c FROM test;

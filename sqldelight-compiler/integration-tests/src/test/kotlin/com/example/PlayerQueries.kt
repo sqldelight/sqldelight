@@ -12,7 +12,6 @@ import java.lang.Void
 import kotlin.Any
 import kotlin.Long
 import kotlin.String
-import kotlin.Unit
 import kotlin.collections.Collection
 
 public class PlayerQueries(
@@ -61,7 +60,7 @@ public class PlayerQueries(
     shoots: Shoots,
   ) -> T): Query<T> = Query(-1_634_440_035, arrayOf("player"), driver, "Player.sq", "allPlayers",
       """
-  |SELECT *
+  |SELECT player.name, player.number, player.team, player.shoots
   |FROM player
   """.trimMargin()) { cursor ->
     mapper(
@@ -157,13 +156,44 @@ public class PlayerQueries(
     )
   }
 
+  public fun <T : Any> greaterThanNumberAndName(
+    number: Long,
+    name: Player.Name,
+    mapper: (
+      name: Player.Name,
+      number: Long,
+      team: Team.Name?,
+      shoots: Shoots,
+    ) -> T,
+  ): Query<T> = GreaterThanNumberAndNameQuery(number, name) { cursor ->
+    mapper(
+      Player.Name(cursor.getString(0)!!),
+      cursor.getLong(1)!!,
+      cursor.getString(2)?.let { Team.Name(it) },
+      playerAdapter.shootsAdapter.decode(cursor.getString(3)!!)
+    )
+  }
+
+  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> =
+      greaterThanNumberAndName(number, name) { name_, number_, team, shoots ->
+    Player(
+      name_,
+      number_,
+      team,
+      shoots
+    )
+  }
+
+  /**
+   * @return The number of rows updated.
+   */
   public fun insertPlayer(
     name: Player.Name,
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ): Unit {
-    driver.execute(-1_595_716_666, """
+  ): QueryResult<Long> {
+    val result = driver.execute(-1_595_716_666, """
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
@@ -175,11 +205,15 @@ public class PlayerQueries(
     notifyQueries(-1_595_716_666) { emit ->
       emit("player")
     }
+    return result
   }
 
-  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>): Unit {
+  /**
+   * @return The number of rows updated.
+   */
+  public fun updateTeamForNumbers(team: Team.Name?, number: Collection<Long>): QueryResult<Long> {
     val numberIndexes = createArguments(count = number.size)
-    driver.execute(null, """
+    val result = driver.execute(null, """
         |UPDATE player
         |SET team = ?
         |WHERE number IN $numberIndexes
@@ -192,14 +226,23 @@ public class PlayerQueries(
     notifyQueries(-636_585_613) { emit ->
       emit("player")
     }
+    return result
   }
 
-  public fun foreignKeysOn(): Unit {
-    driver.execute(-1_596_558_949, """PRAGMA foreign_keys = 1""", 0)
+  /**
+   * @return The number of rows updated.
+   */
+  public fun foreignKeysOn(): QueryResult<Long> {
+    val result = driver.execute(-1_596_558_949, """PRAGMA foreign_keys = 1""", 0)
+    return result
   }
 
-  public fun foreignKeysOff(): Unit {
-    driver.execute(2_046_279_987, """PRAGMA foreign_keys = 0""", 0)
+  /**
+   * @return The number of rows updated.
+   */
+  public fun foreignKeysOff(): QueryResult<Long> {
+    val result = driver.execute(2_046_279_987, """PRAGMA foreign_keys = 0""", 0)
+    return result
   }
 
   private inner class InsertAndReturnQuery<out T : Any>(
@@ -209,7 +252,7 @@ public class PlayerQueries(
     public val shoots: Shoots,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         transactionWithResult {
       driver.execute(-452_007_405, """
           |INSERT INTO player
@@ -221,55 +264,59 @@ public class PlayerQueries(
             bindString(3, playerAdapter.shootsAdapter.encode(shoots))
           }
       driver.executeQuery(-452_007_404, """
-          |SELECT *
+          |SELECT player.name, player.number, player.team, player.shoots
           |  FROM player
           |  WHERE player.rowid = last_insert_rowid()
           """.trimMargin(), mapper, 0)
+    } .also {
+      notifyQueries(781_651_682) { emit ->
+        emit("player")
+      }
     }
 
-    public override fun toString(): String = "Player.sq:insertAndReturn"
+    override fun toString(): String = "Player.sq:insertAndReturn"
   }
 
   private inner class PlayersForTeamQuery<out T : Any>(
     public val team: Team.Name?,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
-    public override fun addListener(listener: Query.Listener): Unit {
-      driver.addListener(listener, arrayOf("player"))
+    override fun addListener(listener: Query.Listener) {
+      driver.addListener("player", listener = listener)
     }
 
-    public override fun removeListener(listener: Query.Listener): Unit {
-      driver.removeListener(listener, arrayOf("player"))
+    override fun removeListener(listener: Query.Listener) {
+      driver.removeListener("player", listener = listener)
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
         driver.executeQuery(null, """
-    |SELECT *
+    |SELECT player.name, player.number, player.team, player.shoots
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
       bindString(0, team?.let { it.name })
     }
 
-    public override fun toString(): String = "Player.sq:playersForTeam"
+    override fun toString(): String = "Player.sq:playersForTeam"
   }
 
   private inner class PlayersForNumbersQuery<out T : Any>(
     public val number: Collection<Long>,
     mapper: (SqlCursor) -> T,
   ) : Query<T>(mapper) {
-    public override fun addListener(listener: Query.Listener): Unit {
-      driver.addListener(listener, arrayOf("player"))
+    override fun addListener(listener: Query.Listener) {
+      driver.addListener("player", listener = listener)
     }
 
-    public override fun removeListener(listener: Query.Listener): Unit {
-      driver.removeListener(listener, arrayOf("player"))
+    override fun removeListener(listener: Query.Listener) {
+      driver.removeListener("player", listener = listener)
     }
 
-    public override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
       val numberIndexes = createArguments(count = number.size)
       return driver.executeQuery(null, """
-          |SELECT *
+          |SELECT player.name, player.number, player.team, player.shoots
           |FROM player
           |WHERE number IN $numberIndexes
           """.trimMargin(), mapper, number.size) {
@@ -279,6 +326,32 @@ public class PlayerQueries(
           }
     }
 
-    public override fun toString(): String = "Player.sq:playersForNumbers"
+    override fun toString(): String = "Player.sq:playersForNumbers"
+  }
+
+  private inner class GreaterThanNumberAndNameQuery<out T : Any>(
+    public val number: Long,
+    public val name: Player.Name,
+    mapper: (SqlCursor) -> T,
+  ) : Query<T>(mapper) {
+    override fun addListener(listener: Query.Listener) {
+      driver.addListener("player", listener = listener)
+    }
+
+    override fun removeListener(listener: Query.Listener) {
+      driver.removeListener("player", listener = listener)
+    }
+
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
+        driver.executeQuery(-1_258_650_806, """
+    |SELECT player.name, player.number, player.team, player.shoots
+    |FROM player
+    |WHERE (number, name) > (?, ?)
+    """.trimMargin(), mapper, 2) {
+      bindLong(0, number)
+      bindString(1, name.name)
+    }
+
+    override fun toString(): String = "Player.sq:greaterThanNumberAndName"
   }
 }

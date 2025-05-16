@@ -15,7 +15,6 @@
  */
 package app.cash.sqldelight.gradle
 
-import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -23,6 +22,7 @@ import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Failure
 import app.cash.sqldelight.core.SqlDelightEnvironment.CompilationStatus.Success
 import app.cash.sqldelight.core.SqlDelightException
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import java.util.ServiceLoader
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
@@ -41,18 +41,11 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.util.ServiceLoader
 
 @CacheableTask
 abstract class SqlDelightTask : SqlDelightWorkerTask() {
-  @Suppress("unused")
-  // Required to invalidate the task on version updates.
-  @Input
-  val pluginVersion = VERSION
-
   @get:OutputDirectory
-  var outputDirectory: File? = null
+  abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
 
@@ -60,7 +53,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @TaskAction
   fun generateSqlDelightFiles() {

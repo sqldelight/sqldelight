@@ -1,9 +1,9 @@
 package app.cash.sqldelight.dialect
 
 import com.google.common.truth.Truth
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class DialectIntegrationTests {
 
@@ -46,6 +46,15 @@ class DialectIntegrationTests {
   @Test fun integrationTestsPostgreSqlAsync() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-postgresql-async"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test fun integrationTestsPostgreSqlMigrations() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-postgresql-migrations"))
       .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()

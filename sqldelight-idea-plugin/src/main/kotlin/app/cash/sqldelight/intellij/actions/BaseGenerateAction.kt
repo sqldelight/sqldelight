@@ -13,8 +13,9 @@ internal abstract class BaseGenerateAction(private val handler: CodeInsightActio
 
   override fun isValidForFile(project: Project, editor: Editor, file: PsiFile): Boolean {
     val offset = editor.caretModel.offset
-    return file is SqlDelightFile && file.findElementAt(offset)
-      ?.parentOfType<SqlCreateTableStmt>(true) != null
+    return file is SqlDelightFile &&
+      file.findElementAt(offset)
+        ?.parentOfType<SqlCreateTableStmt>(true) != null
   }
 
   override fun getHandler(): CodeInsightActionHandler = handler

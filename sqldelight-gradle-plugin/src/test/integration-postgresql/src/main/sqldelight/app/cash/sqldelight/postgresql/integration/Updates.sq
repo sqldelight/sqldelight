@@ -1,0 +1,30 @@
+CREATE TABLE test(
+  id SERIAL PRIMARY KEY,
+  id2 INTEGER
+);
+
+CREATE TABLE test2(
+  id2 SERIAL PRIMARY KEY,
+  other TEXT
+);
+
+insertTest:
+INSERT INTO test (id2) VALUES(?);
+
+insertTest2:
+INSERT INTO test2 (other) VALUES(?);
+
+updateTestId:
+UPDATE test
+SET id = t2.id2
+FROM (
+  SELECT
+    id2
+  FROM test2
+) AS t2 RETURNING test.id;
+
+updateTestId2:
+UPDATE test
+SET id2 = t2.id2
+FROM test2 t2
+WHERE other = ? RETURNING test.id2;

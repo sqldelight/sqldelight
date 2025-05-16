@@ -7,7 +7,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.testhelp.concurrency.ThreadOperations
 import co.touchlab.testhelp.concurrency.sleep
-import kotlin.native.concurrent.AtomicInt
+import kotlin.concurrent.AtomicInt
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
 import kotlin.test.BeforeTest
@@ -44,9 +44,9 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
     val block = {
       transacter.transaction {
         insertTestData(TestData(1L, "arst 1"))
-        transactionStarted.increment()
+        transactionStarted.incrementAndGet()
         sleep(1500)
-        counter.increment()
+        counter.incrementAndGet()
       }
     }
 
@@ -107,11 +107,11 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
       }
 
       override fun addListener(listener: Listener) {
-        driver.addListener(listener, arrayOf("test"))
+        driver.addListener("test", listener = listener)
       }
 
       override fun removeListener(listener: Listener) {
-        driver.removeListener(listener, arrayOf("test"))
+        driver.removeListener("test", listener = listener)
       }
     }
   }
@@ -126,9 +126,9 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
     val block = {
       transacter.transaction {
         insertTestData(TestData(1L, "arst 1"))
-        transactionStarted.increment()
+        transactionStarted.incrementAndGet()
         sleep(1500)
-        counter.increment()
+        counter.incrementAndGet()
       }
     }
 
@@ -155,7 +155,7 @@ class WalConcurrencyTest : BaseConcurrencyTest() {
     val block = {
       transacter.transaction {
         insertTestData(TestData(1L, "arst 1"), driver)
-        transactionStarted.increment()
+        transactionStarted.incrementAndGet()
         sleep(1500)
         insertTestData(TestData(5L, "arst 1"), driver)
       }

@@ -29,13 +29,12 @@ import app.cash.paging.PagingSourceLoadResultInvalid
 import app.cash.paging.PagingSourceLoadResultPage
 import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.SuspendingTransacterImpl
+import app.cash.sqldelight.TransacterBase
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -45,18 +44,36 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 
 @ExperimentalCoroutinesApi
-class OffsetQueryPagingSourceTest : DbTest {
+class OffsetQueryPagingSourceTest : BaseOffsetQueryPagingSourceTest() {
+  override fun createTransacter(driver: SqlDriver): TransacterBase {
+    return object : TransacterImpl(driver) {}
+  }
+}
+
+@ExperimentalCoroutinesApi
+class OffsetQueryPagingSourceWithSuspendingTransacterTest : BaseOffsetQueryPagingSourceTest() {
+  override fun createTransacter(driver: SqlDriver): TransacterBase {
+    return object : SuspendingTransacterImpl(driver) {}
+  }
+}
+
+@ExperimentalCoroutinesApi
+abstract class BaseOffsetQueryPagingSourceTest : DbTest {
 
   private lateinit var driver: SqlDriver
-  private lateinit var transacter: Transacter
+  private lateinit var transacter: TransacterBase
   private lateinit var pagingSource: PagingSource<Int, TestItem>
+
+  abstract fun createTransacter(driver: SqlDriver): TransacterBase
 
   override suspend fun setup(driver: SqlDriver) {
     this.driver = driver
     driver.execute(null, "CREATE TABLE TestItem(id INTEGER NOT NULL PRIMARY KEY);", 0)
-    transacter = object : TransacterImpl(driver) {}
+    transacter = createTransacter(driver)
     pagingSource = QueryPagingSource(
       countQuery(),
       transacter,
@@ -140,6 +157,15 @@ class OffsetQueryPagingSourceTest : DbTest {
   fun invalidInitialKey_keyTooLarge_returnsLastPage() = runDbTest {
     insertItems(ITEMS_LIST)
     val result = pagingSource.refresh(key = 101) as PagingSourceLoadResultPage<Int, TestItem>
+
+    // should load the last page
+    assertContentEquals(ITEMS_LIST.subList(85, 100), result.data)
+  }
+
+  @Test
+  fun invalidInitialKey_keyOnLastPage_returnsLastPage() = runDbTest {
+    insertItems(ITEMS_LIST)
+    val result = pagingSource.refresh(key = 90) as PagingSourceLoadResultPage<Int, TestItem>
 
     // should load the last page
     assertContentEquals(ITEMS_LIST.subList(85, 100), result.data)
@@ -524,8 +550,8 @@ class OffsetQueryPagingSourceTest : DbTest {
       bindLong(1, offset)
     }
 
-    override fun addListener(listener: Listener) = driver.addListener(listener, arrayOf("TestItem"))
-    override fun removeListener(listener: Listener) = driver.removeListener(listener, arrayOf("TestItem"))
+    override fun addListener(listener: Listener) = driver.addListener("TestItem", listener = listener)
+    override fun removeListener(listener: Listener) = driver.removeListener("TestItem", listener = listener)
   }
 
   private fun countQuery() = Query(
@@ -556,20 +582,18 @@ class OffsetQueryPagingSourceTest : DbTest {
     }
   }
 
-  private fun deleteItem(item: TestItem): Long =
-    driver
-      .execute(22, "DELETE FROM TestItem WHERE id = ?;", 1) {
-        bindLong(0, item.id)
-      }
-      .value
+  private fun deleteItem(item: TestItem): Long = driver
+    .execute(22, "DELETE FROM TestItem WHERE id = ?;", 1) {
+      bindLong(0, item.id)
+    }
+    .value
 
-  private fun deleteItems(range: IntRange): Long =
-    driver
-      .execute(23, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
-        bindLong(0, range.first.toLong())
-        bindLong(1, range.last.toLong())
-      }
-      .value
+  private fun deleteItems(range: IntRange): Long = driver
+    .execute(23, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
+      bindLong(0, range.first.toLong())
+      bindLong(1, range.last.toLong())
+    }
+    .value
 }
 
 private val CONFIG = PagingConfig(
@@ -609,11 +633,8 @@ private fun createLoadParam(loadType: LoadType, key: Int?): PagingSourceLoadPara
   else -> error("Unknown PagingSourceLoadParams ${loadType::class}")
 }
 
-private suspend fun PagingSource<Int, TestItem>.refresh(key: Int? = null): PagingSourceLoadResult<Int, TestItem> =
-  load(createLoadParam(LoadType.REFRESH, key))
+private suspend fun PagingSource<Int, TestItem>.refresh(key: Int? = null): PagingSourceLoadResult<Int, TestItem> = load(createLoadParam(LoadType.REFRESH, key))
 
-private suspend fun PagingSource<Int, TestItem>.append(key: Int?): PagingSourceLoadResult<Int, TestItem> =
-  load(createLoadParam(LoadType.APPEND, key))
+private suspend fun PagingSource<Int, TestItem>.append(key: Int?): PagingSourceLoadResult<Int, TestItem> = load(createLoadParam(LoadType.APPEND, key))
 
-private suspend fun PagingSource<Int, TestItem>.prepend(key: Int?): PagingSourceLoadResult<Int, TestItem> =
-  load(createLoadParam(LoadType.PREPEND, key))
+private suspend fun PagingSource<Int, TestItem>.prepend(key: Int?): PagingSourceLoadResult<Int, TestItem> = load(createLoadParam(LoadType.PREPEND, key))

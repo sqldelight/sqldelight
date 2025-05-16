@@ -22,6 +22,7 @@ import app.cash.sqldelight.dialect.api.PragmaWithResults
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
+import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.NULL
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
@@ -30,6 +31,7 @@ import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.SelectQueryable
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingType
+import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import com.alecstrong.sql.psi.core.psi.SqlBetweenExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryExpr
@@ -46,6 +48,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
+import com.alecstrong.sql.psi.core.psi.SqlLikeEscapeCharacterExpr
 import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
@@ -76,8 +79,7 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     return functionExpr.typeReturned()
   }
 
-  override fun definitionType(typeName: SqlTypeName) =
-    throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
+  override fun definitionType(typeName: SqlTypeName) = throw UnsupportedOperationException("ANSI SQL is not supported for being used as a dialect.")
 
   override fun argumentType(
     parent: PsiElement,
@@ -136,10 +138,12 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     "avg" -> IntermediateType(REAL).asNullable()
     "abs" -> encapsulatingType(exprList, INTEGER, REAL)
     "iif" -> exprList[1].type()
-    "coalesce", "ifnull" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB)
+    "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, nullability = { exprListNullability ->
+      exprListNullability.all { it }
+    })
     "nullif" -> exprList[0].type().asNullable()
-    "max" -> encapsulatingType(exprList, INTEGER, REAL, TEXT, BLOB).asNullable()
-    "min" -> encapsulatingType(exprList, BLOB, TEXT, INTEGER, REAL).asNullable()
+    "max" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, BOOLEAN).asNullable()
+    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, INTEGER, REAL, BOOLEAN).asNullable()
     else -> null
   }
 
@@ -184,7 +188,6 @@ private fun SqlExpr.type(): IntermediateType {
  *          | between_expr
  *          | is_expr
  *          | null_expr
- *          | like_expr
  *          | collate_expr
  *          | cast_expr
  *          | paren_expr
@@ -192,6 +195,8 @@ private fun SqlExpr.type(): IntermediateType {
  *          | binary_expr
  *          | unary_expr
  *          | bind_expr
+ *          | like_escape_character_expr
+ *          | like_expr
  *          | literal_expr
  *          | column_expr )
  */
@@ -231,10 +236,10 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
     } else {
       typeResolver.encapsulatingType(
         exprList = getExprList(),
-        nullableIfAny = (
-          this is SqlBinaryAddExpr || this is SqlBinaryMultExpr ||
-            this is SqlBinaryPipeExpr
-          ),
+        nullability = { exprListNullability ->
+          (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
+            exprListNullability.any { it }
+        },
         INTEGER,
         REAL,
         TEXT,
@@ -275,6 +280,8 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   is SqlOtherExpr -> {
     extensionExpr.type()
   }
+
+  is SqlLikeEscapeCharacterExpr -> expr.type()
 
   else -> throw IllegalStateException("Unknown expression type $this")
 }

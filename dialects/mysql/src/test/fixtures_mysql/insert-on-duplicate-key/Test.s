@@ -1,8 +1,0 @@
-CREATE TABLE test (
-  id INTEGER PRIMARY KEY,
-  value INTEGER
-);
-
-INSERT INTO test
-VALUES (1,2)
-ON DUPLICATE KEY UPDATE value = VALUES(value);

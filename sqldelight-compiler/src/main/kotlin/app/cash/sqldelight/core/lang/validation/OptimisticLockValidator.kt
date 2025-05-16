@@ -3,7 +3,6 @@ package app.cash.sqldelight.core.lang.validation
 import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
-import com.alecstrong.sql.psi.core.SqlCompilerAnnotator
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
@@ -21,15 +20,11 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 
-open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
+open class OptimisticLockValidator : Annotator {
   open fun quickFix(element: PsiElement, lock: ColumnDefMixin): IntentionAction? = null
 
   override fun annotate(element: PsiElement, holder: AnnotationHolder) {
     annotate(element, holder, null)
-  }
-
-  override fun annotate(element: PsiElement, annotationHolder: SqlAnnotationHolder) {
-    annotate(element, null, annotationHolder)
   }
 
   fun annotate(
@@ -103,7 +98,7 @@ open class OptimisticLockValidator : Annotator, SqlCompilerAnnotator {
 
     val whereExpression = when (element) {
       is SqlUpdateStmt -> element.expr
-      is SqlUpdateStmtLimited -> element.exprList.getOrNull(0) ?: return
+      is SqlUpdateStmtLimited -> element.expr
       else -> throw IllegalStateException()
     }
 

@@ -81,9 +81,9 @@ interface SqlDriver : Closeable {
    */
   fun currentTransaction(): Transacter.Transaction?
 
-  fun addListener(listener: Query.Listener, queryKeys: Array<String>)
+  fun addListener(vararg queryKeys: String, listener: Query.Listener)
 
-  fun removeListener(listener: Query.Listener, queryKeys: Array<String>)
+  fun removeListener(vararg queryKeys: String, listener: Query.Listener)
 
-  fun notifyListeners(queryKeys: Array<String>)
+  fun notifyListeners(vararg queryKeys: String)
 }

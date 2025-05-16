@@ -1,5 +1,3 @@
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+  alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'app.cash.sqldelight'

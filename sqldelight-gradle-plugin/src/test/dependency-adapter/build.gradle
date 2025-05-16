@@ -1,3 +1,0 @@
-buildscript {
-  apply from: "${projectDir.absolutePath}/../buildscript.gradle"
-}

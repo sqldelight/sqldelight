@@ -69,8 +69,7 @@ internal class UnusedColumnInspection : LocalInspectionTool() {
     }
   }
 
-  class SafeDeleteQuickFix(createTableStmt: SqlCreateTableStmt, columnDef: SqlColumnDef) :
-    LocalQuickFixOnPsiElement(createTableStmt) {
+  class SafeDeleteQuickFix(createTableStmt: SqlCreateTableStmt, columnDef: SqlColumnDef) : LocalQuickFixOnPsiElement(createTableStmt) {
 
     private val createTableRef = SmartPointerManager.getInstance(createTableStmt.project)
       .createSmartPsiElementPointer(createTableStmt, createTableStmt.containingFile)

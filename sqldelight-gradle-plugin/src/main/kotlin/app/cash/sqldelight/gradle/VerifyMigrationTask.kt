@@ -1,6 +1,5 @@
 package app.cash.sqldelight.gradle
 
-import app.cash.sqldelight.VERSION
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightEnvironment
@@ -11,6 +10,11 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqlite.migrations.CatalogDatabase
 import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
+import java.io.File
+import java.sql.DriverManager
+import java.util.Properties
+import java.util.ServiceLoader
+import kotlin.collections.ArrayList
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.RegularFileProperty
@@ -30,31 +34,21 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.sql.DriverManager
-import java.util.Properties
-import java.util.ServiceLoader
-import kotlin.collections.ArrayList
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
-  @Suppress("unused")
-  // Required to invalidate the task on version updates.
-  @Input
-  val pluginVersion = VERSION
-
   @get:Input abstract val projectName: Property<String>
 
   /** Directory where the database files are copied for the migration scripts to run against. */
-  @get:Internal abstract var workingDirectory: File
+  @get:Internal abstract val workingDirectory: DirectoryProperty
 
   @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
 
   @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
-  @Input var verifyMigrations: Boolean = false
+  @get:Input abstract val verifyMigrations: Property<Boolean>
 
-  @Input var verifyDefinitions: Boolean = true
+  @get:Input abstract val verifyDefinitions: Property<Boolean>
 
   @get:Input abstract val driverProperties: MapProperty<String, String>
 
@@ -74,7 +68,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)
-      it.driverProperties.set(driverProperties.get())
+      it.driverProperties.set(driverProperties)
       it.outputFile.set(getDummyOutputFile())
     }
   }
@@ -129,7 +123,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         .findDatabaseFiles()
 
       check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
-        "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+        "Verifying a migration requires a database file to be present. To generate one, use the generate schema Gradle task for your database. A quick way to find the task name(s) is to run `gradle :module:tasks | grep generate`."
       }
 
       databaseFiles.forEach { dbFile ->
@@ -197,7 +191,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     }
 
     private fun checkForGaps() {
-      var lastMigrationVersion: Int? = null
+      var lastMigrationVersion: Long? = null
       environment.forMigrationFiles {
         val actual = it.version
         val expected = lastMigrationVersion?.plus(1) ?: actual
@@ -208,21 +202,21 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         lastMigrationVersion = actual
       }
     }
-
-    private fun MapProperty<String, String>.toProperties(): Properties {
-      val connectionProperties = Properties()
-      get().forEach { (key, value) ->
-        connectionProperties[key] = value
-      }
-      return connectionProperties
-    }
   }
 }
 
 /**
  * Allows consumers to configure and register (with [DriverManager]) their custom drivers prior to
- * running migration verification task.
+ * running VerifyMigrationTask and GenerateSchemaTask tasks.
  */
 interface DriverInitializer {
   fun execute(properties: SqlDelightDatabaseProperties, driverProperties: Properties)
+}
+
+internal fun MapProperty<String, String>.toProperties(): Properties {
+  val properties = Properties()
+  get().forEach { (key, value) ->
+    properties[key] = value
+  }
+  return properties
 }

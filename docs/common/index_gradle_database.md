@@ -1,4 +1,5 @@
-First apply the gradle plugin in your project.
+First apply the gradle plugin in your project{% if dialect %} and set your database's dialect accordingly{% endif %}. {% if async %}Make sure to set `generateAsync` to 
+`true` when creating your database.{% endif %} 
 
 === "Kotlin"
     ```kotlin
@@ -15,7 +16,8 @@ First apply the gradle plugin in your project.
       databases {
         create("Database") {
           packageName.set("com.example"){% if dialect %}
-          dialect("{{ dialect }}:{{ versions.sqldelight }}"){% endif %}
+          dialect("{{ dialect }}:{{ versions.sqldelight }}"){% endif %}{% if async %}
+          generateAsync.set(true){% endif %}
         }
       }
     }
@@ -35,7 +37,8 @@ First apply the gradle plugin in your project.
       databases {
         Database { // This will be the name of the generated database class.
           packageName = "com.example"{% if dialect %}
-          dialect "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}
+          dialect "{{ dialect }}:{{ versions.sqldelight }}"{% endif %}{% if async %}
+          generateAsync = true{% endif %}
         }
       }
     }

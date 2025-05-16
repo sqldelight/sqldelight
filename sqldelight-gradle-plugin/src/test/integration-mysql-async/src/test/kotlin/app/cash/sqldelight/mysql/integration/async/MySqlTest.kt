@@ -52,6 +52,20 @@ class MySqlTest {
   }
 
   @Test
+  fun insertAndReturn() = runTest { database ->
+    val all = database.dogQueries.insertDogAndReturnAll("Tilda", "Pomeranian", null)
+    assertThat(all.awaitAsList())
+      .containsExactly(
+        Dog(
+          name = "Tilda",
+          breed = "Pomeranian",
+          is_good = true,
+          age = null,
+        ),
+      )
+  }
+
+  @Test
   fun simpleSelectWithIn() = runTest { database ->
     with(database) {
       dogQueries.insertDog("Tilda", "Pomeranian", null)

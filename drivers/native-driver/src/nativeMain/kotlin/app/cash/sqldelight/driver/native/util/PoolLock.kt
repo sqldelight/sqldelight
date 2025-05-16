@@ -1,6 +1,5 @@
 package app.cash.sqldelight.driver.native.util
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect class PoolLock(reentrant: Boolean = false) {
   fun <R> withLock(
     action: CriticalSection.() -> R,
@@ -26,7 +25,5 @@ internal expect class PoolLock(reentrant: Boolean = false) {
      * depend on the same conditional result.
      */
     fun <R> loopForConditionalResult(block: () -> R?): R
-
-    fun loopUntilConditionalResult(block: () -> Boolean)
   }
 }

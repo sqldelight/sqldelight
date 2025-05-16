@@ -1,9 +1,7 @@
-buildscript {
-    apply from: "${projectDir.absolutePath}/../buildscript.gradle"
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.sqldelight)
 }
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'app.cash.sqldelight'
 
 sqldelight {
   databases {
@@ -15,7 +13,7 @@ sqldelight {
 }
 
 dependencies {
-    implementation "org.hsqldb:hsqldb:2.7.1"
+    implementation "org.hsqldb:hsqldb:2.7.4"
     implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
     implementation libs.truth
 }

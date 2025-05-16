@@ -7,7 +7,7 @@ CREATE TABLE person (
 insertAndReturn1:
 INSERT INTO person
 VALUES (?, ?, ?)
-RETURNING name;
+RETURNING first_name;
 
 insertAndReturnMany:
 INSERT INTO person
@@ -23,7 +23,7 @@ updateAndReturn1:
 UPDATE person
 SET last_name = ?
 WHERE last_name = ?
-RETURNING name;
+RETURNING first_name;
 
 updateAndReturnMany:
 UPDATE person
@@ -40,7 +40,7 @@ RETURNING *;
 deleteAndReturn1:
 DELETE FROM person
 WHERE last_name = ?
-RETURNING name;
+RETURNING first_name;
 
 deleteAndReturnMany:
 DELETE FROM person
@@ -51,3 +51,8 @@ deleteAndReturnAll:
 DELETE FROM person
 WHERE last_name = ?
 RETURNING *;
+
+performUpsert:
+INSERT INTO person (_id, first_name, last_name) VALUES (?, ?, ?)
+  ON CONFLICT(_id) DO UPDATE SET first_name=excluded.first_name, last_name=excluded.last_name
+  ON CONFLICT DO NOTHING;

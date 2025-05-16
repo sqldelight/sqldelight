@@ -17,10 +17,10 @@ package app.cash.sqldelight.integrations
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
-import java.io.File
 
 class IntegrationTest {
   @Test
@@ -75,6 +75,22 @@ class IntegrationTest {
         },
       ).outcome,
     ).isEqualTo(TaskOutcome.UP_TO_DATE)
+  }
+
+  @Test
+  fun integrationTestsAndroidSingleVariant() {
+    val projectLocation = File("src/test/integration-android-variants")
+    val outputDir = File(projectLocation, "build/generated/sqldelight/code/QueryWrapper")
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(projectLocation)
+      .forwardOutput()
+
+    val generateDebugResult = runner
+      .withArguments("clean", "generateDebugQueryWrapperInterface", "-PdebugOnly=true")
+      .build()
+    assertThat(generateDebugResult.output).contains("BUILD SUCCESSFUL")
+
+    assertThat(File(outputDir, "debug").exists()).isTrue()
   }
 
   @Test

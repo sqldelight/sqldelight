@@ -5,8 +5,8 @@ import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.withTemporaryFixture
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
 import java.io.File
+import org.junit.Test
 
 class CompilationUnitTests {
   @Test
@@ -14,12 +14,10 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.jvm)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.jvm'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -41,7 +39,7 @@ class CompilationUnitTests {
           SqlDelightCompilationUnitImpl(
             name = "main",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)),
-            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/main"),
           ),
         )
       }
@@ -53,12 +51,10 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.jvm)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.jvm'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -85,7 +81,7 @@ class CompilationUnitTests {
               SqlDelightCompilationUnitImpl(
                 name = "main",
                 sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false)),
-                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/main"),
               ),
             ),
             dependencies = emptyList(),
@@ -101,7 +97,7 @@ class CompilationUnitTests {
                   SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/otherdb"), false),
                   SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
                 ),
-                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/OtherDb"),
+                outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/OtherDb/main"),
               ),
             ),
             dependencies = emptyList(),
@@ -118,12 +114,10 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -153,7 +147,7 @@ class CompilationUnitTests {
           SqlDelightCompilationUnitImpl(
             name = "commonMain",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), false)),
-            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/commonMain"),
           ),
         )
       }
@@ -165,13 +159,11 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.android.application)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'org.jetbrains.kotlin.multiplatform'
-        |apply plugin: 'com.android.application'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {
@@ -227,7 +219,7 @@ class CompilationUnitTests {
           SqlDelightCompilationUnitImpl(
             name = "commonMain",
             sourceFolders = listOf(SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), false)),
-            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb"),
+            outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/commonMain"),
           ),
         )
       }
@@ -239,13 +231,11 @@ class CompilationUnitTests {
     withTemporaryFixture {
       gradleFile(
         """
-        |buildscript {
-        |  apply from: "${"$"}{projectDir.absolutePath}/../buildscript.gradle"
+        |plugins {
+        |  alias(libs.plugins.android.application)
+        |  alias(libs.plugins.kotlin.android)
+        |  alias(libs.plugins.sqldelight)
         |}
-        |
-        |apply plugin: 'com.android.application'
-        |apply plugin: 'org.jetbrains.kotlin.android'
-        |apply plugin: 'app.cash.sqldelight'
         |
         |sqldelight {
         |  databases {

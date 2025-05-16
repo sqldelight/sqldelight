@@ -5,10 +5,10 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class OptimisticLockTest {
   @get:Rule val tempFolder = TemporaryFolder()
@@ -98,11 +98,14 @@ class OptimisticLockTest {
     val generator = MutatorQueryGenerator(mutator)
     assertThat(generator.function().toString()).isEqualTo(
       """
+      |/**
+      | * @return The number of rows updated.
+      | */
       |public fun updateText(
       |  text: kotlin.String,
       |  version: com.example.Test.Version,
       |  id: com.example.Test.Id,
-      |): kotlin.Unit {
+      |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
       |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET
@@ -114,14 +117,15 @@ class OptimisticLockTest {
       |      ""${'"'}.trimMargin(), 4) {
       |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
       |        bindString(0, text)
-      |        bindLong(1, version.version.toLong())
-      |        bindLong(2, id.id.toLong())
-      |        bindLong(3, version.version.toLong())
+      |        bindInt(1, version.version)
+      |        bindInt(2, id.id)
+      |        bindInt(3, version.version)
       |      }
       |  if (result.value == 0L) throw app.cash.sqldelight.db.OptimisticLockException("UPDATE on test failed because optimistic lock version did not match")
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),

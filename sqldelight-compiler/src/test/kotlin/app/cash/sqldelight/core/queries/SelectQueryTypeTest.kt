@@ -50,7 +50,7 @@ class SelectQueryTypeTest {
       |public fun <T : kotlin.Any> insertReturning(mapper: (val1: kotlin.String?, val2: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "insertReturning", ""${'"'}
       ||INSERT INTO data
       ||VALUES ('sup', 'dude')
-      ||RETURNING *
+      ||RETURNING data.val1, data.val2
       |""${'"'}.trimMargin()) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
@@ -63,8 +63,8 @@ class SelectQueryTypeTest {
     )
   }
 
-  @Test fun `returning clause in an update correctly generates a query function`(dialect: TestDialect) {
-    assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
+  @Test fun `returning clause in an update correctly generates a query function - postgres`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.POSTGRESQL)
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE IF NOT EXISTS users(
@@ -82,7 +82,7 @@ class SelectQueryTypeTest {
       |
       """.trimMargin(),
       tempFolder,
-      dialect = PostgreSqlDialect(),
+      dialect = dialect.dialect,
     )
 
     val query = file.namedQueries.first()
@@ -102,7 +102,55 @@ class SelectQueryTypeTest {
       |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
       |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
       |  mapper(
-      |    cursor.getLong(0)!!.toInt(),
+      |    cursor.getInt(0)!!,
+      |    cursor.getString(1)!!,
+      |    cursor.getString(2)!!
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `returning clause in an update correctly generates a query function - sqlite`(dialect: TestDialect) {
+    assumeTrue(dialect == TestDialect.SQLITE_3_35)
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE IF NOT EXISTS users(
+      |    id ${dialect.intType} PRIMARY KEY,
+      |    firstname ${dialect.textType} NOT NULL,
+      |    lastname ${dialect.textType} NOT NULL
+      |);
+      |
+      |update:
+      |UPDATE users SET
+      |    firstname = :firstname,
+      |    lastname = :lastname
+      |WHERE id = :id
+      |RETURNING id, firstname, lastname;
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> update(
+      |  firstname: kotlin.String,
+      |  lastname: kotlin.String,
+      |  id: kotlin.Long,
+      |  mapper: (
+      |    id: kotlin.Long,
+      |    firstname: kotlin.String,
+      |    lastname: kotlin.String,
+      |  ) -> T,
+      |): app.cash.sqldelight.ExecutableQuery<T> = UpdateQuery(firstname, lastname, id) { cursor ->
+      |  mapper(
+      |    cursor.getLong(0)!!,
       |    cursor.getString(1)!!,
       |    cursor.getString(2)!!
       |  )
@@ -137,23 +185,23 @@ class SelectQueryTypeTest {
       |  public val id: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |  |SELECT data.id
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
       |    bindLong(0, id)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -178,9 +226,9 @@ class SelectQueryTypeTest {
       |private inner class SelectWithoutFromQuery<out T : kotlin.Any>(
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}SELECT 42""${'"'}, mapper, 0)
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}SELECT 42""${'"'}, mapper, 0)
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectWithoutFrom"
+      |  override fun toString(): kotlin.String = "Test.sq:selectWithoutFrom"
       |}
       |
       """.trimMargin(),
@@ -214,16 +262,16 @@ class SelectQueryTypeTest {
       |  public val id: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |  |SELECT data.id, data.value
       |  |FROM data
       |  |WHERE id = ?
       |  |AND value = ?
@@ -232,7 +280,7 @@ class SelectQueryTypeTest {
       |    bindString(1, value_)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:select"
+      |  override fun toString(): kotlin.String = "Test.sq:select"
       |}
       |
       """.trimMargin(),
@@ -263,18 +311,18 @@ class SelectQueryTypeTest {
       |  public val id: kotlin.collections.Collection<kotlin.Long>,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
       |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |        |SELECT *
+      |        |SELECT data.id
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, id.size) {
@@ -284,7 +332,7 @@ class SelectQueryTypeTest {
       |        }
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -317,18 +365,18 @@ class SelectQueryTypeTest {
       |  public val message: kotlin.String,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
       |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |        |SELECT *
+      |        |SELECT data.id, data.message
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, 1 + id.size + id.size) {
@@ -342,7 +390,7 @@ class SelectQueryTypeTest {
       |        }
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -374,19 +422,19 @@ class SelectQueryTypeTest {
        |  public val userId: kotlin.String?,
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
-       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.addListener(listener, arrayOf("socialFeedItem"))
+       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.addListener("socialFeedItem", listener = listener)
        |  }
        |
-       |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.removeListener(listener, arrayOf("socialFeedItem"))
+       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.removeListener("socialFeedItem", listener = listener)
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
+       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT socialFeedItem.message, socialFeedItem.userId, socialFeedItem.creation_time FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
        |    bindString(0, userId)
        |  }
        |
-       |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
+       |  override fun toString(): kotlin.String = "Test.sq:select_news_list"
        |}
        |
       """.trimMargin(),
@@ -417,19 +465,19 @@ class SelectQueryTypeTest {
        |  public val userId: kotlin.String?,
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
-       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.addListener(listener, arrayOf("socialFeedItem"))
+       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.addListener("socialFeedItem", listener = listener)
        |  }
        |
-       |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.removeListener(listener, arrayOf("socialFeedItem"))
+       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.removeListener("socialFeedItem", listener = listener)
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id.withUnderscores}, ""${'"'}SELECT * FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
+       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id.withUnderscores}, ""${'"'}SELECT socialFeedItem.message, socialFeedItem.userId, socialFeedItem.creation_time FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
        |    bindString(0, userId)
        |  }
        |
-       |  public override fun toString(): kotlin.String = "Test.sq:select_news_list"
+       |  override fun toString(): kotlin.String = "Test.sq:select_news_list"
        |}
        |
       """.trimMargin(),
@@ -465,15 +513,15 @@ class SelectQueryTypeTest {
        |  public val username: kotlin.String,
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
-       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.addListener(listener, arrayOf("Friend"))
+       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.addListener("Friend", listener = listener)
        |  }
        |
-       |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.removeListener(listener, arrayOf("Friend"))
+       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.removeListener("Friend", listener = listener)
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
+       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
        |  |SELECT _id, username
        |  |FROM Friend
        |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
@@ -482,7 +530,7 @@ class SelectQueryTypeTest {
        |    bindString(1, username)
        |  }
        |
-       |  public override fun toString(): kotlin.String = "Test.sq:selectData"
+       |  override fun toString(): kotlin.String = "Test.sq:selectData"
        |}
        |
       """.trimMargin(),
@@ -516,15 +564,15 @@ class SelectQueryTypeTest {
        |  public val username: kotlin.String,
        |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
        |) : app.cash.sqldelight.Query<T>(mapper) {
-       |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.addListener(listener, arrayOf("Friend"))
+       |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.addListener("Friend", listener = listener)
        |  }
        |
-       |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-       |    driver.removeListener(listener, arrayOf("Friend"))
+       |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+       |    driver.removeListener("Friend", listener = listener)
        |  }
        |
-       |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
+       |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
        |  |SELECT _id, username
        |  |FROM Friend
        |  |WHERE userId=? OR username=? LIMIT 2
@@ -533,7 +581,7 @@ class SelectQueryTypeTest {
        |    bindString(1, username)
        |  }
        |
-       |  public override fun toString(): kotlin.String = "Test.sq:selectData"
+       |  override fun toString(): kotlin.String = "Test.sq:selectData"
        |}
        |
       """.trimMargin(),
@@ -576,16 +624,16 @@ class SelectQueryTypeTest {
       |  public val val______: kotlin.String?,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
+      |  |SELECT data.id, data.val
       |  |FROM data
       |  |WHERE val ${"$"}{ if (val_ == null) "IS" else "=" } ?
       |  |AND val ${"$"}{ if (val__ == null) "IS" else "==" } ?
@@ -602,7 +650,7 @@ class SelectQueryTypeTest {
       |    bindString(5, val______)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -644,16 +692,16 @@ class SelectQueryTypeTest {
       |  public val val______: kotlin.String?,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
+      |  |SELECT data.id, data.val
       |  |FROM data
       |  |WHERE val = ?
       |  |AND val == ?
@@ -670,7 +718,7 @@ class SelectQueryTypeTest {
       |    bindString(5, val______)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -703,16 +751,16 @@ class SelectQueryTypeTest {
       |  public val rowid: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |  |SELECT data.content
       |  |FROM data
       |  |WHERE data MATCH ? AND rowid = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
@@ -720,7 +768,7 @@ class SelectQueryTypeTest {
       |    bindLong(1, rowid)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectMatching"
+      |  override fun toString(): kotlin.String = "Test.sq:selectMatching"
       |}
       |
       """.trimMargin(),
@@ -754,23 +802,23 @@ class SelectQueryTypeTest {
       |  public val `value`: kotlin.String,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |  |SELECT data.content
       |  |FROM data
       |  |WHERE data MATCH '"one ' || ? || '" * '
       |  ""${'"'}.trimMargin(), mapper, 1) {
       |    bindString(0, value)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectMatching"
+      |  override fun toString(): kotlin.String = "Test.sq:selectMatching"
       |}
       |
       """.trimMargin(),
@@ -809,19 +857,19 @@ class SelectQueryTypeTest {
       |  public val token_: kotlin.collections.Collection<kotlin.String>,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
       |    val idIndexes = createArguments(count = id.size)
       |    val token_Indexes = createArguments(count = token_.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |        |SELECT *
+      |        |SELECT data.id, data.token, data.name
       |        |FROM data
       |        |WHERE token = ?
       |        |  AND id IN ${"$"}idIndexes
@@ -841,7 +889,7 @@ class SelectQueryTypeTest {
       |        }
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -878,17 +926,17 @@ class SelectQueryTypeTest {
       |  public val offset: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
       |  |WITH child_ids AS (SELECT id FROM data WHERE id ${'$'}{ if (id == null) "IS" else "=" } ?)
-      |  |SELECT *
+      |  |SELECT data.id
       |  |FROM data
       |  |WHERE id ${'$'}{ if (id == null) "IS" else "=" } ? OR id IN child_ids
       |  |LIMIT ?
@@ -900,7 +948,7 @@ class SelectQueryTypeTest {
       |    bindLong(3, offset)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -936,17 +984,17 @@ class SelectQueryTypeTest {
       |  public val offset: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
       |  |WITH child_ids AS (SELECT id FROM data WHERE id = ?)
-      |  |SELECT *
+      |  |SELECT data.id
       |  |FROM data
       |  |WHERE id = ? OR id IN child_ids
       |  |LIMIT ?
@@ -958,7 +1006,7 @@ class SelectQueryTypeTest {
       |    bindLong(3, offset)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForId"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForId"
       |}
       |
       """.trimMargin(),
@@ -991,18 +1039,18 @@ class SelectQueryTypeTest {
       |  public val id: kotlin.collections.Collection<foo.Bar?>,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
       |    val idIndexes = createArguments(count = id.size)
       |    return driver.executeQuery(null, ""${'"'}
-      |        |SELECT *
+      |        |SELECT data.id
       |        |FROM data
       |        |WHERE id IN ${'$'}idIndexes
       |        ""${'"'}.trimMargin(), mapper, id.size) {
@@ -1012,7 +1060,7 @@ class SelectQueryTypeTest {
       |        }
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectForIds"
+      |  override fun toString(): kotlin.String = "Test.sq:selectForIds"
       |}
       |
       """.trimMargin(),
@@ -1059,16 +1107,16 @@ class SelectQueryTypeTest {
       |  public val token: kotlin.String?,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}
+      |  |SELECT data.token
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
@@ -1076,7 +1124,7 @@ class SelectQueryTypeTest {
       |    bindString(1, token)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
+      |  override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
       |}
       |
       """.trimMargin(),
@@ -1108,16 +1156,16 @@ class SelectQueryTypeTest {
       |  public val token: kotlin.String?,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.Query<T>(mapper) {
-      |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.addListener(listener, arrayOf("data"))
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("data", listener = listener)
       |  }
       |
-      |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-      |    driver.removeListener(listener, arrayOf("data"))
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("data", listener = listener)
       |  }
       |
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
-      |  |SELECT *
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${nullAsUnknownQuery.id.withUnderscores}, ""${'"'}
+      |  |SELECT data.token
       |  |FROM data
       |  |WHERE token = ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
@@ -1125,7 +1173,7 @@ class SelectQueryTypeTest {
       |    bindString(1, token)
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
+      |  override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
       |}
       |
       """.trimMargin(),
@@ -1412,21 +1460,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(`value`: kotlin.Long): kotlin.Unit {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(`value`: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1463,21 +1513,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value__)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value__)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1514,21 +1566,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long): kotlin.Unit {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1565,21 +1619,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value__)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value__)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1620,24 +1676,75 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): kotlin.Unit {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value__)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value__)
+      |      }
+      |} .also {
       |  notifyQueries(${query.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `grouped statements with return and no parameters`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      |  value INTEGER NOT NULL
+      |);
+      |
+      |insertAndReturn {
+      |  INSERT INTO data (value)
+      |  VALUES (NULL)
+      |  ;
+      |  SELECT last_insert_rowid();
+      |}
+      |
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    println(generator.defaultResultTypeFunction().toString())
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class InsertAndReturnQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = transactionWithResult {
+      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |        |INSERT INTO data (value)
+      |        |  VALUES (NULL)
+      |        ""${'"'}.trimMargin(), 0)
+      |    driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
+      |  } .also {
+      |    notifyQueries(${query.id.withUnderscores}) { emit ->
+      |      emit("data")
+      |    }
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
       |}
       |
       """.trimMargin(),
@@ -1712,15 +1819,15 @@ class SelectQueryTypeTest {
         |  public val values: kotlin.collections.Collection<ComboEnum>,
         |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
         |) : app.cash.sqldelight.Query<T>(mapper) {
-        |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.addListener(listener, arrayOf("ComboData", "ComboData2"))
+        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+        |    driver.addListener("ComboData", "ComboData2", listener = listener)
         |  }
         |
-        |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.removeListener(listener, arrayOf("ComboData", "ComboData2"))
+        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+        |    driver.removeListener("ComboData", "ComboData2", listener = listener)
         |  }
         |
-        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
+        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> {
         |    val valuesIndexes = createArguments(count = values.size)
         |    return driver.executeQuery(null, ""${'"'}
         |        |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
@@ -1735,7 +1842,7 @@ class SelectQueryTypeTest {
         |        }
         |  }
         |
-        |  public override fun toString(): kotlin.String = "Data.sq:countRecords"
+        |  override fun toString(): kotlin.String = "Data.sq:countRecords"
         |}
         |
       """.trimMargin(),
@@ -1773,7 +1880,7 @@ class SelectQueryTypeTest {
       |  public val value_: kotlin.Long,
       |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
       |) : app.cash.sqldelight.ExecutableQuery<T>(mapper) {
-      |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = transactionWithResult {
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = transactionWithResult {
       |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
@@ -1785,9 +1892,13 @@ class SelectQueryTypeTest {
       |        |  FROM data
       |        |  WHERE id = last_insert_rowid()
       |        ""${'"'}.trimMargin(), mapper, 0)
+      |  } .also {
+      |    notifyQueries(${query.id.withUnderscores}) { emit ->
+      |      emit("data")
+      |    }
       |  }
       |
-      |  public override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
+      |  override fun toString(): kotlin.String = "Test.sq:insertAndReturn"
       |}
       |
       """.trimMargin(),
@@ -1863,6 +1974,109 @@ class SelectQueryTypeTest {
       |    cursor.getString(0),
       |    cursor.getString(1)
       |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `multi column expression select`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE multi(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |multiColumnExpressionSelect:
+      |SELECT *
+      |FROM multi
+      |WHERE (id, name) > (?, ?);
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val select = file.namedQueries.first()
+    val generator = SelectQueryGenerator(select)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class MultiColumnExpressionSelectQuery<out T : kotlin.Any>(
+      |  public val id: kotlin.Long,
+      |  public val name: kotlin.String,
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("multi", listener = listener)
+      |  }
+      |
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("multi", listener = listener)
+      |  }
+      |
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(841_750_630, ""${'"'}
+      |  |SELECT multi.id, multi.name
+      |  |FROM multi
+      |  |WHERE (id, name) > (?, ?)
+      |  ""${'"'}.trimMargin(), mapper, 2) {
+      |    bindLong(0, id)
+      |    bindString(1, name)
+      |  }
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:multiColumnExpressionSelect"
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `expand select star across join`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE `player`(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL,
+      |  team_id INTEGER NOT NULL
+      |);
+      |
+      |CREATE TABLE `team`(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |selectAll:
+      |SELECT *
+      |FROM `player`
+      |JOIN `team` ON team_id = `team`.id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val select = file.namedQueries.first()
+    val generator = SelectQueryGenerator(select)
+
+    assertThat(generator.querySubtype().toString()).isEqualTo(
+      """
+      |private inner class SelectAllQuery<out T : kotlin.Any>(
+      |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
+      |) : app.cash.sqldelight.Query<T>(mapper) {
+      |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.addListener("player", "team", listener = listener)
+      |  }
+      |
+      |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+      |    driver.removeListener("player", "team", listener = listener)
+      |  }
+      |
+      |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-585_795_480, ""${'"'}
+      |  |SELECT `player`.id, `player`.name, `player`.team_id, `team`.id, `team`.name
+      |  |FROM `player`
+      |  |JOIN `team` ON team_id = `team`.id
+      |  ""${'"'}.trimMargin(), mapper, 0)
+      |
+      |  override fun toString(): kotlin.String = "Test.sq:selectAll"
       |}
       |
       """.trimMargin(),

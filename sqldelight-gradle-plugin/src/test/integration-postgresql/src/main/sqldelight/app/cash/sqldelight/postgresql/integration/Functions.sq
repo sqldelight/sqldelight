@@ -1,0 +1,26 @@
+CREATE TABLE myTable(
+  foo REAL NOT NULL,
+  bar NUMERIC NOT NULL
+);
+
+INSERT INTO myTable VALUES (1, 1), (2, 2), (3, 3);
+
+selectPercentile:
+SELECT percentile_disc(.5) WITHIN GROUP (ORDER BY foo) AS P5
+FROM myTable;
+
+selectStats:
+SELECT
+corr(foo, bar),
+stddev(foo),
+regr_count(foo, bar)
+FROM myTable
+GROUP BY foo, bar;
+
+selectGenerateSeries:
+SELECT generate_series(
+    CAST(:start AS TIMESTAMPTZ),
+    CAST(:finish AS TIMESTAMPTZ),
+    CAST('1 hour' AS INTERVAL)
+);
+

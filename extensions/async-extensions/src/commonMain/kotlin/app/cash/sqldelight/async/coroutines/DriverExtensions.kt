@@ -23,4 +23,4 @@ suspend fun SqlDriver.await(
 
 suspend fun SqlSchema<*>.awaitCreate(driver: SqlDriver) = create(driver).await()
 
-suspend fun SqlSchema<*>.awaitMigrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) = migrate(driver, oldVersion, newVersion).await()
+suspend fun SqlSchema<*>.awaitMigrate(driver: SqlDriver, oldVersion: Long, newVersion: Long) = migrate(driver, oldVersion, newVersion).await()

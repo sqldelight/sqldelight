@@ -1,4 +1,7 @@
-# Multiplatform setup with the SqlJs Driver
+---
+async: true
+---
+# Multiplatform setup with the Web Worker Driver
 
 {% include 'common/index_gradle_database.md' %}
 
@@ -29,56 +32,55 @@ kotlin {
 }
 ```
 
-Because the SqlJs driver must be initialized asynchronously, the drivers for other platforms must be initialized in a compatible way to be usable in a common source set.
+## Creating Drivers
 
-The drivers can be initialized in a coroutine, and a higher-order function can be used to ensure that the driver is initialized before executing a block of code that requires the database:
+First set up a way to create a driver in your common code. This can be done using `expect`/`actual`,
+or simply with a common interface a platform-specific implementations of the interface.
 
-```kotlin
-// in src/commonMain/kotlin
-expect suspend fun provideDbDriver(schema: SqlDriver.Schema): SqlDriver
-
-class SharedDatabase(
-    private val driverProvider: suspend (SqlDriver.Schema) -> SqlDriver
-) {
-    private var database: Database? = null
-
-    suspend fun initDatabase() {
-        if (database == null) {
-            database = driverProvider(Database.Schema).createDatabase()
-        }
-    }
-
-    suspend operator fun <R> invoke(block: suspend (Database) -> R): R {
-        initDatabase()
-        return block(database!!)
-    }
-
-    private fun SqlDriver.createDatabase(): Database { /* ... */ }
-}
-
-val sharedDb = SharedDatabase(::createTestDbDriver)
-class DataRepository(
-    private val withDatabase: SharedDatabase = sharedDb
-) {
-    suspend fun getData() = withDatabase { database ->
-        /* Do something with the database */
-    }
-}
-
-// in src/jsMain/kotlin
-actual suspend fun provideDbDriver(schema: SqlDriver.Schema): SqlDriver {
-    return initSqlDriver(schema).await()
-}
-
-// in src/nativeMain/kotlin
-actual suspend fun provideDbDriver(schema: SqlDriver.Schema): SqlDriver {
-    return NativeSqliteDriver(schema, "test.db")
-}
-
-// in src/jvmMain/kotlin
-actual suspend fun provideDbDriver(schema: SqlDriver.Schema): SqlDriver {
-    return JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).also { driver ->
-        schema.create(driver)
-    }
-}
+```kotlin title="src/commonMain/kotlin"
+expect suspend fun provideDbDriver(
+  schema: SqlSchema<QueryResult.AsyncValue<Unit>>
+): SqlDriver
 ```
+The `SqlSchema` interface contains a generic `QueryResult` type argument which is used to differentiate
+schema code that is generated with the `generateAsync` configuration option set to `true`.
+Some drivers rely on synchronous behaviours when creating or migrating the schema, so to use an
+asynchronous schema you can use the [`synchronous()`](../../2.x/extensions/async-extensions/app.cash.sqldelight.async.coroutines/#427896482%2FFunctions%2F-1043631958) extension method to adapt it for use with synchronous drivers. 
+
+=== "src/jsMain/kotlin"
+    ```kotlin
+    actual suspend fun provideDbDriver(
+      schema: SqlSchema<QueryResult.AsyncValue<Unit>>
+    ): SqlDriver {
+      return WebWorkerDriver(
+        Worker(
+          js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")
+        )
+      ).also { schema.create(it).await() }
+    }
+    ```
+=== "src/jvmMain/kotlin"
+    ```kotlin
+    actual suspend fun provideDbDriver(
+      schema: SqlSchema<QueryResult.AsyncValue<Unit>>
+    ): SqlDriver {
+      return JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        .also { schema.create(it).await() }
+    }
+    ```
+=== "src/androidMain/kotlin"
+    ```kotlin
+    actual suspend fun provideDbDriver(
+      schema: SqlSchema<QueryResult.AsyncValue<Unit>>
+    ): SqlDriver {
+      return AndroidSqliteDriver(schema.synchronous(), context, "test.db")
+    }
+    ```
+=== "src/nativeMain/kotlin"
+    ```kotlin
+    actual suspend fun provideDbDriver(
+      schema: SqlSchema<QueryResult.AsyncValue<Unit>>
+    ): SqlDriver {
+      return NativeSqliteDriver(schema.synchronous(), "test.db")
+    }
+    ```

@@ -20,29 +20,46 @@ import app.cash.paging.PagingSourceLoadParamsRefresh
 import app.cash.paging.PagingSourceLoadResultPage
 import app.cash.paging.PagingState
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.Transacter
+import app.cash.sqldelight.SuspendingTransacterImpl
+import app.cash.sqldelight.TransacterBase
 import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class KeyedQueryPagingSourceTest : DbTest {
+class KeyedQueryPagingSourceTest : BaseKeyedQueryPagingSourceTest() {
+  override fun createTransacter(driver: SqlDriver): TransacterBase {
+    return object : TransacterImpl(driver) {}
+  }
+}
+
+@ExperimentalCoroutinesApi
+class KeyedQueryPagingSourceWithSuspendingTransacterTest : BaseKeyedQueryPagingSourceTest() {
+  override fun createTransacter(driver: SqlDriver): TransacterBase {
+    return object : SuspendingTransacterImpl(driver) {}
+  }
+}
+
+@ExperimentalCoroutinesApi
+abstract class BaseKeyedQueryPagingSourceTest : DbTest {
 
   private lateinit var driver: SqlDriver
-  private lateinit var transacter: Transacter
+  private lateinit var transacter: TransacterBase
   private lateinit var source: KeyedQueryPagingSource<Long, Long>
+
+  abstract fun createTransacter(driver: SqlDriver): TransacterBase
 
   override suspend fun setup(driver: SqlDriver) {
     this.driver = driver
     driver.execute(null, "CREATE TABLE testTable(value INTEGER PRIMARY KEY)", 0)
     (0L until 10L).forEach { this.insert(it) }
-    transacter = object : TransacterImpl(driver) {}
+    transacter = createTransacter(driver)
     source = KeyedQueryPagingSource(
       queryProvider = this::query,
       pageBoundariesProvider = this::pageBoundaries,

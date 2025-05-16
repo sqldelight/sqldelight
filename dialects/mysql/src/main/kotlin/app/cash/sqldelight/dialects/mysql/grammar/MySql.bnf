@@ -31,12 +31,14 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.GROUP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.IGNORE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.IN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEX"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.LOCK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
@@ -44,6 +46,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
@@ -85,7 +88,7 @@ type_name ::= (
   date_data_type |
   binary_data_type |
   json_data_type
-) [ LP {signed_number} RP [ 'unsigned' ] | LP {signed_number} COMMA {signed_number} RP ] |
+) [ LP {signed_number} RP | LP {signed_number} COMMA {signed_number} RP ] [ 'unsigned' ] |
 character_type |
 enum_set_type
 {
@@ -95,9 +98,9 @@ enum_set_type
 }
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   'AUTO_INCREMENT' |
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  [ NOT ] NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  [ NOT ] NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   default_constraint |
   COLLATE {collation_name} |
@@ -118,7 +121,7 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   override = true
 }
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP [ {conflict_clause} ] [comment_type] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -217,6 +220,7 @@ alter_table_rules ::= (
   | alter_table_modify_column
   | alter_table_add_index
   | alter_table_drop_index
+  | alter_table_rename_index
   | alter_table_drop_column
   | alter_table_convert_character_set
   | row_format_clause
@@ -253,6 +257,8 @@ alter_table_add_constraint ::= ADD table_constraint
 alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
 
 alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
+
+alter_table_rename_index ::= RENAME ( INDEX | KEY ) {index_name} TO {index_name}
 
 placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 
@@ -305,13 +311,13 @@ insert_stmt ::= [ {with_clause} ] ( INSERT | REPLACE ) [ 'LOW_PRIORITY' | 'DELAY
   pin = 7
 }
 
-assignment_value ::= VALUES LP {column_name} RP | { <<expr '-1'>> | DEFAULT}
+assignment_value ::= VALUES LP {column_name} RP | <<expr '-1'>> | DEFAULT
 
 assignment ::= {column_name} EQ assignment_value
 
 assignment_list ::= assignment ( COMMA assignment ) *
 
-compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} [ ( OFFSET | COMMA ) {limiting_term} ] ] [ FOR ( UPDATE | 'SHARE') ] {
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} [ ( OFFSET | COMMA ) {limiting_term} ] ] [ ( LOCK IN 'SHARE' 'MODE' ) | FOR ( UPDATE | 'SHARE') ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true

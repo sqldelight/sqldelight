@@ -1,0 +1,14 @@
+<problems>
+  <problem>
+    <file>Example.sq</file>
+    <line>8</line>
+    <description>This query may delete all records, consider adding a WHERE clause</description>
+    <highlighted_element>UPDATE example SET id = 1</highlighted_element>
+  </problem>
+  <problem>
+    <file>Example.sq</file>
+    <line>10</line>
+    <description>This query may overwrite all records, consider adding a WHERE clause</description>
+    <highlighted_element>UPDATE example SET id = 1</highlighted_element>
+  </problem>
+</problems>

@@ -8,13 +8,16 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Statement
+import java.math.BigDecimal
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.intellij.lang.annotations.Language
+import org.reactivestreams.Publisher
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 
@@ -27,7 +30,7 @@ class R2dbcDriver(
 ) : SqlDriver {
   override fun <R> executeQuery(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     mapper: (SqlCursor) -> QueryResult<R>,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
@@ -39,17 +42,19 @@ class R2dbcDriver(
     return QueryResult.AsyncValue {
       val result = prepared.execute().awaitSingle()
 
-      val rowSet = result.map { row, rowMetadata ->
-        List(rowMetadata.columnMetadatas.size) { index -> row.get(index) }
-      }.asFlow().toList()
+      val rowPublisher = result.map { row, rowMetadata ->
+        List(rowMetadata.columnMetadatas.size) { index ->
+          row.get(index)
+        }
+      }
 
-      return@AsyncValue mapper(R2dbcCursor(rowSet)).await()
+      return@AsyncValue mapper(R2dbcCursor(rowPublisher.asIterator())).await()
     }
   }
 
   override fun execute(
     identifier: Int?,
-    sql: String,
+    @Language("SQL") sql: String,
     parameters: Int,
     binders: (SqlPreparedStatement.() -> Unit)?,
   ): QueryResult<Long> {
@@ -84,9 +89,9 @@ class R2dbcDriver(
 
   override fun currentTransaction(): Transacter.Transaction? = transaction
 
-  override fun addListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-  override fun removeListener(listener: Query.Listener, queryKeys: Array<String>) = Unit
-  override fun notifyListeners(queryKeys: Array<String>) = Unit
+  override fun addListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+  override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
+  override fun notifyListeners(vararg queryKeys: String) = Unit
 
   override fun close() {
     // Normally, this is just a Mono, so it completes directly without onNext.
@@ -151,36 +156,12 @@ fun CoroutineScope.R2dbcDriver(
 }
 
 // R2DBC uses boxed Java classes instead primitives: https://r2dbc.io/spec/1.0.0.RELEASE/spec/html/#datatypes
-class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStatement {
+class R2dbcPreparedStatement(val statement: Statement) : SqlPreparedStatement {
   override fun bindBytes(index: Int, bytes: ByteArray?) {
     if (bytes == null) {
       statement.bindNull(index, ByteArray::class.java)
     } else {
       statement.bind(index, bytes)
-    }
-  }
-
-  override fun bindLong(index: Int, long: Long?) {
-    if (long == null) {
-      statement.bindNull(index, Long::class.javaObjectType)
-    } else {
-      statement.bind(index, long)
-    }
-  }
-
-  override fun bindDouble(index: Int, double: Double?) {
-    if (double == null) {
-      statement.bindNull(index, Double::class.javaObjectType)
-    } else {
-      statement.bind(index, double)
-    }
-  }
-
-  override fun bindString(index: Int, string: String?) {
-    if (string == null) {
-      statement.bindNull(index, String::class.java)
-    } else {
-      statement.bind(index, string)
     }
   }
 
@@ -192,36 +173,161 @@ class R2dbcPreparedStatement(private val statement: Statement) : SqlPreparedStat
     }
   }
 
-  fun bindObject(index: Int, any: Any?) {
+  fun bindByte(index: Int, byte: Byte?) {
+    if (byte == null) {
+      statement.bindNull(index, Byte::class.javaObjectType)
+    } else {
+      statement.bind(index, byte)
+    }
+  }
+
+  fun bindShort(index: Int, short: Short?) {
+    if (short == null) {
+      statement.bindNull(index, Short::class.javaObjectType)
+    } else {
+      statement.bind(index, short)
+    }
+  }
+
+  fun bindInt(index: Int, int: Int?) {
+    if (int == null) {
+      statement.bindNull(index, Int::class.javaObjectType)
+    } else {
+      statement.bind(index, int)
+    }
+  }
+
+  override fun bindLong(index: Int, long: Long?) {
+    if (long == null) {
+      statement.bindNull(index, Long::class.javaObjectType)
+    } else {
+      statement.bind(index, long)
+    }
+  }
+
+  fun bindFloat(index: Int, float: Float?) {
+    if (float == null) {
+      statement.bindNull(index, Float::class.javaObjectType)
+    } else {
+      statement.bind(index, float)
+    }
+  }
+
+  override fun bindDouble(index: Int, double: Double?) {
+    if (double == null) {
+      statement.bindNull(index, Double::class.javaObjectType)
+    } else {
+      statement.bind(index, double)
+    }
+  }
+
+  fun bindBigDecimal(index: Int, decimal: BigDecimal?) {
+    if (decimal == null) {
+      statement.bindNull(index, BigDecimal::class.java)
+    } else {
+      statement.bind(index, decimal)
+    }
+  }
+
+  fun bindObject(index: Int, any: Any?, ignoredSqlType: Int = 0) {
     if (any == null) {
       statement.bindNull(index, Any::class.java)
     } else {
       statement.bind(index, any)
     }
   }
+
+  @JvmName("bindTypedObject")
+  inline fun <reified T : Any> bindObject(index: Int, any: T?) {
+    if (any == null) {
+      statement.bindNull(index, T::class.java)
+    } else {
+      statement.bind(index, any)
+    }
+  }
+
+  override fun bindString(index: Int, string: String?) {
+    if (string == null) {
+      statement.bindNull(index, String::class.java)
+    } else {
+      statement.bind(index, string)
+    }
+  }
 }
 
-/**
- * TODO: Write a better async cursor API
- */
-class R2dbcCursor(val rowSet: List<List<Any?>>) : SqlCursor {
-  var row = -1
-    private set
+internal fun <T : Any> Publisher<T>.asIterator(): AsyncPublisherIterator<T> = AsyncPublisherIterator(this)
 
-  override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(++row < rowSet.size)
+internal class AsyncPublisherIterator<T : Any>(
+  pub: Publisher<T>,
+) {
+  private var nextValue = CompletableDeferred<T?>()
+  private val subscription = CompletableDeferred<Subscription>()
 
-  override fun getString(index: Int): String? = rowSet[row][index] as String?
+  init {
+    pub.subscribe(object : Subscriber<T> {
+      override fun onSubscribe(sub: Subscription) {
+        subscription.complete(sub)
+      }
 
-  override fun getLong(index: Int): Long? = (rowSet[row][index] as Number?)?.toLong()
+      override fun onError(error: Throwable) {
+        nextValue.completeExceptionally(error)
+      }
 
-  override fun getBytes(index: Int): ByteArray? = rowSet[row][index] as ByteArray?
+      override fun onComplete() {
+        nextValue.complete(null)
+      }
 
-  override fun getDouble(index: Int): Double? = rowSet[row][index] as Double?
+      override fun onNext(next: T) {
+        nextValue.complete(next)
+      }
+    })
+  }
 
-  override fun getBoolean(index: Int): Boolean? = rowSet[row][index] as Boolean?
+  suspend fun next(): T? {
+    val sub = subscription.await()
+    sub.request(1)
+    try {
+      val next = nextValue.await() ?: return null
+      nextValue = CompletableDeferred()
+      return next
+    } catch (cancel: CancellationException) {
+      sub.cancel()
+      throw cancel
+    }
+  }
+}
 
-  inline fun <reified T : Any> getObject(index: Int): T? = rowSet[row][index] as T?
+class R2dbcCursor
+internal constructor(
+  private val results: AsyncPublisherIterator<List<Any?>>,
+) : SqlCursor {
+  private lateinit var currentRow: List<Any?>
 
-  @Suppress("UNCHECKED_CAST")
-  fun <T> getArray(index: Int): Array<T>? = rowSet[row][index] as Array<T>?
+  override fun next(): QueryResult.AsyncValue<Boolean> = QueryResult.AsyncValue {
+    val next = results.next() ?: return@AsyncValue false
+    currentRow = next
+    true
+  }
+
+  @PublishedApi
+  internal fun <T : Any> get(index: Int): T? {
+    @Suppress("UNCHECKED_CAST")
+    return currentRow[index] as T?
+  }
+
+  override fun getString(index: Int): String? = get(index)
+  fun getShort(index: Int): Short? = get<Number>(index)?.toShort()
+  fun getInt(index: Int): Int? = get<Number>(index)?.toInt()
+
+  override fun getLong(index: Int): Long? = get<Number>(index)?.toLong()
+
+  override fun getBytes(index: Int): ByteArray? = get(index)
+
+  override fun getDouble(index: Int): Double? = get(index)
+
+  override fun getBoolean(index: Int): Boolean? = get(index)
+
+  inline fun <reified T : Any> getObject(index: Int): T? = get(index)
+
+  fun <T> getArray(index: Int): Array<T>? = get(index)
 }
