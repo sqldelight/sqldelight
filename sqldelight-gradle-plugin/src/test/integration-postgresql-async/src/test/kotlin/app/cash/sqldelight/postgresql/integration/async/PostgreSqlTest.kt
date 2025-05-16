@@ -4,7 +4,7 @@ import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.db.OptimisticLockException
-import app.cash.sqldelight.driver.r2dbc.R2dbcDriver
+import app.cash.sqldelight.driver.r2dbc.PostgreSqlR2dbcDriver
 import com.google.common.truth.Truth.assertThat
 import io.r2dbc.spi.ConnectionFactories
 import java.time.LocalDate
@@ -33,7 +33,7 @@ class PostgreSqlTest {
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
         val awaitClose = CompletableDeferred<Unit>()
-        val driver = R2dbcDriver(connection) {
+        val driver = PostgreSqlR2dbcDriver(connection) {
           if (it == null) {
             awaitClose.complete(Unit)
           } else {
@@ -72,7 +72,7 @@ class PostgreSqlTest {
       val connectionFactory = ConnectionFactories.get(PostgreSQLR2DBCDatabaseContainer.getOptions(it))
       kotlinx.coroutines.test.runTest {
         val connection = connectionFactory.create().awaitSingle()
-        R2dbcDriver(connection).use { driver ->
+        PostgreSqlR2dbcDriver(connection).use { driver ->
           assertThat(driver.connection).isEqualTo(connection)
         }
       }
@@ -195,5 +195,17 @@ class PostgreSqlTest {
         Assert.fail()
       } catch (e: OptimisticLockException) { }
     }
+  }
+
+  @Test fun testVarArgs() = runTest { database ->
+    database.varArgsQueries.insert(1)
+    database.varArgsQueries.insert(2)
+    database.varArgsQueries.insert(3)
+    val one = database.varArgsQueries.select(listOf(1)).awaitAsList()
+    assertThat(one.map { it.a }).containsExactly(1)
+    val two = database.varArgsQueries.select(listOf(1, 2)).awaitAsList()
+    assertThat(two.map { it.a }).containsExactly(1, 2)
+    val three = database.varArgsQueries.select(listOf(1, 2, 3)).awaitAsList()
+    assertThat(three.map { it.a }).containsExactly(1, 2, 3)
   }
 }
