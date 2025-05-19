@@ -12,12 +12,16 @@ import java.io.File
 import javax.inject.Inject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ExternalModuleDependencyBundle
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
+import org.gradle.api.internal.provider.ProviderInternal
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.ProviderConvertible
+import org.gradle.internal.Cast
 
 @SqlDelightDsl
 abstract class SqlDelightDatabase @Inject constructor(
@@ -57,7 +61,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   internal var addedDialect: Boolean = false
 
   fun module(module: Any) {
-    configuration.dependencies.add(project.dependencies.create(module))
+    project.dependencies.add(configuration.name, module)
   }
 
   fun dialect(dialect: Any) {
