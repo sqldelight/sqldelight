@@ -11,17 +11,16 @@ abstract class AlterTableAddConstraintMixin(node: ASTNode) :
   SqlCompositeElementImpl(node),
   PostgreSqlAlterTableAddConstraint,
   AlterTableApplier {
-  override fun applyTo(lazyQuery: LazyQuery): LazyQuery =
-    if (tableConstraint.node.findChildByType(SqlTypes.PRIMARY) != null &&
-      tableConstraint.node.findChildByType(SqlTypes.KEY) != null
-    ) {
-      val columns = lazyQuery.query.columns.map { queryCol ->
-        tableConstraint.indexedColumnList.find { indexedCol -> queryCol.element.textMatches(indexedCol) }.let {
-          queryCol.copy(nullable = if (it != null) false else queryCol.nullable)
-        }
+  override fun applyTo(lazyQuery: LazyQuery): LazyQuery = if (tableConstraint.node.findChildByType(SqlTypes.PRIMARY) != null &&
+    tableConstraint.node.findChildByType(SqlTypes.KEY) != null
+  ) {
+    val columns = lazyQuery.query.columns.map { queryCol ->
+      tableConstraint.indexedColumnList.find { indexedCol -> queryCol.element.textMatches(indexedCol) }.let {
+        queryCol.copy(nullable = if (it != null) false else queryCol.nullable)
       }
-      LazyQuery(lazyQuery.tableName, query = { lazyQuery.query.copy(columns = columns) })
-    } else {
-      lazyQuery
     }
+    LazyQuery(lazyQuery.tableName, query = { lazyQuery.query.copy(columns = columns) })
+  } else {
+    lazyQuery
+  }
 }

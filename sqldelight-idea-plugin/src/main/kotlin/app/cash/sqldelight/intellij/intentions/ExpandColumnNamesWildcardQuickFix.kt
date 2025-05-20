@@ -49,11 +49,9 @@ class ExpandColumnNamesWildcardQuickFix : BaseElementAtCaretIntentionAction() {
     }
   }
 
-  private fun SqlResultColumn.findTableName() =
-    PsiTreeUtil.findChildOfType(this, SqlTableName::class.java)?.name
+  private fun SqlResultColumn.findTableName() = PsiTreeUtil.findChildOfType(this, SqlTableName::class.java)?.name
 
-  private fun SqlResultColumn.findColumns(): List<String> =
-    queryExposed().flatMap { result -> result.columns.map { it.element.text } }
+  private fun SqlResultColumn.findColumns(): List<String> = queryExposed().flatMap { result -> result.columns.map { it.element.text } }
 
   private fun List<SqlResultColumn>.startEndOffset(): Pair<Int, Int> {
     var start = firstOrNull()?.startOffset ?: 0
