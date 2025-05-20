@@ -80,19 +80,18 @@ abstract class SqlDelightWorkerTask : SourceTask() {
     return this
   }
 
-  internal fun workQueue(): WorkQueue =
-    workerExecutor.processIsolation { workerSpec ->
-      workerSpec.classpath.from(classpath)
+  internal fun workQueue(): WorkQueue = workerExecutor.processIsolation { workerSpec ->
+    workerSpec.classpath.from(classpath)
 
-      workerSpec.forkOptions { forkOptions ->
-        forkOptions.defaultCharacterEncoding = "UTF-8"
-        forkOptions.environment(environment.orNull)
-        forkOptions.systemProperties(systemProperties.orNull)
-        forkOptions.minHeapSize = minHeapSize.orNull
-        forkOptions.maxHeapSize = maxHeapSize.orNull
-        forkOptions.jvmArgs = jvmArgs.orNull
-      }
+    workerSpec.forkOptions { forkOptions ->
+      forkOptions.defaultCharacterEncoding = "UTF-8"
+      forkOptions.environment(environment.orNull)
+      forkOptions.systemProperties(systemProperties.orNull)
+      forkOptions.minHeapSize = minHeapSize.orNull
+      forkOptions.maxHeapSize = maxHeapSize.orNull
+      forkOptions.jvmArgs = jvmArgs.orNull
     }
+  }
 
   /** Copied from Gradle's internal org.gradle.internal.jvm.Jvm.getInheritableEnvironmentVariables() */
   private fun getInheritableEnvironmentVariables(envVars: Map<String, Any>): Map<String, Any> {
