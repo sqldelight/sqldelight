@@ -1,5 +1,9 @@
 # Change Log
 
+## UNRELEASED
+
+Nothing yet!
+
 ## [2.1.0] - 2025-05-16
 
 ### Added
