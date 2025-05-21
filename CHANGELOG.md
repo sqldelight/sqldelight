@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-Nothing yet!
+- [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
 
 ## [2.1.0] - 2025-05-16
 
@@ -1152,3 +1152,4 @@ Initial release.
   [drewd]: https://github.com/drewd
   [orenkislev-faire]: https://github.com/orenkislev-faire
   [janbina]: https://github.com/janbina
+  [DRSchlaubi]: https://github.com/DRSchlaubi
