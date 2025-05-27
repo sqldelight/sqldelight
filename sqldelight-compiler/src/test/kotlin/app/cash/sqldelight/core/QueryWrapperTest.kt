@@ -48,8 +48,7 @@ class QueryWrapperTest {
       |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
       |  get() = TestDatabaseImpl.Schema
       |
-      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-      |    TestDatabaseImpl(driver)
+      |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
       |
       |private class TestDatabaseImpl(
       |  driver: SqlDriver,
@@ -216,8 +215,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -311,8 +309,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -398,8 +395,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -483,8 +479,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -559,8 +554,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -639,8 +633,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -735,8 +728,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -852,8 +844,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -966,8 +957,7 @@ class QueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.Value<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
