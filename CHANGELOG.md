@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-- [SQLiteDialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
+- [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
 
 ## [2.1.0] - 2025-05-16
