@@ -26,7 +26,7 @@ class InterfaceGeneration {
     checkFixtureCompiles("query-requires-type")
   }
 
-  @Test fun `left joins apply nullability to columns`() {
+  @Test fun `left joins apply nullability to val2`() {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE A(
@@ -49,6 +49,68 @@ class InterfaceGeneration {
       """
       |public data class LeftJoin(
       |  public val val1: kotlin.String,
+      |  public val val2: kotlin.String?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `right joins apply nullability to val1`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A(
+      |  val1 TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE B(
+      |  val2 TEXT NOT NULL
+      |);
+      |
+      |rightJoin:
+      |SELECT *
+      |FROM A RIGHT OUTER JOIN B ON A.val1 = B.val2;
+      """.trimMargin(),
+      temporaryFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class RightJoin(
+      |  public val val1: kotlin.String?,
+      |  public val val2: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `full joins apply nullability to val1 and val2`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A(
+      |  val1 TEXT NOT NULL
+      |);
+      |
+      |CREATE TABLE B(
+      |  val2 TEXT NOT NULL
+      |);
+      |
+      |fullJoin:
+      |SELECT *
+      |FROM A FULL OUTER JOIN B ON A.val1 = B.val2;
+      """.trimMargin(),
+      temporaryFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class FullJoin(
+      |  public val val1: kotlin.String?,
       |  public val val2: kotlin.String?,
       |)
       |
@@ -891,6 +953,7 @@ class InterfaceGeneration {
       |import app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement
       |import kotlin.Any
       |import kotlin.Int
+      |import kotlin.Long
       |import kotlin.String
       |
       |public class SubscriptionQueries(
@@ -902,8 +965,11 @@ class InterfaceGeneration {
       |    cursor.getInt(0)!!
       |  }
       |
-      |  public fun insertSubscription(user_id2: Int) {
-      |    driver.execute(${result.compiledFile.namedMutators[0].id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public fun insertSubscription(user_id2: Int): QueryResult<Long> {
+      |    val result = driver.execute(${result.compiledFile.namedMutators[0].id.withUnderscores}, ""${'"'}
       |        |INSERT INTO subscriptionEntity(user_id2)
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
@@ -913,6 +979,7 @@ class InterfaceGeneration {
       |    notifyQueries(${result.compiledFile.namedMutators[0].id.withUnderscores}) { emit ->
       |      emit("subscriptionEntity")
       |    }
+      |    return result
       |  }
       |
       |  private inner class InsertUserQuery<out T : Any>(

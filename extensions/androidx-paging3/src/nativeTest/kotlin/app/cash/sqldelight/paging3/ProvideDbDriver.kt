@@ -34,5 +34,4 @@ private fun defaultSchema(): SqlSchema<QueryResult.Value<Unit>> {
   }
 }
 
-actual suspend fun provideDbDriver(): SqlDriver =
-  inMemoryDriver(defaultSchema())
+actual suspend fun provideDbDriver(): SqlDriver = inMemoryDriver(defaultSchema())

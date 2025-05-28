@@ -48,7 +48,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.asTypeName
 
-class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
+open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun definitionType(typeName: SqlTypeName): IntermediateType = with(typeName) {
     check(this is PostgreSqlTypeName)
     val type = IntermediateType(
@@ -77,6 +77,10 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         tsvectorDataType != null -> PostgreSqlType.TSVECTOR
+        tsrange != null -> PostgreSqlType.TSRANGE
+        tstzrange != null -> PostgreSqlType.TSTZRANGE
+        tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
+        tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
@@ -133,6 +137,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "lower", "upper" -> {
+      val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
+      when (exprType.dialectType) {
+        PostgreSqlType.TSRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP).nullableIf(exprType.javaType.isNullable)
+        PostgreSqlType.TSTZRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE).nullableIf(exprType.javaType.isNullable)
+        else -> exprType
+      }
+    }
     "sum" -> {
       val type = resolvedType(exprList.single())
       when (type.dialectType) {
@@ -196,6 +208,21 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     "rank", "dense_rank", "row_number" -> IntermediateType(INTEGER)
     "ntile" -> IntermediateType(INTEGER).asNullable()
     "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "isempty", "lower_inc", "upper_inc", "lower_inf", "upper_inf" -> IntermediateType(BOOLEAN)
+    "range_merge" -> encapsulatingTypePreferringKotlin(exprList, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE, PostgreSqlType.TSMULTIRANGE, PostgreSqlType.TSTZRANGE)
+    "tsrange" -> IntermediateType(PostgreSqlType.TSRANGE)
+    "tstzrange" -> IntermediateType(PostgreSqlType.TSTZRANGE)
+    "tsmultirange" -> IntermediateType(PostgreSqlType.TSMULTIRANGE)
+    "tstzmultirange" -> IntermediateType(PostgreSqlType.TSTZMULTIRANGE)
+    "range_agg" -> {
+      when (resolvedType(exprList[0]).dialectType) {
+        PostgreSqlType.TSRANGE, PostgreSqlType.TSMULTIRANGE -> IntermediateType(PostgreSqlType.TSMULTIRANGE)
+        PostgreSqlType.TSTZRANGE, PostgreSqlType.TSTZMULTIRANGE -> IntermediateType(PostgreSqlType.TSTZMULTIRANGE)
+        else -> error("type not supported for range_agg, use TSRANGE, TSMULTIRANGE, TSTZRANGE, TSTZMULTIRANGE")
+      }
+    }
+    "unnest" -> unNestType(exprList[0].postgreSqlType())
+
     else -> null
   }
 
@@ -250,6 +277,11 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
     }
   }
 
+  // dialects or modules would need to extend this if they add types that use operators in binaryExprChildTypesResolvingToBool
+  protected open fun booleanBinaryExprTypes(): Array<DialectType> {
+    return booleanBinaryExprTypes
+  }
+
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
     is SqlIsExpr -> IntermediateType(BOOLEAN)
     is SqlBinaryExpr -> {
@@ -262,23 +294,7 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
             (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
               exprListNullability.any { it }
           },
-          SMALL_INT,
-          PostgreSqlType.INTEGER,
-          INTEGER,
-          BIG_INT,
-          REAL,
-          PostgreSqlType.NUMERIC,
-          TEXT,
-          BLOB,
-          BOOLEAN,
-          DATE,
-          PostgreSqlType.UUID,
-          PostgreSqlType.INTERVAL,
-          PostgreSqlType.TIMESTAMP_TIMEZONE,
-          PostgreSqlType.TIMESTAMP,
-          PostgreSqlType.TIME,
-          PostgreSqlType.JSON,
-          PostgreSqlType.TSVECTOR,
+          typeOrder = booleanBinaryExprTypes(),
         )
       }
     }
@@ -315,7 +331,14 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
           IntermediateType(PostgreSqlType.JSON)
         }
       }
-      matchOperatorExpression != null || regexMatchOperatorExpression != null || containsOperatorExpression != null || booleanNotExpression != null -> {
+      rangeOperatorExpression != null -> {
+        IntermediateType(BOOLEAN)
+      }
+      matchOperatorExpression != null ||
+        regexMatchOperatorExpression != null ||
+        booleanNotExpression != null ||
+        containsOperatorExpression != null ||
+        overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
       atTimeZoneOperatorExpression != null -> {
@@ -343,6 +366,30 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
   }
 
   companion object {
+
+    private val booleanBinaryExprTypes: Array<DialectType> = arrayOf(
+      SMALL_INT,
+      PostgreSqlType.INTEGER,
+      INTEGER,
+      BIG_INT,
+      REAL,
+      PostgreSqlType.NUMERIC,
+      TEXT,
+      BLOB,
+      DATE,
+      PostgreSqlType.UUID,
+      PostgreSqlType.INTERVAL,
+      PostgreSqlType.TIMESTAMP_TIMEZONE,
+      PostgreSqlType.TIMESTAMP,
+      PostgreSqlType.TIME,
+      PostgreSqlType.JSON,
+      PostgreSqlType.TSVECTOR,
+      PostgreSqlType.TSRANGE,
+      PostgreSqlType.TSTZRANGE,
+      PostgreSqlType.TSMULTIRANGE,
+      PostgreSqlType.TSTZMULTIRANGE,
+      BOOLEAN, // is last as expected that boolean expression resolve to boolean
+    )
     private val binaryExprChildTypesResolvingToBool = TokenSet.create(
       SqlTypes.EQ,
       SqlTypes.EQ2,
@@ -366,18 +413,24 @@ class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeRes
 
     private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
-        object : DialectType {
-          override val javaType = Array::class.asTypeName().parameterizedBy(type.javaType)
-          override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) =
-            CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
-          override fun cursorGetter(columnIndex: Int, cursorName: String) =
-            CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", type.javaType)
-        },
+        ArrayDialectType(type),
       )
     }
 
     private fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
+    }
+
+    // ArrayDialectType stores the original IntermediateType as parameterizedType so that the type can be returned by unnested
+    private class ArrayDialectType(val parameterizedType: IntermediateType) : DialectType {
+      override val javaType = Array::class.asTypeName().parameterizedBy(parameterizedType.javaType)
+      override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+      override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
+    }
+
+    // assumes that arrayIntermediateType is ArrayDialectType
+    private fun unNestType(arrayIntermediateType: IntermediateType): IntermediateType {
+      return (arrayIntermediateType.dialectType as ArrayDialectType).parameterizedType
     }
   }
 }

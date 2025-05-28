@@ -26,6 +26,7 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.api.TableFunctionRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
@@ -82,6 +83,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
+  is TableFunctionRowType -> (sqFile().typeResolver.definitionType(columnType()).asNullable())
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
@@ -237,15 +239,17 @@ private val IntRange.length: Int
 fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
-  return (replacements + rangesToReplace())
+  val x = (replacements + rangesToReplace())
     .sortedBy { it.first.first }
     .map { (range, replacement) -> (range - node.startOffset) to replacement }
-    .fold(
-      0 to text,
-      { (totalRemoved, sqlText), (range, replacement) ->
-        (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      },
-    ).second
+
+  val y = x.fold(
+    0 to text,
+    { (totalRemoved, sqlText), (range, replacement) ->
+      (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
+    },
+  ).second
+  return y
 }
 
 val PsiElement.range: IntRange
