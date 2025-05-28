@@ -1,17 +1,22 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlSchemaContributorElementType
 import com.alecstrong.sql.psi.core.psi.QueryElement
+import com.alecstrong.sql.psi.core.psi.SchemaContributorStub
+import com.alecstrong.sql.psi.core.psi.SqlTypes
+import com.alecstrong.sql.psi.core.psi.TableElement
 import com.alecstrong.sql.psi.core.psi.impl.SqlCreateViewStmtImpl
 import com.intellij.lang.ASTNode
+import com.intellij.psi.stubs.IStubElementType
 
 /**
  * See sql-psi com.alecstrong.sql.psi.core.psi.mixins.CreateViewMixin where `REPLACE` is enabled
- * Add annotations to check replace has identical set of columns in same order, but allows appending columns
+ * Add annotations to check replace has an identical set of columns in same order, but allows appending columns
  */
-internal abstract class CreateOrReplaceViewMixin(
-  node: ASTNode,
-) : SqlCreateViewStmtImpl(node) {
+abstract class CreateOrReplaceViewMixin : SqlCreateViewStmtImpl {
+  constructor(node: ASTNode) : super(node)
+  constructor(stub: SchemaContributorStub, stubType: IStubElementType<*, *>) : super(stub, stubType)
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     val currentColumns: List<QueryElement.QueryColumn> = tableAvailable(this, viewName.name).flatMap { it.columns }
@@ -25,4 +30,9 @@ internal abstract class CreateOrReplaceViewMixin(
     }
     super.annotate(annotationHolder)
   }
+}
+
+class CreateViewElementType(name: String) : SqlSchemaContributorElementType<TableElement>(name, TableElement::class.java) {
+  override fun nameType() = SqlTypes.VIEW_NAME
+  override fun createPsi(stub: SchemaContributorStub) = SqlCreateViewStmtImpl(stub, this)
 }
