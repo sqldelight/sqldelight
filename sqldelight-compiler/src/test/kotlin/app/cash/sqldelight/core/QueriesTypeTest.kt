@@ -999,8 +999,7 @@ class QueriesTypeTest {
            * @return The number of rows updated.
            */
           public fun insertObject(Examples: Examples): QueryResult<Long> {
-            val result = driver.execute(-1_876_170_987,
-                ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
+            val result = driver.execute(-1_876_170_987, ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
                   bindString(0, Examples.id)
                   bindLong(1, Examples.index)
                 }
