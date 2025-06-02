@@ -77,6 +77,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         booleanDataType != null -> BOOLEAN
         blobDataType != null -> BLOB
         tsvectorDataType != null -> PostgreSqlType.TSVECTOR
+        tsqueryDataType != null -> PostgreSqlType.TSQUERY
         tsrange != null -> PostgreSqlType.TSRANGE
         tstzrange != null -> PostgreSqlType.TSTZRANGE
         tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
@@ -201,10 +202,11 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "regexp_count", "regexp_instr" -> IntermediateType(INTEGER)
     "regexp_like" -> IntermediateType(BOOLEAN)
     "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
-    "to_tsquery" -> IntermediateType(TEXT)
+    "plainto_tsquery" -> IntermediateType(PostgreSqlType.TSQUERY)
+    "to_tsquery" -> IntermediateType(PostgreSqlType.TSQUERY)
     "to_tsvector" -> IntermediateType(PostgreSqlType.TSVECTOR)
-    "ts_rank" -> encapsulatingType(exprList, REAL, TEXT)
-    "websearch_to_tsquery" -> IntermediateType(TEXT)
+    "ts_rank" -> IntermediateType(REAL)
+    "websearch_to_tsquery" -> IntermediateType(PostgreSqlType.TSQUERY)
     "rank", "dense_rank", "row_number" -> IntermediateType(INTEGER)
     "ntile" -> IntermediateType(INTEGER).asNullable()
     "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
@@ -222,7 +224,6 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       }
     }
     "unnest" -> unNestType(exprList[0].postgreSqlType())
-
     else -> null
   }
 
@@ -388,6 +389,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TSTZRANGE,
       PostgreSqlType.TSMULTIRANGE,
       PostgreSqlType.TSTZMULTIRANGE,
+      PostgreSqlType.TSQUERY,
       BOOLEAN, // is last as expected that boolean expression resolve to boolean
     )
     private val binaryExprChildTypesResolvingToBool = TokenSet.create(
