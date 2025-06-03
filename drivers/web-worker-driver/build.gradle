@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
-
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.publish)
@@ -16,12 +14,8 @@ kotlin {
       }
     }
   }
-  applyDefaultHierarchyTemplate {
-    it.common {
-      it.withJs()
-      it.withWasmJs()
-    }
-  }
+
+  applyDefaultHierarchyTemplate()
 
   compilerOptions {
     freeCompilerArgs.add("-Xexpect-actual-classes")
@@ -40,6 +34,10 @@ kotlin {
       implementation devNpm("copy-webpack-plugin", "9.1.0")
       implementation libs.kotlin.coroutines.test
       implementation project(":extensions:async-extensions")
+    }
+
+    wasmJsMain.dependencies {
+      implementation libs.kotlinx.browser
     }
   }
 }

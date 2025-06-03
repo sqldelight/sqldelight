@@ -81,7 +81,7 @@ class PropertiesFileTest {
         |    }
         |  }
         |
-        |  targetFromPreset(presets.android, 'androidLib')
+        |  android("androidLib")
         |}
         """.trimMargin(),
       )

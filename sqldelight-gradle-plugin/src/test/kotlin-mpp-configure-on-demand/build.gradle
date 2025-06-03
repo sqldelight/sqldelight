@@ -12,14 +12,14 @@ sqldelight {
 }
 
 kotlin {
-  targetFromPreset(presets.jvm, 'jvm')
-  targetFromPreset(presets.js, 'js')
-  targetFromPreset(presets.iosArm64, 'iosArm64') {
+  js()
+  jvm()
+  iosArm64 {
     binaries {
       framework()
     }
   }
-  targetFromPreset(presets.iosX64, 'iosX64') {
+  iosX64 {
     binaries {
       framework()
     }
