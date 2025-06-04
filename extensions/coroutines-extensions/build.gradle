@@ -6,7 +6,7 @@ plugins {
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
-  id("kotlinx-atomicfu")
+  id("org.jetbrains.kotlinx.atomicfu")
 }
 
 archivesBaseName = 'sqldelight-coroutines-extensions'
