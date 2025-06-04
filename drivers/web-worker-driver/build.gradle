@@ -30,7 +30,7 @@ kotlin {
     commonTest.dependencies {
       implementation libs.kotlin.test
       implementation npm("sql.js", libs.versions.sqljs.get())
-      implementation npm("@cashapp/sqldelight-sqljs-worker", project(":drivers:web-worker-driver:sqljs").projectDir)
+      implementation npm("@cashapp/sqldelight-sqljs-worker", file('sqljs'))
       implementation devNpm("copy-webpack-plugin", "9.1.0")
       implementation libs.kotlin.coroutines.test
       implementation project(":extensions:async-extensions")
