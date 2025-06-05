@@ -1,5 +1,68 @@
 # Change Log
 
+## UNRELEASED
+
+- [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
+- [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
+
+## [2.1.0] - 2025-05-16
+
+### Added
+- [WASM Driver] Add support for wasmJs to web worker driver (#5534 by [Ilya Gulya][IlyaGulya])
+- [PostgreSQL Dialect] Support PostgreSql UnNest Array to rows  (#5673 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql TSRANGE/TSTZRANGE support (#5297 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql Right Full Join (#5086 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postrgesql extract from temporal types (#5273 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql array contains operators (#4933 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql drop constraint (#5288 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgresql type casting (#5089 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql lateral join operator for subquery (#5122 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgresql ILIKE operator (#5330 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql XML type (#5331 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql AT TIME ZONE (#5243 by [Griffio][griffio])
+- [PostgreSQL Dialect] Support postgresql order by nulls (#5199 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add PostgreSQL current date/time function support (#5226 by [Drew Dobson][drewd])
+- [PostgreSQL Dialect] PostgreSql Regex operators (#5137 by [Griffio][griffio])
+- [PostgreSQL Dialect] add brin gist (#5059 by [Griffio][griffio])
+- [MySQL Dialect] Support RENAME INDEX for MySql dialect (#5212 by [Oren Kislev][orenkislev-faire])
+- [JSON Extension] Add alias to json table function (#5372 by [Griffio][griffio])
+
+### Changed
+- [Compiler] Generated query files return row counts for simple mutators (#4578 by [Marius Volkhart][MariusV])
+- [Native Driver] Update NativeSqlDatabase.kt to change readonly flag for DELETE, INSERT, and UPDATE statements (#5680 by [Griffio][griffio])
+- [PostgreSQL Dialect] Change PgInterval to String (#5403 by [Griffio][griffio])
+- [PostgreSQL Dialect] Support SqlDelight modules to implement PostgreSql extensions (#5677 by [Griffio][griffio])
+
+### Fixed
+- [Compiler] fix: notify queries when executing group statements with result (#5006 by [Vitor Hugo Schwaab][vitorhugods])
+- [Compiler] Fix SqlDelightModule type resolver (#5625 by [Griffio][griffio])
+- [Compiler] Fix 5501 insert object escaped column (#5503 by [Griffio][griffio])
+- [Compiler] Compiler: Improve error message such that path links are clickable with the correct line & char position. (#5604 by [Niklas Baudy][vanniktech])
+- [Compiler] Fix issue 5298: allow keywords to be used as table names
+- [Compiler] fix named executes and add test
+- [Compiler] Consider foreign key table constraints when sorting initialization statements (#5325 by [Leon Linhart][TheMrMilchmann])
+- [Compiler] Align error underlines properly when tabs are involved (#5224 by [Drew Dobson][drewd])
+- [JDBC Driver] Fix memory leak for connectionManager during end of transaction
+- [JDBC Driver] Run SQLite migrations inside transaction as mentioned in documentation (#5218 by [Lukáš Moravec][morki])
+- [JDBC Driver] Fix leaking connections after transaction commit / rollback (#5205 by [Lukáš Moravec][morki])
+- [Gradle Plugin] Execute `DriverInitializer` before `GenerateSchemaTask` (#5562 by [Emeka Nwagu][nwagu])
+- [Runtime] Fix crash in LogSqliteDriver when real driver is Async (#5723 by [Eric Denman][edenman])
+- [Runtime] Fix StringBuilder capacity (#5192 by [Jan Bína][janbina])
+- [PostgreSQL Dialect] PostgreSql create or replace view (#5407 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgresql to_json (#5606 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql numeric resolver (#5399 by [Griffio][griffio])
+- [PostgreSQL Dialect] sqlite windows function (#2799 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql SELECT DISTINCT ON (#5345 by [Griffio][griffio])
+- [PostgreSQL Dialect] alter table add column if not exists (#5309 by [Griffio][griffio])
+- [PostgreSQL Dialect] Postgresql async bind parameter (#5313 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql boolean literals (#5262 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql window functions (#5155 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql isNull isNotNull types (#5173 by [Griffio][griffio])
+- [PostgreSQL Dialect] PostgreSql select distinct (#5172 by [Griffio][griffio])
+- [Paging Extension] paging refresh initial load fix (#5615 by [Eva][evant])
+- [Paging Extension] Add MacOS native targets (#5324 by [Vitor Hugo Schwaab][vitorhugods])
+- [IntelliJ Plugin] K2 Support
+
 ## [2.0.2] - 2024-04-05
 
 ### Added
@@ -1082,3 +1145,12 @@ Initial release.
   [de-luca]: https://github.com/de-luca
   [MohamadJaara]: https://github.com/MohamadJaara
   [nwagu]: https://github.com/nwagu
+  [IlyaGulya]: https://github.com/IlyaGulya
+  [edenman]: https://github.com/edenman
+  [vitorhugods]: https://github.com/vitorhugods
+  [evant]: https://github.com/evant
+  [TheMrMilchmann]: https://github.com/TheMrMilchmann
+  [drewd]: https://github.com/drewd
+  [orenkislev-faire]: https://github.com/orenkislev-faire
+  [janbina]: https://github.com/janbina
+  [DRSchlaubi]: https://github.com/DRSchlaubi

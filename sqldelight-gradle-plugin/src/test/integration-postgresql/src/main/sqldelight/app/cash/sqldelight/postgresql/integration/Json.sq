@@ -1,3 +1,8 @@
+CREATE TABLE TestJsonFunc(
+    id INTEGER NOT NULL,
+    t TEXT NOT NULL
+);
+
 CREATE TABLE TestJson(
   data JSON NOT NULL,
   datab JSONB NOT NULL,
@@ -56,3 +61,14 @@ selectJsonbContains:
 SELECT *
 FROM TestJson
 WHERE datab ?? ?;
+
+insertJsonFunc:
+INSERT INTO TestJsonFunc (id, t) VALUES (?, ?);
+
+selectJsonFunc:
+SELECT to_json(tjf), to_json(tjf.t), to_jsonb(tjf), row_to_json(tjf)
+FROM TestJsonFunc tjf
+WHERE tjf.id = ?;
+
+selectJsonAgg:
+SELECT json_agg(TestJsonFunc) FROM TestJsonFunc;

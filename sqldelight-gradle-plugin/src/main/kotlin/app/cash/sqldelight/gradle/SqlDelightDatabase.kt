@@ -57,7 +57,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   internal var addedDialect: Boolean = false
 
   fun module(module: Any) {
-    configuration.dependencies.add(project.dependencies.create(module))
+    project.dependencies.add(configuration.name, module)
   }
 
   fun dialect(dialect: Any) {

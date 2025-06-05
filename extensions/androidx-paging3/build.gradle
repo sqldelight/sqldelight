@@ -23,6 +23,8 @@ kotlin {
   linuxX64()
   mingwX64()
 
+  applyDefaultHierarchyTemplate()
+
   sourceSets {
     commonMain {
       dependencies {

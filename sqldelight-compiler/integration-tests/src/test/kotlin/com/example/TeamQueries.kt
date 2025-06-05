@@ -16,16 +16,14 @@ public class TeamQueries(
   driver: SqlDriver,
   private val teamAdapter: Team.Adapter,
 ) : TransacterImpl(driver) {
-  public fun <T : Any> teamForCoach(coach: String, mapper: (name: Team.Name, captain: Long) -> T):
-      Query<T> = TeamForCoachQuery(coach) { cursor ->
+  public fun <T : Any> teamForCoach(coach: String, mapper: (name: Team.Name, captain: Long) -> T): Query<T> = TeamForCoachQuery(coach) { cursor ->
     mapper(
       Team.Name(cursor.getString(0)!!),
       cursor.getLong(1)!!
     )
   }
 
-  public fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name,
-      captain ->
+  public fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name, captain ->
     TeamForCoach(
       name,
       captain
@@ -46,8 +44,7 @@ public class TeamQueries(
     )
   }
 
-  public fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) { name,
-      captain, inner_type_, coach ->
+  public fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) { name, captain, inner_type_, coach ->
     Team(
       name,
       captain,
@@ -56,8 +53,7 @@ public class TeamQueries(
     )
   }
 
-  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> =
-      Query(397_134_288, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
+  public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> = Query(397_134_288, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
       cursor.getLong(0)!!,
       cursor.getLong(1)!!
@@ -83,8 +79,7 @@ public class TeamQueries(
       driver.removeListener("team", listener = listener)
     }
 
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(1_839_882_838, """
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(1_839_882_838, """
     |SELECT name, captain
     |FROM team
     |WHERE coach = ?
@@ -107,8 +102,7 @@ public class TeamQueries(
       driver.removeListener("team", listener = listener)
     }
 
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(null, """
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(null, """
     |SELECT team.name, team.captain, team.inner_type, team.coach
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?

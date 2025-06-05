@@ -139,8 +139,7 @@ class AsyncQueriesTypeTest {
       |  private val data_Adapter: Data_.Adapter,
       |  private val otherAdapter: Other.Adapter,
       |) : SuspendingTransacterImpl(driver) {
-      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
-      |      SelectForIdQuery(id) { cursor ->
+      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
@@ -155,8 +154,7 @@ class AsyncQueriesTypeTest {
       |  }
       |
       |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
-      |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) {
-      |        "Adapter types are expected to be identical." }
+      |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) { "Adapter types are expected to be identical." }
       |    return Query(424_911_250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
       |    |SELECT id, value FROM data
       |    |UNION
@@ -176,8 +174,11 @@ class AsyncQueriesTypeTest {
       |    )
       |  }
       |
-      |  public suspend fun insertData(id: Long?, value_: List?) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public suspend fun insertData(id: Long?, value_: List?): Long {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
@@ -187,6 +188,7 @@ class AsyncQueriesTypeTest {
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
+      |    return result
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
@@ -201,8 +203,7 @@ class AsyncQueriesTypeTest {
       |      driver.removeListener("data", listener = listener)
       |    }
       |
-      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
       |    |SELECT data.id, data.value
       |    |FROM data
       |    |WHERE id = ?

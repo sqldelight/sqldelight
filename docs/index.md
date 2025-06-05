@@ -79,7 +79,7 @@ SQLDelight supports a variety of SQL dialects and platforms.
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/app/cash/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
 
 Documentation pages for the latest snapshot version can be [found here](https://sqldelight.github.io/sqldelight/snapshot).
 

@@ -263,9 +263,11 @@ class JavadocTest {
       """
       |/**
       | * Insert new value.
+      | *
+      | * @return The number of rows updated.
       | */
-      |public fun insertValue(value_: kotlin.String) {
-      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |public fun insertValue(value_: kotlin.String): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO test(value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
@@ -274,6 +276,7 @@ class JavadocTest {
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -302,9 +305,11 @@ class JavadocTest {
       """
       |/**
       | * Update value by id.
+      | *
+      | * @return The number of rows updated.
       | */
-      |public fun updateById(value_: kotlin.String, _id: kotlin.Long) {
-      |  driver.execute(${update.id.withUnderscores}, ""${'"'}
+      |public fun updateById(value_: kotlin.String, _id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${update.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET value = ?
       |      |WHERE _id = ?
@@ -315,6 +320,7 @@ class JavadocTest {
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -342,12 +348,15 @@ class JavadocTest {
       """
       |/**
       | * Delete all.
+      | *
+      | * @return The number of rows updated.
       | */
-      |public fun deleteAll() {
-      |  driver.execute(${delete.id.withUnderscores}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |public fun deleteAll(): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${delete.id.withUnderscores}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |  notifyQueries(${delete.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
