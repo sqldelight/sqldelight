@@ -184,6 +184,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1869698678%2FFunctions%2F666177779" anchor-label="visitAlterTableAlterIndex" id="-1869698678%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-alter-table-alter-index.html"><span>visit</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span><span>Index</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1869698678%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-alter-table-alter-index.html"><span class="token function">visitAlterTableAlterIndex</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-my-sql-alter-table-alter-index/index.html">MySqlAlterTableAlterIndex</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1390745654%2FFunctions%2F666177779" anchor-label="visitAlterTableChangeColumn" id="1390745654%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -514,6 +529,21 @@
               </div>
             </div>
           </div>
+<a data-name="331611320%2FFunctions%2F666177779" anchor-label="visitCreateIndexStmt" id="331611320%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-create-index-stmt.html"><span>visit</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="331611320%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-create-index-stmt.html"><span class="token function">visitCreateIndexStmt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-my-sql-create-index-stmt/index.html">MySqlCreateIndexStmt</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-17815014%2FFunctions%2F666177779" anchor-label="visitCurrentTimestampWithOptionalNumber" id="-17815014%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -750,6 +780,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-index-list.html"><span class="token function">visitIndexList</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-my-sql-index-list/index.html">MySqlIndexList</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-16521992%2FFunctions%2F666177779" anchor-label="visitIndexVisibility" id="-16521992%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-index-visibility.html"><span>visit</span><wbr><span>Index</span><wbr><span><span>Visibility</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-16521992%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-index-visibility.html"><span class="token function">visitIndexVisibility</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-my-sql-index-visibility/index.html">MySqlIndexVisibility</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>

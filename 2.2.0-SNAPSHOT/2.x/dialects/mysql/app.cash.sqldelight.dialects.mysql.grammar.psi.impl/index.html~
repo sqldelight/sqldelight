@@ -145,6 +145,21 @@
               </div>
             </div>
           </div>
+<a data-name="-829381145%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableAlterIndexImpl" id="-829381145%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-alter-index-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-829381145%2FClasslikes%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-alter-index-impl/index.html">MySqlAlterTableAlterIndexImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-alter-index/index.html">MySqlAlterTableAlterIndex</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-15962915%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableChangeColumnImpl" id="-15962915%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -445,6 +460,21 @@
               </div>
             </div>
           </div>
+<a data-name="-2014835447%2FClasslikes%2F666177779" anchor-label="MySqlCreateIndexStmtImpl" id="-2014835447%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-create-index-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2014835447%2FClasslikes%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-create-index-stmt-impl/index.html">MySqlCreateIndexStmtImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/CreateIndexMixin///PointingToDeclaration/">CreateIndexMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-create-index-stmt/index.html">MySqlCreateIndexStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1367699057%2FClasslikes%2F666177779" anchor-label="MySqlCurrentTimestampWithOptionalNumberImpl" id="-1367699057%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -621,6 +651,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-index-list-impl/index.html">MySqlIndexListImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-list/index.html">MySqlIndexList</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1394412387%2FClasslikes%2F666177779" anchor-label="MySqlIndexVisibilityImpl" id="1394412387%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-index-visibility-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Visibility</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1394412387%2FClasslikes%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-index-visibility-impl/index.html">MySqlIndexVisibilityImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-visibility/index.html">MySqlIndexVisibility</a></div></div></div>
                 </div>
               </div>
             </div>

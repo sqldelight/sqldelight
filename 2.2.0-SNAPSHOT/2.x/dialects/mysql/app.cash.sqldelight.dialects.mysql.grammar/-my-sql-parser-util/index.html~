@@ -146,6 +146,21 @@
               </div>
             </div>
           </div>
+<a data-name="1610877590%2FProperties%2F666177779" anchor-label="alter_table_alter_index" id="1610877590%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter_table_alter_index.html"><span>alter_</span><wbr><span>table_</span><wbr><span>alter_</span><wbr><span>index</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1610877590%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="alter_table_alter_index.html">alter_table_alter_index</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1688963526%2FProperties%2F666177779" anchor-label="alter_table_change_column" id="-1688963526%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -446,6 +461,21 @@
               </div>
             </div>
           </div>
+<a data-name="-53014771%2FProperties%2F666177779" anchor-label="create_index_stmt" id="-53014771%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create_index_stmt.html"><span>create_</span><wbr><span>index_</span><wbr><span>stmt</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-53014771%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="create_index_stmt.html">create_index_stmt</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-124971035%2FProperties%2F666177779" anchor-label="createElement" id="-124971035%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -637,6 +667,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="index_list.html">index_list</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1824107402%2FProperties%2F666177779" anchor-label="index_visibility" id="-1824107402%2FProperties%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index_visibility.html"><span>index_</span><wbr><span>visibility</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1824107402%2FProperties%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="index_visibility.html">index_visibility</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -975,6 +1020,21 @@
               </div>
             </div>
           </div>
+<a data-name="308327086%2FFunctions%2F666177779" anchor-label="alterTableAlterIndexExt" id="308327086%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter-table-alter-index-ext.html"><span>alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span>Index</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="308327086%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="alter-table-alter-index-ext.html"><span class="token function">alterTableAlterIndexExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">alter_table_alter_index<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1542865828%2FFunctions%2F666177779" anchor-label="alterTableChangeColumnExt" id="1542865828%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1275,6 +1335,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1496495052%2FFunctions%2F666177779" anchor-label="createIndexStmtExt" id="-1496495052%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-index-stmt-ext.html"><span>create</span><wbr><span>Index</span><wbr><span>Stmt</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1496495052%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="create-index-stmt-ext.html"><span class="token function">createIndexStmtExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">create_index_stmt<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="364756950%2FFunctions%2F666177779" anchor-label="currentTimestampWithOptionalNumberExt" id="364756950%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1451,6 +1526,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="index-list-ext.html"><span class="token function">indexListExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">index_list<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="460611854%2FFunctions%2F666177779" anchor-label="indexVisibilityExt" id="460611854%2FFunctions%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index-visibility-ext.html"><span>index</span><wbr><span>Visibility</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="460611854%2FFunctions%2F666177779"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="index-visibility-ext.html"><span class="token function">indexVisibilityExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">index_visibility<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
