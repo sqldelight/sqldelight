@@ -64,16 +64,16 @@ internal class MySqlMigrationSquasher(
         val endOffset = indexStmt.textRange.endOffset
 
         // VISIBLE is the default, so we only need to add/remove INVISIBLE.
-        if (visibility == "INVISIBLE") {
-          if (indexStmt.text.contains(" VISIBLE")) {
-            into.text.replaceRange(startOffset until endOffset, indexStmt.text.replace(" VISIBLE", " INVISIBLE"))
-          } else if (!indexStmt.text.contains(" INVISIBLE")) {
+        if (visibility.uppercase() == "INVISIBLE") {
+          if (indexStmt.text.contains(" VISIBLE", ignoreCase = true)) {
+            into.text.replaceRange(startOffset until endOffset, indexStmt.text.replace(" VISIBLE", " INVISIBLE", ignoreCase = true))
+          } else if (!indexStmt.text.contains(" INVISIBLE", ignoreCase = true)) {
             into.text.replaceRange(endOffset until endOffset, " INVISIBLE")
           } else {
             into.text
           }
-        } else if (visibility == "VISIBLE" && indexStmt.text.contains(" INVISIBLE")) {
-          into.text.replaceRange(startOffset until endOffset, indexStmt.text.replace(" INVISIBLE", ""))
+        } else if (visibility.uppercase() == "VISIBLE" && indexStmt.text.contains(" INVISIBLE", ignoreCase = true)) {
+          into.text.replaceRange(startOffset until endOffset, indexStmt.text.replace(" INVISIBLE", "", ignoreCase = true))
         } else {
           into.text
         }

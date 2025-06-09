@@ -20,6 +20,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CREATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
@@ -58,6 +59,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
   ]
 }
 overrides ::= type_name
@@ -76,6 +78,7 @@ overrides ::= type_name
   | blob_literal
   | insert_stmt
   | compound_select_stmt
+  | create_index_stmt
 
 type_name ::= (
   bit_data_type |
@@ -215,6 +218,14 @@ index_hint ::=
 }
 
 index_list ::= LP {index_name} ( COMMA {index_name} ) * RP
+
+create_index_stmt ::= CREATE [ UNIQUE | 'FULLTEXT' ] INDEX [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
+ LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] [ index_visibility ] {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.CreateIndexMixin"
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  override = true
+  pin = 6
+}
 
 alter_table_rules ::= (
   alter_table_add_column

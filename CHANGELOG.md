@@ -2,6 +2,7 @@
 
 ## UNRELEASED
 
+- [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
 - [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
 

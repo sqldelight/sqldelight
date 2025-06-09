@@ -34,3 +34,4 @@ CREATE TABLE test_index_visibility (
   INDEX j_idx(j) INVISIBLE,
   INDEX i_idx(i)
 );
+CREATE INDEX k_idx ON test_index_visibility(k) INVISIBLE;
