@@ -10,6 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlIndexName
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
 internal class MySqlMigrationSquasher(
@@ -43,6 +44,39 @@ internal class MySqlMigrationSquasher(
           .single { it.indexName.textMatches(oldName.text) }
         val newName = indexNames.last()
         into.text.replaceRange(createIndex.indexName.textRange.startOffset until createIndex.indexName.textRange.endOffset, newName.text)
+      }
+      alterTableRules.alterTableAlterIndex != null -> {
+        val indexName = PsiTreeUtil.findChildOfType(alterTableRules.alterTableAlterIndex, SqlIndexName::class.java)!!
+        val visibility = alterTableRules.alterTableAlterIndex!!.text.substringAfter(indexName.text).trim()
+
+        // INDEX statement could be in the CREATE TABLE statement or ALTER TABLE statement.
+        var indexStmt: PsiElement? = alterTableRules.alteredTable(into).tableConstraintList
+          .singleOrNull { PsiTreeUtil.findChildOfType(it, SqlIndexName::class.java)?.textMatches(indexName.text) == true }
+        if (indexStmt == null) {
+          indexStmt = into.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }
+            .singleOrNull { it.indexName.textMatches(indexName.text) }
+        }
+        if (indexStmt == null) {
+          throw IllegalStateException("Cannot find definition of index ${indexName.text}")
+        }
+
+        val startOffset = indexStmt.textRange.startOffset
+        val endOffset = indexStmt.textRange.endOffset
+
+        // VISIBLE is the default, so we only need to add/remove INVISIBLE.
+        if (visibility.uppercase() == "INVISIBLE") {
+          if (indexStmt.text.contains(" VISIBLE", ignoreCase = true)) {
+            into.text.replaceRange(startOffset until endOffset, indexStmt.text.replace(" VISIBLE", " INVISIBLE", ignoreCase = true))
+          } else if (!indexStmt.text.contains(" INVISIBLE", ignoreCase = true)) {
+            into.text.replaceRange(endOffset until endOffset, " INVISIBLE")
+          } else {
+            into.text
+          }
+        } else if (visibility.uppercase() == "VISIBLE" && indexStmt.text.contains(" INVISIBLE", ignoreCase = true)) {
+          into.text.replaceRange(startOffset until endOffset, indexStmt.text.replace(" INVISIBLE", "", ignoreCase = true))
+        } else {
+          into.text
+        }
       }
       alterTableRules.alterTableAddColumn != null -> {
         val placement = alterTableRules.alterTableAddColumn!!.placementClause
