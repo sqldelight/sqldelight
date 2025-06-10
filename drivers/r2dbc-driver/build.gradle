@@ -5,7 +5,9 @@ plugins {
   id("app.cash.sqldelight.toolchain.runtime")
 }
 
-archivesBaseName = 'sqldelight-r2dbc-driver'
+base {
+  archivesName = 'sqldelight-r2dbc-driver'
+}
 
 dependencies {
   api projects.runtime

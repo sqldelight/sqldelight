@@ -56,7 +56,9 @@ class PropertiesFileTest {
         |  alias(libs.plugins.android.library)
         |}
         |
-        |archivesBaseName = 'Test'
+        |base {
+        |  archivesName = 'Test'
+        |}
         |
         |android {
         |  namespace 'com.example.namespace'
