@@ -13,7 +13,7 @@ agp = "8.10.1"
 compileSdk = "35"
 minSdk = "21"
 sqlPsi = "0.5.2"
-testContainers = "1.20.6"
+testContainers = "1.21.1"
 moshi = "1.15.2"
 
 [libraries]
