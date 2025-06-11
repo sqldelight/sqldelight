@@ -6,7 +6,9 @@ plugins {
   alias(libs.plugins.binaryCompatibilityValidator)
 }
 
-archivesBaseName = 'sqldelight-primitive-adapters'
+base {
+  archivesName = 'sqldelight-primitive-adapters'
+}
 
 kotlin {
   sourceSets {
