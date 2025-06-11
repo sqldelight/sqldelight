@@ -117,7 +117,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   @Suppress("unused") // Public API used in gradle files.
-  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(delegatedProject.dependencyProject)
+  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(project.project(delegatedProject.path))
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
