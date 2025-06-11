@@ -98,8 +98,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
 
     override fun getFamilyName(): String = name
 
-    override fun getText(): String =
-      "Add migration for ${createTableRef.element?.tableName?.text.orEmpty()}"
+    override fun getText(): String = "Add migration for ${createTableRef.element?.tableName?.text.orEmpty()}"
 
     override fun invoke(
       project: Project,
@@ -131,8 +130,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
 
     override fun getFamilyName(): String = name
 
-    override fun getText(): String =
-      "Add migration for ${createTableRef.element?.tableName?.text.orEmpty()}"
+    override fun getText(): String = "Add migration for ${createTableRef.element?.tableName?.text.orEmpty()}"
 
     override fun invoke(
       project: Project,
@@ -160,8 +158,7 @@ internal class SchemaNeedsMigrationInspection : LocalInspectionTool() {
 
     override fun getFamilyName(): String = name
 
-    override fun getText(): String =
-      "Add migration for ${createTableRef.element?.tableName?.text.orEmpty()}"
+    override fun getText(): String = "Add migration for ${createTableRef.element?.tableName?.text.orEmpty()}"
 
     override fun invoke(
       project: Project,

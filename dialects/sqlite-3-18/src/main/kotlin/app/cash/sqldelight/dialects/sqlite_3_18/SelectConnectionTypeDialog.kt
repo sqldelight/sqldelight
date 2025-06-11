@@ -64,22 +64,20 @@ internal class SelectConnectionTypeDialog(
   }
 }
 
-private fun validateKey(): ValidationInfoBuilder.(JTextField) -> ValidationInfo? =
-  {
-    if (it.text.isNullOrEmpty()) {
-      error("You must supply a connection key.")
-    } else {
-      null
-    }
+private fun validateKey(): ValidationInfoBuilder.(JTextField) -> ValidationInfo? = {
+  if (it.text.isNullOrEmpty()) {
+    error("You must supply a connection key.")
+  } else {
+    null
   }
+}
 
-private fun validateFilePath(): ValidationInfoBuilder.(TextFieldWithHistoryWithBrowseButton) -> ValidationInfo? =
-  {
-    if (it.text.isEmpty()) {
-      error("The file path is empty.")
-    } else if (!File(it.text).exists()) {
-      error("This file does not exist.")
-    } else {
-      null
-    }
+private fun validateFilePath(): ValidationInfoBuilder.(TextFieldWithHistoryWithBrowseButton) -> ValidationInfo? = {
+  if (it.text.isEmpty()) {
+    error("The file path is empty.")
+  } else if (!File(it.text).exists()) {
+    error("This file does not exist.")
+  } else {
+    null
   }
+}

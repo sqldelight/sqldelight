@@ -1460,21 +1460,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(`value`: kotlin.Long) {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(`value`: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1511,21 +1513,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long) {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value__)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value__)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1562,21 +1566,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long) {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1613,21 +1619,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long) {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value__)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value__)
+      |      }
+      |} .also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1668,21 +1676,23 @@ class SelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long) {
-      |  transaction {
-      |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
-      |        }
-      |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
-      |        |INSERT INTO data (value)
-      |        |  VALUES (?)
-      |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value__)
-      |        }
-      |  }
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertTwice(value_: kotlin.Long, value__: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
+      |  driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value_)
+      |      }
+      |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
+      |      |INSERT INTO data (value)
+      |      |  VALUES (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        bindLong(0, value__)
+      |      }
+      |} .also {
       |  notifyQueries(${query.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }

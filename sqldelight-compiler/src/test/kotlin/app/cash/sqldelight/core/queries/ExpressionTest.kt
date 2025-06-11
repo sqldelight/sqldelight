@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.TestDialect.POSTGRESQL
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.blobType
 import app.cash.sqldelight.core.dialects.textType
+import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
@@ -925,5 +926,19 @@ class ExpressionTest {
 
     val query = file.namedQueries.first()
     assertThat(query.resultColumns[0].javaType).isEqualTo(INT.copy(nullable = true))
+  }
+
+  @Test fun `for each sqlite dialect inherited functions are callable`(dialect: TestDialect) {
+    assumeTrue(dialect.dialect is SqliteDialect) // any sqlite dialect
+    val file = FixtureCompiler.compileSql(
+      """
+    functions:
+       SELECT changes(), last_insert_rowid(), sqlite_version();
+      """.trimMargin(),
+      tempFolder,
+      overrideDialect = dialect.dialect,
+    )
+
+    assertThat(file.errors).isEmpty()
   }
 }
