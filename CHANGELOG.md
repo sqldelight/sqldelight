@@ -2,9 +2,19 @@
 
 ## UNRELEASED
 
+### Added
+
 - [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
-- [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
+
+### Changed
+
+- In-development snapshots are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
+
+### Fixed
+
+- [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
+
 
 ## [2.1.0] - 2025-05-16
 
@@ -63,6 +73,7 @@
 - [Paging Extension] paging refresh initial load fix (#5615 by [Eva][evant])
 - [Paging Extension] Add MacOS native targets (#5324 by [Vitor Hugo Schwaab][vitorhugods])
 - [IntelliJ Plugin] K2 Support
+
 
 ## [2.0.2] - 2024-04-05
 
