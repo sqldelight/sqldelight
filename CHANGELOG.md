@@ -6,6 +6,7 @@
 
 - [PostgreSQL Dialect] Add limited support for PostgreSql Comment On statement (#5808 by [Griffio][griffio])
 - [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
+- [PostgreSql Dialect] Add support for TSQUERY data type (#5779 by [Griffio][griffio])
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
 
 ### Changed
@@ -15,7 +16,7 @@
 
 ### Fixed
 
-- [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by by [Griffio][griffio])
+- [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by [Griffio][griffio])
 
 
 ## [2.1.0] - 2025-05-16
