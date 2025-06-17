@@ -1,1 +1,2 @@
 ALTER TABLE Products ADD COLUMN requires_dpi BOOLEAN DEFAULT FALSE;
+COMMENT ON COLUMN Products.requires_dpi IS 'requires_dpi is false by default';
