@@ -4,6 +4,7 @@
 
 ### Added
 
+- [PostgreSQL Dialect] Add limited support for PostgreSql Comment On statement (#5808 by [Griffio][griffio])
 - [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
 
