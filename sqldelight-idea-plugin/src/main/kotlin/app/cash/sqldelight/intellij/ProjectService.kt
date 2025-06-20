@@ -163,6 +163,8 @@ class ProjectService(val project: Project) :
 
   override var generateAsync: Boolean = false
 
+  override var expandSelectStar: Boolean = false
+
   override var dialect: SqlDelightDialect = MissingDialect()
 
   override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {

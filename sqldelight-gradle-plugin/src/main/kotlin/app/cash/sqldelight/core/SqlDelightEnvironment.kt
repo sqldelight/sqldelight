@@ -101,6 +101,8 @@ class SqlDelightEnvironment(
 
   override var generateAsync: Boolean = properties.generateAsync
 
+  override var expandSelectStar: Boolean = properties.expandSelectStar
+
   override fun module(vFile: VirtualFile) = module
 
   override fun fileIndex(module: Module): SqlDelightFileIndex = FileIndex()
