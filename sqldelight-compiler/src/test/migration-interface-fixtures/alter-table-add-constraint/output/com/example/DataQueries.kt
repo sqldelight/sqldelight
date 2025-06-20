@@ -22,12 +22,7 @@ public class DataQueries(
     )
   }
 
-  public fun selectSingle(): Query<TestSingle> = selectSingle { first, second ->
-    TestSingle(
-      first,
-      second
-    )
-  }
+  public fun selectSingle(): Query<TestSingle> = selectSingle(::TestSingle)
 
   public fun <T : Any> selectCompound(mapper: (first: Int, second: String) -> T): Query<T> = Query(-19_725_220, arrayOf("TestCompound"), driver, "Data.sq", "selectCompound", """
   |SELECT TestCompound.first, TestCompound.second
@@ -40,10 +35,5 @@ public class DataQueries(
     )
   }
 
-  public fun selectCompound(): Query<TestCompound> = selectCompound { first, second ->
-    TestCompound(
-      first,
-      second
-    )
-  }
+  public fun selectCompound(): Query<TestCompound> = selectCompound(::TestCompound)
 }
