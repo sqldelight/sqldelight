@@ -11,7 +11,7 @@
 ### Changed
 
 - In-development snapshots are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
-- Simplified default generated queries by using constructor references (#???? by [Jon Poulton][jonapoul])
+- Simplified default generated queries by using constructor references (#5814 by [Jon Poulton][jonapoul])
 
 ### Fixed
 
