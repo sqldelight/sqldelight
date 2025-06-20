@@ -20,6 +20,7 @@ internal class TestEnvironment(
   private val treatNullAsUnknownForEquality: Boolean = false,
   private val dialect: SqlDelightDialect = SqliteDialect(),
   private val generateAsync: Boolean = false,
+  private val expandSelectStar: Boolean = true,
 ) {
   fun build(
     root: String,
@@ -42,6 +43,7 @@ internal class TestEnvironment(
         override val treatNullAsUnknownForEquality = this@TestEnvironment.treatNullAsUnknownForEquality
         override val rootDirectory = File(root)
         override val generateAsync: Boolean = this@TestEnvironment.generateAsync
+        override val expandSelectStar: Boolean = this@TestEnvironment.expandSelectStar
       },
       dialect = dialect,
       verifyMigrations = true,
