@@ -65,12 +65,8 @@ class SelectQueryGenerator(
     val parametersAndTypes = query.parameters.map { argNameAllocator.newName(it.name, it) to it.argumentType() }
 
     val params = parametersAndTypes.map { (name, _) -> CodeBlock.of(name) }
-    val queryCall = if (params.isEmpty()) {
-      CodeBlock.of("%L(::%T)", query.name, query.interfaceType)
-    } else {
-      val ctorCall = CodeBlock.of("::%T", query.interfaceType)
-      (params + ctorCall).joinToCode(", ", "${query.name}(", ")")
-    }
+    val ctorCall = CodeBlock.of("::%T", query.interfaceType)
+    val queryCall = (params + ctorCall).joinToCode(", ", "${query.name}(", ")")
 
     return defaultResultTypeFunctionInterface(parametersAndTypes)
       .addStatement("return %L", queryCall)
