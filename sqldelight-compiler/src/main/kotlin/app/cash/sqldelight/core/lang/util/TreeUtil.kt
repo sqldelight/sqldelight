@@ -39,6 +39,8 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
+import com.alecstrong.sql.psi.core.psi.SqlTableAlias
 import com.alecstrong.sql.psi.core.psi.SqlTableName
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
@@ -203,6 +205,8 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
       )
     }
   } else if (this is SqlResultColumn && this.expr == null) {
+    val aliasMapping = createTableNameToAliasMapping()
+
     listOf(
       this.range to this@rangesToReplace.queryExposed().flatMap { query ->
         query.columns.map { column ->
@@ -216,7 +220,9 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
               if (definition?.parent is SqlCreateViewStmt) {
                 append("${(definition.parent as SqlCreateViewStmt).viewName.node.text}.")
               } else if (definition?.parent?.parent is SqlCreateTableStmt) {
-                append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
+                val tableName = (definition.parent.parent as SqlCreateTableStmt).tableName.node.text
+                val aliasName = aliasMapping.getOrDefault(tableName, tableName)
+                append("$aliasName.")
               }
             }
             append(columnElement.node.text)
@@ -341,4 +347,16 @@ private fun <T : PsiElement, E : PsiElement> ArrayList<T>.orderStatements(
       return@removeAll true
     }
   }
+}
+
+private fun SqlResultColumn.createTableNameToAliasMapping() = PsiTreeUtil
+  .getParentOfType(this, SqlSelectStmt::class.java)
+  ?.findChildrenOfType<SqlTableAlias>()
+  .orEmpty()
+  .mapNotNull(::toMappingOrNull)
+  .toMap()
+
+private fun toMappingOrNull(alias: SqlTableAlias): Pair<String, String>? {
+  val tableName = PsiTreeUtil.getPrevSiblingOfType(alias, SqlTableName::class.java)?.name
+  return tableName?.let { it to alias.name }
 }
