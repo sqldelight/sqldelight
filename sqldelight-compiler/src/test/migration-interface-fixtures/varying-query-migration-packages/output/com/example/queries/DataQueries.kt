@@ -27,12 +27,7 @@ public class DataQueries(
     )
   }
 
-  public fun migrationSelect(): Query<Test> = migrationSelect { first, second ->
-    Test(
-      first,
-      second
-    )
-  }
+  public fun migrationSelect(): Query<Test> = migrationSelect(::Test)
 
   public fun <T : Any> migrationInsert(
     first: String,
@@ -46,12 +41,7 @@ public class DataQueries(
     )
   }
 
-  public fun migrationInsert(first: String, second: Int): ExecutableQuery<Test> = migrationInsert(first, second) { first_, second_ ->
-    Test(
-      first_,
-      second_
-    )
-  }
+  public fun migrationInsert(first: String, second: Int): ExecutableQuery<Test> = migrationInsert(first, second, ::Test)
 
   public fun <T : Any> migrationDelete(first: String, mapper: (first: String, second: Int) -> T): ExecutableQuery<T> = MigrationDeleteQuery(first) { cursor ->
     check(cursor is JdbcCursor)
@@ -61,12 +51,7 @@ public class DataQueries(
     )
   }
 
-  public fun migrationDelete(first: String): ExecutableQuery<Test> = migrationDelete(first) { first_, second ->
-    Test(
-      first_,
-      second
-    )
-  }
+  public fun migrationDelete(first: String): ExecutableQuery<Test> = migrationDelete(first, ::Test)
 
   public fun <T : Any> migrationUpdate(first: String, mapper: (first: String, second: Int) -> T): ExecutableQuery<T> = MigrationUpdateQuery(first) { cursor ->
     check(cursor is JdbcCursor)
@@ -76,12 +61,7 @@ public class DataQueries(
     )
   }
 
-  public fun migrationUpdate(first: String): ExecutableQuery<Test> = migrationUpdate(first) { first_, second ->
-    Test(
-      first_,
-      second
-    )
-  }
+  public fun migrationUpdate(first: String): ExecutableQuery<Test> = migrationUpdate(first, ::Test)
 
   private inner class MigrationInsertQuery<out T : Any>(
     public val first: String,

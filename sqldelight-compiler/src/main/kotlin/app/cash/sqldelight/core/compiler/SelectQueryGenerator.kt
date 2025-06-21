@@ -64,43 +64,12 @@ class SelectQueryGenerator(
     val argNameAllocator = NameAllocator()
     val parametersAndTypes = query.parameters.map { argNameAllocator.newName(it.name, it) to it.argumentType() }
 
-    val function = defaultResultTypeFunctionInterface(parametersAndTypes)
-    val params = parametersAndTypes.map { (name) -> CodeBlock.of(name) }
+    val params = parametersAndTypes.map { (name, _) -> CodeBlock.of(name) }
+    val ctorCall = CodeBlock.of("::%T", query.interfaceType)
+    val queryCall = (params + ctorCall).joinToCode(", ", "${query.name}(", ")")
 
-    val columnArgs = query.resultColumns.map { argument ->
-      argNameAllocator.newName(argument.name, argument)
-    }
-
-    val lamdaParams = columnArgs.joinToString(separator = ", ")
-    val ctorParams = columnArgs.joinToString(separator = ",\n", postfix = "\n")
-
-    val trailingLambda = CodeBlock.builder()
-      .add(CodeBlock.of("·{ $lamdaParams ->\n"))
-      .indent()
-      .add("%T(\n", query.interfaceType)
-      .indent()
-      .add(ctorParams)
-      .unindent()
-      .add(")\n")
-      .unindent()
-      .add("}")
-      .build()
-
-    return function
-      .addStatement(
-        "return %L",
-        CodeBlock
-          .builder()
-          .add(
-            if (params.isEmpty()) {
-              CodeBlock.of(query.name)
-            } else {
-              params.joinToCode(", ", "${query.name}(", ")")
-            },
-          )
-          .add(trailingLambda)
-          .build(),
-      )
+    return defaultResultTypeFunctionInterface(parametersAndTypes)
+      .addStatement("return %L", queryCall)
       .build()
   }
 

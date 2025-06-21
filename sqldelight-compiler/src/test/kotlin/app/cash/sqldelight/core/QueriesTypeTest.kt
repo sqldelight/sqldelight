@@ -145,12 +145,7 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
-      |    Data_(
-      |      id_,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id, ::Data_)
       |
       |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
       |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) { "Adapter types are expected to be identical." }
@@ -166,12 +161,7 @@ class QueriesTypeTest {
       |    }
       |  }
       |
-      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues { id, value_ ->
-      |    SelectAllValues(
-      |      id,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues(::SelectAllValues)
       |
       |  /**
       |   * @return The number of rows updated.
@@ -506,12 +496,7 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<SelectForId> = selectForId(id) { id_, value_ ->
-      |    SelectForId(
-      |      id_,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectForId(id: Long): Query<SelectForId> = selectForId(id, ::SelectForId)
       |
       |  /**
       |   * @return The number of rows updated.
@@ -662,12 +647,7 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun selectOffsets(search: String): Query<SelectOffsets> = selectOffsets(search) { id, offsets ->
-      |    SelectOffsets(
-      |      id,
-      |      offsets
-      |    )
-      |  }
+      |  public fun selectOffsets(search: String): Query<SelectOffsets> = selectOffsets(search, ::SelectOffsets)
       |
       |  /**
       |   * @return The number of rows updated.
@@ -803,14 +783,7 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun forSoupToken(soup_token: String): Query<SoupView> = forSoupToken(soup_token) { token, soup_token_, soup_broth, soup_name ->
-      |    SoupView(
-      |      token,
-      |      soup_token_,
-      |      soup_broth,
-      |      soup_name
-      |    )
-      |  }
+      |  public fun forSoupToken(soup_token: String): Query<SoupView> = forSoupToken(soup_token, ::SoupView)
       |
       |  public fun <T : Any> maxSoupBroth(mapper: (MAX: ChickenSoupBase.Broth?) -> T): Query<T> = Query(-1_892_940_684, arrayOf("soupBase", "soup"), driver, "MyView.sq", "maxSoupBroth", ""${'"'}
       |  |SELECT MAX(soup_broth)
@@ -821,11 +794,7 @@ class QueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun maxSoupBroth(): Query<MaxSoupBroth> = maxSoupBroth { MAX ->
-      |    MaxSoupBroth(
-      |      MAX
-      |    )
-      |  }
+      |  public fun maxSoupBroth(): Query<MaxSoupBroth> = maxSoupBroth(::MaxSoupBroth)
       |
       |  private inner class ForSoupTokenQuery<out T : Any>(
       |    public val soup_token: String,

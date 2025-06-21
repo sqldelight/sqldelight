@@ -870,13 +870,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id) { title, track_number, album_id_ ->
-      |    Song(
-      |      title,
-      |      track_number,
-      |      album_id_
-      |    )
-      |  }
+      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id, ::Song)
       |
       |  private inner class SelectSongsByAlbumIdQuery<out T : Any>(
       |    public val album_id: Long?,
@@ -1080,12 +1074,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id) { id_, parent_id ->
-      |    RecursiveQuery(
-      |      id_,
-      |      parent_id
-      |    )
-      |  }
+      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id, ::RecursiveQuery)
       |
       |  private inner class RecursiveQueryQuery<out T : Any>(
       |    public val id: Long,
@@ -1180,12 +1169,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun selectRank(): Query<SelectRank> = selectRank { name, rank ->
-      |    SelectRank(
-      |      name,
-      |      rank
-      |    )
-      |  }
+      |  public fun selectRank(): Query<SelectRank> = selectRank(::SelectRank)
       |}
       |
       """.trimMargin(),
@@ -1311,25 +1295,7 @@ class InterfaceGeneration {
     |    )
     |  }
     |
-    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull { has_bigint, has_boolean, has_byte, has_date, has_integer, has_json, has_jsob, has_num, has_smallint, has_time, has_timestamp, has_timestamptz, has_tsvector, has_uuid, has_varchar ->
-    |    SelectIsNotNull(
-    |      has_bigint,
-    |      has_boolean,
-    |      has_byte,
-    |      has_date,
-    |      has_integer,
-    |      has_json,
-    |      has_jsob,
-    |      has_num,
-    |      has_smallint,
-    |      has_time,
-    |      has_timestamp,
-    |      has_timestamptz,
-    |      has_tsvector,
-    |      has_uuid,
-    |      has_varchar
-    |    )
-    |  }
+    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull(::SelectIsNotNull)
     |}
     |
       """.trimMargin(),
@@ -1529,21 +1495,7 @@ class InterfaceGeneration {
     |    )
     |  }
     |
-    |  public fun select(): Query<Select> = select { p, f, b, l, d, g, pf, pfb, gf, gfpf, dl ->
-    |    Select(
-    |      p,
-    |      f,
-    |      b,
-    |      l,
-    |      d,
-    |      g,
-    |      pf,
-    |      pfb,
-    |      gf,
-    |      gfpf,
-    |      dl
-    |    )
-    |  }
+    |  public fun select(): Query<Select> = select(::Select)
     |}
     |
       """.trimMargin(),

@@ -43,14 +43,7 @@ public class PlayerQueries(
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots) { name_, number_, team_, shoots_ ->
-    Player(
-      name_,
-      number_,
-      team_,
-      shoots_
-    )
-  }
+  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots, ::Player)
 
   public fun <T : Any> allPlayers(mapper: (
     name: Player.Name,
@@ -69,14 +62,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
-    Player(
-      name,
-      number,
-      team,
-      shoots
-    )
-  }
+  public fun allPlayers(): Query<Player> = allPlayers(::Player)
 
   public fun <T : Any> playersForTeam(team: Team.Name?, mapper: (
     name: Player.Name,
@@ -92,14 +78,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team) { name, number, team_, shoots ->
-    Player(
-      name,
-      number,
-      team_,
-      shoots
-    )
-  }
+  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team, ::Player)
 
   public fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
     name: Player.Name,
@@ -115,14 +94,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number) { name, number_, team, shoots ->
-    Player(
-      name,
-      number_,
-      team,
-      shoots
-    )
-  }
+  public fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, ::Player)
 
   public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> = Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
@@ -130,11 +102,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun selectNull(): ExecutableQuery<SelectNull> = selectNull { expr ->
-    SelectNull(
-      expr
-    )
-  }
+  public fun selectNull(): ExecutableQuery<SelectNull> = selectNull(::SelectNull)
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> = Query(-976_770_036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
@@ -143,12 +111,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff { expr, expr_ ->
-    SelectStuff(
-      expr,
-      expr_
-    )
-  }
+  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff(::SelectStuff)
 
   public fun <T : Any> greaterThanNumberAndName(
     number: Long,
@@ -168,14 +131,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> = greaterThanNumberAndName(number, name) { name_, number_, team, shoots ->
-    Player(
-      name_,
-      number_,
-      team,
-      shoots
-    )
-  }
+  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> = greaterThanNumberAndName(number, name, ::Player)
 
   /**
    * @return The number of rows updated.

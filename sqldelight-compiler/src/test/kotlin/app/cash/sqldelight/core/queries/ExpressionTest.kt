@@ -7,6 +7,7 @@ import app.cash.sqldelight.core.TestDialect.POSTGRESQL
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.blobType
 import app.cash.sqldelight.core.dialects.textType
+import app.cash.sqldelight.core.test.fileContents
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
@@ -47,15 +48,15 @@ class ExpressionTest {
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(generator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
-      |public fun testQuery(SecondId: kotlin.Long, value_: kotlin.String): app.cash.sqldelight.Query<com.example.Test> = testQuery(SecondId, value_) { TestId, TestText, SecondId_ ->
-      |  com.example.Test(
-      |    TestId,
-      |    TestText,
-      |    SecondId_
-      |  )
-      |}
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public fun testQuery(SecondId: Long, value_: String): Query<Test> = testQuery(SecondId, value_, ::Test)
       |
       """.trimMargin(),
     )

@@ -23,12 +23,7 @@ public class TeamQueries(
     )
   }
 
-  public fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach) { name, captain ->
-    TeamForCoach(
-      name,
-      captain
-    )
-  }
+  public fun teamForCoach(coach: String): Query<TeamForCoach> = teamForCoach(coach, ::TeamForCoach)
 
   public fun <T : Any> forInnerType(inner_type: Shoots.Type?, mapper: (
     name: Team.Name,
@@ -44,14 +39,7 @@ public class TeamQueries(
     )
   }
 
-  public fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type) { name, captain, inner_type_, coach ->
-    Team(
-      name,
-      captain,
-      inner_type_,
-      coach
-    )
-  }
+  public fun forInnerType(inner_type: Shoots.Type?): Query<Team> = forInnerType(inner_type, ::Team)
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> = Query(397_134_288, driver, "Team.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
@@ -60,12 +48,7 @@ public class TeamQueries(
     )
   }
 
-  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff { expr, expr_ ->
-    SelectStuff(
-      expr,
-      expr_
-    )
-  }
+  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff(::SelectStuff)
 
   private inner class TeamForCoachQuery<out T : Any>(
     public val coach: String,

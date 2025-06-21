@@ -146,12 +146,7 @@ class AsyncQueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
-      |    Data_(
-      |      id_,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id, ::Data_)
       |
       |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
       |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) { "Adapter types are expected to be identical." }
@@ -167,12 +162,7 @@ class AsyncQueriesTypeTest {
       |    }
       |  }
       |
-      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues { id, value_ ->
-      |    SelectAllValues(
-      |      id,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues(::SelectAllValues)
       |
       |  /**
       |   * @return The number of rows updated.
