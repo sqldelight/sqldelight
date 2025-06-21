@@ -896,6 +896,61 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `selecting all columns with named tables on join`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE IF NOT EXISTS TableA(id TEXT PRIMARY KEY, value INTEGER);
+      |CREATE TABLE IF NOT EXISTS TableB(id TEXT PRIMARY KEY, value INTEGER);
+      |
+      |getMatching:
+      |  SELECT * FROM TableA a LEFT JOIN TableB b ON a.id = b.id;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "test.sq",
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedInterface).isNotNull()
+
+    // The important part here is that the table aliases are used in the column selections, not the table names
+    val expectedQuery = "SELECT a.id, a.value, b.id, b.value FROM TableA a LEFT JOIN TableB b ON a.id = b.id"
+
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class TestQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> getMatching(mapper: (
+      |    id: String,
+      |    value_: Long?,
+      |    id_: String?,
+      |    value__: Long?,
+      |  ) -> T): Query<T> = Query(625_275_446, arrayOf("TableA", "TableB"), driver, "test.sq", "getMatching", "$expectedQuery") { cursor ->
+      |    mapper(
+      |      cursor.getString(0)!!,
+      |      cursor.getLong(1),
+      |      cursor.getString(2),
+      |      cursor.getLong(3)
+      |    )
+      |  }
+      |
+      |  public fun getMatching(): Query<GetMatching> = getMatching(::GetMatching)
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `returning statement in select works fine`() {
     val result = FixtureCompiler.compileSql(
       """

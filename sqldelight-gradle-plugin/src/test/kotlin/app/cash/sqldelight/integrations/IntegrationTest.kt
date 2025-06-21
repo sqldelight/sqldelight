@@ -198,4 +198,13 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun `Generate aliased table references when selecting all columns`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/select-all-joining-aliased-tables"))
+      .withArguments("clean", "test", "--stacktrace")
+      .build()
+      .output
+    assertThat(output).contains("BUILD SUCCESSFUL")
+  }
 }
