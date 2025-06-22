@@ -357,6 +357,8 @@ private fun SqlResultColumn.createTableNameToAliasMapping() = PsiTreeUtil
   .toMap()
 
 private fun toMappingOrNull(alias: SqlTableAlias): Pair<String, String>? {
-  val tableName = PsiTreeUtil.getPrevSiblingOfType(alias, SqlTableName::class.java)?.name
-  return tableName?.let { it to alias.name }
+  // using "nameIdentifier.text" instead of "name" because it captures of backticks around table/alias names
+  val tableName = PsiTreeUtil.getPrevSiblingOfType(alias, SqlTableName::class.java)?.nameIdentifier?.text
+  val aliasName = alias.nameIdentifier?.text
+  return if (tableName != null && aliasName != null) tableName to aliasName else null
 }

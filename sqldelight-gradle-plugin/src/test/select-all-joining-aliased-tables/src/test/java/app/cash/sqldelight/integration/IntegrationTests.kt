@@ -32,4 +32,35 @@ class IntegrationTests {
     val actual = db.testQueries.getMatching().executeAsList()
     assertThat(actual).isEqualTo(expected)
   }
+
+  @Test fun `running named tables surrounded by backticks generates a valid select statement`() {
+    val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+    TestDatabase.Schema.create(driver)
+    val db = TestDatabase(driver)
+
+    with(db.testQueries) {
+      transaction {
+        insertPlayer(Player(1L, "Andrey Arshavin", 101L))
+        insertPlayer(Player(2L, "Barry Bannan", 102L))
+        insertPlayer(Player(3L, "Christian Chivu", 103L))
+        insertPlayer(Player(4L, "Didier Drogba", 104L))
+        insertPlayer(Player(5L, "Emmanuel Eboué", 101L))
+
+        insertTeam(Team(101L, "Arsenal"))
+        insertTeam(Team(102L, "Aston Villa"))
+        insertTeam(Team(103L, "Inter"))
+        insertTeam(Team(104L, "Chelsea"))
+      }
+    }
+
+    val expected = listOf(
+      MatchPlayerToTeam(1L, "Andrey Arshavin", 101L, 101L, "Arsenal"),
+      MatchPlayerToTeam(2L, "Barry Bannan", 102L, 102L, "Aston Villa"),
+      MatchPlayerToTeam(3L, "Christian Chivu", 103L, 103L, "Inter"),
+      MatchPlayerToTeam(4L, "Didier Drogba", 104L, 104L, "Chelsea"),
+      MatchPlayerToTeam(5L, "Emmanuel Eboué", 101L, 101L, "Arsenal"),
+    )
+    val actual = db.testQueries.matchPlayerToTeam().executeAsList()
+    assertThat(actual).isEqualTo(expected)
+  }
 }
