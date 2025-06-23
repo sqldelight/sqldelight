@@ -52,6 +52,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
 
   @get:Input abstract val driverProperties: MapProperty<String, String>
 
+  @get:Input abstract val migrationVerificationLevel: Property<String>
+
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
    * https://github.com/gradle/gradle/issues/14223 is resolved. */
@@ -69,6 +71,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)
       it.driverProperties.set(driverProperties)
+      it.migrationVerificationLevel.set(migrationVerificationLevel)
       it.outputFile.set(getDummyOutputFile())
     }
   }
@@ -89,6 +92,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     val verifyMigrations: Property<Boolean>
     val verifyDefinitions: Property<Boolean>
     val driverProperties: MapProperty<String, String>
+    val migrationVerificationLevel: Property<String>
     val outputFile: RegularFileProperty
   }
 
@@ -145,7 +149,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       ) { sqlText ->
         initStatements.add(CatalogDatabase.InitStatement(sqlText, "Error compiling $sqlText"))
       }
-      return CatalogDatabase.withInitStatements(initStatements)
+      return CatalogDatabase.withInitStatements(initStatements, parameters.migrationVerificationLevel.get())
     }
 
     private fun checkMigration(
@@ -187,7 +191,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
           )
         }
       }
-      return CatalogDatabase.fromFile(copy.absolutePath, initStatements).also { copy.delete() }
+      return CatalogDatabase.fromFile(copy.absolutePath, initStatements, parameters.migrationVerificationLevel.get()).also { copy.delete() }
     }
 
     private fun checkForGaps() {

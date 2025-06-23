@@ -36,6 +36,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   abstract val migrationOutputDirectory: DirectoryProperty
   val migrationOutputFileFormat: Property<String> = project.objects.property(String::class.java).convention(".sql")
   val generateAsync: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+  val migrationVerificationLevel: Property<String> = project.objects.property(String::class.java).convention("maximum")
 
   val configurationName: String = "${name}DialectClasspath"
 
@@ -280,6 +281,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.properties = getProperties()
         it.verifyMigrations.set(verifyMigrations)
         it.verifyDefinitions.set(verifyDefinitions)
+        it.migrationVerificationLevel.set(migrationVerificationLevel)
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 
