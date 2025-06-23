@@ -898,7 +898,22 @@ class PostgreSqlTest {
   fun testContactTsVectorRank() {
     database.textSearchQueries.insertLiteral("the rain in spain")
     with(database.textSearchQueries.rank("rain | plain").executeAsList()) {
-      assertThat(first()).isEqualTo("0.030396355")
+      assertThat(first()).isEqualTo(0.030396355)
+    }
+  }
+
+  @Test
+  fun testContactTsQueryRank() {
+    database.textSearchQueries.insertLiteral("Peter Piper picked a peck of pickled peppers")
+    with(database.textSearchQueries.plainToRank("peck").executeAsList()) {
+      assertThat(first().rank).isEqualTo(0.06079271)
+    }
+  }
+
+  @Test
+  fun testQueryPartialComparison() {
+    with(database.textSearchQueries.partialComparison("postgraduate", "postgres:*").executeAsOne()) {
+      assertThat(this).isTrue()
     }
   }
 
