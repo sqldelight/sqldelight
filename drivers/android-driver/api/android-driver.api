@@ -14,6 +14,7 @@ public final class app/cash/sqldelight/driver/android/AndroidSqliteDriver : app/
 	public synthetic fun <init> (Lapp/cash/sqldelight/db/SqlSchema;Landroid/content/Context;Ljava/lang/String;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;Landroidx/sqlite/db/SupportSQLiteOpenHelper$Callback;IZLjava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
 	public fun close ()V
+	public fun createArguments (I)Ljava/lang/String;
 	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
 	public fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
 	public synthetic fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
