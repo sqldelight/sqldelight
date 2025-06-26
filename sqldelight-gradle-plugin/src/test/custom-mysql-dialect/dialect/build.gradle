@@ -1,0 +1,8 @@
+plugins {
+    id("org.jetbrains.kotlin.jvm")
+}
+
+dependencies {
+    api "app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}"
+    compileOnly "app.cash.sqldelight:compiler-env:${app.cash.sqldelight.VersionKt.VERSION}"
+}
