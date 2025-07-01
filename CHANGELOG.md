@@ -1170,3 +1170,4 @@ Initial release.
   [janbina]: https://github.com/janbina
   [DRSchlaubi]: https://github.com/DRSchlaubi
   [jonapoul]: https://github.com/jonapoul
+  [guilhermemagro]: https://github.com/guilhermemagro
