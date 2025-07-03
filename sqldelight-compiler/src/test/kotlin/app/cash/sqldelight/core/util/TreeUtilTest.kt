@@ -163,4 +163,21 @@ class TreeUtilTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `rawSqlText maintains aliased tables in join statement when selecting all columns`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE IF NOT EXISTS TableA(id TEXT PRIMARY KEY, value INTEGER);
+      |CREATE TABLE IF NOT EXISTS TableB(id TEXT PRIMARY KEY, value INTEGER);
+      |
+      |getMatching:
+      |  SELECT * FROM TableA a LEFT JOIN TableB b ON a.id = b.id;
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(file.sqlStatements().last().statement.rawSqlText()).isEqualTo(
+      "SELECT a.id, a.value, b.id, b.value FROM TableA a LEFT JOIN TableB b ON a.id = b.id",
+    )
+  }
 }

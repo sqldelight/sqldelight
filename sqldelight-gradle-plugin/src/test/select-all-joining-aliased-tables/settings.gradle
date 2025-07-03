@@ -1,0 +1,15 @@
+pluginManagement {
+  includeBuild("../build-logic-tests")
+}
+
+plugins {
+  id("sqldelightTests")
+}
+
+rootProject.name = 'select-all-joining-aliased-tables'
+
+buildCache {
+  local {
+    directory = new File(rootDir, 'build-cache')
+  }
+}
