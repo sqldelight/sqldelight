@@ -42,6 +42,8 @@ Each target platform has its own driver implementation.
     }
     ```
 
+To use the native SQLDelight driver on iOS, [see here](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ktor-sqldelight.html#add-the-dynamic-linking-flag-for-sqldelight).
+
 ## Constructing Driver Instances
 
 Create a common factory class or method to obtain a `SqlDriver` instance.
