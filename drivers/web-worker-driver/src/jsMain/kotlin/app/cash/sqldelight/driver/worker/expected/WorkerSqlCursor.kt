@@ -16,8 +16,7 @@ internal actual class WorkerSqlCursor actual constructor(result: WorkerResult) :
 
   actual override fun getLong(index: Int): Long? = (values[currentRow][index] as? Double)?.toLong()
 
-  actual override fun getBytes(index: Int): ByteArray? =
-    (values[currentRow][index] as? Uint8Array)?.let { Int8Array(it.buffer).unsafeCast<ByteArray>() }
+  actual override fun getBytes(index: Int): ByteArray? = (values[currentRow][index] as? Uint8Array)?.let { Int8Array(it.buffer).unsafeCast<ByteArray>() }
 
   actual override fun getDouble(index: Int): Double? = values[currentRow][index].unsafeCast<Double?>()
 

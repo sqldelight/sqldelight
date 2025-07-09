@@ -38,5 +38,4 @@ private fun SqlDelightCompilationUnitImpl.withSortedSourceFolders(): SqlDelightC
   return copy(sourceFolders = sourceFolders.sortedBy { it.folder.path })
 }
 
-private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() =
-  copy(folder = File(folder.path.withInvariantPathSeparators()))
+private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() = copy(folder = File(folder.path.withInvariantPathSeparators()))

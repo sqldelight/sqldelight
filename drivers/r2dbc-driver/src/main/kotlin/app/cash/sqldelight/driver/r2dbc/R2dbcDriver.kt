@@ -255,8 +255,7 @@ class R2dbcPreparedStatement(val statement: Statement) : SqlPreparedStatement {
   }
 }
 
-internal fun <T : Any> Publisher<T>.asIterator(): AsyncPublisherIterator<T> =
-  AsyncPublisherIterator(this)
+internal fun <T : Any> Publisher<T>.asIterator(): AsyncPublisherIterator<T> = AsyncPublisherIterator(this)
 
 internal class AsyncPublisherIterator<T : Any>(
   pub: Publisher<T>,

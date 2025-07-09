@@ -45,6 +45,16 @@ abstract class QueryGenerator(
   protected val generateAsync = query.statement.sqFile().generateAsync
 
   /**
+   * Whether the mutator should return a value to the caller.
+   *
+   * Mutators (`INSERT`, `UPDATE`, `DELETE`) typically return the number of rows modified.
+   * However, when combined with something like a `RETURNING` clause, we treat mutators as a query.
+   * SQLDelight also support mutators with multiple expressions (think trying to make your own `UPSERT`).
+   * These types of mutators do not return a value.
+   */
+  protected val mutatorReturns = query.statement !is SqlDelightStmtClojureStmtList
+
+  /**
    * Creates the block of code that prepares [query] as a prepared statement and binds the
    * arguments to it. This code block does not make any use of class fields, and only populates a
    * single variable [STATEMENT_NAME]
@@ -65,20 +75,16 @@ abstract class QueryGenerator(
 
     val notifyBlock = notifyQueriesBlock()
     if (query.statement is SqlDelightStmtClojureStmtList) {
-      if (query is NamedQuery) {
-        result
-          .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
-          .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
-      } else {
-        result.beginControlFlow("transaction")
-      }
+      result
+        .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
+        .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
       val handledArrayArgs = mutableSetOf<BindableQuery.Argument>()
       query.statement.findChildrenOfType<SqlStmt>().forEachIndexed { index, statement ->
         val (block, additionalArrayArgs) = executeBlock(statement, handledArrayArgs, query.idForIndex(index))
         handledArrayArgs.addAll(additionalArrayArgs)
         result.add(block)
       }
-      if (query is NamedQuery && notifyBlock.isNotEmpty()) {
+      if (notifyBlock.isNotEmpty()) {
         result.nextControlFlow(".also")
         result.add(notifyBlock)
         result.endControlFlow()
@@ -86,7 +92,7 @@ abstract class QueryGenerator(
         result.endControlFlow()
         result.add(notifyBlock)
       }
-      if (generateAsync && query is NamedQuery) {
+      if (generateAsync) {
         result.endControlFlow()
       }
     } else {
@@ -315,7 +321,7 @@ abstract class QueryGenerator(
         statementId,
         *arguments.toTypedArray(),
       )
-    } else if (optimisticLock != null) {
+    } else if (optimisticLock != null || mutatorReturns) {
       result.addStatement(
         "val result = $DRIVER_NAME.execute(%L, %P, %L)$binder",
         statementId,

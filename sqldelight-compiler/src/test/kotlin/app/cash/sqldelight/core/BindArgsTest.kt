@@ -505,5 +505,60 @@ class BindArgsTest {
     }
   }
 
+  @Test fun `like bind args have correct types in binary op expression`() {
+    val file = FixtureCompiler.parseSql(
+      """
+       |CREATE TABLE itemDownload (
+       |   url TEXT NOT NULL,
+       |   channelId INTEGER NOT NULL,
+       |   itemId INTEGER NOT NULL
+       |);
+
+       |selectLike:
+       |  SELECT *
+       |  FROM itemDownload
+       |  WHERE url LIKE :urlLike AND itemId = :itemId AND channelId = :channelId;
+       |
+       |selectLikeEscape:
+       |  SELECT *
+       |  FROM itemDownload
+       |  WHERE url LIKE :urlLike ESCAPE :escape AND itemId = :itemId AND channelId = :channelId;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    file.namedQueries[0].arguments.map { it.type }.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.TEXT)
+      assertThat(args[0].javaType).isEqualTo(String::class.asClassName())
+      assertThat(args[0].name).isEqualTo("urlLike")
+
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[1].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[1].name).isEqualTo("itemId")
+
+      assertThat(args[2].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[2].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[2].name).isEqualTo("channelId")
+    }
+
+    file.namedQueries[1].arguments.map { it.type }.let { args ->
+      assertThat(args[0].dialectType).isEqualTo(PrimitiveType.TEXT)
+      assertThat(args[0].javaType).isEqualTo(String::class.asClassName())
+      assertThat(args[0].name).isEqualTo("urlLike")
+
+      assertThat(args[1].dialectType).isEqualTo(PrimitiveType.TEXT)
+      assertThat(args[1].javaType).isEqualTo(String::class.asClassName())
+      assertThat(args[1].name).isEqualTo("escape")
+
+      assertThat(args[2].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[2].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[2].name).isEqualTo("itemId")
+
+      assertThat(args[3].dialectType).isEqualTo(PrimitiveType.INTEGER)
+      assertThat(args[3].javaType).isEqualTo(Long::class.asClassName())
+      assertThat(args[3].name).isEqualTo("channelId")
+    }
+  }
+
   private fun SqlBindExpr.argumentType() = typeResolver.argumentType(this)
 }

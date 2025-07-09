@@ -325,8 +325,7 @@ class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   @Suppress("UNCHECKED_CAST")
   fun <T> getArray(index: Int) = getAtIndex(index, resultSet::getArray)?.array as Array<T>?
 
-  private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? =
-    converter(index + 1).takeUnless { resultSet.wasNull() }
+  private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? = converter(index + 1).takeUnless { resultSet.wasNull() }
 
   override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(resultSet.next())
 }

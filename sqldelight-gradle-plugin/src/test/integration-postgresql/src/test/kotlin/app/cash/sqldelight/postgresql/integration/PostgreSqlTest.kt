@@ -33,11 +33,9 @@ class PostgreSqlTest {
     driver,
     arraysAdapter = Arrays.Adapter(
       object : ColumnAdapter<Array<UInt>, Array<Int>> {
-        override fun decode(databaseValue: Array<Int>): Array<UInt> =
-          databaseValue.map { it.toUInt() }.toTypedArray()
+        override fun decode(databaseValue: Array<Int>): Array<UInt> = databaseValue.map { it.toUInt() }.toTypedArray()
 
-        override fun encode(value: Array<UInt>): Array<Int> =
-          value.map { it.toInt() }.toTypedArray()
+        override fun encode(value: Array<UInt>): Array<Int> = value.map { it.toInt() }.toTypedArray()
       },
     ),
     data_Adapter = Data_.Adapter(
@@ -443,20 +441,19 @@ class PostgreSqlTest {
   @Test fun interval() {
     val interval = database.datesQueries.selectInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
+    assertThat(interval).isEqualTo("1 day")
   }
 
   @Test fun intervalBinaryMultiplyExpression() {
     val interval = database.datesQueries.selectMultiplyInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(31)
+    assertThat(interval).isEqualTo("31 days")
   }
 
   @Test fun intervalBinaryAddExpression() {
     val interval = database.datesQueries.selectAddInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
-    assertThat(interval.getHours()).isEqualTo(3)
+    assertThat(interval).isEqualTo("1 day 03:00:00")
   }
 
   @Test fun successfulOptimisticLock() {
@@ -1114,6 +1111,95 @@ class PostgreSqlTest {
       assertThat(first().home_region_id).isEqualTo(1)
       assertThat(first().home_region_name).isEqualTo("North America")
       assertThat(first().total_sales).isEqualTo(BigDecimal("1000.50"))
+    }
+  }
+
+  @Test
+  fun testSelectAppointments() {
+    val slotBegin = LocalDateTime.of(2009, 1, 1, 9, 0).atOffset(ZoneOffset.UTC)
+    val slotEnd = slotBegin.plusMinutes(30)
+
+    database.temporalRangesQueries.insert("[$slotBegin, $slotEnd)")
+    database.temporalRangesQueries.insert("[$slotEnd, ${slotEnd.plusMinutes(30)})")
+
+    with(database.temporalRangesQueries.appointments().executeAsList()) {
+      assertThat(first().begin).isEqualTo(slotBegin)
+      assertThat(first().end).isEqualTo(slotEnd)
+    }
+
+    val multiRangeSlots = "{[$slotBegin, $slotEnd), [$slotEnd, ${slotEnd.plusMinutes(30)})}"
+    with(database.temporalRangesQueries.selectAvailableAppointments(multiRangeSlots, "[$slotBegin, $slotEnd)").executeAsList()) {
+      assertThat(first()).isEqualTo("""{["2009-01-01 09:30:00+00","2009-01-01 10:00:00+00")}""")
+    }
+
+    with(database.temporalRangesQueries.selectAppointmentContainsRange().executeAsList()) {
+      assertThat(first()).isFalse()
+    }
+  }
+
+  @Test
+  fun testSelectContainsTemporalRange() {
+    with(database.temporalRangesQueries.selectMultiRangeContainsTimestamp().executeAsList()) {
+      assertThat(first()).isTrue()
+    }
+  }
+
+  @Test
+  fun testUnnestSelect() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(76, 12, 18))
+    with(database.unnestQueries.selectHeadcount().executeAsList()) {
+      assertThat(first().headcount).isEqualTo(76)
+    }
+  }
+
+  @Test
+  fun testUnnestSelectFrom() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(6, 12, 18))
+    with(database.unnestQueries.selectBusinesses().executeAsList()) {
+      assertThat(first().name).isEqualTo("Ok Burger")
+      assertThat(first().zipcode).isEqualTo("A12345")
+      assertThat(first().headcount).isEqualTo(6)
+    }
+    with(database.unnestQueries.selectLocation("AB5522").executeAsList()) {
+      assertThat(first().name).isEqualTo("Ok Burger")
+    }
+  }
+
+  @Test
+  fun testUnnestInsertSelect() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Aaaa")
+      assertThat(first().age).isEqualTo(32)
+    }
+  }
+
+  @Test
+  fun testUnnestUpdate() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    database.unnestQueries.updateUsersAge(arrayOf("Aaaa"), arrayOf(39))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Aaaa")
+      assertThat(first().age).isEqualTo(39)
+    }
+  }
+
+  @Test
+  fun testUnnestDelete() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    database.unnestQueries.deleteUsers(arrayOf("Aaaa"), arrayOf(32))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Bbbb")
+      assertThat(first().age).isEqualTo(21)
+    }
+  }
+
+  @Test
+  fun testUnnestWhere() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(6, 12, 18))
+    database.unnestQueries.insertBusiness("Donut Hut", arrayOf("N12345", "QB7536", "P31879"), arrayOf(6, 12, 18))
+    with(database.unnestQueries.selectBusinessExists("P31879").executeAsList()) {
+      assertThat(first().name).isEqualTo("Donut Hut")
     }
   }
 }

@@ -21,7 +21,7 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : Sqlite
   }
 
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
-    return functionExpr.sqliteFunctionType() ?: parentResolver.functionType(functionExpr)
+    return functionExpr.sqliteFunctionType() ?: super.functionType(functionExpr)
   }
 
   private fun SqlFunctionExpr.sqliteFunctionType() = when (functionName.text.lowercase()) {

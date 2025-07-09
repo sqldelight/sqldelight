@@ -58,9 +58,8 @@ class ObjectDifferDatabaseComparator(
           }
         }
 
-        private fun String.normalizeDefinition() =
-          replace(Regex("--(.*)"), "")
-            .replace(Regex("[\\s\"]+"), "")
+        private fun String.normalizeDefinition() = replace(Regex("--(.*)"), "")
+          .replace(Regex("[\\s\"]+"), "")
       },
     )
 

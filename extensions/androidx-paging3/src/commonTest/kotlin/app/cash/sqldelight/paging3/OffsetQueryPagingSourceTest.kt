@@ -582,20 +582,18 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
     }
   }
 
-  private fun deleteItem(item: TestItem): Long =
-    driver
-      .execute(22, "DELETE FROM TestItem WHERE id = ?;", 1) {
-        bindLong(0, item.id)
-      }
-      .value
+  private fun deleteItem(item: TestItem): Long = driver
+    .execute(22, "DELETE FROM TestItem WHERE id = ?;", 1) {
+      bindLong(0, item.id)
+    }
+    .value
 
-  private fun deleteItems(range: IntRange): Long =
-    driver
-      .execute(23, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
-        bindLong(0, range.first.toLong())
-        bindLong(1, range.last.toLong())
-      }
-      .value
+  private fun deleteItems(range: IntRange): Long = driver
+    .execute(23, "DELETE FROM TestItem WHERE id >= ? AND id <= ?", 2) {
+      bindLong(0, range.first.toLong())
+      bindLong(1, range.last.toLong())
+    }
+    .value
 }
 
 private val CONFIG = PagingConfig(
@@ -635,11 +633,8 @@ private fun createLoadParam(loadType: LoadType, key: Int?): PagingSourceLoadPara
   else -> error("Unknown PagingSourceLoadParams ${loadType::class}")
 }
 
-private suspend fun PagingSource<Int, TestItem>.refresh(key: Int? = null): PagingSourceLoadResult<Int, TestItem> =
-  load(createLoadParam(LoadType.REFRESH, key))
+private suspend fun PagingSource<Int, TestItem>.refresh(key: Int? = null): PagingSourceLoadResult<Int, TestItem> = load(createLoadParam(LoadType.REFRESH, key))
 
-private suspend fun PagingSource<Int, TestItem>.append(key: Int?): PagingSourceLoadResult<Int, TestItem> =
-  load(createLoadParam(LoadType.APPEND, key))
+private suspend fun PagingSource<Int, TestItem>.append(key: Int?): PagingSourceLoadResult<Int, TestItem> = load(createLoadParam(LoadType.APPEND, key))
 
-private suspend fun PagingSource<Int, TestItem>.prepend(key: Int?): PagingSourceLoadResult<Int, TestItem> =
-  load(createLoadParam(LoadType.PREPEND, key))
+private suspend fun PagingSource<Int, TestItem>.prepend(key: Int?): PagingSourceLoadResult<Int, TestItem> = load(createLoadParam(LoadType.PREPEND, key))

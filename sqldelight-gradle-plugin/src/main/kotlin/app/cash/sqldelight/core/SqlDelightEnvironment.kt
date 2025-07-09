@@ -218,8 +218,7 @@ class SqlDelightEnvironment(
       }
   }
 
-  private fun errorMessage(element: PsiElement, message: String): String =
-    "${element.containingFile.virtualFile.path}:${element.lineStart}:${element.charPositionInLine} $message\n${detailText(element)}"
+  private fun errorMessage(element: PsiElement, message: String): String = "${element.containingFile.virtualFile.path}:${element.lineStart}:${element.charPositionInLine} $message\n${detailText(element)}"
 
   private fun detailText(element: PsiElement) = try {
     val context = context(element) ?: element
@@ -268,14 +267,13 @@ class SqlDelightEnvironment(
       return file.getLineNumber(textOffset + textLength) + 1
     }
 
-  private fun context(element: PsiElement?): PsiElement? =
-    when (element) {
-      null -> element
-      is SqlCreateTableStmt -> element
-      is SqlStmt -> element
-      is SqlDelightImportStmt -> element
-      else -> context(element.parent)
-    }
+  private fun context(element: PsiElement?): PsiElement? = when (element) {
+    null -> element
+    is SqlCreateTableStmt -> element
+    is SqlStmt -> element
+    is SqlDelightImportStmt -> element
+    else -> context(element.parent)
+  }
 
   sealed class CompilationStatus {
     object Success : CompilationStatus()
@@ -343,10 +341,8 @@ class SqlDelightEnvironment(
       )
     }
 
-    override fun sourceFolders(file: VirtualFile, includeDependencies: Boolean) =
-      if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
+    override fun sourceFolders(file: VirtualFile, includeDependencies: Boolean) = if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
 
-    override fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean) =
-      if (includeDependencies) directoriesWithDependencies else directories
+    override fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean) = if (includeDependencies) directoriesWithDependencies else directories
   }
 }

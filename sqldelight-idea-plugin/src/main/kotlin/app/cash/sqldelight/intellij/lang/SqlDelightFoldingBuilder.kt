@@ -37,8 +37,7 @@ class SqlDelightFoldingBuilder :
   FoldingBuilder,
   DumbAware {
 
-  override fun buildFoldRegions(root: ASTNode, document: Document) =
-    root.createFoldingDescriptors()
+  override fun buildFoldRegions(root: ASTNode, document: Document) = root.createFoldingDescriptors()
 
   private fun ASTNode.createFoldingDescriptors(): Array<FoldingDescriptor> {
     return getChildren(null)

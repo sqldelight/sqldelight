@@ -42,8 +42,8 @@ kotlin {
     }
   }
 
-  targetFromPreset(presets.iosX64, 'iosX64')
-  targetFromPreset(presets.android, 'androidLib')
+  iosX64()
+  android("androidLib")
 }
 
 tasks.withType(KotlinCompilationTask.class).configureEach {

@@ -76,6 +76,5 @@ internal class OffsetQueryPagingSource<RowType : Any>(
     (if (invalid) PagingSourceLoadResultInvalid<Int, RowType>() else loadResult) as PagingSourceLoadResult<Int, RowType>
   }
 
-  override fun getRefreshKey(state: PagingState<Int, RowType>) =
-    state.anchorPosition?.let { maxOf(0, it - (state.config.initialLoadSize / 2)) }
+  override fun getRefreshKey(state: PagingState<Int, RowType>) = state.anchorPosition?.let { maxOf(0, it - (state.config.initialLoadSize / 2)) }
 }
