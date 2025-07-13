@@ -896,6 +896,194 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `selecting all columns with all tables named on join`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE IF NOT EXISTS TableA(id TEXT PRIMARY KEY, value INTEGER);
+      |CREATE TABLE IF NOT EXISTS TableB(id TEXT PRIMARY KEY, value INTEGER);
+      |
+      |getMatching:
+      |  SELECT * FROM TableA a LEFT JOIN TableB b ON a.id = b.id;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "test.sq",
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedInterface).isNotNull()
+
+    // The important part here is that the table aliases are used in the column selections, not the table names
+    val expectedQuery = "SELECT a.id, a.value, b.id, b.value FROM TableA a LEFT JOIN TableB b ON a.id = b.id"
+
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class TestQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> getMatching(mapper: (
+      |    id: String,
+      |    value_: Long?,
+      |    id_: String?,
+      |    value__: Long?,
+      |  ) -> T): Query<T> = Query(625_275_446, arrayOf("TableA", "TableB"), driver, "test.sq", "getMatching", "$expectedQuery") { cursor ->
+      |    mapper(
+      |      cursor.getString(0)!!,
+      |      cursor.getLong(1),
+      |      cursor.getString(2),
+      |      cursor.getLong(3)
+      |    )
+      |  }
+      |
+      |  public fun getMatching(): Query<GetMatching> = getMatching(::GetMatching)
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `selecting all columns with not all tables named on join`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE IF NOT EXISTS TableA(id TEXT PRIMARY KEY, value INTEGER);
+      |CREATE TABLE IF NOT EXISTS TableB(id TEXT PRIMARY KEY, value INTEGER);
+      |
+      |getMatchingNamedJoin:
+      |  SELECT * FROM TableA LEFT JOIN TableB b ON TableA.id = b.id;
+      |
+      |getMatchingNamedFrom:
+      |  SELECT * FROM TableA a LEFT JOIN TableB ON a.id = TableB.id;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "test.sq",
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedInterface).isNotNull()
+
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class TestQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> getMatchingNamedJoin(mapper: (
+      |    id: String,
+      |    value_: Long?,
+      |    id_: String?,
+      |    value__: Long?,
+      |  ) -> T): Query<T> = Query(1_020_931_693, arrayOf("TableA", "TableB"), driver, "test.sq", "getMatchingNamedJoin", "SELECT TableA.id, TableA.value, b.id, b.value FROM TableA LEFT JOIN TableB b ON TableA.id = b.id") { cursor ->
+      |    mapper(
+      |      cursor.getString(0)!!,
+      |      cursor.getLong(1),
+      |      cursor.getString(2),
+      |      cursor.getLong(3)
+      |    )
+      |  }
+      |
+      |  public fun getMatchingNamedJoin(): Query<GetMatchingNamedJoin> = getMatchingNamedJoin(::GetMatchingNamedJoin)
+      |
+      |  public fun <T : Any> getMatchingNamedFrom(mapper: (
+      |    id: String,
+      |    value_: Long?,
+      |    id_: String?,
+      |    value__: Long?,
+      |  ) -> T): Query<T> = Query(1_020_815_597, arrayOf("TableA", "TableB"), driver, "test.sq", "getMatchingNamedFrom", "SELECT a.id, a.value, TableB.id, TableB.value FROM TableA a LEFT JOIN TableB ON a.id = TableB.id") { cursor ->
+      |    mapper(
+      |      cursor.getString(0)!!,
+      |      cursor.getLong(1),
+      |      cursor.getString(2),
+      |      cursor.getLong(3)
+      |    )
+      |  }
+      |
+      |  public fun getMatchingNamedFrom(): Query<GetMatchingNamedFrom> = getMatchingNamedFrom(::GetMatchingNamedFrom)
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `expand select all statement with backticks around table and alias names`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        CREATE TABLE `player`(
+          id INTEGER NOT NULL PRIMARY KEY,
+          name TEXT NOT NULL,
+          team_id INTEGER NOT NULL
+        );
+
+        CREATE TABLE `team`(
+          id INTEGER NOT NULL PRIMARY KEY,
+          name TEXT NOT NULL
+        );
+
+        selectAll:
+          SELECT * FROM `player` `p` JOIN `team` ON `p`.team_id = `team`.id;
+      """.trimIndent(),
+      temporaryFolder,
+      fileName = "test.sq",
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedInterface).isNotNull()
+
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class TestQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> selectAll(mapper: (
+      |    id: Long,
+      |    name: String,
+      |    team_id: Long,
+      |    id_: Long,
+      |    name_: String,
+      |  ) -> T): Query<T> = Query(-229_558_136, arrayOf("player", "team"), driver, "test.sq", "selectAll", "SELECT `p`.id, `p`.name, `p`.team_id, `team`.id, `team`.name FROM `player` `p` JOIN `team` ON `p`.team_id = `team`.id") { cursor ->
+      |    mapper(
+      |      cursor.getLong(0)!!,
+      |      cursor.getString(1)!!,
+      |      cursor.getLong(2)!!,
+      |      cursor.getLong(3)!!,
+      |      cursor.getString(4)!!
+      |    )
+      |  }
+      |
+      |  public fun selectAll(): Query<SelectAll> = selectAll(::SelectAll)
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `returning statement in select works fine`() {
     val result = FixtureCompiler.compileSql(
       """
