@@ -26,6 +26,7 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.api.TableFunctionRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
@@ -46,7 +47,6 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
-import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
@@ -83,6 +83,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
+  is TableFunctionRowType -> (sqFile().typeResolver.definitionType(columnType()).asNullable())
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
@@ -168,8 +169,8 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
     )
   } else if (this is SqlModuleArgument && moduleArgumentDef?.columnDef != null && (parent as SqlCreateVirtualTableStmt).moduleName?.text?.lowercase() == "fts5") {
     val columnDef = moduleArgumentDef!!.columnDef!!
-    // If there is a space at the end of the constraints, preserve it.
-    val lengthModifier = if (columnDef.columnConstraintList.isNotEmpty() && columnDef.columnConstraintList.last()?.lastChild?.prevSibling is PsiWhiteSpace) 1 else 0
+    // If there is a space at the end of the column constraint "TEXT NOT NULL ", preserve it as this means it could have a "TEXT NOT NULL UNINDEXED" constraint
+    val lengthModifier = if (columnDef.columnConstraintList.isNotEmpty() && columnDef.columnConstraintList.last().text.endsWith(" ")) 1 else 0
     listOf(
       Pair(
         first = (columnDef.columnName.node.startOffset + columnDef.columnName.node.textLength) until
@@ -238,15 +239,17 @@ private val IntRange.length: Int
 fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
-  return (replacements + rangesToReplace())
+  val x = (replacements + rangesToReplace())
     .sortedBy { it.first.first }
     .map { (range, replacement) -> (range - node.startOffset) to replacement }
-    .fold(
-      0 to text,
-      { (totalRemoved, sqlText), (range, replacement) ->
-        (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      },
-    ).second
+
+  val y = x.fold(
+    0 to text,
+    { (totalRemoved, sqlText), (range, replacement) ->
+      (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
+    },
+  ).second
+  return y
 }
 
 val PsiElement.range: IntRange

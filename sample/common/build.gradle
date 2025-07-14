@@ -4,7 +4,9 @@ plugins {
   id("app.cash.sqldelight")
 }
 
-archivesBaseName = 'sample-common'
+base {
+  archivesName = 'sample-common'
+}
 
 sqldelight {
   databases {
