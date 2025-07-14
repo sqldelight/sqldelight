@@ -9,13 +9,11 @@ import app.cash.sqldelight.intellij.FileIndex
 import app.cash.sqldelight.intellij.SqlDelightFileIndexImpl
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification
 import app.cash.sqldelight.intellij.resolvers.SQL_DELIGHT_MODEL_KEY
-import com.android.tools.idea.gradle.project.sync.GradleSyncState
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.extensions.PluginDescriptor
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.module.Module
-import com.intellij.util.ThreeState
 import com.intellij.util.lang.ClassPath
 import com.intellij.util.lang.UrlClassLoader
 import java.net.URI
@@ -28,9 +26,6 @@ internal class FileIndexMap {
   private val fileIndices = mutableMapOf<String, SqlDelightFileIndex>()
 
   operator fun get(module: Module): SqlDelightFileIndex {
-    // Check if Gradle needs to be synced
-    if (GradleSyncState.getInstance(module.project).isSyncNeeded() != ThreeState.NO) return defaultIndex
-
     val projectPath = ExternalSystemApiUtil.getExternalProjectPath(module) ?: return defaultIndex
 
     // Get the DataNode for this module
