@@ -460,7 +460,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       )
     }
 
-    private fun isArrayType(type: IntermediateType): Boolean {
+    fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
     }
 
