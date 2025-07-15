@@ -454,7 +454,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TIME,
     )
 
-    private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
+    fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
         ArrayDialectType(type),
       )
