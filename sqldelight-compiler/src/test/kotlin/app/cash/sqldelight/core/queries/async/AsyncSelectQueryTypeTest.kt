@@ -186,7 +186,7 @@ class AsyncSelectQueryTypeTest {
       |/**
       | * @return The number of rows updated.
       | */
-      |public suspend fun insertTwice(`value`: kotlin.Long): kotlin.Long = app.cash.sqldelight.db.QueryResult.AsyncValue {
+      |public suspend fun insertTwice(`value`: kotlin.Long): app.cash.sqldelight.db.QueryResult.AsyncValue<kotlin.Long> = app.cash.sqldelight.db.QueryResult.AsyncValue {
       |  transactionWithResult {
       |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
