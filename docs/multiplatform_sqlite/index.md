@@ -42,6 +42,8 @@ Each target platform has its own driver implementation.
     }
     ```
 
+To use the native SQLDelight driver on iOS, add the dynamic linker flag `-lsqlite3` on Xcode.
+
 ## Constructing Driver Instances
 
 Create a common factory class or method to obtain a `SqlDriver` instance.
