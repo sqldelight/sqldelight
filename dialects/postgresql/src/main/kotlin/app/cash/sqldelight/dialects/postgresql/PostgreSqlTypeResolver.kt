@@ -222,6 +222,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       }
     }
     "unnest" -> unNestType(exprList[0].postgreSqlType())
+    "pg_input_is_valid" -> IntermediateType(BOOLEAN)
 
     else -> null
   }
