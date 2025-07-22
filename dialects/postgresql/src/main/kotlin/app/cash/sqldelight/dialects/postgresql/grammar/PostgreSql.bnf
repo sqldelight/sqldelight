@@ -131,7 +131,6 @@ overrides ::= type_name
   | ordering_term
   | binary_like_operator
   | literal_value
-  | is_expr
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
@@ -324,13 +323,6 @@ literal_value ::= ( {numeric_literal}
                   | time_expression ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
-  override = true
-}
-
-is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( 'WITH' | 'WITHOUT' ) 'UNIQUE' [ 'KEYS' ] ]
-
-is_expr ::= <<expr '-1'>> IS [ NOT ] is_json_expression <<expr '-1'>> | <<expr '-1'>> IS [ NOT ] <<expr '-1'>> {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlIsExprImpl"
   override = true
 }
 
@@ -554,6 +546,8 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
 boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_name} )
 
 boolean_literal ::= TRUE | FALSE
+
+is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( 'WITH' | 'WITHOUT' ) 'UNIQUE' [ 'KEYS' ] ]
 
 json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
