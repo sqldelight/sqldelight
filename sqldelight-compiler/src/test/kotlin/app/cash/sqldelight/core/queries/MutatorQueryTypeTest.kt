@@ -999,7 +999,7 @@ class MutatorQueryTypeTest {
       |          bindLong(index, data_Adapter.idAdapter.encode(ids_))
       |        }
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
