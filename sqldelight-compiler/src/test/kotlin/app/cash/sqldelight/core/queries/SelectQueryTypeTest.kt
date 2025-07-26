@@ -57,6 +57,10 @@ class SelectQueryTypeTest {
       |    cursor.getString(0),
       |    cursor.getString(1)
       |  )
+      |}.also {
+      |  notifyQueries(-2_037_436_132) { emit ->
+      |    emit("data")
+      |  }
       |}
       |
       """.trimMargin(),
