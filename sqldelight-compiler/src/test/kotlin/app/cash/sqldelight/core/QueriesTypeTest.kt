@@ -878,7 +878,7 @@ class QueriesTypeTest {
       |          |  VALUES (NULL)
       |          ""${'"'}.trimMargin(), 0)
       |      driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
-      |    } .also {
+      |    }.also {
       |      notifyQueries(${query.id.withUnderscores}) { emit ->
       |        emit("data")
       |      }

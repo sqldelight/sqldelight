@@ -92,7 +92,7 @@ class MutatorQueryFunctionTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        ${dialect.binderCheck}bindString(0, customTextValue)
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }

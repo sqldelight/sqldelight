@@ -34,6 +34,10 @@ public class DataQueries(
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_320_712_882, """INSERT INTO test3 (alpha) VALUES (?) RETURNING test3.alpha""", mapper, 1) {
       check(this is JdbcPreparedStatement)
       bindString(0, test3.alpha)
+    }.also {
+      notifyQueries(-1_320_712_882) { emit ->
+        emit("test3")
+      }
     }
 
     override fun toString(): String = "Data.sq:insert"

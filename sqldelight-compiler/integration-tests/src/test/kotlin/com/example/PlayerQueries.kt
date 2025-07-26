@@ -216,7 +216,7 @@ public class PlayerQueries(
           |  FROM player
           |  WHERE player.rowid = last_insert_rowid()
           """.trimMargin(), mapper, 0)
-    } .also {
+    }.also {
       notifyQueries(781_651_682) { emit ->
         emit("player")
       }

@@ -22,8 +22,10 @@ import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
+import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBinaryEqualityExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
+import com.alecstrong.sql.psi.core.psi.SqlDeleteStmt
 import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -36,6 +38,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.NameAllocator
+import com.squareup.kotlinpoet.buildCodeBlock
 
 abstract class QueryGenerator(
   private val query: BindableQuery,
@@ -73,8 +76,9 @@ abstract class QueryGenerator(
   protected fun executeBlock(): CodeBlock {
     val result = CodeBlock.builder()
 
-    val notifyBlock = notifyQueriesBlock()
     if (query.statement is SqlDelightStmtClojureStmtList) {
+      val notifyBlock = notifyQueriesBlock()
+
       result
         .apply { if (generateAsync) beginControlFlow("return %T", ASYNC_RESULT_TYPE) }
         .beginControlFlow(if (generateAsync) "transactionWithResult" else "return transactionWithResult")
@@ -85,7 +89,9 @@ abstract class QueryGenerator(
         result.add(block)
       }
       if (notifyBlock.isNotEmpty()) {
-        result.nextControlFlow(".also")
+        result.unindent()
+        result.add("}.also {\n")
+        result.indent()
         result.add(notifyBlock)
         result.endControlFlow()
       } else {
@@ -97,7 +103,6 @@ abstract class QueryGenerator(
       }
     } else {
       result.add(executeBlock(query.statement, emptySet(), query.id).first)
-      result.add(notifyBlock)
     }
 
     return result.build()
@@ -316,17 +321,31 @@ abstract class QueryGenerator(
       } else {
         "return $DRIVER_NAME.executeQuery"
       }
-      result.addStatement(
-        "$execute(%L, %P, $MAPPER_NAME, %L)$binder",
-        statementId,
-        *arguments.toTypedArray(),
-      )
+      if (tablesUpdated().isEmpty() || query.statement is SqlDelightStmtClojureStmtList && tablesUpdated().isNotEmpty()) {
+        result.addStatement(
+          "$execute(%L, %P, $MAPPER_NAME, %L)$binder",
+          statementId,
+          *arguments.toTypedArray(),
+        )
+      } else {
+        query.statement !is SqlDelightStmtClojureStmtList
+        result.add(
+          "$execute(%L, %P, $MAPPER_NAME, %L)$binder.also {\n",
+          statementId,
+          *arguments.toTypedArray(),
+        )
+        result.indent()
+        result.add("${notifyQueriesBlock()}")
+        result.unindent()
+        result.add("}\n")
+      }
     } else if (optimisticLock != null || mutatorReturns) {
       result.addStatement(
         "val result = $DRIVER_NAME.execute(%L, %P, %L)$binder",
         statementId,
         *arguments.toTypedArray(),
       )
+      if (optimisticLock == null) result.add("${notifyQueriesBlock()}")
     } else {
       result.addStatement(
         "$DRIVER_NAME.execute(%L, %P, %L)$binder",
@@ -344,30 +363,38 @@ abstract class QueryGenerator(
         ClassName("app.cash.sqldelight.db", "OptimisticLockException"),
         "UPDATE on ${query.tablesAffected.single().name} failed because optimistic lock ${optimisticLock.name} did not match",
       )
+      result.add("${notifyQueriesBlock()}")
     }
 
     return Pair(result.build(), seenArrayArguments)
   }
 
+  private fun mutatedTables(mutatorStmt: SqlAnnotatedElement): List<TableNameElement> {
+    return MutatorQueryGenerator(
+      when (mutatorStmt) {
+        is SqlUpdateStmtLimited -> NamedMutator.Update(mutatorStmt, query.identifier as StmtIdentifierMixin)
+        is SqlDeleteStmtLimited -> NamedMutator.Delete(mutatorStmt, query.identifier as StmtIdentifierMixin)
+        is SqlInsertStmt -> NamedMutator.Insert(mutatorStmt, query.identifier as StmtIdentifierMixin)
+        else -> throw IllegalArgumentException("Unexpected statement $mutatorStmt")
+      },
+    ).tablesUpdated()
+  }
+
   internal open fun tablesUpdated(): List<TableNameElement> {
-    if (query.statement is SqlDelightStmtClojureStmtList) {
-      return PsiTreeUtil.findChildrenOfAnyType(
+    return if (query.statement is SqlDelightStmtClojureStmtList) {
+      PsiTreeUtil.findChildrenOfAnyType(
         query.statement,
         SqlUpdateStmtLimited::class.java,
         SqlDeleteStmtLimited::class.java,
         SqlInsertStmt::class.java,
       ).flatMap {
-        MutatorQueryGenerator(
-          when (it) {
-            is SqlUpdateStmtLimited -> NamedMutator.Update(it, query.identifier as StmtIdentifierMixin)
-            is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
-            is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
-            else -> throw IllegalArgumentException("Unexpected statement $it")
-          },
-        ).tablesUpdated()
+        mutatedTables(it)
       }.distinctBy { it.name }
+    } else if (query.statement is SqlUpdateStmtLimited || query.statement is SqlDeleteStmt || query.statement is SqlInsertStmt) {
+      mutatedTables(query.statement)
+    } else {
+      emptyList()
     }
-    return emptyList()
   }
 
   protected fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
@@ -386,15 +413,13 @@ abstract class QueryGenerator(
     //     emit("players")
     //     emit("teams")
     // }
-    return CodeBlock.builder()
-      .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
-      .apply {
-        tablesUpdated.sortedBy { it.name }.forEach {
-          addStatement("emit(\"${it.name}\")")
-        }
+    return buildCodeBlock {
+      beginControlFlow("notifyQueries(%L) { emit ->", query.id)
+      for (table in tablesUpdated.sortedBy(TableNameElement::name)) {
+        add("emit(\"${table.name}\")\n")
       }
-      .endControlFlow()
-      .build()
+      endControlFlow()
+    }
   }
 
   private fun PsiElement.leftWhitspace(): String {
