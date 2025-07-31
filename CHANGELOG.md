@@ -6,6 +6,7 @@
 
 - [PostgreSQL Dialect] Add limited support for PostgreSql Comment On statement (#5808 by [Griffio][griffio])
 - [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
+- [PostgreSql Dialect] Add support for TSQUERY data type (#5779 by [Griffio][griffio])
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by [Michael Rittmeister][DRSchlaubi])
 
 ### Changed
@@ -14,6 +15,7 @@
 - [Compiler] Simplified default generated queries using constructor references (#5814 by [Jon Poulton][jonapoul])
 
 ### Fixed
+
 - [Compiler] Fix Notify for Insert|Update|Delete Returning statements (#5851 by [Griffio][griffio])
 - [Compiler] Fix async result type for transaction blocks returning Long (#5836 by [Griffio][griffio])
 - [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by [Griffio][griffio])
