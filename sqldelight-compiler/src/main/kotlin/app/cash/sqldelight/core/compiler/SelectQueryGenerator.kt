@@ -190,11 +190,19 @@ class SelectQueryGenerator(
     } else {
       mapperLambda.add(query.resultColumns.single().cursorGetter(0)).add("\n")
     }
-    mapperLambda.unindent().add("}\n")
 
     if (!query.needsQuerySubType()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
+      if (tablesUpdated().isNotEmpty()) {
+        mapperLambda.unindent()
+        mapperLambda.add("}.also {\n")
+        mapperLambda.indent()
+        mapperLambda.add(notifyQueriesBlock())
+      }
+
+      mapperLambda.unindent().add("}\n")
+
       val tablesObserved = query.tablesObserved
       if (tablesObserved.isNullOrEmpty()) {
         function.addCode(
@@ -219,6 +227,7 @@ class SelectQueryGenerator(
         )
       }
     } else {
+      mapperLambda.unindent().add("}\n")
       // Custom type is needed to handle dirtying events, return an instance of custom type:
       // return SelectForId(id) { resultSet -> ... }
       function.addCode(

@@ -57,6 +57,10 @@ class SelectQueryTypeTest {
       |    cursor.getString(0),
       |    cursor.getString(1)
       |  )
+      |}.also {
+      |  notifyQueries(-2_037_436_132) { emit ->
+      |    emit("data")
+      |  }
       |}
       |
       """.trimMargin(),
@@ -1476,7 +1480,7 @@ class SelectQueryTypeTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, value)
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1529,7 +1533,7 @@ class SelectQueryTypeTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, value__)
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1582,7 +1586,7 @@ class SelectQueryTypeTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, value_)
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1635,7 +1639,7 @@ class SelectQueryTypeTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, value__)
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(-609_468_782) { emit ->
       |    emit("data")
       |  }
@@ -1692,7 +1696,7 @@ class SelectQueryTypeTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        bindLong(0, value__)
       |      }
-      |} .also {
+      |}.also {
       |  notifyQueries(${query.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
@@ -1738,7 +1742,7 @@ class SelectQueryTypeTest {
       |        |  VALUES (NULL)
       |        ""${'"'}.trimMargin(), 0)
       |    driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}SELECT last_insert_rowid()""${'"'}, mapper, 0)
-      |  } .also {
+      |  }.also {
       |    notifyQueries(${query.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
@@ -1892,7 +1896,7 @@ class SelectQueryTypeTest {
       |        |  FROM data
       |        |  WHERE id = last_insert_rowid()
       |        ""${'"'}.trimMargin(), mapper, 0)
-      |  } .also {
+      |  }.also {
       |    notifyQueries(${query.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
