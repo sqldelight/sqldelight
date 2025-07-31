@@ -14,7 +14,7 @@
 - [Compiler] Simplified default generated queries using constructor references (#5814 by [Jon Poulton][jonapoul])
 
 ### Fixed
-
+- [Compiler] Fix Notify for Insert|Update|Delete Returning statements (#5851 by [Griffio][griffio])
 - [Compiler] Fix async result type for transaction blocks returning Long (#5836 by [Griffio][griffio])
 - [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by [Griffio][griffio])
 

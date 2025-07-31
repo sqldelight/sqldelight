@@ -72,6 +72,10 @@ public class DataQueries(
       check(this is JdbcPreparedStatement)
       bindString(0, first)
       bindInt(1, second)
+    }.also {
+      notifyQueries(-1_845_995_606) { emit ->
+        emit("test")
+      }
     }
 
     override fun toString(): String = "Data.sq:migrationInsert"
@@ -84,6 +88,10 @@ public class DataQueries(
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_997_661_540, """DELETE FROM test WHERE first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
       bindString(0, first)
+    }.also {
+      notifyQueries(-1_997_661_540) { emit ->
+        emit("test")
+      }
     }
 
     override fun toString(): String = "Data.sq:migrationDelete"
@@ -96,6 +104,10 @@ public class DataQueries(
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_501_049_414, """UPDATE test SET first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
       bindString(0, first)
+    }.also {
+      notifyQueries(-1_501_049_414) { emit ->
+        emit("test")
+      }
     }
 
     override fun toString(): String = "Data.sq:migrationUpdate"
