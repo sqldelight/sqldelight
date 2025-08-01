@@ -839,7 +839,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#1297724596%2FFunctions%2F-128169639"><span class="token function">getFunctionExpr</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlFunctionExpr///PointingToDeclaration/">SqlFunctionExpr</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#1297724596%2FFunctions%2F-128169639"><span class="token function">getFunctionExpr</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span>NonExistentClass</div></div></div>
                 </div>
               </div>
             </div>
