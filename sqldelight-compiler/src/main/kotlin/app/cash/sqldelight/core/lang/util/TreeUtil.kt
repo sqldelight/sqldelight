@@ -102,7 +102,7 @@ fun PsiDirectory.queryFiles(): Sequence<SqlDelightQueriesFile> {
   return children.asSequence().flatMap {
     when (it) {
       is PsiDirectory -> it.queryFiles()
-      is SqlDelightQueriesFile -> sequenceOf(it)
+      is SqlDelightQueriesFile -> listOf(it).asSequence()
       else -> emptySequence()
     }
   }
@@ -112,7 +112,7 @@ fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
   return children.asSequence().flatMap {
     when (it) {
       is PsiDirectory -> it.migrationFiles()
-      is MigrationFile -> sequenceOf(it)
+      is MigrationFile -> listOf(it).asSequence()
       else -> emptySequence()
     }
   }
