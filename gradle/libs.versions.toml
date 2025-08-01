@@ -25,7 +25,7 @@ kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 kotlin-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinCoroutines" }
 kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
-kotlinx-atomicfu-plugin = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.28.0"
+kotlinx-atomicfu-plugin = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.29.0"
 kotlinx-browser = "org.jetbrains.kotlinx:kotlinx-browser:0.3"
 
 androidx-test-core = "androidx.test:core:1.6.1"
