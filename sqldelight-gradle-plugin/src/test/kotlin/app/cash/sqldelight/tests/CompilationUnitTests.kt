@@ -132,7 +132,7 @@ class CompilationUnitTests {
         |  iosArm64()
         |  macosArm64()
         |  macosX64()
-        |  js()
+        |  js().nodejs()
         |  jvm()
         |}
         """.trimMargin(),

@@ -98,6 +98,7 @@ tasks.named('test') {
         ":runtime:publishIosX64PublicationToInstallLocallyRepository",
         ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
         ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
+        ":runtime:publishMacosArm64PublicationToInstallLocallyRepository",
         ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
     )
   }
@@ -180,6 +181,7 @@ tasks.named("instrumentationTest") {
       ":runtime:publishIosX64PublicationToInstallLocallyRepository",
       ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
       ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
+      ":runtime:publishMacosArm64PublicationToInstallLocallyRepository",
       ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
     )
   }
