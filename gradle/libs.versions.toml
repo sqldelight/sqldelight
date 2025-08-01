@@ -28,7 +28,7 @@ kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 kotlinx-atomicfu-plugin = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.28.0"
 kotlinx-browser = "org.jetbrains.kotlinx:kotlinx-browser:0.3"
 
-androidx-test-core = "androidx.test:core:1.6.1"
+androidx-test-core = "androidx.test:core:1.7.0"
 androidx-test-runner = "androidx.test:runner:1.6.1"
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
