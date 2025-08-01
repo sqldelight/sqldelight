@@ -204,7 +204,7 @@ class CompilationUnitTests {
         |}
         |
         |kotlin {
-        |  android("androidLib")
+        |  androidTarget("androidLib")
         |  iosX64()
         |}
         """.trimMargin(),
