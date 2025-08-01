@@ -111,4 +111,4 @@ spotless = { id = "com.diffplug.spotless", version = "7.0.4" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = "com.gradleup.shadow:9.0.0-rc3"
 ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.17.0" }
+binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }
