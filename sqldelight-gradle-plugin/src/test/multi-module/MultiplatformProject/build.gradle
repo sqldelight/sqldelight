@@ -43,7 +43,7 @@ kotlin {
   }
 
   iosX64()
-  android("androidLib")
+  androidTarget("androidLib")
 }
 
 tasks.withType(KotlinCompilationTask.class).configureEach {

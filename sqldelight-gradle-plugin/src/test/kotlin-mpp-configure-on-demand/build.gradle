@@ -12,7 +12,7 @@ sqldelight {
 }
 
 kotlin {
-  js()
+  js().nodejs()
   jvm()
   iosArm64 {
     binaries {
