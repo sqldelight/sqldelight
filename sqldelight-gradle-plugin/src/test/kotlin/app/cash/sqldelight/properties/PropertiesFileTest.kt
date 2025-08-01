@@ -83,7 +83,7 @@ class PropertiesFileTest {
         |    }
         |  }
         |
-        |  android("androidLib")
+        |  androidTarget("androidLib")
         |}
         """.trimMargin(),
       )
