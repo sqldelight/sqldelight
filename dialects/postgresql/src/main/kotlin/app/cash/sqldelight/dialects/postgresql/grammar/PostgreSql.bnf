@@ -176,6 +176,7 @@ type_name ::= (
   boolean_data_type |
   json_data_type |
   blob_data_type |
+  ltree_data_type |
   tsvector_data_type |
   tsquery_data_type |
   tstzrange |
@@ -266,6 +267,8 @@ json_data_type ::= 'JSON' | 'JSONB'
 blob_data_type ::= 'BYTEA'
 
 tsvector_data_type ::= 'TSVECTOR'
+
+ltree_data_type ::= 'LTREE'
 
 tsquery_data_type ::= 'TSQUERY'
 
@@ -558,6 +561,7 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
 jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+ltree_operators ::= '<@' | '@>' | '@' | '~' | '^<@' | '^@>' | '^@' | '^~' | '||' | '?'
 contains_operator ::= '@>' | '<@'
 match_operator ::= '@@'
 overlaps_operator ::= '&&'
@@ -581,6 +585,11 @@ overlaps_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | 
 
 range_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) range_boolean_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RangeOperatorExpressionMixin"
+  pin = 2
+}
+
+ltree_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) ltree_operators <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LtreeOperatorExpressionMixin"
   pin = 2
 }
 
@@ -675,6 +684,8 @@ truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
 
 json_function_stmt ::= ( 'row_to_json' | 'json_agg' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
+
+ltree_function_stmt ::= ( 'subltree' | 'subpath' | 'nlevel' | 'index' | 'text2ltree' | 'ltree2text' | 'lca') LP ( {table_alias} | {table_name} ) RP
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {

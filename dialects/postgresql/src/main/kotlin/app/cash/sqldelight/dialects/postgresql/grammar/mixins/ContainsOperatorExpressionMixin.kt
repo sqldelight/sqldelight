@@ -30,8 +30,9 @@ internal abstract class ContainsOperatorExpressionMixin(node: ASTNode) :
         columnType == "TSMULTIRANGE" ||
         columnType == "TSTZMULTIRANGE" ||
         columnType.endsWith("[]") -> super.annotate(annotationHolder)
+      columnType == "LTREE" -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of ltree expression must be a ltree column.")
       columnType == "JSON" -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of jsonb expression must be a jsonb column.")
-      else -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "expression must be ARRAY, JSONB, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.")
+      else -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "expression must be ARRAY, JSONB, LTREE, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.")
     }
     super.annotate(annotationHolder)
   }

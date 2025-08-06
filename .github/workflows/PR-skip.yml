@@ -4,6 +4,7 @@
 name: Test
 
 on:
+  workflow_dispatch:
   pull_request:
     # Ensure paths match paths-ignore in PR.yml
     paths:

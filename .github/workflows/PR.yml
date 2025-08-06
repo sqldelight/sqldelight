@@ -1,6 +1,7 @@
 name: Test
 
 on:
+  workflow_dispatch:
   pull_request:
     # Ensure paths-ignore match paths in PR-skip.yml
     paths-ignore:
