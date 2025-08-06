@@ -177,6 +177,7 @@ type_name ::= (
   json_data_type |
   blob_data_type |
   tsvector_data_type |
+  tsquery_data_type |
   tstzrange |
   tsrange |
   tsmultirange |
@@ -265,6 +266,8 @@ json_data_type ::= 'JSON' | 'JSONB'
 blob_data_type ::= 'BYTEA'
 
 tsvector_data_type ::= 'TSVECTOR'
+
+tsquery_data_type ::= 'TSQUERY'
 
 xml_data_type ::= 'XML'
 

@@ -132,7 +132,7 @@ class CompilationUnitTests {
         |  iosArm64()
         |  macosArm64()
         |  macosX64()
-        |  js()
+        |  js().nodejs()
         |  jvm()
         |}
         """.trimMargin(),
@@ -204,7 +204,7 @@ class CompilationUnitTests {
         |}
         |
         |kotlin {
-        |  android("androidLib")
+        |  androidTarget("androidLib")
         |  iosX64()
         |}
         """.trimMargin(),
