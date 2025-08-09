@@ -4,7 +4,6 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.example.sqldelight.hockey.HockeyDb
 import kotlin.concurrent.AtomicReference
-import kotlin.native.concurrent.freeze
 
 object Db {
   private val driverRef = AtomicReference<SqlDriver?>(null)
@@ -12,8 +11,8 @@ object Db {
 
   internal fun dbSetup(driver: SqlDriver) {
     val db = createQueryWrapper(driver)
-    driverRef.value = driver.freeze()
-    dbRef.value = db.freeze()
+    driverRef.value = driver
+    dbRef.value = db
   }
 
   internal fun dbClear() {

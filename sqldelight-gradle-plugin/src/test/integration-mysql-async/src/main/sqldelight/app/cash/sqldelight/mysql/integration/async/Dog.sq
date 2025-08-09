@@ -16,6 +16,15 @@ VALUES (?, ?, DEFAULT, ?);
 SELECT * FROM dog;
 }
 
+insertTerrierDog {
+INSERT INTO dog
+VALUES ('Jack', 'Terrier', 0, 3);
+}
+
+deleteTerrierDogs {
+DELETE FROM dog WHERE breed = 'Terrier';
+}
+
 selectDogs:
 SELECT *
 FROM dog;
@@ -25,3 +34,4 @@ SELECT *
 FROM dog
 WHERE breed = ?
   AND name IN ?;
+
