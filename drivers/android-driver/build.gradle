@@ -7,7 +7,9 @@ plugins {
   alias(libs.plugins.binaryCompatibilityValidator)
 }
 
-archivesBaseName = 'sqldelight-android-driver'
+base {
+  archivesName = 'sqldelight-android-driver'
+}
 
 android {
   compileSdk libs.versions.compileSdk.get() as int
@@ -15,7 +17,6 @@ android {
 
   lint {
     textReport true
-    textOutput file("$reportsDir/lint-results.txt")
   }
 
   defaultConfig {

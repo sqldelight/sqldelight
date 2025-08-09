@@ -21,9 +21,7 @@ package androidx.paging
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
-import app.cash.paging.DiffingChangePayload.ITEM_TO_PLACEHOLDER
-import app.cash.paging.DiffingChangePayload.PLACEHOLDER_POSITION_CHANGE
-import app.cash.paging.DiffingChangePayload.PLACEHOLDER_TO_ITEM
+import app.cash.paging.DiffingChangePayload
 import app.cash.paging.NullPaddedList
 
 /**
@@ -272,7 +270,7 @@ internal object OverlappingListsDiffDispatcher {
         callback.onChanged(
           unchangedPlaceholdersStartPos,
           unchangedPlaceholders,
-          PLACEHOLDER_POSITION_CHANGE,
+          DiffingChangePayload.PLACEHOLDER_POSITION_CHANGE,
         )
       }
       placeholdersAfter = newList.placeholdersAfter
@@ -286,7 +284,7 @@ internal object OverlappingListsDiffDispatcher {
       if (prePlaceholdersToAdd > 0) {
         if (unchangedPlaceholders > 0) {
           // these will be shifted down so send a change event for them
-          callback.onChanged(0, unchangedPlaceholders, PLACEHOLDER_POSITION_CHANGE)
+          callback.onChanged(0, unchangedPlaceholders, DiffingChangePayload.PLACEHOLDER_POSITION_CHANGE)
         }
         // always insert to the beginning of the list
         callback.onInserted(0, prePlaceholdersToAdd)
@@ -299,7 +297,7 @@ internal object OverlappingListsDiffDispatcher {
           callback.onChanged(
             0,
             unchangedPlaceholders + prePlaceholdersToAdd,
-            PLACEHOLDER_POSITION_CHANGE,
+            DiffingChangePayload.PLACEHOLDER_POSITION_CHANGE,
           )
         }
       }
@@ -337,7 +335,7 @@ internal object OverlappingListsDiffDispatcher {
         placeholdersBeforeState = USED_FOR_ADDITION
         // this index is negative because we are going back. offsetForDispatch will fix it
         val index = (0 - asPlaceholderChange)
-        callback.onChanged(index.offsetForDispatch(), asPlaceholderChange, PLACEHOLDER_TO_ITEM)
+        callback.onChanged(index.offsetForDispatch(), asPlaceholderChange, DiffingChangePayload.PLACEHOLDER_TO_ITEM)
         placeholdersBefore -= asPlaceholderChange
       }
       val asInsert = count - asPlaceholderChange
@@ -360,7 +358,7 @@ internal object OverlappingListsDiffDispatcher {
       val asPlaceholderChange = minOf(count, placeholdersAfter)
       if (asPlaceholderChange > 0) {
         placeholdersAfterState = USED_FOR_ADDITION
-        callback.onChanged(position.offsetForDispatch(), asPlaceholderChange, PLACEHOLDER_TO_ITEM)
+        callback.onChanged(position.offsetForDispatch(), asPlaceholderChange, DiffingChangePayload.PLACEHOLDER_TO_ITEM)
         placeholdersAfter -= asPlaceholderChange
       }
       val asInsert = count - asPlaceholderChange
@@ -409,7 +407,7 @@ internal object OverlappingListsDiffDispatcher {
       }
       if (asPlaceholders > 0) {
         placeholdersBeforeState = USED_FOR_REMOVAL
-        callback.onChanged(0.offsetForDispatch(), asPlaceholders, ITEM_TO_PLACEHOLDER)
+        callback.onChanged(0.offsetForDispatch(), asPlaceholders, DiffingChangePayload.ITEM_TO_PLACEHOLDER)
         placeholdersBefore += asPlaceholders
       }
       return true
@@ -436,7 +434,7 @@ internal object OverlappingListsDiffDispatcher {
       // the loaded content center are more likely to stay in the list
       if (asPlaceholders > 0) {
         placeholdersAfterState = USED_FOR_REMOVAL
-        callback.onChanged(position.offsetForDispatch(), asPlaceholders, ITEM_TO_PLACEHOLDER)
+        callback.onChanged(position.offsetForDispatch(), asPlaceholders, DiffingChangePayload.ITEM_TO_PLACEHOLDER)
         placeholdersAfter += asPlaceholders
       }
       if (asRemoval > 0) {
@@ -498,7 +496,7 @@ internal object DistinctListsDiffDispatcher {
       endBoundary = changeEventEndBoundary,
       start = oldList.placeholdersBefore.coerceAtMost(newList.size),
       end = (oldList.placeholdersBefore + oldList.storageCount).coerceAtMost(newList.size),
-      payload = ITEM_TO_PLACEHOLDER,
+      payload = DiffingChangePayload.ITEM_TO_PLACEHOLDER,
     )
     // now for new items that were mapping to placeholders, send change events
     dispatchChange(
@@ -507,7 +505,7 @@ internal object DistinctListsDiffDispatcher {
       endBoundary = changeEventEndBoundary,
       start = newList.placeholdersBefore.coerceAtMost(oldList.size),
       end = (newList.placeholdersBefore + newList.storageCount).coerceAtMost(oldList.size),
-      payload = PLACEHOLDER_TO_ITEM,
+      payload = DiffingChangePayload.PLACEHOLDER_TO_ITEM,
     )
     // finally, fix the size
     val itemsToAdd = newList.size - oldList.size

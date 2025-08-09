@@ -12,10 +12,6 @@ android {
   compileSdk libs.versions.compileSdk.get() as int
   namespace = "com.example.sqldelight.hockey"
 
-  lint {
-    textOutput file("$reportsDir/lint-results.txt")
-  }
-
   defaultConfig {
     minSdk 21
     targetSdk libs.versions.compileSdk.get() as int

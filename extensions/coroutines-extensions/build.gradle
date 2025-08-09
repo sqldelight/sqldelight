@@ -6,10 +6,12 @@ plugins {
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
-  id("kotlinx-atomicfu")
+  id("org.jetbrains.kotlinx.atomicfu")
 }
 
-archivesBaseName = 'sqldelight-coroutines-extensions'
+base {
+  archivesName = 'sqldelight-coroutines-extensions'
+}
 
 kotlin {
   applyDefaultHierarchyTemplate {
@@ -55,9 +57,9 @@ kotlin {
       }
     }
     testableWebTest.dependencies {
-      implementation  projects.drivers.webWorkerDriver
+      implementation projects.drivers.webWorkerDriver
       implementation npm("sql.js", libs.versions.sqljs.get())
-      implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
+      implementation npm("@cashapp/sqldelight-sqljs-worker", file("../../drivers/web-worker-driver/sqljs"))
     }
 
     testableNativeTest.dependencies {

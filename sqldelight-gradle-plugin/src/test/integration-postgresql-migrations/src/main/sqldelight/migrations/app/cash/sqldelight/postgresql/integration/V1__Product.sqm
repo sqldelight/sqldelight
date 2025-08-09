@@ -3,3 +3,6 @@ CREATE TABLE Products
     id                   SERIAL PRIMARY KEY,
     sku                  VARCHAR(255) NOT NULL
 );
+
+COMMENT ON TABLE Products IS 'Store the sku rows by id';
+COMMENT ON COLUMN Products.sku IS 'The sku is not a unique identifier';

@@ -2,8 +2,10 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.model.NamedExecute
+import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
 import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
 import app.cash.sqldelight.core.lang.argumentType
+import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -38,7 +40,11 @@ open class ExecuteQueryGenerator(
         },
       )
       .apply {
-        val type = if (generateAsync) LONG else QUERY_RESULT_TYPE.parameterizedBy(LONG)
+        val type = when {
+          generateAsync && query.statement is SqlDelightStmtClojureStmtList -> ASYNC_RESULT_TYPE.parameterizedBy(LONG)
+          generateAsync -> LONG
+          else -> QUERY_RESULT_TYPE.parameterizedBy(LONG)
+        }
         returns(type, CodeBlock.of("The number of rows updated."))
       }
   }

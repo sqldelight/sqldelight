@@ -10,8 +10,10 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import java.io.File
 import javax.inject.Inject
+import kotlin.DeprecationLevel.HIDDEN
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
@@ -117,7 +119,11 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   @Suppress("unused") // Public API used in gradle files.
-  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(delegatedProject.dependencyProject)
+  @Deprecated("use ProjectDependency", level = HIDDEN)
+  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(project.project(delegatedProject.path))
+
+  @Suppress("unused") // Public API used in gradle files.
+  fun dependency(delegatedProject: ProjectDependency) = dependency(project.project(delegatedProject.path))
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {

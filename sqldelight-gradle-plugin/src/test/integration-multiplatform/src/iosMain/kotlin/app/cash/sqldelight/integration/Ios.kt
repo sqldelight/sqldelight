@@ -6,7 +6,6 @@ import co.touchlab.sqliter.DatabaseFileContext.deleteDatabase
 import kotlin.native.concurrent.Future
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
-import kotlin.native.concurrent.freeze
 
 actual fun createSqlDatabase(): SqlDriver {
   val name = "testdb"
@@ -18,7 +17,7 @@ actual class MPWorker actual constructor() {
   val worker = Worker.start()
   actual fun <T> runBackground(backJob: () -> T): MPFuture<T> {
     return MPFuture(
-      worker.execute(TransferMode.SAFE, { backJob.freeze() }) {
+      worker.execute(TransferMode.SAFE, { backJob }) {
         it()
       },
     )

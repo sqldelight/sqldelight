@@ -1,8 +1,9 @@
 package app.cash.sqldelight.core.queries.async
 
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
+import app.cash.sqldelight.core.test.fileContents
 import app.cash.sqldelight.test.util.FixtureCompiler
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -33,14 +34,14 @@ class AsyncQueryFunctionTest {
     )
 
     val generator = SelectQueryGenerator(file.namedQueries.first())
-    Truth.assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(generator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
-      |public fun selectForId(id: kotlin.Long): app.cash.sqldelight.Query<com.example.Data_> = selectForId(id) { id_, value_ ->
-      |  com.example.Data_(
-      |    id_,
-      |    value_
-      |  )
-      |}
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import kotlin.Long
+      |
+      |public fun selectForId(id: Long): Query<Data_> = selectForId(id, ::Data_)
       |
       """.trimMargin(),
     )

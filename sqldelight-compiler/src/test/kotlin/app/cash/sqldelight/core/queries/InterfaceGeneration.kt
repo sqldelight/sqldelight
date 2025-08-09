@@ -870,14 +870,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id) {
-      |      title, track_number, album_id_ ->
-      |    Song(
-      |      title,
-      |      track_number,
-      |      album_id_
-      |    )
-      |  }
+      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id, ::Song)
       |
       |  private inner class SelectSongsByAlbumIdQuery<out T : Any>(
       |    public val album_id: Long?,
@@ -891,10 +884,7 @@ class InterfaceGeneration {
       |      driver.removeListener("song", listener = listener)
       |    }
       |
-      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(null,
-      |        ""${'"'}SELECT song.title, song.track_number, song.album_id FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'},
-      |        mapper, 1) {
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT song.title, song.track_number, song.album_id FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper, 1) {
       |      bindLong(0, album_id)
       |    }
       |
@@ -959,8 +949,7 @@ class InterfaceGeneration {
       |public class SubscriptionQueries(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
-      |  public fun insertUser(slack_user_id: String): Query<Int> = InsertUserQuery(slack_user_id) {
-      |      cursor ->
+      |  public fun insertUser(slack_user_id: String): Query<Int> = InsertUserQuery(slack_user_id) { cursor ->
       |    check(cursor is JdbcCursor)
       |    cursor.getInt(0)!!
       |  }
@@ -994,8 +983,7 @@ class InterfaceGeneration {
       |      driver.removeListener("userEntity", listener = listener)
       |    }
       |
-      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(${result.compiledFile.namedQueries[0].id.withUnderscores}, ""${'"'}
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(${result.compiledFile.namedQueries[0].id.withUnderscores}, ""${'"'}
       |    |WITH inserted_ids AS (
       |    |  INSERT INTO userEntity(slack_user_id)
       |    |  VALUES (?)
@@ -1079,21 +1067,14 @@ class InterfaceGeneration {
       |public class RecursiveQueries(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
-      |  public fun <T : Any> recursiveQuery(id: Long, mapper: (id: Long, parent_id: Long?) -> T): Query<T>
-      |      = RecursiveQueryQuery(id) { cursor ->
+      |  public fun <T : Any> recursiveQuery(id: Long, mapper: (id: Long, parent_id: Long?) -> T): Query<T> = RecursiveQueryQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getLong(1)
       |    )
       |  }
       |
-      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id) { id_,
-      |      parent_id ->
-      |    RecursiveQuery(
-      |      id_,
-      |      parent_id
-      |    )
-      |  }
+      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id, ::RecursiveQuery)
       |
       |  private inner class RecursiveQueryQuery<out T : Any>(
       |    public val id: Long,
@@ -1107,8 +1088,7 @@ class InterfaceGeneration {
       |      driver.removeListener("item", listener = listener)
       |    }
       |
-      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
       |    |WITH RECURSIVE
       |    |descendants AS (
       |    |    SELECT id, parent_id
@@ -1174,8 +1154,7 @@ class InterfaceGeneration {
       |public class WindowsFunctionsQueries(
       |  driver: SqlDriver,
       |) : TransacterImpl(driver) {
-      |  public fun <T : Any> selectRank(mapper: (name: String, rank: Long) -> T): Query<T> =
-      |      Query(-1_725_152_245, arrayOf("scores"), driver, "WindowsFunctions.sq", "selectRank", ""${'"'}
+      |  public fun <T : Any> selectRank(mapper: (name: String, rank: Long) -> T): Query<T> = Query(-1_725_152_245, arrayOf("scores"), driver, "WindowsFunctions.sq", "selectRank", ""${'"'}
       |  |SELECT
       |  |  name,
       |  |  RANK () OVER (
@@ -1190,12 +1169,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun selectRank(): Query<SelectRank> = selectRank { name, rank ->
-      |    SelectRank(
-      |      name,
-      |      rank
-      |    )
-      |  }
+      |  public fun selectRank(): Query<SelectRank> = selectRank(::SelectRank)
       |}
       |
       """.trimMargin(),
@@ -1282,8 +1256,7 @@ class InterfaceGeneration {
     |    has_tsvector: Boolean,
     |    has_uuid: Boolean,
     |    has_varchar: Boolean,
-    |  ) -> T): Query<T> = Query(-1_574_646_250, arrayOf("test"), driver, "SqlIsExpr.sq",
-    |      "selectIsNotNull", ""${'"'}
+    |  ) -> T): Query<T> = Query(-1_574_646_250, arrayOf("test"), driver, "SqlIsExpr.sq", "selectIsNotNull", ""${'"'}
     |  |SELECT
     |  |big IS NOT NULL AS has_bigint,
     |  |bol IS NOT NULL AS has_boolean,
@@ -1322,27 +1295,7 @@ class InterfaceGeneration {
     |    )
     |  }
     |
-    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull { has_bigint, has_boolean,
-    |      has_byte, has_date, has_integer, has_json, has_jsob, has_num, has_smallint, has_time,
-    |      has_timestamp, has_timestamptz, has_tsvector, has_uuid, has_varchar ->
-    |    SelectIsNotNull(
-    |      has_bigint,
-    |      has_boolean,
-    |      has_byte,
-    |      has_date,
-    |      has_integer,
-    |      has_json,
-    |      has_jsob,
-    |      has_num,
-    |      has_smallint,
-    |      has_time,
-    |      has_timestamp,
-    |      has_timestamptz,
-    |      has_tsvector,
-    |      has_uuid,
-    |      has_varchar
-    |    )
-    |  }
+    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull(::SelectIsNotNull)
     |}
     |
       """.trimMargin(),
@@ -1518,7 +1471,7 @@ class InterfaceGeneration {
     |    gfpf: BigDecimal?,
     |    dl: BigDecimal?,
     |  ) -> T): Query<T> = Query(89_549_764, arrayOf("Test"), driver, "Lateral.sq", "select", ""${'"'}
-    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, pf, pfb, gf, gfpf, dl
+    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, _pf.pf, _pfb.pfb, _gf.gf, _gfpf.gfpf, _dl.dl
     |  |FROM Test,
     |  |LATERAL (SELECT p / f AS pf) _pf,
     |  |LATERAL (SELECT pf / b AS pfb) _pfb,
@@ -1542,21 +1495,7 @@ class InterfaceGeneration {
     |    )
     |  }
     |
-    |  public fun select(): Query<Select> = select { p, f, b, l, d, g, pf, pfb, gf, gfpf, dl ->
-    |    Select(
-    |      p,
-    |      f,
-    |      b,
-    |      l,
-    |      d,
-    |      g,
-    |      pf,
-    |      pfb,
-    |      gf,
-    |      gfpf,
-    |      dl
-    |    )
-    |  }
+    |  public fun select(): Query<Select> = select(::Select)
     |}
     |
       """.trimMargin(),
