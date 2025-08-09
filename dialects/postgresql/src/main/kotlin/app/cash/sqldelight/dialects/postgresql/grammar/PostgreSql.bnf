@@ -558,10 +558,16 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
   pin = 2
 }
 
+ltree_expression ::= {column_expr} ( ltree_binary_operator | ltree_boolean_operator ) <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LtreeExpressionMixin"
+  pin = 2
+}
+
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
 jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
-ltree_operators ::= '<@' | '@>' | '@' | '~' | '^<@' | '^@>' | '^@' | '^~' | '||' | '?'
+ltree_binary_operator ::= '?@>' | '?<@' | '?@' | '?~' | '||'
+ltree_boolean_operator ::= '<@' | '@>' | '@' | '~' | '^<@' | '^@>' | '^@' | '^~' | '?'
 contains_operator ::= '@>' | '<@'
 match_operator ::= '@@'
 overlaps_operator ::= '&&'
@@ -585,11 +591,6 @@ overlaps_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | 
 
 range_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) range_boolean_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.RangeOperatorExpressionMixin"
-  pin = 2
-}
-
-ltree_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) ltree_operators <<expr '-1'>> {
-  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LtreeOperatorExpressionMixin"
   pin = 2
 }
 
