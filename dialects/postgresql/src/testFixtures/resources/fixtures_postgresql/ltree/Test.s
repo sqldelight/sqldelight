@@ -6,19 +6,10 @@ SELECT path FROM myTable
 WHERE path @> 'a.b.c';
 
 SELECT path FROM myTable
-WHERE path @> 'a.*.c';
-
-SELECT path FROM myTable
-WHERE path @> 'a.*.d';
-
-SELECT path FROM myTable
-WHERE path @> '*';
-
-SELECT path FROM myTable
 WHERE path <@ 'a.b.c';
 
 SELECT path FROM myTable
-WHERE path <@ 'a.b';
+WHERE path @ 'a.*.c';
 
 SELECT path FROM myTable
-WHERE path <@ 'a.*.c';
+WHERE path ? 'a.*.c';

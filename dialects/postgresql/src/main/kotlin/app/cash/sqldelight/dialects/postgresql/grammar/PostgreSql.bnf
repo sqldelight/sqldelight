@@ -506,7 +506,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | ltree_expression | ltree_function_stmt | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -566,7 +566,7 @@ ltree_expression ::= {column_expr} ( ltree_binary_operator | ltree_boolean_opera
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
 jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
-ltree_binary_operator ::= '?@>' | '?<@' | '?@' | '?~' | '||'
+ltree_binary_operator ::= '?@>' | '?<@' | '?@' | '?~'
 ltree_boolean_operator ::= '<@' | '@>' | '@' | '~' | '^<@' | '^@>' | '^@' | '^~' | '?'
 contains_operator ::= '@>' | '<@'
 match_operator ::= '@@'
