@@ -1,0 +1,14 @@
+CREATE TABLE MyTree(
+  path LTREE NOT NULL
+);
+
+CREATE INDEX path_gist_idx ON MyTree USING GIST (path);
+CREATE INDEX path_idx ON MyTree USING BTREE (path);
+CREATE INDEX path_hash_idx ON MyTree USING HASH (path);
+
+selectPathContains:
+SELECT path FROM MyTree
+WHERE path <@ 'Top.Science';
+
+insertPath:
+INSERT INTO MyTree (path) VALUES (?);
