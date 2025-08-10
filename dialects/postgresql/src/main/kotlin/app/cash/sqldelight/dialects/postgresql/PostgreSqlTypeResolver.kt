@@ -225,6 +225,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       }
     }
     "unnest" -> unNestType(exprList[0].postgreSqlType())
+    "subpath" -> IntermediateType(PostgreSqlType.LTREE)
     else -> null
   }
 
@@ -340,6 +341,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         regexMatchOperatorExpression != null ||
         booleanNotExpression != null ||
         containsOperatorExpression != null ||
+        existsOperatorExpression != null ||
         overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
