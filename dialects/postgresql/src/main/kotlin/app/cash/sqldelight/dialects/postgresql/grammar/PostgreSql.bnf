@@ -506,7 +506,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | ltree_function_stmt | boolean_not_expression | window_function_expr {
+extension_expr ::= overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | exists_operator_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -560,12 +560,18 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
 
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
-jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+jsonb_boolean_operator ::= '@?' | '??|' | '??&'
+exists_operator ::= '??'
 contains_operator ::= '@>' | '<@'
 match_operator ::= '@@'
 overlaps_operator ::= '&&'
 range_boolean_operator ::= '<<' | '>>' | '&>' | '&<' | '-|-'
 regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
+
+exists_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) exists_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExistsOperatorExpressionMixin"
+  pin = 2
+}
 
 contains_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ContainsOperatorExpressionMixin"
@@ -678,8 +684,6 @@ truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
 
 json_function_stmt ::= ( 'row_to_json' | 'json_agg' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
-
-ltree_function_stmt ::= ( 'subltree' | 'subpath' | 'nlevel' | 'index' | 'text2ltree' | 'ltree2text' | 'lca') LP ( {table_alias} | {table_name} ) RP
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
