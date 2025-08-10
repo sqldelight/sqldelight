@@ -1231,7 +1231,7 @@ class PostgreSqlTest {
         "Top.Science",
         "Top.Science.Astronomy",
         "Top.Science.Astronomy.Astrophysics",
-        "Top.Science.Astronomy.Cosmology"
+        "Top.Science.Astronomy.Cosmology",
       )
     }
   }
