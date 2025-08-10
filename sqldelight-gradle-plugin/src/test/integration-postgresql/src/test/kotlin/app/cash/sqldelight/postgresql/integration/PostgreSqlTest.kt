@@ -1235,4 +1235,19 @@ class PostgreSqlTest {
       )
     }
   }
+
+  @Test
+  fun testLtreeExists() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathExists("{Top.Science.Astronomy.Astrophysics, Top.Science.Astronomy.Cosmology}").executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science.Space.Astronomy.Astrophysics",
+        "Top.Science.Space.Astronomy.Cosmology",
+      )
+    }
+  }
 }
