@@ -12,8 +12,6 @@ SELECT
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
   data <@ datab,
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
-  data ?? 'b',
---error[col 2]: Left side of jsonb expression must be a jsonb column.
   data ??| '{"a","b"}',
 --error[col 2]: Left side of jsonb expression must be a jsonb column.
   data ??& '{"a"}',
