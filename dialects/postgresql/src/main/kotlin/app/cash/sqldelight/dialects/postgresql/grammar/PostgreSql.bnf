@@ -575,7 +575,7 @@ boolean_literal ::= TRUE | FALSE
 
 is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( WITH | WITHOUT ) 'UNIQUE' [ 'KEYS' ] ]
 
-json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
+json_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
