@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -68,7 +68,7 @@ jobs:
     needs: publish_archives
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
@@ -103,7 +103,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |

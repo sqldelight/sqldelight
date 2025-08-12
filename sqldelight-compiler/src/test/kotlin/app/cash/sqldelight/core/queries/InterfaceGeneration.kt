@@ -1471,7 +1471,7 @@ class InterfaceGeneration {
     |    gfpf: BigDecimal?,
     |    dl: BigDecimal?,
     |  ) -> T): Query<T> = Query(89_549_764, arrayOf("Test"), driver, "Lateral.sq", "select", ""${'"'}
-    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, pf, pfb, gf, gfpf, dl
+    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, _pf.pf, _pfb.pfb, _gf.gf, _gfpf.gfpf, _dl.dl
     |  |FROM Test,
     |  |LATERAL (SELECT p / f AS pf) _pf,
     |  |LATERAL (SELECT pf / b AS pfb) _pfb,
