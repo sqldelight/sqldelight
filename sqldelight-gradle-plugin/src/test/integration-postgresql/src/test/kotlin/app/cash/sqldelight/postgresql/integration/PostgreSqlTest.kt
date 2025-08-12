@@ -839,6 +839,32 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testSelectJsonExtractionBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionBinds("""{ "c": "cc" }""").executeAsList()) {
+      assertThat(first().ab).isEqualTo(""""bb"""")
+      assertThat(first().abb).isEqualTo("""{"b": "bb", "c": "cc"}""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonExtractionExistsBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionExistsBinds("b", "a", "bb").executeAsList()) {
+      assertThat(first().a).isEqualTo("""{ "b": "bb" }""")
+      assertThat(first().b).isEqualTo(""""bb"""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonExtractionContainsBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionContainsBinds("b", """"bb"""").executeAsList()) {
+      assertThat(first()).isEqualTo("""{"a": {"b": "bb"}}""")
+    }
+  }
+
+  @Test
   fun testJsonAggFilter() {
     database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
     with(database.jsonQueries.selectJsonAggFilterWhere().executeAsList()) {
