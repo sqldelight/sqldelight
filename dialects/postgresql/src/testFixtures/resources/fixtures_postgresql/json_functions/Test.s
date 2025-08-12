@@ -26,6 +26,23 @@ FROM myTable;
 SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab || datab, datab - 'b', datab - 1, datab @@ '$.b[*] > 0'
 FROM myTable;
 
+SELECT data -> 'a' -> 'b', datab -> 'a' -> 'b'
+FROM myTable;
+
+SELECT t
+FROM myTable
+WHERE t = :txt
+  AND data -> 'a' @> :a
+  AND datab -> 'aa' -> 'bb' ?? :bb;
+
+SELECT
+    data -> 'a' -> 'b',
+    data -> 'a' ->> 'b',
+    data #> '{a}' -> 'b',
+    data #>> '{a}',
+    datab - '{a}' -> 'a'
+FROM myTable;
+
 SELECT row_to_json(myTable) FROM myTable;
 
 SELECT json_agg(myTable) FROM myTable;
