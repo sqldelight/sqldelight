@@ -62,6 +62,7 @@ class PostgreSqlTest {
 
   @Before fun before() {
     driver.execute(null, "SET timezone TO UTC", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS ltree", 0)
     MyDatabase.Schema.create(driver)
   }
 
@@ -1215,6 +1216,38 @@ class PostgreSqlTest {
     database.unnestQueries.insertBusiness("Donut Hut", arrayOf("N12345", "QB7536", "P31879"), arrayOf(6, 12, 18))
     with(database.unnestQueries.selectBusinessExists("P31879").executeAsList()) {
       assertThat(first().name).isEqualTo("Donut Hut")
+    }
+  }
+
+  @Test
+  fun testLtreeContains() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathContains().executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science",
+        "Top.Science.Astronomy",
+        "Top.Science.Astronomy.Astrophysics",
+        "Top.Science.Astronomy.Cosmology",
+      )
+    }
+  }
+
+  @Test
+  fun testLtreeExists() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathExists("{Top.Science.Astronomy.Astrophysics, Top.Science.Astronomy.Cosmology}").executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science.Space.Astronomy.Astrophysics",
+        "Top.Science.Space.Astronomy.Cosmology",
+      )
     }
   }
 }
