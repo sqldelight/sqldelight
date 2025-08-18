@@ -217,13 +217,18 @@ index_method ::=  'BRIN' | 'BTREE' | 'GIN' | 'GIST' | 'HASH'
 create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
  ( USING index_method LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ with_storage_parameter ] | LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ WHERE <<expr '-1'>> ] )  {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexMixin"
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+  elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexElementType"
+  stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6
 }
 
 create_view_stmt ::= CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] [ RECURSIVE ] VIEW [ {database_name} DOT ] {view_name} [ LP {column_alias} ( COMMA {column_alias} ) * RP ] AS {compound_select_stmt} [ WITH [ 'CASCADED' | 'LOCAL' ] CHECK 'OPTION' ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateOrReplaceViewMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.TableElement"
+  elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateViewElementType"
+  stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6
 }
