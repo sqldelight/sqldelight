@@ -11,6 +11,7 @@
 
 ### Changed
 
+- [Documentation] Add a note about the -lsqlite3 linker flag (#5828 by [Guilherme Magro][guilhermemagro])
 - In-development snapshots are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
 - [Compiler] Simplified default generated queries using constructor references (#5814 by [Jon Poulton][jonapoul])
 
@@ -1173,3 +1174,4 @@ Initial release.
   [janbina]: https://github.com/janbina
   [DRSchlaubi]: https://github.com/DRSchlaubi
   [jonapoul]: https://github.com/jonapoul
+  [guilhermemagro]: https://github.com/guilhermemagro
