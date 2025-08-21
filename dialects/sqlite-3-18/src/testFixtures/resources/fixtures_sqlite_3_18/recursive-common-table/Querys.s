@@ -71,3 +71,49 @@ FROM `tbl_accounts` `c`
 JOIN `name_tree` `p` ON `c`.`id` = `p`.parent_id
 AND `c`.`id` <> `c`.`parent_id`)
 SELECT count(*) AS `level` FROM `name_tree`;
+
+CREATE TABLE NodeEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    parent_id TEXT
+);
+
+WITH RECURSIVE descendants(id, depth) AS (
+  SELECT id, 0 AS depth
+  FROM NodeEntity
+  WHERE id = ?
+  UNION ALL
+  SELECT n.id, d.depth + 1
+  FROM NodeEntity n
+  INNER JOIN descendants d ON n.parent_id = d.id
+)
+SELECT * FROM descendants;
+
+WITH RECURSIVE descendants(id, depth) AS (
+  SELECT id, 0 AS depth
+  FROM NodeEntity
+  WHERE id = ?
+  UNION ALL
+  SELECT n.id, descendants.depth + 1
+  FROM NodeEntity n
+  INNER JOIN descendants ON n.parent_id = descendants.id
+)
+SELECT * FROM descendants;
+
+CREATE TABLE Branch (
+    id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    parent_id INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (parent_id) REFERENCES Branch(id)
+);
+
+WITH RECURSIVE ancestor(id, parent_id) AS (
+  SELECT id, parent_id
+  FROM Branch
+  WHERE id = ?
+UNION ALL
+  SELECT b.id, b.parent_id
+  FROM Branch b
+  INNER JOIN ancestor a ON a.parent_id = b.id LIMIT 255
+)
+SELECT * FROM ancestor;
