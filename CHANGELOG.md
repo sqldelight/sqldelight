@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- [Compiler] Fix Fts stackoverflow when referencing columns (#5896 by [Griffio][griffio])
 - [Compiler] Fix With Recursive stackoverflow (#5892 by [Griffio][griffio])
 - [Compiler] Fix Notify for Insert|Update|Delete Returning statements (#5851 by [Griffio][griffio])
 - [Compiler] Fix async result type for transaction blocks returning Long (#5836 by [Griffio][griffio])
