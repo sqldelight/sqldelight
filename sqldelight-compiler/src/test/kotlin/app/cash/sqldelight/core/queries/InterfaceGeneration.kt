@@ -470,6 +470,45 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `using virtual table column reference compiles`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE VIRTUAL TABLE Email USING fts5(
+      |  sender,
+      |  title,
+      |  body UNINDEXED
+      |);
+      |
+      |someSelect:
+      |SELECT sender, title, body
+      |FROM Email
+      |WHERE Email MATCH ? AND sender = ?;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.String
+      |
+      |public data class SomeSelect(
+      |  public val sender: String?,
+      |  public val title: String?,
+      |  public val body: String?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `virtual table with tokenizer has correct types`() {
     val result = FixtureCompiler.compileSql(
       """
