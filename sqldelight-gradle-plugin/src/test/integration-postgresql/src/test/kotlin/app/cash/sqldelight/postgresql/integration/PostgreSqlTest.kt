@@ -1217,4 +1217,22 @@ class PostgreSqlTest {
       assertThat(first().name).isEqualTo("Donut Hut")
     }
   }
+
+  @Test
+  fun testJsonChecks() {
+    database.jsonQueries.insertTestJsonCheck()
+    with(database.jsonQueries.selectJsonChecks().executeAsList()) {
+      assertThat(first().null_).isFalse()
+      assertThat(first().not_null_).isTrue()
+      assertThat(first().json_).isTrue()
+      assertThat(first().value_).isTrue()
+      assertThat(first().not_json_).isFalse()
+      assertThat(first().scalar_).isFalse()
+      assertThat(first().object_).isTrue()
+      assertThat(first().not_object_).isFalse()
+      assertThat(first().array_).isFalse()
+      assertThat(first().array_with_unq_key_).isFalse()
+      assertThat(first().array_without_unq_key_).isFalse()
+    }
+  }
 }
