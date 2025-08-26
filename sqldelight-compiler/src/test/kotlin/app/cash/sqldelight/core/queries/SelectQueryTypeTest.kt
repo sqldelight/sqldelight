@@ -280,8 +280,9 @@ class SelectQueryTypeTest {
       |  |WHERE id = ?
       |  |AND value = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    bindLong(0, id)
-      |    bindString(1, value_)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
+      |    bindString(parameterIndex++, value_)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:select"
@@ -384,13 +385,16 @@ class SelectQueryTypeTest {
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, 1 + id.size + id.size) {
+      |          var parameterIndex = 0
       |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index, id_)
+      |            bindLong(parameterIndex + index, id_)
       |          }
-      |          bindString(id.size, message)
+      |          parameterIndex += id.size
+      |          bindString(parameterIndex++, message)
       |          id.forEachIndexed { index, id__ ->
-      |            bindLong(index + id.size + 1, id__)
+      |            bindLong(parameterIndex + index, id__)
       |          }
+      |          parameterIndex += id.size
       |        }
       |  }
       |
@@ -530,8 +534,9 @@ class SelectQueryTypeTest {
        |  |FROM Friend
        |  |WHERE userId${'$'}{ if (userId == null) " IS " else "=" }? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), mapper, 2) {
-       |    bindString(0, userId)
-       |    bindString(1, username)
+       |    var parameterIndex = 0
+       |    bindString(parameterIndex++, userId)
+       |    bindString(parameterIndex++, username)
        |  }
        |
        |  override fun toString(): kotlin.String = "Test.sq:selectData"
@@ -581,8 +586,9 @@ class SelectQueryTypeTest {
        |  |FROM Friend
        |  |WHERE userId=? OR username=? LIMIT 2
        |  ""${'"'}.trimMargin(), mapper, 2) {
-       |    bindString(0, userId)
-       |    bindString(1, username)
+       |    var parameterIndex = 0
+       |    bindString(parameterIndex++, userId)
+       |    bindString(parameterIndex++, username)
        |  }
        |
        |  override fun toString(): kotlin.String = "Test.sq:selectData"
@@ -646,12 +652,13 @@ class SelectQueryTypeTest {
       |  |AND val IS ?
       |  |AND val IS NOT ?
       |  ""${'"'}.trimMargin(), mapper, 6) {
-      |    bindString(0, val_)
-      |    bindString(1, val__)
-      |    bindString(2, val___)
-      |    bindString(3, val____)
-      |    bindString(4, val_____)
-      |    bindString(5, val______)
+      |    var parameterIndex = 0
+      |    bindString(parameterIndex++, val_)
+      |    bindString(parameterIndex++, val__)
+      |    bindString(parameterIndex++, val___)
+      |    bindString(parameterIndex++, val____)
+      |    bindString(parameterIndex++, val_____)
+      |    bindString(parameterIndex++, val______)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -714,12 +721,13 @@ class SelectQueryTypeTest {
       |  |AND val IS ?
       |  |AND val IS NOT ?
       |  ""${'"'}.trimMargin(), mapper, 6) {
-      |    bindString(0, val_)
-      |    bindString(1, val__)
-      |    bindString(2, val___)
-      |    bindString(3, val____)
-      |    bindString(4, val_____)
-      |    bindString(5, val______)
+      |    var parameterIndex = 0
+      |    bindString(parameterIndex++, val_)
+      |    bindString(parameterIndex++, val__)
+      |    bindString(parameterIndex++, val___)
+      |    bindString(parameterIndex++, val____)
+      |    bindString(parameterIndex++, val_____)
+      |    bindString(parameterIndex++, val______)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -768,8 +776,9 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE data MATCH ? AND rowid = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    bindString(0, data)
-      |    bindLong(1, rowid)
+      |    var parameterIndex = 0
+      |    bindString(parameterIndex++, data)
+      |    bindLong(parameterIndex++, rowid)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectMatching"
@@ -880,16 +889,19 @@ class SelectQueryTypeTest {
       |        |  AND (token != ? OR (name = ? OR ? = 'foo'))
       |        |  AND token IN ${"$"}token_Indexes
       |        ""${'"'}.trimMargin(), mapper, 4 + id.size + token_.size) {
-      |          bindString(0, token)
+      |          var parameterIndex = 0
+      |          bindString(parameterIndex++, token)
       |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index + 1, id_)
+      |            bindLong(parameterIndex + index, id_)
       |          }
-      |          bindString(id.size + 1, token)
-      |          bindString(id.size + 2, name)
-      |          bindString(id.size + 3, name)
+      |          parameterIndex += id.size
+      |          bindString(parameterIndex++, token)
+      |          bindString(parameterIndex++, name)
+      |          bindString(parameterIndex++, name)
       |          token_.forEachIndexed { index, token__ ->
-      |            bindString(index + id.size + 4, token__)
+      |            bindString(parameterIndex + index, token__)
       |          }
+      |          parameterIndex += token_.size
       |        }
       |  }
       |
@@ -946,10 +958,11 @@ class SelectQueryTypeTest {
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), mapper, 4) {
-      |    bindLong(0, id)
-      |    bindLong(1, id)
-      |    bindLong(2, limit)
-      |    bindLong(3, offset)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
+      |    bindLong(parameterIndex++, id)
+      |    bindLong(parameterIndex++, limit)
+      |    bindLong(parameterIndex++, offset)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -1004,10 +1017,11 @@ class SelectQueryTypeTest {
       |  |LIMIT ?
       |  |OFFSET ?
       |  ""${'"'}.trimMargin(), mapper, 4) {
-      |    bindLong(0, id)
-      |    bindLong(1, id)
-      |    bindLong(2, limit)
-      |    bindLong(3, offset)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
+      |    bindLong(parameterIndex++, id)
+      |    bindLong(parameterIndex++, limit)
+      |    bindLong(parameterIndex++, offset)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -1124,8 +1138,9 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token ${"$"}{ if (token == null) "IS" else "=" } ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    ${binderCheck}bindString(0, token)
-      |    bindString(1, token)
+      |    ${binderCheck}var parameterIndex = 0
+      |    bindString(parameterIndex++, token)
+      |    bindString(parameterIndex++, token)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
@@ -1173,8 +1188,9 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE token = ? OR ? IS NULL
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    ${binderCheck}bindString(0, token)
-      |    bindString(1, token)
+      |    ${binderCheck}var parameterIndex = 0
+      |    bindString(parameterIndex++, token)
+      |    bindString(parameterIndex++, token)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectByTokenOrAll"
@@ -1837,12 +1853,15 @@ class SelectQueryTypeTest {
         |        |SELECT (SELECT count(*) FROM ComboData WHERE value IN ${"$"}valuesIndexes) +
         |        |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
         |        ""${'"'}.trimMargin(), mapper, values.size + values.size) {
+        |          var parameterIndex = 0
         |          values.forEachIndexed { index, values_ ->
-        |            bindString(index, ComboDataAdapter.value_Adapter.encode(values_))
+        |            bindString(parameterIndex + index, ComboDataAdapter.value_Adapter.encode(values_))
         |          }
+        |          parameterIndex += values.size
         |          values.forEachIndexed { index, values__ ->
-        |            bindString(index + values.size, ComboDataAdapter.value_Adapter.encode(values__))
+        |            bindString(parameterIndex + index, ComboDataAdapter.value_Adapter.encode(values__))
         |          }
+        |          parameterIndex += values.size
         |        }
         |  }
         |
@@ -2024,8 +2043,9 @@ class SelectQueryTypeTest {
       |  |FROM multi
       |  |WHERE (id, name) > (?, ?)
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    bindLong(0, id)
-      |    bindString(1, name)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
+      |    bindString(parameterIndex++, name)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:multiColumnExpressionSelect"

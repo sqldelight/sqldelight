@@ -311,8 +311,9 @@ class JavadocTest {
       |      |SET value = ?
       |      |WHERE _id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, value_)
-      |        bindLong(1, _id)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
+      |        bindLong(parameterIndex++, _id)
       |      }
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("test")

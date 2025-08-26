@@ -70,8 +70,9 @@ public class DataQueries(
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_845_995_606, """INSERT INTO test(first, second) VALUES (?, ?) RETURNING test.first, test.second""", mapper, 2) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
-      bindInt(1, second)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
+      bindInt(parameterIndex++, second)
     }.also {
       notifyQueries(-1_845_995_606) { emit ->
         emit("test")

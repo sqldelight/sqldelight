@@ -172,8 +172,9 @@ class AsyncQueriesTypeTest {
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, id)
-      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, id)
+      |          bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }.await()
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
