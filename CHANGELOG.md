@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 ### Added
+- [PostgreSQL Dialect] Add predicate to check whether SQL expression can be parsed as JSON (#5843 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add limited support for PostgreSql Comment On statement (#5808 by [Griffio][griffio])
 - [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
 - [PostgreSql Dialect] Add support for TSQUERY data type (#5779 by [Griffio][griffio])
@@ -13,7 +14,9 @@
 - [Compiler] Simplified default generated queries using constructor references (#5814 by [Jon Poulton][jonapoul])
 
 ### Fixed
-- [PostgreSQL Dialect] Fix Intellij SqlDelight Plugin ClassCastException (#5772 by [Griffio][griffio])
+- [PostgreSQL Dialect] Fix IntelliJ SqlDelight Plugin ClassCastException (#5772 by [Griffio][griffio])
+- [Compiler] Fix FTS stack overflow when referencing columns (#5896 by [Griffio][griffio])
+- [Compiler] Fix With Recursive stack overflow (#5892 by [Griffio][griffio])
 - [Compiler] Fix Notify for Insert|Update|Delete Returning statements (#5851 by [Griffio][griffio])
 - [Compiler] Fix async result type for transaction blocks returning Long (#5836 by [Griffio][griffio])
 - [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by [Griffio][griffio])
