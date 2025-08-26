@@ -130,6 +130,36 @@
               </div>
             </div>
           </div>
+<a data-name="-1984206906%2FClasslikes%2F-128169639" anchor-label="CreateOrReplaceViewMixin" id="-1984206906%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-create-or-replace-view-mixin/index.html"><span>Create</span><wbr><span>Or</span><wbr><span>Replace</span><wbr><span>View</span><wbr><span><span>Mixin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1984206906%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-create-or-replace-view-mixin/index.html">CreateOrReplaceViewMixin</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlCreateViewStmtImpl///PointingToDeclaration/">SqlCreateViewStmtImpl</span></div><div class="brief "><p class="paragraph">See sql-psi com.alecstrong.sql.psi.core.psi.mixins.CreateViewMixin where <code class="lang-kotlin">REPLACE</code> is enabled Add annotations to check replace has an identical set of columns in same order, but allows appending columns</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="186876704%2FClasslikes%2F-128169639" anchor-label="CreateViewElementType" id="186876704%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-create-view-element-type/index.html"><span>Create</span><wbr><span>View</span><wbr><span>Element</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="186876704%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-create-view-element-type/index.html">CreateViewElementType</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="com.alecstrong.sql.psi.core/SqlSchemaContributorElementType///PointingToDeclaration/">SqlSchemaContributorElementType</span><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/TableElement///PointingToDeclaration/">TableElement</span><span class="token operator">&gt; </span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1137752465%2FClasslikes%2F-128169639" anchor-label="SqlInsertExcludedTableMixin" id="1137752465%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">

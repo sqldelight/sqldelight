@@ -815,7 +815,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-index-stmt/index.html">PostgreSqlCreateIndexStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-index-stmt/index.html">PostgreSqlCreateIndexStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SchemaContributor///PointingToDeclaration/">SchemaContributor</span>, <span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToDeclaration/">StubBasedPsiElement</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToGenericParameters(0)/">Stub</span><span class="token operator">&gt; </span></div></div></div>
                 </div>
               </div>
             </div>
@@ -845,7 +845,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-view-stmt/index.html">PostgreSqlCreateViewStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-view-stmt/index.html">PostgreSqlCreateViewStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/TableElement///PointingToDeclaration/">TableElement</span>, <span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToDeclaration/">StubBasedPsiElement</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToGenericParameters(0)/">Stub</span><span class="token operator">&gt; </span></div></div></div>
                 </div>
               </div>
             </div>

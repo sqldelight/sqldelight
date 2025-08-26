@@ -1252,12 +1252,22 @@
      <a href="dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-bind-parameter-mixin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Bind</span><wbr><span>Parameter</span><wbr><span><span>Mixin</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-2-2" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/SqlInsertExcludedTableMixin///PointingToDeclaration//-128169639" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-2-2" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/CreateOrReplaceViewMixin///PointingToDeclaration//-128169639" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-or-replace-view-mixin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Create</span><wbr><span>Or</span><wbr><span>Replace</span><wbr><span>View</span><wbr><span><span>Mixin</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-2-3" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/CreateViewElementType///PointingToDeclaration//-128169639" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-view-element-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Create</span><wbr><span>View</span><wbr><span>Element</span><wbr><span><span>Type</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-2-4" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/SqlInsertExcludedTableMixin///PointingToDeclaration//-128169639" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-sql-insert-excluded-table-mixin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Sql</span><wbr><span>Insert</span><wbr><span>Excluded</span><wbr><span>Table</span><wbr><span><span>Mixin</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-2-3" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/WindowDefinitionMixin///PointingToDeclaration//-128169639" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-2-5" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.mixins/WindowDefinitionMixin///PointingToDeclaration//-128169639" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-window-definition-mixin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Window</span><wbr><span>Definition</span><wbr><span><span>Mixin</span></span></span></span></a>
     </div>
