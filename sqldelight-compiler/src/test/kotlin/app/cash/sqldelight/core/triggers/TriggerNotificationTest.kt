@@ -113,7 +113,8 @@ class TriggerNotificationTest {
       |      |DELETE FROM data
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, id)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")

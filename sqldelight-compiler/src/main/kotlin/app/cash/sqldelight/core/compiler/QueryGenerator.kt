@@ -136,13 +136,8 @@ abstract class QueryGenerator(
       bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
 
-    // Determine if we should use incremental indexing (beneficial for multiple parameters)
-    val useIncrementalIndexing = orderedBindArgs.size > 1
-
-    // Add parameter index counter variable if we're using incremental indexing
-    if (useIncrementalIndexing) {
-      bindStatements.add("var parameterIndex = 0\n")
-    }
+    // Add parameter index counter variable
+		bindStatements.add("var parameterIndex = 0\n")
 
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -164,26 +159,14 @@ abstract class QueryGenerator(
 
         // Perform the necessary binds using the appropriate indexing strategy
         val elementName = argumentNameAllocator.newName(type.name)
-        if (useIncrementalIndexing) {
-          bindStatements.add(
-            """
-            |${type.name}.forEachIndexed { index, $elementName ->
-            |  %L}
-            |parameterIndex += ${type.name}.size
-            |
-            """.trimMargin(),
-            type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex + index")),
-          )
-        } else {
-          bindStatements.add(
-            """
-            |${type.name}.forEachIndexed { index, $elementName ->
-            |  %L}
-            |
-            """.trimMargin(),
-            type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("index")),
-          )
-        }
+				bindStatements.add(
+					"""
+					|${type.name}.forEach { $elementName ->
+					|  %L}
+					|
+					""".trimMargin(),
+					type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
+				)
 
         arrayParameterSizes.add("${type.name}.size")
       } else {
@@ -208,13 +191,8 @@ abstract class QueryGenerator(
             }
           }
 
-          // Binds each parameter to the statement using the appropriate indexing strategy
-          if (useIncrementalIndexing) {
-            bindStatements.add(type.preparedStatementBinder(CodeBlock.of("parameterIndex++"), extractedVariables[type]))
-          } else {
-            // For single parameter, just use 0
-            bindStatements.add(type.preparedStatementBinder(CodeBlock.of("0"), extractedVariables[type]))
-          }
+          // Binds each parameter to the statement using its index
+					bindStatements.add(type.preparedStatementBinder(CodeBlock.of("parameterIndex++"), extractedVariables[type]))
 
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects

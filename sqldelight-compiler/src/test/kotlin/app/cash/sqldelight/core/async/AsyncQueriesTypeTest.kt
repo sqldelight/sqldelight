@@ -199,7 +199,8 @@ class AsyncQueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"

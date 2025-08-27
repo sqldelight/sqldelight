@@ -268,7 +268,8 @@ class JavadocTest {
       |      |INSERT INTO test(value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${testDialect.binderCheck}bindString(0, value_)
+      |        ${testDialect.binderCheck}var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
       |      }
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("test")

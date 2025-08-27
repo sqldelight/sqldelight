@@ -198,7 +198,8 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"
@@ -535,7 +536,8 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"
@@ -687,7 +689,8 @@ class QueriesTypeTest {
       |    |FROM search
       |    |WHERE search MATCH ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindString(0, search)
+      |      var parameterIndex = 0
+      |      bindString(parameterIndex++, search)
       |    }
       |
       |    override fun toString(): String = "Search.sq:selectOffsets"
@@ -817,7 +820,8 @@ class QueriesTypeTest {
       |    |FROM soupView
       |    |WHERE soup_token = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindString(0, soup_token)
+      |      var parameterIndex = 0
+      |      bindString(parameterIndex++, soup_token)
       |    }
       |
       |    override fun toString(): String = "MyView.sq:forSoupToken"
@@ -927,7 +931,8 @@ class QueriesTypeTest {
            */
           public fun selectForId(order: Order): QueryResult<Long> {
             val result = driver.execute(-304_025_397, ""${'"'}INSERT INTO "order" (data_id) VALUES (?)""${'"'}, 1) {
-                  bindLong(0, order.data_id)
+                  var parameterIndex = 0
+                  bindLong(parameterIndex++, order.data_id)
                 }
             notifyQueries(-304_025_397) { emit ->
               emit("order")

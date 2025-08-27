@@ -202,7 +202,8 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindLong(0, id)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -331,8 +332,9 @@ class SelectQueryTypeTest {
       |        |FROM data
       |        |WHERE id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, id.size) {
-      |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index, id_)
+      |          var parameterIndex = 0
+      |          id.forEach { id_ ->
+      |            bindLong(parameterIndex++, id_)
       |          }
       |        }
       |  }
@@ -386,15 +388,13 @@ class SelectQueryTypeTest {
       |        |WHERE id IN ${"$"}idIndexes AND message != ? AND id IN ${"$"}idIndexes
       |        ""${'"'}.trimMargin(), mapper, 1 + id.size + id.size) {
       |          var parameterIndex = 0
-      |          id.forEachIndexed { index, id_ ->
-      |            bindLong(parameterIndex + index, id_)
+      |          id.forEach { id_ ->
+      |            bindLong(parameterIndex++, id_)
       |          }
-      |          parameterIndex += id.size
       |          bindString(parameterIndex++, message)
-      |          id.forEachIndexed { index, id__ ->
-      |            bindLong(parameterIndex + index, id__)
+      |          id.forEach { id__ ->
+      |            bindLong(parameterIndex++, id__)
       |          }
-      |          parameterIndex += id.size
       |        }
       |  }
       |
@@ -439,7 +439,8 @@ class SelectQueryTypeTest {
        |  }
        |
        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT socialFeedItem.message, socialFeedItem.userId, socialFeedItem.creation_time FROM socialFeedItem WHERE message IS NOT NULL AND userId ${"$"}{ if (userId == null) "IS" else "=" } ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
-       |    bindString(0, userId)
+       |    var parameterIndex = 0
+       |    bindString(parameterIndex++, userId)
        |  }
        |
        |  override fun toString(): kotlin.String = "Test.sq:select_news_list"
@@ -482,7 +483,8 @@ class SelectQueryTypeTest {
        |  }
        |
        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(${treatNullAsUnknownQuery.id.withUnderscores}, ""${'"'}SELECT socialFeedItem.message, socialFeedItem.userId, socialFeedItem.creation_time FROM socialFeedItem WHERE message IS NOT NULL AND userId = ? ORDER BY datetime(creation_time) DESC""${'"'}, mapper, 1) {
-       |    bindString(0, userId)
+       |    var parameterIndex = 0
+       |    bindString(parameterIndex++, userId)
        |  }
        |
        |  override fun toString(): kotlin.String = "Test.sq:select_news_list"
@@ -828,7 +830,8 @@ class SelectQueryTypeTest {
       |  |FROM data
       |  |WHERE data MATCH '"one ' || ? || '" * '
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindString(0, value)
+      |    var parameterIndex = 0
+      |    bindString(parameterIndex++, value)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectMatching"
@@ -891,17 +894,15 @@ class SelectQueryTypeTest {
       |        ""${'"'}.trimMargin(), mapper, 4 + id.size + token_.size) {
       |          var parameterIndex = 0
       |          bindString(parameterIndex++, token)
-      |          id.forEachIndexed { index, id_ ->
-      |            bindLong(parameterIndex + index, id_)
+      |          id.forEach { id_ ->
+      |            bindLong(parameterIndex++, id_)
       |          }
-      |          parameterIndex += id.size
       |          bindString(parameterIndex++, token)
       |          bindString(parameterIndex++, name)
       |          bindString(parameterIndex++, name)
-      |          token_.forEachIndexed { index, token__ ->
-      |            bindString(parameterIndex + index, token__)
+      |          token_.forEach { token__ ->
+      |            bindString(parameterIndex++, token__)
       |          }
-      |          parameterIndex += token_.size
       |        }
       |  }
       |
@@ -1072,8 +1073,9 @@ class SelectQueryTypeTest {
       |        |FROM data
       |        |WHERE id IN ${'$'}idIndexes
       |        ""${'"'}.trimMargin(), mapper, id.size) {
-      |          id.forEachIndexed { index, id_ ->
-      |            bindLong(index, id_?.let { data_Adapter.idAdapter.encode(it) })
+      |          var parameterIndex = 0
+      |          id.forEach { id_ ->
+      |            bindLong(parameterIndex++, id_?.let { data_Adapter.idAdapter.encode(it) })
       |          }
       |        }
       |  }
@@ -1488,13 +1490,15 @@ class SelectQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value)
       |      }
       |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value)
       |      }
       |}.also {
       |  notifyQueries(-609_468_782) { emit ->
@@ -1541,13 +1545,15 @@ class SelectQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value_)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value_)
       |      }
       |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value__)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value__)
       |      }
       |}.also {
       |  notifyQueries(-609_468_782) { emit ->
@@ -1594,13 +1600,15 @@ class SelectQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value_)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value_)
       |      }
       |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value_)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value_)
       |      }
       |}.also {
       |  notifyQueries(-609_468_782) { emit ->
@@ -1647,13 +1655,15 @@ class SelectQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value_)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value_)
       |      }
       |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value__)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value__)
       |      }
       |}.also {
       |  notifyQueries(-609_468_782) { emit ->
@@ -1704,13 +1714,15 @@ class SelectQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value_)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value_)
       |      }
       |  driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |      |INSERT INTO data (value)
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, value__)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, value__)
       |      }
       |}.also {
       |  notifyQueries(${query.id.withUnderscores}) { emit ->
@@ -1854,14 +1866,12 @@ class SelectQueryTypeTest {
         |        |(SELECT count(*) FROM ComboData2 WHERE value IN ${"$"}valuesIndexes)
         |        ""${'"'}.trimMargin(), mapper, values.size + values.size) {
         |          var parameterIndex = 0
-        |          values.forEachIndexed { index, values_ ->
-        |            bindString(parameterIndex + index, ComboDataAdapter.value_Adapter.encode(values_))
+        |          values.forEach { values_ ->
+        |            bindString(parameterIndex++, ComboDataAdapter.value_Adapter.encode(values_))
         |          }
-        |          parameterIndex += values.size
-        |          values.forEachIndexed { index, values__ ->
-        |            bindString(parameterIndex + index, ComboDataAdapter.value_Adapter.encode(values__))
+        |          values.forEach { values__ ->
+        |            bindString(parameterIndex++, ComboDataAdapter.value_Adapter.encode(values__))
         |          }
-        |          parameterIndex += values.size
         |        }
         |  }
         |
@@ -1908,7 +1918,8 @@ class SelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value_)
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, value_)
       |        }
       |    driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |        |SELECT value

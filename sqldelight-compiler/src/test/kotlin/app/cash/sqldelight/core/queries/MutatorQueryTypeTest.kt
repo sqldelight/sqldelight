@@ -458,7 +458,8 @@ class MutatorQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindBytes(0, value_)
+      |        var parameterIndex = 0
+      |        bindBytes(parameterIndex++, value_)
       |      }
       |  notifyQueries(208_179_736) { emit ->
       |    emit("data")
@@ -499,7 +500,8 @@ class MutatorQueryTypeTest {
       |      |INSERT INTO data (value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindDouble(0, value_)
+      |        var parameterIndex = 0
+      |        bindDouble(parameterIndex++, value_)
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
@@ -901,7 +903,8 @@ class MutatorQueryTypeTest {
     | */
     |public fun insertItem(content: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
     |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT OR FAIL INTO item_index(content) VALUES (?)""${'"'}, 1) {
-    |        bindString(0, content)
+    |        var parameterIndex = 0
+    |        bindString(parameterIndex++, content)
     |      }
     |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
     |    emit("item_index")
@@ -1002,13 +1005,15 @@ class MutatorQueryTypeTest {
       |public fun delete(ids: kotlin.collections.Collection<Int>): app.cash.sqldelight.db.QueryResult<kotlin.Long> = transactionWithResult {
       |  val idsIndexes = createArguments(count = ids.size)
       |  driver.execute(null, ""${'"'}DELETE FROM data WHERE id IN ${'$'}idsIndexes""${'"'}, ids.size) {
-      |        ids.forEachIndexed { index, ids_ ->
-      |          bindLong(index, data_Adapter.idAdapter.encode(ids_))
+      |        var parameterIndex = 0
+      |        ids.forEach { ids_ ->
+      |          bindLong(parameterIndex++, data_Adapter.idAdapter.encode(ids_))
       |        }
       |      }
       |  driver.execute(null, ""${'"'}DELETE FROM data WHERE other IN ${'$'}idsIndexes""${'"'}, ids.size) {
-      |        ids.forEachIndexed { index, ids_ ->
-      |          bindLong(index, data_Adapter.idAdapter.encode(ids_))
+      |        var parameterIndex = 0
+      |        ids.forEach { ids_ ->
+      |          bindLong(parameterIndex++, data_Adapter.idAdapter.encode(ids_))
       |        }
       |      }
       |}.also {

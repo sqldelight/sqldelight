@@ -49,7 +49,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${dialect.binderCheck}bindString(0, customTextValue)
+      |        ${dialect.binderCheck}var parameterIndex = 0
+      |        bindString(parameterIndex++, customTextValue)
       |      }
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("data")
@@ -91,7 +92,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${dialect.binderCheck}bindString(0, customTextValue)
+      |        ${dialect.binderCheck}var parameterIndex = 0
+      |        bindString(parameterIndex++, customTextValue)
       |      }
       |}.also {
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
@@ -379,7 +381,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, data_.id)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, data_.id)
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -419,7 +422,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, id)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -464,10 +468,9 @@ class MutatorQueryFunctionTest {
       |      ""${'"'}.trimMargin(), 1 + id.size) {
       |        var parameterIndex = 0
       |        bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |        id.forEachIndexed { index, id_ ->
-      |          bindLong(parameterIndex + index, id_)
+      |        id.forEach { id_ ->
+      |          bindLong(parameterIndex++, id_)
       |        }
-      |        parameterIndex += id.size
       |      }
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("data")
@@ -864,155 +867,5 @@ class MutatorQueryFunctionTest {
       val generator = MutatorQueryGenerator(it)
       assertThat(generator.function().parameters.map { it.toString() }).containsExactly("subtotal: kotlin.String?")
     }
-  }
-
-  @Test
-  fun `large number of parameters generates efficient incremental indexing`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE test_data (
-      |  id INTEGER PRIMARY KEY,
-      |  param1 TEXT,
-      |  param2 TEXT, 
-      |  param3 TEXT,
-      |  param4 TEXT,
-      |  param5 TEXT,
-      |  param6 TEXT,
-      |  param7 TEXT,
-      |  param8 TEXT,
-      |  param9 TEXT,
-      |  param10 TEXT
-      |);
-      |
-      |insertManyParams:
-      |INSERT INTO test_data (param1, param2, param3, param4, param5, param6, param7, param8, param9, param10)
-      |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      """.trimMargin(),
-      tempFolder,
-    )
-
-    val insert = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(insert)
-    val generatedFunction = generator.function().toString()
-
-    // Verify the function uses incremental indexing for multiple parameters
-    assertThat(generatedFunction).contains("var parameterIndex = 0")
-    assertThat(generatedFunction).contains("parameterIndex++")
-    
-    // Verify it doesn't contain the old O(n²) offset calculations
-    assertThat(generatedFunction).doesNotContain("index + 0")
-    assertThat(generatedFunction).doesNotContain("index + 1 + 1")
-    assertThat(generatedFunction).doesNotContain("0 + 1 + 1")
-    
-    // Verify each parameter is bound with parameterIndex++
-    for (i in 1..10) {
-      assertThat(generatedFunction).contains("bindString(parameterIndex++, param$i)")
-    }
-  }
-
-  @Test
-  fun `single parameter does not use incremental indexing`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE test_data (
-      |  id INTEGER PRIMARY KEY,
-      |  value TEXT
-      |);
-      |
-      |insertSingleParam:
-      |INSERT INTO test_data (value)
-      |VALUES (?);
-      """.trimMargin(),
-      tempFolder,
-    )
-
-    val insert = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(insert)
-    val generatedFunction = generator.function().toString()
-
-    // For single parameter, should use simple hardcoded indexing
-    assertThat(generatedFunction).doesNotContain("var parameterIndex = 0")
-    assertThat(generatedFunction).doesNotContain("parameterIndex++")
-    assertThat(generatedFunction).contains("bindString(0, value_)")
-  }
-
-  @Test
-  fun `array parameters with regular parameters generate efficient incremental indexing`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE data (
-      |  id INTEGER PRIMARY KEY,
-      |  value TEXT,
-      |  category TEXT
-      |);
-      |
-      |updateWithArrays:
-      |UPDATE data 
-      |SET value = ?
-      |WHERE id IN :ids 
-      |AND category = ?;
-      """.trimMargin(),
-      tempFolder,
-    )
-
-    val update = file.namedMutators.first()
-    val generator = MutatorQueryGenerator(update)
-    val generatedFunction = generator.function().toString()
-
-    // Verify incremental indexing is used (multiple parameters including array)
-    assertThat(generatedFunction).contains("var parameterIndex = 0")
-    assertThat(generatedFunction).contains("parameterIndex++")
-    
-    // Verify array parameter indexing
-    assertThat(generatedFunction).contains("bindLong(parameterIndex + index, ids_)")
-    assertThat(generatedFunction).contains("parameterIndex += ids.size")
-    
-    // Verify regular parameter after array uses incremental indexing
-    assertThat(generatedFunction).contains("bindString(parameterIndex++, category)")
-    
-    // Verify no complex offset calculations
-    assertThat(generatedFunction).doesNotContain("1 + ids.size")
-    assertThat(generatedFunction).doesNotContain("0 + 1 + ids.size")
-  }
-
-  @Test fun `multiple array parameters generate efficient incremental indexing`() {
-    val file = FixtureCompiler.parseSql(
-      """
-      |CREATE TABLE data (
-      |  id INTEGER PRIMARY KEY,
-      |  value TEXT,
-      |  category TEXT
-      |);
-      |
-      |selectMultipleArrays:
-      |SELECT * FROM data 
-      |WHERE id IN :ids 
-      |AND value IN :values
-      |AND category = ?;
-      """.trimMargin(),
-      tempFolder,
-    )
-
-    val query = file.namedQueries.first()
-    val generator = SelectQueryGenerator(query)
-    val generatedQueryType = generator.querySubtype().toString()
-
-    // Verify incremental indexing is used
-    assertThat(generatedQueryType).contains("var parameterIndex = 0")
-    
-    // Verify first array parameter
-    assertThat(generatedQueryType).contains("bindLong(parameterIndex + index, ids_)")
-    assertThat(generatedQueryType).contains("parameterIndex += ids.size")
-    
-    // Verify second array parameter uses updated parameterIndex
-    assertThat(generatedQueryType).contains("bindString(parameterIndex + index, values_)")
-    assertThat(generatedQueryType).contains("parameterIndex += values.size")
-    
-    // Verify regular parameter after arrays
-    assertThat(generatedQueryType).contains("bindString(parameterIndex++, category)")
-    
-    // The total argument count calculation still includes the old format for arrays
-    // This is expected as it's calculated before the incremental binding logic
-    assertThat(generatedQueryType).contains("1 + ids.size + values.size")
   }
 }

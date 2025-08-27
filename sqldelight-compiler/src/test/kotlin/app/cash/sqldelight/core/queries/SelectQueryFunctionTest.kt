@@ -314,14 +314,12 @@ class SelectQueryFunctionTest {
       |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |        ""${'"'}.trimMargin(), mapper, good.size + bad.size) {
       |          var parameterIndex = 0
-      |          good.forEachIndexed { index, good_ ->
-      |            bindLong(parameterIndex + index, good_)
+      |          good.forEach { good_ ->
+      |            bindLong(parameterIndex++, good_)
       |          }
-      |          parameterIndex += good.size
-      |          bad.forEachIndexed { index, bad_ ->
-      |            bindLong(parameterIndex + index, bad_)
+      |          bad.forEach { bad_ ->
+      |            bindLong(parameterIndex++, bad_)
       |          }
-      |          parameterIndex += bad.size
       |        }
       |  }
       |
