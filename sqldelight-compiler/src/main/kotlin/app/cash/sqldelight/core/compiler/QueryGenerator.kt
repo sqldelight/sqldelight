@@ -137,7 +137,7 @@ abstract class QueryGenerator(
     }
 
     // Add parameter index counter variable
-		bindStatements.add("var parameterIndex = 0\n")
+    bindStatements.add("var parameterIndex = 0\n")
 
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
@@ -159,14 +159,14 @@ abstract class QueryGenerator(
 
         // Perform the necessary binds using the appropriate indexing strategy
         val elementName = argumentNameAllocator.newName(type.name)
-				bindStatements.add(
-					"""
+        bindStatements.add(
+          """
 					|${type.name}.forEach { $elementName ->
 					|  %L}
 					|
-					""".trimMargin(),
-					type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
-				)
+          """.trimMargin(),
+          type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
+        )
 
         arrayParameterSizes.add("${type.name}.size")
       } else {
@@ -192,7 +192,7 @@ abstract class QueryGenerator(
           }
 
           // Binds each parameter to the statement using its index
-					bindStatements.add(type.preparedStatementBinder(CodeBlock.of("parameterIndex++"), extractedVariables[type]))
+          bindStatements.add(type.preparedStatementBinder(CodeBlock.of("parameterIndex++"), extractedVariables[type]))
 
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects
