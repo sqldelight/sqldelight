@@ -14,7 +14,8 @@
 - [Compiler] Simplified default generated queries using constructor references (#5814 by [Jon Poulton][jonapoul])
 
 ### Fixed
-- [PostgreSQL Dialect] Fix IntelliJ SqlDelight Plugin ClassCastException (#5772 by [Griffio][griffio])
+- [IntelliJ Plugin] Avoid threading-related crash in the copy-to-sqlite gutter action (#5901 by [Griffio][griffio])
+- [IntelliJ Plugin] Fix for PostgreSql dialect when using schema statements CREATE INDEX and CREATE VIEW (#5772 by [Griffio][griffio])
 - [Compiler] Fix FTS stack overflow when referencing columns (#5896 by [Griffio][griffio])
 - [Compiler] Fix With Recursive stack overflow (#5892 by [Griffio][griffio])
 - [Compiler] Fix Notify for Insert|Update|Delete Returning statements (#5851 by [Griffio][griffio])
