@@ -8,163 +8,58 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.intellij.FileIndex
 import app.cash.sqldelight.intellij.SqlDelightFileIndexImpl
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification
-import app.cash.sqldelight.intellij.notifications.FileIndexingNotification.UnconfiguredReason.Syncing
+import app.cash.sqldelight.intellij.resolvers.SQL_DELIGHT_MODEL_KEY
 import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.extensions.PluginDescriptor
 import com.intellij.openapi.extensions.PluginId
-import com.intellij.openapi.externalSystem.model.ExternalSystemException
-import com.intellij.openapi.externalSystem.service.execution.ExternalSystemJdkUtil
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.progress.EmptyProgressIndicator
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
-import com.intellij.ui.EditorNotifications
 import com.intellij.util.lang.ClassPath
 import com.intellij.util.lang.UrlClassLoader
-import io.ktor.util.rootCause
-import java.io.File
 import java.net.URI
 import java.nio.file.Path
 import java.util.ServiceLoader
-import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
-import org.jetbrains.plugins.gradle.settings.DistributionType
-import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
-import timber.log.Timber
+import org.jetbrains.kotlin.idea.base.externalSystem.findAll
+import org.jetbrains.kotlin.idea.configuration.GRADLE_SYSTEM_ID
 
 internal class FileIndexMap {
-  private var fetchThread: Thread? = null
   private val fileIndices = mutableMapOf<String, SqlDelightFileIndex>()
-
-  private var initialized = false
-  private var retries = 0
-
-  fun close() {
-    fetchThread?.interrupt()
-    fetchThread = null
-    initialized = false
-  }
 
   operator fun get(module: Module): SqlDelightFileIndex {
     val projectPath = ExternalSystemApiUtil.getExternalProjectPath(module) ?: return defaultIndex
-    val result = fileIndices[projectPath]
-    if (result != null) return result
-    ApplicationManager.getApplication().invokeLater {
-      synchronized(this) {
-        if (!initialized) {
-          initialized = true
-          if (!module.isDisposed && !module.project.isDisposed) {
-            try {
-              ProgressManager.getInstance().runProcessWithProgressAsynchronously(
-                FetchModuleModels(module, projectPath),
-                EmptyProgressIndicator().apply { start() },
-              )
-            } catch (e: Throwable) {
-              // IntelliJ can fail to start the fetch command, reinitialize later in this case.
-              if (retries++ < 3) {
-                initialized = false
-              }
-            }
-          }
-        }
+
+    // Get the DataNode for this module
+    val moduleDataNode = ExternalSystemApiUtil.findModuleNode(module.project, GRADLE_SYSTEM_ID, projectPath) ?: return defaultIndex
+
+    // Get the DataNode containing the propertiesFile object
+    val propertiesFileNode = moduleDataNode.findAll(SQL_DELIGHT_MODEL_KEY).singleOrNull() ?: return defaultIndex
+
+    // Get the actual propertiesFile object
+    val propertiesFile = propertiesFileNode.data
+
+    return fileIndices.computeIfAbsent(projectPath) {
+      val compatibility = GradleCompatibility.validate(propertiesFile)
+
+      if (compatibility is Incompatible) {
+        FileIndexingNotification.getInstance(module.project).unconfiguredReason =
+          FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason, null)
+        return@computeIfAbsent defaultIndex
       }
-    }
-    return fileIndices[projectPath] ?: defaultIndex
-  }
 
-  private inner class FetchModuleModels(
-    private val module: Module,
-    private val projectPath: String,
-  ) : Task.Backgroundable(
-    /* project = */
-    module.project,
-    /* title = */
-    "Importing ${module.name} SQLDelight",
-  ) {
-    override fun run(indicator: ProgressIndicator) {
-      FileIndexingNotification.getInstance(module.project).unconfiguredReason = Syncing
-
-      val executionSettings = GradleExecutionSettings(
-        /* gradleHome = */
-        null,
-        /* serviceDirectory = */
-        null,
-        /* distributionType = */
-        DistributionType.DEFAULT_WRAPPED,
-        /* isOfflineWork = */
-        false,
+      val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
+      val shouldInvalidate = pluginDescriptor.addDialect(
+        propertiesFile.dialectJars.map { it.toURI() },
       )
-      try {
-        fileIndices.putAll(
-          GradleExecutionHelper().execute(projectPath, executionSettings) { connection ->
-            fetchThread = Thread.currentThread()
-            if (!initialized) return@execute emptyMap()
 
-            Timber.i("Fetching SQLDelight models")
-            val javaHome = (
-              ExternalSystemJdkUtil.getAvailableJdk(project).second.homePath
-                ?: ExternalSystemJdkUtil.getJavaHome()
-              )?.let { File(it) }
-
-            Timber.i("Using java home $javaHome")
-
-            val properties =
-              connection.action(FetchProjectModelsBuildAction).setJavaHome(javaHome).run()
-
-            Timber.i("Assembling file index")
-            return@execute properties.mapValues { (_, value) ->
-              val compatibility = if (value == null) {
-                Incompatible("The IDE and Gradle versions of SQLDelight are incompatible, please update the lower version.")
-              } else {
-                GradleCompatibility.validate(value)
-              }
-
-              if (compatibility is Incompatible) {
-                FileIndexingNotification.getInstance(project).unconfiguredReason =
-                  FileIndexingNotification.UnconfiguredReason.Incompatible(compatibility.reason, null)
-                return@mapValues defaultIndex
-              }
-
-              val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
-              val shouldInvalidate = pluginDescriptor.addDialect(
-                value!!.dialectJars.map { it.toURI() },
-              )
-
-              val database = value.databases.first()
-              SqlDelightProjectService.getInstance(module.project).apply {
-                val dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).first()
-                setDialect(dialect, shouldInvalidate)
-                treatNullAsUnknownForEquality = database.treatNullAsUnknownForEquality
-                generateAsync = database.generateAsync
-              }
-
-              return@mapValues FileIndex(database)
-            }
-          },
-        )
-        Timber.i("Initialized file index")
-        EditorNotifications.getInstance(module.project).updateAllNotifications()
-      } catch (externalException: ExternalSystemException) {
-        // Expected interrupt from calling close() on the index.
-        if (externalException.rootCause() !is InterruptedException) {
-          // It's a gradle error, ignore and let the user fix when they try and build the project
-          Timber.i("sqldelight model gen failed")
-          Timber.i(externalException)
-
-          FileIndexingNotification.getInstance(project).unconfiguredReason =
-            FileIndexingNotification.UnconfiguredReason.Incompatible(
-              """
-              Connecting with the SQLDelight plugin failed: try building from the command line.
-              """.trimIndent(),
-              externalException,
-            )
-        }
-      } finally {
-        fetchThread = null
-        initialized = false
+      val database = propertiesFile.databases.first()
+      SqlDelightProjectService.getInstance(module.project).apply {
+        val dialect = ServiceLoader.load(SqlDelightDialect::class.java, pluginDescriptor.pluginClassLoader).first()
+        setDialect(dialect, shouldInvalidate)
+        treatNullAsUnknownForEquality = database.treatNullAsUnknownForEquality
+        generateAsync = database.generateAsync
       }
+
+      return@computeIfAbsent FileIndex(database)
     }
   }
 
