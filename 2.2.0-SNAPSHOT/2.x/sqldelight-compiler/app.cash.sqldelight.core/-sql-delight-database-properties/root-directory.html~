@@ -95,7 +95,7 @@
   <div class="cover ">
     <h1 class="cover"><span>root</span><wbr><span><span>Directory</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="root-directory.html">rootDirectory</a><span class="token operator">: </span><span data-unresolved-link="java.io/File///PointingToDeclaration/">File</span></div></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="root-directory.html">rootDirectory</a><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a></div></div></div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
