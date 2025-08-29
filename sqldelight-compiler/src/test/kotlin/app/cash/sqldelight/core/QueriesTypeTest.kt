@@ -171,8 +171,9 @@ class QueriesTypeTest {
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, id)
-      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, id)
+      |          bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
@@ -197,7 +198,8 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"
@@ -308,8 +310,9 @@ class QueriesTypeTest {
       |        |INSERT INTO data (id, value)
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, data_.id)
-      |          bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, data_.id)
+      |          bindString(parameterIndex++, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
@@ -506,8 +509,9 @@ class QueriesTypeTest {
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, id)
-      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, id)
+      |          bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
@@ -532,7 +536,8 @@ class QueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"
@@ -657,8 +662,9 @@ class QueriesTypeTest {
       |        |INSERT INTO search
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, id)
-      |          bindString(1, value_)
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, id)
+      |          bindString(parameterIndex++, value_)
       |        }
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("search")
@@ -683,7 +689,8 @@ class QueriesTypeTest {
       |    |FROM search
       |    |WHERE search MATCH ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindString(0, search)
+      |      var parameterIndex = 0
+      |      bindString(parameterIndex++, search)
       |    }
       |
       |    override fun toString(): String = "Search.sq:selectOffsets"
@@ -813,7 +820,8 @@ class QueriesTypeTest {
       |    |FROM soupView
       |    |WHERE soup_token = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindString(0, soup_token)
+      |      var parameterIndex = 0
+      |      bindString(parameterIndex++, soup_token)
       |    }
       |
       |    override fun toString(): String = "MyView.sq:forSoupToken"
@@ -923,7 +931,8 @@ class QueriesTypeTest {
            */
           public fun selectForId(order: Order): QueryResult<Long> {
             val result = driver.execute(-304_025_397, ""${'"'}INSERT INTO "order" (data_id) VALUES (?)""${'"'}, 1) {
-                  bindLong(0, order.data_id)
+                  var parameterIndex = 0
+                  bindLong(parameterIndex++, order.data_id)
                 }
             notifyQueries(-304_025_397) { emit ->
               emit("order")
@@ -969,8 +978,9 @@ class QueriesTypeTest {
            */
           public fun insertObject(Examples: Examples): QueryResult<Long> {
             val result = driver.execute(-1_876_170_987, ""${'"'}INSERT INTO Examples (id, `index`) VALUES (?, ?)""${'"'}, 2) {
-                  bindString(0, Examples.id)
-                  bindLong(1, Examples.index)
+                  var parameterIndex = 0
+                  bindString(parameterIndex++, Examples.id)
+                  bindLong(parameterIndex++, Examples.index)
                 }
             notifyQueries(-1_876_170_987) { emit ->
               emit("Examples")

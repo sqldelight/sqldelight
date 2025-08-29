@@ -924,7 +924,8 @@ class InterfaceGeneration {
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT song.title, song.track_number, song.album_id FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper, 1) {
-      |      bindLong(0, album_id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, album_id)
       |    }
       |
       |    override fun toString(): String = "song.sq:selectSongsByAlbumId"
@@ -1002,7 +1003,8 @@ class InterfaceGeneration {
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          check(this is JdbcPreparedStatement)
-      |          bindInt(0, user_id2)
+      |          var parameterIndex = 0
+      |          bindInt(parameterIndex++, user_id2)
       |        }
       |    notifyQueries(${result.compiledFile.namedMutators[0].id.withUnderscores}) { emit ->
       |      emit("subscriptionEntity")
@@ -1030,7 +1032,8 @@ class InterfaceGeneration {
       |    |) SELECT insert_id FROM inserted_ids
       |    ""${'"'}.trimMargin(), mapper, 1) {
       |      check(this is JdbcPreparedStatement)
-      |      bindString(0, slack_user_id)
+      |      var parameterIndex = 0
+      |      bindString(parameterIndex++, slack_user_id)
       |    }
       |
       |    override fun toString(): String = "Subscription.sq:insertUser"
@@ -1141,7 +1144,8 @@ class InterfaceGeneration {
       |    |SELECT descendants.id, descendants.parent_id
       |    |FROM descendants
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Recursive.sq:recursiveQuery"
@@ -1252,7 +1256,8 @@ class InterfaceGeneration {
       |    |SELECT descendants.id, descendants.parent_id
       |    |FROM descendants
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Recursive.sq:recursiveQuery"
