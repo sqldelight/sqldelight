@@ -11,7 +11,6 @@ import com.intellij.codeInsight.daemon.impl.ShowAutoImportPass
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.codeInsight.hint.QuestionAction
 import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction
-import com.intellij.codeInsight.navigation.NavigationUtil
 import com.intellij.codeInspection.HintAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
@@ -107,7 +106,6 @@ internal class AddImportIntention(
       }
     }
     val popup = ListPopupImpl(project, step)
-    NavigationUtil.hidePopupIfDumbModeStarts(popup, project)
     popup.showInBestPositionFor(editor)
   }
 

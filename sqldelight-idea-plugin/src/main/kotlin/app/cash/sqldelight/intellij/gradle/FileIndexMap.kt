@@ -84,7 +84,7 @@ internal class FileIndexMap {
           field.isAccessible = false
           return@let result
         }
-      } catch (e: NoSuchFieldException) {
+      } catch (_: NoSuchFieldException) {
         // This is a newer version of IntelliJ that doesn't have the files field on UrlClassLoader,
         // reflect on Classpath instead.
         ClassPath::class.java.getDeclaredField("files").let { field ->
