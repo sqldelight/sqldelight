@@ -23,17 +23,17 @@ import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.intellij.ProjectService
 import app.cash.sqldelight.intellij.util.GeneratedVirtualFile
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.TableElement
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.constrainedReadAndWriteAction
+import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.progress.ProcessCanceledException
-import com.intellij.openapi.project.DumbService
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.FileViewProviderFactory
@@ -42,13 +42,9 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.util.concurrency.NonUrgentExecutor
 import java.io.PrintStream
-import java.util.concurrent.Callable
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.function.BooleanSupplier
+import java.util.concurrent.CancellationException
+import kotlinx.coroutines.launch
 
 class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
   override fun createFileViewProvider(
@@ -57,9 +53,10 @@ class SqlDelightFileViewProviderFactory : FileViewProviderFactory {
     manager: PsiManager,
     eventSystemEnabled: Boolean,
   ): FileViewProvider {
-    val module = SqlDelightProjectService.getInstance(manager.project).module(file)
+    val service = SqlDelightProjectService.getInstance(manager.project) as ProjectService
+    val module = service.module(file)
       ?: return SingleRootFileViewProvider(manager, file, eventSystemEnabled)
-    return SqlDelightFileViewProvider(manager, file, eventSystemEnabled, language, module)
+    return SqlDelightFileViewProvider(manager, file, eventSystemEnabled, language, module, service)
   }
 }
 
@@ -69,8 +66,8 @@ private class SqlDelightFileViewProvider(
   eventSystemEnabled: Boolean,
   private val language: Language,
   private val module: Module,
+  private val service: ProjectService,
 ) : SingleRootFileViewProvider(manager, virtualFile, eventSystemEnabled, language) {
-  private val threadPool = Executors.newScheduledThreadPool(1)
 
   private val file: SqlDelightFile
     get() = getPsiInner(language) as SqlDelightFile
@@ -80,8 +77,6 @@ private class SqlDelightFileViewProvider(
       (field - value.toSet()).forEach { it.delete(this) }
       field = value
     }
-
-  private var condition = WriteCondition()
 
   override fun contentsSynchronized() {
     contentsSynchronized(updateTransitive = true)
@@ -96,63 +91,45 @@ private class SqlDelightFileViewProvider(
       return
     }
 
-    condition.invalidated.set(true)
-
     if (ApplicationManager.getApplication().isUnitTestMode) {
       writeFiles(generateSqlDelightCode())
       return
     }
 
-    val thisCondition = WriteCondition()
-    condition = thisCondition
-    threadPool.schedule(
-      {
-        ReadAction.nonBlocking(
-          Callable<Map<GeneratedFile, StringBuilder>?> {
-            try {
-              generateSqlDelightCode()
-            } catch (e: ProcessCanceledException) {
-              throw e
-            } catch (e: Throwable) {
-              // IDE generating code should be best effort - source of truth is always the gradle
-              // build, and its better to ignore the error and try again than crash and require
-              // the IDE restarts.
-              e.printStackTrace()
-              null
-            }
-          },
-        ).expireWhen(thisCondition)
-          .finishOnUiThread(ModalityState.NON_MODAL, ::writeFiles)
-          .submit(NonUrgentExecutor.getInstance())
-      },
-      1,
-      TimeUnit.SECONDS,
-    )
+    service.scope.launch {
+      constrainedReadAndWriteAction {
+        val fileContent = try {
+          generateSqlDelightCode()
+        } catch (e: CancellationException) {
+          throw e
+        } catch (e: Throwable) {
+          // IDE generating code should be best effort - source of truth is always the gradle
+          // build, and its better to ignore the error and try again than crash and require
+          // the IDE restarts.
+          e.printStackTrace()
+          null
+        }
+        ProgressManager.checkCanceled()
+        writeAction {
+          writeFiles(fileContent)
+        }
+      }
 
-    if (!updateTransitive) return
+      if (!updateTransitive) return@launch
 
-    // Alert other files that rely on tables in this file to synchronize.
-    threadPool.schedule(
-      {
-        ReadAction.nonBlocking(
-          Callable {
-            DumbService.getInstance(module.project).waitForSmartMode()
-            file.findChildrenOfType<TableElement>().forEach { queryable ->
-              val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
-                .mapNotNull { it.element.containingFile as? SqlDelightFile }
-                .distinct()
+      // Alert other files that rely on tables in this file to synchronize.
+      smartReadAction(module.project) {
+        file.findChildrenOfType<TableElement>().forEach { queryable ->
+          val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
+            .mapNotNull { it.element.containingFile as? SqlDelightFile }
+            .distinct()
 
-              affectedFiles.forEach {
-                (it.viewProvider as? SqlDelightFileViewProvider)?.contentsSynchronized(false)
-              }
-            }
-          },
-        ).expireWhen(thisCondition)
-          .submit(NonUrgentExecutor.getInstance())
-      },
-      1,
-      TimeUnit.SECONDS,
-    )
+          affectedFiles.forEach {
+            (it.viewProvider as? SqlDelightFileViewProvider)?.contentsSynchronized(false)
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -177,7 +154,7 @@ private class SqlDelightFileViewProvider(
         }
         return@processElements shouldGenerate
       }
-    } catch (e: Throwable) {
+    } catch (_: Throwable) {
       // If we encountered an exception while looking for errors, assume it was an error.
       false
     }
@@ -216,12 +193,6 @@ private class SqlDelightFileViewProvider(
       }
       this.filesGenerated = files
     }
-  }
-
-  private class WriteCondition : BooleanSupplier {
-    var invalidated = AtomicBoolean(false)
-
-    override fun getAsBoolean() = invalidated.get()
   }
 
   private data class GeneratedFile(
