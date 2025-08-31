@@ -10,13 +10,11 @@ import kotlin.String
 public class GroupQueries(
   driver: SqlDriver,
 ) : TransacterImpl(driver) {
-  public fun selectAll(): Query<Long> = Query(165_688_501, arrayOf("group"), driver, "Group.sq",
-      "selectAll", "SELECT `index` FROM `group`") { cursor ->
+  public fun selectAll(): Query<Long> = Query(165_688_501, arrayOf("group"), driver, "Group.sq", "selectAll", "SELECT `index` FROM `group`") { cursor ->
     cursor.getLong(0)!!
   }
 
-  public fun <T : Any> selectFromTable2(mapper: (something: String?, nice: String?) -> T): Query<T>
-      = Query(-620_576_550, arrayOf("myftstable2"), driver, "Group.sq", "selectFromTable2", """
+  public fun <T : Any> selectFromTable2(mapper: (something: String?, nice: String?) -> T): Query<T> = Query(-620_576_550, arrayOf("myftstable2"), driver, "Group.sq", "selectFromTable2", """
   |SELECT myftstable2.something, myftstable2.nice
   |FROM myftstable2
   """.trimMargin()) { cursor ->
@@ -26,10 +24,5 @@ public class GroupQueries(
     )
   }
 
-  public fun selectFromTable2(): Query<SelectFromTable2> = selectFromTable2 { something, nice ->
-    SelectFromTable2(
-      something,
-      nice
-    )
-  }
+  public fun selectFromTable2(): Query<SelectFromTable2> = selectFromTable2(::SelectFromTable2)
 }

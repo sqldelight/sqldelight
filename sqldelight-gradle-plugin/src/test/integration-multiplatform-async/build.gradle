@@ -19,10 +19,8 @@ sqldelight {
 kotlin {
   jvmToolchain(11)
 
-  targets {
-    android()
-    jvm()
-  }
+  androidTarget()
+  jvm()
 
   sourceSets {
     commonMain {

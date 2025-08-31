@@ -7,6 +7,7 @@
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
   <depends>com.intellij.gradle</depends>
+  <depends>org.jetbrains.plugins.gradle</depends>
   <depends optional="true" config-file="com.squareup.sqldelight-withAndroid.xml">org.jetbrains.android</depends>
 
   <description><![CDATA[
@@ -230,6 +231,10 @@
 
   <extensions defaultExtensionNs="org.jetbrains.kotlin">
     <supportsKotlinPluginMode supportsK2="true" />
+  </extensions>
+
+  <extensions defaultExtensionNs="org.jetbrains.plugins.gradle">
+    <projectResolve implementation="app.cash.sqldelight.intellij.resolvers.SqlDelightProjectResolverExtension"/>
   </extensions>
 
   <actions>

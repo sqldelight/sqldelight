@@ -28,5 +28,6 @@ private fun SqlDelightCompilationUnitImpl.withInvariantPathSeparators(): SqlDeli
   )
 }
 
-private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() =
-  copy(folder = File(folder.path.withInvariantPathSeparators()))
+private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators(): SqlDelightSourceFolderImpl {
+  return copy(folder = File(folder.path.withInvariantPathSeparators()))
+}

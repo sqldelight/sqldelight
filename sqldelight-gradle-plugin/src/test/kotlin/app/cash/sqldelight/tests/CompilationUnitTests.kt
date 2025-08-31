@@ -128,11 +128,12 @@ class CompilationUnitTests {
         |}
         |
         |kotlin {
-        |  targetFromPreset(presets.jvm, 'jvm')
-        |  targetFromPreset(presets.js, 'js')
-        |  targetFromPreset(presets.iosArm64, 'iosArm64')
-        |  targetFromPreset(presets.iosX64, 'iosX64')
-        |  targetFromPreset(presets.macosX64, 'macosX64')
+        |  iosX64()
+        |  iosArm64()
+        |  macosArm64()
+        |  macosX64()
+        |  js().nodejs()
+        |  jvm()
         |}
         """.trimMargin(),
       )
@@ -203,8 +204,8 @@ class CompilationUnitTests {
         |}
         |
         |kotlin {
-        |  targetFromPreset(presets.iosX64, 'iosX64')
-        |  targetFromPreset(presets.android, 'androidLib')
+        |  androidTarget("androidLib")
+        |  iosX64()
         |}
         """.trimMargin(),
       )

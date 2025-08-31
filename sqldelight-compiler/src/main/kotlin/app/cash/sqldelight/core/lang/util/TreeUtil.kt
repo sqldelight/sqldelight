@@ -26,6 +26,7 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
+import app.cash.sqldelight.dialect.api.TableFunctionRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
@@ -36,6 +37,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
+import com.alecstrong.sql.psi.core.psi.SqlModuleColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlTableName
@@ -63,7 +65,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
   is SqlColumnName -> {
     when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()
-      is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
+      is SqlModuleColumnDef -> IntermediateType(TEXT, name = this.name).asNullable()
       else -> {
         when (val resolvedReference = reference?.resolve()) {
           null -> IntermediateType(PrimitiveType.NULL)
@@ -82,6 +84,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
+  is TableFunctionRowType -> (sqFile().typeResolver.definitionType(columnType()).asNullable())
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
@@ -100,7 +103,7 @@ fun PsiDirectory.queryFiles(): Sequence<SqlDelightQueriesFile> {
   return children.asSequence().flatMap {
     when (it) {
       is PsiDirectory -> it.queryFiles()
-      is SqlDelightQueriesFile -> sequenceOf(it)
+      is SqlDelightQueriesFile -> listOf(it).asSequence()
       else -> emptySequence()
     }
   }
@@ -110,7 +113,7 @@ fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
   return children.asSequence().flatMap {
     when (it) {
       is PsiDirectory -> it.migrationFiles()
-      is MigrationFile -> sequenceOf(it)
+      is MigrationFile -> listOf(it).asSequence()
       else -> emptySequence()
     }
   }
@@ -237,15 +240,17 @@ private val IntRange.length: Int
 fun PsiElement.rawSqlText(
   replacements: List<Pair<IntRange, String>> = emptyList(),
 ): String {
-  return (replacements + rangesToReplace())
+  val x = (replacements + rangesToReplace())
     .sortedBy { it.first.first }
     .map { (range, replacement) -> (range - node.startOffset) to replacement }
-    .fold(
-      0 to text,
-      { (totalRemoved, sqlText), (range, replacement) ->
-        (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
-      },
-    ).second
+
+  val y = x.fold(
+    0 to text,
+    { (totalRemoved, sqlText), (range, replacement) ->
+      (totalRemoved + (range.length - replacement.length)) to sqlText.replaceRange(range - totalRemoved, replacement)
+    },
+  ).second
+  return y
 }
 
 val PsiElement.range: IntRange

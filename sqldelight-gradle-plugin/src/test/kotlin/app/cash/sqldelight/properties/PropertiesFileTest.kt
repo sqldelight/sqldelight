@@ -56,7 +56,9 @@ class PropertiesFileTest {
         |  alias(libs.plugins.android.library)
         |}
         |
-        |archivesBaseName = 'Test'
+        |base {
+        |  archivesName = 'Test'
+        |}
         |
         |android {
         |  namespace 'com.example.namespace'
@@ -81,7 +83,7 @@ class PropertiesFileTest {
         |    }
         |  }
         |
-        |  targetFromPreset(presets.android, 'androidLib')
+        |  androidTarget("androidLib")
         |}
         """.trimMargin(),
       )
