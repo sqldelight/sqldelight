@@ -28,7 +28,7 @@ internal class TestEnvironment(
     val compilationUnit = object : SqlDelightCompilationUnit {
       override val name = "test"
       override val outputDirectoryFile = outputDirectory
-      override val sourceFolders = emptyList<SqlDelightSourceFolder>()
+      override val sourceFolders = emptySet<SqlDelightSourceFolder>()
     }
     val environment = SqlDelightEnvironment(
       sourceFolders = listOf(File(root)),

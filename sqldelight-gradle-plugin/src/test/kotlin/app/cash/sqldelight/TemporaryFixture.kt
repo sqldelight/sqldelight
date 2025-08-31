@@ -79,7 +79,7 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
                 folder = it.folder,
                 dependency = it.dependency,
               )
-            },
+            }.toSet(),
             outputDirectoryFile = it.outputDirectoryFile,
           )
         },
