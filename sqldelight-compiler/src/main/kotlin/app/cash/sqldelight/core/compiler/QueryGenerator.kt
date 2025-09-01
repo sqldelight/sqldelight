@@ -161,9 +161,9 @@ abstract class QueryGenerator(
         val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.add(
           """
-					|${type.name}.forEach { $elementName ->
-					|  %L}
-					|
+          |${type.name}.forEach { $elementName ->
+          |  %L}
+          |
           """.trimMargin(),
           type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
         )
