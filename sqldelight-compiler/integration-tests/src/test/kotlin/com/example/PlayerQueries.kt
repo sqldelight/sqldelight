@@ -170,10 +170,9 @@ public class PlayerQueries(
         """.trimMargin(), 1 + number.size) {
           var parameterIndex = 0
           bindString(parameterIndex++, team?.let { it.name })
-          number.forEachIndexed { index, number_ ->
-            bindLong(parameterIndex + index, number_)
+          number.forEach { number_ ->
+            bindLong(parameterIndex++, number_)
           }
-          parameterIndex += number.size
         }
     notifyQueries(-636_585_613) { emit ->
       emit("player")
@@ -246,7 +245,8 @@ public class PlayerQueries(
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
-      bindString(0, team?.let { it.name })
+      var parameterIndex = 0
+      bindString(parameterIndex++, team?.let { it.name })
     }
 
     override fun toString(): String = "Player.sq:playersForTeam"
@@ -271,8 +271,9 @@ public class PlayerQueries(
           |FROM player
           |WHERE number IN $numberIndexes
           """.trimMargin(), mapper, number.size) {
-            number.forEachIndexed { index, number_ ->
-              bindLong(index, number_)
+            var parameterIndex = 0
+            number.forEach { number_ ->
+              bindLong(parameterIndex++, number_)
             }
           }
     }
