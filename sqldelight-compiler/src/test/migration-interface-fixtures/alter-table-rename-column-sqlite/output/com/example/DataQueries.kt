@@ -22,7 +22,8 @@ public class DataQueries(
    */
   public fun insert(alpha: String): QueryResult<Long> {
     val result = driver.execute(-1_320_712_882, """INSERT INTO test (alpha) VALUES (?)""", 1) {
-          bindString(0, alpha)
+          var parameterIndex = 0
+          bindString(parameterIndex++, alpha)
         }
     notifyQueries(-1_320_712_882) { emit ->
       emit("test")

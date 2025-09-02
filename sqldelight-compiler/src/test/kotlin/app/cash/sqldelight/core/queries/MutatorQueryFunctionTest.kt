@@ -3,6 +3,7 @@ package app.cash.sqldelight.core.queries
 import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
+import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.textType
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
@@ -48,7 +49,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${dialect.binderCheck}bindString(0, customTextValue)
+      |        ${dialect.binderCheck}var parameterIndex = 0
+      |        bindString(parameterIndex++, customTextValue)
       |      }
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("data")
@@ -90,7 +92,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data
       |      |  VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${dialect.binderCheck}bindString(0, customTextValue)
+      |        ${dialect.binderCheck}var parameterIndex = 0
+      |        bindString(parameterIndex++, customTextValue)
       |      }
       |}.also {
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
@@ -130,8 +133,9 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, id)
-      |        bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
+      |        bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -206,8 +210,9 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data (id, value)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, data_.id)
-      |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, data_.id)
+      |        bindString(parameterIndex++, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -249,8 +254,9 @@ class MutatorQueryFunctionTest {
       |      |SET value = ?
       |      |WHERE value ${"$"}{ if (oldValue == null) "IS" else "=" } ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
-      |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, newValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindString(parameterIndex++, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
       |  notifyQueries(380_313_360) { emit ->
       |    emit("data")
@@ -291,8 +297,9 @@ class MutatorQueryFunctionTest {
       |      |SET value = ?
       |      |WHERE value = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, newValue?.let { data_Adapter.value_Adapter.encode(it) })
-      |        bindString(1, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, newValue?.let { data_Adapter.value_Adapter.encode(it) })
+      |        bindString(parameterIndex++, oldValue?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
       |  notifyQueries(380_313_360) { emit ->
       |    emit("data")
@@ -332,8 +339,9 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data (id, value)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, data_.id)
-      |        bindString(1, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, data_.id)
+      |        bindString(parameterIndex++, data_.value_?.let { data_Adapter.value_Adapter.encode(it) })
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -373,7 +381,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, data_.id)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, data_.id)
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -413,7 +422,8 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO data (id)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, id)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(1_642_410_240) { emit ->
       |    emit("data")
@@ -456,9 +466,10 @@ class MutatorQueryFunctionTest {
       |      |SET value = ?
       |      |WHERE id IN ${"$"}idIndexes
       |      ""${'"'}.trimMargin(), 1 + id.size) {
-      |        bindString(0, value_?.let { data_Adapter.value_Adapter.encode(it) })
-      |        id.forEachIndexed { index, id_ ->
-      |          bindLong(index + 1, id_)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |        id.forEach { id_ ->
+      |          bindLong(parameterIndex++, id_)
       |        }
       |      }
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
@@ -504,8 +515,9 @@ class MutatorQueryFunctionTest {
       |      |  FROM some_table
       |      |)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, some_column)
-      |        bindLong(1, some_column)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, some_column)
+      |        bindLong(parameterIndex++, some_column)
       |      }
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("some_table")
@@ -560,10 +572,11 @@ class MutatorQueryFunctionTest {
       |      |    c = ?,
       |      |    d = ?
       |      ""${'"'}.trimMargin(), 4) {
-      |        bindString(0, a)
-      |        bindString(1, b)
-      |        bindBytes(2, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
-      |        bindBytes(3, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, a)
+      |        bindString(parameterIndex++, b)
+      |        bindBytes(parameterIndex++, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
+      |        bindBytes(parameterIndex++, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
       |      }
       |  notifyQueries(-1_559_802_298) { emit ->
       |    emit("paymentHistoryConfig")
@@ -612,10 +625,11 @@ class MutatorQueryFunctionTest {
       |      |UPDATE paymentHistoryConfig
       |      |SET (a, b, c, d) = (?, ?, ?, ?)
       |      ""${'"'}.trimMargin(), 4) {
-      |        bindString(0, a)
-      |        bindString(1, b)
-      |        bindBytes(2, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
-      |        bindBytes(3, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, a)
+      |        bindString(parameterIndex++, b)
+      |        bindBytes(parameterIndex++, c?.let { paymentHistoryConfigAdapter.cAdapter.encode(it) })
+      |        bindBytes(parameterIndex++, d?.let { paymentHistoryConfigAdapter.dAdapter.encode(it) })
       |      }
       |  notifyQueries(-1_559_802_298) { emit ->
       |    emit("paymentHistoryConfig")
@@ -655,8 +669,9 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO nullableTypes (val1, val2)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
-      |        bindString(1, nullableTypes.val2)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, nullableTypes.val1?.let { nullableTypesAdapter.val1Adapter.encode(it) })
+      |        bindString(parameterIndex++, nullableTypes.val2)
       |      }
       |  notifyQueries(-871_418_479) { emit ->
       |    emit("nullableTypes")
@@ -703,10 +718,11 @@ class MutatorQueryFunctionTest {
       |      |INTO category (rowid, id, name, description)
       |      |VALUES (COALESCE((SELECT rowid FROM category c2 WHERE id = ?), NULL), ?, ?, ?)
       |      ""${'"'}.trimMargin(), 4) {
-      |        bindString(0, id)
-      |        bindString(1, id)
-      |        bindString(2, name)
-      |        bindString(3, description)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, id)
+      |        bindString(parameterIndex++, id)
+      |        bindString(parameterIndex++, name)
+      |        bindString(parameterIndex++, description)
       |      }
       |  notifyQueries(-368_176_582) { emit ->
       |    emit("category")
@@ -747,9 +763,10 @@ class MutatorQueryFunctionTest {
     |public fun upsert(id: kotlin.String, `data`: java.math.BigDecimal?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
     |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}INSERT INTO example(id, data) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET data = ?""${'"'}, 3) {
     |        val data__ = data?.let { exampleAdapter.data_Adapter.encode(it) }
-    |        bindString(0, id)
-    |        bindString(1, data__)
-    |        bindString(2, data__)
+    |        var parameterIndex = 0
+    |        bindString(parameterIndex++, id)
+    |        bindString(parameterIndex++, data__)
+    |        bindString(parameterIndex++, data__)
     |      }
     |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
     |    emit("example")
@@ -790,8 +807,9 @@ class MutatorQueryFunctionTest {
       |      |INSERT INTO annotation (id, name)
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, annotation_.id)
-      |        bindString(1, annotation_.name)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, annotation_.id)
+      |        bindString(parameterIndex++, annotation_.name)
       |      }
       |  notifyQueries(1_295_352_605) { emit ->
       |    emit("annotation")

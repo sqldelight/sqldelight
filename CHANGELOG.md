@@ -21,6 +21,7 @@
 - [Compiler] Fix With Recursive stack overflow (#5892 by [Griffio][griffio])
 - [Compiler] Fix Notify for Insert|Update|Delete Returning statements (#5851 by [Griffio][griffio])
 - [Compiler] Fix async result type for transaction blocks returning Long (#5836 by [Griffio][griffio])
+- [Compiler] Optimize SQL parameter binding from O(n²) to O(n) complexity (#5898 by [Chen Frenkel][chenf7])
 - [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by [Griffio][griffio])
 
 ## [2.1.0] - 2025-05-16

@@ -70,8 +70,9 @@ public class DataQueries(
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_845_995_606, """INSERT INTO test(first, second) VALUES (?, ?) RETURNING test.first, test.second""", mapper, 2) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
-      bindInt(1, second)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
+      bindInt(parameterIndex++, second)
     }.also {
       notifyQueries(-1_845_995_606) { emit ->
         emit("test")
@@ -87,7 +88,8 @@ public class DataQueries(
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_997_661_540, """DELETE FROM test WHERE first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
     }.also {
       notifyQueries(-1_997_661_540) { emit ->
         emit("test")
@@ -103,7 +105,8 @@ public class DataQueries(
   ) : ExecutableQuery<T>(mapper) {
     override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_501_049_414, """UPDATE test SET first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
     }.also {
       notifyQueries(-1_501_049_414) { emit ->
         emit("test")

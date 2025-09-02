@@ -149,7 +149,8 @@ class AsyncSelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindLong(0, id)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -196,13 +197,15 @@ class AsyncSelectQueryTypeTest {
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, value)
       |        }.await()
       |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, value)
       |        }.await()
       |  }.also {
       |    notifyQueries(-609_468_782) { emit ->
@@ -253,7 +256,8 @@ class AsyncSelectQueryTypeTest {
       |          |INSERT INTO data (value)
       |          |  VALUES (?)
       |          ""${'"'}.trimMargin(), 1) {
-      |            bindLong(0, value_)
+      |            var parameterIndex = 0
+      |            bindLong(parameterIndex++, value_)
       |          }.await()
       |      driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |          |SELECT value
