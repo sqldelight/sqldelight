@@ -9,7 +9,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class PostgreSqlTest {
+class MigrationTest {
   val conn = DriverManager.getConnection("jdbc:tc:postgresql:13.11:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
@@ -21,7 +21,8 @@ class PostgreSqlTest {
   val database = MyDatabase(driver)
 
   @Before fun before() {
-    MyDatabase.Schema.create(driver)
+//    MyDatabase.Schema.create(driver)
+    MyDatabase.Schema.migrate(driver, 0, MyDatabase.Schema.version)
   }
 
   @After fun after() {
