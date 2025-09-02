@@ -15,11 +15,7 @@
  */
 package app.cash.sqldelight.paging3
 
-import app.cash.paging.PagingSourceLoadParams
-import app.cash.paging.PagingSourceLoadResult
-import app.cash.paging.PagingSourceLoadResultError
-import app.cash.paging.PagingSourceLoadResultPage
-import app.cash.paging.PagingState
+import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.SuspendingTransacter
 import app.cash.sqldelight.Transacter
@@ -48,10 +44,10 @@ internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
     return boundaries.getOrNull(keyIndex)
   }
 
-  override suspend fun load(params: PagingSourceLoadParams<Key>): PagingSourceLoadResult<Key, RowType> {
+  override suspend fun load(params: LoadParams<Key>): LoadResult<Key, RowType> {
     return withContext(context) {
       try {
-        val getPagingSourceLoadResult: TransactionCallbacks.() -> PagingSourceLoadResult<Key, RowType> = {
+        val getPagingSourceLoadResult: TransactionCallbacks.() -> LoadResult<Key, RowType> = {
           val boundaries = pageBoundaries
             ?: pageBoundariesProvider(params.key, params.loadSize.toLong())
               .executeAsList()
@@ -68,11 +64,11 @@ internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
             .also { currentQuery = it }
             .executeAsList()
 
-          PagingSourceLoadResultPage(
+          LoadResult.Page(
             data = results,
             prevKey = previousKey,
             nextKey = nextKey,
-          ) as PagingSourceLoadResult<Key, RowType>
+          )
         }
         when (transacter) {
           is Transacter -> transacter.transactionWithResult(bodyWithReturn = getPagingSourceLoadResult)
@@ -80,7 +76,7 @@ internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
         }
       } catch (e: Exception) {
         if (e is IllegalArgumentException) throw e
-        PagingSourceLoadResultError<Key, RowType>(e) as PagingSourceLoadResult<Key, RowType>
+        LoadResult.Error(e)
       }
     }
   }

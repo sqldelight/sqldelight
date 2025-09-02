@@ -31,7 +31,7 @@ kotlin {
     commonMain {
       dependencies {
         api projects.runtime
-        api libs.app.cash.paging.common
+        api libs.androidx.paging.common
         implementation libs.kotlin.coroutines.core
       }
     }
@@ -45,11 +45,6 @@ kotlin {
     nativeTest {
       dependencies {
         implementation projects.drivers.nativeDriver
-      }
-    }
-    iosTest {
-      dependencies {
-        implementation libs.app.cash.paging.runtime.uikit
       }
     }
     jvmTest {

@@ -7,7 +7,7 @@ androidxSqlite = "2.5.2"
 schemaCrawler = "16.19.2"
 sqliter = "1.3.3"
 sqljs = "1.8.0"
-paging-mpp = "3.1.1-0.3.1"
+paging = "3.4.0-alpha03"
 ktlint = "1.7.1"
 agp = "8.12.2"
 compileSdk = "35"
@@ -32,8 +32,7 @@ androidx-test-core = "androidx.test:core:1.7.0"
 androidx-test-runner = "androidx.test:runner:1.6.1"
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
-app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
-app-cash-paging-runtime-uikit = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-mpp" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.4.0" }
 android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
