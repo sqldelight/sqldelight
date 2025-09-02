@@ -24,17 +24,17 @@ import androidx.annotation.MainThread
 import androidx.paging.LoadType.REFRESH
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.coroutines.CoroutineContext
+import kotlin.jvm.JvmOverloads
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
-import kotlin.concurrent.atomics.AtomicInt
-import kotlin.concurrent.atomics.AtomicReference
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.concurrent.atomics.incrementAndFetch
-import kotlin.jvm.JvmOverloads
 
 /**
  * Helper class for mapping a [PagingData] into a
@@ -90,9 +90,11 @@ constructor(
   @Suppress("MissingJvmstatic")
   constructor(
     diffCallback: DiffUtil.ItemCallback<T>,
-    @Suppress("ListenerLast") // have to suppress for each, due to optional args
+    // have to suppress for each, due to optional args
+    @Suppress("ListenerLast")
     updateCallback: ListUpdateCallback,
-    @Suppress("ListenerLast") // have to suppress for each, due to optional args
+    // have to suppress for each, due to optional args
+    @Suppress("ListenerLast")
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
   ) : this(
     diffCallback = diffCallback,
@@ -124,11 +126,14 @@ constructor(
   @Suppress("MissingJvmstatic")
   constructor(
     diffCallback: DiffUtil.ItemCallback<T>,
-    @Suppress("ListenerLast") // have to suppress for each, due to optional args
+    // have to suppress for each, due to optional args
+    @Suppress("ListenerLast")
     updateCallback: ListUpdateCallback,
-    @Suppress("ListenerLast") // have to suppress for each, due to optional args
+    // have to suppress for each, due to optional args
+    @Suppress("ListenerLast")
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
-    @Suppress("ListenerLast") // have to suppress for each, due to optional args
+    // have to suppress for each, due to optional args
+    @Suppress("ListenerLast")
     workerDispatcher: CoroutineDispatcher = Dispatchers.Default,
   ) : this(
     diffCallback = diffCallback,
@@ -460,8 +465,7 @@ constructor(
    * Returns a new [ItemSnapshotList] representing the currently presented items, including any
    * placeholders if they are enabled.
    */
-  fun snapshot(): ItemSnapshotList<T> =
-    previousPresenter.load()?.snapshot() ?: presenter.snapshot()
+  fun snapshot(): ItemSnapshotList<T> = previousPresenter.load()?.snapshot() ?: presenter.snapshot()
 
   /**
    * Get the number of items currently presented by this Differ. This value can be directly

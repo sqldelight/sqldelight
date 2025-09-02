@@ -15,12 +15,12 @@
  */
 package app.cash.sqldelight.paging3
 
-import androidx.recyclerview.widget.DiffUtil
 import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import androidx.recyclerview.widget.DiffUtil
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.SuspendingTransacterImpl
 import app.cash.sqldelight.TransacterBase
