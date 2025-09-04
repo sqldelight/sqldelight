@@ -40,17 +40,17 @@ class FileIndexingNotification(
       EditorNotifications.getInstance(project).updateAllNotifications()
     }
 
-  override fun collectNotificationData(project: Project, file: VirtualFile): Function<in FileEditor, out JComponent?> {
-    return Function { createNotificationPanel(file, project) }
-  }
-
-  private fun createNotificationPanel(file: VirtualFile, project: Project): EditorNotificationPanel? {
+  override fun collectNotificationData(project: Project, file: VirtualFile): Function<in FileEditor, out JComponent?>? {
     if (file.fileType != SqlDelightFileType && file.fileType != MigrationFileType) return null
 
     val service = SqlDelightProjectService.getInstance(project)
     val module = service.module(file) ?: return null
+    val notConfigured = !service.fileIndex(module).isConfigured
+    return Function { createNotificationPanel(notConfigured, project) }
+  }
 
-    if (!service.fileIndex(module).isConfigured) {
+  private fun createNotificationPanel(notConfigured: Boolean, project: Project): EditorNotificationPanel? {
+    if (notConfigured) {
       val message = when (val unconfiguredReason = unconfiguredReason) {
         is GradleSyncing -> "SQLDelight is waiting for Gradle to finish syncing."
         is Syncing -> "SQLDelight is setting up..."
