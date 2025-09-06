@@ -12,6 +12,7 @@
 ### Changed
 - In-development snapshots are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
 - [Compiler] Simplified default generated queries using constructor references (#5814 by [Jon Poulton][jonapoul])
+- [Paging Extension] Switch to AndroidX Paging (#5910 by [Jeff Lockhart][jeffdgr8])
 
 ### Fixed
 - [Gradle Plugin] Fix crash when opening SqlDelight tool window to add "New Connection" (by #5906 [Griffio][griffio])
