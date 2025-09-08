@@ -168,7 +168,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         compilationUnits = sources.map { source ->
           SqlDelightCompilationUnitImpl(
             name = source.name,
-            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
+            sourceFolders = sourceFolders(source),
             outputDirectoryFile = source.outputDir,
           )
         },
@@ -184,8 +184,8 @@ abstract class SqlDelightDatabase @Inject constructor(
     }
   }
 
-  private fun sourceFolders(source: Source): List<SqlDelightSourceFolderImpl> {
-    val sourceFolders: List<SqlDelightSourceFolderImpl> = buildList {
+  private fun sourceFolders(source: Source): Set<SqlDelightSourceFolderImpl> {
+    val sourceFolders: Set<SqlDelightSourceFolderImpl> = buildSet {
       for (dir in srcDirs) {
         val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(folder = dir, dependency = false)
         add(sqlDelightSourceFolder)
@@ -214,7 +214,7 @@ abstract class SqlDelightDatabase @Inject constructor(
           dependency = true,
         )
       }
-    }.distinct()
+    }
   }
 
   internal fun registerTasks() {

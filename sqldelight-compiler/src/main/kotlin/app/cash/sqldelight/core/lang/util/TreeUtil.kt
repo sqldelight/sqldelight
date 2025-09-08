@@ -37,6 +37,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
+import com.alecstrong.sql.psi.core.psi.SqlModuleColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlTableName
@@ -64,7 +65,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
   is SqlColumnName -> {
     when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()
-      is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
+      is SqlModuleColumnDef -> IntermediateType(TEXT, name = this.name).asNullable()
       else -> {
         when (val resolvedReference = reference?.resolve()) {
           null -> IntermediateType(PrimitiveType.NULL)

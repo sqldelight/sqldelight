@@ -2,9 +2,15 @@ package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlCreateIndexStmt
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlSchemaContributorElementType
+import com.alecstrong.sql.psi.core.psi.SchemaContributorStub
+import com.alecstrong.sql.psi.core.psi.SqlCreateIndexStmt
+import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
+import com.intellij.psi.stubs.IStubElementType
+
 /**
  * Storage parameter list 'autosummarize' | 'buffering' | 'deduplicate_items' | 'fastupdate' | 'fillfactor' | 'gin_pending_list_limit' | 'pages_per_range'
  * btree, hash, gist = [fillfactor (10-100) ]
@@ -13,9 +19,11 @@ import com.intellij.psi.PsiElement
  * gin = [fastupdate (on|off|true|false), gin_pending_list_limit (64-2147483647) ]
  * brin = [autosummarize (on|off|true|false), pages_per_range (1-2147483647) ]
  */
-internal abstract class CreateIndexMixin(node: ASTNode) :
-  SqlCreateIndexStmtImpl(node),
+internal abstract class CreateIndexMixin :
+  SqlCreateIndexStmtImpl,
   PostgreSqlCreateIndexStmt {
+  constructor(node: ASTNode) : super(node)
+  constructor(stub: SchemaContributorStub, stubType: IStubElementType<*, *>) : super(stub, stubType)
 
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
     withStorageParameter?.let { wsp ->
@@ -143,4 +151,11 @@ internal abstract class CreateIndexMixin(node: ASTNode) :
       }
     }
   }
+}
+
+internal class CreateIndexElementType(
+  name: String,
+) : SqlSchemaContributorElementType<SqlCreateIndexStmt>(name, SqlCreateIndexStmt::class.java) {
+  override fun nameType() = SqlTypes.INDEX_NAME
+  override fun createPsi(stub: SchemaContributorStub) = SqlCreateIndexStmtImpl(stub, this)
 }

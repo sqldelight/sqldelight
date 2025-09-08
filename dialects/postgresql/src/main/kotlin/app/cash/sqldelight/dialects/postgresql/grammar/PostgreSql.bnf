@@ -217,13 +217,18 @@ index_method ::=  'BRIN' | 'BTREE' | 'GIN' | 'GIST' | 'HASH'
 create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
  ( USING index_method LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ with_storage_parameter ] | LP {indexed_column} [ operator_class_stmt ] ( COMMA {indexed_column} [ operator_class_stmt ] ) * RP [ WHERE <<expr '-1'>> ] )  {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexMixin"
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+  elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateIndexElementType"
+  stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6
 }
 
 create_view_stmt ::= CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] [ RECURSIVE ] VIEW [ {database_name} DOT ] {view_name} [ LP {column_alias} ( COMMA {column_alias} ) * RP ] AS {compound_select_stmt} [ WITH [ 'CASCADED' | 'LOCAL' ] CHECK 'OPTION' ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateOrReplaceViewMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.TableElement"
+  elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateViewElementType"
+  stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6
 }
@@ -503,7 +508,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -549,6 +554,8 @@ frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
 boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_name} )
 
 boolean_literal ::= TRUE | FALSE
+
+is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( 'WITH' | 'WITHOUT' ) 'UNIQUE' [ 'KEYS' ] ]
 
 json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"

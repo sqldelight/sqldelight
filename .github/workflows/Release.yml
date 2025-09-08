@@ -26,7 +26,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v5
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
@@ -76,7 +76,7 @@ jobs:
           mkdir -p .gradle/ && touch .gradle/gradle.properties
       - name: Set up Java
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
@@ -111,11 +111,11 @@ jobs:
           mkdir -p .gradle/ && touch .gradle/gradle.properties
       - name: Set up Java
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 18
       - name: Setup Gradle Java installations paths
