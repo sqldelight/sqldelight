@@ -40,7 +40,7 @@ android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp
 kotlinPoet = { module = "com.squareup:kotlinpoet", version = "2.2.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
 jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.2" }
-truth = { module = "com.google.truth:truth", version = "1.4.4" }
+truth = { module = "com.google.truth:truth", version = "1.4.5" }
 turbine = { module = "app.cash.turbine:turbine", version = "1.2.1" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.8.0" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.7.0" }
