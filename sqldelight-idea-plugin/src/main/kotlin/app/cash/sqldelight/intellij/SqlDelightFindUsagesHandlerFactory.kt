@@ -6,7 +6,6 @@ import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.queriesName
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
-import app.cash.sqldelight.intellij.usages.ReflectiveKotlinFindUsagesFactory
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.find.findUsages.FindUsagesHandler
@@ -25,6 +24,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import com.intellij.usageView.UsageInfo
 import com.intellij.util.Processor
+import org.jetbrains.kotlin.idea.base.searching.usages.KotlinReferenceUsageInfo
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
@@ -54,7 +54,7 @@ internal class SqlDelightFindUsagesHandlerFactory : FindUsagesHandlerFactory() {
 internal class SqlDelightIdentifierHandler(
   private val element: PsiElement,
 ) : FindUsagesHandler(element) {
-  private val factory = ReflectiveKotlinFindUsagesFactory(element.project)
+  private val factory = org.jetbrains.kotlin.idea.base.searching.usages.KotlinFindUsagesHandlerFactory(element.project)
   private val kotlinHandlers = when (element) {
     is StmtIdentifierMixin -> element.generatedMethods()
     is SqlColumnName -> element.generatedProperties()
@@ -77,7 +77,7 @@ internal class SqlDelightIdentifierHandler(
   ): Boolean {
     val generatedFiles = element.generatedVirtualFiles()
     val ignoringFileProcessor = Processor<UsageInfo> { t ->
-      if (factory.isKotlinReferenceUsageInfo(t) && t.virtualFile in generatedFiles) {
+      if (t is KotlinReferenceUsageInfo && t.virtualFile in generatedFiles) {
         return@Processor true
       }
       processor.process(t)
@@ -85,7 +85,7 @@ internal class SqlDelightIdentifierHandler(
     super.processElementUsages(element, ignoringFileProcessor, options)
     return kotlinHandlers.all {
       ApplicationManager.getApplication().runReadAction(
-        Computable<Boolean> {
+        Computable {
           it.processElementUsages(
             it.primaryElements.single(),
             ignoringFileProcessor,
