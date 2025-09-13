@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.2.10"
+kotlin = "2.2.20"
 dokka = "2.0.0"
 kotlinCoroutines = "1.10.2"
 idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
@@ -110,5 +110,5 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
 spotless = { id = "com.diffplug.spotless", version = "7.2.1" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = "com.gradleup.shadow:9.1.0"
-ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.20-RC2-2.0.2" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }
