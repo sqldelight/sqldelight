@@ -10,12 +10,14 @@
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BEFORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
@@ -37,6 +39,8 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EACH"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.END"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ESCAPE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
@@ -57,6 +61,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEXED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INNER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSTEAD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
@@ -71,6 +76,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
@@ -88,17 +94,20 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SEMI"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TEMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TEMPORARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRIGGER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIEW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
@@ -108,6 +117,8 @@
 overrides ::= type_name
   | column_constraint
   | string_literal
+  | create_trigger_stmt
+  | drop_trigger_stmt
   | bind_parameter
   | table_constraint
   | default_constraint
@@ -612,7 +623,7 @@ at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_
   pin = 2
 }
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+extension_stmt ::= create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
  alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | comment_on_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
@@ -723,4 +734,44 @@ extract_temporal_expression ::= 'EXTRACT' LP extract_temporal_field FROM <<expr 
 comment_on_extension_stmt ::= 'COMMENT' ON ( COLUMN {column_expr} | TABLE {table_name} | VIEW {view_name} ) IS ( NULL | string_literal )  {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CommentOnMixin"
   pin = 2
+}
+
+
+trigger_event ::= DELETE | INSERT | 'TRUNCATE' | UPDATE [ OF {column_name} ( COMMA {column_name} ) * ]
+
+create_trigger_stmt ::= CREATE [ OR REPLACE ] [ CONSTRAINT ] TRIGGER [ database_name DOT ] {trigger_name} [ AFTER | BEFORE | INSTEAD OF ]
+ trigger_event ON {table_name}
+ [ FROM {identifier} ]
+ [ NOT 'DEFERRABLE' | 'DEFERRABLE' ]
+ [ 'INITIALLY' 'IMMEDIATE' | 'INITIALLY' 'DEFERRED' ]
+ [ 'REFERENCING' ( ('OLD' | 'NEW') TABLE [ AS ] {identifier} ) ? ]
+ [ FOR EACH ROW ] [ WHEN <<expr '-1'>> ] 'EXECUTE' ('FUNCTION' | 'PROCEDURE') {function_expr} {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateTriggerMixin"
+ implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+ elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateTriggerElementType"
+ stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
+ pin = 5
+ override = true
+}
+
+drop_trigger_stmt ::= DROP TRIGGER [ IF EXISTS ] [ database_name DOT ] {trigger_name} ON {table_name} [ CASCADE | RESTRICT ] {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropTriggerMixin"
+ implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+ elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropTriggerElementType"
+ stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
+ pin = 2
+ override = true
+}
+
+plsql_assignment ::= 'NEW' DOT {column_name} ':=' <<expr '-1'>>
+
+create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETURNS' TRIGGER [ 'LANGUAGE' 'PLPGSQL' ] AS
+'$$'
+'BEGIN'
+( plsql_assignment | delete_stmt_limited | insert_stmt | update_stmt_limited ) SEMI
+'RETURN' ( 'NEW' | 'OLD' | NULL ) SEMI
+'END' SEMI
+'$$'
+[ 'LANGUAGE' 'PLPGSQL' ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateFunctionMixin"
 }
