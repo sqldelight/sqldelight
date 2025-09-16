@@ -623,7 +623,7 @@ at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_
   pin = 2
 }
 
-extension_stmt ::= create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+extension_stmt ::= drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
  alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | comment_on_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
@@ -775,4 +775,10 @@ create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETUR
 [ 'LANGUAGE' 'PLPGSQL' ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateFunctionMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+}
+
+drop_function_stmt ::= DROP 'FUNCTION' [ IF EXISTS ] {function_expr} [ CASCADE | RESTRICT ] {
+  pin = 2
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropFunctionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor
 }
