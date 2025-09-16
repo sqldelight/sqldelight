@@ -1,1 +1,2 @@
-
+DROP TRIGGER orders_set_updated_at ON Orders;
+DROP FUNCTION orders_set_updated_at();
