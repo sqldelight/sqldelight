@@ -774,4 +774,5 @@ create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETUR
 '$$'
 [ 'LANGUAGE' 'PLPGSQL' ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateFunctionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
 }

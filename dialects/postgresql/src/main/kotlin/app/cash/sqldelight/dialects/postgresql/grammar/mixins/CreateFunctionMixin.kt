@@ -3,6 +3,8 @@ package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlCreateFunctionStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlPlsqlAssignment
 import com.alecstrong.sql.psi.core.psi.QueryElement.QueryResult
+import com.alecstrong.sql.psi.core.psi.Schema
+import com.alecstrong.sql.psi.core.psi.SchemaContributor
 import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
 import com.alecstrong.sql.psi.core.psi.SqlCreateTriggerStmt
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
@@ -16,7 +18,15 @@ import com.intellij.psi.PsiElement
  */
 internal abstract class CreateFunctionMixin(node: ASTNode) :
   SqlCompositeElementImpl(node),
-  PostgreSqlCreateFunctionStmt {
+  PostgreSqlCreateFunctionStmt,
+  SchemaContributor {
+
+  override fun modifySchema(schema: Schema) {
+  }
+
+  override fun name(): String {
+    return findChildByType<SqlFunctionExpr>(SqlTypes.FUNCTION_EXPR)!!.text
+  }
 
   override fun queryAvailable(child: PsiElement): Collection<QueryResult> {
     val functionName = findChildByType<SqlFunctionExpr>(SqlTypes.FUNCTION_EXPR)!!.text
