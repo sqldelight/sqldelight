@@ -1,7 +1,6 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlCreateFunctionStmt
-import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlPlsqlAssignment
 import com.alecstrong.sql.psi.core.psi.QueryElement.QueryResult
 import com.alecstrong.sql.psi.core.psi.Schema
 import com.alecstrong.sql.psi.core.psi.SchemaContributor
@@ -31,28 +30,20 @@ internal abstract class CreateFunctionMixin(node: ASTNode) :
   override fun queryAvailable(child: PsiElement): Collection<QueryResult> {
     val functionName = findChildByType<SqlFunctionExpr>(SqlTypes.FUNCTION_EXPR)!!.text
     val trigger = containingFile.schema(SqlCreateTriggerStmt::class).find { it.node.findChildByType(SqlTypes.FUNCTION_EXPR)!!.text == functionName }
-    val tableName = trigger!!.tableName!!.name
+    val triggerTableName = trigger!!.tableName!!.name
 
-    if (child is PostgreSqlPlsqlAssignment) { // resolve the query for 'NEW.column := ...' using trigger table
-      return listOfNotNull(
-        tablesAvailable(this).firstOrNull { it.tableName.name == tableName }?.query,
-      )
-    }
-
-    val tableQuery = tablesAvailable(this).firstOrNull {
-      it.tableName.name == tableName
-    }!!.query
+    val triggerTableQuery = tablesAvailable(this).firstOrNull { it.tableName.name == triggerTableName }!!.query
 
     return listOf(
       QueryResult(
-        SingleRow(tableQuery.table!!, "new"),
-        tableQuery.columns,
-        synthesizedColumns = tableQuery.synthesizedColumns,
+        SingleRow(triggerTableQuery.table!!, "new"),
+        triggerTableQuery.columns,
+        synthesizedColumns = triggerTableQuery.synthesizedColumns,
       ),
       QueryResult(
-        SingleRow(tableQuery.table!!, "old"),
-        tableQuery.columns,
-        synthesizedColumns = tableQuery.synthesizedColumns,
+        SingleRow(triggerTableQuery.table!!, "old"),
+        triggerTableQuery.columns,
+        synthesizedColumns = triggerTableQuery.synthesizedColumns,
       ),
     )
   }
