@@ -763,12 +763,13 @@ drop_trigger_stmt ::= DROP TRIGGER [ IF EXISTS ] [ database_name DOT ] {trigger_
  override = true
 }
 
-plsql_assignment ::= 'NEW' DOT {column_name} ':=' <<expr '-1'>>
+plsql_assignment ::= {column_expr} ':=' <<expr '-1'>>
+plsql_statement ::= ( plsql_assignment SEMI | delete_stmt_limited SEMI | insert_stmt SEMI | update_stmt_limited SEMI ) *
 
 create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETURNS' TRIGGER [ 'LANGUAGE' 'PLPGSQL' ] AS
 '$$'
 'BEGIN'
-( plsql_assignment | delete_stmt_limited | insert_stmt | update_stmt_limited ) SEMI
+plsql_statement
 'RETURN' ( 'NEW' | 'OLD' | NULL ) SEMI
 'END' SEMI
 '$$'
