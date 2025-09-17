@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 ### Added
+- [PostgreSQL Dialect] Add limited support for Postgres Triggers (#5932 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add predicate to check whether SQL expression can be parsed as JSON (#5843 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add limited support for PostgreSql Comment On statement (#5808 by [Griffio][griffio])
 - [MySQL Dialect] Add support for index visibility options (#5785 by [Oren Kislev][orenkislev-faire])
