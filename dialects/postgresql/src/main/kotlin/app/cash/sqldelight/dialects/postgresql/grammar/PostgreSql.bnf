@@ -106,6 +106,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIEW"
@@ -193,7 +194,8 @@ type_name ::= (
   tsrange |
   tsmultirange |
   tstzmultirange |
-  xml_data_type
+  xml_data_type |
+  enum_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -302,6 +304,8 @@ tstzrange ::= 'TSTZRANGE'
 tsmultirange ::= 'TSMULTIRANGE'
 
 tstzmultirange ::= 'TSTZMULTIRANGE'
+
+enum_data_type ::= {identifier}
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
@@ -625,7 +629,7 @@ at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_
   pin = 2
 }
 
-extension_stmt ::= drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+extension_stmt ::= create_enum_type_stmt| drop_type_stmt | alter_type_stmt | drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
  alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | comment_on_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
@@ -788,3 +792,23 @@ drop_function_stmt ::= DROP 'FUNCTION' [ IF EXISTS ] {function_expr} [ CASCADE |
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropFunctionMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor
 }
+
+enum_type_label ::= string_literal
+type_identifier ::= {identifier}
+
+create_enum_type_stmt ::= CREATE 'TYPE' type_identifier AS 'ENUM' LP enum_type_label (COMMA enum_type_label) * RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateEnumTypeMixin"
+}
+
+drop_type_stmt ::= DROP 'TYPE' [ IF EXISTS ] type_identifier [ CASCADE | 'RESTRICT' ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropEnumTypeMixin"
+}
+alter_type_add_enum_value ::= ALTER 'TYPE' type_identifier ADD VALUE [ IF NOT EXISTS ] enum_type_label [ ( BEFORE | AFTER ) enum_type_label ]
+alter_type_rename_enum_value ::= ALTER 'TYPE' type_identifier RENAME VALUE enum_type_label TO enum_type_label
+alter_type_rename ::= ALTER 'TYPE' type_identifier RENAME TO type_identifier
+alter_type_stmt ::= alter_type_add_enum_value | alter_type_rename_enum_value | alter_type_rename
+
+
+
+
+
