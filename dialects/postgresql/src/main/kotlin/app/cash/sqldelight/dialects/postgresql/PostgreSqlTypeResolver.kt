@@ -14,6 +14,7 @@ import app.cash.sqldelight.dialect.api.encapsulatingType
 import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.BIG_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.DATE
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.ENUM
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
@@ -83,6 +84,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
         tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
+        enumDataType != null -> PostgreSqlType.ENUM
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )
@@ -109,6 +111,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       BLOB,
       TIMESTAMP_TIMEZONE,
       TIMESTAMP,
+      ENUM,
     )
     "least" -> encapsulatingTypePreferringKotlin(
       exprList,
@@ -122,6 +125,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.NUMERIC,
       TIMESTAMP_TIMEZONE,
       TIMESTAMP,
+      ENUM,
     )
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
@@ -136,8 +140,8 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         })
       }
     }
-    "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
-    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+    "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
+    "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, INTEGER, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
     "lower", "upper" -> {
       val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
       when (exprType.dialectType) {
@@ -225,6 +229,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     }
     "unnest" -> unNestType(exprList[0].postgreSqlType())
     "pg_input_is_valid" -> IntermediateType(BOOLEAN)
+    "enum_range" -> IntermediateType(TEXT)
+    "enum_first" -> IntermediateType(TEXT)
+    "enum_last" -> IntermediateType(TEXT)
 
     else -> null
   }
@@ -394,6 +401,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TSMULTIRANGE,
       PostgreSqlType.TSTZMULTIRANGE,
       PostgreSqlType.TSQUERY,
+      PostgreSqlType.ENUM,
       BOOLEAN, // is last as expected that boolean expression resolve to boolean
     )
     private val binaryExprChildTypesResolvingToBool = TokenSet.create(
