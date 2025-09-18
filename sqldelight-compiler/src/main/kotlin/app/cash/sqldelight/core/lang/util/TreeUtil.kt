@@ -23,6 +23,7 @@ import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.InsertStmtValuesMixin
 import app.cash.sqldelight.dialect.api.ExposableType
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PreCreateTableInitialization
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
@@ -261,6 +262,7 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   body: (sqlText: String) -> Unit,
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
+  val preTables = ArrayList<PsiElement>()
   val tables = ArrayList<SqlCreateTableStmt>()
   val creators = ArrayList<PsiElement>()
   val miscellanious = ArrayList<PsiElement>()
@@ -270,6 +272,17 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
       .filter { (label, _) -> label.name == null }
       .forEach { (_, sqlStatement) ->
         when {
+          sqlStatement.extensionStmt != null -> {
+            if (PsiTreeUtil.getChildOfType(
+                sqlStatement.extensionStmt,
+                PreCreateTableInitialization::class.java,
+              ) != null
+            ) {
+              preTables.add(sqlStatement)
+            } else {
+              miscellanious.add(sqlStatement)
+            }
+          }
           sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
           sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
           sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
@@ -278,6 +291,8 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
         }
       }
   }
+
+  preTables.forEach { body(it.rawSqlText()) }
 
   when (allowReferenceCycles) {
     // If we allow cycles, don't attempt to order the table creation statements. The dialect
