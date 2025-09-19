@@ -72,7 +72,7 @@ robolectric = { module = "org.robolectric:robolectric", version = "4.16" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.11" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.50.3.0" }
-postgresJdbc = { module = "org.postgresql:postgresql", version = "42.7.7" }
+postgresJdbc = { module = "org.postgresql:postgresql", version = "42.7.8" }
 mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.33" }
 
 schemaCrawler-tools = { module = "us.fatehi:schemacrawler-tools", version.ref = "schemaCrawler" }
