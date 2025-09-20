@@ -1235,4 +1235,42 @@ class PostgreSqlTest {
       assertThat(first().array_without_unq_key_).isFalse()
     }
   }
+
+  @Test
+  fun testEnums() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.select().executeAsList().let {
+      assertThat(it).containsExactly(low, med, high)
+    }
+  }
+
+  @Test
+  fun testEnumsArg() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.selectByPriority("medium").executeAsList().let {
+      assertThat(it).containsExactly(med)
+    }
+  }
+
+  @Test
+  fun testEnumsMin() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.selectMinPriority().executeAsList().let {
+      assertThat(it).containsExactly(low)
+    }
+  }
+
+  fun testEnumsFunctions() {
+    database.enumsQueries.selectEnumValues().executeAsOne().let {
+      assertThat(it.values).isEqualTo("{low,medium,high}")
+      assertThat(it.first_value).isEqualTo("low")
+      assertThat(it.last_value).isEqualTo("high")
+    }
+  }
 }
