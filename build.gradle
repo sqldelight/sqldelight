@@ -5,7 +5,6 @@ buildscript {
         strictly '4.4.1'
       }
     }
-    classpath(libs.kotlinx.atomicfu.plugin)
   }
 }
 
