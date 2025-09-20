@@ -732,15 +732,18 @@ comment_on_extension_stmt ::= 'COMMENT' ON ( COLUMN {column_expr} | TABLE {table
 }
 
 enum_type_label ::= string_literal
+type_identifier ::= {identifier}
 
-create_enum_type_stmt ::= CREATE 'TYPE' {identifier} AS 'ENUM' LP enum_type_label (COMMA enum_type_label) * RP {
+create_enum_type_stmt ::= CREATE 'TYPE' type_identifier AS 'ENUM' LP enum_type_label (COMMA enum_type_label) * RP {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateEnumTypeMixin"
 }
 
-drop_type_stmt ::= DROP 'TYPE' [ IF EXISTS ] {identifier}  [ ( COMMA extension_name ) * ] [ CASCADE | 'RESTRICT' ]
-alter_type_add_enum_value ::= ALTER 'TYPE' {identifier} ADD VALUE [ IF NOT EXISTS ] enum_type_label [ ( BEFORE | AFTER ) enum_type_label ]
-alter_type_rename_enum_value ::= ALTER 'TYPE' {identifier} RENAME VALUE enum_type_label TO enum_type_label
-alter_type_rename ::= ALTER 'TYPE' {identifier} RENAME TO {identifier}
+drop_type_stmt ::= DROP 'TYPE' [ IF EXISTS ] type_identifier [ ( COMMA type_identifier ) * ] [ CASCADE | 'RESTRICT' ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropEnumTypeMixin"
+}
+alter_type_add_enum_value ::= ALTER 'TYPE' type_identifier ADD VALUE [ IF NOT EXISTS ] enum_type_label [ ( BEFORE | AFTER ) enum_type_label ]
+alter_type_rename_enum_value ::= ALTER 'TYPE' type_identifier RENAME VALUE enum_type_label TO enum_type_label
+alter_type_rename ::= ALTER 'TYPE' type_identifier RENAME TO type_identifier
 alter_type_stmt ::= alter_type_add_enum_value | alter_type_rename_enum_value | alter_type_rename
 
 
