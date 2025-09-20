@@ -37,6 +37,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlExtensionStmt
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
 import com.alecstrong.sql.psi.core.psi.SqlModuleColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
@@ -257,6 +258,13 @@ fun PsiElement.rawSqlText(
 val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
+fun SqlExtensionStmt.hasPreCreateTableInitialization(): Boolean {
+  return PsiTreeUtil.getChildOfType(
+    this,
+    PreCreateTableInitialization::class.java,
+  ) != null
+}
+
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   allowReferenceCycles: Boolean,
   body: (sqlText: String) -> Unit,
@@ -265,29 +273,20 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   val preTables = ArrayList<PsiElement>()
   val tables = ArrayList<SqlCreateTableStmt>()
   val creators = ArrayList<PsiElement>()
-  val miscellanious = ArrayList<PsiElement>()
+  val miscellaneous = ArrayList<PsiElement>()
 
   forEach { file ->
     file.sqlStatements()
       .filter { (label, _) -> label.name == null }
       .forEach { (_, sqlStatement) ->
         when {
-          sqlStatement.extensionStmt != null -> {
-            if (PsiTreeUtil.getChildOfType(
-                sqlStatement.extensionStmt,
-                PreCreateTableInitialization::class.java,
-              ) != null
-            ) {
-              preTables.add(sqlStatement)
-            } else {
-              miscellanious.add(sqlStatement)
-            }
-          }
+          sqlStatement.extensionStmt != null &&
+            sqlStatement.extensionStmt!!.hasPreCreateTableInitialization() -> preTables.add(sqlStatement.extensionStmt!!)
           sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
           sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
           sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
           sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
-          else -> miscellanious.add(sqlStatement)
+          else -> miscellaneous.add(sqlStatement)
         }
       }
   }
@@ -309,7 +308,7 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   )
 
   creators.forEach { body(it.rawSqlText()) }
-  miscellanious.forEach { body(it.rawSqlText()) }
+  miscellaneous.forEach { body(it.rawSqlText()) }
 }
 
 private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt, DefaultEdge> {
