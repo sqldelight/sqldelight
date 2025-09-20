@@ -6,7 +6,6 @@ plugins {
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
-  id("org.jetbrains.kotlinx.atomicfu")
 }
 
 base {
