@@ -55,7 +55,7 @@ CREATE OR REPLACE FUNCTION user_profile_password_strength()
 RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
 
-  IF new.password = old.password THEN
+  IF TG_OP = 'UPDATE' AND new.password IS NOT DISTINCT FROM old.password THEN
     RETURN new;
   END IF;
 
@@ -76,3 +76,38 @@ BEFORE INSERT OR UPDATE OF password
 ON user_profile
 FOR EACH ROW
 EXECUTE FUNCTION user_profile_password_strength();
+
+CREATE TABLE emp (
+    empname           TEXT NOT NULL,
+    salary            INTEGER
+);
+
+CREATE TABLE emp_audit(
+    operation         CHAR(1)   NOT NULL,
+    stamp             TIMESTAMP NOT NULL,
+    userid            TEXT      NOT NULL,
+    empname           TEXT      NOT NULL,
+    salary            INTEGER
+);
+
+CREATE OR REPLACE FUNCTION process_emp_audit()
+RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+BEGIN
+    --
+    -- Create a row in emp_audit to reflect the operation performed on emp,
+    -- making use of the special variable TG_OP to work out the operation.
+    --
+    IF (TG_OP = 'DELETE') THEN
+           INSERT INTO emp_audit SELECT 'D', NOW(), CURRENT_USER, old.empname, old.salary;
+       ELSIF (TG_OP = 'UPDATE') THEN
+           INSERT INTO emp_audit SELECT 'U', NOW(), CURRENT_USER, new.empname, new.salary;
+       ELSIF (TG_OP = 'INSERT') THEN
+           INSERT INTO emp_audit SELECT 'I', NOW(), CURRENT_USER, new.empname, new.salary;
+       END IF;
+    RETURN NULL; -- result is ignored since this is an AFTER trigger
+END;
+$$;
+
+CREATE TRIGGER emp_audit
+AFTER INSERT OR UPDATE OR DELETE ON emp
+  FOR EACH ROW EXECUTE FUNCTION process_emp_audit();
