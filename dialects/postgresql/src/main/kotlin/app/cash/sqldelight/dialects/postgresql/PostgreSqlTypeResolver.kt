@@ -83,6 +83,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
         tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
+        ltreeDataType != null -> PostgreSqlType.LTREE
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )
@@ -225,7 +226,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     }
     "unnest" -> unNestType(exprList[0].postgreSqlType())
     "pg_input_is_valid" -> IntermediateType(BOOLEAN)
-
+    "subpath" -> IntermediateType(PostgreSqlType.LTREE)
     else -> null
   }
 
@@ -341,6 +342,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         regexMatchOperatorExpression != null ||
         booleanNotExpression != null ||
         containsOperatorExpression != null ||
+        existsOperatorExpression != null ||
         overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
@@ -392,6 +394,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TSMULTIRANGE,
       PostgreSqlType.TSTZMULTIRANGE,
       PostgreSqlType.TSQUERY,
+      PostgreSqlType.LTREE,
       BOOLEAN, // is last as expected that boolean expression resolve to boolean
     )
     private val binaryExprChildTypesResolvingToBool = TokenSet.create(

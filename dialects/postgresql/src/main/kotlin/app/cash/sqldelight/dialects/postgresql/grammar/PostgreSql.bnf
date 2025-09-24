@@ -182,7 +182,8 @@ type_name ::= (
   tsrange |
   tsmultirange |
   tstzmultirange |
-  xml_data_type
+  xml_data_type |
+  ltree_data_type |
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -291,6 +292,8 @@ tstzrange ::= 'TSTZRANGE'
 tsmultirange ::= 'TSMULTIRANGE'
 
 tstzmultirange ::= 'TSTZMULTIRANGE'
+
+ltree_data_type ::= 'LTREE'
 
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
@@ -508,7 +511,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | exists_operator_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -564,12 +567,18 @@ json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operato
 
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
-jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+jsonb_boolean_operator ::= '@?' | '??|' | '??&'
+exists_operator ::= '??'
 contains_operator ::= '@>' | '<@'
 match_operator ::= '@@'
 overlaps_operator ::= '&&'
 range_boolean_operator ::= '<<' | '>>' | '&>' | '&<' | '-|-'
 regex_match_operator ::=  '~~*' | '~*' | '!~~*' | '!~*' | '~~' | '~' | '!~~' | '!~'
+
+exists_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) exists_operator <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExistsOperatorExpressionMixin"
+  pin = 2
+}
 
 contains_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) contains_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ContainsOperatorExpressionMixin"

@@ -54,6 +54,6 @@ SELECT tstzmultirange(tstzrange('2010-01-01 14:30:00', '2010-01-01 15:30:00', '[
 FROM Ranges
 WHERE tst_2 && tstzrange('2010-01-01 14:30:00', '2010-01-01 15:30:00', '[]');
 
---error[col 7]: expression must be ARRAY, JSONB, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.
+--error[col 7]: expression must be ARRAY, JSONB, LTREE, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.
 SELECT id @> ts_1
 FROM Ranges;
