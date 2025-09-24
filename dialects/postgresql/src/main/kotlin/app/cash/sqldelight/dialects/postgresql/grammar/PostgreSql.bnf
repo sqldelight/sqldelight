@@ -339,7 +339,9 @@ literal_value ::= ( {numeric_literal}
                   | interval_expression
                   | timestamp_expression
                   | date_expression
-                  | time_expression ) {
+                  | time_expression
+                  | 'CURRENT_USER'
+                  | 'SESSION_USER') {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
@@ -519,7 +521,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -762,6 +764,8 @@ drop_trigger_stmt ::= DROP TRIGGER [ IF EXISTS ] [ database_name DOT ] {trigger_
  pin = 2
  override = true
 }
+
+plsql_trigger_var_expression ::= 'TG_OP' | 'TG_WHEN' | 'TG_LEVEL' | 'TG_OP' | 'TG_RELID' | 'TG_TABLE_NAME' | 'TG_TABLE_SCHEMA' |
 
 plsql_assignment ::= {column_expr} ':=' <<expr '-1'>>
 plsql_conditional ::= IF <<expr '-1'>> 'THEN' plsql_statement [ ( 'ELSIF' <<expr '-1'>> 'THEN' plsql_statement ) * ] [ 'ELSE' plsql_statement ] END IF
