@@ -740,7 +740,7 @@ comment_on_extension_stmt ::= 'COMMENT' ON ( COLUMN {column_expr} | TABLE {table
 trigger_event ::= DELETE | INSERT | 'TRUNCATE' | UPDATE [ OF {column_name} ( COMMA {column_name} ) * ]
 
 create_trigger_stmt ::= CREATE [ OR REPLACE ] [ CONSTRAINT ] TRIGGER [ database_name DOT ] {trigger_name} [ AFTER | BEFORE | INSTEAD OF ]
- trigger_event ON {table_name}
+ trigger_event [ ( OR trigger_event ) * ] ON {table_name}
  [ FROM {identifier} ]
  [ NOT 'DEFERRABLE' | 'DEFERRABLE' ]
  [ 'INITIALLY' 'IMMEDIATE' | 'INITIALLY' 'DEFERRED' ]
@@ -764,13 +764,14 @@ drop_trigger_stmt ::= DROP TRIGGER [ IF EXISTS ] [ database_name DOT ] {trigger_
 }
 
 plsql_assignment ::= {column_expr} ':=' <<expr '-1'>>
-plsql_statement ::= ( plsql_assignment SEMI | delete_stmt_limited SEMI | insert_stmt SEMI | update_stmt_limited SEMI ) *
+plsql_conditional ::= IF <<expr '-1'>> 'THEN' plsql_statement [ ( 'ELSIF' <<expr '-1'>> 'THEN' plsql_statement ) * ] [ 'ELSE' plsql_statement ] END IF
+plsql_return ::= 'RETURN' ( 'NEW' | 'OLD' | NULL )
+plsql_statement ::= ( plsql_return SEMI | plsql_conditional SEMI | plsql_assignment SEMI | delete_stmt_limited SEMI | insert_stmt SEMI | update_stmt_limited SEMI ) *
 
 create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETURNS' TRIGGER [ 'LANGUAGE' 'PLPGSQL' ] AS
 '$$'
 'BEGIN'
 plsql_statement
-'RETURN' ( 'NEW' | 'OLD' | NULL ) SEMI
 'END' SEMI
 '$$'
 [ 'LANGUAGE' 'PLPGSQL' ] {
