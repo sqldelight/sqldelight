@@ -310,7 +310,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       literalValue.text.startsWith("TIMESTAMP WITHOUT TIME ZONE") -> IntermediateType(TIMESTAMP)
       literalValue.text.startsWith("TIMESTAMP") -> IntermediateType(TIMESTAMP)
       literalValue.text.startsWith("INTERVAL") -> IntermediateType(PostgreSqlType.INTERVAL)
-      literalValue.text == ("CURRENT_USER") || literalValue.text == ("SESSION_USER") -> IntermediateType(TEXT)
+      literalValue.text == "CURRENT_USER" || literalValue.text == "SESSION_USER" -> IntermediateType(TEXT)
       else -> parentResolver.resolvedType(this)
     }
     is PostgreSqlAtTimeZoneOperator -> IntermediateType(TEXT)
