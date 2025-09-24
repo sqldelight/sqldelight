@@ -2,7 +2,8 @@
 kotlin = "2.2.10"
 dokka = "2.0.0"
 kotlinCoroutines = "1.10.2"
-idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+ideaCompiler = "231.9392.1" # sync with sql-psi, see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
+ideaPlugin = "251.26094.121" # AS Narwhal Feature Drop
 androidxSqlite = "2.5.2"
 schemaCrawler = "16.19.2"
 sqliter = "1.3.3"
@@ -47,23 +48,23 @@ picnic = { module = "com.jakewharton.picnic:picnic", version = "0.7.0" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 
-intellij-core = { module = "com.jetbrains.intellij.platform:core", version.ref = "idea" }
-intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
-intellij-coreUi = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "idea" }
-intellij-ide = { module = "com.jetbrains.intellij.platform:ide", version.ref = "idea" }
-intellij-ideCore = { module = "com.jetbrains.intellij.platform:ide-core", version.ref = "idea" }
-intellij-ideImpl = { module = "com.jetbrains.intellij.platform:ide-impl", version.ref = "idea" }
-intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "idea" }
-intellij-lang = { module = "com.jetbrains.intellij.platform:lang", version.ref = "idea" }
-intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
-intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
-intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "idea" }
-intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-model", version.ref = "idea" }
-intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
-intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
-intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.ref = "idea" }
-intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "idea" }
-intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
+intellij-core = { module = "com.jetbrains.intellij.platform:core", version.ref = "ideaCompiler" }
+intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "ideaCompiler" }
+intellij-coreUi = { module = "com.jetbrains.intellij.platform:core-ui", version.ref = "ideaCompiler" }
+intellij-ide = { module = "com.jetbrains.intellij.platform:ide", version.ref = "ideaCompiler" }
+intellij-ideCore = { module = "com.jetbrains.intellij.platform:ide-core", version.ref = "ideaCompiler" }
+intellij-ideImpl = { module = "com.jetbrains.intellij.platform:ide-impl", version.ref = "ideaCompiler" }
+intellij-testFramework = { module = "com.jetbrains.intellij.platform:test-framework", version.ref = "ideaCompiler" }
+intellij-lang = { module = "com.jetbrains.intellij.platform:lang", version.ref = "ideaCompiler" }
+intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "ideaCompiler" }
+intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "ideaCompiler" }
+intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "ideaCompiler" }
+intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-model", version.ref = "ideaCompiler" }
+intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "ideaCompiler" }
+intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "ideaCompiler" }
+intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.ref = "ideaCompiler" }
+intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "ideaCompiler" }
+intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "ideaCompiler" }
 
 sqlPsi = { module = "app.cash.sql-psi:core", version.ref = "sqlPsi" }
 sqlPsiEnvironment = { module = "app.cash.sql-psi:environment", version.ref = "sqlPsi" }
