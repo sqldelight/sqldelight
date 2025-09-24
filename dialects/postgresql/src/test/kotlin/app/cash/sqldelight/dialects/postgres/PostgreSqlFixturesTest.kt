@@ -45,6 +45,7 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
       "trigger-migration",
       "trigger-new-in-expression",
       "update-view-with-trigger",
+      "rowid-orderby",
     )
 
     @Suppress("unused")
