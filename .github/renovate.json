@@ -4,7 +4,7 @@
   ],
   "semanticCommits": "disabled",
   "constraints": {
-    "python": "==3.11"
+    "python": "==3.13"
   },
   "ignoreDeps": [
     "com.jetbrains.intellij.platform",
