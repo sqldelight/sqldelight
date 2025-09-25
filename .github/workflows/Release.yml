@@ -117,7 +117,7 @@ jobs:
           java-version-file: .github/workflows/.ci-java-version
       - uses: actions/setup-node@v5
         with:
-          node-version: 18
+          node-version: 22
       - name: Setup Gradle Java installations paths
         run: |
           cd ~/.gradle
