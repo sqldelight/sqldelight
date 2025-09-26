@@ -40,7 +40,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: 3.13 # See the pinned version in renovate.json too
+          python-version: 3.11 # See the pinned version in renovate.json too
 
       - name: Get Docs Version
         run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
