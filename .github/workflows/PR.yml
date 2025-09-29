@@ -171,5 +171,50 @@ jobs:
           cache-cleanup: always
       - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
 
+  docs_verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v5
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.ci-java-version
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-cleanup: always
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.13
+      - name: Get Docs Version
+        id: version
+        run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
+      - name: Prep mkdocs
+        run: |
+          pip3 install --no-deps -r .github/workflows/requirements.txt
+          .github/workflows/prepare_mkdocs.sh ${{ steps.version.outputs.VERSION_NAME }}
+      - name: Configure git for mike (no push)
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch origin gh-pages --depth=1 || true
+      - name: Validate SNAPSHOT deploy (no push)
+        if: ${{ contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
+        env:
+          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
+        run: mike deploy -u ${{ steps.version.outputs.VERSION_NAME }} snapshot
+      - name: Validate release deploy (no push)
+        if: ${{ !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
+        env:
+          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
+        run: mike deploy -u ${{ steps.version.outputs.VERSION_NAME }} latest
+      - name: Ensure working tree clean
+        run: test -z "$(git status --porcelain)" || (echo "mike produced uncommitted changes" && git status && exit 1)
+
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
