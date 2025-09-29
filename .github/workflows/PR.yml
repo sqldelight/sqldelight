@@ -208,11 +208,6 @@ jobs:
         env:
           SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
         run: mike deploy -u ${{ steps.version.outputs.VERSION_NAME }} snapshot
-      - name: Validate release deploy (no push)
-        if: ${{ !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
-        env:
-          SQLDELIGHT_VERSION: ${{ steps.version.outputs.VERSION_NAME }}
-        run: mike deploy -u ${{ steps.version.outputs.VERSION_NAME }} latest
       - name: Ensure working tree clean
         run: test -z "$(git status --porcelain)" || (echo "mike produced uncommitted changes" && git status && exit 1)
 
