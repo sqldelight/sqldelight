@@ -1,6 +1,10 @@
 package app.cash.sqldelight.core.util
 
+import app.cash.sqldelight.core.compiler.toCodeLiteral
+import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlType
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
@@ -159,6 +163,34 @@ class TreeUtilTest {
       |CREATE VIRTUAL TABLE data USING FTS5 (
       |  value,
       |  prefix='2 3 4 5 6'
+      |)
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `A PreCreateTableInitialization statement is ordered before CREATE TABLE`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  value ABC
+      |);
+      |CREATE TYPE ABC AS ENUM('a','b','c');
+      """.trimMargin(),
+      temporaryFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val initializationStatements = mutableListOf<String>()
+
+    listOf(file).forInitializationStatements(file.dialect.allowsReferenceCycles) { sqlText ->
+      initializationStatements.add(sqlText)
+    }
+
+    assertThat(initializationStatements.joinToString("\n")).isEqualTo(
+      """
+      |CREATE TYPE ABC AS ENUM('a','b','c')
+      |CREATE TABLE data (
+      |  value ABC
       |)
       """.trimMargin(),
     )
