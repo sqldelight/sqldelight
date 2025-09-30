@@ -190,6 +190,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1898434388%2FClasslikes%2F1586659465" anchor-label="PreCreateTableInitialization" id="-1898434388%2FClasslikes%2F1586659465" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":sqldelight-compiler:dialect:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-pre-create-table-initialization/index.html"><span>Pre</span><wbr><span>Create</span><wbr><span>Table</span><wbr><span><span>Initialization</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1898434388%2FClasslikes%2F1586659465"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-pre-create-table-initialization/index.html">PreCreateTableInitialization</a> : <span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></div><div class="brief "><p class="paragraph">A Dialect implements this interface on statement Mixin classes that must be executed before <code class="lang-kotlin">CREATE TABLE</code> statements in <code class="lang-kotlin">.sq</code> files and where a schema is not derived from <code class="lang-kotlin">.sqm</code> files. Only used in <code class="lang-kotlin">app.cash.sqldelight.core.lang.util.TreeUtilKt.forInitializationStatements</code> for use by <code class="lang-kotlin">Schema.create</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-2090018266%2FClasslikes%2F1586659465" anchor-label="PrimitiveType" id="-2090018266%2FClasslikes%2F1586659465" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":sqldelight-compiler:dialect:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dialect:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">

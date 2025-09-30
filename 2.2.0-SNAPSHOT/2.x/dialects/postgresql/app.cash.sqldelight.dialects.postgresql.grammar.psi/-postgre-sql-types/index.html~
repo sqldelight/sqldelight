@@ -345,6 +345,66 @@
               </div>
             </div>
           </div>
+<a data-name="1910549404%2FProperties%2F-128169639" anchor-label="ALTER_TYPE_ADD_ENUM_VALUE" id="1910549404%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-y-p-e_-a-d-d_-e-n-u-m_-v-a-l-u-e.html"><span>ALTER_</span><wbr><span>TYPE_</span><wbr><span>ADD_</span><wbr><span>ENUM_</span><wbr><span>VALUE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1910549404%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-y-p-e_-a-d-d_-e-n-u-m_-v-a-l-u-e.html">ALTER_TYPE_ADD_ENUM_VALUE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1812209679%2FProperties%2F-128169639" anchor-label="ALTER_TYPE_RENAME" id="1812209679%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-y-p-e_-r-e-n-a-m-e.html"><span>ALTER_</span><wbr><span>TYPE_</span><wbr><span>RENAME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1812209679%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-y-p-e_-r-e-n-a-m-e.html">ALTER_TYPE_RENAME</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1055276487%2FProperties%2F-128169639" anchor-label="ALTER_TYPE_RENAME_ENUM_VALUE" id="-1055276487%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-y-p-e_-r-e-n-a-m-e_-e-n-u-m_-v-a-l-u-e.html"><span>ALTER_</span><wbr><span>TYPE_</span><wbr><span>RENAME_</span><wbr><span>ENUM_</span><wbr><span>VALUE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1055276487%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-y-p-e_-r-e-n-a-m-e_-e-n-u-m_-v-a-l-u-e.html">ALTER_TYPE_RENAME_ENUM_VALUE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1213739323%2FProperties%2F-128169639" anchor-label="ALTER_TYPE_STMT" id="-1213739323%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-y-p-e_-s-t-m-t.html"><span>ALTER_</span><wbr><span>TYPE_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1213739323%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-y-p-e_-s-t-m-t.html">ALTER_TYPE_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="2047075298%2FProperties%2F-128169639" anchor-label="ALWAYS" id="2047075298%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1125,6 +1185,21 @@
               </div>
             </div>
           </div>
+<a data-name="1497927831%2FProperties%2F-128169639" anchor-label="CREATE_ENUM_TYPE_STMT" id="1497927831%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-r-e-a-t-e_-e-n-u-m_-t-y-p-e_-s-t-m-t.html"><span>CREATE_</span><wbr><span>ENUM_</span><wbr><span>TYPE_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1497927831%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-r-e-a-t-e_-e-n-u-m_-t-y-p-e_-s-t-m-t.html">CREATE_ENUM_TYPE_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1243635010%2FProperties%2F-128169639" anchor-label="CREATE_EXTENSION_STMT" id="-1243635010%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1575,6 +1650,21 @@
               </div>
             </div>
           </div>
+<a data-name="123289940%2FProperties%2F-128169639" anchor-label="DROP_TYPE_STMT" id="123289940%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-r-o-p_-t-y-p-e_-s-t-m-t.html"><span>DROP_</span><wbr><span>TYPE_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="123289940%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-r-o-p_-t-y-p-e_-s-t-m-t.html">DROP_TYPE_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-712783568%2FProperties%2F-128169639" anchor-label="EACH" id="-712783568%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1601,6 +1691,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-n-d.html">END</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="12938048%2FProperties%2F-128169639" anchor-label="ENUM_DATA_TYPE" id="12938048%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-n-u-m_-d-a-t-a_-t-y-p-e.html"><span>ENUM_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="12938048%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-n-u-m_-d-a-t-a_-t-y-p-e.html">ENUM_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1857992700%2FProperties%2F-128169639" anchor-label="ENUM_TYPE_LABEL" id="1857992700%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-n-u-m_-t-y-p-e_-l-a-b-e-l.html"><span>ENUM_</span><wbr><span>TYPE_</span><wbr><span>LABEL</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1857992700%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-n-u-m_-t-y-p-e_-l-a-b-e-l.html">ENUM_TYPE_LABEL</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -3810,6 +3930,21 @@
               </div>
             </div>
           </div>
+<a data-name="579379163%2FProperties%2F-128169639" anchor-label="TYPE_IDENTIFIER" id="579379163%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-y-p-e_-i-d-e-n-t-i-f-i-e-r.html"><span>TYPE_</span><wbr><span>IDENTIFIER</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="579379163%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-y-p-e_-i-d-e-n-t-i-f-i-e-r.html">TYPE_IDENTIFIER</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="108695929%2FProperties%2F-128169639" anchor-label="TYPE_NAME" id="108695929%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -3911,6 +4046,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-u-u-i-d_-d-a-t-a_-t-y-p-e.html">UUID_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1328682424%2FProperties%2F-128169639" anchor-label="VALUE" id="1328682424%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-v-a-l-u-e.html"><span><span>VALUE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1328682424%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-v-a-l-u-e.html">VALUE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
