@@ -21,7 +21,7 @@ version = 1.0
 
 kotlin {
   applyDefaultHierarchyTemplate()
-  jvmToolchain(8)
+  jvmToolchain(17)
 
   // Configure common.
   sourceSets.commonMain.dependencies {
