@@ -35,6 +35,7 @@ import com.intellij.ide.impl.ProjectUtil
 import com.intellij.ide.projectView.ProjectView
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
@@ -55,24 +56,33 @@ import java.io.PrintStream
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.reflect.jvm.jvmName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import timber.log.Timber
 
-class ProjectService(val project: Project) :
-  SqlDelightProjectService,
+@Service(Service.Level.PROJECT)
+class ProjectService(
+  val project: Project,
+  val scope: CoroutineScope,
+) : SqlDelightProjectService,
   Disposable {
-  private var fileIndexes: FileIndexMap?
+  private val fileIndexes = MutableStateFlow<FileIndexMap?>(null)
   private val loggingTree = LoggerTree(Logger.getInstance("SQLDelight[${project.name}]"))
 
   init {
     Timber.plant(loggingTree)
 
     val path = Path.of(project.basePath!!)
-    fileIndexes = if (ProjectUtil.isValidProjectPath(path)) {
-      FileIndexMap()
-    } else {
-      // A gradle sync is needed before the file index map initializes.
-      null
+    scope.launch {
+      fileIndexes.value = if (ProjectUtil.isValidProjectPath(path)) {
+        FileIndexMap()
+      } else {
+        // A gradle sync is needed before the file index map initializes.
+        null
+      }
     }
 
     if (!ApplicationManager.getApplication().isUnitTestMode) {
@@ -88,7 +98,11 @@ class ProjectService(val project: Project) :
                     ?.contentsSynchronized()
                 }
                 if (event is VFileCreateEvent || event is VFileDeleteEvent || event is VFileMoveEvent) {
-                  event.file?.let { generateDatabaseOnSync(it) }
+                  event.file?.let {
+                    scope.launch(Dispatchers.Default) {
+                      generateDatabaseOnSync(it)
+                    }
+                  }
                 }
               }
               events.mapNotNull { it.file }
@@ -97,7 +111,7 @@ class ProjectService(val project: Project) :
                   val index = requireNotNull(virtualFile.findConfiguredFileIndex())
                   val filePath = try {
                     virtualFile.toNioPath().toAbsolutePath()
-                  } catch (exception: UnsupportedOperationException) {
+                  } catch (_: UnsupportedOperationException) {
                     Paths.get("").toAbsolutePath()
                   }
                   val sourceFolder = index.sourceFolders(true)
@@ -126,11 +140,11 @@ class ProjectService(val project: Project) :
   }
 
   override fun resetIndex() {
-    fileIndexes = FileIndexMap()
+    fileIndexes.value = FileIndexMap()
   }
 
   override fun clearIndex() {
-    fileIndexes = null
+    fileIndexes.value = null
   }
 
   private fun generateDatabaseOnSync(vFile: VirtualFile) {
@@ -217,7 +231,7 @@ class ProjectService(val project: Project) :
   }
 
   override fun fileIndex(module: Module): SqlDelightFileIndex {
-    return fileIndexes?.get(module) ?: FileIndexMap.defaultIndex
+    return fileIndexes.value?.get(module) ?: FileIndexMap.defaultIndex
   }
 
   private class MissingDialect : SqlDelightDialect {

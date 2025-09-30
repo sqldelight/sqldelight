@@ -16,18 +16,18 @@ intellijPlatform {
     name = 'SQLDelight'
     dependencies {
       intellijPlatform {
-        intellijIdeaCommunity(libs.versions.idea, false)
+        intellijIdeaCommunity(libs.versions.ideaPlugin, false)
         bundledPlugin("org.jetbrains.kotlin")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("com.intellij.java")
-        bundledPlugin("org.jetbrains.android")
+        plugin(libs.versions.ideaPlugin.map { "org.jetbrains.android:" + it })
 
         pluginVerifier()
         zipSigner()
         instrumentationTools()
 
-        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform.INSTANCE, libs.versions.idea.get())
-        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Plugin.Java.INSTANCE, libs.versions.idea.get())
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform.INSTANCE, libs.versions.ideaPlugin.get())
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Plugin.Java.INSTANCE, libs.versions.ideaPlugin.get())
       }
     }
     if (!project.version.endsWith("SNAPSHOT")) {
@@ -49,7 +49,7 @@ intellijPlatform {
     def version = providers.systemProperty("ideaVersion").getOrElse(null)
     if (version != null) {
       ides {
-        ide(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity, version)
+        create(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity, version)
       }
     }
 

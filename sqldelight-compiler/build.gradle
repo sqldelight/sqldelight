@@ -19,7 +19,7 @@ tasks.named('test') {
 }
 
 grammarKit {
-  intellijRelease.set(libs.versions.idea)
+  intellijRelease.set(libs.versions.ideaCompiler)
 }
 
 dependencies {
