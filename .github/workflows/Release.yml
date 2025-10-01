@@ -31,7 +31,7 @@ jobs:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -85,7 +85,7 @@ jobs:
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -123,7 +123,7 @@ jobs:
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
