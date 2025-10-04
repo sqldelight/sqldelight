@@ -190,7 +190,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "jsonb_path_query_array", "jsonb_path_query_first", "jsonb_path_query_array_tz", "jsonb_path_query_first_tz",
     "jsonb_pretty",
     "json_typeof", "jsonb_typeof",
-    "json_agg", "jsonb_agg", "json_object_agg", "jsonb_object_agg",
+    "json_agg", "jsonb_agg", "json_agg_strict", "jsonb_agg_strict",
+    "json_object_agg", "jsonb_object_agg", "json_object_agg_strict", "jsonb_object_agg_strict",
+    "json_object_agg_unique", "jsonb_object_agg_unique", "json_object_agg_unique_strict", "jsonb_object_agg_unique_strict",
     -> IntermediateType(PostgreSqlType.JSON)
     "json_build_object", "jsonb_build_object",
     -> IntermediateType(TEXT)
@@ -322,7 +324,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     }
     is PostgreSqlAtTimeZoneOperator -> IntermediateType(TEXT)
     is PostgreSqlExtensionExpr -> when {
-      jsonFunctionStmt != null -> IntermediateType(PostgreSqlType.JSON)
+      jsonFunctionStmt != null || jsonAggStmt != null || jsonObjectAggStmt != null -> IntermediateType(PostgreSqlType.JSON)
 
       arrayAggStmt != null -> {
         val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
