@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 ### Added
+- [PostgreSQL Dialect] Add support for Postgres JSON Aggregate FILTER (#5957 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for Postgres Enums (#5935 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add limited support for Postgres Triggers (#5932 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add predicate to check whether SQL expression can be parsed as JSON (#5843 by [Griffio][griffio])
