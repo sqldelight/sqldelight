@@ -2325,6 +2325,21 @@
               </div>
             </div>
           </div>
+<a data-name="-2059647316%2FProperties%2F-128169639" anchor-label="JSON_AGG_STMT" id="-2059647316%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-s-o-n_-a-g-g_-s-t-m-t.html"><span>JSON_</span><wbr><span>AGG_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2059647316%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n_-a-g-g_-s-t-m-t.html">JSON_AGG_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-759721479%2FProperties%2F-128169639" anchor-label="JSON_DATA_TYPE" id="-759721479%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -2366,6 +2381,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n_-f-u-n-c-t-i-o-n_-s-t-m-t.html">JSON_FUNCTION_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1600820510%2FProperties%2F-128169639" anchor-label="JSON_OBJECT_AGG_STMT" id="-1600820510%2FProperties%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-s-o-n_-o-b-j-e-c-t_-a-g-g_-s-t-m-t.html"><span>JSON_</span><wbr><span>OBJECT_</span><wbr><span>AGG_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1600820510%2FProperties%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n_-o-b-j-e-c-t_-a-g-g_-s-t-m-t.html">JSON_OBJECT_AGG_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>

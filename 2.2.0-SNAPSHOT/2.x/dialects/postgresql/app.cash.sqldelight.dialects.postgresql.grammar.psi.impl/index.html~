@@ -1480,6 +1480,21 @@
               </div>
             </div>
           </div>
+<a data-name="-144443406%2FClasslikes%2F-128169639" anchor-label="PostgreSqlJsonAggStmtImpl" id="-144443406%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-json-agg-stmt-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Agg</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-144443406%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-agg-stmt-impl/index.html">PostgreSqlJsonAggStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-agg-stmt/index.html">PostgreSqlJsonAggStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1113541172%2FClasslikes%2F-128169639" anchor-label="PostgreSqlJsonbBinaryOperatorImpl" id="1113541172%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -1551,6 +1566,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-function-stmt-impl/index.html">PostgreSqlJsonFunctionStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-function-stmt/index.html">PostgreSqlJsonFunctionStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1613587375%2FClasslikes%2F-128169639" anchor-label="PostgreSqlJsonObjectAggStmtImpl" id="-1613587375%2FClasslikes%2F-128169639" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:postgresql:dokkaHtmlPartial/main" data-filterable-set=":dialects:postgresql:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-json-object-agg-stmt-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Object</span><wbr><span>Agg</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1613587375%2FClasslikes%2F-128169639"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-object-agg-stmt-impl/index.html">PostgreSqlJsonObjectAggStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-object-agg-stmt/index.html">PostgreSqlJsonObjectAggStmt</a></div></div></div>
                 </div>
               </div>
             </div>
