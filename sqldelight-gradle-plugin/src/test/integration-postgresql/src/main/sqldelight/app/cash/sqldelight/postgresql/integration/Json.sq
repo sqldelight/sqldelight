@@ -100,3 +100,20 @@ SELECT
   data IS JSON ARRAY WITHOUT UNIQUE KEYS "array without unq key?"
 FROM TestJsonCheck
 WHERE data IS NOT NULL;
+
+selectJsonAggFilterWhere:
+SELECT json_agg(data) FILTER (WHERE (data->>'in_stock')::BOOLEAN) AS in_stock_rows
+FROM TestJson;
+
+selectJsonbAggFilter:
+SELECT jsonb_agg(datab->'color') AS colors
+FROM TestJson
+WHERE datab ?? 'color';
+
+selectJsonObjectAggFilterWhere:
+SELECT json_object_agg(data->>'color', data) FILTER (WHERE (data->'size') IS NOT NULL)
+FROM TestJson;
+
+selectJsonbObjectAgg:
+SELECT jsonb_object_agg(datab->>'color', datab)
+FROM TestJson;

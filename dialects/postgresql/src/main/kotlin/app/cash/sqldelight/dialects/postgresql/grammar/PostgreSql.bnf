@@ -525,7 +525,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -698,7 +698,21 @@ truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
 
-json_function_stmt ::= ( 'row_to_json' | 'json_agg' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
+json_function_stmt ::= ( 'row_to_json' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
+
+json_agg_stmt ::= ( 'json_agg' | 'jsonb_agg' | 'json_agg_strict' | 'jsonb_agg_strict')
+LP [ ALL | DISTINCT ] ( json_expression | {table_alias} | {table_name} | <<expr '-1'>> ) [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
+pin = 2
+}
+
+json_object_agg_stmt ::= ('json_object_agg' | 'jsonb_object_agg' | 'json_object_agg_strict' | 'jsonb_object_agg_strict'
+| 'json_object_agg_unique' | 'jsonb_object_agg_unique' | 'json_object_agg_unique_strict' | 'jsonb_object_agg_unique_strict' ) {
+LP [ ALL | DISTINCT ] ( json_expression | {column_expr} | <<expr '-1'>> ) COMMA ( json_expression | {column_expr} | <<expr '-1'>> )
+[ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
+pin = 2
+}
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {

@@ -839,6 +839,38 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testJsonAggFilter() {
+    database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonAggFilterWhere().executeAsList()) {
+      assertThat(first()).isEqualTo("""[{"color":"red","size":"small","in_stock":true}]""")
+    }
+  }
+
+  @Test
+  fun testJsonbAggFilter() {
+    database.jsonQueries.insertLiteral("""{}""", """{"color":"red","size":"small","in_stock":true}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbAggFilter().executeAsList()) {
+      assertThat(first()).isEqualTo("""["red"]""")
+    }
+  }
+
+  @Test
+  fun testJsonObjectAggFilterWhere() {
+    database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonObjectAggFilterWhere().executeAsList()) {
+      assertThat(first()).isEqualTo("""{ "red" : {"color":"red","size":"small","in_stock":true} }""")
+    }
+  }
+
+  @Test
+  fun testJsonbObjectAgg() {
+    database.jsonQueries.insertLiteral("""{}""", """{"color":"red","size":"small","in_stock":true}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbObjectAgg().executeAsList()) {
+      assertThat(first()).isEqualTo("""{"red": {"size": "small", "color": "red", "in_stock": true}}""")
+    }
+  }
+
+  @Test
   fun testUpdateSetFromId() {
     database.updatesQueries.insertTest(31)
     database.updatesQueries.insertTest2("X")
