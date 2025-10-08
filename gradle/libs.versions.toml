@@ -109,5 +109,5 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
 spotless = { id = "com.diffplug.spotless", version = "8.0.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = "com.gradleup.shadow:9.2.2"
-ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.4" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }
