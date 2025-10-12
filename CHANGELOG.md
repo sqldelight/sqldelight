@@ -3,6 +3,8 @@
 ## UNRELEASED
 
 ### Added
+- [SQLite Dialect] Add Sqlite 3.35 support for MATERIALIZED query planner hint using Common Table Expressions (#5961 by [Griffio][griffio])
+- [PostgreSQL Dialect] Add support for MATERIALIZED query planner hint using Common Table Expressions (#5961 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for Postgres JSON Aggregate FILTER (#5957 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for Postgres Enums (#5935 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add limited support for Postgres Triggers (#5932 by [Griffio][griffio])
