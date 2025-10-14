@@ -115,7 +115,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
       - name: Setup Gradle Java installations paths
