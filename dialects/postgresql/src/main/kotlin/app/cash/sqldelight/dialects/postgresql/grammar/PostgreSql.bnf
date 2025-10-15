@@ -143,6 +143,7 @@ overrides ::= type_name
   | ordering_term
   | binary_like_operator
   | literal_value
+  | with_clause
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
@@ -572,7 +573,7 @@ boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_nam
 
 boolean_literal ::= TRUE | FALSE
 
-is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( 'WITH' | 'WITHOUT' ) 'UNIQUE' [ 'KEYS' ] ]
+is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( WITH | WITHOUT ) 'UNIQUE' [ 'KEYS' ] ]
 
 json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
@@ -822,7 +823,13 @@ alter_type_rename_enum_value ::= ALTER 'TYPE' type_identifier RENAME VALUE enum_
 alter_type_rename ::= ALTER 'TYPE' type_identifier RENAME TO type_identifier
 alter_type_stmt ::= alter_type_add_enum_value | alter_type_rename_enum_value | alter_type_rename
 
-
+with_clause_materialized ::= NOT 'MATERIALIZED' | 'MATERIALIZED'
+with_clause ::= WITH [ RECURSIVE ] {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ( COMMA {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ) * {
+  mixin = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlWithClause"
+  pin = 1
+  override = true
+}
 
 
 
