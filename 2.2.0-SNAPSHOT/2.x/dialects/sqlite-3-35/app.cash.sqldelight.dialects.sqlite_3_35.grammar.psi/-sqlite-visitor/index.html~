@@ -409,6 +409,21 @@
               </div>
             </div>
           </div>
+<a data-name="-113982502%2FFunctions%2F-1311902568" anchor-label="visitSqlWithClause" id="-113982502%2FFunctions%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-sql-with-clause.html"><span>visit</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span><span>Clause</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-113982502%2FFunctions%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-sql-with-clause.html"><span class="token function">visitSqlWithClause</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlWithClause///PointingToDeclaration/">SqlWithClause</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1210357484%2FFunctions%2F-1311902568" anchor-label="visitUpdateStmtLimited" id="-1210357484%2FFunctions%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -480,6 +495,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1356965038%2FFunctions%2F-1311902568"><span class="token function">visitWhiteSpace</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiWhiteSpace///PointingToDeclaration/">PsiWhiteSpace</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2134031502%2FFunctions%2F-1311902568" anchor-label="visitWithClause" id="2134031502%2FFunctions%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-with-clause.html"><span>visit</span><wbr><span>With</span><wbr><span><span>Clause</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2134031502%2FFunctions%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-with-clause.html"><span class="token function">visitWithClause</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-with-clause/index.html">SqliteWithClause</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1539825006%2FFunctions%2F-1311902568" anchor-label="visitWithClauseMaterialized" id="1539825006%2FFunctions%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-with-clause-materialized.html"><span>visit</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span><span>Materialized</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1539825006%2FFunctions%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-with-clause-materialized.html"><span class="token function">visitWithClauseMaterialized</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-sqlite-with-clause-materialized/index.html">SqliteWithClauseMaterialized</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>

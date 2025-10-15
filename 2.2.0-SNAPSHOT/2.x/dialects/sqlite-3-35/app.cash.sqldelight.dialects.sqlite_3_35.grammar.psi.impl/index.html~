@@ -250,6 +250,36 @@
               </div>
             </div>
           </div>
+<a data-name="-1696221211%2FClasslikes%2F-1311902568" anchor-label="SqliteWithClauseImpl" id="-1696221211%2FClasslikes%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sqlite-with-clause-impl/index.html"><span>Sqlite</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1696221211%2FClasslikes%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-with-clause-impl/index.html">SqliteWithClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlWithClauseImpl///PointingToDeclaration/">SqlWithClauseImpl</span>, <a href="../app.cash.sqldelight.dialects.sqlite_3_35.grammar.psi/-sqlite-with-clause/index.html">SqliteWithClause</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1337769454%2FClasslikes%2F-1311902568" anchor-label="SqliteWithClauseMaterializedImpl" id="1337769454%2FClasslikes%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sqlite-with-clause-materialized-impl/index.html"><span>Sqlite</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span>Materialized</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1337769454%2FClasslikes%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-sqlite-with-clause-materialized-impl/index.html">SqliteWithClauseMaterializedImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.sqlite_3_35.grammar.psi/-sqlite-with-clause-materialized/index.html">SqliteWithClauseMaterialized</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

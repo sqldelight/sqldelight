@@ -465,6 +465,21 @@
               </div>
             </div>
           </div>
+<a data-name="-668944207%2FProperties%2F-1311902568" anchor-label="NOT" id="-668944207%2FProperties%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-n-o-t.html"><span><span>NOT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-668944207%2FProperties%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-n-o-t.html">NOT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-151935625%2FProperties%2F-1311902568" anchor-label="NOTHING" id="-151935625%2FProperties%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
@@ -551,6 +566,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-o-v-e-r-r-i-d-e-s.html">OVERRIDES</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1640342798%2FProperties%2F-1311902568" anchor-label="RECURSIVE" id="-1640342798%2FProperties%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-c-u-r-s-i-v-e.html"><span><span>RECURSIVE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1640342798%2FProperties%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-e-c-u-r-s-i-v-e.html">RECURSIVE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -731,6 +761,51 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-h-e-r-e.html">WHERE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="146369104%2FProperties%2F-1311902568" anchor-label="WITH" id="146369104%2FProperties%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-i-t-h.html"><span><span>WITH</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="146369104%2FProperties%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-i-t-h.html">WITH</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-126140676%2FProperties%2F-1311902568" anchor-label="WITH_CLAUSE" id="-126140676%2FProperties%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-i-t-h_-c-l-a-u-s-e.html"><span>WITH_</span><wbr><span>CLAUSE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-126140676%2FProperties%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-i-t-h_-c-l-a-u-s-e.html">WITH_CLAUSE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1750208888%2FProperties%2F-1311902568" anchor-label="WITH_CLAUSE_MATERIALIZED" id="-1750208888%2FProperties%2F-1311902568" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":dialects:sqlite-3-35:dokkaHtmlPartial/main" data-filterable-set=":dialects:sqlite-3-35:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-i-t-h_-c-l-a-u-s-e_-m-a-t-e-r-i-a-l-i-z-e-d.html"><span>WITH_</span><wbr><span>CLAUSE_</span><wbr><span><span>MATERIALIZED</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1750208888%2FProperties%2F-1311902568"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-35:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-i-t-h_-c-l-a-u-s-e_-m-a-t-e-r-i-a-l-i-z-e-d.html">WITH_CLAUSE_MATERIALIZED</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
