@@ -24,10 +24,12 @@ import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOpe
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneOperator
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlContainsOperatorExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDoubleColonCastOperatorExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlJsonExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
@@ -283,6 +285,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       is PostgreSqlDoubleColonCastOperatorExpression -> {
         (argument.parent.parent as SqlExpr).postgreSqlType()
       }
+      is PostgreSqlJsonExpression -> {
+        IntermediateType(PostgreSqlType.JSON)
+      }
       else -> {
         parentResolver.argumentType(parent, argument)
       }
@@ -341,7 +346,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         if (jsonExpression!!.jsonbBooleanOperator != null) {
           IntermediateType(BOOLEAN)
         } else {
-          IntermediateType(PostgreSqlType.JSON)
+          IntermediateType(PostgreSqlType.JSON).asNullable()
         }
       }
       rangeOperatorExpression != null -> {
