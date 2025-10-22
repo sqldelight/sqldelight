@@ -12,10 +12,10 @@ base {
 dependencies {
   api projects.runtime
   implementation libs.r2dbc
-  implementation libs.kotlin.coroutines.reactive
+  implementation libs.kotlinx.coroutines.reactive
 
   testImplementation libs.kotlin.test
-  testImplementation libs.kotlin.coroutines.test
+  testImplementation libs.kotlinx.coroutines.test
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
