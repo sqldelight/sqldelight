@@ -3,7 +3,7 @@ package app.cash.sqldelight.integration
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.google.common.truth.Truth.assertThat
-import kotlinx.serialization.builtins.ArraySerializer
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import org.junit.Before
@@ -44,6 +44,6 @@ class IntegrationTests {
   }
 
   private fun jsonPhones(vararg phoneNumbers: String): String {
-    return Json.encodeToString(ArraySerializer(String.serializer()), phoneNumbers)
+    return Json.encodeToString(ListSerializer(String.serializer()), phoneNumbers.toList())
   }
 }
