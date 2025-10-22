@@ -28,7 +28,7 @@ dependencies {
   }
   testFixturesApi testFixtures(libs.sqlPsi)
 
-  testImplementation libs.truth
+  testImplementation libs.junit
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

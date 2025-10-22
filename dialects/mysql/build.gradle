@@ -28,6 +28,7 @@ dependencies {
   }
   testFixturesApi testFixtures(libs.sqlPsi)
 
+  testImplementation libs.junit
   testImplementation libs.truth
 }
 
