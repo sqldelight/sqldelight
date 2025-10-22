@@ -3,9 +3,9 @@ package app.cash.sqldelight.integration
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver.Companion.IN_MEMORY
 import com.google.common.truth.Truth.assertThat
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.adapter
+import kotlinx.serialization.builtins.ArraySerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.Test
 
@@ -46,8 +46,6 @@ class IntegrationTests {
   }
 
   private fun jsonPhones(vararg phoneNumbers: String): String {
-    val adapter =
-      moshi.adapter<List<String>>(Types.newParameterizedType(List::class.java, String::class.java))
-    return adapter.toJson(phoneNumbers.toList())
+    return Json.encodeToString(ArraySerializer(String.serializer()), phoneNumbers)
   }
 }
