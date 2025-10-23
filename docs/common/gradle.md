@@ -197,6 +197,31 @@ Defaults to `false`.
 
 ----
 
+### `migrationVerificationLevel`
+
+Type: `Property<String>`
+
+Controls the level of schema metadata retrieved by SchemaCrawler during migration verification. This affects the depth of database introspection performed when verifying migrations.
+
+Valid values:
+- `"minimum"` - Basic schema information only
+- `"standard"` - Standard schema details including columns and basic constraints
+- `"detailed"` - Detailed schema information including indexes and additional metadata
+- `"maximum"` - Complete schema information including all available metadata (default)
+
+Defaults to `"maximum"`.
+
+=== "Kotlin"
+    ```kotlin
+    migrationVerificationLevel.set("standard")
+    ```
+=== "Groovy"
+    ```groovy
+    migrationVerificationLevel = "standard"
+    ```
+
+----
+
 ### `treatNullAsUnknownForEquality`
 
 Type: `Property<Boolean>`
