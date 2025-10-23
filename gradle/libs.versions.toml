@@ -30,7 +30,7 @@ kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutin
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 
 androidx-test-core = "androidx.test:core:1.7.0"
-androidx-test-runner = "androidx.test:runner:1.6.1"
+androidx-test-runner = "androidx.test:runner:1.7.0"
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "androidxSqlite" }
 androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", version.ref = "androidxSqlite" }
 app-cash-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-mpp" }
