@@ -2,514 +2,514 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/changelog/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/code_of_conduct/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/contributing/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/upgrading-2.0/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/coroutines/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/foreign_keys/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/resources/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/rxjava/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/testing/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/android_sqlite/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/androidx_paging_multiplatform/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/androidx_paging_usage/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/coroutines-multiplatform/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/coroutines-usage/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/coroutines/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/custom_column_types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/gradle-dependencies/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/index_gradle_database/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/index_queries/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/index_schema/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/index_schema_sq/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/index_server/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/migrations_server/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/multiplatform/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/query_arguments_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/rxjava/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/types_server_migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/common/types_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/coroutines/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/custom_worker/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/multiplatform/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/sqljs_worker/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/js_sqlite/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_h2/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_mysql/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_postgresql/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/coroutines/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/foreign_keys/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/rxjava/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/jvm_sqlite/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/coroutines/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/foreign_keys/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/resources/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/multiplatform_sqlite/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/androidx_paging/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/coroutines/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/custom_projections/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/foreign_keys/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/gradle/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/grouping_statements/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/intellij_plugin/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/migrations/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/query_arguments/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/transactions/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.2.0-SNAPSHOT/native_sqlite/types/</loc>
-         <lastmod>2025-10-22</lastmod>
+         <lastmod>2025-10-24</lastmod>
     </url>
 </urlset>
