@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 ### Added
+- [Compiler] Improve the compiler error message to include source file location when a CAST is required (#5979 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for Postgres JSON operator path extraction (#5971 by [Griffio][griffio])
 - [SQLite Dialect] Add Sqlite 3.35 support for MATERIALIZED query planner hint using Common Table Expressions (#5961 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for MATERIALIZED query planner hint using Common Table Expressions (#5961 by [Griffio][griffio])
