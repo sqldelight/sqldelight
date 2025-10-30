@@ -1,0 +1,8 @@
+CREATE TABLE dummy(
+  foo INTEGER
+);
+
+maxSupportsManySqlTypes:
+SELECT 1
+FROM dummy
+WHERE MAX(:input) > 1;

@@ -25,10 +25,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
-        // coroutines
-        api libs.kotlin.coroutines.core
-
-        // database extension
+        api libs.kotlinx.coroutines.core
         implementation "app.cash.sqldelight:coroutines-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
         implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
       }
@@ -36,15 +33,12 @@ kotlin {
     commonTest {
       dependencies {
         implementation(kotlin("test"))
-
-        // coroutines
-        implementation libs.kotlin.coroutines.test
+        implementation libs.kotlinx.coroutines.test
       }
     }
 
     androidMain {
       dependencies {
-        // sql
         implementation("app.cash.sqldelight:android-driver:${app.cash.sqldelight.VersionKt.VERSION}")
       }
     }
@@ -57,11 +51,9 @@ kotlin {
 
     jvmMain {
       dependencies {
-        // sql
         implementation("app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}")
       }
     }
-    jvmTest { }
   }
 }
 

@@ -23,23 +23,20 @@ kotlin {
   applyDefaultHierarchyTemplate()
   jvmToolchain(17)
 
-  // Configure common.
   sourceSets.commonMain.dependencies {
     implementation 'app.cash.sqldelight:primitive-adapters'
   }
   sourceSets.commonTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation libs.kotlin.coroutines.test
+    implementation libs.kotlinx.coroutines.test
   }
 
-  // Configure jvm.
   jvm()
   sourceSets.jvmTest.dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-test-junit'
     implementation "app.cash.sqldelight:sqlite-driver"
   }
 
-  // Configure iOS.
   iosArm64()
   iosX64()
   sourceSets.iosMain.dependencies {

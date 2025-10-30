@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.2.10"
 dokka = "2.1.0"
-kotlinCoroutines = "1.10.2"
+kotlinx-coroutines = "1.10.2"
 idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.5.2"
 schemaCrawler = "16.19.2"
@@ -14,18 +14,20 @@ compileSdk = "35"
 minSdk = "21"
 sqlPsi = "0.6.0"
 testContainers = "1.21.3"
-moshi = "1.15.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
-kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
-kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinCoroutines" }
-kotlin-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinCoroutines" }
 kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 kotlinx-browser = "org.jetbrains.kotlinx:kotlinx-browser:0.3"
+
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
+
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 
 androidx-test-core = "androidx.test:core:1.7.0"
 androidx-test-runner = "androidx.test:runner:1.6.1"
@@ -43,9 +45,6 @@ truth = { module = "com.google.truth:truth", version = "1.4.5" }
 turbine = { module = "app.cash.turbine:turbine", version = "1.2.1" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.8.0" }
 picnic = { module = "com.jakewharton.picnic:picnic", version = "0.7.0" }
-
-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
-moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 
 intellij-core = { module = "com.jetbrains.intellij.platform:core", version.ref = "idea" }
 intellij-coreImpl = { module = "com.jetbrains.intellij.platform:core-impl", version.ref = "idea" }
@@ -102,12 +101,12 @@ kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij.platform", version = "2.10.1" }
+intellij = { id = "org.jetbrains.intellij.platform", version = "2.10.2" }
 grammarKitComposer = { id = "app.cash.grammarkit-composer", version = "0.2.0" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
 spotless = { id = "com.diffplug.spotless", version = "8.0.0" }
 changelog = { id = "org.jetbrains.changelog", version = "2.0.0" }
 shadow = "com.gradleup.shadow:9.2.2"
-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.4" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }

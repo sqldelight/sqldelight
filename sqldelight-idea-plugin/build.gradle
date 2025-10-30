@@ -4,8 +4,8 @@ import app.cash.sqldelight.toolchain.BugsnagKey
 plugins {
   alias(libs.plugins.intellij)
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlin.plugin.serialization)
   alias(libs.plugins.changelog)
-  alias(libs.plugins.ksp)
   id("app.cash.sqldelight.toolchain.compiler")
 }
 
@@ -92,14 +92,12 @@ repositories {
 }
 
 dependencies {
-  ksp libs.moshiCodegen
-
   implementation projects.sqldelightCompiler
 
   implementation libs.sqliteJdbc
   implementation libs.bugsnag
   implementation libs.picnic
-  implementation libs.moshi
+  implementation libs.kotlinx.serialization.json
 
   testImplementation libs.truth
   testImplementation libs.intellij.android
