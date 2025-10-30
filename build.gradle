@@ -79,14 +79,10 @@ allprojects {
   version = VERSION_NAME
 }
 
-tasks.named("dokkaHtmlMultiModule") {
-  outputDirectory = file("$rootDir/docs/2.x")
-
+dokka {
   moduleName.set("SQLDelight")
-  pluginsMapConfiguration.set(["org.jetbrains.dokka.base.DokkaBase": """
-    {
-      "footerMessage": "Copyright &copy; 2022 Square, Inc.",
-      "customStyleSheets": ["${file("docs/css/logo-styles.css")}"]
-    }
-  """])
+
+  dokkaPublications.html {
+    outputDirectory.set(layout.projectDirectory.dir("docs/2.x"))
+  }
 }

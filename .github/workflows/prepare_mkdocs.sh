@@ -9,7 +9,7 @@
 set -ex
 
 # Generate the API docs
-./gradlew :dokkaHtmlMultiModule
+./gradlew :dokkaGenerate
 
 # Fix up some styling/functionality on the generated dokka HTML pages
 set +x
