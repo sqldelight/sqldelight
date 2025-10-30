@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>app.cash.sqldelight.dialects.mysql.grammar.psi</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,19 +24,17 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
                     SQLDelight
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -44,19 +42,19 @@
         <div class="library-version" id="library-version">2.2.0-SNAPSHOT
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:mysql:dokkaHtmlPartial/main">jvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":dialects:mysql/main">jvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":dialects:mysql:dokkaHtmlPartial/main" data-filter=":dialects:mysql:dokkaHtmlPartial/main">
+                                <input type="checkbox" class="checkbox--input" id=":dialects:mysql/main" data-filter=":dialects:mysql/main">
                                 <span class="checkbox--icon"></span>
                                 jvm
                             </label>
@@ -64,33 +62,35 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     SQLDelight
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi////PointingToDeclaration//666177779">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi////PointingToDeclaration//727215285">
   <div class="breadcrumbs"><a href="../index.html">mysql</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.dialects.mysql.grammar.psi</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -99,888 +99,888 @@
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="-630573872%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableAddColumn" id="-630573872%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-630573872%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAddColumn" id="-630573872%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-add-column/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-630573872%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-630573872%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-add-column/index.html">MySqlAlterTableAddColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAlterTableAddColumn///PointingToDeclaration/">SqlAlterTableAddColumn</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-add-column/index.html">MySqlAlterTableAddColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAlterTableAddColumn///PointingToDeclaration/">SqlAlterTableAddColumn</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="683369897%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableAddConstraint" id="683369897%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="683369897%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAddConstraint" id="683369897%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-add-constraint/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Constraint</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="683369897%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="683369897%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-add-constraint/index.html">MySqlAlterTableAddConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-add-constraint/index.html">MySqlAlterTableAddConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1452474934%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableAddIndex" id="-1452474934%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1452474934%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAddIndex" id="-1452474934%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-add-index/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Index</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1452474934%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1452474934%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-add-index/index.html">MySqlAlterTableAddIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-add-index/index.html">MySqlAlterTableAddIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-555456513%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableAlterIndex" id="-555456513%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-555456513%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAlterIndex" id="-555456513%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-alter-index/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span><span>Index</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-555456513%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-555456513%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-alter-index/index.html">MySqlAlterTableAlterIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-alter-index/index.html">MySqlAlterTableAlterIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-436780043%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableChangeColumn" id="-436780043%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-436780043%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableChangeColumn" id="-436780043%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-change-column/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Change</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-436780043%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-436780043%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-change-column/index.html">MySqlAlterTableChangeColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-change-column/index.html">MySqlAlterTableChangeColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="819363963%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableConvertCharacterSet" id="819363963%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="819363963%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableConvertCharacterSet" id="819363963%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-convert-character-set/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Convert</span><wbr><span>Character</span><wbr><span><span>Set</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="819363963%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="819363963%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-convert-character-set/index.html">MySqlAlterTableConvertCharacterSet</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-convert-character-set/index.html">MySqlAlterTableConvertCharacterSet</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1925512362%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableDropColumn" id="-1925512362%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1925512362%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableDropColumn" id="-1925512362%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-drop-column/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1925512362%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1925512362%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-drop-column/index.html">MySqlAlterTableDropColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-drop-column/index.html">MySqlAlterTableDropColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2107983492%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableDropIndex" id="2107983492%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="2107983492%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableDropIndex" id="2107983492%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-drop-index/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span><span>Index</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2107983492%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2107983492%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-drop-index/index.html">MySqlAlterTableDropIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-drop-index/index.html">MySqlAlterTableDropIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="18398635%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableModifyColumn" id="18398635%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="18398635%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableModifyColumn" id="18398635%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-modify-column/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Modify</span><wbr><span><span>Column</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="18398635%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="18398635%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-modify-column/index.html">MySqlAlterTableModifyColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-modify-column/index.html">MySqlAlterTableModifyColumn</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1997729043%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableRenameIndex" id="1997729043%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1997729043%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableRenameIndex" id="1997729043%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-rename-index/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Rename</span><wbr><span><span>Index</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1997729043%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1997729043%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-rename-index/index.html">MySqlAlterTableRenameIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-rename-index/index.html">MySqlAlterTableRenameIndex</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-235637200%2FClasslikes%2F666177779" anchor-label="MySqlAlterTableRules" id="-235637200%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-235637200%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableRules" id="-235637200%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-alter-table-rules/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span><span>Rules</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-235637200%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-235637200%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-rules/index.html">MySqlAlterTableRules</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAlterTableRules///PointingToDeclaration/">SqlAlterTableRules</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-alter-table-rules/index.html">MySqlAlterTableRules</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAlterTableRules///PointingToDeclaration/">SqlAlterTableRules</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="98828790%2FClasslikes%2F666177779" anchor-label="MySqlApproximateNumericDataType" id="98828790%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="98828790%2FClasslikes%2F727215285" anchor-label="MySqlApproximateNumericDataType" id="98828790%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-approximate-numeric-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Approximate</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="98828790%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="98828790%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-approximate-numeric-data-type/index.html">MySqlApproximateNumericDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-approximate-numeric-data-type/index.html">MySqlApproximateNumericDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1698059354%2FClasslikes%2F666177779" anchor-label="MySqlAssignment" id="-1698059354%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1698059354%2FClasslikes%2F727215285" anchor-label="MySqlAssignment" id="-1698059354%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-assignment/index.html"><span>My</span><wbr><span>Sql</span><wbr><span><span>Assignment</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1698059354%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1698059354%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-assignment/index.html">MySqlAssignment</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-assignment/index.html">MySqlAssignment</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1725953576%2FClasslikes%2F666177779" anchor-label="MySqlAssignmentList" id="1725953576%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1725953576%2FClasslikes%2F727215285" anchor-label="MySqlAssignmentList" id="1725953576%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-assignment-list/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span><span>List</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1725953576%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1725953576%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-assignment-list/index.html">MySqlAssignmentList</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-assignment-list/index.html">MySqlAssignmentList</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1237324373%2FClasslikes%2F666177779" anchor-label="MySqlAssignmentValue" id="-1237324373%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1237324373%2FClasslikes%2F727215285" anchor-label="MySqlAssignmentValue" id="-1237324373%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-assignment-value/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span><span>Value</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1237324373%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1237324373%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-assignment-value/index.html">MySqlAssignmentValue</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-assignment-value/index.html">MySqlAssignmentValue</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-440135104%2FClasslikes%2F666177779" anchor-label="MySqlBigIntDataType" id="-440135104%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-440135104%2FClasslikes%2F727215285" anchor-label="MySqlBigIntDataType" id="-440135104%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-big-int-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Big</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-440135104%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-440135104%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-big-int-data-type/index.html">MySqlBigIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-big-int-data-type/index.html">MySqlBigIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="575272782%2FClasslikes%2F666177779" anchor-label="MySqlBinaryDataType" id="575272782%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="575272782%2FClasslikes%2F727215285" anchor-label="MySqlBinaryDataType" id="575272782%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-binary-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Binary</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="575272782%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="575272782%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-binary-data-type/index.html">MySqlBinaryDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-binary-data-type/index.html">MySqlBinaryDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="980315363%2FClasslikes%2F666177779" anchor-label="MySqlBindParameter" id="980315363%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="980315363%2FClasslikes%2F727215285" anchor-label="MySqlBindParameter" id="980315363%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-bind-parameter/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Bind</span><wbr><span><span>Parameter</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="980315363%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="980315363%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-bind-parameter/index.html">MySqlBindParameter</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlBindParameter///PointingToDeclaration/">SqlBindParameter</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-bind-parameter/index.html">MySqlBindParameter</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlBindParameter///PointingToDeclaration/">SqlBindParameter</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="370202046%2FClasslikes%2F666177779" anchor-label="MySqlBitDataType" id="370202046%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="370202046%2FClasslikes%2F727215285" anchor-label="MySqlBitDataType" id="370202046%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-bit-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Bit</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="370202046%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="370202046%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-bit-data-type/index.html">MySqlBitDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-bit-data-type/index.html">MySqlBitDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1394118467%2FClasslikes%2F666177779" anchor-label="MySqlBlobLiteral" id="-1394118467%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1394118467%2FClasslikes%2F727215285" anchor-label="MySqlBlobLiteral" id="-1394118467%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-blob-literal/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Blob</span><wbr><span><span>Literal</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1394118467%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1394118467%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-blob-literal/index.html">MySqlBlobLiteral</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlBlobLiteral///PointingToDeclaration/">SqlBlobLiteral</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-blob-literal/index.html">MySqlBlobLiteral</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlBlobLiteral///PointingToDeclaration/">SqlBlobLiteral</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="119916204%2FClasslikes%2F666177779" anchor-label="MySqlCharacterType" id="119916204%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="119916204%2FClasslikes%2F727215285" anchor-label="MySqlCharacterType" id="119916204%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-character-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Character</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="119916204%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="119916204%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-character-type/index.html">MySqlCharacterType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-character-type/index.html">MySqlCharacterType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1070812704%2FClasslikes%2F666177779" anchor-label="MySqlColumnConstraint" id="-1070812704%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1070812704%2FClasslikes%2F727215285" anchor-label="MySqlColumnConstraint" id="-1070812704%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-column-constraint/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Column</span><wbr><span><span>Constraint</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1070812704%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1070812704%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-column-constraint/index.html">MySqlColumnConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlColumnConstraint///PointingToDeclaration/">SqlColumnConstraint</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-column-constraint/index.html">MySqlColumnConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlColumnConstraint///PointingToDeclaration/">SqlColumnConstraint</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="523261622%2FClasslikes%2F666177779" anchor-label="MySqlCommentType" id="523261622%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="523261622%2FClasslikes%2F727215285" anchor-label="MySqlCommentType" id="523261622%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-comment-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Comment</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="523261622%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="523261622%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-comment-type/index.html">MySqlCommentType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-comment-type/index.html">MySqlCommentType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1513104444%2FClasslikes%2F666177779" anchor-label="MySqlCompoundSelectStmt" id="-1513104444%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1513104444%2FClasslikes%2F727215285" anchor-label="MySqlCompoundSelectStmt" id="-1513104444%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-compound-select-stmt/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Compound</span><wbr><span>Select</span><wbr><span><span>Stmt</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1513104444%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1513104444%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-compound-select-stmt/index.html">MySqlCompoundSelectStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompoundSelectStmt///PointingToDeclaration/">SqlCompoundSelectStmt</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-compound-select-stmt/index.html">MySqlCompoundSelectStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompoundSelectStmt///PointingToDeclaration/">SqlCompoundSelectStmt</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-365791375%2FClasslikes%2F666177779" anchor-label="MySqlCreateIndexStmt" id="-365791375%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-365791375%2FClasslikes%2F727215285" anchor-label="MySqlCreateIndexStmt" id="-365791375%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-create-index-stmt/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span><span>Stmt</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-365791375%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-365791375%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-create-index-stmt/index.html">MySqlCreateIndexStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-create-index-stmt/index.html">MySqlCreateIndexStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1566182823%2FClasslikes%2F666177779" anchor-label="MySqlCurrentTimestampWithOptionalNumber" id="1566182823%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1566182823%2FClasslikes%2F727215285" anchor-label="MySqlCurrentTimestampWithOptionalNumber" id="1566182823%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-current-timestamp-with-optional-number/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Current</span><wbr><span>Timestamp</span><wbr><span>With</span><wbr><span>Optional</span><wbr><span><span>Number</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1566182823%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1566182823%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-current-timestamp-with-optional-number/index.html">MySqlCurrentTimestampWithOptionalNumber</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-current-timestamp-with-optional-number/index.html">MySqlCurrentTimestampWithOptionalNumber</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="571424193%2FClasslikes%2F666177779" anchor-label="MySqlDateDataType" id="571424193%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="571424193%2FClasslikes%2F727215285" anchor-label="MySqlDateDataType" id="571424193%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-date-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Date</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="571424193%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="571424193%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-date-data-type/index.html">MySqlDateDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-date-data-type/index.html">MySqlDateDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1586569455%2FClasslikes%2F666177779" anchor-label="MySqlDefaultConstraint" id="-1586569455%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1586569455%2FClasslikes%2F727215285" anchor-label="MySqlDefaultConstraint" id="-1586569455%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-default-constraint/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Default</span><wbr><span><span>Constraint</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1586569455%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1586569455%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-default-constraint/index.html">MySqlDefaultConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlDefaultConstraint///PointingToDeclaration/">SqlDefaultConstraint</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-default-constraint/index.html">MySqlDefaultConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlDefaultConstraint///PointingToDeclaration/">SqlDefaultConstraint</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="756397736%2FClasslikes%2F666177779" anchor-label="MySqlDropTableStmt" id="756397736%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="756397736%2FClasslikes%2F727215285" anchor-label="MySqlDropTableStmt" id="756397736%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-drop-table-stmt/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Drop</span><wbr><span>Table</span><wbr><span><span>Stmt</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="756397736%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="756397736%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-drop-table-stmt/index.html">MySqlDropTableStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlDropTableStmt///PointingToDeclaration/">SqlDropTableStmt</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-drop-table-stmt/index.html">MySqlDropTableStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlDropTableStmt///PointingToDeclaration/">SqlDropTableStmt</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="977313972%2FClasslikes%2F666177779" anchor-label="MySqlEnumSetType" id="977313972%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="977313972%2FClasslikes%2F727215285" anchor-label="MySqlEnumSetType" id="977313972%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-enum-set-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Enum</span><wbr><span>Set</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="977313972%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="977313972%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-enum-set-type/index.html">MySqlEnumSetType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-enum-set-type/index.html">MySqlEnumSetType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="334271227%2FClasslikes%2F666177779" anchor-label="MySqlExtensionExpr" id="334271227%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="334271227%2FClasslikes%2F727215285" anchor-label="MySqlExtensionExpr" id="334271227%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-extension-expr/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span><span>Expr</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="334271227%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="334271227%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-extension-expr/index.html">MySqlExtensionExpr</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionExpr///PointingToDeclaration/">SqlExtensionExpr</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-extension-expr/index.html">MySqlExtensionExpr</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionExpr///PointingToDeclaration/">SqlExtensionExpr</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-356095864%2FClasslikes%2F666177779" anchor-label="MySqlExtensionStmt" id="-356095864%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-356095864%2FClasslikes%2F727215285" anchor-label="MySqlExtensionStmt" id="-356095864%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-extension-stmt/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span><span>Stmt</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-356095864%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-356095864%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-extension-stmt/index.html">MySqlExtensionStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionStmt///PointingToDeclaration/">SqlExtensionStmt</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-extension-stmt/index.html">MySqlExtensionStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionStmt///PointingToDeclaration/">SqlExtensionStmt</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2110171341%2FClasslikes%2F666177779" anchor-label="MySqlFixedPointDataType" id="-2110171341%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-2110171341%2FClasslikes%2F727215285" anchor-label="MySqlFixedPointDataType" id="-2110171341%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-fixed-point-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Fixed</span><wbr><span>Point</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2110171341%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2110171341%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-fixed-point-data-type/index.html">MySqlFixedPointDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-fixed-point-data-type/index.html">MySqlFixedPointDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="887024225%2FClasslikes%2F666177779" anchor-label="MySqlIfExpr" id="887024225%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="887024225%2FClasslikes%2F727215285" anchor-label="MySqlIfExpr" id="887024225%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-if-expr/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span><span>Expr</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="887024225%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="887024225%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-if-expr/index.html">MySqlIfExpr</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-if-expr/index.html">MySqlIfExpr</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2021037558%2FClasslikes%2F666177779" anchor-label="MySqlIndexHint" id="2021037558%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="2021037558%2FClasslikes%2F727215285" anchor-label="MySqlIndexHint" id="2021037558%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-index-hint/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>Hint</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2021037558%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2021037558%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-hint/index.html">MySqlIndexHint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-hint/index.html">MySqlIndexHint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1953446008%2FClasslikes%2F666177779" anchor-label="MySqlIndexHintList" id="1953446008%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1953446008%2FClasslikes%2F727215285" anchor-label="MySqlIndexHintList" id="1953446008%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-index-hint-list/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Hint</span><wbr><span><span>List</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1953446008%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1953446008%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-hint-list/index.html">MySqlIndexHintList</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-hint-list/index.html">MySqlIndexHintList</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1011579839%2FClasslikes%2F666177779" anchor-label="MySqlIndexList" id="1011579839%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1011579839%2FClasslikes%2F727215285" anchor-label="MySqlIndexList" id="1011579839%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-index-list/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>List</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1011579839%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1011579839%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-list/index.html">MySqlIndexList</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-list/index.html">MySqlIndexList</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1275638475%2FClasslikes%2F666177779" anchor-label="MySqlIndexVisibility" id="1275638475%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1275638475%2FClasslikes%2F727215285" anchor-label="MySqlIndexVisibility" id="1275638475%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-index-visibility/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>Visibility</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1275638475%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1275638475%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-visibility/index.html">MySqlIndexVisibility</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-index-visibility/index.html">MySqlIndexVisibility</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="437100242%2FClasslikes%2F666177779" anchor-label="MySqlInsertStmt" id="437100242%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="437100242%2FClasslikes%2F727215285" anchor-label="MySqlInsertStmt" id="437100242%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-insert-stmt/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Insert</span><wbr><span><span>Stmt</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="437100242%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="437100242%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-insert-stmt/index.html">MySqlInsertStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlInsertStmt///PointingToDeclaration/">SqlInsertStmt</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-insert-stmt/index.html">MySqlInsertStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlInsertStmt///PointingToDeclaration/">SqlInsertStmt</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1174871836%2FClasslikes%2F666177779" anchor-label="MySqlIntDataType" id="1174871836%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1174871836%2FClasslikes%2F727215285" anchor-label="MySqlIntDataType" id="1174871836%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-int-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1174871836%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1174871836%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-int-data-type/index.html">MySqlIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-int-data-type/index.html">MySqlIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1546113738%2FClasslikes%2F666177779" anchor-label="MySqlIntervalExpression" id="-1546113738%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1546113738%2FClasslikes%2F727215285" anchor-label="MySqlIntervalExpression" id="-1546113738%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-interval-expression/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span><span>Expression</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1546113738%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1546113738%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-interval-expression/index.html">MySqlIntervalExpression</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-interval-expression/index.html">MySqlIntervalExpression</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="155369866%2FClasslikes%2F666177779" anchor-label="MySqlIntervalUnit" id="155369866%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="155369866%2FClasslikes%2F727215285" anchor-label="MySqlIntervalUnit" id="155369866%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-interval-unit/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span><span>Unit</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="155369866%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="155369866%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-interval-unit/index.html">MySqlIntervalUnit</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-interval-unit/index.html">MySqlIntervalUnit</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-561125978%2FClasslikes%2F666177779" anchor-label="MySqlJsonBinaryOperator" id="-561125978%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-561125978%2FClasslikes%2F727215285" anchor-label="MySqlJsonBinaryOperator" id="-561125978%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-json-binary-operator/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Binary</span><wbr><span><span>Operator</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-561125978%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-561125978%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-json-binary-operator/index.html">MySqlJsonBinaryOperator</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-json-binary-operator/index.html">MySqlJsonBinaryOperator</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-397258809%2FClasslikes%2F666177779" anchor-label="MySqlJsonDataType" id="-397258809%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-397258809%2FClasslikes%2F727215285" anchor-label="MySqlJsonDataType" id="-397258809%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-json-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-397258809%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-397258809%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-json-data-type/index.html">MySqlJsonDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-json-data-type/index.html">MySqlJsonDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="719846195%2FClasslikes%2F666177779" anchor-label="MySqlJsonExpression" id="719846195%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="719846195%2FClasslikes%2F727215285" anchor-label="MySqlJsonExpression" id="719846195%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-json-expression/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span><span>Expression</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="719846195%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="719846195%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-json-expression/index.html">MySqlJsonExpression</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-json-expression/index.html">MySqlJsonExpression</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1988010575%2FClasslikes%2F666177779" anchor-label="MySqlMediumIntDataType" id="-1988010575%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1988010575%2FClasslikes%2F727215285" anchor-label="MySqlMediumIntDataType" id="-1988010575%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-medium-int-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Medium</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1988010575%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1988010575%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-medium-int-data-type/index.html">MySqlMediumIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-medium-int-data-type/index.html">MySqlMediumIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="57530888%2FClasslikes%2F666177779" anchor-label="MySqlOverrides" id="57530888%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="57530888%2FClasslikes%2F727215285" anchor-label="MySqlOverrides" id="57530888%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-overrides/index.html"><span>My</span><wbr><span>Sql</span><wbr><span><span>Overrides</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="57530888%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="57530888%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-overrides/index.html">MySqlOverrides</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-overrides/index.html">MySqlOverrides</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2090706331%2FClasslikes%2F666177779" anchor-label="MySqlPlacementClause" id="2090706331%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="2090706331%2FClasslikes%2F727215285" anchor-label="MySqlPlacementClause" id="2090706331%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-placement-clause/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Placement</span><wbr><span><span>Clause</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2090706331%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2090706331%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-placement-clause/index.html">MySqlPlacementClause</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-placement-clause/index.html">MySqlPlacementClause</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1130791882%2FClasslikes%2F666177779" anchor-label="MySqlQualifiedTableName" id="-1130791882%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1130791882%2FClasslikes%2F727215285" anchor-label="MySqlQualifiedTableName" id="-1130791882%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-qualified-table-name/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Qualified</span><wbr><span>Table</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1130791882%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1130791882%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-qualified-table-name/index.html">MySqlQualifiedTableName</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlQualifiedTableName///PointingToDeclaration/">SqlQualifiedTableName</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-qualified-table-name/index.html">MySqlQualifiedTableName</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlQualifiedTableName///PointingToDeclaration/">SqlQualifiedTableName</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1162840945%2FClasslikes%2F666177779" anchor-label="MySqlRowFormatClause" id="-1162840945%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1162840945%2FClasslikes%2F727215285" anchor-label="MySqlRowFormatClause" id="-1162840945%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-row-format-clause/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Row</span><wbr><span>Format</span><wbr><span><span>Clause</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1162840945%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1162840945%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-row-format-clause/index.html">MySqlRowFormatClause</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-row-format-clause/index.html">MySqlRowFormatClause</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1793380935%2FClasslikes%2F666177779" anchor-label="MySqlSmallIntDataType" id="1793380935%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1793380935%2FClasslikes%2F727215285" anchor-label="MySqlSmallIntDataType" id="1793380935%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-small-int-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1793380935%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1793380935%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-small-int-data-type/index.html">MySqlSmallIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-small-int-data-type/index.html">MySqlSmallIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-71936540%2FClasslikes%2F666177779" anchor-label="MySqlTableConstraint" id="-71936540%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-71936540%2FClasslikes%2F727215285" anchor-label="MySqlTableConstraint" id="-71936540%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-table-constraint/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span><span>Constraint</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-71936540%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-71936540%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-table-constraint/index.html">MySqlTableConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableConstraint///PointingToDeclaration/">SqlTableConstraint</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-table-constraint/index.html">MySqlTableConstraint</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableConstraint///PointingToDeclaration/">SqlTableConstraint</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2102430132%2FClasslikes%2F666177779" anchor-label="MySqlTableOption" id="-2102430132%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-2102430132%2FClasslikes%2F727215285" anchor-label="MySqlTableOption" id="-2102430132%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-table-option/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span><span>Option</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2102430132%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2102430132%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-table-option/index.html">MySqlTableOption</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableOption///PointingToDeclaration/">SqlTableOption</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-table-option/index.html">MySqlTableOption</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableOption///PointingToDeclaration/">SqlTableOption</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1011886582%2FClasslikes%2F666177779" anchor-label="MySqlTableOrSubquery" id="1011886582%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1011886582%2FClasslikes%2F727215285" anchor-label="MySqlTableOrSubquery" id="1011886582%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-table-or-subquery/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Or</span><wbr><span><span>Subquery</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1011886582%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1011886582%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-table-or-subquery/index.html">MySqlTableOrSubquery</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableOrSubquery///PointingToDeclaration/">SqlTableOrSubquery</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-table-or-subquery/index.html">MySqlTableOrSubquery</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableOrSubquery///PointingToDeclaration/">SqlTableOrSubquery</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1696110788%2FClasslikes%2F666177779" anchor-label="MySqlTinyIntDataType" id="-1696110788%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-1696110788%2FClasslikes%2F727215285" anchor-label="MySqlTinyIntDataType" id="-1696110788%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-tiny-int-data-type/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Tiny</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1696110788%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1696110788%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-tiny-int-data-type/index.html">MySqlTinyIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-tiny-int-data-type/index.html">MySqlTinyIntDataType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1944841925%2FClasslikes%2F666177779" anchor-label="MySqlTruncateStmt" id="1944841925%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1944841925%2FClasslikes%2F727215285" anchor-label="MySqlTruncateStmt" id="1944841925%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-truncate-stmt/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Stmt</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1944841925%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1944841925%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-truncate-stmt/index.html">MySqlTruncateStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-truncate-stmt/index.html">MySqlTruncateStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-336499442%2FClasslikes%2F666177779" anchor-label="MySqlTypeName" id="-336499442%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-336499442%2FClasslikes%2F727215285" anchor-label="MySqlTypeName" id="-336499442%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-type-name/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-336499442%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-336499442%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-type-name/index.html">MySqlTypeName</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTypeName///PointingToDeclaration/">SqlTypeName</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-type-name/index.html">MySqlTypeName</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTypeName///PointingToDeclaration/">SqlTypeName</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2089451786%2FClasslikes%2F666177779" anchor-label="MySqlTypes" id="-2089451786%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="-2089451786%2FClasslikes%2F727215285" anchor-label="MySqlTypes" id="-2089451786%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-types/index.html"><span>My</span><wbr><span>Sql</span><wbr><span><span>Types</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2089451786%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2089451786%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-types/index.html">MySqlTypes</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-my-sql-types/index.html">MySqlTypes</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1411793185%2FClasslikes%2F666177779" anchor-label="MySqlVisitor" id="1411793185%2FClasslikes%2F666177779" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:mysql:dokkaHtmlPartial/main" data-filterable-set=":dialects:mysql:dokkaHtmlPartial/main">
+<a data-name="1411793185%2FClasslikes%2F727215285" anchor-label="MySqlVisitor" id="1411793185%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-my-sql-visitor/index.html"><span>My</span><wbr><span>Sql</span><wbr><span><span>Visitor</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1411793185%2FClasslikes%2F666177779"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1411793185%2FClasslikes%2F727215285"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-visitor/index.html">MySqlVisitor</a> : <span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-visitor/index.html">MySqlVisitor</a> : <span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -991,17 +991,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

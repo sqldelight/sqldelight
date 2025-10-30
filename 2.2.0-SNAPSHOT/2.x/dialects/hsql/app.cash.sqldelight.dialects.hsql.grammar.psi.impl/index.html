@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>app.cash.sqldelight.dialects.hsql.grammar.psi.impl</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,19 +24,17 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
                     SQLDelight
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -44,19 +42,19 @@
         <div class="library-version" id="library-version">2.2.0-SNAPSHOT
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dialects:hsql:dokkaHtmlPartial/main">jvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":dialects:hsql/main">jvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":dialects:hsql:dokkaHtmlPartial/main" data-filter=":dialects:hsql:dokkaHtmlPartial/main">
+                                <input type="checkbox" class="checkbox--input" id=":dialects:hsql/main" data-filter=":dialects:hsql/main">
                                 <span class="checkbox--icon"></span>
                                 jvm
                             </label>
@@ -64,33 +62,35 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     SQLDelight
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="hsql::app.cash.sqldelight.dialects.hsql.grammar.psi.impl////PointingToDeclaration//1188588423">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="hsql::app.cash.sqldelight.dialects.hsql.grammar.psi.impl////PointingToDeclaration//-1221539935">
   <div class="breadcrumbs"><a href="../index.html">hsql</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.dialects.hsql.grammar.psi.impl</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -99,573 +99,573 @@
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="129267150%2FClasslikes%2F1188588423" anchor-label="HsqlApproximateNumericDataTypeImpl" id="129267150%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="129267150%2FClasslikes%2F-1221539935" anchor-label="HsqlApproximateNumericDataTypeImpl" id="129267150%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-approximate-numeric-data-type-impl/index.html"><span>Hsql</span><wbr><span>Approximate</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="129267150%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="129267150%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-approximate-numeric-data-type-impl/index.html">HsqlApproximateNumericDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-approximate-numeric-data-type/index.html">HsqlApproximateNumericDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-approximate-numeric-data-type-impl/index.html">HsqlApproximateNumericDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-approximate-numeric-data-type/index.html">HsqlApproximateNumericDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2117988703%2FClasslikes%2F1188588423" anchor-label="HsqlBaseWindowNameImpl" id="2117988703%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="2117988703%2FClasslikes%2F-1221539935" anchor-label="HsqlBaseWindowNameImpl" id="2117988703%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-base-window-name-impl/index.html"><span>Hsql</span><wbr><span>Base</span><wbr><span>Window</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2117988703%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2117988703%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-base-window-name-impl/index.html">HsqlBaseWindowNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-base-window-name/index.html">HsqlBaseWindowName</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-base-window-name-impl/index.html">HsqlBaseWindowNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-base-window-name/index.html">HsqlBaseWindowName</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-104106728%2FClasslikes%2F1188588423" anchor-label="HsqlBigIntDataTypeImpl" id="-104106728%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-104106728%2FClasslikes%2F-1221539935" anchor-label="HsqlBigIntDataTypeImpl" id="-104106728%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-big-int-data-type-impl/index.html"><span>Hsql</span><wbr><span>Big</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-104106728%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-104106728%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-big-int-data-type-impl/index.html">HsqlBigIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-big-int-data-type/index.html">HsqlBigIntDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-big-int-data-type-impl/index.html">HsqlBigIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-big-int-data-type/index.html">HsqlBigIntDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1779576457%2FClasslikes%2F1188588423" anchor-label="HsqlBinaryLargeObjectStringDataTypeImpl" id="1779576457%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1779576457%2FClasslikes%2F-1221539935" anchor-label="HsqlBinaryLargeObjectStringDataTypeImpl" id="1779576457%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-binary-large-object-string-data-type-impl/index.html"><span>Hsql</span><wbr><span>Binary</span><wbr><span>Large</span><wbr><span>Object</span><wbr><span>String</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1779576457%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1779576457%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-binary-large-object-string-data-type-impl/index.html">HsqlBinaryLargeObjectStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-binary-large-object-string-data-type/index.html">HsqlBinaryLargeObjectStringDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-binary-large-object-string-data-type-impl/index.html">HsqlBinaryLargeObjectStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-binary-large-object-string-data-type/index.html">HsqlBinaryLargeObjectStringDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2006059733%2FClasslikes%2F1188588423" anchor-label="HsqlBinaryStringDataTypeImpl" id="2006059733%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="2006059733%2FClasslikes%2F-1221539935" anchor-label="HsqlBinaryStringDataTypeImpl" id="2006059733%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-binary-string-data-type-impl/index.html"><span>Hsql</span><wbr><span>Binary</span><wbr><span>String</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2006059733%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2006059733%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-binary-string-data-type-impl/index.html">HsqlBinaryStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-binary-string-data-type/index.html">HsqlBinaryStringDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-binary-string-data-type-impl/index.html">HsqlBinaryStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-binary-string-data-type/index.html">HsqlBinaryStringDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1647489547%2FClasslikes%2F1188588423" anchor-label="HsqlBindParameterImpl" id="1647489547%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1647489547%2FClasslikes%2F-1221539935" anchor-label="HsqlBindParameterImpl" id="1647489547%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-bind-parameter-impl/index.html"><span>Hsql</span><wbr><span>Bind</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1647489547%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1647489547%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-bind-parameter-impl/index.html">HsqlBindParameterImpl</a> : <a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html">BindParameterMixin</a>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-bind-parameter/index.html">HsqlBindParameter</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-bind-parameter-impl/index.html">HsqlBindParameterImpl</a> : <a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html">BindParameterMixin</a>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-bind-parameter/index.html">HsqlBindParameter</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1655629589%2FClasslikes%2F1188588423" anchor-label="HsqlBitStringDataTypeImpl" id="1655629589%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1655629589%2FClasslikes%2F-1221539935" anchor-label="HsqlBitStringDataTypeImpl" id="1655629589%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-bit-string-data-type-impl/index.html"><span>Hsql</span><wbr><span>Bit</span><wbr><span>String</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1655629589%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1655629589%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-bit-string-data-type-impl/index.html">HsqlBitStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-bit-string-data-type/index.html">HsqlBitStringDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-bit-string-data-type-impl/index.html">HsqlBitStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-bit-string-data-type/index.html">HsqlBitStringDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1226984917%2FClasslikes%2F1188588423" anchor-label="HsqlBooleanDataTypeImpl" id="-1226984917%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1226984917%2FClasslikes%2F-1221539935" anchor-label="HsqlBooleanDataTypeImpl" id="-1226984917%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-boolean-data-type-impl/index.html"><span>Hsql</span><wbr><span>Boolean</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1226984917%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1226984917%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-boolean-data-type-impl/index.html">HsqlBooleanDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-boolean-data-type/index.html">HsqlBooleanDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-boolean-data-type-impl/index.html">HsqlBooleanDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-boolean-data-type/index.html">HsqlBooleanDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1326617546%2FClasslikes%2F1188588423" anchor-label="HsqlCharacterLargeObjectDataTypeImpl" id="-1326617546%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1326617546%2FClasslikes%2F-1221539935" anchor-label="HsqlCharacterLargeObjectDataTypeImpl" id="-1326617546%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-character-large-object-data-type-impl/index.html"><span>Hsql</span><wbr><span>Character</span><wbr><span>Large</span><wbr><span>Object</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1326617546%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1326617546%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-character-large-object-data-type-impl/index.html">HsqlCharacterLargeObjectDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-character-large-object-data-type/index.html">HsqlCharacterLargeObjectDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-character-large-object-data-type-impl/index.html">HsqlCharacterLargeObjectDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-character-large-object-data-type/index.html">HsqlCharacterLargeObjectDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1784783060%2FClasslikes%2F1188588423" anchor-label="HsqlCharacterLargeObjectLengthImpl" id="1784783060%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1784783060%2FClasslikes%2F-1221539935" anchor-label="HsqlCharacterLargeObjectLengthImpl" id="1784783060%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-character-large-object-length-impl/index.html"><span>Hsql</span><wbr><span>Character</span><wbr><span>Large</span><wbr><span>Object</span><wbr><span>Length</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1784783060%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1784783060%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-character-large-object-length-impl/index.html">HsqlCharacterLargeObjectLengthImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-character-large-object-length/index.html">HsqlCharacterLargeObjectLength</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-character-large-object-length-impl/index.html">HsqlCharacterLargeObjectLengthImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-character-large-object-length/index.html">HsqlCharacterLargeObjectLength</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="671757049%2FClasslikes%2F1188588423" anchor-label="HsqlCharacterStringDataTypeImpl" id="671757049%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="671757049%2FClasslikes%2F-1221539935" anchor-label="HsqlCharacterStringDataTypeImpl" id="671757049%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-character-string-data-type-impl/index.html"><span>Hsql</span><wbr><span>Character</span><wbr><span>String</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="671757049%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="671757049%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-character-string-data-type-impl/index.html">HsqlCharacterStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-character-string-data-type/index.html">HsqlCharacterStringDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-character-string-data-type-impl/index.html">HsqlCharacterStringDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-character-string-data-type/index.html">HsqlCharacterStringDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-28963100%2FClasslikes%2F1188588423" anchor-label="HsqlCharLengthUnitsImpl" id="-28963100%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-28963100%2FClasslikes%2F-1221539935" anchor-label="HsqlCharLengthUnitsImpl" id="-28963100%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-char-length-units-impl/index.html"><span>Hsql</span><wbr><span>Char</span><wbr><span>Length</span><wbr><span>Units</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28963100%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28963100%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-char-length-units-impl/index.html">HsqlCharLengthUnitsImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-char-length-units/index.html">HsqlCharLengthUnits</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-char-length-units-impl/index.html">HsqlCharLengthUnitsImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-char-length-units/index.html">HsqlCharLengthUnits</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1777762632%2FClasslikes%2F1188588423" anchor-label="HsqlColumnConstraintImpl" id="-1777762632%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1777762632%2FClasslikes%2F-1221539935" anchor-label="HsqlColumnConstraintImpl" id="-1777762632%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-column-constraint-impl/index.html"><span>Hsql</span><wbr><span>Column</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1777762632%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1777762632%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-column-constraint-impl/index.html">HsqlColumnConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlColumnConstraintImpl///PointingToDeclaration/">SqlColumnConstraintImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-column-constraint/index.html">HsqlColumnConstraint</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-column-constraint-impl/index.html">HsqlColumnConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlColumnConstraintImpl///PointingToDeclaration/">SqlColumnConstraintImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-column-constraint/index.html">HsqlColumnConstraint</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="921583129%2FClasslikes%2F1188588423" anchor-label="HsqlDateDataTypeImpl" id="921583129%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="921583129%2FClasslikes%2F-1221539935" anchor-label="HsqlDateDataTypeImpl" id="921583129%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-date-data-type-impl/index.html"><span>Hsql</span><wbr><span>Date</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="921583129%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="921583129%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-date-data-type-impl/index.html">HsqlDateDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-date-data-type/index.html">HsqlDateDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-date-data-type-impl/index.html">HsqlDateDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-date-data-type/index.html">HsqlDateDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-906044116%2FClasslikes%2F1188588423" anchor-label="HsqlEndFieldImpl" id="-906044116%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-906044116%2FClasslikes%2F-1221539935" anchor-label="HsqlEndFieldImpl" id="-906044116%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-end-field-impl/index.html"><span>Hsql</span><wbr><span>End</span><wbr><span>Field</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-906044116%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-906044116%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-end-field-impl/index.html">HsqlEndFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-end-field/index.html">HsqlEndField</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-end-field-impl/index.html">HsqlEndFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-end-field/index.html">HsqlEndField</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1785398133%2FClasslikes%2F1188588423" anchor-label="HsqlFixedPointDataTypeImpl" id="-1785398133%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1785398133%2FClasslikes%2F-1221539935" anchor-label="HsqlFixedPointDataTypeImpl" id="-1785398133%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-fixed-point-data-type-impl/index.html"><span>Hsql</span><wbr><span>Fixed</span><wbr><span>Point</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1785398133%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1785398133%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-fixed-point-data-type-impl/index.html">HsqlFixedPointDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-fixed-point-data-type/index.html">HsqlFixedPointDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-fixed-point-data-type-impl/index.html">HsqlFixedPointDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-fixed-point-data-type/index.html">HsqlFixedPointDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="527249327%2FClasslikes%2F1188588423" anchor-label="HsqlFrameSpecImpl" id="527249327%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="527249327%2FClasslikes%2F-1221539935" anchor-label="HsqlFrameSpecImpl" id="527249327%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-frame-spec-impl/index.html"><span>Hsql</span><wbr><span>Frame</span><wbr><span>Spec</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="527249327%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="527249327%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-frame-spec-impl/index.html">HsqlFrameSpecImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-frame-spec/index.html">HsqlFrameSpec</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-frame-spec-impl/index.html">HsqlFrameSpecImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-frame-spec/index.html">HsqlFrameSpec</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1110802983%2FClasslikes%2F1188588423" anchor-label="HsqlGeneratedClauseImpl" id="-1110802983%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1110802983%2FClasslikes%2F-1221539935" anchor-label="HsqlGeneratedClauseImpl" id="-1110802983%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-generated-clause-impl/index.html"><span>Hsql</span><wbr><span>Generated</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1110802983%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1110802983%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-generated-clause-impl/index.html">HsqlGeneratedClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlGeneratedClauseImpl///PointingToDeclaration/">SqlGeneratedClauseImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-generated-clause/index.html">HsqlGeneratedClause</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-generated-clause-impl/index.html">HsqlGeneratedClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlGeneratedClauseImpl///PointingToDeclaration/">SqlGeneratedClauseImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-generated-clause/index.html">HsqlGeneratedClause</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1462269098%2FClasslikes%2F1188588423" anchor-label="HsqlInsertStmtImpl" id="1462269098%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1462269098%2FClasslikes%2F-1221539935" anchor-label="HsqlInsertStmtImpl" id="1462269098%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-insert-stmt-impl/index.html"><span>Hsql</span><wbr><span>Insert</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1462269098%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1462269098%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-insert-stmt-impl/index.html">HsqlInsertStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlInsertStmtImpl///PointingToDeclaration/">SqlInsertStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-insert-stmt/index.html">HsqlInsertStmt</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-insert-stmt-impl/index.html">HsqlInsertStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlInsertStmtImpl///PointingToDeclaration/">SqlInsertStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-insert-stmt/index.html">HsqlInsertStmt</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1636197948%2FClasslikes%2F1188588423" anchor-label="HsqlIntDataTypeImpl" id="-1636197948%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1636197948%2FClasslikes%2F-1221539935" anchor-label="HsqlIntDataTypeImpl" id="-1636197948%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-int-data-type-impl/index.html"><span>Hsql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1636197948%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1636197948%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-int-data-type-impl/index.html">HsqlIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-int-data-type/index.html">HsqlIntDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-int-data-type-impl/index.html">HsqlIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-int-data-type/index.html">HsqlIntDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-763654558%2FClasslikes%2F1188588423" anchor-label="HsqlIntervalDataTypeImpl" id="-763654558%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-763654558%2FClasslikes%2F-1221539935" anchor-label="HsqlIntervalDataTypeImpl" id="-763654558%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-interval-data-type-impl/index.html"><span>Hsql</span><wbr><span>Interval</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-763654558%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-763654558%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-interval-data-type-impl/index.html">HsqlIntervalDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-interval-data-type/index.html">HsqlIntervalDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-interval-data-type-impl/index.html">HsqlIntervalDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-interval-data-type/index.html">HsqlIntervalDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="44017714%2FClasslikes%2F1188588423" anchor-label="HsqlIntervalQualifierImpl" id="44017714%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="44017714%2FClasslikes%2F-1221539935" anchor-label="HsqlIntervalQualifierImpl" id="44017714%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-interval-qualifier-impl/index.html"><span>Hsql</span><wbr><span>Interval</span><wbr><span>Qualifier</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="44017714%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="44017714%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-interval-qualifier-impl/index.html">HsqlIntervalQualifierImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-interval-qualifier/index.html">HsqlIntervalQualifier</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-interval-qualifier-impl/index.html">HsqlIntervalQualifierImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-interval-qualifier/index.html">HsqlIntervalQualifier</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1444718949%2FClasslikes%2F1188588423" anchor-label="HsqlMergeKeySelectorImpl" id="1444718949%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1444718949%2FClasslikes%2F-1221539935" anchor-label="HsqlMergeKeySelectorImpl" id="1444718949%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-merge-key-selector-impl/index.html"><span>Hsql</span><wbr><span>Merge</span><wbr><span>Key</span><wbr><span>Selector</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1444718949%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1444718949%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-merge-key-selector-impl/index.html">HsqlMergeKeySelectorImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-merge-key-selector/index.html">HsqlMergeKeySelector</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-merge-key-selector-impl/index.html">HsqlMergeKeySelectorImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-merge-key-selector/index.html">HsqlMergeKeySelector</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1613933302%2FClasslikes%2F1188588423" anchor-label="HsqlMultiplierImpl" id="-1613933302%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1613933302%2FClasslikes%2F-1221539935" anchor-label="HsqlMultiplierImpl" id="-1613933302%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-multiplier-impl/index.html"><span>Hsql</span><wbr><span>Multiplier</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1613933302%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1613933302%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-multiplier-impl/index.html">HsqlMultiplierImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-multiplier/index.html">HsqlMultiplier</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-multiplier-impl/index.html">HsqlMultiplierImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-multiplier/index.html">HsqlMultiplier</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-452437863%2FClasslikes%2F1188588423" anchor-label="HsqlNonSecondPrimaryDatetimeFieldImpl" id="-452437863%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-452437863%2FClasslikes%2F-1221539935" anchor-label="HsqlNonSecondPrimaryDatetimeFieldImpl" id="-452437863%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-non-second-primary-datetime-field-impl/index.html"><span>Hsql</span><wbr><span>Non</span><wbr><span>Second</span><wbr><span>Primary</span><wbr><span>Datetime</span><wbr><span>Field</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-452437863%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-452437863%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-non-second-primary-datetime-field-impl/index.html">HsqlNonSecondPrimaryDatetimeFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-non-second-primary-datetime-field/index.html">HsqlNonSecondPrimaryDatetimeField</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-non-second-primary-datetime-field-impl/index.html">HsqlNonSecondPrimaryDatetimeFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-non-second-primary-datetime-field/index.html">HsqlNonSecondPrimaryDatetimeField</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1088125104%2FClasslikes%2F1188588423" anchor-label="HsqlOverridesImpl" id="1088125104%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1088125104%2FClasslikes%2F-1221539935" anchor-label="HsqlOverridesImpl" id="1088125104%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-overrides-impl/index.html"><span>Hsql</span><wbr><span>Overrides</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1088125104%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1088125104%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-overrides-impl/index.html">HsqlOverridesImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-overrides/index.html">HsqlOverrides</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-overrides-impl/index.html">HsqlOverridesImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-overrides/index.html">HsqlOverrides</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2016102983%2FClasslikes%2F1188588423" anchor-label="HsqlPrecisionImpl" id="-2016102983%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-2016102983%2FClasslikes%2F-1221539935" anchor-label="HsqlPrecisionImpl" id="-2016102983%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-precision-impl/index.html"><span>Hsql</span><wbr><span>Precision</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2016102983%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2016102983%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-precision-impl/index.html">HsqlPrecisionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-precision/index.html">HsqlPrecision</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-precision-impl/index.html">HsqlPrecisionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-precision/index.html">HsqlPrecision</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1582022584%2FClasslikes%2F1188588423" anchor-label="HsqlResultColumnImpl" id="1582022584%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1582022584%2FClasslikes%2F-1221539935" anchor-label="HsqlResultColumnImpl" id="1582022584%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-result-column-impl/index.html"><span>Hsql</span><wbr><span>Result</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1582022584%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1582022584%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-result-column-impl/index.html">HsqlResultColumnImpl</a> : <a href="../../../dialects/hsql/app.cash.sqldelight.dialects.hsql.grammar.mixins/-result-column-mixin/index.html">ResultColumnMixin</a>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-result-column/index.html">HsqlResultColumn</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-result-column-impl/index.html">HsqlResultColumnImpl</a> : <a href="../../../dialects/hsql/app.cash.sqldelight.dialects.hsql.grammar.mixins/-result-column-mixin/index.html">ResultColumnMixin</a>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-result-column/index.html">HsqlResultColumn</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1047648109%2FClasslikes%2F1188588423" anchor-label="HsqlScaleImpl" id="1047648109%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1047648109%2FClasslikes%2F-1221539935" anchor-label="HsqlScaleImpl" id="1047648109%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-scale-impl/index.html"><span>Hsql</span><wbr><span>Scale</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1047648109%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1047648109%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-scale-impl/index.html">HsqlScaleImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-scale/index.html">HsqlScale</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-scale-impl/index.html">HsqlScaleImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-scale/index.html">HsqlScale</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1697981824%2FClasslikes%2F1188588423" anchor-label="HsqlSingleDatetimeFieldImpl" id="-1697981824%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1697981824%2FClasslikes%2F-1221539935" anchor-label="HsqlSingleDatetimeFieldImpl" id="-1697981824%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-single-datetime-field-impl/index.html"><span>Hsql</span><wbr><span>Single</span><wbr><span>Datetime</span><wbr><span>Field</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1697981824%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1697981824%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-single-datetime-field-impl/index.html">HsqlSingleDatetimeFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-single-datetime-field/index.html">HsqlSingleDatetimeField</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-single-datetime-field-impl/index.html">HsqlSingleDatetimeFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-single-datetime-field/index.html">HsqlSingleDatetimeField</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-312667233%2FClasslikes%2F1188588423" anchor-label="HsqlSmallIntDataTypeImpl" id="-312667233%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-312667233%2FClasslikes%2F-1221539935" anchor-label="HsqlSmallIntDataTypeImpl" id="-312667233%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-small-int-data-type-impl/index.html"><span>Hsql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-312667233%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-312667233%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-small-int-data-type-impl/index.html">HsqlSmallIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-small-int-data-type/index.html">HsqlSmallIntDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-small-int-data-type-impl/index.html">HsqlSmallIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-small-int-data-type/index.html">HsqlSmallIntDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2037780365%2FClasslikes%2F1188588423" anchor-label="HsqlStartFieldImpl" id="-2037780365%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-2037780365%2FClasslikes%2F-1221539935" anchor-label="HsqlStartFieldImpl" id="-2037780365%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-start-field-impl/index.html"><span>Hsql</span><wbr><span>Start</span><wbr><span>Field</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2037780365%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2037780365%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-start-field-impl/index.html">HsqlStartFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-start-field/index.html">HsqlStartField</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-start-field-impl/index.html">HsqlStartFieldImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-start-field/index.html">HsqlStartField</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="510090724%2FClasslikes%2F1188588423" anchor-label="HsqlTinyIntDataTypeImpl" id="510090724%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="510090724%2FClasslikes%2F-1221539935" anchor-label="HsqlTinyIntDataTypeImpl" id="510090724%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-tiny-int-data-type-impl/index.html"><span>Hsql</span><wbr><span>Tiny</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="510090724%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="510090724%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-tiny-int-data-type-impl/index.html">HsqlTinyIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-tiny-int-data-type/index.html">HsqlTinyIntDataType</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-tiny-int-data-type-impl/index.html">HsqlTinyIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-tiny-int-data-type/index.html">HsqlTinyIntDataType</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-677311770%2FClasslikes%2F1188588423" anchor-label="HsqlTypeNameImpl" id="-677311770%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-677311770%2FClasslikes%2F-1221539935" anchor-label="HsqlTypeNameImpl" id="-677311770%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-type-name-impl/index.html"><span>Hsql</span><wbr><span>Type</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-677311770%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-677311770%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-type-name-impl/index.html">HsqlTypeNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTypeNameImpl///PointingToDeclaration/">SqlTypeNameImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-type-name/index.html">HsqlTypeName</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-type-name-impl/index.html">HsqlTypeNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTypeNameImpl///PointingToDeclaration/">SqlTypeNameImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-type-name/index.html">HsqlTypeName</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="705060018%2FClasslikes%2F1188588423" anchor-label="HsqlWindowDefnImpl" id="705060018%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="705060018%2FClasslikes%2F-1221539935" anchor-label="HsqlWindowDefnImpl" id="705060018%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-window-defn-impl/index.html"><span>Hsql</span><wbr><span>Window</span><wbr><span>Defn</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="705060018%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="705060018%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-defn-impl/index.html">HsqlWindowDefnImpl</a> : <a href="../app.cash.sqldelight.dialects.hsql.grammar.mixins/-window-definition-mixin/index.html">WindowDefinitionMixin</a>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-defn/index.html">HsqlWindowDefn</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-defn-impl/index.html">HsqlWindowDefnImpl</a> : <a href="../app.cash.sqldelight.dialects.hsql.grammar.mixins/-window-definition-mixin/index.html">WindowDefinitionMixin</a>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-defn/index.html">HsqlWindowDefn</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1217705175%2FClasslikes%2F1188588423" anchor-label="HsqlWindowFuncImpl" id="1217705175%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="1217705175%2FClasslikes%2F-1221539935" anchor-label="HsqlWindowFuncImpl" id="1217705175%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-window-func-impl/index.html"><span>Hsql</span><wbr><span>Window</span><wbr><span>Func</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1217705175%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1217705175%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-func-impl/index.html">HsqlWindowFuncImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-func/index.html">HsqlWindowFunc</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-func-impl/index.html">HsqlWindowFuncImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-func/index.html">HsqlWindowFunc</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1553698285%2FClasslikes%2F1188588423" anchor-label="HsqlWindowFunctionInvocationImpl" id="-1553698285%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="-1553698285%2FClasslikes%2F-1221539935" anchor-label="HsqlWindowFunctionInvocationImpl" id="-1553698285%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-window-function-invocation-impl/index.html"><span>Hsql</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span>Invocation</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1553698285%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1553698285%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-function-invocation-impl/index.html">HsqlWindowFunctionInvocationImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-function-invocation/index.html">HsqlWindowFunctionInvocation</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-function-invocation-impl/index.html">HsqlWindowFunctionInvocationImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-function-invocation/index.html">HsqlWindowFunctionInvocation</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2147362416%2FClasslikes%2F1188588423" anchor-label="HsqlWindowNameImpl" id="2147362416%2FClasslikes%2F1188588423" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":dialects:hsql:dokkaHtmlPartial/main" data-filterable-set=":dialects:hsql:dokkaHtmlPartial/main">
+<a data-name="2147362416%2FClasslikes%2F-1221539935" anchor-label="HsqlWindowNameImpl" id="2147362416%2FClasslikes%2F-1221539935" data-filterable-set=":dialects:hsql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:hsql/main" data-filterable-set=":dialects:hsql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-hsql-window-name-impl/index.html"><span>Hsql</span><wbr><span>Window</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2147362416%2FClasslikes%2F1188588423"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2147362416%2FClasslikes%2F-1221539935"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-name-impl/index.html">HsqlWindowNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-name/index.html">HsqlWindowName</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:hsql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-hsql-window-name-impl/index.html">HsqlWindowNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.hsql.grammar.psi/-hsql-window-name/index.html">HsqlWindowName</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -676,17 +676,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

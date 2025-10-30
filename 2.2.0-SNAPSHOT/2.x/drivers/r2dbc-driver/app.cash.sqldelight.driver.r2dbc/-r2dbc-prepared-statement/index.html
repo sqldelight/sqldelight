@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>R2dbcPreparedStatement</title>
-<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,19 +24,17 @@
 <link href="../../../../styles/main.css" rel="Stylesheet">
 <link href="../../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
                     SQLDelight
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -44,19 +42,19 @@
         <div class="library-version" id="library-version">2.2.0-SNAPSHOT
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":drivers:r2dbc-driver:dokkaHtmlPartial/main">jvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":drivers:r2dbc-driver/main">jvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filter=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+                                <input type="checkbox" class="checkbox--input" id=":drivers:r2dbc-driver/main" data-filter=":drivers:r2dbc-driver/main">
                                 <span class="checkbox--icon"></span>
                                 jvm
                             </label>
@@ -64,54 +62,56 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     SQLDelight
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="r2dbc-driver::app.cash.sqldelight.driver.r2dbc/R2dbcPreparedStatement///PointingToDeclaration//-597983287">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="r2dbc-driver::app.cash.sqldelight.driver.r2dbc/R2dbcPreparedStatement///PointingToDeclaration//-232005857">
   <div class="breadcrumbs"><a href="../../index.html">r2dbc-driver</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.driver.r2dbc</a><span class="delimiter">/</span><span class="current">R2dbcPreparedStatement</span></div>
   <div class="cover ">
     <h1 class="cover"><span>R2dbc</span><wbr><span>Prepared</span><wbr><span><span>Statement</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">R2dbcPreparedStatement</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>statement<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></span></span><span class="token punctuation">)</span> : <a href="../../../../runtime/app.cash.sqldelight.db/-sql-prepared-statement/index.html">SqlPreparedStatement</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">R2dbcPreparedStatement</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>statement<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></span></span><span class="token punctuation">)</span> : <a href="../../../../runtime/app.cash.sqldelight.db/-sql-prepared-statement/index.html">SqlPreparedStatement</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-653046455%2FConstructors%2F-597983287" anchor-label="R2dbcPreparedStatement" id="-653046455%2FConstructors%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-653046455%2FConstructors%2F-232005857" anchor-label="R2dbcPreparedStatement" id="-653046455%2FConstructors%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-r2dbc-prepared-statement.html"><span>R2dbc</span><wbr><span>Prepared</span><wbr><span><span>Statement</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-653046455%2FConstructors%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-653046455%2FConstructors%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">statement<span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -119,18 +119,18 @@
         </div>
       </div>
       <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-1655738695%2FProperties%2F-597983287" anchor-label="statement" id="-1655738695%2FProperties%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1655738695%2FProperties%2F-232005857" anchor-label="statement" id="-1655738695%2FProperties%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="statement.html"><span><span>statement</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1655738695%2FProperties%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1655738695%2FProperties%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="statement.html">statement</a><span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="statement.html">statement</a><span class="token operator">: </span><span data-unresolved-link="io.r2dbc.spi/Statement///PointingToDeclaration/">Statement</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -138,168 +138,168 @@
         </div>
       </div>
       <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1327536401%2FFunctions%2F-597983287" anchor-label="bindBigDecimal" id="1327536401%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1327536401%2FFunctions%2F-232005857" anchor-label="bindBigDecimal" id="1327536401%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-big-decimal.html"><span>bind</span><wbr><span>Big</span><wbr><span><span>Decimal</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1327536401%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1327536401%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-big-decimal.html"><span class="token function">bindBigDecimal</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">decimal<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html">BigDecimal</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-big-decimal.html"><span class="token function">bindBigDecimal</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">decimal<span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigDecimal.html">BigDecimal</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-21509382%2FFunctions%2F-597983287" anchor-label="bindBoolean" id="-21509382%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-21509382%2FFunctions%2F-232005857" anchor-label="bindBoolean" id="-21509382%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-boolean.html"><span>bind</span><wbr><span><span>Boolean</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-21509382%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-21509382%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-boolean.html"><span class="token function">bindBoolean</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">boolean<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-boolean.html"><span class="token function">bindBoolean</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">boolean<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1485155402%2FFunctions%2F-597983287" anchor-label="bindByte" id="1485155402%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="1485155402%2FFunctions%2F-232005857" anchor-label="bindByte" id="1485155402%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-byte.html"><span>bind</span><wbr><span><span>Byte</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1485155402%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1485155402%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-byte.html"><span class="token function">bindByte</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">byte<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte/index.html">Byte</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-byte.html"><span class="token function">bindByte</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">byte<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte/index.html">Byte</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1115855776%2FFunctions%2F-597983287" anchor-label="bindBytes" id="1115855776%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="1115855776%2FFunctions%2F-232005857" anchor-label="bindBytes" id="1115855776%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-bytes.html"><span>bind</span><wbr><span><span>Bytes</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1115855776%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1115855776%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-bytes.html"><span class="token function">bindBytes</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">bytes<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-bytes.html"><span class="token function">bindBytes</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">bytes<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1216007012%2FFunctions%2F-597983287" anchor-label="bindDouble" id="-1216007012%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-1216007012%2FFunctions%2F-232005857" anchor-label="bindDouble" id="-1216007012%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-double.html"><span>bind</span><wbr><span><span>Double</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1216007012%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1216007012%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-double.html"><span class="token function">bindDouble</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">double<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-double/index.html">Double</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-double.html"><span class="token function">bindDouble</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">double<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-double/index.html">Double</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2031325050%2FFunctions%2F-597983287" anchor-label="bindFloat" id="2031325050%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="2031325050%2FFunctions%2F-232005857" anchor-label="bindFloat" id="2031325050%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-float.html"><span>bind</span><wbr><span><span>Float</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2031325050%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2031325050%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-float.html"><span class="token function">bindFloat</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">float<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-float/index.html">Float</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-float.html"><span class="token function">bindFloat</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">float<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-float/index.html">Float</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1811423462%2FFunctions%2F-597983287" anchor-label="bindInt" id="-1811423462%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-1811423462%2FFunctions%2F-232005857" anchor-label="bindInt" id="-1811423462%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-int.html"><span>bind</span><wbr><span><span>Int</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1811423462%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1811423462%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-int.html"><span class="token function">bindInt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">int<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-int.html"><span class="token function">bindInt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">int<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-51502286%2FFunctions%2F-597983287" anchor-label="bindLong" id="-51502286%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-51502286%2FFunctions%2F-232005857" anchor-label="bindLong" id="-51502286%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-long.html"><span>bind</span><wbr><span><span>Long</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-51502286%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-51502286%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-long.html"><span class="token function">bindLong</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">long<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-long.html"><span class="token function">bindLong</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">long<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1001580219%2FFunctions%2F-597983287" anchor-label="bindObject" id="-1001580219%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-1001580219%2FFunctions%2F-232005857" anchor-label="bindObject" id="-1001580219%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-object.html"><span>bind</span><wbr><span><span>Object</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1001580219%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1001580219%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"bindTypedObject"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="bind-object.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="bind-object.html"><span class="token function">bindObject</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">any<span class="token operator">: </span><a href="bind-object.html">T</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-object.html"><span class="token function">bindObject</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">any<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">ignoredSqlType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"bindTypedObject"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="bind-object.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="bind-object.html"><span class="token function">bindObject</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">any<span class="token operator">: </span><a href="bind-object.html">T</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-object.html"><span class="token function">bindObject</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">any<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">ignoredSqlType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1996213382%2FFunctions%2F-597983287" anchor-label="bindShort" id="-1996213382%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-1996213382%2FFunctions%2F-232005857" anchor-label="bindShort" id="-1996213382%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-short.html"><span>bind</span><wbr><span><span>Short</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1996213382%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1996213382%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-short.html"><span class="token function">bindShort</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">short<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-short/index.html">Short</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="bind-short.html"><span class="token function">bindShort</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">short<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-short/index.html">Short</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1393644260%2FFunctions%2F-597983287" anchor-label="bindString" id="-1393644260%2FFunctions%2F-597983287" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":drivers:r2dbc-driver:dokkaHtmlPartial/main" data-filterable-set=":drivers:r2dbc-driver:dokkaHtmlPartial/main">
+<a data-name="-1393644260%2FFunctions%2F-232005857" anchor-label="bindString" id="-1393644260%2FFunctions%2F-232005857" data-filterable-set=":drivers:r2dbc-driver/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":drivers:r2dbc-driver/main" data-filterable-set=":drivers:r2dbc-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bind-string.html"><span>bind</span><wbr><span><span>String</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1393644260%2FFunctions%2F-597983287"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1393644260%2FFunctions%2F-232005857"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-string.html"><span class="token function">bindString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:r2dbc-driver/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="bind-string.html"><span class="token function">bindString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -310,17 +310,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

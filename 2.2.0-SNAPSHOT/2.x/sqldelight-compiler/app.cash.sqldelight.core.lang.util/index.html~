@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>app.cash.sqldelight.core.lang.util</title>
-<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
@@ -24,19 +24,17 @@
 <link href="../../styles/main.css" rel="Stylesheet">
 <link href="../../styles/prism.css" rel="Stylesheet">
 <link href="../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../index.html" tabindex="1">
                     SQLDelight
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -44,19 +42,19 @@
         <div class="library-version" id="library-version">2.2.0-SNAPSHOT
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqldelight-compiler:dokkaHtmlPartial/main">jvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":sqldelight-compiler/main">jvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":sqldelight-compiler:dokkaHtmlPartial/main" data-filter=":sqldelight-compiler:dokkaHtmlPartial/main">
+                                <input type="checkbox" class="checkbox--input" id=":sqldelight-compiler/main" data-filter=":sqldelight-compiler/main">
                                 <span class="checkbox--icon"></span>
                                 jvm
                             </label>
@@ -64,33 +62,35 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     SQLDelight
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.lang.util////PointingToDeclaration//1896744885">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core.lang.util////PointingToDeclaration//121786803">
   <div class="breadcrumbs"><a href="../index.html">sqldelight-compiler</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.core.lang.util</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -99,18 +99,18 @@
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button><button class="section-tab" data-togglable="PROPERTY,EXTENSION_PROPERTY">Properties</button></div>
     <div class="tabs-section-body">
       <div data-togglable="EXTENSION_PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-712653736%2FProperties%2F1896744885" anchor-label="range" id="-712653736%2FProperties%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-712653736%2FProperties%2F121786803" anchor-label="range" id="-712653736%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="range.html"><span><span>range</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-712653736%2FProperties%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-712653736%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">val </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="range.html">range</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/-int-range/index.html">IntRange</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">val </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="range.html">range</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/-int-range/index.html">IntRange</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -118,168 +118,168 @@
         </div>
       </div>
       <div data-togglable="EXTENSION_FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-891792016%2FFunctions%2F1896744885" anchor-label="childOfType" id="-891792016%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-891792016%2FFunctions%2F121786803" anchor-label="childOfType" id="-891792016%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="child-of-type.html"><span>child</span><wbr><span>Of</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-891792016%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-891792016%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="child-of-type.html"><span class="token function">childOfType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">type<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">?</span></div><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="child-of-type.html"><span class="token function">childOfType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">types<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/TokenSet///PointingToDeclaration/">TokenSet</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="child-of-type.html"><span class="token function">childOfType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">type<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">?</span></div><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="child-of-type.html"><span class="token function">childOfType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">types<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/TokenSet///PointingToDeclaration/">TokenSet</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1980109520%2FFunctions%2F1896744885" anchor-label="columnDefSource" id="1980109520%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="1980109520%2FFunctions%2F121786803" anchor-label="columnDefSource" id="1980109520%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="column-def-source.html"><span>column</span><wbr><span>Def</span><wbr><span><span>Source</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1980109520%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1980109520%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/NamedElement///PointingToDeclaration/">NamedElement</span><span class="token punctuation">.</span><a href="column-def-source.html"><span class="token function">columnDefSource</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi.mixins/ColumnDefMixin///PointingToDeclaration/">ColumnDefMixin</span><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/NamedElement///PointingToDeclaration/">NamedElement</span><span class="token punctuation">.</span><a href="column-def-source.html"><span class="token function">columnDefSource</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi.mixins/ColumnDefMixin///PointingToDeclaration/">ColumnDefMixin</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="483590927%2FFunctions%2F1896744885" anchor-label="findChildOfType" id="483590927%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="483590927%2FFunctions%2F121786803" anchor-label="findChildOfType" id="483590927%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="find-child-of-type.html"><span>find</span><wbr><span>Child</span><wbr><span>Of</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="483590927%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="483590927%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="find-child-of-type.html">T</a><span class="token operator"> : </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token operator">&gt; </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="find-child-of-type.html"><span class="token function">findChildOfType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="find-child-of-type.html">T</a><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="find-child-of-type.html">T</a><span class="token operator"> : </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token operator">&gt; </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="find-child-of-type.html"><span class="token function">findChildOfType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="find-child-of-type.html">T</a><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1652323203%2FFunctions%2F1896744885" anchor-label="findChildRecursive" id="-1652323203%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="-1652323203%2FFunctions%2F121786803" anchor-label="findChildRecursive" id="-1652323203%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="find-child-recursive.html"><span>find</span><wbr><span>Child</span><wbr><span><span>Recursive</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1652323203%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1652323203%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span><span class="token punctuation">.</span><a href="find-child-recursive.html"><span class="token function">findChildRecursive</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">type<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span><span class="token punctuation">.</span><a href="find-child-recursive.html"><span class="token function">findChildRecursive</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">type<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-933185764%2FFunctions%2F1896744885" anchor-label="findChildrenOfType" id="-933185764%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="-933185764%2FFunctions%2F121786803" anchor-label="findChildrenOfType" id="-933185764%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="find-children-of-type.html"><span>find</span><wbr><span>Children</span><wbr><span>Of</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-933185764%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-933185764%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="find-children-of-type.html">T</a><span class="token operator"> : </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token operator">&gt; </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="find-children-of-type.html"><span class="token function">findChildrenOfType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="find-children-of-type.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="find-children-of-type.html">T</a><span class="token operator"> : </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token operator">&gt; </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="find-children-of-type.html"><span class="token function">findChildrenOfType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="find-children-of-type.html">T</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1034755006%2FFunctions%2F1896744885" anchor-label="forInitializationStatements" id="1034755006%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="1034755006%2FFunctions%2F121786803" anchor-label="forInitializationStatements" id="1034755006%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="for-initialization-statements.html"><span>for</span><wbr><span>Initialization</span><wbr><span><span>Statements</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1034755006%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1034755006%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="for-initialization-statements.html"><span class="token function">forInitializationStatements</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowReferenceCycles<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><span class="token punctuation">(</span>sqlText<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="for-initialization-statements.html"><span class="token function">forInitializationStatements</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowReferenceCycles<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">body<span class="token operator">: </span><span class="token punctuation">(</span>sqlText<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1595374041%2FFunctions%2F1896744885" anchor-label="hasPreCreateTableInitialization" id="-1595374041%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="-1595374041%2FFunctions%2F121786803" anchor-label="hasPreCreateTableInitialization" id="-1595374041%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="has-pre-create-table-initialization.html"><span>has</span><wbr><span>Pre</span><wbr><span>Create</span><wbr><span>Table</span><wbr><span><span>Initialization</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1595374041%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1595374041%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionStmt///PointingToDeclaration/">SqlExtensionStmt</span><span class="token punctuation">.</span><a href="has-pre-create-table-initialization.html"><span class="token function">hasPreCreateTableInitialization</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExtensionStmt///PointingToDeclaration/">SqlExtensionStmt</span><span class="token punctuation">.</span><a href="has-pre-create-table-initialization.html"><span class="token function">hasPreCreateTableInitialization</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1842599341%2FFunctions%2F1896744885" anchor-label="migrationFiles" id="1842599341%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="1842599341%2FFunctions%2F121786803" anchor-label="migrationFiles" id="1842599341%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="migration-files.html"><span>migration</span><wbr><span><span>Files</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1842599341%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1842599341%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiDirectory///PointingToDeclaration/">PsiDirectory</span><span class="token punctuation">.</span><a href="migration-files.html"><span class="token function">migrationFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../app.cash.sqldelight.core.lang/-migration-file/index.html">MigrationFile</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiDirectory///PointingToDeclaration/">PsiDirectory</span><span class="token punctuation">.</span><a href="migration-files.html"><span class="token function">migrationFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../app.cash.sqldelight.core.lang/-migration-file/index.html">MigrationFile</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1769660539%2FFunctions%2F1896744885" anchor-label="nextSiblingOfType" id="1769660539%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="1769660539%2FFunctions%2F121786803" anchor-label="nextSiblingOfType" id="1769660539%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="next-sibling-of-type.html"><span>next</span><wbr><span>Sibling</span><wbr><span>Of</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1769660539%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1769660539%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="next-sibling-of-type.html">T</a><span class="token operator"> : </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt; </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="next-sibling-of-type.html"><span class="token function">nextSiblingOfType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="next-sibling-of-type.html">T</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="next-sibling-of-type.html">T</a><span class="token operator"> : </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt; </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="next-sibling-of-type.html"><span class="token function">nextSiblingOfType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="next-sibling-of-type.html">T</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1697619341%2FFunctions%2F1896744885" anchor-label="queryFiles" id="-1697619341%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="-1697619341%2FFunctions%2F121786803" anchor-label="queryFiles" id="-1697619341%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="query-files.html"><span>query</span><wbr><span><span>Files</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1697619341%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1697619341%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiDirectory///PointingToDeclaration/">PsiDirectory</span><span class="token punctuation">.</span><a href="query-files.html"><span class="token function">queryFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiDirectory///PointingToDeclaration/">PsiDirectory</span><span class="token punctuation">.</span><a href="query-files.html"><span class="token function">queryFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../app.cash.sqldelight.core.lang/-sql-delight-queries-file/index.html">SqlDelightQueriesFile</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1110088592%2FFunctions%2F1896744885" anchor-label="rawSqlText" id="-1110088592%2FFunctions%2F1896744885" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqldelight-compiler:dokkaHtmlPartial/main" data-filterable-set=":sqldelight-compiler:dokkaHtmlPartial/main">
+<a data-name="-1110088592%2FFunctions%2F121786803" anchor-label="rawSqlText" id="-1110088592%2FFunctions%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="raw-sql-text.html"><span>raw</span><wbr><span>Sql</span><wbr><span><span>Text</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1110088592%2FFunctions%2F1896744885"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1110088592%2FFunctions%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="raw-sql-text.html"><span class="token function">rawSqlText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">replacements<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-pair/index.html">Pair</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/-int-range/index.html">IntRange</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token punctuation">.</span><a href="raw-sql-text.html"><span class="token function">rawSqlText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">replacements<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-pair/index.html">Pair</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/-int-range/index.html">IntRange</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -290,17 +290,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

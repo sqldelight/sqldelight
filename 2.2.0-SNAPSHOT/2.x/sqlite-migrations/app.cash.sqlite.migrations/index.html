@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>app.cash.sqlite.migrations</title>
-<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
@@ -24,19 +24,17 @@
 <link href="../../styles/main.css" rel="Stylesheet">
 <link href="../../styles/prism.css" rel="Stylesheet">
 <link href="../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
+<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.2.0-SNAPSHOT/images/icon-cashapp.png"></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../index.html" tabindex="1">
                     SQLDelight
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -44,19 +42,19 @@
         <div class="library-version" id="library-version">2.2.0-SNAPSHOT
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sqlite-migrations:dokkaHtmlPartial/main">jvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":sqlite-migrations/main">jvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":sqlite-migrations:dokkaHtmlPartial/main" data-filter=":sqlite-migrations:dokkaHtmlPartial/main">
+                                <input type="checkbox" class="checkbox--input" id=":sqlite-migrations/main" data-filter=":sqlite-migrations/main">
                                 <span class="checkbox--icon"></span>
                                 jvm
                             </label>
@@ -64,33 +62,35 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     SQLDelight
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="sqlite-migrations::app.cash.sqlite.migrations////PointingToDeclaration//-1125609132">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="sqlite-migrations::app.cash.sqlite.migrations////PointingToDeclaration//996653620">
   <div class="breadcrumbs"><a href="../index.html">sqlite-migrations</a><span class="delimiter">/</span><span class="current">app.cash.sqlite.migrations</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -99,93 +99,93 @@
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="-189342861%2FClasslikes%2F-1125609132" anchor-label="CatalogDatabase" id="-189342861%2FClasslikes%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-189342861%2FClasslikes%2F996653620" anchor-label="CatalogDatabase" id="-189342861%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-catalog-database/index.html"><span>Catalog</span><wbr><span><span>Database</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-189342861%2FClasslikes%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-189342861%2FClasslikes%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-catalog-database/index.html">CatalogDatabase</a> : <a href="-database/index.html">Database</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-catalog-database/index.html">CatalogDatabase</a> : <a href="-database/index.html">Database</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="839118432%2FClasslikes%2F-1125609132" anchor-label="Database" id="839118432%2FClasslikes%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+<a data-name="839118432%2FClasslikes%2F996653620" anchor-label="Database" id="839118432%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-database/index.html"><span><span>Database</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="839118432%2FClasslikes%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="839118432%2FClasslikes%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-database/index.html">Database</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-database/index.html">Database</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="140277610%2FClasslikes%2F-1125609132" anchor-label="DatabaseComparator" id="140277610%2FClasslikes%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+<a data-name="140277610%2FClasslikes%2F996653620" anchor-label="DatabaseComparator" id="140277610%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-database-comparator/index.html"><span>Database</span><wbr><span><span>Comparator</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="140277610%2FClasslikes%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="140277610%2FClasslikes%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-database-comparator/index.html">DatabaseComparator</a><span class="token operator">&lt;</span><a href="-database-comparator/index.html">T</a><span class="token operator"> : </span><a href="-database/index.html">Database</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-database-comparator/index.html">DatabaseComparator</a><span class="token operator">&lt;</span><a href="-database-comparator/index.html">T</a><span class="token operator"> : </span><a href="-database/index.html">Database</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="803652187%2FClasslikes%2F-1125609132" anchor-label="DatabaseDiff" id="803652187%2FClasslikes%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+<a data-name="803652187%2FClasslikes%2F996653620" anchor-label="DatabaseDiff" id="803652187%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-database-diff/index.html"><span>Database</span><wbr><span><span>Diff</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="803652187%2FClasslikes%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="803652187%2FClasslikes%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-database-diff/index.html">DatabaseDiff</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-database-diff/index.html">DatabaseDiff</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="895221785%2FClasslikes%2F-1125609132" anchor-label="ObjectDifferDatabaseComparator" id="895221785%2FClasslikes%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+<a data-name="895221785%2FClasslikes%2F996653620" anchor-label="ObjectDifferDatabaseComparator" id="895221785%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-object-differ-database-comparator/index.html"><span>Object</span><wbr><span>Differ</span><wbr><span>Database</span><wbr><span><span>Comparator</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="895221785%2FClasslikes%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="895221785%2FClasslikes%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-object-differ-database-comparator/index.html">ObjectDifferDatabaseComparator</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ignoreDefinitions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">circularReferenceExceptionLogger<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="-database-comparator/index.html">DatabaseComparator</a><span class="token operator">&lt;</span><a href="-catalog-database/index.html">CatalogDatabase</a><span class="token operator">&gt; </span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-object-differ-database-comparator/index.html">ObjectDifferDatabaseComparator</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ignoreDefinitions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">circularReferenceExceptionLogger<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="-database-comparator/index.html">DatabaseComparator</a><span class="token operator">&lt;</span><a href="-catalog-database/index.html">CatalogDatabase</a><span class="token operator">&gt; </span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1386887754%2FClasslikes%2F-1125609132" anchor-label="ObjectDifferDatabaseDiff" id="1386887754%2FClasslikes%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+<a data-name="1386887754%2FClasslikes%2F996653620" anchor-label="ObjectDifferDatabaseDiff" id="1386887754%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-object-differ-database-diff/index.html"><span>Object</span><wbr><span>Differ</span><wbr><span>Database</span><wbr><span><span>Diff</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1386887754%2FClasslikes%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1386887754%2FClasslikes%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-object-differ-database-diff/index.html">ObjectDifferDatabaseDiff</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">diff<span class="token operator">: </span><span data-unresolved-link="de.danielbechler.diff.node/DiffNode///PointingToDeclaration/">DiffNode</span><span class="token punctuation">, </span></span><span class="parameter ">db1<span class="token operator">: </span><a href="-catalog-database/index.html">CatalogDatabase</a><span class="token punctuation">, </span></span><span class="parameter ">db2<span class="token operator">: </span><a href="-catalog-database/index.html">CatalogDatabase</a></span></span><span class="token punctuation">)</span> : <a href="-database-diff/index.html">DatabaseDiff</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-object-differ-database-diff/index.html">ObjectDifferDatabaseDiff</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">diff<span class="token operator">: </span><span data-unresolved-link="de.danielbechler.diff.node/DiffNode///PointingToDeclaration/">DiffNode</span><span class="token punctuation">, </span></span><span class="parameter ">db1<span class="token operator">: </span><a href="-catalog-database/index.html">CatalogDatabase</a><span class="token punctuation">, </span></span><span class="parameter ">db2<span class="token operator">: </span><a href="-catalog-database/index.html">CatalogDatabase</a></span></span><span class="token punctuation">)</span> : <a href="-database-diff/index.html">DatabaseDiff</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -193,18 +193,18 @@
         </div>
       </div>
       <div data-togglable="EXTENSION_FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="789873117%2FFunctions%2F-1125609132" anchor-label="findDatabaseFiles" id="789873117%2FFunctions%2F-1125609132" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main"></a>
-          <div class="table-row" data-filterable-current=":sqlite-migrations:dokkaHtmlPartial/main" data-filterable-set=":sqlite-migrations:dokkaHtmlPartial/main">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="789873117%2FFunctions%2F996653620" anchor-label="findDatabaseFiles" id="789873117%2FFunctions%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="find-database-files.html"><span>find</span><wbr><span>Database</span><wbr><span><span>Files</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="789873117%2FFunctions%2F-1125609132"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="789873117%2FFunctions%2F996653620"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="find-database-files.html"><span class="token function">findDatabaseFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="find-database-files.html"><span class="token function">findDatabaseFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -215,17 +215,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
