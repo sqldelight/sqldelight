@@ -382,6 +382,10 @@ abstract class TransacterImpl(driver: SqlDriver) :
   }
 }
 
+interface TransactionContextProvider {
+  suspend fun <R> withTransactionContext(block: suspend () -> R): R
+}
+
 abstract class SuspendingTransacterImpl(driver: SqlDriver) :
   BaseTransacterImpl(driver),
   SuspendingTransacter {
@@ -389,14 +393,26 @@ abstract class SuspendingTransacterImpl(driver: SqlDriver) :
     noEnclosing: Boolean,
     bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,
   ): R {
-    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+    return when(driver) {
+      is TransactionContextProvider -> driver.withTransactionContext {
+        transactionWithWrapper(noEnclosing, bodyWithReturn)
+      }
+
+      else -> transactionWithWrapper(noEnclosing, bodyWithReturn)
+    }
   }
 
   override suspend fun transaction(
     noEnclosing: Boolean,
     body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   ) {
-    return transactionWithWrapper(noEnclosing, body)
+    return when(driver) {
+      is TransactionContextProvider -> driver.withTransactionContext {
+        transactionWithWrapper(noEnclosing, body)
+      }
+
+      else -> transactionWithWrapper(noEnclosing, body)
+    }
   }
 
   private suspend fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend SuspendingTransactionWrapper<R>.() -> R): R {
