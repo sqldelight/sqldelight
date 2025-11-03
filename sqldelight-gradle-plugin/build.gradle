@@ -54,6 +54,7 @@ dependencies {
 
   implementation libs.sqlPsiEnvironment
   implementation libs.kotlin.plugin
+  // TODO Use only libs.android.pluginApi
   compileOnly libs.android.plugin
 
   testImplementation libs.junit

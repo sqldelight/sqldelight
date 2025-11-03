@@ -165,7 +165,7 @@ class IntegrationTest {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "test", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace")
       .withDebug(true)
 
     val result = runner.build()

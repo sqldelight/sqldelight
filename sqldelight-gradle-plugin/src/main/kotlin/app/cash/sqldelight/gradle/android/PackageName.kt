@@ -1,12 +1,12 @@
 package app.cash.sqldelight.gradle.android
 
 import app.cash.sqldelight.VERSION
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
 internal fun Project.packageName(): String {
-  val androidExtension = extensions.getByType(BaseExtension::class.java)
+  val androidExtension = extensions.getByType(CommonExtension::class.java)
   return androidExtension.namespace ?: throw GradleException(
     """
     |SqlDelight requires a package name to be set. This can be done via the android namespace:
@@ -27,7 +27,7 @@ internal fun Project.packageName(): String {
 }
 
 internal fun Project.sqliteVersion(): String? {
-  val androidExtension = extensions.getByType(BaseExtension::class.java)
+  val androidExtension = extensions.getByType(CommonExtension::class.java)
   val minSdk = androidExtension.defaultConfig.minSdk ?: return null
 
   // Mapping available at https://developer.android.com/reference/android/database/sqlite/package-summary.

@@ -156,13 +156,13 @@ class CompilationUnitTests {
   }
 
   @Test
-  fun `Multiplatform project with android and ios targets`() {
+  fun `Multiplatform project with android and ios targets AGP 8`() {
     withTemporaryFixture {
       gradleFile(
         """
         |plugins {
         |  alias(libs.plugins.kotlin.multiplatform)
-        |  alias(libs.plugins.android.application)
+        |  id("com.android.application").version("8.13.0")
         |  alias(libs.plugins.sqldelight)
         |}
         |
@@ -234,7 +234,6 @@ class CompilationUnitTests {
         """
         |plugins {
         |  alias(libs.plugins.android.application)
-        |  alias(libs.plugins.kotlin.android)
         |  alias(libs.plugins.sqldelight)
         |}
         |

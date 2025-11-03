@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.multiplatform)
 }
 
 sqldelight {
@@ -19,7 +17,12 @@ sqldelight {
 kotlin {
   jvmToolchain(11)
 
-  androidTarget()
+  android {
+    namespace = 'app.sqltest.shared'
+    compileSdk = libs.versions.compileSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
+  }
+
   jvm()
 
   sourceSets {
@@ -54,20 +57,5 @@ kotlin {
         implementation("app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}")
       }
     }
-  }
-}
-
-android {
-  namespace "app.sqltest.shared"
-
-  compileSdk libs.versions.compileSdk.get() as int
-
-  defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
-    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-  }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
   }
 }
