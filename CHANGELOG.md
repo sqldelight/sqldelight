@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+- [SQLite Dialect] Add support for synthesized rank column in virtual tables (#5986 by [watbe][watbe])
+
 ### Added
 - [Compiler] Improve the compiler error message to include source file location when a CAST is required (#5979 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for Postgres JSON operator path extraction (#5971 by [Griffio][griffio])
@@ -1183,3 +1185,4 @@ Initial release.
   [janbina]: https://github.com/janbina
   [DRSchlaubi]: https://github.com/DRSchlaubi
   [jonapoul]: https://github.com/jonapoul
+  [watbe]: https://github.com/watbe
