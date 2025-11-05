@@ -35,6 +35,11 @@ android {
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
   lint {
     tasks.lint.enabled false
   }
@@ -46,9 +51,4 @@ android {
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
   compilerOptions.jvmTarget = JvmTarget.JVM_1_8
-}
-
-tasks.withType(JavaCompile).configureEach {
-  sourceCompatibility = '1.8'
-  targetCompatibility = '1.8'
 }

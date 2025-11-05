@@ -29,6 +29,11 @@ android {
     minSdk libs.versions.minSdk.get() as int
   }
 
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
   packagingOptions {
     exclude 'LICENSE.txt'
   }
@@ -42,9 +47,4 @@ androidComponents {
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
   compilerOptions.jvmTarget = JvmTarget.JVM_1_8
-}
-
-tasks.withType(JavaCompile).configureEach {
-  sourceCompatibility = '1.8'
-  targetCompatibility = '1.8'
 }

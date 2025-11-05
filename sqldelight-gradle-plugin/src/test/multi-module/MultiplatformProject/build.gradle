@@ -20,6 +20,11 @@ android {
 
   compileSdk libs.versions.compileSdk.get() as int
 
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
   buildTypes {
     release {}
     sqldelight {}
@@ -49,9 +54,4 @@ kotlin {
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
   compilerOptions.jvmTarget = JvmTarget.JVM_1_8
-}
-
-tasks.withType(JavaCompile).configureEach {
-  sourceCompatibility = '1.8'
-  targetCompatibility = '1.8'
 }
