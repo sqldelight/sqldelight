@@ -4,23 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.android.library)
-}
-
-android {
-  namespace "app.cash.sqldelight.integration"
-
-  compileSdk libs.versions.compileSdk.get() as int
-
-  defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
-    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-  }
-
-  compileOptions {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-  }
+  alias(libs.plugins.android.multiplatform)
 }
 
 sqldelight {
@@ -32,7 +16,16 @@ sqldelight {
 }
 
 kotlin {
-  androidTarget()
+  android {
+    namespace = "app.cash.sqldelight.integration"
+    compileSdk = libs.versions.compileSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
+
+    compileOptions {
+      sourceCompatibility = '1.8'
+      targetCompatibility = '1.8'
+    }
+  }
 
   sourceSets {
     commonTest {
