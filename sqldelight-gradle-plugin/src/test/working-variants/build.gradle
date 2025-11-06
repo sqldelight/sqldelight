@@ -4,9 +4,9 @@ plugins {
 }
 
 android {
-  namespace "com.example.sqldelight"
+  namespace = "com.example.sqldelight"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   defaultConfig {
     applicationId "com.sample"

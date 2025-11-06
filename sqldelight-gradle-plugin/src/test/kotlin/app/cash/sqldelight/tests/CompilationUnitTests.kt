@@ -175,8 +175,8 @@ class CompilationUnitTests {
         |}
         |
         |android {
-        |  namespace 'com.example.namespace'
-        |  compileSdk libs.versions.compileSdk.get() as int
+        |  namespace = 'com.example.namespace'
+        |  compileSdk = libs.versions.compileSdk.get() as int
         |
         |  buildTypes {
         |    release {}
@@ -246,8 +246,8 @@ class CompilationUnitTests {
         |}
         |
         |android {
-        |  namespace 'com.example.namespace'
-        |  compileSdk libs.versions.compileSdk.get() as int
+        |  namespace = 'com.example.namespace'
+        |  compileSdk = libs.versions.compileSdk.get() as int
         |
         |  buildTypes {
         |    release {}

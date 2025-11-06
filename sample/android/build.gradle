@@ -8,7 +8,7 @@ kotlin.jvmToolchain {
 }
 
 android {
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
   namespace = "com.example.sqldelight.hockey"
 
   defaultConfig {

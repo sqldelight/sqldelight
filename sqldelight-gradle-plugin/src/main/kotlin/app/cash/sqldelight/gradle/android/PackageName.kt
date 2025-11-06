@@ -12,7 +12,7 @@ internal fun Project.packageName(): String {
     |SqlDelight requires a package name to be set. This can be done via the android namespace:
     |
     |android {
-    |  namespace "com.example.mypackage"
+    |  namespace = "com.example.mypackage"
     |}
     |
     |or the sqldelight configuration:
