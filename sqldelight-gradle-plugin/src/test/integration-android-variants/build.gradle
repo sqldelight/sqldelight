@@ -1,8 +1,9 @@
+import com.android.build.api.variant.HostTestBuilder
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.sqldelight)
 }
 
@@ -29,6 +30,11 @@ android {
     minSdk libs.versions.minSdk.get() as int
   }
 
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
   packagingOptions {
     exclude 'LICENSE.txt'
   }
@@ -37,9 +43,10 @@ android {
 androidComponents {
   beforeVariants(selector().withBuildType("release")) {
     enable = project.properties["debugOnly"] != "true"
+    hostTests[HostTestBuilder.UNIT_TEST_TYPE].enable = true
   }
 }
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
-  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+  compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }

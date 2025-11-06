@@ -1,12 +1,10 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.kotlin.android)
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'app.cash.sqldelight'
-apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
   namespace "com.example.sqldelight"

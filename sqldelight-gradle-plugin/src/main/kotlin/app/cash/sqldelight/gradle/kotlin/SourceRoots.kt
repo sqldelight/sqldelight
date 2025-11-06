@@ -1,8 +1,8 @@
 package app.cash.sqldelight.gradle.kotlin
 
 import app.cash.sqldelight.gradle.SqlDelightDatabase
+import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import java.io.File
@@ -43,7 +43,7 @@ internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
 
   // Android project.
   project.extensions.findByName("android")?.let {
-    return (it as BaseExtension).sources(project)
+    return (it as CommonExtension).sources(project)
   }
 
   // Kotlin project.
@@ -85,24 +85,20 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   )
 }
 
-private fun BaseExtension.sources(project: Project): List<Source> {
+private fun CommonExtension.sources(project: Project): List<Source> {
   val variants: DomainObjectSet<out BaseVariant> = when (this) {
     is AppExtension -> applicationVariants
     is LibraryExtension -> libraryVariants
     else -> throw IllegalStateException("Unknown Android plugin $this")
   }
-  val kotlinSourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
-  val sourceSets = sourceSets
-    .associate { sourceSet ->
-      sourceSet.name to kotlinSourceSets.getByName(sourceSet.name).kotlin
-    }
 
+  val kotlinSourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
   return variants.map { variant ->
     Source(
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
       variantName = variant.name,
-      sourceDirectorySet = sourceSets[variant.name]!!,
+      sourceDirectorySet = kotlinSourceSets.getByName(variant.name).kotlin,
       sourceSets = variant.sourceSets.map { it.name },
       registerGeneratedDirectory = { outputDirectoryProvider ->
         variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
