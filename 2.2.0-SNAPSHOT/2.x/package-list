@@ -62,8 +62,6 @@ app.cash.sqldelight.dialects.sqlite.json.module
 app.cash.sqldelight.dialects.sqlite.json.module.grammar
 app.cash.sqldelight.dialects.sqlite.json.module.grammar.psi
 app.cash.sqldelight.dialects.sqlite.json.module.grammar.psi.impl
-module:android-driver
-app.cash.sqldelight.driver.android
 module:jdbc-driver
 app.cash.sqldelight.driver.jdbc
 module:native-driver

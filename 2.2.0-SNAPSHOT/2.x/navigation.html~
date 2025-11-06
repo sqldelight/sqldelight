@@ -4004,31 +4004,6 @@
    </div>
   </div>
  </div>
- <div class="toc--part" id="android-driver-nav-submenu" pageid="android-driver::////PointingToDeclaration//1009513204" data-nesting-level="0">
-  <div class="toc--row">
-   <button class="toc--button" aria-expanded="false" aria-label="android-driver" onclick="window.handleTocButtonClick(event, 'android-driver-nav-submenu')"></button><a href="drivers/android-driver/index.html" class="toc--link"><span><span>android-driver</span></span></a><a class="toc--skip-link" href="drivers/android-driver/">Skip to content</a>
-  </div>
-  <div class="toc--part" id="android-driver-nav-submenu-0" pageid="android-driver::app.cash.sqldelight.driver.android////PointingToDeclaration//1009513204" data-nesting-level="1">
-   <div class="toc--row">
-    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.driver.android" onclick="window.handleTocButtonClick(event, 'android-driver-nav-submenu-0')"></button><a href="drivers/android-driver/app.cash.sqldelight.driver.android/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>driver.</span><wbr><span>android</span></a><a class="toc--skip-link" href="drivers/android-driver/">Skip to content</a>
-   </div>
-   <div class="toc--part" id="android-driver-nav-submenu-0-0" pageid="android-driver::app.cash.sqldelight.driver.android/AndroidSqliteDriver///PointingToDeclaration//1009513204" data-nesting-level="2">
-    <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="AndroidSqliteDriver" onclick="window.handleTocButtonClick(event, 'android-driver-nav-submenu-0-0')"></button><a href="drivers/android-driver/app.cash.sqldelight.driver.android/-android-sqlite-driver/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Android</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></span></span></a><a class="toc--skip-link" href="drivers/android-driver/">Skip to content</a>
-    </div>
-    <div class="toc--part" id="android-driver-nav-submenu-0-0-0" pageid="android-driver::app.cash.sqldelight.driver.android/AndroidSqliteDriver.Callback///PointingToDeclaration//1009513204" data-nesting-level="3">
-     <div class="toc--row">
-      <a href="drivers/android-driver/app.cash.sqldelight.driver.android/-android-sqlite-driver/-callback/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span><span>Callback</span></span></span></span></a>
-     </div>
-    </div>
-    <div class="toc--part" id="android-driver-nav-submenu-0-0-1" pageid="android-driver::app.cash.sqldelight.driver.android/AndroidSqliteDriver.Transaction///PointingToDeclaration//1009513204" data-nesting-level="3">
-     <div class="toc--row">
-      <a href="drivers/android-driver/app.cash.sqldelight.driver.android/-android-sqlite-driver/-transaction/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span><span>Transaction</span></span></span></span></a>
-     </div>
-    </div>
-   </div>
-  </div>
- </div>
  <div class="toc--part" id="jdbc-driver-nav-submenu" pageid="jdbc-driver::////PointingToDeclaration//-1813608135" data-nesting-level="0">
   <div class="toc--row">
    <button class="toc--button" aria-expanded="false" aria-label="jdbc-driver" onclick="window.handleTocButtonClick(event, 'jdbc-driver-nav-submenu')"></button><a href="drivers/jdbc-driver/index.html" class="toc--link"><span><span>jdbc-driver</span></span></a><a class="toc--skip-link" href="drivers/jdbc-driver/">Skip to content</a>
