@@ -1,3 +1,4 @@
+import com.android.build.api.variant.HostTestBuilder
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
@@ -42,6 +43,7 @@ android {
 androidComponents {
   beforeVariants(selector().withBuildType("release")) {
     enable = project.properties["debugOnly"] != "true"
+    hostTests[HostTestBuilder.UNIT_TEST_TYPE].enable = true
   }
 }
 

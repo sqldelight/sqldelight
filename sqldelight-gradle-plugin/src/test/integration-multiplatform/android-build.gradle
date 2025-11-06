@@ -20,11 +20,6 @@ kotlin {
     namespace = "app.cash.sqldelight.integration"
     compileSdk = libs.versions.compileSdk.get() as int
     minSdk = libs.versions.minSdk.get() as int
-
-    compileOptions {
-      sourceCompatibility = '1.8'
-      targetCompatibility = '1.8'
-    }
   }
 
   sourceSets {
