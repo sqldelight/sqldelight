@@ -25,12 +25,12 @@ sqldelight {
 }
 
 android {
-  namespace "app.cash.sqldelight.integration"
+  namespace = "app.cash.sqldelight.integration"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
 
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }

@@ -4,9 +4,9 @@ plugins {
 }
 
 android {
-  namespace "com.example"
+  namespace = "com.example"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   defaultConfig {
     minSdk 30

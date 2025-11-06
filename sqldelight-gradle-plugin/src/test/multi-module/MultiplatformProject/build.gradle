@@ -16,9 +16,9 @@ sqldelight {
 }
 
 android {
-  namespace "app.cash.sqldelight.multiplatform.project"
+  namespace = "app.cash.sqldelight.multiplatform.project"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   compileOptions {
     sourceCompatibility = '1.8'
