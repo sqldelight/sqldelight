@@ -37,6 +37,7 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
       "create-trigger-raise",
       "create-trigger-success",
       "create-trigger-validation-failures",
+      "if-not-exists",
       "timestamp-with-precission",
       "localtimestamp-with-precission",
       "localtimestamp-literals",

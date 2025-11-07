@@ -1,6 +1,5 @@
 plugins {
   alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.runtime")
@@ -12,7 +11,7 @@ base {
 }
 
 android {
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
   namespace = "app.cash.sqldelight.driver.android"
 
   lint {
@@ -20,7 +19,7 @@ android {
   }
 
   defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
   }
 
   buildFeatures {

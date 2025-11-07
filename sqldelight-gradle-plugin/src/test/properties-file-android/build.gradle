@@ -1,13 +1,12 @@
 plugins {
   alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.sqldelight)
 }
 
 android {
-  namespace "com.example"
+  namespace = "com.example"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   defaultConfig {
     minSdk 30

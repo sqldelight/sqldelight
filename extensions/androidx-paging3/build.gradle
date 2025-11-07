@@ -32,13 +32,13 @@ kotlin {
       dependencies {
         api projects.runtime
         api libs.app.cash.paging.common
-        implementation libs.kotlin.coroutines.core
+        implementation libs.kotlinx.coroutines.core
       }
     }
     commonTest {
       dependencies {
         implementation libs.kotlin.test
-        implementation libs.kotlin.coroutines.test
+        implementation libs.kotlinx.coroutines.test
         implementation libs.stately.concurrency
       }
     }

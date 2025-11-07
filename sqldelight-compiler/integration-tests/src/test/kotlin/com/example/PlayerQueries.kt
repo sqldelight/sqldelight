@@ -146,10 +146,11 @@ public class PlayerQueries(
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
-          bindString(0, name.name)
-          bindLong(1, number)
-          bindString(2, team?.let { it.name })
-          bindString(3, playerAdapter.shootsAdapter.encode(shoots))
+          var parameterIndex = 0
+          bindString(parameterIndex++, name.name)
+          bindLong(parameterIndex++, number)
+          bindString(parameterIndex++, team?.let { it.name })
+          bindString(parameterIndex++, playerAdapter.shootsAdapter.encode(shoots))
         }
     notifyQueries(-1_595_716_666) { emit ->
       emit("player")
@@ -167,9 +168,10 @@ public class PlayerQueries(
         |SET team = ?
         |WHERE number IN $numberIndexes
         """.trimMargin(), 1 + number.size) {
-          bindString(0, team?.let { it.name })
-          number.forEachIndexed { index, number_ ->
-            bindLong(index + 1, number_)
+          var parameterIndex = 0
+          bindString(parameterIndex++, team?.let { it.name })
+          number.forEach { number_ ->
+            bindLong(parameterIndex++, number_)
           }
         }
     notifyQueries(-636_585_613) { emit ->
@@ -206,10 +208,11 @@ public class PlayerQueries(
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
           """.trimMargin(), 4) {
-            bindString(0, name.name)
-            bindLong(1, number)
-            bindString(2, team?.let { it.name })
-            bindString(3, playerAdapter.shootsAdapter.encode(shoots))
+            var parameterIndex = 0
+            bindString(parameterIndex++, name.name)
+            bindLong(parameterIndex++, number)
+            bindString(parameterIndex++, team?.let { it.name })
+            bindString(parameterIndex++, playerAdapter.shootsAdapter.encode(shoots))
           }
       driver.executeQuery(-452_007_404, """
           |SELECT player.name, player.number, player.team, player.shoots
@@ -242,7 +245,8 @@ public class PlayerQueries(
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
-      bindString(0, team?.let { it.name })
+      var parameterIndex = 0
+      bindString(parameterIndex++, team?.let { it.name })
     }
 
     override fun toString(): String = "Player.sq:playersForTeam"
@@ -267,8 +271,9 @@ public class PlayerQueries(
           |FROM player
           |WHERE number IN $numberIndexes
           """.trimMargin(), mapper, number.size) {
-            number.forEachIndexed { index, number_ ->
-              bindLong(index, number_)
+            var parameterIndex = 0
+            number.forEach { number_ ->
+              bindLong(parameterIndex++, number_)
             }
           }
     }
@@ -294,8 +299,9 @@ public class PlayerQueries(
     |FROM player
     |WHERE (number, name) > (?, ?)
     """.trimMargin(), mapper, 2) {
-      bindLong(0, number)
-      bindString(1, name.name)
+      var parameterIndex = 0
+      bindLong(parameterIndex++, number)
+      bindString(parameterIndex++, name.name)
     }
 
     override fun toString(): String = "Player.sq:greaterThanNumberAndName"

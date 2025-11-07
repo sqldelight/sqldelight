@@ -24,14 +24,14 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -68,7 +68,7 @@ jobs:
     needs: publish_archives
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
@@ -76,7 +76,7 @@ jobs:
           mkdir -p .gradle/ && touch .gradle/gradle.properties
       - name: Set up Java
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
@@ -85,7 +85,7 @@ jobs:
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -103,7 +103,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
@@ -111,19 +111,19 @@ jobs:
           mkdir -p .gradle/ && touch .gradle/gradle.properties
       - name: Set up Java
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
       - name: Setup Gradle Java installations paths
         run: |
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 

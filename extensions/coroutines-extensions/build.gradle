@@ -6,7 +6,6 @@ plugins {
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
-  id("org.jetbrains.kotlinx.atomicfu")
 }
 
 base {
@@ -36,12 +35,12 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       api projects.runtime
-      api libs.kotlin.coroutines.core
+      api libs.kotlinx.coroutines.core
       implementation project(":extensions:async-extensions")
     }
 
     commonTest.dependencies {
-      implementation libs.kotlin.coroutines.test
+      implementation libs.kotlinx.coroutines.test
       implementation libs.kotlin.test
       implementation libs.turbine
       implementation libs.stately.concurrency
