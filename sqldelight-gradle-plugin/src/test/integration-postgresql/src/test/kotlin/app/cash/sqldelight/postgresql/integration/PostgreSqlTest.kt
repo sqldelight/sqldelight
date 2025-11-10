@@ -565,8 +565,8 @@ class PostgreSqlTest {
     with(
       database.numbersQueries.sumInts().executeAsOne(),
     ) {
-      assertThat(sumSmall).isInstanceOf(Long::class.javaObjectType)
-      assertThat(sumInt).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumSmall).isInstanceOf(Short::class.javaObjectType)
+      assertThat(sumInt).isInstanceOf(Int::class.javaObjectType)
       assertThat(sumBig).isInstanceOf(Long::class.javaObjectType)
       assertThat(sumSmall).isEqualTo(3)
       assertThat(sumInt).isEqualTo(3)
@@ -695,7 +695,7 @@ class PostgreSqlTest {
     val updated = Instant.parse("2022-05-01T10:00:00.00Z")
     database.binaryArgumentsQueries.insertData(10, 5, created, updated)
     val result = database.binaryArgumentsQueries.selectDataBinaryCast2(10.0, 10).executeAsOne()
-    assertThat(result.expected_datum).isEqualTo(9.5)
+    assertThat(result.expected_datum).isEqualTo(9.5.toBigDecimal())
   }
 
   @Test
