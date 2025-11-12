@@ -71,7 +71,7 @@ class SqlDelightEnvironment(
   private val dependencyFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && it.dependency }
     .map { it.folder },
-) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
+) : SqlCoreEnvironment(sourceFolders.map { it.toPath() }, dependencyFolders.map { it.toPath() }),
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
