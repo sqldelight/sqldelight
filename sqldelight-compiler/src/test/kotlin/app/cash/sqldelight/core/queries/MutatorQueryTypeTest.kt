@@ -884,7 +884,7 @@ class MutatorQueryTypeTest {
     |queryTerm:
     |SELECT item.*
     |FROM item_index
-    |JOIN item ON (docid = item.id)
+    |JOIN item ON (rowid = item.id)
     |WHERE content MATCH '"one ' || ? || '" * ';
     |
     |
