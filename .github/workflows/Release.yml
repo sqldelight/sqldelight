@@ -28,7 +28,7 @@ jobs:
         with:
           cache-cleanup: always
 
-      - run: ./gradlew publishAllPublicationsToMavenCentralRepository
+      - run: ./gradlew publishToMavenCentral
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
