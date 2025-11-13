@@ -147,6 +147,27 @@ jobs:
         if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
         run: npm publish
 
+  publish_release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs:
+      - publish_archives
+      - publish_plugin
+      - publish_npm_packages
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Extract release notes
+        id: release_notes
+        uses: ffurrer2/extract-release-notes@v2
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.release_notes.outputs.release_notes }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 env:
   GRADLE_OPTS: -Dorg.gradle.caching=true
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
