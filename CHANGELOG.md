@@ -3,6 +3,7 @@
 ## UNRELEASED
 
 ### Added
+- [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by [Griffio][griffio])
 - [PostgreSQL Dialect] Fix Postgres numeric/integer/biginteger type mapping (#5994 by [Griffio][griffio])
 - [Compiler] Improve the compiler error message to include source file location when a CAST is required (#5979 by [Griffio][griffio])
 - [PostgreSQL Dialect] Add support for Postgres JSON operator path extraction (#5971 by [Griffio][griffio])
