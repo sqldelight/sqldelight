@@ -1556,4 +1556,16 @@ class PostgreSqlTest {
       ).executeAsOne(),
     ).isTrue()
   }
+
+  fun testSysColumns() {
+    database.systemTablesQueries.selectSystemColumns().executeAsOne().let {
+      assertThat(it.table_name).isEqualTo("demo_sys_cols")
+      assertThat(it.table_comment).isEqualTo("Some Comment")
+      assertThat(it.xmin).isNotNull()
+      assertThat(it.xmax).isNotNull()
+      assertThat(it.cmin).isNotNull()
+      assertThat(it.cmax).isNotNull()
+      assertThat(it.ctid).isNotNull()
+    }
+  }
 }
