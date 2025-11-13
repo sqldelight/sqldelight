@@ -166,26 +166,22 @@ tasks.named("instrumentationTest") {
       ":runtime:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
       ":runtime:publishJvmPublicationToInstallLocallyRepository",
       ":runtime:publishJsPublicationToInstallLocallyRepository",
+      ":runtime:publishIosX64PublicationToInstallLocallyRepository",
+      ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+      ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
+      ":runtime:publishMacosArm64PublicationToInstallLocallyRepository",
+      ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
       ":drivers:sqlite-driver:publishAllPublicationsToInstallLocallyRepository",
       ":drivers:jdbc-driver:publishAllPublicationsToInstallLocallyRepository",
+      ":drivers:native-driver:publishIosX64PublicationToInstallLocallyRepository",
+      ":drivers:native-driver:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
+      ":drivers:native-driver:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
       ":sqlite-migrations:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-gradle-plugin:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:environment:publishAllPublicationsToInstallLocallyRepository",
       ":sqlite-migrations:environment:publishAllPublicationsToInstallLocallyRepository",
   )
-  if (HostManager.hostIsMac) {
-    dependsOn(
-      ":drivers:native-driver:publishIosX64PublicationToInstallLocallyRepository",
-      ":drivers:native-driver:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
-      ":drivers:native-driver:publishKotlinMultiplatformPublicationToInstallLocallyRepository",
-      ":runtime:publishIosX64PublicationToInstallLocallyRepository",
-      ":runtime:publishIosSimulatorArm64PublicationToInstallLocallyRepository",
-      ":runtime:publishIosArm64PublicationToInstallLocallyRepository",
-      ":runtime:publishMacosArm64PublicationToInstallLocallyRepository",
-      ":runtime:publishMacosX64PublicationToInstallLocallyRepository",
-    )
-  }
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(ToolchainConventions.BUILD_JDK)
   }
