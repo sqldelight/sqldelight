@@ -65,7 +65,7 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
           ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.JETBRAINS_MARKETPLACE_SQUARE_PLUGINS }}
-        run: ./gradlew publishPlugin --stacktrace --no-parallel
+        run: ./gradlew publishPlugin --no-parallel
 
   publish_npm_packages:
     runs-on: ubuntu-latest
@@ -138,5 +138,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.caching=true
+  GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

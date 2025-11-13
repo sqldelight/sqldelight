@@ -67,19 +67,19 @@ jobs:
       - name: Run gradle tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         run: |
-          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test --stacktrace -x linuxX64Test -x dokkaGeneratePublicationHtml
+          ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test -x linuxX64Test -x dokkaGeneratePublicationHtml
       - name: Run gradle plugin tests
         if: matrix.os == 'macOS-14' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --parallel -x dokkaGeneratePublicationHtml
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        run: ./gradlew :sqldelight-idea-plugin:build --stacktrace -x dokkaGeneratePublicationHtml
+        run: ./gradlew :sqldelight-idea-plugin:build -x dokkaGeneratePublicationHtml
 
       # Windows tests
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
-        run: ./gradlew mingwX64Test sqldelight-idea-plugin:check --stacktrace
+        run: ./gradlew mingwX64Test sqldelight-idea-plugin:check
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
@@ -102,12 +102,12 @@ jobs:
           target: aosp_atd
           profile: Nexus One
           disk-size: 2048M
-          script: ./gradlew :sqldelight-gradle-plugin:instrumentationTest --stacktrace --parallel -x dokkaGeneratePublicationHtml
+          script: ./gradlew :sqldelight-gradle-plugin:instrumentationTest --parallel -x dokkaGeneratePublicationHtml
 
       # ios tests
       - name: Run ios tests
         if: matrix.os == 'macOS-14' && matrix.job == 'test'
-        run: ./gradlew iosX64Test --stacktrace --parallel
+        run: ./gradlew iosX64Test --parallel
 
       - name: Check for changed files
         run: test -z "$(git status --porcelain)"
@@ -154,7 +154,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
-      - run: ./gradlew -p sample build --stacktrace --parallel
+      - run: ./gradlew -p sample build --parallel
 
   buildWebSample:
     runs-on: macos-15
@@ -169,7 +169,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
-      - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --stacktrace --parallel
+      - run: ./gradlew -p sample-web kotlinUpgradeYarnLock build --parallel
 
   docs_verify:
     runs-on: ubuntu-latest
@@ -212,4 +212,4 @@ jobs:
         run: test -z "$(git status --porcelain)" || (echo "mike produced uncommitted changes" && git status && exit 1)
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.caching=true
+  GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
