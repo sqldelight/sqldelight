@@ -1,0 +1,981 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>app.cash.sqldelight.dialects.mysql.grammar.psi.impl</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.3.0-SNAPSHOT/images/icon-cashapp.png"></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    SQLDelight
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">2.3.0-SNAPSHOT
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":dialects:mysql/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":dialects:mysql/main" data-filter=":dialects:mysql/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    SQLDelight
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl////PointingToDeclaration//727215285">
+  <div class="breadcrumbs"><a href="../index.html">mysql</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.dialects.mysql.grammar.psi.impl</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-291612952%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAddColumnImpl" id="-291612952%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-add-column-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-291612952%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-add-column-impl/index.html">MySqlAlterTableAddColumnImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/AlterTableAddColumnMixin///PointingToDeclaration/">AlterTableAddColumnMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-add-column/index.html">MySqlAlterTableAddColumn</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="887736129%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAddConstraintImpl" id="887736129%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-add-constraint-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="887736129%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-add-constraint-impl/index.html">MySqlAlterTableAddConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-add-constraint/index.html">MySqlAlterTableAddConstraint</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="36833330%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAddIndexImpl" id="36833330%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-add-index-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="36833330%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-add-index-impl/index.html">MySqlAlterTableAddIndexImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-add-index/index.html">MySqlAlterTableAddIndex</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-829381145%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableAlterIndexImpl" id="-829381145%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-alter-index-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-829381145%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-alter-index-impl/index.html">MySqlAlterTableAlterIndexImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-alter-index/index.html">MySqlAlterTableAlterIndex</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-15962915%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableChangeColumnImpl" id="-15962915%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-change-column-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Change</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-15962915%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-change-column-impl/index.html">MySqlAlterTableChangeColumnImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/AlterTableChangeColumnMixin///PointingToDeclaration/">AlterTableChangeColumnMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-change-column/index.html">MySqlAlterTableChangeColumn</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1554835219%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableConvertCharacterSetImpl" id="1554835219%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-convert-character-set-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Convert</span><wbr><span>Character</span><wbr><span>Set</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1554835219%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-convert-character-set-impl/index.html">MySqlAlterTableConvertCharacterSetImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-convert-character-set/index.html">MySqlAlterTableConvertCharacterSet</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-286540354%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableDropColumnImpl" id="-286540354%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-drop-column-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-286540354%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-drop-column-impl/index.html">MySqlAlterTableDropColumnImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/AlterTableDropColumnMixin///PointingToDeclaration/">AlterTableDropColumnMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-drop-column/index.html">MySqlAlterTableDropColumn</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1976659612%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableDropIndexImpl" id="1976659612%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-drop-index-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1976659612%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-drop-index-impl/index.html">MySqlAlterTableDropIndexImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-drop-index/index.html">MySqlAlterTableDropIndex</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1422793619%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableModifyColumnImpl" id="1422793619%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-modify-column-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Modify</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1422793619%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-modify-column-impl/index.html">MySqlAlterTableModifyColumnImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/AlterTableModifyColumnMixin///PointingToDeclaration/">AlterTableModifyColumnMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-modify-column/index.html">MySqlAlterTableModifyColumn</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="38051755%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableRenameIndexImpl" id="38051755%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-rename-index-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Rename</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="38051755%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-rename-index-impl/index.html">MySqlAlterTableRenameIndexImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-rename-index/index.html">MySqlAlterTableRenameIndex</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-855731128%2FClasslikes%2F727215285" anchor-label="MySqlAlterTableRulesImpl" id="-855731128%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-alter-table-rules-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Rules</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-855731128%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-alter-table-rules-impl/index.html">MySqlAlterTableRulesImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlAlterTableRulesImpl///PointingToDeclaration/">SqlAlterTableRulesImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-rules/index.html">MySqlAlterTableRules</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1735954850%2FClasslikes%2F727215285" anchor-label="MySqlApproximateNumericDataTypeImpl" id="-1735954850%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-approximate-numeric-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Approximate</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1735954850%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-approximate-numeric-data-type-impl/index.html">MySqlApproximateNumericDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-approximate-numeric-data-type/index.html">MySqlApproximateNumericDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1088417778%2FClasslikes%2F727215285" anchor-label="MySqlAssignmentImpl" id="-1088417778%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-assignment-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1088417778%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-assignment-impl/index.html">MySqlAssignmentImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-assignment/index.html">MySqlAssignment</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="546993552%2FClasslikes%2F727215285" anchor-label="MySqlAssignmentListImpl" id="546993552%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-assignment-list-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span>List</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="546993552%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-assignment-list-impl/index.html">MySqlAssignmentListImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-assignment-list/index.html">MySqlAssignmentList</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="125556291%2FClasslikes%2F727215285" anchor-label="MySqlAssignmentValueImpl" id="125556291%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-assignment-value-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span>Value</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="125556291%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-assignment-value-impl/index.html">MySqlAssignmentValueImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-assignment-value/index.html">MySqlAssignmentValue</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="425903528%2FClasslikes%2F727215285" anchor-label="MySqlBigIntDataTypeImpl" id="425903528%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-big-int-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Big</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="425903528%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-big-int-data-type-impl/index.html">MySqlBigIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-big-int-data-type/index.html">MySqlBigIntDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="657683382%2FClasslikes%2F727215285" anchor-label="MySqlBinaryDataTypeImpl" id="657683382%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-binary-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Binary</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="657683382%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-binary-data-type-impl/index.html">MySqlBinaryDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-binary-data-type/index.html">MySqlBinaryDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="556207995%2FClasslikes%2F727215285" anchor-label="MySqlBindParameterImpl" id="556207995%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-bind-parameter-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Bind</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="556207995%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-bind-parameter-impl/index.html">MySqlBindParameterImpl</a> : <a href="../../../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html">BindParameterMixin</a>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-bind-parameter/index.html">MySqlBindParameter</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1844455638%2FClasslikes%2F727215285" anchor-label="MySqlBitDataTypeImpl" id="1844455638%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-bit-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Bit</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1844455638%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-bit-data-type-impl/index.html">MySqlBitDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-bit-data-type/index.html">MySqlBitDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="838020181%2FClasslikes%2F727215285" anchor-label="MySqlBlobLiteralImpl" id="838020181%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-blob-literal-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Blob</span><wbr><span>Literal</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="838020181%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-blob-literal-impl/index.html">MySqlBlobLiteralImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlBlobLiteralImpl///PointingToDeclaration/">SqlBlobLiteralImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-blob-literal/index.html">MySqlBlobLiteral</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1415947068%2FClasslikes%2F727215285" anchor-label="MySqlCharacterTypeImpl" id="-1415947068%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-character-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Character</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1415947068%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-character-type-impl/index.html">MySqlCharacterTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-character-type/index.html">MySqlCharacterType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="755952456%2FClasslikes%2F727215285" anchor-label="MySqlColumnConstraintImpl" id="755952456%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-column-constraint-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Column</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="755952456%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-column-constraint-impl/index.html">MySqlColumnConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlColumnConstraintImpl///PointingToDeclaration/">SqlColumnConstraintImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-column-constraint/index.html">MySqlColumnConstraint</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-386503218%2FClasslikes%2F727215285" anchor-label="MySqlCommentTypeImpl" id="-386503218%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-comment-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Comment</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-386503218%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-comment-type-impl/index.html">MySqlCommentTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-comment-type/index.html">MySqlCommentType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="899766572%2FClasslikes%2F727215285" anchor-label="MySqlCompoundSelectStmtImpl" id="899766572%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-compound-select-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Compound</span><wbr><span>Select</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="899766572%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-compound-select-stmt-impl/index.html">MySqlCompoundSelectStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlCompoundSelectStmtImpl///PointingToDeclaration/">SqlCompoundSelectStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-compound-select-stmt/index.html">MySqlCompoundSelectStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2014835447%2FClasslikes%2F727215285" anchor-label="MySqlCreateIndexStmtImpl" id="-2014835447%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-create-index-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2014835447%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-create-index-stmt-impl/index.html">MySqlCreateIndexStmtImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/CreateIndexMixin///PointingToDeclaration/">CreateIndexMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-create-index-stmt/index.html">MySqlCreateIndexStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1367699057%2FClasslikes%2F727215285" anchor-label="MySqlCurrentTimestampWithOptionalNumberImpl" id="-1367699057%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-current-timestamp-with-optional-number-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Current</span><wbr><span>Timestamp</span><wbr><span>With</span><wbr><span>Optional</span><wbr><span>Number</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1367699057%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-current-timestamp-with-optional-number-impl/index.html">MySqlCurrentTimestampWithOptionalNumberImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-current-timestamp-with-optional-number/index.html">MySqlCurrentTimestampWithOptionalNumber</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-499092823%2FClasslikes%2F727215285" anchor-label="MySqlDateDataTypeImpl" id="-499092823%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-date-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Date</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-499092823%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-date-data-type-impl/index.html">MySqlDateDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-date-data-type/index.html">MySqlDateDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1927934295%2FClasslikes%2F727215285" anchor-label="MySqlDefaultConstraintImpl" id="-1927934295%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-default-constraint-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Default</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1927934295%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-default-constraint-impl/index.html">MySqlDefaultConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlDefaultConstraintImpl///PointingToDeclaration/">SqlDefaultConstraintImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-default-constraint/index.html">MySqlDefaultConstraint</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2010771136%2FClasslikes%2F727215285" anchor-label="MySqlDropTableStmtImpl" id="2010771136%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-drop-table-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Drop</span><wbr><span>Table</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2010771136%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-drop-table-stmt-impl/index.html">MySqlDropTableStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlDropTableStmtImpl///PointingToDeclaration/">SqlDropTableStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-drop-table-stmt/index.html">MySqlDropTableStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="246778060%2FClasslikes%2F727215285" anchor-label="MySqlEnumSetTypeImpl" id="246778060%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-enum-set-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Enum</span><wbr><span>Set</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="246778060%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-enum-set-type-impl/index.html">MySqlEnumSetTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-enum-set-type/index.html">MySqlEnumSetType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="611608979%2FClasslikes%2F727215285" anchor-label="MySqlExtensionExprImpl" id="611608979%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-extension-expr-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="611608979%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-extension-expr-impl/index.html">MySqlExtensionExprImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlExtensionExprImpl///PointingToDeclaration/">SqlExtensionExprImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-extension-expr/index.html">MySqlExtensionExpr</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1474383712%2FClasslikes%2F727215285" anchor-label="MySqlExtensionStmtImpl" id="-1474383712%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-extension-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1474383712%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-extension-stmt-impl/index.html">MySqlExtensionStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlExtensionStmtImpl///PointingToDeclaration/">SqlExtensionStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-extension-stmt/index.html">MySqlExtensionStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2131655397%2FClasslikes%2F727215285" anchor-label="MySqlFixedPointDataTypeImpl" id="-2131655397%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-fixed-point-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Fixed</span><wbr><span>Point</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2131655397%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-fixed-point-data-type-impl/index.html">MySqlFixedPointDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-fixed-point-data-type/index.html">MySqlFixedPointDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1690979657%2FClasslikes%2F727215285" anchor-label="MySqlIfExprImpl" id="1690979657%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-if-expr-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1690979657%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-if-expr-impl/index.html">MySqlIfExprImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-if-expr/index.html">MySqlIfExpr</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1119542514%2FClasslikes%2F727215285" anchor-label="MySqlIndexHintImpl" id="-1119542514%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-index-hint-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Hint</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1119542514%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-index-hint-impl/index.html">MySqlIndexHintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-hint/index.html">MySqlIndexHint</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1879177072%2FClasslikes%2F727215285" anchor-label="MySqlIndexHintListImpl" id="-1879177072%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-index-hint-list-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Hint</span><wbr><span>List</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1879177072%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-index-hint-list-impl/index.html">MySqlIndexHintListImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-hint-list/index.html">MySqlIndexHintList</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="489684055%2FClasslikes%2F727215285" anchor-label="MySqlIndexListImpl" id="489684055%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-index-list-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>List</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="489684055%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-index-list-impl/index.html">MySqlIndexListImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-list/index.html">MySqlIndexList</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1394412387%2FClasslikes%2F727215285" anchor-label="MySqlIndexVisibilityImpl" id="1394412387%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-index-visibility-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Visibility</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1394412387%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-index-visibility-impl/index.html">MySqlIndexVisibilityImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-visibility/index.html">MySqlIndexVisibility</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1201573178%2FClasslikes%2F727215285" anchor-label="MySqlInsertStmtImpl" id="1201573178%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-insert-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Insert</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1201573178%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-insert-stmt-impl/index.html">MySqlInsertStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlInsertStmtImpl///PointingToDeclaration/">SqlInsertStmtImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-insert-stmt/index.html">MySqlInsertStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1127836876%2FClasslikes%2F727215285" anchor-label="MySqlIntDataTypeImpl" id="-1127836876%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-int-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1127836876%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-int-data-type-impl/index.html">MySqlIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-int-data-type/index.html">MySqlIntDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1801429406%2FClasslikes%2F727215285" anchor-label="MySqlIntervalExpressionImpl" id="1801429406%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-interval-expression-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1801429406%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-interval-expression-impl/index.html">MySqlIntervalExpressionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-interval-expression/index.html">MySqlIntervalExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="957016562%2FClasslikes%2F727215285" anchor-label="MySqlIntervalUnitImpl" id="957016562%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-interval-unit-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span>Unit</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="957016562%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-interval-unit-impl/index.html">MySqlIntervalUnitImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-interval-unit/index.html">MySqlIntervalUnit</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1789108750%2FClasslikes%2F727215285" anchor-label="MySqlJsonBinaryOperatorImpl" id="1789108750%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-json-binary-operator-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Binary</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1789108750%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-json-binary-operator-impl/index.html">MySqlJsonBinaryOperatorImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-json-binary-operator/index.html">MySqlJsonBinaryOperator</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-855699025%2FClasslikes%2F727215285" anchor-label="MySqlJsonDataTypeImpl" id="-855699025%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-json-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-855699025%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-json-data-type-impl/index.html">MySqlJsonDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-json-data-type/index.html">MySqlJsonDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-407700197%2FClasslikes%2F727215285" anchor-label="MySqlJsonExpressionImpl" id="-407700197%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-json-expression-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-407700197%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-json-expression-impl/index.html">MySqlJsonExpressionImpl</a> : <span data-unresolved-link="app.cash.sqldelight.dialects.mysql.grammar.mixins/JsonExpressionMixin///PointingToDeclaration/">JsonExpressionMixin</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-json-expression/index.html">MySqlJsonExpression</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="344472905%2FClasslikes%2F727215285" anchor-label="MySqlMediumIntDataTypeImpl" id="344472905%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-medium-int-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Medium</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="344472905%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-medium-int-data-type-impl/index.html">MySqlMediumIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-medium-int-data-type/index.html">MySqlMediumIntDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1275589088%2FClasslikes%2F727215285" anchor-label="MySqlOverridesImpl" id="-1275589088%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-overrides-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Overrides</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1275589088%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-overrides-impl/index.html">MySqlOverridesImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-overrides/index.html">MySqlOverrides</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2002523699%2FClasslikes%2F727215285" anchor-label="MySqlPlacementClauseImpl" id="2002523699%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-placement-clause-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Placement</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2002523699%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-placement-clause-impl/index.html">MySqlPlacementClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-placement-clause/index.html">MySqlPlacementClause</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1797164898%2FClasslikes%2F727215285" anchor-label="MySqlQualifiedTableNameImpl" id="-1797164898%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-qualified-table-name-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Qualified</span><wbr><span>Table</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1797164898%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-qualified-table-name-impl/index.html">MySqlQualifiedTableNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlQualifiedTableNameImpl///PointingToDeclaration/">SqlQualifiedTableNameImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-qualified-table-name/index.html">MySqlQualifiedTableName</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1060746457%2FClasslikes%2F727215285" anchor-label="MySqlRowFormatClauseImpl" id="-1060746457%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-row-format-clause-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Row</span><wbr><span>Format</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1060746457%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-row-format-clause-impl/index.html">MySqlRowFormatClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-row-format-clause/index.html">MySqlRowFormatClause</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2073919441%2FClasslikes%2F727215285" anchor-label="MySqlSmallIntDataTypeImpl" id="-2073919441%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-small-int-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2073919441%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-small-int-data-type-impl/index.html">MySqlSmallIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-small-int-data-type/index.html">MySqlSmallIntDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1587640828%2FClasslikes%2F727215285" anchor-label="MySqlTableConstraintImpl" id="1587640828%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-table-constraint-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1587640828%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-table-constraint-impl/index.html">MySqlTableConstraintImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTableConstraintImpl///PointingToDeclaration/">SqlTableConstraintImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-table-constraint/index.html">MySqlTableConstraint</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="839897700%2FClasslikes%2F727215285" anchor-label="MySqlTableOptionImpl" id="839897700%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-table-option-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Option</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="839897700%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-table-option-impl/index.html">MySqlTableOptionImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTableOptionImpl///PointingToDeclaration/">SqlTableOptionImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-table-option/index.html">MySqlTableOption</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1462695182%2FClasslikes%2F727215285" anchor-label="MySqlTableOrSubqueryImpl" id="1462695182%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-table-or-subquery-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Or</span><wbr><span>Subquery</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1462695182%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-table-or-subquery-impl/index.html">MySqlTableOrSubqueryImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTableOrSubqueryImpl///PointingToDeclaration/">SqlTableOrSubqueryImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-table-or-subquery/index.html">MySqlTableOrSubquery</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-239460524%2FClasslikes%2F727215285" anchor-label="MySqlTinyIntDataTypeImpl" id="-239460524%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-tiny-int-data-type-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Tiny</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-239460524%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-tiny-int-data-type-impl/index.html">MySqlTinyIntDataTypeImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-tiny-int-data-type/index.html">MySqlTinyIntDataType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1533738579%2FClasslikes%2F727215285" anchor-label="MySqlTruncateStmtImpl" id="-1533738579%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-truncate-stmt-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1533738579%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-truncate-stmt-impl/index.html">MySqlTruncateStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-truncate-stmt/index.html">MySqlTruncateStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="216270710%2FClasslikes%2F727215285" anchor-label="MySqlTypeNameImpl" id="216270710%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-my-sql-type-name-impl/index.html"><span>My</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="216270710%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-my-sql-type-name-impl/index.html">MySqlTypeNameImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlTypeNameImpl///PointingToDeclaration/">SqlTypeNameImpl</span>, <a href="../app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-type-name/index.html">MySqlTypeName</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
