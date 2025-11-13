@@ -244,7 +244,8 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "enum_range" -> IntermediateType(TEXT)
     "enum_first" -> IntermediateType(TEXT)
     "enum_last" -> IntermediateType(TEXT)
-
+    "obj_description" -> IntermediateType(TEXT)
+    "to_regclass" -> IntermediateType(TEXT)
     else -> null
   }
 
