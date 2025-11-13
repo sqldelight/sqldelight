@@ -5,8 +5,8 @@
 Nothing yet!
 
 
-## [2.2.0] - 2025-11-13
-[2.2.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.0
+## [2.2.1] - 2025-11-13
+[2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
 
 ### Added
 - [PostgreSQL Dialect] Fix Postgres numeric/integer/biginteger type mapping (#5994 by [Griffio][griffio])
@@ -38,6 +38,13 @@ Nothing yet!
 - [Compiler] Fix async result type for transaction blocks returning Long (#5836 by [Griffio][griffio])
 - [Compiler] Optimize SQL parameter binding from O(n²) to O(n) complexity (#5898 by [Chen Frenkel][chenf7])
 - [SQLite Dialect] Fix Sqlite 3.18 missing functions (#5759 by [Griffio][griffio])
+
+
+## [2.2.0] - 2025-11-13
+[2.2.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.0
+
+Failed release with partially published artifacts. Use 2.2.1!
+
 
 ## [2.1.0] - 2025-05-16
 [2.1.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.1.0
