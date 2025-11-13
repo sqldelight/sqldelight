@@ -9,6 +9,7 @@
 - [SQLite Dialect] Add support for synthesized columns in FTS5 virtual tables (#5986 by @watbe)
 - [PostgreSQL Dialect] Add support for Postgres row level security (#6087 by @shellderp)
 - [PostgreSQL Dialect] Support Postgis Point type and related functions (#5602 by @vanniktech)
+- [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 
 ### Changed
 - [Compiler] Allow for underscores in package names. Before underscores have been sanitized which resulted in unexpected behaviours (#6027 by @BierDav)
