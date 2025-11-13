@@ -122,7 +122,7 @@ jobs:
     needs:
       - publish_archives
       - publish_plugin
-      - publish_npm_packages
+      #- publish_npm_packages
     steps:
       - uses: actions/checkout@v5
 
