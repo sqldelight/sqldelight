@@ -13,52 +13,27 @@ concurrency:
 
 jobs:
   publish_archives:
-    strategy:
-      matrix:
-        os: [macOS-14, windows-latest, ubuntu-latest]
-
-    runs-on: ${{matrix.os}}
+    runs-on: macos-latest
     if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v5
-      - name: Set up Java
-        uses: actions/setup-java@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
-      - name: Publish the macOS artifacts
-        if: matrix.os == 'macOS-14'
+      - run: ./gradlew publishAllPublicationsToMavenCentralRepository
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-parallel
-      - name: Publish the windows artifact
-        if: matrix.os == 'windows-latest'
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
-        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository --no-parallel
-      - name: Publish the linux artifact
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
-        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository --no-parallel
 
   publish_plugin:
     runs-on: ubuntu-latest
@@ -67,16 +42,14 @@ jobs:
       contents: read
     needs: publish_archives
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
           cd ~
           mkdir -p .gradle/ && touch .gradle/gradle.properties
-      - name: Set up Java
+      - uses: actions/setup-java@v5
         id: setup-java
-        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
@@ -84,8 +57,7 @@ jobs:
         run: |
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -102,16 +74,14 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
           cd ~
           mkdir -p .gradle/ && touch .gradle/gradle.properties
-      - name: Set up Java
+      - uses: actions/setup-java@v5
         id: setup-java
-        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
@@ -122,8 +92,7 @@ jobs:
         run: |
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
