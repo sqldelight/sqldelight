@@ -584,6 +584,43 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `fts5 virtual table with rank has correct types`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE VIRTUAL TABLE data USING fts5(
+      |  text
+      |);
+      |
+      |someSelect:
+      |SELECT rank, rowid
+      |FROM data
+      |WHERE data MATCH ?
+      |ORDER BY rank;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.String
+      |
+      |public data class SomeSelect(
+      |  public val rank: Double,
+      |  public val rowid: Integer,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `adapted column in foreign table exposed properly`() {
     val result = FixtureCompiler.compileSql(
       """

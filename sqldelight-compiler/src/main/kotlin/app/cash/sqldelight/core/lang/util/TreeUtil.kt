@@ -26,6 +26,7 @@ import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PreCreateTableInitialization
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TableFunctionRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
@@ -95,6 +96,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
 private fun synthesizedColumnType(columnName: String): IntermediateType {
   val dialectType = when (columnName) {
     "docid", "rowid", "oid", "_rowid_" -> INTEGER
+    "rank" -> REAL
     else -> TEXT
   }
 

@@ -8,6 +8,8 @@ Nothing yet!
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
 
+- [SQLite Dialect] Add support for synthesized rank column in virtual tables (#5986 by [watbe][watbe])
+
 ### Added
 - [PostgreSQL Dialect] Fix Postgres numeric/integer/biginteger type mapping (#5994 by [Griffio][griffio])
 - [Compiler] Improve the compiler error message to include source file location when a CAST is required (#5979 by [Griffio][griffio])
@@ -1254,3 +1256,4 @@ Initial release.
   [janbina]: https://github.com/janbina
   [DRSchlaubi]: https://github.com/DRSchlaubi
   [jonapoul]: https://github.com/jonapoul
+  [watbe]: https://github.com/watbe
