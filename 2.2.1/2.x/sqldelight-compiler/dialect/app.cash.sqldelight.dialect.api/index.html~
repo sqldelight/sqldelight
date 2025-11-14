@@ -1,0 +1,445 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>app.cash.sqldelight.dialect.api</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    SQLDelight
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">2.2.1
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":sqldelight-compiler:dialect/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":sqldelight-compiler:dialect/main" data-filter=":sqldelight-compiler:dialect/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    SQLDelight
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="dialect::app.cash.sqldelight.dialect.api////PointingToDeclaration//-1243068833">
+  <div class="breadcrumbs"><a href="../index.html">dialect</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.dialect.api</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="691323064%2FClasslikes%2F-1243068833" anchor-label="ConnectionManager" id="691323064%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-connection-manager/index.html"><span>Connection</span><wbr><span><span>Manager</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="691323064%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-connection-manager/index.html">ConnectionManager</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1067603257%2FClasslikes%2F-1243068833" anchor-label="DialectType" id="-1067603257%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-dialect-type/index.html"><span>Dialect</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1067603257%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-dialect-type/index.html">DialectType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1208762866%2FClasslikes%2F-1243068833" anchor-label="ExposableType" id="1208762866%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-exposable-type/index.html"><span>Exposable</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1208762866%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-exposable-type/index.html">ExposableType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-388199320%2FClasslikes%2F-1243068833" anchor-label="IntermediateType" id="-388199320%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-intermediate-type/index.html"><span>Intermediate</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-388199320%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-intermediate-type/index.html">IntermediateType</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>dialectType<span class="token operator">: </span><a href="-dialect-type/index.html">DialectType</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>javaType<span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/TypeName///PointingToDeclaration/">TypeName</span><span class="token operator"> = </span>dialectType.javaType<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>column<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlColumnDef///PointingToDeclaration/">SqlColumnDef</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"value"</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>bindArg<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlBindExpr///PointingToDeclaration/">SqlBindExpr</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>assumedCompatibleTypes<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="-intermediate-type/index.html">IntermediateType</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>simplified<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Internal representation for a column type, which has dialect data affinity as well as JVM class type.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="848571885%2FClasslikes%2F-1243068833" anchor-label="MigrationSquasher" id="848571885%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-migration-squasher/index.html"><span>Migration</span><wbr><span><span>Squasher</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="848571885%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-migration-squasher/index.html">MigrationSquasher</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2043066925%2FClasslikes%2F-1243068833" anchor-label="PragmaWithResults" id="-2043066925%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-pragma-with-results/index.html"><span>Pragma</span><wbr><span>With</span><wbr><span><span>Results</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2043066925%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-pragma-with-results/index.html">PragmaWithResults</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pragmaStmt<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlPragmaStmt///PointingToDeclaration/">SqlPragmaStmt</span></span></span><span class="token punctuation">)</span> : <a href="-query-with-results/index.html">QueryWithResults</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1898434388%2FClasslikes%2F-1243068833" anchor-label="PreCreateTableInitialization" id="-1898434388%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-pre-create-table-initialization/index.html"><span>Pre</span><wbr><span>Create</span><wbr><span>Table</span><wbr><span><span>Initialization</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1898434388%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-pre-create-table-initialization/index.html">PreCreateTableInitialization</a> : <span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></div><div class="brief "><p class="paragraph">A Dialect implements this interface on statement Mixin classes that must be executed before <code class="lang-kotlin">CREATE TABLE</code> statements in <code class="lang-kotlin">.sq</code> files and where a schema is not derived from <code class="lang-kotlin">.sqm</code> files. Only used in <code class="lang-kotlin">app.cash.sqldelight.core.lang.util.TreeUtilKt.forInitializationStatements</code> for use by <code class="lang-kotlin">Schema.create</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2090018266%2FClasslikes%2F-1243068833" anchor-label="PrimitiveType" id="-2090018266%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-primitive-type/index.html"><span>Primitive</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2090018266%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-primitive-type/index.html">PrimitiveType</a> : <a href="-dialect-type/index.html">DialectType</a>, <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-primitive-type/index.html">PrimitiveType</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Types which are retrieved the same way for all dialects.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1112683379%2FClasslikes%2F-1243068833" anchor-label="QueryWithResults" id="1112683379%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-query-with-results/index.html"><span>Query</span><wbr><span>With</span><wbr><span><span>Results</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1112683379%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-query-with-results/index.html">QueryWithResults</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1785717451%2FClasslikes%2F-1243068833" anchor-label="ReturningQueryable" id="1785717451%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-returning-queryable/index.html"><span>Returning</span><wbr><span><span>Queryable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1785717451%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-returning-queryable/index.html">ReturningQueryable</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">var </span>statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>select<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/QueryElement///PointingToDeclaration/">QueryElement</span><span class="token punctuation">, </span></span><span class="parameter ">tableName<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableName///PointingToDeclaration/">SqlTableName</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <a href="-query-with-results/index.html">QueryWithResults</a></div><div class="brief "><p class="paragraph">Query deriving from the <code class="lang-kotlin">RETURNING</code> clause of an expression.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-29118086%2FClasslikes%2F-1243068833" anchor-label="RuntimeTypes" id="-29118086%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-runtime-types/index.html"><span>Runtime</span><wbr><span><span>Types</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-29118086%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-runtime-types/index.html">RuntimeTypes</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>cursorType<span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/ClassName///PointingToDeclaration/">ClassName</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>preparedStatementType<span class="token operator">: </span><span data-unresolved-link="com.squareup.kotlinpoet/ClassName///PointingToDeclaration/">ClassName</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Types that can be specified by each dialect for different driver components</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1347708799%2FClasslikes%2F-1243068833" anchor-label="SelectQueryable" id="-1347708799%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-select-queryable/index.html"><span>Select</span><wbr><span><span>Queryable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1347708799%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-select-queryable/index.html">SelectQueryable</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>select<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompoundSelectStmt///PointingToDeclaration/">SqlCompoundSelectStmt</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>statement<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span><span class="token operator"> = </span>select</span></span><span class="token punctuation">)</span> : <a href="-query-with-results/index.html">QueryWithResults</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2034362104%2FClasslikes%2F-1243068833" anchor-label="SqlDelightDialect" id="-2034362104%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sql-delight-dialect/index.html"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Dialect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2034362104%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sql-delight-dialect/index.html">SqlDelightDialect</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-649948312%2FClasslikes%2F-1243068833" anchor-label="SqlDelightModule" id="-649948312%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sql-delight-module/index.html"><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-649948312%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sql-delight-module/index.html">SqlDelightModule</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-710579507%2FClasslikes%2F-1243068833" anchor-label="SqlDelightPragmaName" id="-710579507%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sql-delight-pragma-name/index.html"><span>Sql</span><wbr><span>Delight</span><wbr><span>Pragma</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-710579507%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-sql-delight-pragma-name/index.html">SqlDelightPragmaName</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">node<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/ASTNode///PointingToDeclaration/">ASTNode</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlPragmaNameImpl///PointingToDeclaration/">SqlPragmaNameImpl</span>, <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/QueryElement///PointingToDeclaration/">QueryElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1297531997%2FClasslikes%2F-1243068833" anchor-label="SqlGeneratorStrategy" id="-1297531997%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sql-generator-strategy/index.html"><span>Sql</span><wbr><span>Generator</span><wbr><span><span>Strategy</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1297531997%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sql-generator-strategy/index.html">SqlGeneratorStrategy</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="892655629%2FClasslikes%2F-1243068833" anchor-label="TableFunctionRowType" id="892655629%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-table-function-row-type/index.html"><span>Table</span><wbr><span>Function</span><wbr><span>Row</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="892655629%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-table-function-row-type/index.html">TableFunctionRowType</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAnnotatedElement///PointingToDeclaration/">SqlAnnotatedElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1617994875%2FClasslikes%2F-1243068833" anchor-label="TypeResolver" id="1617994875%2FClasslikes%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-type-resolver/index.html"><span>Type</span><wbr><span><span>Resolver</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1617994875%2FClasslikes%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-type-resolver/index.html">TypeResolver</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="EXTENSION_FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1528326307%2FFunctions%2F-1243068833" anchor-label="alteredTable" id="1528326307%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="altered-table.html"><span>altered</span><wbr><span><span>Table</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1528326307%2FFunctions%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlAlterTableRules///PointingToDeclaration/">SqlAlterTableRules</span><span class="token punctuation">.</span><a href="altered-table.html"><span class="token function">alteredTable</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core/SqlFileBase///PointingToDeclaration/">SqlFileBase</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCreateTableStmt///PointingToDeclaration/">SqlCreateTableStmt</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1526229250%2FFunctions%2F-1243068833" anchor-label="encapsulatingType" id="1526229250%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encapsulating-type.html"><span>encapsulating</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1526229250%2FFunctions%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-type-resolver/index.html">TypeResolver</a><span class="token punctuation">.</span><a href="encapsulating-type.html"><span class="token function">encapsulatingType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">exprList<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>typeOrder<span class="token operator">: </span><a href="-dialect-type/index.html">DialectType</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-intermediate-type/index.html">IntermediateType</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="-type-resolver/index.html">TypeResolver</a><span class="token punctuation">.</span><a href="encapsulating-type.html"><span class="token function">encapsulatingType</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">exprList<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">nullability<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>typeOrder<span class="token operator">: </span><a href="-dialect-type/index.html">DialectType</a><span class="token punctuation">, </span></span><span class="parameter ">preferKotlinType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1510368495%2FFunctions%2F-1243068833" anchor-label="encapsulatingTypePreferringKotlin" id="-1510368495%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encapsulating-type-preferring-kotlin.html"><span>encapsulating</span><wbr><span>Type</span><wbr><span>Preferring</span><wbr><span><span>Kotlin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1510368495%2FFunctions%2F-1243068833"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-type-resolver/index.html">TypeResolver</a><span class="token punctuation">.</span><a href="encapsulating-type-preferring-kotlin.html"><span class="token function">encapsulatingTypePreferringKotlin</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">exprList<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>typeOrder<span class="token operator">: </span><a href="-dialect-type/index.html">DialectType</a><span class="token punctuation">, </span></span><span class="parameter ">nullability<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-intermediate-type/index.html">IntermediateType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1766 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MySqlTypes</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.2.1/images/icon-cashapp.png"></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    SQLDelight
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">2.2.1
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":dialects:mysql/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":dialects:mysql/main" data-filter=":dialects:mysql/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    SQLDelight
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypes///PointingToDeclaration//727215285">
+  <div class="breadcrumbs"><a href="../../index.html">mysql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.mysql.grammar.psi</a><span class="delimiter">/</span><span class="current">MySqlTypes</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>My</span><wbr><span>Sql</span><wbr><span><span>Types</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">MySqlTypes</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="604890234%2FClasslikes%2F727215285" anchor-label="Factory" id="604890234%2FClasslikes%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-factory/index.html"><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="604890234%2FClasslikes%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-factory/index.html">Factory</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1503183792%2FProperties%2F727215285" anchor-label="ADD" id="-1503183792%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-d-d.html"><span><span>ADD</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1503183792%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-d-d.html">ADD</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="722060917%2FProperties%2F727215285" anchor-label="AFTER" id="722060917%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-f-t-e-r.html"><span><span>AFTER</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="722060917%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-f-t-e-r.html">AFTER</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="585703803%2FProperties%2F727215285" anchor-label="ALTER" id="585703803%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r.html"><span><span>ALTER</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="585703803%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r.html">ALTER</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="308359643%2FProperties%2F727215285" anchor-label="ALTER_TABLE_ADD_COLUMN" id="308359643%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ADD_</span><wbr><span>COLUMN</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="308359643%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-l-u-m-n.html">ALTER_TABLE_ADD_COLUMN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="869700404%2FProperties%2F727215285" anchor-label="ALTER_TABLE_ADD_CONSTRAINT" id="869700404%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-n-s-t-r-a-i-n-t.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ADD_</span><wbr><span>CONSTRAINT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="869700404%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-c-o-n-s-t-r-a-i-n-t.html">ALTER_TABLE_ADD_CONSTRAINT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1581854697%2FProperties%2F727215285" anchor-label="ALTER_TABLE_ADD_INDEX" id="-1581854697%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ADD_</span><wbr><span>INDEX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1581854697%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-a-d-d_-i-n-d-e-x.html">ALTER_TABLE_ADD_INDEX</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1359329922%2FProperties%2F727215285" anchor-label="ALTER_TABLE_ALTER_INDEX" id="1359329922%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-a-l-t-e-r_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>ALTER_</span><wbr><span>INDEX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1359329922%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-a-l-t-e-r_-i-n-d-e-x.html">ALTER_TABLE_ALTER_INDEX</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="946723558%2FProperties%2F727215285" anchor-label="ALTER_TABLE_CHANGE_COLUMN" id="946723558%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-c-h-a-n-g-e_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>CHANGE_</span><wbr><span>COLUMN</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="946723558%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-c-h-a-n-g-e_-c-o-l-u-m-n.html">ALTER_TABLE_CHANGE_COLUMN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="921963435%2FProperties%2F727215285" anchor-label="ALTER_TABLE_CONVERT_CHARACTER_SET" id="921963435%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-c-o-n-v-e-r-t_-c-h-a-r-a-c-t-e-r_-s-e-t.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>CONVERT_</span><wbr><span>CHARACTER_</span><wbr><span>SET</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="921963435%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-c-o-n-v-e-r-t_-c-h-a-r-a-c-t-e-r_-s-e-t.html">ALTER_TABLE_CONVERT_CHARACTER_SET</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1439988133%2FProperties%2F727215285" anchor-label="ALTER_TABLE_DROP_COLUMN" id="1439988133%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>DROP_</span><wbr><span>COLUMN</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1439988133%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-c-o-l-u-m-n.html">ALTER_TABLE_DROP_COLUMN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-298424563%2FProperties%2F727215285" anchor-label="ALTER_TABLE_DROP_INDEX" id="-298424563%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>DROP_</span><wbr><span>INDEX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-298424563%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-d-r-o-p_-i-n-d-e-x.html">ALTER_TABLE_DROP_INDEX</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2122606608%2FProperties%2F727215285" anchor-label="ALTER_TABLE_MODIFY_COLUMN" id="-2122606608%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-m-o-d-i-f-y_-c-o-l-u-m-n.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>MODIFY_</span><wbr><span>COLUMN</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2122606608%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-m-o-d-i-f-y_-c-o-l-u-m-n.html">ALTER_TABLE_MODIFY_COLUMN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1480178594%2FProperties%2F727215285" anchor-label="ALTER_TABLE_RENAME_INDEX" id="-1480178594%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-r-e-n-a-m-e_-i-n-d-e-x.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>RENAME_</span><wbr><span>INDEX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1480178594%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-r-e-n-a-m-e_-i-n-d-e-x.html">ALTER_TABLE_RENAME_INDEX</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1397324012%2FProperties%2F727215285" anchor-label="ALTER_TABLE_RULES" id="-1397324012%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-l-t-e-r_-t-a-b-l-e_-r-u-l-e-s.html"><span>ALTER_</span><wbr><span>TABLE_</span><wbr><span>RULES</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1397324012%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-l-t-e-r_-t-a-b-l-e_-r-u-l-e-s.html">ALTER_TABLE_RULES</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-243299937%2FProperties%2F727215285" anchor-label="APPROXIMATE_NUMERIC_DATA_TYPE" id="-243299937%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-p-p-r-o-x-i-m-a-t-e_-n-u-m-e-r-i-c_-d-a-t-a_-t-y-p-e.html"><span>APPROXIMATE_</span><wbr><span>NUMERIC_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-243299937%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-p-p-r-o-x-i-m-a-t-e_-n-u-m-e-r-i-c_-d-a-t-a_-t-y-p-e.html">APPROXIMATE_NUMERIC_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="274765655%2FProperties%2F727215285" anchor-label="AS" id="274765655%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-s.html"><span><span>AS</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="274765655%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-s.html">AS</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="5104768%2FProperties%2F727215285" anchor-label="ASC" id="5104768%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-s-c.html"><span><span>ASC</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="5104768%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-s-c.html">ASC</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="975795484%2FProperties%2F727215285" anchor-label="ASSIGNMENT" id="975795484%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-s-s-i-g-n-m-e-n-t.html"><span><span>ASSIGNMENT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="975795484%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-s-s-i-g-n-m-e-n-t.html">ASSIGNMENT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1155847455%2FProperties%2F727215285" anchor-label="ASSIGNMENT_LIST" id="-1155847455%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-s-s-i-g-n-m-e-n-t_-l-i-s-t.html"><span>ASSIGNMENT_</span><wbr><span>LIST</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1155847455%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-s-s-i-g-n-m-e-n-t_-l-i-s-t.html">ASSIGNMENT_LIST</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="275895754%2FProperties%2F727215285" anchor-label="ASSIGNMENT_VALUE" id="275895754%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-s-s-i-g-n-m-e-n-t_-v-a-l-u-e.html"><span>ASSIGNMENT_</span><wbr><span>VALUE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="275895754%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-s-s-i-g-n-m-e-n-t_-v-a-l-u-e.html">ASSIGNMENT_VALUE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1868243345%2FProperties%2F727215285" anchor-label="BIG_INT_DATA_TYPE" id="1868243345%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-i-g_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>BIG_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1868243345%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-i-g_-i-n-t_-d-a-t-a_-t-y-p-e.html">BIG_INT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1864638328%2FProperties%2F727215285" anchor-label="BINARY_DATA_TYPE" id="1864638328%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-i-n-a-r-y_-d-a-t-a_-t-y-p-e.html"><span>BINARY_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1864638328%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-i-n-a-r-y_-d-a-t-a_-t-y-p-e.html">BINARY_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1001814750%2FProperties%2F727215285" anchor-label="BIND_PARAMETER" id="-1001814750%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-i-n-d_-p-a-r-a-m-e-t-e-r.html"><span>BIND_</span><wbr><span>PARAMETER</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1001814750%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-i-n-d_-p-a-r-a-m-e-t-e-r.html">BIND_PARAMETER</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="438160756%2FProperties%2F727215285" anchor-label="BIT_DATA_TYPE" id="438160756%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-i-t_-d-a-t-a_-t-y-p-e.html"><span>BIT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="438160756%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-i-t_-d-a-t-a_-t-y-p-e.html">BIT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1118006012%2FProperties%2F727215285" anchor-label="BLOB_LITERAL" id="1118006012%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-l-o-b_-l-i-t-e-r-a-l.html"><span>BLOB_</span><wbr><span>LITERAL</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1118006012%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-l-o-b_-l-i-t-e-r-a-l.html">BLOB_LITERAL</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1422498514%2FProperties%2F727215285" anchor-label="BY" id="1422498514%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-y.html"><span><span>BY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1422498514%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-b-y.html">BY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1170021223%2FProperties%2F727215285" anchor-label="CHARACTER_TYPE" id="-1170021223%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-h-a-r-a-c-t-e-r_-t-y-p-e.html"><span>CHARACTER_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1170021223%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-h-a-r-a-c-t-e-r_-t-y-p-e.html">CHARACTER_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-542060949%2FProperties%2F727215285" anchor-label="COLLATE" id="-542060949%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-l-l-a-t-e.html"><span><span>COLLATE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-542060949%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-l-l-a-t-e.html">COLLATE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="587252403%2FProperties%2F727215285" anchor-label="COLUMN" id="587252403%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-l-u-m-n.html"><span><span>COLUMN</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="587252403%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-l-u-m-n.html">COLUMN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1813609227%2FProperties%2F727215285" anchor-label="COLUMN_CONSTRAINT" id="1813609227%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-l-u-m-n_-c-o-n-s-t-r-a-i-n-t.html"><span>COLUMN_</span><wbr><span>CONSTRAINT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1813609227%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-l-u-m-n_-c-o-n-s-t-r-a-i-n-t.html">COLUMN_CONSTRAINT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1248529508%2FProperties%2F727215285" anchor-label="COMMA" id="-1248529508%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-m-m-a.html"><span><span>COMMA</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1248529508%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-m-m-a.html">COMMA</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="197952591%2FProperties%2F727215285" anchor-label="COMMENT_TYPE" id="197952591%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-m-m-e-n-t_-t-y-p-e.html"><span>COMMENT_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="197952591%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-m-m-e-n-t_-t-y-p-e.html">COMMENT_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1842486382%2FProperties%2F727215285" anchor-label="COMPOUND_SELECT_STMT" id="-1842486382%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-m-p-o-u-n-d_-s-e-l-e-c-t_-s-t-m-t.html"><span>COMPOUND_</span><wbr><span>SELECT_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1842486382%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-m-p-o-u-n-d_-s-e-l-e-c-t_-s-t-m-t.html">COMPOUND_SELECT_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-703465460%2FProperties%2F727215285" anchor-label="CONSTRAINT" id="-703465460%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-n-s-t-r-a-i-n-t.html"><span><span>CONSTRAINT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-703465460%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-n-s-t-r-a-i-n-t.html">CONSTRAINT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1273594931%2FProperties%2F727215285" anchor-label="CREATE" id="-1273594931%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-r-e-a-t-e.html"><span><span>CREATE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1273594931%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-r-e-a-t-e.html">CREATE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="654637913%2FProperties%2F727215285" anchor-label="CREATE_INDEX_STMT" id="654637913%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-r-e-a-t-e_-i-n-d-e-x_-s-t-m-t.html"><span>CREATE_</span><wbr><span>INDEX_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="654637913%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-r-e-a-t-e_-i-n-d-e-x_-s-t-m-t.html">CREATE_INDEX_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="972217121%2FProperties%2F727215285" anchor-label="CURRENT_TIMESTAMP" id="972217121%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p.html"><span>CURRENT_</span><wbr><span>TIMESTAMP</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="972217121%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p.html">CURRENT_TIMESTAMP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-177154005%2FProperties%2F727215285" anchor-label="CURRENT_TIMESTAMP_WITH_OPTIONAL_NUMBER" id="-177154005%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p_-w-i-t-h_-o-p-t-i-o-n-a-l_-n-u-m-b-e-r.html"><span>CURRENT_</span><wbr><span>TIMESTAMP_</span><wbr><span>WITH_</span><wbr><span>OPTIONAL_</span><wbr><span>NUMBER</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-177154005%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-u-r-r-e-n-t_-t-i-m-e-s-t-a-m-p_-w-i-t-h_-o-p-t-i-o-n-a-l_-n-u-m-b-e-r.html">CURRENT_TIMESTAMP_WITH_OPTIONAL_NUMBER</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-215866453%2FProperties%2F727215285" anchor-label="DATE_DATA_TYPE" id="-215866453%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-a-t-e_-d-a-t-a_-t-y-p-e.html"><span>DATE_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-215866453%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-a-t-e_-d-a-t-a_-t-y-p-e.html">DATE_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-304721744%2FProperties%2F727215285" anchor-label="DEFAULT" id="-304721744%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-e-f-a-u-l-t.html"><span><span>DEFAULT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-304721744%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-e-f-a-u-l-t.html">DEFAULT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1825193198%2FProperties%2F727215285" anchor-label="DEFAULT_CONSTRAINT" id="1825193198%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-e-f-a-u-l-t_-c-o-n-s-t-r-a-i-n-t.html"><span>DEFAULT_</span><wbr><span>CONSTRAINT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1825193198%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-e-f-a-u-l-t_-c-o-n-s-t-r-a-i-n-t.html">DEFAULT_CONSTRAINT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-207843624%2FProperties%2F727215285" anchor-label="DESC" id="-207843624%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-e-s-c.html"><span><span>DESC</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-207843624%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-e-s-c.html">DESC</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1465450564%2FProperties%2F727215285" anchor-label="DIGIT" id="1465450564%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-i-g-i-t.html"><span><span>DIGIT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1465450564%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-i-g-i-t.html">DIGIT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="216743080%2FProperties%2F727215285" anchor-label="DOT" id="216743080%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-o-t.html"><span><span>DOT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="216743080%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-o-t.html">DOT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1627317306%2FProperties%2F727215285" anchor-label="DROP" id="1627317306%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-r-o-p.html"><span><span>DROP</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1627317306%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-r-o-p.html">DROP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-872567096%2FProperties%2F727215285" anchor-label="DROP_TABLE_STMT" id="-872567096%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-r-o-p_-t-a-b-l-e_-s-t-m-t.html"><span>DROP_</span><wbr><span>TABLE_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-872567096%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-r-o-p_-t-a-b-l-e_-s-t-m-t.html">DROP_TABLE_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1219065924%2FProperties%2F727215285" anchor-label="ENUM_SET_TYPE" id="-1219065924%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-n-u-m_-s-e-t_-t-y-p-e.html"><span>ENUM_</span><wbr><span>SET_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1219065924%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-n-u-m_-s-e-t_-t-y-p-e.html">ENUM_SET_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-235785187%2FProperties%2F727215285" anchor-label="EQ" id="-235785187%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-q.html"><span><span>EQ</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-235785187%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-q.html">EQ</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1882672019%2FProperties%2F727215285" anchor-label="EXISTS" id="-1882672019%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-x-i-s-t-s.html"><span><span>EXISTS</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1882672019%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-x-i-s-t-s.html">EXISTS</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1278183636%2FProperties%2F727215285" anchor-label="EXTENSION_EXPR" id="1278183636%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-x-t-e-n-s-i-o-n_-e-x-p-r.html"><span>EXTENSION_</span><wbr><span>EXPR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1278183636%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-x-t-e-n-s-i-o-n_-e-x-p-r.html">EXTENSION_EXPR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="587816545%2FProperties%2F727215285" anchor-label="EXTENSION_STMT" id="587816545%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-x-t-e-n-s-i-o-n_-s-t-m-t.html"><span>EXTENSION_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="587816545%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-e-x-t-e-n-s-i-o-n_-s-t-m-t.html">EXTENSION_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1074140516%2FProperties%2F727215285" anchor-label="FIXED_POINT_DATA_TYPE" id="-1074140516%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-i-x-e-d_-p-o-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>FIXED_</span><wbr><span>POINT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1074140516%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-i-x-e-d_-p-o-i-n-t_-d-a-t-a_-t-y-p-e.html">FIXED_POINT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-354769624%2FProperties%2F727215285" anchor-label="FOR" id="-354769624%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-o-r.html"><span><span>FOR</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-354769624%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-o-r.html">FOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="153919869%2FProperties%2F727215285" anchor-label="FOREIGN" id="153919869%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-o-r-e-i-g-n.html"><span><span>FOREIGN</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="153919869%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-o-r-e-i-g-n.html">FOREIGN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-65158350%2FProperties%2F727215285" anchor-label="GROUP" id="-65158350%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-r-o-u-p.html"><span><span>GROUP</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-65158350%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-g-r-o-u-p.html">GROUP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1025514292%2FProperties%2F727215285" anchor-label="IF" id="-1025514292%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-f.html"><span><span>IF</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1025514292%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-f.html">IF</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="366043066%2FProperties%2F727215285" anchor-label="IF_EXPR" id="366043066%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-f_-e-x-p-r.html"><span>IF_</span><wbr><span>EXPR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="366043066%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-f_-e-x-p-r.html">IF_EXPR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1455102903%2FProperties%2F727215285" anchor-label="IGNORE" id="1455102903%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-g-n-o-r-e.html"><span><span>IGNORE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1455102903%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-g-n-o-r-e.html">IGNORE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-777355836%2FProperties%2F727215285" anchor-label="IN" id="-777355836%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n.html"><span><span>IN</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-777355836%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n.html">IN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2029372479%2FProperties%2F727215285" anchor-label="INDEX" id="2029372479%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-d-e-x.html"><span><span>INDEX</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2029372479%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-d-e-x.html">INDEX</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="579662805%2FProperties%2F727215285" anchor-label="INDEX_HINT" id="579662805%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-d-e-x_-h-i-n-t.html"><span>INDEX_</span><wbr><span>HINT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="579662805%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-d-e-x_-h-i-n-t.html">INDEX_HINT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-689506360%2FProperties%2F727215285" anchor-label="INDEX_HINT_LIST" id="-689506360%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-d-e-x_-h-i-n-t_-l-i-s-t.html"><span>INDEX_</span><wbr><span>HINT_</span><wbr><span>LIST</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-689506360%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-d-e-x_-h-i-n-t_-l-i-s-t.html">INDEX_HINT_LIST</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-429794914%2FProperties%2F727215285" anchor-label="INDEX_LIST" id="-429794914%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-d-e-x_-l-i-s-t.html"><span>INDEX_</span><wbr><span>LIST</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-429794914%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-d-e-x_-l-i-s-t.html">INDEX_LIST</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="564122218%2FProperties%2F727215285" anchor-label="INDEX_VISIBILITY" id="564122218%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-d-e-x_-v-i-s-i-b-i-l-i-t-y.html"><span>INDEX_</span><wbr><span>VISIBILITY</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="564122218%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-d-e-x_-v-i-s-i-b-i-l-i-t-y.html">INDEX_VISIBILITY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-577447760%2FProperties%2F727215285" anchor-label="INSERT" id="-577447760%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-s-e-r-t.html"><span><span>INSERT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-577447760%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-s-e-r-t.html">INSERT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1859711005%2FProperties%2F727215285" anchor-label="INSERT_STMT" id="-1859711005%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-s-e-r-t_-s-t-m-t.html"><span>INSERT_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1859711005%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-s-e-r-t_-s-t-m-t.html">INSERT_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="631715666%2FProperties%2F727215285" anchor-label="INT_DATA_TYPE" id="631715666%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="631715666%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-t_-d-a-t-a_-t-y-p-e.html">INT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="906791839%2FProperties%2F727215285" anchor-label="INTERVAL_EXPRESSION" id="906791839%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-t-e-r-v-a-l_-e-x-p-r-e-s-s-i-o-n.html"><span>INTERVAL_</span><wbr><span>EXPRESSION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="906791839%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-t-e-r-v-a-l_-e-x-p-r-e-s-s-i-o-n.html">INTERVAL_EXPRESSION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2091401805%2FProperties%2F727215285" anchor-label="INTERVAL_UNIT" id="-2091401805%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-t-e-r-v-a-l_-u-n-i-t.html"><span>INTERVAL_</span><wbr><span>UNIT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2091401805%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-t-e-r-v-a-l_-u-n-i-t.html">INTERVAL_UNIT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1996079639%2FProperties%2F727215285" anchor-label="INTO" id="-1996079639%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-n-t-o.html"><span><span>INTO</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1996079639%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-n-t-o.html">INTO</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="718413407%2FProperties%2F727215285" anchor-label="JOIN" id="718413407%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-o-i-n.html"><span><span>JOIN</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="718413407%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-o-i-n.html">JOIN</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1322877730%2FProperties%2F727215285" anchor-label="JSON_BINARY_OPERATOR" id="-1322877730%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-s-o-n_-b-i-n-a-r-y_-o-p-e-r-a-t-o-r.html"><span>JSON_</span><wbr><span>BINARY_</span><wbr><span>OPERATOR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1322877730%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n_-b-i-n-a-r-y_-o-p-e-r-a-t-o-r.html">JSON_BINARY_OPERATOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="887671857%2FProperties%2F727215285" anchor-label="JSON_DATA_TYPE" id="887671857%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-s-o-n_-d-a-t-a_-t-y-p-e.html"><span>JSON_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="887671857%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n_-d-a-t-a_-t-y-p-e.html">JSON_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="149856322%2FProperties%2F727215285" anchor-label="JSON_EXPRESSION" id="149856322%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-j-s-o-n_-e-x-p-r-e-s-s-i-o-n.html"><span>JSON_</span><wbr><span>EXPRESSION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="149856322%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-j-s-o-n_-e-x-p-r-e-s-s-i-o-n.html">JSON_EXPRESSION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1857448018%2FProperties%2F727215285" anchor-label="KEY" id="1857448018%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-k-e-y.html"><span><span>KEY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1857448018%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-k-e-y.html">KEY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="27560310%2FProperties%2F727215285" anchor-label="LIMIT" id="27560310%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-l-i-m-i-t.html"><span><span>LIMIT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="27560310%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-l-i-m-i-t.html">LIMIT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="536840574%2FProperties%2F727215285" anchor-label="LOCK" id="536840574%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-l-o-c-k.html"><span><span>LOCK</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="536840574%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-l-o-c-k.html">LOCK</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2125441467%2FProperties%2F727215285" anchor-label="LP" id="-2125441467%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-l-p.html"><span><span>LP</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2125441467%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-l-p.html">LP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="837897972%2FProperties%2F727215285" anchor-label="MEDIUM_INT_DATA_TYPE" id="837897972%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-e-d-i-u-m_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>MEDIUM_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="837897972%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-m-e-d-i-u-m_-i-n-t_-d-a-t-a_-t-y-p-e.html">MEDIUM_INT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1964344926%2FProperties%2F727215285" anchor-label="NOT" id="1964344926%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-n-o-t.html"><span><span>NOT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1964344926%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-n-o-t.html">NOT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="490236066%2FProperties%2F727215285" anchor-label="NULL" id="490236066%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-n-u-l-l.html"><span><span>NULL</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="490236066%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-n-u-l-l.html">NULL</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2129010710%2FProperties%2F727215285" anchor-label="OFFSET" id="2129010710%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-o-f-f-s-e-t.html"><span><span>OFFSET</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2129010710%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-o-f-f-s-e-t.html">OFFSET</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="697360970%2FProperties%2F727215285" anchor-label="ON" id="697360970%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-o-n.html"><span><span>ON</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="697360970%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-o-n.html">ON</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="388589891%2FProperties%2F727215285" anchor-label="ORDER" id="388589891%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-o-r-d-e-r.html"><span><span>ORDER</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="388589891%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-o-r-d-e-r.html">ORDER</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1092494986%2FProperties%2F727215285" anchor-label="OVERRIDES" id="1092494986%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-o-v-e-r-r-i-d-e-s.html"><span><span>OVERRIDES</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1092494986%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-o-v-e-r-r-i-d-e-s.html">OVERRIDES</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1466853952%2FProperties%2F727215285" anchor-label="PLACEMENT_CLAUSE" id="1466853952%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-l-a-c-e-m-e-n-t_-c-l-a-u-s-e.html"><span>PLACEMENT_</span><wbr><span>CLAUSE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1466853952%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-a-c-e-m-e-n-t_-c-l-a-u-s-e.html">PLACEMENT_CLAUSE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-494885873%2FProperties%2F727215285" anchor-label="PRIMARY" id="-494885873%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-r-i-m-a-r-y.html"><span><span>PRIMARY</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-494885873%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-r-i-m-a-r-y.html">PRIMARY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-587582198%2FProperties%2F727215285" anchor-label="QUALIFIED_TABLE_NAME" id="-587582198%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-q-u-a-l-i-f-i-e-d_-t-a-b-l-e_-n-a-m-e.html"><span>QUALIFIED_</span><wbr><span>TABLE_</span><wbr><span>NAME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-587582198%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-q-u-a-l-i-f-i-e-d_-t-a-b-l-e_-n-a-m-e.html">QUALIFIED_TABLE_NAME</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-947055669%2FProperties%2F727215285" anchor-label="RENAME" id="-947055669%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-n-a-m-e.html"><span><span>RENAME</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-947055669%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-e-n-a-m-e.html">RENAME</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1035815837%2FProperties%2F727215285" anchor-label="REPLACE" id="1035815837%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-p-l-a-c-e.html"><span><span>REPLACE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1035815837%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-e-p-l-a-c-e.html">REPLACE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-574951937%2FProperties%2F727215285" anchor-label="ROW_FORMAT_CLAUSE" id="-574951937%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-o-w_-f-o-r-m-a-t_-c-l-a-u-s-e.html"><span>ROW_</span><wbr><span>FORMAT_</span><wbr><span>CLAUSE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-574951937%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-o-w_-f-o-r-m-a-t_-c-l-a-u-s-e.html">ROW_FORMAT_CLAUSE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-650724661%2FProperties%2F727215285" anchor-label="RP" id="-650724661%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-p.html"><span><span>RP</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-650724661%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-r-p.html">RP</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-335543377%2FProperties%2F727215285" anchor-label="SET" id="-335543377%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-e-t.html"><span><span>SET</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-335543377%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-s-e-t.html">SET</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-483479894%2FProperties%2F727215285" anchor-label="SMALL_INT_DATA_TYPE" id="-483479894%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-m-a-l-l_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>SMALL_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-483479894%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-s-m-a-l-l_-i-n-t_-d-a-t-a_-t-y-p-e.html">SMALL_INT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-205077309%2FProperties%2F727215285" anchor-label="TABLE" id="-205077309%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-a-b-l-e.html"><span><span>TABLE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-205077309%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-a-b-l-e.html">TABLE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1643679483%2FProperties%2F727215285" anchor-label="TABLE_CONSTRAINT" id="1643679483%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-a-b-l-e_-c-o-n-s-t-r-a-i-n-t.html"><span>TABLE_</span><wbr><span>CONSTRAINT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1643679483%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-a-b-l-e_-c-o-n-s-t-r-a-i-n-t.html">TABLE_CONSTRAINT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1193728797%2FProperties%2F727215285" anchor-label="TABLE_OPTION" id="-1193728797%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-a-b-l-e_-o-p-t-i-o-n.html"><span>TABLE_</span><wbr><span>OPTION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1193728797%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-a-b-l-e_-o-p-t-i-o-n.html">TABLE_OPTION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="187742142%2FProperties%2F727215285" anchor-label="TABLE_OR_SUBQUERY" id="187742142%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-a-b-l-e_-o-r_-s-u-b-q-u-e-r-y.html"><span>TABLE_</span><wbr><span>OR_</span><wbr><span>SUBQUERY</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="187742142%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-a-b-l-e_-o-r_-s-u-b-q-u-e-r-y.html">TABLE_OR_SUBQUERY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1671898121%2FProperties%2F727215285" anchor-label="TINY_INT_DATA_TYPE" id="1671898121%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-i-n-y_-i-n-t_-d-a-t-a_-t-y-p-e.html"><span>TINY_</span><wbr><span>INT_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1671898121%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-i-n-y_-i-n-t_-d-a-t-a_-t-y-p-e.html">TINY_INT_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1241483566%2FProperties%2F727215285" anchor-label="TO" id="1241483566%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-o.html"><span><span>TO</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1241483566%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-o.html">TO</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-342573872%2FProperties%2F727215285" anchor-label="TRUNCATE_STMT" id="-342573872%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-r-u-n-c-a-t-e_-s-t-m-t.html"><span>TRUNCATE_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-342573872%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-r-u-n-c-a-t-e_-s-t-m-t.html">TRUNCATE_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1812714561%2FProperties%2F727215285" anchor-label="TYPE_NAME" id="1812714561%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-y-p-e_-n-a-m-e.html"><span>TYPE_</span><wbr><span>NAME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1812714561%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-t-y-p-e_-n-a-m-e.html">TYPE_NAME</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="358808216%2FProperties%2F727215285" anchor-label="UNIQUE" id="358808216%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-u-n-i-q-u-e.html"><span><span>UNIQUE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="358808216%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-u-n-i-q-u-e.html">UNIQUE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="30102688%2FProperties%2F727215285" anchor-label="UPDATE" id="30102688%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-u-p-d-a-t-e.html"><span><span>UPDATE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="30102688%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-u-p-d-a-t-e.html">UPDATE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-732619222%2FProperties%2F727215285" anchor-label="USE" id="-732619222%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-u-s-e.html"><span><span>USE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-732619222%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-u-s-e.html">USE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-443787673%2FProperties%2F727215285" anchor-label="VALUES" id="-443787673%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-v-a-l-u-e-s.html"><span><span>VALUES</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-443787673%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-v-a-l-u-e-s.html">VALUES</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1755160358%2FProperties%2F727215285" anchor-label="VIRTUAL" id="1755160358%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-v-i-r-t-u-a-l.html"><span><span>VIRTUAL</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1755160358%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-v-i-r-t-u-a-l.html">VIRTUAL</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1096122826%2FProperties%2F727215285" anchor-label="WHERE" id="1096122826%2FProperties%2F727215285" data-filterable-set=":dialects:mysql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:mysql/main" data-filterable-set=":dialects:mysql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-h-e-r-e.html"><span><span>WHERE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1096122826%2FProperties%2F727215285"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:mysql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-h-e-r-e.html">WHERE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
