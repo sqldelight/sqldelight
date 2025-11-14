@@ -1,9 +1,10 @@
 name: Publish a release
 
 on:
-  push:
-    branches:
-      - two-two-one
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - two-two-one
 #    tags:
 #      - '*'
 
