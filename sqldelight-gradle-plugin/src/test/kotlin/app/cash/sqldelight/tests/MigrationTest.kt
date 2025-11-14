@@ -342,4 +342,13 @@ class MigrationTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `migration verification level can be configured`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-verification-level-test"))
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
 }
