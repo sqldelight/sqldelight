@@ -1,10 +1,9 @@
 name: Publish a release
 
 on:
-  workflow_dispatch:
-#  push:
-#    branches:
-#      - two-two-one
+  push:
+    branches:
+      - two-two-one
 #    tags:
 #      - '*'
 
@@ -135,6 +134,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: 2.2.1
           body: ${{ steps.release_notes.outputs.release_notes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
