@@ -35,95 +35,95 @@ jobs:
 #          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
 #          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
 
-  publish_plugin:
-    runs-on: ubuntu-latest
-    if: github.repository == 'sqldelight/sqldelight'
-    permissions:
-      contents: read
-    #needs: publish_archives
-    steps:
-      - uses: actions/checkout@v5
-      # https://github.com/gradle/gradle-build-action/issues/561
-      - name: Create Gradle files
-        run: |
-          cd ~
-          mkdir -p .gradle/ && touch .gradle/gradle.properties
-      - uses: actions/setup-java@v5
-        id: setup-java
-        with:
-          distribution: 'zulu'
-          java-version-file: .github/workflows/.ci-java-version
-      - name: Setup Gradle Java installations paths
-        run: |
-          cd ~/.gradle
-          echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
-      - uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-cleanup: always
+#  publish_plugin:
+#    runs-on: ubuntu-latest
+#    if: github.repository == 'sqldelight/sqldelight'
+#    permissions:
+#      contents: read
+#    #needs: publish_archives
+#    steps:
+#      - uses: actions/checkout@v5
+#      # https://github.com/gradle/gradle-build-action/issues/561
+#      - name: Create Gradle files
+#        run: |
+#          cd ~
+#          mkdir -p .gradle/ && touch .gradle/gradle.properties
+#      - uses: actions/setup-java@v5
+#        id: setup-java
+#        with:
+#          distribution: 'zulu'
+#          java-version-file: .github/workflows/.ci-java-version
+#      - name: Setup Gradle Java installations paths
+#        run: |
+#          cd ~/.gradle
+#          echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
+#      - uses: gradle/actions/setup-gradle@v5
+#        with:
+#          cache-cleanup: always
+#
+#      - name: Publish the plugin artifacts
+#        env:
+#          ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
+#          ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.JETBRAINS_MARKETPLACE_SQUARE_PLUGINS }}
+#        run: ./gradlew publishPlugin --no-parallel
 
-      - name: Publish the plugin artifacts
-        env:
-          ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
-          ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.JETBRAINS_MARKETPLACE_SQUARE_PLUGINS }}
-        run: ./gradlew publishPlugin --no-parallel
-
-  publish_npm_packages:
-    runs-on: ubuntu-latest
-    if: github.repository == 'sqldelight/sqldelight'
-    permissions:
-      contents: read
-    #needs: publish_archives
-
-    steps:
-      - uses: actions/checkout@v5
-      # https://github.com/gradle/gradle-build-action/issues/561
-      - name: Create Gradle files
-        run: |
-          cd ~
-          mkdir -p .gradle/ && touch .gradle/gradle.properties
-      - uses: actions/setup-java@v5
-        id: setup-java
-        with:
-          distribution: 'zulu'
-          java-version-file: .github/workflows/.ci-java-version
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-      - name: Setup Gradle Java installations paths
-        run: |
-          cd ~/.gradle
-          echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
-      - uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-cleanup: always
-
-      - name: Setup .npmrc
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
-
-      - name: Get Version
-        run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
-        id: version
-
-      - name: Assemble NPM Packages
-        run: ./gradlew :drivers:web-worker-driver:sqljs:assemblePackage
-
-      - name: Publish SNAPSHOT Packages
-        working-directory: drivers/web-worker-driver/sqljs/build/package
-        if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
-        run: npm publish --tag snapshot
-
-      - name: Publish Packages
-        working-directory: drivers/web-worker-driver/sqljs/build/package
-        if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
-        run: npm publish
+#  publish_npm_packages:
+#    runs-on: ubuntu-latest
+#    if: github.repository == 'sqldelight/sqldelight'
+#    permissions:
+#      contents: read
+#    #needs: publish_archives
+#
+#    steps:
+#      - uses: actions/checkout@v5
+#      # https://github.com/gradle/gradle-build-action/issues/561
+#      - name: Create Gradle files
+#        run: |
+#          cd ~
+#          mkdir -p .gradle/ && touch .gradle/gradle.properties
+#      - uses: actions/setup-java@v5
+#        id: setup-java
+#        with:
+#          distribution: 'zulu'
+#          java-version-file: .github/workflows/.ci-java-version
+#      - uses: actions/setup-node@v6
+#        with:
+#          node-version: 24
+#      - name: Setup Gradle Java installations paths
+#        run: |
+#          cd ~/.gradle
+#          echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
+#      - uses: gradle/actions/setup-gradle@v5
+#        with:
+#          cache-cleanup: always
+#
+#      - name: Setup .npmrc
+#        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+#
+#      - name: Get Version
+#        run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
+#        id: version
+#
+#      - name: Assemble NPM Packages
+#        run: ./gradlew :drivers:web-worker-driver:sqljs:assemblePackage
+#
+#      - name: Publish SNAPSHOT Packages
+#        working-directory: drivers/web-worker-driver/sqljs/build/package
+#        if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
+#        run: npm publish --tag snapshot
+#
+#      - name: Publish Packages
+#        working-directory: drivers/web-worker-driver/sqljs/build/package
+#        if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
+#        run: npm publish
 
   publish_release:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    needs:
-      #- publish_archives
-      - publish_plugin
-      - publish_npm_packages
+    #if: startsWith(github.ref, 'refs/tags/')
+#    needs:
+#      #- publish_archives
+#      - publish_plugin
+#      - publish_npm_packages
     steps:
       - uses: actions/checkout@v5
 
