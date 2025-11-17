@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialect.api
 
+import com.alecstrong.sql.psi.core.AnnotationException
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
@@ -75,7 +76,7 @@ fun TypeResolver.encapsulatingType(
     if (otherFunctionParameters.size == 1) {
       return IntermediateType(otherFunctionParameters.single())
     }
-    error("The Kotlin type of the argument cannot be inferred, use CAST instead.")
+    throw AnnotationException("The Kotlin type of the argument cannot be inferred, use CAST instead.", exprList.first())
   }
 
   // stripping nullability because that shouldn't affect the type comparison

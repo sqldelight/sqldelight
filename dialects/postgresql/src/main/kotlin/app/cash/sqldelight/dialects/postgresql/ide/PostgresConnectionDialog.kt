@@ -3,10 +3,11 @@ package app.cash.sqldelight.dialects.postgresql.ide
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.ui.layout.GrowPolicy.MEDIUM_TEXT
+import com.intellij.ui.dsl.builder.COLUMNS_MEDIUM
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.columns
+import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.layout.ValidationInfoBuilder
-import com.intellij.ui.layout.applyToComponent
-import com.intellij.ui.layout.panel
 import javax.swing.JComponent
 import javax.swing.JTextField
 
@@ -29,49 +30,31 @@ internal class PostgresConnectionDialog(
   override fun createCenterPanel(): JComponent {
     return panel {
       row("Connection Name") {
-        textField(
-          getter = { connectionKey },
-          setter = { connectionName = it },
-        ).withValidationOnApply(validateNonEmpty(CONNECTION_NAME_NON_EMPTY))
-          .growPolicy(MEDIUM_TEXT)
+        textField().bindText({ connectionKey }, { connectionName = it }).validationOnApply(validateNonEmpty(CONNECTION_NAME_NON_EMPTY))
+          .columns(COLUMNS_MEDIUM)
           .applyToComponent {
             if (connectionName != null) this.isEditable = false
           }
       }
       row("Host") {
-        textField(
-          getter = { host },
-          setter = { host = it },
-        ).withValidationOnApply(validateNonEmpty(HOST_NON_EMPTY))
-          .growPolicy(MEDIUM_TEXT)
+        textField().bindText({ host }, { host = it }).validationOnApply(validateNonEmpty(HOST_NON_EMPTY))
+          .columns(COLUMNS_MEDIUM)
       }
       row("Port") {
-        textField(
-          getter = { port },
-          setter = { port = it },
-        ).withValidationOnApply(validateNonEmpty(PORT_NON_EMPTY))
-          .growPolicy(MEDIUM_TEXT)
+        textField().bindText({ port }, { port = it }).validationOnApply(validateNonEmpty(PORT_NON_EMPTY))
+          .columns(COLUMNS_MEDIUM)
       }
       row("Database Name") {
-        textField(
-          getter = { databaseName },
-          setter = { databaseName = it },
-        )
-          .growPolicy(MEDIUM_TEXT)
+        textField().bindText({ databaseName }, { databaseName = it })
+          .columns(COLUMNS_MEDIUM)
       }
       row("Username") {
-        textField(
-          getter = { username },
-          setter = { username = it },
-        )
-          .growPolicy(MEDIUM_TEXT)
+        textField().bindText({ username }, { username = it })
+          .columns(COLUMNS_MEDIUM)
       }
       row("Password") {
-        textField(
-          getter = { password },
-          setter = { password = it },
-        )
-          .growPolicy(MEDIUM_TEXT)
+        textField().bindText({ password }, { password = it })
+          .columns(COLUMNS_MEDIUM)
       }
     }
   }

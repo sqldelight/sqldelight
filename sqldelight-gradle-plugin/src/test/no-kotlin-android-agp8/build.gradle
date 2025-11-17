@@ -1,10 +1,10 @@
 plugins {
-  alias(libs.plugins.android.application)
+  id("com.android.application").version("8.13.1")
   alias(libs.plugins.sqldelight)
 }
 
 android {
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   lint {
     textReport true

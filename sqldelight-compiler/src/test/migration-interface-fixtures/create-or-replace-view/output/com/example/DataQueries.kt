@@ -29,11 +29,5 @@ public class DataQueries(
     )
   }
 
-  public fun select(): Query<V_test> = select { a, b, c ->
-    V_test(
-      a,
-      b,
-      c
-    )
-  }
+  public fun select(): Query<V_test> = select(::V_test)
 }

@@ -10,8 +10,10 @@ import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import java.io.File
 import javax.inject.Inject
+import kotlin.DeprecationLevel.HIDDEN
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
@@ -57,7 +59,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   internal var addedDialect: Boolean = false
 
   fun module(module: Any) {
-    configuration.dependencies.add(project.dependencies.create(module))
+    project.dependencies.add(configuration.name, module)
   }
 
   fun dialect(dialect: Any) {
@@ -117,7 +119,11 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   @Suppress("unused") // Public API used in gradle files.
-  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(delegatedProject.dependencyProject)
+  @Deprecated("use ProjectDependency", level = HIDDEN)
+  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(project.project(delegatedProject.path))
+
+  @Suppress("unused") // Public API used in gradle files.
+  fun dependency(delegatedProject: ProjectDependency) = dependency(project.project(delegatedProject.path))
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
@@ -161,7 +167,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         compilationUnits = sources.map { source ->
           SqlDelightCompilationUnitImpl(
             name = source.name,
-            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
+            sourceFolders = sourceFolders(source),
             outputDirectoryFile = source.outputDir,
           )
         },
@@ -177,8 +183,8 @@ abstract class SqlDelightDatabase @Inject constructor(
     }
   }
 
-  private fun sourceFolders(source: Source): List<SqlDelightSourceFolderImpl> {
-    val sourceFolders: List<SqlDelightSourceFolderImpl> = buildList {
+  private fun sourceFolders(source: Source): Set<SqlDelightSourceFolderImpl> {
+    val sourceFolders: Set<SqlDelightSourceFolderImpl> = buildSet {
       for (dir in srcDirs) {
         val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(folder = dir, dependency = false)
         add(sqlDelightSourceFolder)
@@ -207,7 +213,7 @@ abstract class SqlDelightDatabase @Inject constructor(
           dependency = true,
         )
       }
-    }.distinct()
+    }
   }
 
   internal fun registerTasks() {

@@ -1,6 +1,5 @@
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
 }
 
 kotlin.jvmToolchain {
@@ -9,12 +8,8 @@ kotlin.jvmToolchain {
 }
 
 android {
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
   namespace = "com.example.sqldelight.hockey"
-
-  lint {
-    textOutput file("$reportsDir/lint-results.txt")
-  }
 
   defaultConfig {
     minSdk 21

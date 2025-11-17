@@ -1,6 +1,6 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlin.plugin.serialization)
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
@@ -13,24 +13,21 @@ grammarKit {
 }
 
 dependencies {
-  ksp libs.moshiCodegen
-
   api libs.mysqlJdbc
   api projects.sqldelightCompiler.dialect
 
   compileOnly(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  compileOnly libs.moshi
+  compileOnly libs.kotlinx.serialization.json
 
   testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
   testFixturesApi testFixtures(libs.sqlPsi)
 
+  testImplementation libs.junit
   testImplementation libs.truth
-  // Remove with next sql-psi release https://github.com/AlecKazakova/sql-psi/pull/619
-  testImplementation libs.sqlPsiEnvironment
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

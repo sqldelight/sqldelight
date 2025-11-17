@@ -14,8 +14,7 @@ import kotlin.String
 public class DataQueries(
   driver: SqlDriver,
 ) : TransacterImpl(driver) {
-  public fun select(): Query<String> = Query(-1_042_942_063, arrayOf("test3"), driver, "Data.sq",
-      "select", """
+  public fun select(): Query<String> = Query(-1_042_942_063, arrayOf("test3"), driver, "Data.sq", "select", """
   |SELECT test3.alpha
   |FROM test3
   """.trimMargin()) { cursor ->
@@ -32,11 +31,14 @@ public class DataQueries(
     public val test3: Test3,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_320_712_882,
-        """INSERT INTO test3 (alpha) VALUES (?) RETURNING test3.alpha""", mapper, 1) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_320_712_882, """INSERT INTO test3 (alpha) VALUES (?) RETURNING test3.alpha""", mapper, 1) {
       check(this is JdbcPreparedStatement)
-      bindString(0, test3.alpha)
+      var parameterIndex = 0
+      bindString(parameterIndex++, test3.alpha)
+    }.also {
+      notifyQueries(-1_320_712_882) { emit ->
+        emit("test3")
+      }
     }
 
     override fun toString(): String = "Data.sq:insert"

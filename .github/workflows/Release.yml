@@ -8,57 +8,32 @@ on:
       - '*'
 
 concurrency:
-  group: "release"
+  group: "release-${{ github.ref }}"
   cancel-in-progress: false
 
 jobs:
   publish_archives:
-    strategy:
-      matrix:
-        os: [macOS-14, windows-latest, ubuntu-latest]
-
-    runs-on: ${{matrix.os}}
+    runs-on: macos-latest
     if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
-      - name: Publish the macOS artifacts
-        if: matrix.os == 'macOS-14'
+      - run: ./gradlew publishToMavenCentral
         env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USERNAME_APP_CASH }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PASSWORD_APP_CASH }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-parallel
-      - name: Publish the windows artifact
-        if: matrix.os == 'windows-latest'
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USERNAME_APP_CASH }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PASSWORD_APP_CASH }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
-        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository --no-parallel
-      - name: Publish the linux artifact
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USERNAME_APP_CASH }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PASSWORD_APP_CASH }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
-        run: ./gradlew publishLinuxX64PublicationToMavenCentralRepository --no-parallel
 
   publish_plugin:
     runs-on: ubuntu-latest
@@ -67,16 +42,14 @@ jobs:
       contents: read
     needs: publish_archives
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
           cd ~
           mkdir -p .gradle/ && touch .gradle/gradle.properties
-      - name: Set up Java
+      - uses: actions/setup-java@v5
         id: setup-java
-        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
@@ -84,8 +57,7 @@ jobs:
         run: |
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -93,37 +65,35 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SQLDELIGHT_BUGSNAG_KEY }}
           ORG_GRADLE_PROJECT_intellijPublishToken: ${{ secrets.JETBRAINS_MARKETPLACE_SQUARE_PLUGINS }}
-        run: ./gradlew publishPlugin --stacktrace --no-parallel
+        run: ./gradlew publishPlugin --no-parallel
 
   publish_npm_packages:
     runs-on: ubuntu-latest
     if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
+    needs: publish_archives
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
           cd ~
           mkdir -p .gradle/ && touch .gradle/gradle.properties
-      - name: Set up Java
+      - uses: actions/setup-java@v5
         id: setup-java
-        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.ci-java-version
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
       - name: Setup Gradle Java installations paths
         run: |
           cd ~/.gradle
           echo "org.gradle.java.installations.paths=${{ steps.setup-java.outputs.path }}" >> gradle.properties
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
 
@@ -147,6 +117,27 @@ jobs:
         if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
         run: npm publish
 
+  publish_release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs:
+      - publish_archives
+      - publish_plugin
+      - publish_npm_packages
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Extract release notes
+        id: release_notes
+        uses: ffurrer2/extract-release-notes@v2
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.release_notes.outputs.release_notes }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 env:
-  GRADLE_OPTS: -Dorg.gradle.caching=true
+  GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

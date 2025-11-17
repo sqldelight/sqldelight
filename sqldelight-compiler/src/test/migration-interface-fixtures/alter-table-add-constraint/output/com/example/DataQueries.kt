@@ -11,8 +11,7 @@ import kotlin.String
 public class DataQueries(
   driver: SqlDriver,
 ) : TransacterImpl(driver) {
-  public fun <T : Any> selectSingle(mapper: (first: Int, second: String?) -> T): Query<T> =
-      Query(-79_317_191, arrayOf("TestSingle"), driver, "Data.sq", "selectSingle", """
+  public fun <T : Any> selectSingle(mapper: (first: Int, second: String?) -> T): Query<T> = Query(-79_317_191, arrayOf("TestSingle"), driver, "Data.sq", "selectSingle", """
   |SELECT TestSingle.first, TestSingle.second
   |FROM TestSingle
   """.trimMargin()) { cursor ->
@@ -23,15 +22,9 @@ public class DataQueries(
     )
   }
 
-  public fun selectSingle(): Query<TestSingle> = selectSingle { first, second ->
-    TestSingle(
-      first,
-      second
-    )
-  }
+  public fun selectSingle(): Query<TestSingle> = selectSingle(::TestSingle)
 
-  public fun <T : Any> selectCompound(mapper: (first: Int, second: String) -> T): Query<T> =
-      Query(-19_725_220, arrayOf("TestCompound"), driver, "Data.sq", "selectCompound", """
+  public fun <T : Any> selectCompound(mapper: (first: Int, second: String) -> T): Query<T> = Query(-19_725_220, arrayOf("TestCompound"), driver, "Data.sq", "selectCompound", """
   |SELECT TestCompound.first, TestCompound.second
   |FROM TestCompound
   """.trimMargin()) { cursor ->
@@ -42,10 +35,5 @@ public class DataQueries(
     )
   }
 
-  public fun selectCompound(): Query<TestCompound> = selectCompound { first, second ->
-    TestCompound(
-      first,
-      second
-    )
-  }
+  public fun selectCompound(): Query<TestCompound> = selectCompound(::TestCompound)
 }

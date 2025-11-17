@@ -1,0 +1,18 @@
+pluginManagement {
+  includeBuild("../build-logic-tests")
+}
+
+plugins {
+  id("sqldelightTests")
+}
+
+def sqldelightVersion = providers.gradleProperty("sqldelightVersion").get().toString()
+
+dependencyResolutionManagement {
+  versionCatalogs {
+    named("libs") {
+      library("sqldelight-module-json", "app.cash.sqldelight", "sqlite-json-module").version(sqldelightVersion)
+      library("sqldelight-sqlite-dialect", "app.cash.sqldelight", "sqlite-3-18-dialect").version(sqldelightVersion)
+    }
+  }
+}

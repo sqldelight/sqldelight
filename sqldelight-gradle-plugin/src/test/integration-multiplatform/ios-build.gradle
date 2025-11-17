@@ -12,13 +12,10 @@ sqldelight {
 }
 
 kotlin {
-  targets {
-    def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
-    def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-    targetFromPreset(iosPreset, 'ios') {
-      binaries { framework() }
-    }
-  }
+  iosX64()
+  iosArm64()
+
+  applyDefaultHierarchyTemplate()
 
   sourceSets {
     commonTest {
@@ -34,12 +31,4 @@ kotlin {
       }
     }
   }
-}
-
-// https://youtrack.jetbrains.com/issue/KT-55751
-configurations {
-  def myAttribute = Attribute.of("dummy.attribute", String)
-
-  debugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
-  releaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
 }

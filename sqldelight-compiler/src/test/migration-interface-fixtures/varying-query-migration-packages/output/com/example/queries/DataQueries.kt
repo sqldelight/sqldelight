@@ -16,8 +16,7 @@ import kotlin.String
 public class DataQueries(
   driver: SqlDriver,
 ) : TransacterImpl(driver) {
-  public fun <T : Any> migrationSelect(mapper: (first: String, second: Int) -> T): Query<T> =
-      Query(-1_568_224_787, arrayOf("test"), driver, "Data.sq", "migrationSelect", """
+  public fun <T : Any> migrationSelect(mapper: (first: String, second: Int) -> T): Query<T> = Query(-1_568_224_787, arrayOf("test"), driver, "Data.sq", "migrationSelect", """
   |SELECT test.first, test.second
   |FROM test
   """.trimMargin()) { cursor ->
@@ -28,12 +27,7 @@ public class DataQueries(
     )
   }
 
-  public fun migrationSelect(): Query<Test> = migrationSelect { first, second ->
-    Test(
-      first,
-      second
-    )
-  }
+  public fun migrationSelect(): Query<Test> = migrationSelect(::Test)
 
   public fun <T : Any> migrationInsert(
     first: String,
@@ -47,16 +41,9 @@ public class DataQueries(
     )
   }
 
-  public fun migrationInsert(first: String, second: Int): ExecutableQuery<Test> =
-      migrationInsert(first, second) { first_, second_ ->
-    Test(
-      first_,
-      second_
-    )
-  }
+  public fun migrationInsert(first: String, second: Int): ExecutableQuery<Test> = migrationInsert(first, second, ::Test)
 
-  public fun <T : Any> migrationDelete(first: String, mapper: (first: String, second: Int) -> T):
-      ExecutableQuery<T> = MigrationDeleteQuery(first) { cursor ->
+  public fun <T : Any> migrationDelete(first: String, mapper: (first: String, second: Int) -> T): ExecutableQuery<T> = MigrationDeleteQuery(first) { cursor ->
     check(cursor is JdbcCursor)
     mapper(
       cursor.getString(0)!!,
@@ -64,16 +51,9 @@ public class DataQueries(
     )
   }
 
-  public fun migrationDelete(first: String): ExecutableQuery<Test> = migrationDelete(first) {
-      first_, second ->
-    Test(
-      first_,
-      second
-    )
-  }
+  public fun migrationDelete(first: String): ExecutableQuery<Test> = migrationDelete(first, ::Test)
 
-  public fun <T : Any> migrationUpdate(first: String, mapper: (first: String, second: Int) -> T):
-      ExecutableQuery<T> = MigrationUpdateQuery(first) { cursor ->
+  public fun <T : Any> migrationUpdate(first: String, mapper: (first: String, second: Int) -> T): ExecutableQuery<T> = MigrationUpdateQuery(first) { cursor ->
     check(cursor is JdbcCursor)
     mapper(
       cursor.getString(0)!!,
@@ -81,26 +61,22 @@ public class DataQueries(
     )
   }
 
-  public fun migrationUpdate(first: String): ExecutableQuery<Test> = migrationUpdate(first) {
-      first_, second ->
-    Test(
-      first_,
-      second
-    )
-  }
+  public fun migrationUpdate(first: String): ExecutableQuery<Test> = migrationUpdate(first, ::Test)
 
   private inner class MigrationInsertQuery<out T : Any>(
     public val first: String,
     public val second: Int,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_845_995_606,
-        """INSERT INTO test(first, second) VALUES (?, ?) RETURNING test.first, test.second""",
-        mapper, 2) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_845_995_606, """INSERT INTO test(first, second) VALUES (?, ?) RETURNING test.first, test.second""", mapper, 2) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
-      bindInt(1, second)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
+      bindInt(parameterIndex++, second)
+    }.also {
+      notifyQueries(-1_845_995_606) { emit ->
+        emit("test")
+      }
     }
 
     override fun toString(): String = "Data.sq:migrationInsert"
@@ -110,11 +86,14 @@ public class DataQueries(
     public val first: String,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_997_661_540,
-        """DELETE FROM test WHERE first = ? RETURNING test.first, test.second""", mapper, 1) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_997_661_540, """DELETE FROM test WHERE first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
+    }.also {
+      notifyQueries(-1_997_661_540) { emit ->
+        emit("test")
+      }
     }
 
     override fun toString(): String = "Data.sq:migrationDelete"
@@ -124,11 +103,14 @@ public class DataQueries(
     public val first: String,
     mapper: (SqlCursor) -> T,
   ) : ExecutableQuery<T>(mapper) {
-    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-        driver.executeQuery(-1_501_049_414,
-        """UPDATE test SET first = ? RETURNING test.first, test.second""", mapper, 1) {
+    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(-1_501_049_414, """UPDATE test SET first = ? RETURNING test.first, test.second""", mapper, 1) {
       check(this is JdbcPreparedStatement)
-      bindString(0, first)
+      var parameterIndex = 0
+      bindString(parameterIndex++, first)
+    }.also {
+      notifyQueries(-1_501_049_414) { emit ->
+        emit("test")
+      }
     }
 
     override fun toString(): String = "Data.sq:migrationUpdate"

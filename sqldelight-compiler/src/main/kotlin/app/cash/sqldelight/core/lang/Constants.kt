@@ -4,7 +4,6 @@ import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.decapitalize
 import com.intellij.openapi.vfs.VirtualFile
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 internal val CURSOR_TYPE = ClassName("app.cash.sqldelight.db", "SqlCursor")
 internal const val CURSOR_NAME = "cursor"
@@ -22,18 +21,13 @@ internal val AFTER_VERSION_TYPE = ClassName("app.cash.sqldelight.db", "AfterVers
 
 internal val PREPARED_STATEMENT_TYPE = ClassName("app.cash.sqldelight.db", "SqlPreparedStatement")
 
-internal const val CUSTOM_DATABASE_NAME = "database"
-
 internal const val ADAPTER_NAME = "Adapter"
 
 internal val QUERY_TYPE = ClassName("app.cash.sqldelight", "Query")
 internal val EXECUTABLE_QUERY_TYPE = ClassName("app.cash.sqldelight", "ExecutableQuery")
 internal val QUERY_LISTENER_TYPE = QUERY_TYPE.nestedClass("Listener")
-internal val QUERY_LISTENER_LIST_TYPE = ClassName("kotlin.collections", "MutableList")
-  .parameterizedBy(QUERY_LISTENER_TYPE)
 
 internal const val MAPPER_NAME = "mapper"
-internal const val EXECUTE_BLOCK_NAME = "block"
 
 internal const val EXECUTE_METHOD = "execute"
 
