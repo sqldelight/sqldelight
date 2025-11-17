@@ -338,22 +338,34 @@ internal class DatabaseGenerator(
 
   private fun SqlStmt.isSchema() = when {
     createIndexStmt != null -> true
+
     createTableStmt != null -> true
+
     createTriggerStmt != null -> true
+
     createViewStmt != null -> true
+
     createVirtualTableStmt != null -> true
+
     alterTableStmt != null -> true
+
     dropIndexStmt != null -> true
+
     dropTableStmt != null -> true
+
     dropTriggerStmt != null -> true
+
     dropViewStmt != null -> true
+
     pragmaStmt != null -> true
+
     extensionStmt != null -> {
       PsiTreeUtil.getChildOfType(
         extensionStmt,
         SchemaContributor::class.java,
       ) != null
     }
+
     else -> false
   }
 }

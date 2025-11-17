@@ -309,9 +309,11 @@ internal object OverlappingListsDiffDispatcher {
         dispatchInsertAsPlaceholderAfter(position, count) -> {
           // dispatched as placeholders after
         }
+
         dispatchInsertAsPlaceholderBefore(position, count) -> {
           // dispatched as placeholders before
         }
+
         else -> {
           // not at the edge, dispatch as usual
           callback.onInserted(position.offsetForDispatch(), count)
@@ -373,9 +375,11 @@ internal object OverlappingListsDiffDispatcher {
         dispatchRemovalAsPlaceholdersAfter(position, count) -> {
           // dispatched as changed into placeholder
         }
+
         dispatchRemovalAsPlaceholdersBefore(position, count) -> {
           // dispatched as changed into placeholder
         }
+
         else -> {
           // fallback, need to handle here
           callback.onRemoved(position.offsetForDispatch(), count)

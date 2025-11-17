@@ -22,6 +22,7 @@ internal class PostgreSqlMigrationSquasher(
         val column = alterTableRules.alteredTable(into).columnDefList.map { it.columnName }.single { it.textMatches(columnName.text) }
         into.text.replaceRange(column.textRange.startOffset until column.textRange.endOffset, alterTableRules.alterTableRenameColumn!!.alterTableColumnAlias!!.text)
       }
+
       alterTableRules.alterTableDropColumn != null -> {
         val createTable = alterTableRules.alteredTable(into)
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableDropColumn, SqlColumnName::class.java)!!
@@ -31,6 +32,7 @@ internal class PostgreSqlMigrationSquasher(
             .joinToString(separator = ",\n  ") { it.text },
         )
       }
+
       else -> parentSquasher.squish(alterTableRules, into)
     }
   }

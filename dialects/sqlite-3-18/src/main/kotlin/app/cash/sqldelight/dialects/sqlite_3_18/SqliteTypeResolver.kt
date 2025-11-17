@@ -30,20 +30,29 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : TypeRe
 
   private fun SqlFunctionExpr.sqliteFunctionType() = when (functionName.text.lowercase()) {
     "printf" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+
     "datetime", "julianday", "strftime", "sqlite_compileoption_get", "sqlite_source_id", "sqlite_version" -> {
       IntermediateType(TEXT)
     }
+
     "changes", "last_insert_rowid", "sqlite_compileoption_used", "total_changes" -> {
       IntermediateType(INTEGER)
     }
+
     "unicode" -> {
       IntermediateType(INTEGER).nullableIf(exprList.any { resolvedType(it).javaType.isNullable })
     }
+
     "randomblob", "zeroblob" -> IntermediateType(BLOB)
+
     "total", "bm25" -> IntermediateType(REAL)
+
     "likelihood", "likely", "unlikely" -> resolvedType(exprList[0])
+
     "highlight", "snippet" -> IntermediateType(TEXT).asNullable()
+
     "offsets" -> IntermediateType(TEXT).asNullable()
+
     else -> null
   }
 

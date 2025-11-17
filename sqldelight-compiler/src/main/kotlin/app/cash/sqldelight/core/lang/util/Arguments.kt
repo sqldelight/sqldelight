@@ -84,12 +84,16 @@ internal fun SqlExpr.inferredType(): IntermediateType {
     }
 
     is SqlValuesExpression -> parentRule.argumentType(this)
+
     is SqlSetterExpression -> typeResolver.argumentType(parentRule, this)
+
     is SqlLimitingTerm -> IntermediateType(INTEGER)
+
     is SqlResultColumn -> {
       (parentRule.parent as SqlSelectStmt).argumentType(parentRule)
         ?: IntermediateType(NULL, Any::class.asClassName())
     }
+
     else -> IntermediateType(NULL, Any::class.asClassName())
   }
 }
@@ -143,6 +147,7 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
     }
 
     is SqlNullExpr -> IntermediateType(NULL).asNullable()
+
     is SqlBinaryLikeExpr -> {
       val other = children.last { it is SqlExpr && it !== argument }.type()
       IntermediateType(TEXT).copy(name = other.name)
@@ -158,7 +163,9 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
           exprList.getOrNull(1) -> IntermediateType(TEXT)
           else -> typeResolver.functionType(this)
         }
+
         "ifnull", "coalesce" -> typeResolver.functionType(this)?.asNullable()
+
         else -> typeResolver.functionType(this)
       }
       return argumentType(argument) ?: IntermediateType(NULL)
@@ -183,6 +190,7 @@ private fun SqlValuesExpression.argumentType(expression: SqlExpr): IntermediateT
         insertStmt.columns[argumentIndex].type()
       }
     }
+
     is SqlSelectStmt -> {
       val compoundSelect = parentRule.parent as SqlCompoundSelectStmt
       NamedQuery("temp", SelectQueryable(compoundSelect)).resultColumns[argumentIndex]

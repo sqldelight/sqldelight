@@ -60,21 +60,30 @@ import org.jgrapht.traverse.TopologicalOrderIterator
 
 internal fun PsiElement.type(): IntermediateType = when (this) {
   is ExposableType -> type()
+
   is SqlTypeName -> sqFile().typeResolver.definitionType(this)
+
   is AliasElement -> source().type().copy(name = name)
+
   is ColumnDefMixin -> (columnType as ColumnTypeMixin).type()
+
   is SqlPragmaName -> IntermediateType(TEXT)
+
   is SqlColumnName -> {
     when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()
+
       is SqlModuleColumnDef -> IntermediateType(TEXT, name = this.name).asNullable()
+
       else -> {
         when (val resolvedReference = reference?.resolve()) {
           null -> IntermediateType(PrimitiveType.NULL)
+
           // Synthesized columns refer directly to the table
           is SqlCreateTableStmt,
           is SqlCreateVirtualTableStmt,
           -> synthesizedColumnType(this.name)
+
           else -> {
             val columnSelected = queryAvailable(this).flatMap { it.columns }
               .firstOrNull { it.element == resolvedReference }
@@ -86,9 +95,13 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
+
   is TableFunctionRowType -> (sqFile().typeResolver.definitionType(columnType()).asNullable())
+
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
+
   is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
+
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
 }
 
@@ -282,10 +295,15 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
         when {
           sqlStatement.extensionStmt != null &&
             sqlStatement.extensionStmt!!.hasPreCreateTableInitialization() -> preTables.add(sqlStatement.extensionStmt!!)
+
           sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
+
           sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
+
           sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
+
           sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
+
           else -> miscellaneous.add(sqlStatement)
         }
       }
@@ -297,6 +315,7 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
     // If we allow cycles, don't attempt to order the table creation statements. The dialect
     // is permissive.
     true -> tables.forEach { body(it.rawSqlText()) }
+
     false -> tables.buildGraph().topological().forEach { body(it.rawSqlText()) }
   }
 

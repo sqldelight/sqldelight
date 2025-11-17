@@ -577,9 +577,7 @@ object DiffUtil {
    * You can consume the updates in a DiffResult via
    * {@link #dispatchUpdatesTo(ListUpdateCallback)} or directly stream the results into a
    * {@link RecyclerView.Adapter} via {@link #dispatchUpdatesTo(RecyclerView.Adapter)}.
-   */
-
-  /**
+   *
    * @param callback        The callback that was used to calculate the diff
    * @param diagonals       Matches between the two lists
    * @param oldItemStatuses An int[] that can be re-purposed to keep metadata

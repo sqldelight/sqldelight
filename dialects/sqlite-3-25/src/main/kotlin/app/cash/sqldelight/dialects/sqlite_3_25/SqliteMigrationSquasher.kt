@@ -24,6 +24,7 @@ internal class SqliteMigrationSquasher(
         val columnAlias = PsiTreeUtil.getChildOfType(alterTableRules.alterTableRenameColumn, SqlColumnAlias::class.java)!!
         into.text.replaceRange(column.textRange.startOffset until column.textRange.endOffset, columnAlias.text)
       }
+
       else -> parentSquasher.squish(alterTableRules, into)
     }
   }

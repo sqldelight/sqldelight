@@ -76,6 +76,7 @@ private fun connectionManager(url: String, properties: Properties): ConnectionMa
       path == "file::memory:" ||
       path.startsWith(":resource:") ||
       url.contains("mode=memory") -> StaticConnectionManager(url, properties)
+
     else -> ThreadedConnectionManager(url, properties)
   }
 }

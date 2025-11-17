@@ -47,6 +47,7 @@ class MySqlTypeResolver(
         TEXT,
         BLOB,
       )
+
       is SqlBinaryExpr -> {
         if (expr.childOfType(
             TokenSet.create(
@@ -75,6 +76,7 @@ class MySqlTypeResolver(
           )
         }
       }
+
       else -> parentResolver.resolvedType(expr)
     }
   }
@@ -112,6 +114,7 @@ class MySqlTypeResolver(
       TEXT,
       BLOB,
     )
+
     "least" -> encapsulatingTypePreferringKotlin(
       exprList,
       BLOB,
@@ -127,16 +130,23 @@ class MySqlTypeResolver(
       BIG_INT,
       REAL,
     )
+
     "concat" -> encapsulatingType(exprList, TEXT)
+
     "last_insert_id" -> IntermediateType(INTEGER)
+
     "row_count" -> IntermediateType(INTEGER)
+
     "microsecond", "second", "minute", "hour", "day", "week", "month", "year" -> IntermediateType(
       INTEGER,
     )
+
     "sin", "cos", "tan" -> IntermediateType(REAL)
+
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, MySqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
       exprListNullability.all { it }
     })
+
     "max" -> encapsulatingTypePreferringKotlin(
       exprList,
       TINY_INT,
@@ -152,6 +162,7 @@ class MySqlTypeResolver(
       TEXT,
       BLOB,
     ).asNullable()
+
     "min" -> encapsulatingTypePreferringKotlin(
       exprList,
       BLOB,
@@ -167,6 +178,7 @@ class MySqlTypeResolver(
       BIG_INT,
       REAL,
     ).asNullable()
+
     "sum" -> {
       val type = resolvedType(exprList.single())
       if (type.dialectType == REAL) {
@@ -175,12 +187,19 @@ class MySqlTypeResolver(
         IntermediateType(INTEGER).asNullable()
       }
     }
+
     "unix_timestamp" -> IntermediateType(TEXT)
+
     "to_seconds" -> IntermediateType(INTEGER)
+
     "json_arrayagg" -> IntermediateType(TEXT)
+
     "date_add", "date_sub" -> IntermediateType(TEXT)
+
     "now" -> IntermediateType(TEXT)
+
     "char_length", "character_length" -> IntermediateType(INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+
     else -> null
   }
 
@@ -189,7 +208,9 @@ class MySqlTypeResolver(
     return IntermediateType(
       when {
         approximateNumericDataType != null -> REAL
+
         binaryDataType != null -> BLOB
+
         dateDataType != null -> {
           when (dateDataType!!.firstChild.text.uppercase()) {
             "DATE" -> MySqlType.DATE
@@ -200,20 +221,31 @@ class MySqlTypeResolver(
             else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
           }
         }
+
         tinyIntDataType != null -> if (tinyIntDataType!!.text == "BOOLEAN") {
           MySqlType.TINY_INT_BOOL
         } else {
           TINY_INT
         }
+
         smallIntDataType != null -> SMALL_INT
+
         mediumIntDataType != null -> MySqlType.INTEGER
+
         intDataType != null -> MySqlType.INTEGER
+
         bigIntDataType != null -> BIG_INT
+
         fixedPointDataType != null -> MySqlType.NUMERIC
+
         jsonDataType != null -> TEXT
+
         enumSetType != null -> TEXT
+
         characterType != null -> TEXT
+
         bitDataType != null -> MySqlType.BIT
+
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )

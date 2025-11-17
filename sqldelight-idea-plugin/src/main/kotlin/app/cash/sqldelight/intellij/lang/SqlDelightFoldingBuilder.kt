@@ -49,16 +49,20 @@ class SqlDelightFoldingBuilder :
           when (statement.elementType) {
             SqldelightTypes.IMPORT_STMT_LIST ->
               statement.psi.toImportListDescriptor()?.let(descriptors::add)
+
             SqlTypes.STMT -> {
               val psi = statement.psi
               val sqlStatement = statement.firstChildNode
               when (sqlStatement?.elementType) {
                 SqlTypes.CREATE_TABLE_STMT ->
                   psi.toCreateTableDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+
                 SqlTypes.CREATE_VIEW_STMT ->
                   psi.toCreateViewDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+
                 SqlTypes.CREATE_TRIGGER_STMT ->
                   psi.toCreateTriggerDescriptor(sqlStatement?.psi)?.let(descriptors::add)
+
                 SqlTypes.CREATE_INDEX_STMT ->
                   psi.toCreateIndexDescriptor(sqlStatement?.psi)?.let(descriptors::add)
               }

@@ -55,15 +55,25 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     val type = IntermediateType(
       when {
         smallIntDataType != null -> PostgreSqlType.SMALL_INT
+
         intDataType != null -> PostgreSqlType.INTEGER
+
         bigIntDataType != null -> PostgreSqlType.BIG_INT
+
         numericDataType != null -> PostgreSqlType.NUMERIC
+
         approximateNumericDataType != null -> REAL
+
         stringDataType != null -> TEXT
+
         uuidDataType != null -> PostgreSqlType.UUID
+
         smallSerialDataType != null -> PostgreSqlType.SMALL_INT
+
         serialDataType != null -> PostgreSqlType.INTEGER
+
         bigSerialDataType != null -> PostgreSqlType.BIG_INT
+
         dateDataType != null -> {
           when (dateDataType!!.firstChild.text) {
             "DATE" -> PostgreSqlType.DATE
@@ -74,17 +84,29 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
             else -> throw IllegalArgumentException("Unknown date type ${dateDataType!!.text}")
           }
         }
+
         jsonDataType != null -> PostgreSqlType.JSON
+
         booleanDataType != null -> BOOLEAN
+
         blobDataType != null -> BLOB
+
         tsvectorDataType != null -> PostgreSqlType.TSVECTOR
+
         tsqueryDataType != null -> PostgreSqlType.TSQUERY
+
         tsrange != null -> PostgreSqlType.TSRANGE
+
         tstzrange != null -> PostgreSqlType.TSTZRANGE
+
         tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
+
         tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
+
         xmlDataType != null -> PostgreSqlType.XML
+
         enumDataType != null -> PostgreSqlType.ENUM
+
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
     )
@@ -112,6 +134,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       TIMESTAMP,
       ENUM,
     )
+
     "least" -> encapsulatingTypePreferringKotlin(
       exprList,
       BLOB,
@@ -125,9 +148,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       TIMESTAMP,
       ENUM,
     )
+
     "concat" -> encapsulatingType(exprList, TEXT)
+
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+
     "starts_with" -> IntermediateType(BOOLEAN)
+
     "coalesce", "ifnull" -> {
       val exprType = exprList.first().postgreSqlType()
       if (isArrayType(exprType)) {
@@ -138,8 +165,11 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         })
       }
     }
+
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
+
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
+
     "lower", "upper" -> {
       val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
       when (exprType.dialectType) {
@@ -148,6 +178,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         else -> exprType
       }
     }
+
     "sum" -> {
       val type = resolvedType(exprList.single())
       when (type.dialectType) {
@@ -158,15 +189,23 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         else -> IntermediateType(PostgreSqlType.BIG_INT).asNullable()
       }
     }
+
     "to_hex", "quote_literal", "quote_ident", "md5" -> IntermediateType(TEXT)
+
     "quote_nullable" -> IntermediateType(TEXT).asNullable()
+
     "date_trunc" -> encapsulatingType(exprList, TIMESTAMP_TIMEZONE, TIMESTAMP)
+
     "date_part" -> IntermediateType(REAL)
+
     "percentile_disc", "cume_dist", "percent_rank" -> IntermediateType(REAL).asNullable()
+
     "now" -> IntermediateType(TIMESTAMP_TIMEZONE)
+
     "corr", "covar_pop", "covar_samp", "regr_avgx", "regr_avgy", "regr_intercept",
     "regr_r2", "regr_slope", "regr_sxx", "regr_sxy", "regr_syy",
     -> IntermediateType(REAL).asNullable()
+
     "stddev", "stddev_pop", "stddev_samp", "variance",
     "var_pop", "var_samp",
     -> if (resolvedType(exprList[0]).dialectType == REAL) {
@@ -176,9 +215,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         PostgreSqlType.NUMERIC,
       ).asNullable()
     }
+
     "regr_count" -> IntermediateType(BIG_INT).asNullable()
+
     "gen_random_uuid" -> IntermediateType(PostgreSqlType.UUID)
+
     "length", "character_length", "char_length" -> IntermediateType(PostgreSqlType.INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+
     "to_json", "to_jsonb",
     "array_to_json", "row_to_json",
     "json_build_array", "jsonb_build_array",
@@ -194,34 +237,59 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "json_object_agg", "jsonb_object_agg", "json_object_agg_strict", "jsonb_object_agg_strict",
     "json_object_agg_unique", "jsonb_object_agg_unique", "json_object_agg_unique_strict", "jsonb_object_agg_unique_strict",
     -> IntermediateType(PostgreSqlType.JSON)
+
     "json_build_object", "jsonb_build_object",
     -> IntermediateType(TEXT)
+
     "array_agg" -> {
       val typeForAgg = encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
       arrayIntermediateType(typeForAgg)
     }
+
     "string_agg" -> IntermediateType(TEXT)
+
     "json_array_length", "jsonb_array_length" -> IntermediateType(PostgreSqlType.INTEGER)
+
     "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
+
     "currval", "lastval", "nextval", "setval" -> IntermediateType(BIG_INT)
+
     "generate_series" -> encapsulatingType(exprList, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP)
+
     "regexp_count", "regexp_instr" -> IntermediateType(PostgreSqlType.INTEGER)
+
     "regexp_like" -> IntermediateType(BOOLEAN)
+
     "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
+
     "plainto_tsquery" -> IntermediateType(PostgreSqlType.TSQUERY)
+
     "to_tsquery" -> IntermediateType(PostgreSqlType.TSQUERY)
+
     "to_tsvector" -> IntermediateType(PostgreSqlType.TSVECTOR)
+
     "ts_rank" -> IntermediateType(REAL)
+
     "websearch_to_tsquery" -> IntermediateType(PostgreSqlType.TSQUERY)
+
     "rank", "dense_rank", "row_number" -> IntermediateType(PostgreSqlType.BIG_INT)
+
     "ntile" -> IntermediateType(PostgreSqlType.INTEGER).asNullable()
+
     "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
+
     "isempty", "lower_inc", "upper_inc", "lower_inf", "upper_inf" -> IntermediateType(BOOLEAN)
+
     "range_merge" -> encapsulatingTypePreferringKotlin(exprList, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE, PostgreSqlType.TSMULTIRANGE, PostgreSqlType.TSTZRANGE)
+
     "tsrange" -> IntermediateType(PostgreSqlType.TSRANGE)
+
     "tstzrange" -> IntermediateType(PostgreSqlType.TSTZRANGE)
+
     "tsmultirange" -> IntermediateType(PostgreSqlType.TSMULTIRANGE)
+
     "tstzmultirange" -> IntermediateType(PostgreSqlType.TSTZMULTIRANGE)
+
     "range_agg" -> {
       when (resolvedType(exprList[0]).dialectType) {
         PostgreSqlType.TSRANGE, PostgreSqlType.TSMULTIRANGE -> IntermediateType(PostgreSqlType.TSMULTIRANGE)
@@ -229,10 +297,15 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         else -> error("type not supported for range_agg, use TSRANGE, TSMULTIRANGE, TSTZRANGE, TSTZMULTIRANGE")
       }
     }
+
     "unnest" -> unNestType(exprList[0].postgreSqlType())
+
     "pg_input_is_valid" -> IntermediateType(BOOLEAN)
+
     "enum_range" -> IntermediateType(TEXT)
+
     "enum_first" -> IntermediateType(TEXT)
+
     "enum_last" -> IntermediateType(TEXT)
 
     else -> null
@@ -280,12 +353,15 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       is PostgreSqlAtTimeZoneOperator -> {
         IntermediateType(TEXT)
       }
+
       is PostgreSqlDoubleColonCastOperatorExpression -> {
         (argument.parent.parent as SqlExpr).postgreSqlType()
       }
+
       is PostgreSqlJsonExpression -> {
         IntermediateType(PostgreSqlType.JSON)
       }
+
       else -> {
         parentResolver.argumentType(parent, argument)
       }
@@ -299,6 +375,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
 
   private fun SqlExpr.postgreSqlType(): IntermediateType = when (this) {
     is SqlIsExpr -> IntermediateType(BOOLEAN)
+
     is SqlBinaryExpr -> {
       if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
         IntermediateType(BOOLEAN)
@@ -313,16 +390,26 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         )
       }
     }
+
     is SqlLiteralExpr -> when {
       literalValue.text == "TRUE" || literalValue.text == "FALSE" -> IntermediateType(BOOLEAN)
+
       literalValue.text == "CURRENT_DATE" || literalValue.text.startsWith("DATE ") -> IntermediateType(PostgreSqlType.DATE)
+
       literalValue.text == "CURRENT_TIME" || literalValue.text.startsWith("TIME ") -> IntermediateType(PostgreSqlType.TIME)
+
       literalValue.text.startsWith("CURRENT_TIMESTAMP") -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE)
+
       literalValue.text.startsWith("TIMESTAMP WITH TIME ZONE") -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE)
+
       literalValue.text.startsWith("TIMESTAMP WITHOUT TIME ZONE") -> IntermediateType(TIMESTAMP)
+
       literalValue.text.startsWith("TIMESTAMP") -> IntermediateType(TIMESTAMP)
+
       literalValue.text.startsWith("INTERVAL") -> IntermediateType(PostgreSqlType.INTERVAL)
+
       literalValue.text == "CURRENT_USER" || literalValue.text == "SESSION_USER" -> IntermediateType(TEXT)
+
       literalValue.numericLiteral != null -> {
         if (literalValue.text.contains('.')) {
           IntermediateType(PostgreSqlType.NUMERIC)
@@ -330,9 +417,12 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
           IntermediateType(PostgreSqlType.INTEGER)
         }
       }
+
       else -> parentResolver.resolvedType(this)
     }
+
     is PostgreSqlAtTimeZoneOperator -> IntermediateType(TEXT)
+
     is PostgreSqlExtensionExpr -> when {
       jsonFunctionStmt != null || jsonAggStmt != null || jsonObjectAggStmt != null -> IntermediateType(PostgreSqlType.JSON)
 
@@ -340,13 +430,16 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
         arrayIntermediateType(typeForArray)
       }
+
       stringAggStmt != null -> {
         IntermediateType(TEXT)
       }
+
       windowFunctionExpr != null -> {
         val windowFunctionExpr = windowFunctionExpr as WindowFunctionMixin
         functionType(windowFunctionExpr.functionExpr)!!
       }
+
       jsonExpression != null -> {
         if (jsonExpression!!.jsonbBooleanOperator != null) {
           IntermediateType(BOOLEAN)
@@ -354,9 +447,11 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
           IntermediateType(PostgreSqlType.JSON).asNullable()
         }
       }
+
       rangeOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
+
       matchOperatorExpression != null ||
         regexMatchOperatorExpression != null ||
         booleanNotExpression != null ||
@@ -364,17 +459,20 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
+
       atTimeZoneOperatorExpression != null -> {
         val timeStamp = (atTimeZoneOperatorExpression as AtTimeZoneOperatorExpressionMixin).postgreSqlType()
         atTimeZoneOperatorExpression?.atTimeZoneOperatorList?.fold(timeStamp) { acc, _ ->
           if (acc.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
         } ?: if (timeStamp.dialectType == TIMESTAMP) IntermediateType(TIMESTAMP_TIMEZONE) else IntermediateType(TIMESTAMP)
       }
+
       doubleColonCastOperatorExpression != null -> {
         val expType: IntermediateType = (doubleColonCastOperatorExpression as DoubleColonCastOperatorExpressionMixin).expr.postgreSqlType()
         val lastTypeCast = doubleColonCastOperatorExpression!!.doubleColonCastOperatorList.last().typeName
         definitionType(lastTypeCast).nullableIf(expType.javaType.isNullable)
       }
+
       extractTemporalExpression != null -> {
         val temporalExprType = (extractTemporalExpression as ExtractTemporalExpressionMixin).expr.postgreSqlType()
         if (temporalExprType.dialectType !in temporalTypes) {
@@ -382,7 +480,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         }
         IntermediateType(REAL).nullableIf(temporalExprType.javaType.isNullable)
       }
+
       plsqlTriggerVarExpression != null -> IntermediateType(TEXT)
+
       else -> parentResolver.resolvedType(this)
     }
 

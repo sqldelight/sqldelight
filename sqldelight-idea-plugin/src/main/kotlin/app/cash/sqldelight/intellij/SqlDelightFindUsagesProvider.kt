@@ -36,6 +36,7 @@ class SqlDelightFindUsagesProvider : FindUsagesProvider {
       is StmtIdentifierMixin, is SqlTableName, is SqlColumnName, is SqlTableAlias,
       is SqlColumnAlias, is SqlViewName, is SqlCteTableName, is SqlNewTableName,
       -> true
+
       else -> false
     }
   }

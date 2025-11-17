@@ -33,15 +33,21 @@ internal fun PsiElement.referencedTables(
   compoundSelectStmt: SqlCompoundSelectStmt? = null,
 ): List<TableNameElement> = when (this) {
   is SqlCompoundSelectStmt -> tablesObserved()
+
   is SqlTableAlias -> source().referencedTables()
+
   is SqlNewTableName -> {
     listOf(TableNameElement.NewTableName(this))
   }
+
   is SqlTableName, is SqlViewName -> {
     when (val parentRule = parent!!) {
       is SqlCreateTableStmt -> listOf(CreateTableName(parentRule.tableName))
+
       is SqlCreateVirtualTableStmt -> listOf(CreateTableName(parentRule.tableName))
+
       is SqlCreateViewStmt -> parentRule.compoundSelectStmt?.tablesObserved().orEmpty()
+
       is SqlCteTableName -> {
         val withClause = parentRule.parent as SqlWithClause
         val index = withClause.cteTableNameList.indexOf(parentRule)
@@ -55,8 +61,10 @@ internal fun PsiElement.referencedTables(
             .findChildOfType<SqlCompoundSelectStmt>()?.tablesObserved().orEmpty()
         }
       }
+
       else -> reference?.resolve()?.referencedTables().orEmpty()
     }
   }
+
   else -> throw IllegalStateException("Cannot get reference table for psi type ${this.javaClass}")
 }
