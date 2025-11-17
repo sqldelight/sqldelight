@@ -81,6 +81,7 @@ abstract class BaseConcurrencyTest {
           maxReaderConnections = maxReaderConnections,
         )
       }
+
       DbType.RegularDelete -> {
         val config = configCommon.copy(journalMode = JournalMode.DELETE)
         NativeSqliteDriver(
@@ -88,6 +89,7 @@ abstract class BaseConcurrencyTest {
           maxReaderConnections = maxReaderConnections,
         )
       }
+
       DbType.InMemoryShared -> {
         val config = configCommon.copy(inMemory = true)
         NativeSqliteDriver(
@@ -95,6 +97,7 @@ abstract class BaseConcurrencyTest {
           maxReaderConnections = maxReaderConnections,
         )
       }
+
       DbType.InMemorySingle -> {
         val config = configCommon.copy(name = null, inMemory = true)
         NativeSqliteDriver(

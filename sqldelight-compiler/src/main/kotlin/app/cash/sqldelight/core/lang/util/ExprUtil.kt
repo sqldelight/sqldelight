@@ -102,7 +102,7 @@ internal object AnsiSqlTypeResolver : TypeResolver {
       }
     }
 
-    /**
+    /*
      * sum's output is always nullable because it returns NULL for an input that's empty or only contains NULLs.
      *
      * https://www.sqlite.org/lang_aggfunc.html#sumunc
@@ -136,14 +136,21 @@ internal object AnsiSqlTypeResolver : TypeResolver {
     }
 
     "avg" -> IntermediateType(REAL).asNullable()
+
     "abs" -> encapsulatingType(exprList, INTEGER, REAL)
+
     "iif" -> exprList[1].type()
+
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, nullability = { exprListNullability ->
       exprListNullability.all { it }
     })
+
     "nullif" -> exprList[0].type().asNullable()
+
     "max" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT, BLOB, BOOLEAN).asNullable()
+
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, INTEGER, REAL, BOOLEAN).asNullable()
+
     else -> null
   }
 
@@ -202,6 +209,7 @@ private fun SqlExpr.type(): IntermediateType {
  */
 private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   is SqlRaiseExpr -> IntermediateType(NULL)
+
   is SqlCaseExpr -> childOfType(SqlTypes.THEN)!!.nextSiblingOfType<SqlExpr>().type()
 
   is SqlExistsExpr -> {
@@ -214,13 +222,21 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   }
 
   is SqlInExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+
   is SqlBetweenExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+
   is SqlIsExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+
   is SqlNullExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+
   is SqlBinaryLikeExpr -> IntermediateType(PrimitiveType.BOOLEAN)
+
   is SqlCollateExpr -> expr.type()
+
   is SqlCastExpr -> typeName.type().nullableIf(expr.type().javaType.isNullable)
+
   is SqlParenExpr -> expr?.type() ?: IntermediateType(NULL)
+
   is SqlFunctionExpr -> typeResolver.functionType(this) ?: IntermediateType(NULL)
 
   is SqlBinaryExpr -> {
@@ -254,7 +270,9 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
 
   is SqlLiteralExpr -> when {
     (literalValue.stringLiteral != null) -> IntermediateType(TEXT)
+
     (literalValue.blobLiteral != null) -> IntermediateType(BLOB)
+
     (literalValue.numericLiteral != null) -> {
       if (literalValue.text.contains('.')) {
         IntermediateType(REAL)
@@ -262,6 +280,7 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
         IntermediateType(INTEGER)
       }
     }
+
     (
       literalValue.childOfType(
         TokenSet.create(
@@ -271,7 +290,9 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
         ),
       ) != null
       ) -> IntermediateType(TEXT)
+
     (literalValue.childOfType(SqlTypes.NULL) != null) -> IntermediateType(NULL)
+
     else -> IntermediateType(BLOB).asNullable()
   }
 

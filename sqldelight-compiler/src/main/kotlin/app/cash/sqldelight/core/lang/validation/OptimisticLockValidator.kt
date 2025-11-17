@@ -53,6 +53,7 @@ open class OptimisticLockValidator : Annotator {
           element.updateStmtSubsequentSetterList.mapNotNull { it.setterExpression }
         columns.zip(setters)
       }
+
       is SqlUpdateStmtLimited -> {
         val columns = element.columnNameList +
           element.updateStmtSubsequentSetterList.mapNotNull { it.columnName }
@@ -60,6 +61,7 @@ open class OptimisticLockValidator : Annotator {
           element.updateStmtSubsequentSetterList.mapNotNull { it.setterExpression }
         columns.zip(setters)
       }
+
       else -> throw IllegalStateException()
     }.singleOrNull { (column, _) -> column.textMatches(lock.columnName.name) } ?: (null to null)
 

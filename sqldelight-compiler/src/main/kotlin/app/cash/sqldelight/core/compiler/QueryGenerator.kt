@@ -220,8 +220,11 @@ abstract class QueryGenerator(
     val totalArgumentCount = when {
       regularParameterCount > 0 && arrayParameterSizes.isNotEmpty() ->
         "$regularParameterCount + ${arrayParameterSizes.joinToString(" + ")}"
+
       regularParameterCount > 0 -> regularParameterCount.toString()
+
       arrayParameterSizes.isNotEmpty() -> arrayParameterSizes.joinToString(" + ")
+
       else -> "0"
     }
 

@@ -9,6 +9,7 @@ internal class WasmWorkerResultWithRowCount(
   override val rowCount: Long
     get() = when {
       data.results.values?.length == 0 -> 0L
+
       else -> data.results.values?.get(0)?.get(0)?.unsafeCast<JsNumber>()?.toDouble()
         ?.toLong() ?: 0L
     }

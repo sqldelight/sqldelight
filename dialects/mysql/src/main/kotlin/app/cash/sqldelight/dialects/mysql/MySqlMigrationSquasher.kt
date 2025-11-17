@@ -26,17 +26,20 @@ internal class MySqlMigrationSquasher(
         val startIndex = alterTableRules.alteredTable(into).columnDefList.last().textRange.endOffset
         into.text.replaceRange(startIndex until startIndex, ",\n  ${alterTableRules.alterTableAddConstraint!!.tableConstraint.text}")
       }
+
       alterTableRules.alterTableAddIndex != null -> {
         val startIndex = alterTableRules.alteredTable(into).columnDefList.last().textRange.endOffset
         val constraint = alterTableRules.alterTableAddIndex!!.text.substringAfter("ADD").trim()
         into.text.replaceRange(startIndex until startIndex, ",\n  $constraint")
       }
+
       alterTableRules.alterTableDropIndex != null -> {
         val indexName = PsiTreeUtil.findChildOfType(alterTableRules.alterTableDropIndex, SqlIndexName::class.java)!!
         val createIndex = into.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }
           .single { it.indexName.textMatches(indexName.text) }
         into.text.removeRange(createIndex.textRange.startOffset..createIndex.textRange.endOffset)
       }
+
       alterTableRules.alterTableRenameIndex != null -> {
         val indexNames = PsiTreeUtil.getChildrenOfTypeAsList(alterTableRules.alterTableRenameIndex, SqlIndexName::class.java)
         val oldName = indexNames.first()
@@ -45,6 +48,7 @@ internal class MySqlMigrationSquasher(
         val newName = indexNames.last()
         into.text.replaceRange(createIndex.indexName.textRange.startOffset until createIndex.indexName.textRange.endOffset, newName.text)
       }
+
       alterTableRules.alterTableAlterIndex != null -> {
         val indexName = PsiTreeUtil.findChildOfType(alterTableRules.alterTableAlterIndex, SqlIndexName::class.java)!!
         val visibility = alterTableRules.alterTableAlterIndex!!.text.substringAfter(indexName.text).trim()
@@ -78,36 +82,43 @@ internal class MySqlMigrationSquasher(
           into.text
         }
       }
+
       alterTableRules.alterTableAddColumn != null -> {
         val placement = alterTableRules.alterTableAddColumn!!.placementClause
         val columnDef = PsiTreeUtil.getChildOfType(alterTableRules.alterTableAddColumn!!, SqlColumnDef::class.java)!!
         into.text.replaceWithPlacement(alterTableRules.alteredTable(into), placement, columnDef)
       }
+
       alterTableRules.alterTableChangeColumn != null -> {
         val placement = alterTableRules.alterTableChangeColumn!!.placementClause
         val columnDef = PsiTreeUtil.getChildOfType(alterTableRules.alterTableChangeColumn!!, SqlColumnDef::class.java)!!
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableChangeColumn!!, SqlColumnName::class.java)!!
         into.text.replaceWithPlacement(alterTableRules.alteredTable(into), placement, columnDef, columnName)
       }
+
       alterTableRules.alterTableModifyColumn != null -> {
         val placement = alterTableRules.alterTableModifyColumn!!.placementClause
         val columnDef = PsiTreeUtil.getChildOfType(alterTableRules.alterTableModifyColumn!!, SqlColumnDef::class.java)!!
         val columnName = columnDef.columnName
         into.text.replaceWithPlacement(alterTableRules.alteredTable(into), placement, columnDef, columnName)
       }
+
       alterTableRules.alterTableDropColumn != null -> {
         val columnName = PsiTreeUtil.getChildOfType(alterTableRules.alterTableDropColumn, SqlColumnName::class.java)!!
         into.text.replaceWithPlacement(alterTableRules.alteredTable(into), null, null, columnName)
       }
+
       alterTableRules.alterTableConvertCharacterSet != null -> {
         val startIndex = alterTableRules.alteredTable(into).textRange.endOffset
         val rule = alterTableRules.alterTableConvertCharacterSet!!.text.substringAfter("TO")
         into.text.replaceRange(startIndex until startIndex, rule)
       }
+
       alterTableRules.rowFormatClause != null -> {
         val startIndex = alterTableRules.alteredTable(into).textRange.endOffset
         into.text.replaceRange(startIndex until startIndex, " ${alterTableRules.rowFormatClause!!.text}")
       }
+
       else -> parentSquasher.squish(alterTableRules, into)
     }
   }

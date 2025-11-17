@@ -31,12 +31,14 @@ class AnsiSqlMigrationSquasher(
           createNewSqlFile(squasher.squish(rules, into = currentFile))
         }.text
       }
+
       statement.dropIndexStmt != null -> {
         val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createIndexStmt }.single {
           it.indexName.textMatches(statement.dropIndexStmt!!.indexName!!.text)
         }
         into.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
+
       statement.dropTableStmt != null -> {
         val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createTableStmt }.single {
           it.tableName.textMatches(statement.dropTableStmt!!.tableName!!.text)
@@ -50,18 +52,21 @@ class AnsiSqlMigrationSquasher(
           fileText.replaceRange(element.textRange.startOffset..element.textRange.endOffset, "")
         }
       }
+
       statement.dropTriggerStmt != null -> {
         val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createTriggerStmt }.single {
           it.triggerName.textMatches(statement.dropTriggerStmt!!.triggerName!!.text)
         }
         into.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
+
       statement.dropViewStmt != null -> {
         val create = into.sqlStmtList!!.stmtList.mapNotNull { it.createViewStmt }.single {
           it.viewName.textMatches(statement.dropViewStmt!!.viewName!!.text)
         }
         into.text.replaceRange(create.textRange.startOffset..create.textRange.endOffset, "")
       }
+
       else -> {
         into.text + statement.text + ";\n"
       }
@@ -81,6 +86,7 @@ class AnsiSqlMigrationSquasher(
           fileText.replaceRange(element.range, newName)
         }
       }
+
       alterTableRules.alterTableAddColumn != null -> {
         val createTable = alterTableRules.alteredTable(into)
         into.text.replaceRange(
@@ -89,6 +95,7 @@ class AnsiSqlMigrationSquasher(
             .joinToString(separator = ",\n  ") { it.text },
         )
       }
+
       else -> throw IllegalStateException("Cannot squish ${alterTableRules.text}")
     }
   }

@@ -95,12 +95,14 @@ class AsyncPagingDataDiffer<T : Any> @JvmOverloads constructor(
         differCallback.onInserted(0, newList.size)
         null
       }
+
       // fast path for some items -> no items
       newList.size == 0 -> {
         onListPresentable()
         differCallback.onRemoved(0, previousList.size)
         null
       }
+
       else -> {
         val diffResult = withContext(workerDispatcher) {
           previousList.computeDiff(newList, diffCallback)

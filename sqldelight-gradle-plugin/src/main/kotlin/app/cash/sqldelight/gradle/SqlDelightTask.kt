@@ -114,6 +114,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
             "Generation failed; see the generator error output for details.",
           )
         }
+
         is Success -> { }
       }
     }

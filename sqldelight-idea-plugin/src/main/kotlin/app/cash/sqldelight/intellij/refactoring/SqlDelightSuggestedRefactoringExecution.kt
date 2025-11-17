@@ -157,6 +157,7 @@ internal class SqlDelightSuggestedRefactoringExecution {
             val version = newestMigrationFile.version.plus(1)
             project.createMigrationFile(migration, version)
           }
+
           else -> newestMigrationFile
         }
         writeToFile(declarationPointer, migrationFile, migration)

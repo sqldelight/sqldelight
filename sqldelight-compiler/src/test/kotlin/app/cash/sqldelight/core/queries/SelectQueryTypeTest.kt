@@ -1115,6 +1115,7 @@ class SelectQueryTypeTest {
      */
     val binderCheck = when {
       dialect.dialect.isSqlite -> ""
+
       else -> when (dialect.dialect) {
         is PostgreSqlDialect, is HsqlDialect, is MySqlDialect -> "check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)\n    "
         else -> throw IllegalStateException("Unknown dialect: $this")

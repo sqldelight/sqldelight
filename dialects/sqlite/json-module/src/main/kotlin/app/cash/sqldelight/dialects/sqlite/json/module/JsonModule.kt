@@ -23,8 +23,11 @@ private class JsonTypeResolver(private val parentResolver: TypeResolver) : TypeR
       "json_remove", "json_type", "json_quote", "json_group_array", "json_group_object",
       ->
         return IntermediateType(PrimitiveType.TEXT)
+
       "json_array_length" -> return IntermediateType(PrimitiveType.INTEGER)
+
       "json_extract" -> return IntermediateType(PrimitiveType.TEXT).asNullable()
+
       "json_valid" -> return IntermediateType(PrimitiveType.BOOLEAN)
     }
     return parentResolver.functionType(functionExpr)

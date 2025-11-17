@@ -17,6 +17,7 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : Sqlite
     is SqliteExtensionExpr -> {
       functionType(expr.windowFunctionExpr)!! // currently this is the only sqlite extension expr in 3_25
     }
+
     else -> super.resolvedType(expr)
   }
 

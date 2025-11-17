@@ -72,17 +72,25 @@ internal class SqlDelightStructureViewElement(
   override fun getPresentation() = this
   override fun getName(): String? = when (element) {
     is SqlDelightFile -> element.virtualFile?.name
+
     is SqlTableName -> when (element.parent) {
       is SqlCreateTableStmt -> "CREATE TABLE ${element.name}"
+
       is SqlCreateVirtualTableStmt -> "CREATE VIRTUAL TABLE ${element.name}"
+
       else -> throw IllegalStateException(
         "Unhandled table name element for parent ${element.parent}",
       )
     }
+
     is SqlIndexName -> "CREATE INDEX ${element.text}"
+
     is SqlTriggerName -> "CREATE TRIGGER ${element.text}"
+
     is SqlViewName -> "CREATE VIEW ${element.name}"
+
     is SqlIdentifier -> element.text
+
     else -> throw IllegalStateException("Unhandled element $element")
   }
 
@@ -98,6 +106,7 @@ internal class SqlDelightStructureViewElement(
         .mapNotNull {
           val element = when (it) {
             is SqlDelightStmtIdentifier -> it.identifier()
+
             is SqlStmt -> with(it) {
               when {
                 createTableStmt != null -> createTableStmt?.tableName
@@ -108,6 +117,7 @@ internal class SqlDelightStructureViewElement(
                 else -> null
               }
             }
+
             else -> null
           }
           return@mapNotNull element?.let(::SqlDelightStructureViewElement)

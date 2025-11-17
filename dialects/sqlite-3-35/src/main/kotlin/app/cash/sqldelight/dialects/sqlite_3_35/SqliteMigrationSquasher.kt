@@ -26,6 +26,7 @@ internal class SqliteMigrationSquasher(
             .joinToString(separator = ",\n  ") { it.text },
         )
       }
+
       else -> parentSquasher.squish(alterTableRules, into)
     }
   }

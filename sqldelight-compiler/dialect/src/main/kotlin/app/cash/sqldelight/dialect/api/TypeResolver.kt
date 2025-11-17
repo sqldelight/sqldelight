@@ -93,6 +93,7 @@ fun TypeResolver.encapsulatingType(
       exprListNullability.all { it } -> type.asNullable()
       else -> type
     }
+
     else -> type.nullableIf(nullability(exprListNullability))
   }
 }

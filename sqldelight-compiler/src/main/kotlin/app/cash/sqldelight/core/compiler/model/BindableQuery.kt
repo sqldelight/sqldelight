@@ -160,13 +160,17 @@ abstract class BindableQuery(
       // then the new type must be nullable.
       // i.e. WHERE (:foo IS NULL OR data = :foo)
       current.type.dialectType == NULL -> newType
+
       current.type.dialectType == INTEGER && newType.dialectType == BOOLEAN -> newType
+
       // If we'd previously assigned a type to this argument other than NULL, and later encounter NULL,
       // we should update the existing type to be nullable.
       // i.e. WHERE (data = :foo OR :foo IS NULL)
       newType.dialectType == NULL && current.type.dialectType != NULL -> current.type
+
       // If the new type is just a wrapped type, use it.
       newType.dialectType is ValueTypeDialectType -> newType
+
       // Nothing to update
       else -> null
     }
@@ -219,6 +223,7 @@ abstract class BindableQuery(
     fun getUniqueQueryIdentifier(qualifiedQueryName: String): Int {
       return when (queryIdMap.containsKey(qualifiedQueryName)) {
         true -> queryIdMap[qualifiedQueryName]!!
+
         else -> {
           val queryId = qualifiedQueryName.hashCode()
           if (queryIdMap.values.contains(queryId)) {

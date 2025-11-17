@@ -35,8 +35,11 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
   override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
     return when (this) {
       SMALL_INT -> CodeBlock.of("bindShort(%L, %L)\n", columnIndex, value)
+
       INTEGER -> CodeBlock.of("bindInt(%L, %L)\n", columnIndex, value)
+
       BIG_INT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
+
       DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> CodeBlock.of(
         "bindObject(%L, %L)\n",
         columnIndex,
@@ -44,12 +47,14 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
       )
 
       NUMERIC -> CodeBlock.of("bindBigDecimal(%L, %L)\n", columnIndex, value)
+
       ENUM, INTERVAL, JSON, TSVECTOR, TSTZRANGE, TSRANGE, TSMULTIRANGE, TSTZMULTIRANGE, TSQUERY -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,
         value,
         MemberName(ClassName("java.sql", "Types"), "OTHER"),
       )
+
       XML -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,

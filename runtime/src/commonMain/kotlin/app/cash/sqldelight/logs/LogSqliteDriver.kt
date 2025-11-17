@@ -62,6 +62,7 @@ class LogSqliteDriver(
           queryResult.await().also { it.attachLogHooks() }
         }
       }
+
       is QueryResult.Value<Transacter.Transaction> -> {
         val transaction = queryResult.value.also { it.attachLogHooks() }
         return QueryResult.Value(transaction)

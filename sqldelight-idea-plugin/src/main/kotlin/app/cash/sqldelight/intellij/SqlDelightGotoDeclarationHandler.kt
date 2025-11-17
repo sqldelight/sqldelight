@@ -116,9 +116,11 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
   private fun targetData(psiElement: PsiElement): TargetData? {
     val reference = when (psiElement.parent) {
       is PsiReference -> psiElement.parent as PsiReference
+
       is KtNameReferenceExpression -> {
         psiElement.parent.references.firstIsInstance<KtSimpleNameReference>()
       }
+
       else -> return null
     }
     return when (val resolved = reference.resolve()) {
@@ -135,11 +137,13 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
           containingFile = element.containingFile.virtualFile,
         )
       }
+
       is KtNamedFunction, is PsiMethod -> TargetData(
         parameter = null,
         function = resolved as PsiNamedElement,
         containingFile = resolved.containingFile?.virtualFile,
       )
+
       else -> null
     }
   }

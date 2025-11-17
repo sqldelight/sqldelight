@@ -34,6 +34,7 @@ internal abstract class InsertStmtMixin(
       )
       val conflictResolution = when {
         replace != null -> SqlTypes.REPLACE
+
         insertOr != null && insertOr.elementType == SqlTypes.OR -> {
           val type = insertOr.treeNext.elementType
           check(

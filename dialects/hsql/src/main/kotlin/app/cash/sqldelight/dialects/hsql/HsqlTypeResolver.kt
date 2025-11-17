@@ -45,6 +45,7 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
     "coalesce", "ifnull" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB, nullability = { exprListNullability ->
       exprListNullability.all { it }
     })
+
     "greatest" -> encapsulatingTypePreferringKotlin(
       exprList,
       TINY_INT,
@@ -56,6 +57,7 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
       TEXT,
       BLOB,
     )
+
     "least" -> encapsulatingTypePreferringKotlin(
       exprList,
       BLOB,
@@ -67,9 +69,13 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
       BIG_INT,
       REAL,
     )
+
     "max" -> encapsulatingTypePreferringKotlin(exprList, TINY_INT, SMALL_INT, HsqlType.INTEGER, INTEGER, BIG_INT, REAL, TEXT, BLOB).asNullable()
+
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, TINY_INT, SMALL_INT, INTEGER, HsqlType.INTEGER, BIG_INT, REAL).asNullable()
+
     "length", "char_length", "character_length" -> IntermediateType(BIG_INT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+
     else -> null
   }
 }

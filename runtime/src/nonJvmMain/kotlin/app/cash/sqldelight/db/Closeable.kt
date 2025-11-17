@@ -14,7 +14,9 @@ actual inline fun <T : Closeable?, R> T.use(body: (T) -> R): R {
   } finally {
     when {
       this == null -> {}
+
       exception == null -> close()
+
       else ->
         try {
           close()
