@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Nothing yet!
+- [Gradle Plugin] Fix build failure when starting schema version is not 1 and verifyMigrations is true (#6013 by @neilgmiller)
 
 
 ## [2.2.1] - 2025-11-13
