@@ -2,8 +2,7 @@
 
 ## Unreleased
 
-Nothing yet!
-
+- [SQLite Dialect] Add support for synthesized columns in FTS5 virtual tables (#5986 by @watbe)
 
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
