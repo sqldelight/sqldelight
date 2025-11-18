@@ -592,7 +592,7 @@ class InterfaceGeneration {
       |);
       |
       |someSelect:
-      |SELECT rank, rowid
+      |SELECT rank AS rank, rowid AS rowid
       |FROM data
       |WHERE data MATCH ?
       |ORDER BY rank;
@@ -610,11 +610,12 @@ class InterfaceGeneration {
       """
       |package com.example
       |
-      |import kotlin.String
+      |import kotlin.Double
+      |import kotlin.Long
       |
       |public data class SomeSelect(
       |  public val rank: Double,
-      |  public val rowid: Integer,
+      |  public val rowid: Long,
       |)
       |
       """.trimMargin(),
