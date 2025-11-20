@@ -100,8 +100,8 @@ jobs:
           df -h
           sudo rm -rf /usr/share/dotnet
           df -h
-          echo 'Showing runner work space use'
-          du -h /home/runner/work/ --max-depth=3 | sort -hr | head -20
+          echo 'Showing /usr/share use'
+          sudo du -sh /usr/share/* | sort -hr | head -20
       - name: Run instrumentation tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
