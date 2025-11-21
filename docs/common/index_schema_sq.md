@@ -1,10 +1,10 @@
 {% if not server %}## Defining the Schema{% endif %}
 
-Write your SQL statements in a `.sq` file under `src/main/sqldelight`. 
+Write your SQL statements in a `.sq` file under `src/commonMain/sqldelight`. 
 Typically the first statement in the `.sq` file creates a table, but you can also create indexes
 or set up default content.
 
-```sql title="src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq"
+```sql title="src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq"
 CREATE TABLE hockeyPlayer (
   player_number INTEGER PRIMARY KEY NOT NULL,
   full_name TEXT NOT NULL
