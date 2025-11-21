@@ -16,8 +16,7 @@ import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
 /**
- * Common API for interacting with gradle workers
- * in tasks
+ * Common API for interacting with gradle workers in tasks
  */
 @CacheableTask
 abstract class SqlDelightWorkerTask : SourceTask() {
@@ -41,7 +40,7 @@ abstract class SqlDelightWorkerTask : SourceTask() {
     return this
   }
 
-  fun environment(environmentVariables: Map<String, *>): SqlDelightWorkerTask {
+  fun environment(environmentVariables: Map<String, Any>): SqlDelightWorkerTask {
     environment.putAll(environmentVariables)
     return this
   }
@@ -51,6 +50,16 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   @get:Optional
   val systemProperties: MapProperty<String, Any> =
     project.objects.mapProperty(String::class.java, Any::class.java)
+
+  fun systemProperty(name: String, value: Any): SqlDelightWorkerTask {
+    systemProperties.put(name, value)
+    return this
+  }
+
+  fun systemProperties(properties: Map<String, Any>): SqlDelightWorkerTask {
+    systemProperties.putAll(properties)
+    return this
+  }
 
   /** @see JavaForkOptions.getMinHeapSize */
   @get:Input
