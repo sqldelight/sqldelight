@@ -52,7 +52,6 @@ jobs:
         if: matrix.os == 'macOS-14'
       - name: Reclaim disk-space on ubuntu
         run: |
-          df -h
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/share/swift
           df -h
