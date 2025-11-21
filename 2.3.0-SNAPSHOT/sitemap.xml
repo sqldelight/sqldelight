@@ -41,6 +41,10 @@
          <lastmod>2025-11-21</lastmod>
     </url>
     <url>
+         <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/android_sqlite/fts5_virtual_tables/</loc>
+         <lastmod>2025-11-21</lastmod>
+    </url>
+    <url>
          <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/android_sqlite/gradle/</loc>
          <lastmod>2025-11-21</lastmod>
     </url>
@@ -110,6 +114,10 @@
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/common/custom_projections/</loc>
+         <lastmod>2025-11-21</lastmod>
+    </url>
+    <url>
+         <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/common/fts5_virtual_tables/</loc>
          <lastmod>2025-11-21</lastmod>
     </url>
     <url>
@@ -202,6 +210,10 @@
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/js_sqlite/custom_worker/</loc>
+         <lastmod>2025-11-21</lastmod>
+    </url>
+    <url>
+         <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/js_sqlite/fts5_virtual_tables/</loc>
          <lastmod>2025-11-21</lastmod>
     </url>
     <url>
@@ -381,6 +393,10 @@
          <lastmod>2025-11-21</lastmod>
     </url>
     <url>
+         <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/jvm_sqlite/fts5_virtual_tables/</loc>
+         <lastmod>2025-11-21</lastmod>
+    </url>
+    <url>
          <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/jvm_sqlite/gradle/</loc>
          <lastmod>2025-11-21</lastmod>
     </url>
@@ -433,6 +449,10 @@
          <lastmod>2025-11-21</lastmod>
     </url>
     <url>
+         <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/multiplatform_sqlite/fts5_virtual_tables/</loc>
+         <lastmod>2025-11-21</lastmod>
+    </url>
+    <url>
          <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/multiplatform_sqlite/gradle/</loc>
          <lastmod>2025-11-21</lastmod>
     </url>
@@ -482,6 +502,10 @@
     </url>
     <url>
          <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/native_sqlite/foreign_keys/</loc>
+         <lastmod>2025-11-21</lastmod>
+    </url>
+    <url>
+         <loc>https://sqldelight.github.io/sqldelight/2.3.0-SNAPSHOT/native_sqlite/fts5_virtual_tables/</loc>
          <lastmod>2025-11-21</lastmod>
     </url>
     <url>
