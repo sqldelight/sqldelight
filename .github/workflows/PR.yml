@@ -50,7 +50,12 @@ jobs:
           find /Applications -type d -name "Xcode_*.app" | grep -v "Xcode_15.4.app" | xargs sudo rm -rf
           df -hI /dev/disk3s1s1
         if: matrix.os == 'macOS-14'
-
+      - name: Reclaim disk-space on ubuntu
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/share/swift
+          df -h
+        if: matrix.os == 'ubuntu-latest'
       - name: Checkout the repo
         uses: actions/checkout@v5
       - name: Set up Java
