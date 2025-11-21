@@ -5186,10 +5186,10 @@ progressively apply migrations over time to update your database's schema.</p>
 In both cases, your SQL <em>queries</em> will be written in <code>.sq</code> files (<a href="#typesafe-sql">as shown here</a>).</p>
 <h2 id="fresh-schema">Fresh Schema<a class="headerlink" href="#fresh-schema" title="Permanent link">&para;</a></h2>
 <h2 id="defining-the-schema">Defining the Schema<a class="headerlink" href="#defining-the-schema" title="Permanent link">&para;</a></h2>
-<p>Write your SQL statements in a <code>.sq</code> file under <code>src/main/sqldelight</code>. 
+<p>Write your SQL statements in a <code>.sq</code> file under <code>src/commonMain/sqldelight</code>. 
 Typically the first statement in the <code>.sq</code> file creates a table, but you can also create indexes
 or set up default content.</p>
-<div class="highlight"><span class="filename">src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
+<div class="highlight"><span class="filename">src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">player_number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">full_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 <span class="p">);</span>
@@ -5268,7 +5268,7 @@ connection managers.</p>
 runtime SQL goes in <code>.sq</code> files.</p>
 <h2 id="defining-typesafe-queries">Defining Typesafe Queries<a class="headerlink" href="#defining-typesafe-queries" title="Permanent link">&para;</a></h2>
 <p>SQLDelight will generate a typesafe function for any labeled SQL statement in a <code>.sq</code> file.</p>
-<div class="highlight"><span class="filename">src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
+<div class="highlight"><span class="filename">src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq</span><pre><span></span><code><span class="n">selectAll</span><span class="p">:</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">hockeyPlayer</span><span class="p">;</span>
 
