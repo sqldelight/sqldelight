@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-Nothing yet!
+### Added
+- [Gradle Plugin] Make `SqlDelightWorkerTask` more configurable, and update default configuration to support developing on Windows (#5215 by @MSDarwish2000)
 
 
 ## [2.2.1] - 2025-11-13
