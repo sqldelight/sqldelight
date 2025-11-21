@@ -50,7 +50,13 @@ jobs:
           find /Applications -type d -name "Xcode_*.app" | grep -v "Xcode_15.4.app" | xargs sudo rm -rf
           df -hI /dev/disk3s1s1
         if: matrix.os == 'macOS-14'
-
+      - name: Reclaim disk-space on ubuntu
+        run: |
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/share/swift
+          df -h
+        if: matrix.os == 'ubuntu-latest'
       - name: Checkout the repo
         uses: actions/checkout@v5
       - name: Set up Java
@@ -93,15 +99,6 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - name: Disk Check
-        if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        run: |
-          echo 'Showing disk space use'
-          df -h
-          sudo rm -rf /usr/share/dotnet
-          df -h
-          echo 'Showing /usr/share use'
-          sudo du -sh /usr/share/* | sort -hr | head -20
       - name: Run instrumentation tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
