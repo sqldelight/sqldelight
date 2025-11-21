@@ -84,7 +84,7 @@ stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2
 
 testhelp = { module = "co.touchlab:testhelp", version = "0.6.13" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
-testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.19" }
+testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.20" }
 
 r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
 testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
