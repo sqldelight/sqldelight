@@ -2,7 +2,7 @@
 
 SQLDelight will generate a typesafe function for any labeled SQL statement in a `.sq` file.
 
-```sql title="src/main/sqldelight/com/example/sqldelight/hockey/data/Player.sq"
+```sql title="src/commonMain/sqldelight/com/example/sqldelight/hockey/data/Player.sq"
 selectAll:
 SELECT *
 FROM hockeyPlayer;

@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
       - name: Set up Java
         uses: actions/setup-java@v5
