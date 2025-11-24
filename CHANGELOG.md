@@ -6,6 +6,9 @@
 - [Gradle Plugin] Make `SqlDelightWorkerTask` more configurable, and update default configuration to support developing on Windows (#5215 by @MSDarwish2000)
 - [SQLite Dialect] Add support for synthesized columns in FTS5 virtual tables (#5986 by @watbe)
 
+### Changed
+- [Compiler] Allow for underscores in package names. Before underscores have been sanitized which resulted in unexpected behaviours (#6027 by @BierDav)
+
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
 
