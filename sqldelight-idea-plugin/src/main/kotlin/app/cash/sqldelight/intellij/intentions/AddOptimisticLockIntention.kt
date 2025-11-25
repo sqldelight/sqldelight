@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.ReadOnlyModificationException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.idea.inspections.findExistingEditor
+import org.jetbrains.kotlin.idea.codeinsight.utils.findExistingEditor
 
 class AddOptimisticLockIntention(
   private val updateElement: PsiElement,
