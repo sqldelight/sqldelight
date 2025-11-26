@@ -2,7 +2,7 @@
 
 {% include 'common/index_gradle_database.md' %}
 
-{% include 'common/index_schema.md' %}
+{% include 'multiplatform_sqlite/index_schema.md' %}
 
 To use the generated database in your code, you must add a SQLDelight driver dependency to your project.
 Each target platform has its own driver implementation.
