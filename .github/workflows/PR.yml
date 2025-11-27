@@ -24,6 +24,7 @@ jobs:
   build:
     strategy:
       # Ensure any changes to the matrix are also made in PR-skip.yml
+      fail-fast: false
       matrix:
         os: [ macOS-14, windows-latest, ubuntu-latest ]
         job: [ instrumentation, test, gradle-plugin-tests ]
@@ -124,6 +125,7 @@ jobs:
       contents: read
 
     strategy:
+      fail-fast: false
       matrix:
         # https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
         idea:
