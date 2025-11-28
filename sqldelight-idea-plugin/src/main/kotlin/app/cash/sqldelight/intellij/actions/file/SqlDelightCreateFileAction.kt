@@ -28,7 +28,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
 import java.util.Properties
-
 import org.jetbrains.kotlin.idea.util.findModule
 
 /**
