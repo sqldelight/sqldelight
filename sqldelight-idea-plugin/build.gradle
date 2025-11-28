@@ -106,7 +106,6 @@ dependencies {
 
 configurations.named("runtimeClasspath") {
   exclude group: "org.slf4j"
-  exclude group: "org.jetbrains.kotlin"
   exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines"
 }
 
