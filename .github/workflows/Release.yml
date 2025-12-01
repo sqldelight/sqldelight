@@ -28,7 +28,11 @@ jobs:
         with:
           cache-cleanup: always
 
-      - run: ./gradlew publishToMavenCentral
+      # Build all artifacts with full parallelism.
+      - run: ./gradlew publishToMavenLocal
+
+      # Publish to Maven Central without parallelism to try and avoid rate limiting.
+      - run: ./gradlew publishToMavenCentral --no-parallel
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
