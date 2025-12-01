@@ -31,8 +31,8 @@ jobs:
       # Build all artifacts with full parallelism.
       - run: ./gradlew publishToMavenLocal
 
-      # Publish to Maven Central without parallelism to try and avoid rate limiting.
-      - run: ./gradlew publishToMavenCentral --no-parallel
+      # Publish to Maven Central with parallelism limited by max-workers to try and avoid rate limiting.
+      - run: ./gradlew publishToMavenCentral --parallel --max-workers=2
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
