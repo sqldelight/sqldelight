@@ -21,7 +21,6 @@ version = 1.0
 
 kotlin {
   applyDefaultHierarchyTemplate()
-  jvmToolchain(17)
 
   sourceSets.commonMain.dependencies {
     implementation 'app.cash.sqldelight:primitive-adapters'

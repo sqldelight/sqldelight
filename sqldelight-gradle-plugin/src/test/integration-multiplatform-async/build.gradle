@@ -15,8 +15,6 @@ sqldelight {
 }
 
 kotlin {
-  jvmToolchain(11)
-
   android {
     namespace = 'app.sqltest.shared'
     compileSdk = libs.versions.compileSdk.get() as int
