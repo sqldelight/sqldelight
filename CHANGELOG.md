@@ -11,6 +11,9 @@
 - [Compiler] Allow for underscores in package names. Before underscores have been sanitized which resulted in unexpected behaviours (#6027 by @BierDav)
 - [Paging Extension] Switch to AndroidX Paging (#5910 by @jeffdgr8)
 
+### Fixed
+- [Intellij Plugin] Fix Plugin initialization exceptions and update deprecated methods (#6040 by @griffio)
+
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
 
