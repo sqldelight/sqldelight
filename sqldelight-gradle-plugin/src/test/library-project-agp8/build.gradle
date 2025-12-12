@@ -1,5 +1,5 @@
 plugins {
-  id("com.android.library").version("8.13.1")
+  id("com.android.library").version("8.13.2")
   alias(libs.plugins.sqldelight)
   alias(libs.plugins.kotlin.android)
 }
