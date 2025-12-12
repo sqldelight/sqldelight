@@ -42,6 +42,8 @@ abstract class SqlDelightDatabase @Inject constructor(
   internal val configuration = project.configurations.create(configurationName).apply {
     isCanBeConsumed = false
     isVisible = false
+    exclude(mapOf("group" to "org.jetbrains.kotlin", "module" to "kotlin-stdlib"))
+    exclude(mapOf("group" to "org.jetbrains.kotlin", "module" to "kotlin-reflect"))
   }
 
   private val intellijEnv = project.configurations.create("${name}IntellijEnv").apply {
