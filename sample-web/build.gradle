@@ -39,7 +39,7 @@ kotlin {
     jsTest {
       dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-test'
-        implementation libs.kotlin.coroutines.test
+        implementation libs.kotlinx.coroutines.test
       }
     }
   }

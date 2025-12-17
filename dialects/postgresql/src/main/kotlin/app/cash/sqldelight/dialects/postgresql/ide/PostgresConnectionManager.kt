@@ -3,10 +3,10 @@ package app.cash.sqldelight.dialects.postgresql.ide
 import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.openapi.project.Project
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
 import java.sql.Connection
 import java.sql.DriverManager
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 internal class PostgresConnectionManager : ConnectionManager {
   override fun createNewConnectionProperties(
@@ -17,7 +17,7 @@ internal class PostgresConnectionManager : ConnectionManager {
       if (prefilledProperties == null) {
         PostgresConnectionDialog(project)
       } else {
-        val properties = adapter.fromJson(prefilledProperties.serializedProperties)!!
+        val properties = json.decodeFromString(ConnectionSettings.serializer(), prefilledProperties.serializedProperties)
         PostgresConnectionDialog(
           project = project,
           connectionName = prefilledProperties.key,
@@ -31,7 +31,8 @@ internal class PostgresConnectionManager : ConnectionManager {
     if (!dialog.showAndGet()) return null
     return ConnectionProperties(
       key = dialog.connectionKey,
-      serializedProperties = adapter.toJson(
+      serializedProperties = json.encodeToString(
+        ConnectionSettings.serializer(),
         ConnectionSettings(
           host = dialog.host,
           port = dialog.port,
@@ -44,7 +45,7 @@ internal class PostgresConnectionManager : ConnectionManager {
   }
 
   override fun getConnection(connectionProperties: ConnectionProperties): Connection {
-    val settings = adapter.fromJson(connectionProperties.serializedProperties)!!
+    val settings = json.decodeFromString(ConnectionSettings.serializer(), connectionProperties.serializedProperties)
 
     var url = "jdbc:postgresql://${settings.host}:${settings.port}"
     if (settings.databaseName != null) {
@@ -65,7 +66,7 @@ internal class PostgresConnectionManager : ConnectionManager {
     }
   }
 
-  @JsonClass(generateAdapter = true)
+  @Serializable
   internal data class ConnectionSettings(
     val host: String,
     val port: String,
@@ -75,7 +76,8 @@ internal class PostgresConnectionManager : ConnectionManager {
   )
 
   companion object {
-    private val adapter = Moshi.Builder().build()
-      .adapter(ConnectionSettings::class.java)
+    private val json = Json {
+      ignoreUnknownKeys = true
+    }
   }
 }

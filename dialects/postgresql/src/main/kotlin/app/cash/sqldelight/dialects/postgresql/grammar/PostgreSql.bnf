@@ -10,12 +10,14 @@
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ABORT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALWAYS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BEFORE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CASCADE"
@@ -37,6 +39,8 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DROP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.EACH"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.END"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EQ"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ESCAPE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.EXISTS"
@@ -57,6 +61,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INDEXED"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INNER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSERT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INSTEAD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.KEY"
@@ -71,6 +76,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NULL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OF"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
@@ -88,17 +94,21 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SELECT"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.SEMI"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.STRING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TEMP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TEMPORARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRIGGER"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TRUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UNIQUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USING"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIEW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
@@ -108,6 +118,8 @@
 overrides ::= type_name
   | column_constraint
   | string_literal
+  | create_trigger_stmt
+  | drop_trigger_stmt
   | bind_parameter
   | table_constraint
   | default_constraint
@@ -131,6 +143,7 @@ overrides ::= type_name
   | ordering_term
   | binary_like_operator
   | literal_value
+  | with_clause
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
@@ -182,7 +195,8 @@ type_name ::= (
   tsrange |
   tsmultirange |
   tstzmultirange |
-  xml_data_type
+  xml_data_type |
+  enum_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
@@ -292,6 +306,8 @@ tsmultirange ::= 'TSMULTIRANGE'
 
 tstzmultirange ::= 'TSTZMULTIRANGE'
 
+enum_data_type ::= {identifier}
+
 with_clause_auxiliary_stmt ::= {compound_select_stmt} | delete_stmt_limited | insert_stmt | update_stmt_limited {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseAuxiliaryStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlWithClauseAuxiliaryStmt"
@@ -328,7 +344,9 @@ literal_value ::= ( {numeric_literal}
                   | interval_expression
                   | timestamp_expression
                   | date_expression
-                  | time_expression ) {
+                  | time_expression
+                  | 'CURRENT_USER'
+                  | 'SESSION_USER') {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LiteralValueMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlLiteralValue"
   override = true
@@ -508,7 +526,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -555,9 +573,9 @@ boolean_not_expression ::= NOT ( {function_expr} | boolean_literal | {column_nam
 
 boolean_literal ::= TRUE | FALSE
 
-is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( 'WITH' | 'WITHOUT' ) 'UNIQUE' [ 'KEYS' ] ]
+is_json_expression ::= 'JSON' [ 'VALUE' | 'SCALAR' | 'ARRAY' | 'OBJECT' ] [ ( WITH | WITHOUT ) 'UNIQUE' [ 'KEYS' ] ]
 
-json_expression ::= {column_expr} ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
+json_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) ( jsona_binary_operator | jsonb_binary_operator | jsonb_boolean_operator ) <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
@@ -612,7 +630,7 @@ at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_
   pin = 2
 }
 
-extension_stmt ::= create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+extension_stmt ::= create_enum_type_stmt| drop_type_stmt | alter_type_stmt | drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
  alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | comment_on_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
@@ -681,7 +699,21 @@ truncate_option ::= truncate_option_identity | truncate_option_cascade
 truncate_option_identity ::= ( 'RESTART' | 'CONTINUE' ) 'IDENTITY'
 truncate_option_cascade ::=  'CASCADE' | 'RESTRICT'
 
-json_function_stmt ::= ( 'row_to_json' | 'json_agg' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
+json_function_stmt ::= ( 'row_to_json' | 'to_json' | 'to_jsonb' ) LP ( {table_alias} | {table_name} ) RP
+
+json_agg_stmt ::= ( 'json_agg' | 'jsonb_agg' | 'json_agg_strict' | 'jsonb_agg_strict')
+LP [ ALL | DISTINCT ] ( json_expression | {table_alias} | {table_name} | <<expr '-1'>> ) [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
+pin = 2
+}
+
+json_object_agg_stmt ::= ('json_object_agg' | 'jsonb_object_agg' | 'json_object_agg_strict' | 'jsonb_object_agg_strict'
+| 'json_object_agg_unique' | 'jsonb_object_agg_unique' | 'json_object_agg_unique_strict' | 'jsonb_object_agg_unique_strict' ) {
+LP [ ALL | DISTINCT ] ( json_expression | {column_expr} | <<expr '-1'>> ) COMMA ( json_expression | {column_expr} | <<expr '-1'>> )
+[ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
+pin = 2
+}
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
@@ -724,3 +756,80 @@ comment_on_extension_stmt ::= 'COMMENT' ON ( COLUMN {column_expr} | TABLE {table
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CommentOnMixin"
   pin = 2
 }
+
+
+trigger_event ::= DELETE | INSERT | 'TRUNCATE' | UPDATE [ OF {column_name} ( COMMA {column_name} ) * ]
+
+create_trigger_stmt ::= CREATE [ OR REPLACE ] [ CONSTRAINT ] TRIGGER [ database_name DOT ] {trigger_name} [ AFTER | BEFORE | INSTEAD OF ]
+ trigger_event [ ( OR trigger_event ) * ] ON {table_name}
+ [ FROM {identifier} ]
+ [ NOT 'DEFERRABLE' | 'DEFERRABLE' ]
+ [ 'INITIALLY' 'IMMEDIATE' | 'INITIALLY' 'DEFERRED' ]
+ [ 'REFERENCING' ( ('OLD' | 'NEW') TABLE [ AS ] {identifier} ) ? ]
+ [ FOR EACH ROW ] [ WHEN <<expr '-1'>> ] 'EXECUTE' ('FUNCTION' | 'PROCEDURE') {function_expr} {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateTriggerMixin"
+ implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+ elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateTriggerElementType"
+ stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
+ pin = 5
+ override = true
+}
+
+drop_trigger_stmt ::= DROP TRIGGER [ IF EXISTS ] [ database_name DOT ] {trigger_name} ON {table_name} [ CASCADE | RESTRICT ] {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropTriggerMixin"
+ implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+ elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropTriggerElementType"
+ stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
+ pin = 2
+ override = true
+}
+
+plsql_trigger_var_expression ::= 'TG_OP' | 'TG_WHEN' | 'TG_LEVEL' | 'TG_OP' | 'TG_RELID' | 'TG_TABLE_NAME' | 'TG_TABLE_SCHEMA' |
+
+plsql_assignment ::= {column_expr} ':=' <<expr '-1'>>
+plsql_conditional ::= IF <<expr '-1'>> 'THEN' plsql_statement [ ( 'ELSIF' <<expr '-1'>> 'THEN' plsql_statement ) * ] [ 'ELSE' plsql_statement ] END IF
+plsql_return ::= 'RETURN' ( 'NEW' | 'OLD' | NULL )
+plsql_statement ::= ( plsql_return SEMI | plsql_conditional SEMI | plsql_assignment SEMI | delete_stmt_limited SEMI | insert_stmt SEMI | update_stmt_limited SEMI ) *
+
+create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETURNS' TRIGGER [ 'LANGUAGE' 'PLPGSQL' ] AS
+'$$'
+'BEGIN'
+plsql_statement
+'END' SEMI
+'$$'
+[ 'LANGUAGE' 'PLPGSQL' ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateFunctionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor"
+}
+
+drop_function_stmt ::= DROP 'FUNCTION' [ IF EXISTS ] {function_expr} [ CASCADE | RESTRICT ] {
+  pin = 2
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropFunctionMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SchemaContributor
+}
+
+enum_type_label ::= string_literal
+type_identifier ::= {identifier}
+
+create_enum_type_stmt ::= CREATE 'TYPE' type_identifier AS 'ENUM' LP enum_type_label (COMMA enum_type_label) * RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateEnumTypeMixin"
+}
+
+drop_type_stmt ::= DROP 'TYPE' [ IF EXISTS ] type_identifier [ CASCADE | 'RESTRICT' ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DropEnumTypeMixin"
+}
+alter_type_add_enum_value ::= ALTER 'TYPE' type_identifier ADD VALUE [ IF NOT EXISTS ] enum_type_label [ ( BEFORE | AFTER ) enum_type_label ]
+alter_type_rename_enum_value ::= ALTER 'TYPE' type_identifier RENAME VALUE enum_type_label TO enum_type_label
+alter_type_rename ::= ALTER 'TYPE' type_identifier RENAME TO type_identifier
+alter_type_stmt ::= alter_type_add_enum_value | alter_type_rename_enum_value | alter_type_rename
+
+with_clause_materialized ::= NOT 'MATERIALIZED' | 'MATERIALIZED'
+with_clause ::= WITH [ RECURSIVE ] {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ( COMMA {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ) * {
+  mixin = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlWithClause"
+  pin = 1
+  override = true
+}
+
+
+
