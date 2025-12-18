@@ -37,7 +37,12 @@ class DatabaseFileViewProviderFactory : FileViewProviderFactory {
       if (it.fileType != DatabaseFileType && it.fileType != MigrationFileType) return@iterateContent true
       if (module != projectService.module(vFile)) return@iterateContent true
 
-      val otherVersion = it.version
+      // migration files have a version that is one less than the version they are for. i.e 1.sqm migrates to version 2
+      val otherVersion = if (it.fileType == MigrationFileType) {
+        it.version?.plus(1)
+      } else {
+        it.version
+      }
       if (otherVersion != null && otherVersion < version) {
         return@iterateContent false
       }

@@ -4,8 +4,8 @@ import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.dialect.api.ConnectionManager.ConnectionProperties
 import com.intellij.ide.util.propComponentProperty
 import com.intellij.openapi.project.Project
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 internal class ConnectionOptions(val project: Project) {
   private var storedOptions: String by propComponentProperty(project, "stored_options", "")
@@ -15,7 +15,7 @@ internal class ConnectionOptions(val project: Project) {
       if (storedOptions.isEmpty()) {
         StoredOptions()
       } else {
-        adapter.fromJson(storedOptions)!!
+        json.decodeFromString(StoredOptions.serializer(), storedOptions)
       }
 
     val dialectKey = SqlDelightProjectService.getInstance(project).dialect::class.qualifiedName
@@ -24,7 +24,7 @@ internal class ConnectionOptions(val project: Project) {
       currentOptions.dialectConnections.getOrPut(dialectKey) { DialectConnections() }
     val result = connections.action()
 
-    storedOptions = adapter.toJson(currentOptions)
+    storedOptions = json.encodeToString(StoredOptions.serializer(), currentOptions)
     return result
   }
 
@@ -58,16 +58,17 @@ internal class ConnectionOptions(val project: Project) {
   }
 
   companion object {
-    private val adapter = Moshi.Builder().build()
-      .adapter(StoredOptions::class.java)
+    private val json = Json {
+      ignoreUnknownKeys = true
+    }
   }
 
-  @JsonClass(generateAdapter = true)
+  @Serializable
   internal class StoredOptions(
     val dialectConnections: MutableMap<String, DialectConnections> = mutableMapOf(),
   )
 
-  @JsonClass(generateAdapter = true)
+  @Serializable
   internal class DialectConnections(
     var selectedOption: String? = null,
     var orderedOptions: MutableList<String> = ArrayList(),

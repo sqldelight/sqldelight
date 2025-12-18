@@ -21,7 +21,7 @@ dependencies {
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
-  implementation libs.kotlin.coroutines.core
-  implementation libs.kotlin.coroutines.test
-  implementation libs.kotlin.coroutines.reactive
+  implementation libs.kotlinx.coroutines.core
+  implementation libs.kotlinx.coroutines.test
+  implementation libs.kotlinx.coroutines.reactive
 }

@@ -1,19 +1,13 @@
 plugins {
-  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.sqldelight)
-}
-
-android {
-  compileSdk libs.versions.compileSdk.get() as int
-
-  lint {
-    textReport true
-  }
 }
 
 sqldelight {
   databases {
     Database {
+      packageName = "com.example"
+      verifyMigrations = true
       schemaOutputDirectory = file('src/main/sqldelight/databases')
     }
   }
