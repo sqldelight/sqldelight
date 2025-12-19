@@ -35,6 +35,24 @@ To generate a `.db` file from your latest schema, run the `generate<source set n
 
 Most use cases would benefit from only having a `1.db` file representing the schema of the initial version of their database. Having multiple `.db` files is allowed, but that would result in each `.db` file having each of its migrations applied to it, which causes a lot of unnecessary work.
 
+### Controlling Migration Verification Detail Level
+
+By default, SQLDelight performs a comprehensive schema comparison during migration verification. You can control the level of detail by setting the `migrationVerificationLevel` property in your Gradle configuration:
+
+```kotlin
+sqldelight {
+  databases {
+    create("Database") {
+      // ... other configuration ...
+      verifyMigrations.set(true)
+      migrationVerificationLevel.set("standard") // Use "standard" instead of "maximum" for faster verification
+    }
+  }
+}
+```
+
+This is particularly useful for large schemas where full introspection might be slow, or when certain database features aren't relevant to your migration verification.
+
 ## Code Migrations
 
 If you run your migration from code and would like to perform data migrations you can use the `Database.Schema.migrate` api:
