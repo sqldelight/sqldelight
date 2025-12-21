@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialects.sqlite_3_38
 
+import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialects.sqlite_3_35.SqliteDialect as Sqlite335Dialect
 import app.cash.sqldelight.dialects.sqlite_3_38.grammar.SqliteParserUtil
 
@@ -8,5 +9,9 @@ class SqliteDialect : Sqlite335Dialect() {
     super.setup()
     SqliteParserUtil.reset()
     SqliteParserUtil.overrideSqlParser()
+  }
+
+  override fun typeResolver(parentResolver: TypeResolver): TypeResolver {
+    return SqliteTypeResolver(parentResolver)
   }
 }
