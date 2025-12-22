@@ -27,4 +27,15 @@ class IntegrationTests {
       assertThat(last().a).isNull()
     }
   }
+
+  @Test fun selectByArgs() {
+    jsonQueries.insert("""{"alpha" : "abc"}""")
+    jsonQueries.insert("{}")
+    with(jsonQueries.selectBindArgs("alpha", "alpha").executeAsList()) {
+      assertThat(first().a).isEqualTo(""""abc"""")
+      assertThat(first().aa).isEqualTo("abc")
+      assertThat(last().a).isNull()
+      assertThat(last().a).isNull()
+    }
+  }
 }

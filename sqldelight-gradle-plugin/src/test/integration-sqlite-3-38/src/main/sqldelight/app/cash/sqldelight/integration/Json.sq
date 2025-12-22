@@ -8,3 +8,7 @@ INSERT INTO MyJson (data) VALUES (?);
 selectAlpha:
 SELECT data->'alpha' AS a, data->>'alpha' AS aa
 FROM MyJson;
+
+selectBindArgs:
+SELECT data->? AS a, data->>? AS aa
+FROM MyJson;
