@@ -185,6 +185,18 @@ interface SuspendingTransacter : TransacterBase {
     noEnclosing: Boolean = false,
     body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   )
+
+  /**
+   * An interface that can be implemented by a [SqlDriver] to provide a specific coroutine context
+   * for transactions.
+   */
+  interface ContextProvider {
+    /**
+     * Used by [SuspendingTransacter] to wrap calls to [transaction] and [transactionWithResult],
+     * providing an opportunity to modify the coroutine context.
+     */
+    suspend fun <R> withTransactionContext(transaction: suspend () -> R): R
+  }
 }
 
 private class RollbackException(val value: Any? = null) : Throwable()
@@ -389,14 +401,26 @@ abstract class SuspendingTransacterImpl(driver: SqlDriver) :
     noEnclosing: Boolean,
     bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,
   ): R {
-    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+    return when (driver) {
+      is SuspendingTransacter.ContextProvider -> driver.withTransactionContext {
+        transactionWithWrapper(noEnclosing, bodyWithReturn)
+      }
+
+      else -> transactionWithWrapper(noEnclosing, bodyWithReturn)
+    }
   }
 
   override suspend fun transaction(
     noEnclosing: Boolean,
     body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   ) {
-    return transactionWithWrapper(noEnclosing, body)
+    return when (driver) {
+      is SuspendingTransacter.ContextProvider -> driver.withTransactionContext {
+        transactionWithWrapper(noEnclosing, body)
+      }
+
+      else -> transactionWithWrapper(noEnclosing, body)
+    }
   }
 
   private suspend fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend SuspendingTransactionWrapper<R>.() -> R): R {
