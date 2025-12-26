@@ -31,6 +31,11 @@ class ObjectDifferDatabaseComparator(
       propertyName("importedForeignKeys")
       propertyName("deferrable")
       propertyName("initiallyDeferred")
+      propertyName("referencedTable")
+      propertyName("referencedTables")
+      propertyName("referencedObjects")
+      propertyName("dependentTable")
+      propertyName("dependentTables")
 
       if (ignoreDefinitions) propertyName("definition")
     }
