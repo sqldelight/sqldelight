@@ -1,7 +1,10 @@
 package app.cash.sqlite.migrations
 
+import de.danielbechler.diff.ObjectDiffer
 import de.danielbechler.diff.ObjectDifferBuilder
+import de.danielbechler.diff.access.Instances
 import de.danielbechler.diff.comparison.ComparisonStrategy
+import de.danielbechler.diff.differ.Differ
 import de.danielbechler.diff.node.DiffNode
 import de.danielbechler.diff.node.DiffNode.State.ADDED
 import de.danielbechler.diff.node.DiffNode.State.CHANGED
@@ -13,6 +16,9 @@ class ObjectDifferDatabaseComparator(
   private val circularReferenceExceptionLogger: ((String) -> Unit)? = null,
 ) : DatabaseComparator<CatalogDatabase> {
 
+  var performedComparisonsCount = 0
+    private set
+
   override fun compare(db1: CatalogDatabase, db2: CatalogDatabase): DatabaseDiff {
     return ObjectDifferDatabaseDiff(
       differBuilder().compare(db1.catalog, db2.catalog),
@@ -21,21 +27,26 @@ class ObjectDifferDatabaseComparator(
     )
   }
 
-  private fun differBuilder() = ObjectDifferBuilder.startBuilding().apply {
+  private fun differBuilder(): ObjectDiffer = ObjectDifferBuilder.startBuilding().apply {
+    differs().register { _, _ -> CountingDiffer() }
+
     filtering().omitNodesWithState(DiffNode.State.UNTOUCHED)
     filtering().omitNodesWithState(DiffNode.State.CIRCULAR)
     inclusion().exclude().apply {
       propertyName("fullName")
       propertyName("parent")
-      propertyName("exportedForeignKeys")
-      propertyName("importedForeignKeys")
       propertyName("deferrable")
       propertyName("initiallyDeferred")
-      propertyName("referencedTable")
-      propertyName("referencedTables")
-      propertyName("referencedObjects")
-      propertyName("dependentTable")
-      propertyName("dependentTables")
+      propertyName("referencedColumn") // interface Column
+      propertyName("columnDataType") // duplicate of property 'type' from interface TypedObject which Column extends
+      propertyNameOfType(
+        Class.forName("schemacrawler.crawl.MutableTable"),
+        "referencingTables", "referencedTables", "exportedForeignKeys", "importedForeignKeys"
+      )
+      propertyNameOfType(
+        Class.forName("schemacrawler.crawl.MutableForeignKey"),
+        "referencingTable", "referencedTable", "primaryKeyTable", "foreignKeyTable"
+      )
 
       if (ignoreDefinitions) propertyName("definition")
     }
@@ -82,4 +93,16 @@ class ObjectDifferDatabaseComparator(
       }
     }
   }.build()
+
+  inner class CountingDiffer : Differ {
+    override fun accepts(clazz: Class<*>): Boolean {
+      performedComparisonsCount++
+      return false
+    }
+
+    override fun compare(
+      diffNode: DiffNode,
+      instances: Instances,
+    ): DiffNode = throw NotImplementedError()
+  }
 }
