@@ -41,11 +41,17 @@ class ObjectDifferDatabaseComparator(
       propertyName("columnDataType") // duplicate of property 'type' from interface TypedObject which Column extends
       propertyNameOfType(
         Class.forName("schemacrawler.crawl.MutableTable"),
-        "referencingTables", "referencedTables", "exportedForeignKeys", "importedForeignKeys"
+        "referencingTables",
+        "referencedTables",
+        "exportedForeignKeys",
+        "importedForeignKeys",
       )
       propertyNameOfType(
         Class.forName("schemacrawler.crawl.MutableForeignKey"),
-        "referencingTable", "referencedTable", "primaryKeyTable", "foreignKeyTable"
+        "referencingTable",
+        "referencedTable",
+        "primaryKeyTable",
+        "foreignKeyTable",
       )
 
       if (ignoreDefinitions) propertyName("definition")
