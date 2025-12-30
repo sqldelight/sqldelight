@@ -118,6 +118,44 @@
           </div>
         </div>
       </div>
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="305621270%2FClasslikes%2F996653620" anchor-label="CountingDiffer" id="305621270%2FClasslikes%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-counting-differ/index.html"><span>Counting</span><wbr><span><span>Differ</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="305621270%2FClasslikes%2F996653620"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">inner </span><span class="token keyword">class </span><a href="-counting-differ/index.html">CountingDiffer</a> : <span data-unresolved-link="de.danielbechler.diff.differ/Differ///PointingToDeclaration/">Differ</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1205169199%2FProperties%2F996653620" anchor-label="performedComparisonsCount" id="1205169199%2FProperties%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqlite-migrations/main" data-filterable-set=":sqlite-migrations/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="performed-comparisons-count.html"><span>performed</span><wbr><span>Comparisons</span><wbr><span><span>Count</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1205169199%2FProperties%2F996653620"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqlite-migrations/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="performed-comparisons-count.html">performedComparisonsCount</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div data-togglable="FUNCTION">
         <h2 class="tableheader">Functions</h2>
         <div class="table"><a data-name="2145757168%2FFunctions%2F996653620" anchor-label="compare" id="2145757168%2FFunctions%2F996653620" data-filterable-set=":sqlite-migrations/main"></a>
