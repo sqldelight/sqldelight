@@ -1,0 +1,332 @@
+public final class app/cash/sqldelight/core/SqlDelightEnvironment : com/alecstrong/sql/psi/core/SqlCoreEnvironment, app/cash/sqldelight/core/SqlDelightProjectService {
+	public fun <init> (Lapp/cash/sqldelight/core/SqlDelightDatabaseProperties;Lapp/cash/sqldelight/core/SqlDelightCompilationUnit;ZLapp/cash/sqldelight/dialect/api/SqlDelightDialect;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Lapp/cash/sqldelight/core/SqlDelightDatabaseProperties;Lapp/cash/sqldelight/core/SqlDelightCompilationUnit;ZLapp/cash/sqldelight/dialect/api/SqlDelightDialect;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun clearIndex ()Ljava/lang/Void;
+	public synthetic fun clearIndex ()V
+	public fun fileIndex (Lcom/intellij/openapi/module/Module;)Lapp/cash/sqldelight/core/SqlDelightFileIndex;
+	public final fun forMigrationFiles (Lkotlin/jvm/functions/Function1;)V
+	public fun forSourceFiles (Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)V
+	public final fun forSqlFileBases (Lkotlin/jvm/functions/Function1;)V
+	public final fun generateSqlDelightFiles (Lkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus;
+	public fun getDialect ()Lapp/cash/sqldelight/dialect/api/SqlDelightDialect;
+	public fun getGenerateAsync ()Z
+	public final fun getModule ()Lcom/intellij/mock/MockModule;
+	public final fun getProject ()Lcom/intellij/mock/MockProject;
+	public fun getTreatNullAsUnknownForEquality ()Z
+	public fun module (Lcom/intellij/openapi/vfs/VirtualFile;)Lcom/intellij/mock/MockModule;
+	public synthetic fun module (Lcom/intellij/openapi/vfs/VirtualFile;)Lcom/intellij/openapi/module/Module;
+	public fun resetIndex ()Ljava/lang/Void;
+	public synthetic fun resetIndex ()V
+	public fun setDialect (Lapp/cash/sqldelight/dialect/api/SqlDelightDialect;)V
+	public fun setDialect (Lapp/cash/sqldelight/dialect/api/SqlDelightDialect;Z)V
+	public fun setGenerateAsync (Z)V
+	public fun setTreatNullAsUnknownForEquality (Z)V
+}
+
+public abstract class app/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus {
+}
+
+public final class app/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus$Failure : app/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getErrors ()Ljava/util/List;
+}
+
+public final class app/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus$Success : app/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus {
+	public static final field INSTANCE Lapp/cash/sqldelight/core/SqlDelightEnvironment$CompilationStatus$Success;
+}
+
+public final class app/cash/sqldelight/core/annotators/OptimisticLockCompilerAnnotator : com/alecstrong/sql/psi/core/SqlCompilerAnnotator {
+	public fun <init> ()V
+	public fun annotate (Lcom/intellij/psi/PsiElement;Lcom/alecstrong/sql/psi/core/SqlAnnotationHolder;)V
+}
+
+public abstract interface class app/cash/sqldelight/gradle/DriverInitializer {
+	public abstract fun execute (Lapp/cash/sqldelight/core/SqlDelightDatabaseProperties;Ljava/util/Properties;)V
+}
+
+public abstract class app/cash/sqldelight/gradle/GenerateMigrationOutputTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
+	public fun <init> ()V
+	public final fun generateSchemaFile ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public abstract fun getMigrationOutputExtension ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
+}
+
+public abstract class app/cash/sqldelight/gradle/GenerateMigrationOutputTask$GenerateMigration : org/gradle/workers/WorkAction {
+	public fun <init> ()V
+	public fun execute ()V
+}
+
+public abstract interface class app/cash/sqldelight/gradle/GenerateMigrationOutputTask$GenerateSchemaWorkParameters : org/gradle/workers/WorkParameters {
+	public abstract fun getCompilationUnit ()Lorg/gradle/api/provider/Property;
+	public abstract fun getMigrationExtension ()Lorg/gradle/api/provider/Property;
+	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getProperties ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class app/cash/sqldelight/gradle/GenerateSchemaTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
+	public fun <init> ()V
+	public final fun generateSchemaFile ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public abstract fun getDriverProperties ()Lorg/gradle/api/provider/MapProperty;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
+}
+
+public abstract class app/cash/sqldelight/gradle/GenerateSchemaTask$GenerateSchema : org/gradle/workers/WorkAction {
+	public fun <init> ()V
+	public fun execute ()V
+}
+
+public abstract interface class app/cash/sqldelight/gradle/GenerateSchemaTask$GenerateSchemaWorkParameters : org/gradle/workers/WorkParameters {
+	public abstract fun getCompilationUnit ()Lorg/gradle/api/provider/Property;
+	public abstract fun getDriverProperties ()Lorg/gradle/api/provider/MapProperty;
+	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getProperties ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+}
+
+public final class app/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl : app/cash/sqldelight/core/SqlDelightCompilationUnit {
+	public fun <init> (Ljava/lang/String;Ljava/util/Set;Ljava/io/File;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/Set;
+	public final fun component3 ()Ljava/io/File;
+	public final fun copy (Ljava/lang/String;Ljava/util/Set;Ljava/io/File;)Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public static synthetic fun copy$default (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;Ljava/lang/String;Ljava/util/Set;Ljava/io/File;ILjava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun getOutputDirectoryFile ()Ljava/io/File;
+	public fun getSourceFolders ()Ljava/util/Set;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class app/cash/sqldelight/gradle/SqlDelightDatabase {
+	public fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;)V
+	public final fun dependency (Lorg/gradle/api/Project;)V
+	public final fun dependency (Lorg/gradle/api/artifacts/ProjectDependency;)V
+	public final synthetic fun dependency (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;)V
+	public final fun dialect (Ljava/lang/Object;)V
+	public final fun getConfigurationName ()Ljava/lang/String;
+	public final fun getDeriveSchemaFromMigrations ()Lorg/gradle/api/provider/Property;
+	public final fun getGenerateAsync ()Lorg/gradle/api/provider/Property;
+	public abstract fun getMigrationOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public final fun getMigrationOutputFileFormat ()Lorg/gradle/api/provider/Property;
+	public final fun getName ()Ljava/lang/String;
+	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
+	public final fun getProject ()Lorg/gradle/api/Project;
+	public abstract fun getSchemaOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getSrcDirs ()Lorg/gradle/api/file/ConfigurableFileCollection;
+	public final fun getTreatNullAsUnknownForEquality ()Lorg/gradle/api/provider/Property;
+	public final fun getVerifyDefinitions ()Lorg/gradle/api/provider/Property;
+	public final fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public final fun methodMissing (Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun module (Ljava/lang/Object;)V
+	public final fun srcDirs ([Ljava/lang/Object;)V
+}
+
+public final class app/cash/sqldelight/gradle/SqlDelightDatabaseNameImpl : app/cash/sqldelight/core/SqlDelightDatabaseName {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lapp/cash/sqldelight/gradle/SqlDelightDatabaseNameImpl;
+	public static synthetic fun copy$default (Lapp/cash/sqldelight/gradle/SqlDelightDatabaseNameImpl;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightDatabaseNameImpl;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getClassName ()Ljava/lang/String;
+	public fun getPackageName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl : app/cash/sqldelight/core/SqlDelightDatabaseProperties {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;ZZZLjava/io/File;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;ZZZLjava/io/File;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/io/File;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;ZZZLjava/io/File;)Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public static synthetic fun copy$default (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;ZZZLjava/io/File;ILjava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getClassName ()Ljava/lang/String;
+	public fun getCompilationUnits ()Ljava/util/List;
+	public fun getDependencies ()Ljava/util/List;
+	public fun getDeriveSchemaFromMigrations ()Z
+	public fun getGenerateAsync ()Z
+	public fun getPackageName ()Ljava/lang/String;
+	public fun getRootDirectory ()Ljava/io/File;
+	public fun getTreatNullAsUnknownForEquality ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class app/cash/sqldelight/gradle/SqlDelightDsl : java/lang/annotation/Annotation {
+}
+
+public abstract interface class app/cash/sqldelight/gradle/SqlDelightExtension {
+	public abstract fun getDatabases ()Lorg/gradle/api/NamedDomainObjectContainer;
+	public abstract fun getLinkSqlite ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class app/cash/sqldelight/gradle/SqlDelightPlugin : org/gradle/api/Plugin {
+	public static final field GROUP Ljava/lang/String;
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+	public abstract fun getRegistry ()Lorg/gradle/tooling/provider/model/ToolingModelBuilderRegistry;
+}
+
+public final class app/cash/sqldelight/gradle/SqlDelightPlugin$PropertiesModelBuilder : org/gradle/tooling/provider/model/ToolingModelBuilder {
+	public fun <init> (Ljava/lang/Iterable;)V
+	public fun buildAll (Ljava/lang/String;Lorg/gradle/api/Project;)Ljava/lang/Object;
+	public fun canBuild (Ljava/lang/String;)Z
+}
+
+public final class app/cash/sqldelight/gradle/SqlDelightPropertiesFileImpl : app/cash/sqldelight/core/SqlDelightPropertiesFile {
+	public fun <init> (Ljava/util/List;Ljava/util/Collection;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/Collection;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;Ljava/util/Collection;Ljava/lang/String;Ljava/lang/String;)Lapp/cash/sqldelight/gradle/SqlDelightPropertiesFileImpl;
+	public static synthetic fun copy$default (Lapp/cash/sqldelight/gradle/SqlDelightPropertiesFileImpl;Ljava/util/List;Ljava/util/Collection;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightPropertiesFileImpl;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCurrentVersion ()Ljava/lang/String;
+	public fun getDatabases ()Ljava/util/List;
+	public fun getDialectJars ()Ljava/util/Collection;
+	public fun getMinimumSupportedVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/cash/sqldelight/gradle/SqlDelightSourceFolderImpl : app/cash/sqldelight/core/SqlDelightSourceFolder {
+	public fun <init> (Ljava/io/File;Z)V
+	public synthetic fun <init> (Ljava/io/File;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/io/File;
+	public final fun component2 ()Z
+	public final fun copy (Ljava/io/File;Z)Lapp/cash/sqldelight/gradle/SqlDelightSourceFolderImpl;
+	public static synthetic fun copy$default (Lapp/cash/sqldelight/gradle/SqlDelightSourceFolderImpl;Ljava/io/File;ZILjava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightSourceFolderImpl;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getDependency ()Z
+	public fun getFolder ()Ljava/io/File;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class app/cash/sqldelight/gradle/SqlDelightTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
+	public fun <init> ()V
+	public final fun generateSqlDelightFiles ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
+}
+
+public abstract class app/cash/sqldelight/gradle/SqlDelightTask$GenerateInterfaces : org/gradle/workers/WorkAction {
+	public fun <init> ()V
+	public fun execute ()V
+}
+
+public abstract interface class app/cash/sqldelight/gradle/SqlDelightTask$GenerateInterfacesWorkParameters : org/gradle/workers/WorkParameters {
+	public abstract fun getCompilationUnit ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class app/cash/sqldelight/gradle/SqlDelightWorkerTask : org/gradle/api/tasks/SourceTask {
+	public fun <init> ()V
+	public final fun environment (Ljava/lang/String;Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
+	public final fun environment (Ljava/util/Map;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
+	public abstract fun getClasspath ()Lorg/gradle/api/file/ConfigurableFileCollection;
+	public final fun getEnvironment ()Lorg/gradle/api/provider/MapProperty;
+	public final fun getJvmArgs ()Lorg/gradle/api/provider/ListProperty;
+	public final fun getMaxHeapSize ()Lorg/gradle/api/provider/Property;
+	public final fun getMinHeapSize ()Lorg/gradle/api/provider/Property;
+	public final fun getSystemProperties ()Lorg/gradle/api/provider/MapProperty;
+	public final fun jvmArgs (Ljava/lang/Iterable;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
+	public final fun jvmArgs ([Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
+	public final fun systemProperties (Ljava/util/Map;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
+	public final fun systemProperty (Ljava/lang/String;Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
+}
+
+public abstract class app/cash/sqldelight/gradle/VerifyMigrationTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
+	public fun <init> ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public abstract fun getDriverProperties ()Lorg/gradle/api/provider/MapProperty;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun getVerifyDefinitions ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public abstract fun getWorkingDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
+	public final fun verifyMigrations ()V
+}
+
+public abstract class app/cash/sqldelight/gradle/VerifyMigrationTask$VerifyMigrationAction : org/gradle/workers/WorkAction {
+	public fun <init> ()V
+	public fun execute ()V
+}
+
+public abstract interface class app/cash/sqldelight/gradle/VerifyMigrationTask$VerifyMigrationWorkParameters : org/gradle/workers/WorkParameters {
+	public abstract fun getCompilationUnit ()Lorg/gradle/api/provider/Property;
+	public abstract fun getDriverProperties ()Lorg/gradle/api/provider/MapProperty;
+	public abstract fun getOutputFile ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVerifyDefinitions ()Lorg/gradle/api/provider/Property;
+	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public abstract fun getWorkingDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+}
+
+public final class app/cash/sqldelight/gradle/squash/AnsiSqlMigrationSquasher : app/cash/sqldelight/dialect/api/MigrationSquasher {
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public fun squish (Lcom/alecstrong/sql/psi/core/psi/SqlAlterTableRules;Lcom/alecstrong/sql/psi/core/SqlFileBase;)Ljava/lang/String;
+	public fun squish (Lcom/alecstrong/sql/psi/core/psi/SqlStmt;Lcom/alecstrong/sql/psi/core/SqlFileBase;)Ljava/lang/String;
+}
+
+public abstract class app/cash/sqldelight/gradle/squash/MigrationSquashTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
+	public fun <init> ()V
+	public final fun generateSquashedMigrationFile ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
+	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
+	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
+}
+
+public abstract class app/cash/sqldelight/gradle/squash/MigrationSquashTask$GenerateMigration : org/gradle/workers/WorkAction {
+	public fun <init> ()V
+	public fun execute ()V
+}
+
+public abstract interface class app/cash/sqldelight/gradle/squash/MigrationSquashTask$GenerateSchemaWorkParameters : org/gradle/workers/WorkParameters {
+	public abstract fun getCompilationUnit ()Lorg/gradle/api/provider/Property;
+	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lorg/gradle/api/provider/Property;
+}
+
