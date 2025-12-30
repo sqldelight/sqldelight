@@ -163,6 +163,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         buildString(diff::printTo)
       }
 
+      logger.info("Performed ${databaseComparator.performedComparisonsCount} comparisons")
+
       check(diffReport.isEmpty()) {
         "Error migrating from ${dbFile.name}, fresh database looks" +
           " different from migration database:\n$diffReport"

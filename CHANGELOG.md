@@ -13,6 +13,7 @@
 
 ### Fixed
 - [Intellij Plugin] Fix Plugin initialization exceptions and update deprecated methods (#6040 by @griffio)
+- [Gradle Plugin] Improve performance of `VerifyMigrationTask` to stop it from hanging on complex schemas (#6073 by @Lightwood13)
 
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
