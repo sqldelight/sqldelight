@@ -92,10 +92,18 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     // Add the runtime dependency.
-    val sourceSetName = if (isMultiplatform) "commonMain" else "main"
-    val sourceSetApiConfigName =
-      project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
-    project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
+    when {
+      android.get() && !isMultiplatform -> {
+        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
+      }
+      else -> {
+        val sourceSetName = if (isMultiplatform) "commonMain" else "main"
+        val sourceSetApiConfigName =
+          project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
+
+        project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
+      }
+    }
 
     if (extension.linkSqlite.get()) {
       project.linkSqlite()
@@ -138,7 +146,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     override fun buildAll(modelName: String, project: Project): Any {
       return SqlDelightPropertiesFileImpl(
-        databases = databases.map { it.getProperties() },
+        databases = databases.map { it.resolveProperties() },
         currentVersion = VERSION,
         minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
         dialectJars = databases.first().configuration.files,
