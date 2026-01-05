@@ -151,7 +151,11 @@ class MultiModuleTests {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace")
+      .withArguments(
+        "clean",
+        "-Dorg.gradle.unsafe.isolated-projects=true",
+        "--stacktrace",
+      )
       .forwardOutput()
       .build()
 
