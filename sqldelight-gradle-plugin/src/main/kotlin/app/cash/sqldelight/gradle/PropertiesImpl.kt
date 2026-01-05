@@ -19,7 +19,8 @@ data class SqlDelightPropertiesFileImpl(
 
 data class SqlDelightDatabasePropertiesImpl(
   @Input override val packageName: String,
-  @Nested override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
+  // Only used by the ToolingModelBuilder.
+  @Nested override val compilationUnits: List<SqlDelightCompilationUnitImpl> = emptyList(),
   @Input override val className: String,
   @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
   @Input override val deriveSchemaFromMigrations: Boolean = false,

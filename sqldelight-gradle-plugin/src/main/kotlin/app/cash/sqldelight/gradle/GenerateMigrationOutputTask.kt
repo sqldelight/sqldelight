@@ -14,7 +14,6 @@ import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -30,10 +29,6 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
 
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
-
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
-
   @get:Input abstract val migrationOutputExtension: Property<String>
 
   @TaskAction
@@ -41,9 +36,9 @@ abstract class GenerateMigrationOutputTask : SqlDelightWorkerTask() {
     workQueue().submit(GenerateMigration::class.java) {
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(projectName)
-      it.properties.set(properties)
+      it.properties.set(resolveProperties())
       it.migrationExtension.set(migrationOutputExtension)
-      it.compilationUnit.set(compilationUnit)
+      it.compilationUnit.set(resolveCompilationUnit(outputDirectory))
     }
   }
 

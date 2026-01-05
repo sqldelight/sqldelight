@@ -115,17 +115,4 @@ internal data class Source(
   val variantName: String? = null,
   val sourceSets: List<String>,
   val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null,
-) {
-  fun closestMatch(sources: Collection<Source>): Source? {
-    var matches = sources.filter {
-      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
-    }
-    if (matches.size <= 1) return matches.singleOrNull()
-
-    // Multiplatform native matched or android variants matched.
-    matches = matches.filter {
-      nativePresetName == it.nativePresetName && variantName == it.variantName
-    }
-    return matches.singleOrNull()
-  }
-}
+)
