@@ -45,6 +45,8 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
+    project.dependencies.registerSqlDelightAttributesSchema()
+
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java).apply {
       linkSqlite.convention(true)
     }

@@ -2,8 +2,6 @@ package app.cash.sqldelight.gradle
 
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
-import app.cash.sqldelight.gradle.SqlDelightDatabase.Companion.DatabaseNameAttribute
-import app.cash.sqldelight.gradle.SqlDelightDatabase.Companion.PackageNameAttribute
 import javax.inject.Inject
 import org.gradle.api.artifacts.result.ResolvedArtifactResult
 import org.gradle.api.file.ConfigurableFileCollection
@@ -90,7 +88,7 @@ abstract class SqlDelightWorkerTask : SourceTask() {
             "Dependency missing packageName attribute for ${artifact.id.displayName}"
           }
           val databaseName = requireNotNull(artifact.variant.attributes.getAttribute(DatabaseNameAttribute)) {
-            "Dependency missing database name  attribute for ${artifact.id.displayName}"
+            "Dependency missing database name attribute for ${artifact.id.displayName}"
           }
           SqlDelightDatabaseNameImpl(
             packageName = packageName,
@@ -107,15 +105,22 @@ abstract class SqlDelightWorkerTask : SourceTask() {
     )
   }
 
-  internal fun resolveProperties(): SqlDelightDatabaseProperties = SqlDelightDatabasePropertiesImpl(
-    packageName = packageName.get(),
-    className = className.get(),
-    dependencies = dependencies.get(),
-    rootDirectory = rootDirectory.get().asFile,
-    deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
-    treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
-    generateAsync = generateAsync.get(),
-  )
+  internal fun resolveProperties(): SqlDelightDatabaseProperties {
+    val packageName = packageName.get()
+    val dependencies = dependencies.get()
+    check(dependencies.none { it.packageName == packageName }) {
+      "Found a circular dependency in ${className.get()}."
+    }
+    return SqlDelightDatabasePropertiesImpl(
+      packageName = packageName,
+      className = className.get(),
+      dependencies = dependencies,
+      rootDirectory = rootDirectory.get().asFile,
+      deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
+      generateAsync = generateAsync.get(),
+    )
+  }
 
   internal fun resolveCompilationUnit(outputDirectory: DirectoryProperty): SqlDelightCompilationUnit {
     val sourceFolders = buildSet {
