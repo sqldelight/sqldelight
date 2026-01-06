@@ -247,6 +247,8 @@ abstract class SqlDelightDatabase @Inject constructor(
           attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category::class.java, "sqldelight-schema"))
           attribute(DatabaseNameAttribute, this@SqlDelightDatabase.name)
           attribute(SourceNameAttribute, source.name)
+          attribute(PlatformTypeAttribute, source.type.name)
+          // This should only be added to the consumable, otherwise it would affect variant matching.
           attributeProvider(PackageNameAttribute, packageName)
         }
 
@@ -268,6 +270,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category::class.java, "sqldelight-schema"))
         attribute(DatabaseNameAttribute, this@SqlDelightDatabase.name)
         attribute(SourceNameAttribute, source.name)
+        attribute(PlatformTypeAttribute, source.type.name)
       }
     }
 
@@ -418,10 +421,4 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   private val Source.schemaClasspathName get() = "schema${this.name.capitalize()}${this@SqlDelightDatabase.name}Classpath"
   private val Source.schemaElementsName get() = "schema${this.name.capitalize()}${this@SqlDelightDatabase.name}Elements"
-
-  internal companion object {
-    val PackageNameAttribute: Attribute<String> = Attribute.of("app.cash.sqldelight.packageName", String::class.java)
-    val DatabaseNameAttribute: Attribute<String> = Attribute.of("app.cash.sqldelight.database", String::class.java)
-    val SourceNameAttribute: Attribute<String> = Attribute.of("app.cash.sqldelight.source", String::class.java)
-  }
 }
