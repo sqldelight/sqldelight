@@ -23,8 +23,10 @@ import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.psi.InsertStmtValuesMixin
 import app.cash.sqldelight.dialect.api.ExposableType
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PreCreateTableInitialization
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TableFunctionRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
@@ -36,7 +38,9 @@ import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateViewStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlExtensionStmt
 import com.alecstrong.sql.psi.core.psi.SqlModuleArgument
+import com.alecstrong.sql.psi.core.psi.SqlModuleColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlTableName
@@ -64,7 +68,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
   is SqlColumnName -> {
     when (val parentRule = parent) {
       is ColumnDefMixin -> parentRule.type()
-      is SqlCreateVirtualTableStmt -> IntermediateType(TEXT, name = this.name)
+      is SqlModuleColumnDef -> IntermediateType(TEXT, name = this.name).asNullable()
       else -> {
         when (val resolvedReference = reference?.resolve()) {
           null -> IntermediateType(PrimitiveType.NULL)
@@ -92,6 +96,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
 private fun synthesizedColumnType(columnName: String): IntermediateType {
   val dialectType = when (columnName) {
     "docid", "rowid", "oid", "_rowid_" -> INTEGER
+    "rank" -> REAL
     else -> TEXT
   }
 
@@ -102,7 +107,7 @@ fun PsiDirectory.queryFiles(): Sequence<SqlDelightQueriesFile> {
   return children.asSequence().flatMap {
     when (it) {
       is PsiDirectory -> it.queryFiles()
-      is SqlDelightQueriesFile -> sequenceOf(it)
+      is SqlDelightQueriesFile -> listOf(it).asSequence()
       else -> emptySequence()
     }
   }
@@ -112,7 +117,7 @@ fun PsiDirectory.migrationFiles(): Sequence<MigrationFile> {
   return children.asSequence().flatMap {
     when (it) {
       is PsiDirectory -> it.migrationFiles()
-      is MigrationFile -> sequenceOf(it)
+      is MigrationFile -> listOf(it).asSequence()
       else -> emptySequence()
     }
   }
@@ -255,28 +260,40 @@ fun PsiElement.rawSqlText(
 val PsiElement.range: IntRange
   get() = node.startOffset until (node.startOffset + node.textLength)
 
+fun SqlExtensionStmt.hasPreCreateTableInitialization(): Boolean {
+  return PsiTreeUtil.getChildOfType(
+    this,
+    PreCreateTableInitialization::class.java,
+  ) != null
+}
+
 fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   allowReferenceCycles: Boolean,
   body: (sqlText: String) -> Unit,
 ) {
   val views = ArrayList<SqlCreateViewStmt>()
+  val preTables = ArrayList<PsiElement>()
   val tables = ArrayList<SqlCreateTableStmt>()
   val creators = ArrayList<PsiElement>()
-  val miscellanious = ArrayList<PsiElement>()
+  val miscellaneous = ArrayList<PsiElement>()
 
   forEach { file ->
     file.sqlStatements()
       .filter { (label, _) -> label.name == null }
       .forEach { (_, sqlStatement) ->
         when {
+          sqlStatement.extensionStmt != null &&
+            sqlStatement.extensionStmt!!.hasPreCreateTableInitialization() -> preTables.add(sqlStatement.extensionStmt!!)
           sqlStatement.createTableStmt != null -> tables.add(sqlStatement.createTableStmt!!)
           sqlStatement.createViewStmt != null -> views.add(sqlStatement.createViewStmt!!)
           sqlStatement.createTriggerStmt != null -> creators.add(sqlStatement.createTriggerStmt!!)
           sqlStatement.createIndexStmt != null -> creators.add(sqlStatement.createIndexStmt!!)
-          else -> miscellanious.add(sqlStatement)
+          else -> miscellaneous.add(sqlStatement)
         }
       }
   }
+
+  preTables.forEach { body(it.rawSqlText()) }
 
   when (allowReferenceCycles) {
     // If we allow cycles, don't attempt to order the table creation statements. The dialect
@@ -293,7 +310,7 @@ fun Collection<SqlDelightQueriesFile>.forInitializationStatements(
   )
 
   creators.forEach { body(it.rawSqlText()) }
-  miscellanious.forEach { body(it.rawSqlText()) }
+  miscellaneous.forEach { body(it.rawSqlText()) }
 }
 
 private fun ArrayList<SqlCreateTableStmt>.buildGraph(): Graph<SqlCreateTableStmt, DefaultEdge> {

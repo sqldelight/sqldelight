@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -15,9 +16,14 @@ sqldelight {
 }
 
 android {
-  namespace "app.cash.sqldelight.multiplatform.project"
+  namespace = "app.cash.sqldelight.multiplatform.project"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
+
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
 
   buildTypes {
     release {}
@@ -43,9 +49,9 @@ kotlin {
   }
 
   iosX64()
-  android("androidLib")
+  androidTarget("androidLib")
 }
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
-  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+  compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }

@@ -43,14 +43,7 @@ public class PlayerQueries(
     number: Long,
     team: Team.Name?,
     shoots: Shoots,
-  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots) { name_, number_, team_, shoots_ ->
-    Player(
-      name_,
-      number_,
-      team_,
-      shoots_
-    )
-  }
+  ): ExecutableQuery<Player> = insertAndReturn(name, number, team, shoots, ::Player)
 
   public fun <T : Any> allPlayers(mapper: (
     name: Player.Name,
@@ -69,14 +62,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun allPlayers(): Query<Player> = allPlayers { name, number, team, shoots ->
-    Player(
-      name,
-      number,
-      team,
-      shoots
-    )
-  }
+  public fun allPlayers(): Query<Player> = allPlayers(::Player)
 
   public fun <T : Any> playersForTeam(team: Team.Name?, mapper: (
     name: Player.Name,
@@ -92,14 +78,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team) { name, number, team_, shoots ->
-    Player(
-      name,
-      number,
-      team_,
-      shoots
-    )
-  }
+  public fun playersForTeam(team: Team.Name?): Query<Player> = playersForTeam(team, ::Player)
 
   public fun <T : Any> playersForNumbers(number: Collection<Long>, mapper: (
     name: Player.Name,
@@ -115,14 +94,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number) { name, number_, team, shoots ->
-    Player(
-      name,
-      number_,
-      team,
-      shoots
-    )
-  }
+  public fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, ::Player)
 
   public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> = Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
@@ -130,11 +102,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun selectNull(): ExecutableQuery<SelectNull> = selectNull { expr ->
-    SelectNull(
-      expr
-    )
-  }
+  public fun selectNull(): ExecutableQuery<SelectNull> = selectNull(::SelectNull)
 
   public fun <T : Any> selectStuff(mapper: (expr: Long, expr_: Long) -> T): ExecutableQuery<T> = Query(-976_770_036, driver, "Player.sq", "selectStuff", "SELECT 1, 2") { cursor ->
     mapper(
@@ -143,12 +111,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff { expr, expr_ ->
-    SelectStuff(
-      expr,
-      expr_
-    )
-  }
+  public fun selectStuff(): ExecutableQuery<SelectStuff> = selectStuff(::SelectStuff)
 
   public fun <T : Any> greaterThanNumberAndName(
     number: Long,
@@ -168,14 +131,7 @@ public class PlayerQueries(
     )
   }
 
-  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> = greaterThanNumberAndName(number, name) { name_, number_, team, shoots ->
-    Player(
-      name_,
-      number_,
-      team,
-      shoots
-    )
-  }
+  public fun greaterThanNumberAndName(number: Long, name: Player.Name): Query<Player> = greaterThanNumberAndName(number, name, ::Player)
 
   /**
    * @return The number of rows updated.
@@ -190,10 +146,11 @@ public class PlayerQueries(
         |INSERT INTO player
         |VALUES (?, ?, ?, ?)
         """.trimMargin(), 4) {
-          bindString(0, name.name)
-          bindLong(1, number)
-          bindString(2, team?.let { it.name })
-          bindString(3, playerAdapter.shootsAdapter.encode(shoots))
+          var parameterIndex = 0
+          bindString(parameterIndex++, name.name)
+          bindLong(parameterIndex++, number)
+          bindString(parameterIndex++, team?.let { it.name })
+          bindString(parameterIndex++, playerAdapter.shootsAdapter.encode(shoots))
         }
     notifyQueries(-1_595_716_666) { emit ->
       emit("player")
@@ -211,9 +168,10 @@ public class PlayerQueries(
         |SET team = ?
         |WHERE number IN $numberIndexes
         """.trimMargin(), 1 + number.size) {
-          bindString(0, team?.let { it.name })
-          number.forEachIndexed { index, number_ ->
-            bindLong(index + 1, number_)
+          var parameterIndex = 0
+          bindString(parameterIndex++, team?.let { it.name })
+          number.forEach { number_ ->
+            bindLong(parameterIndex++, number_)
           }
         }
     notifyQueries(-636_585_613) { emit ->
@@ -250,17 +208,18 @@ public class PlayerQueries(
           |INSERT INTO player
           |  VALUES (?, ?, ?, ?)
           """.trimMargin(), 4) {
-            bindString(0, name.name)
-            bindLong(1, number)
-            bindString(2, team?.let { it.name })
-            bindString(3, playerAdapter.shootsAdapter.encode(shoots))
+            var parameterIndex = 0
+            bindString(parameterIndex++, name.name)
+            bindLong(parameterIndex++, number)
+            bindString(parameterIndex++, team?.let { it.name })
+            bindString(parameterIndex++, playerAdapter.shootsAdapter.encode(shoots))
           }
       driver.executeQuery(-452_007_404, """
           |SELECT player.name, player.number, player.team, player.shoots
           |  FROM player
           |  WHERE player.rowid = last_insert_rowid()
           """.trimMargin(), mapper, 0)
-    } .also {
+    }.also {
       notifyQueries(781_651_682) { emit ->
         emit("player")
       }
@@ -286,7 +245,8 @@ public class PlayerQueries(
     |FROM player
     |WHERE team ${ if (team == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
-      bindString(0, team?.let { it.name })
+      var parameterIndex = 0
+      bindString(parameterIndex++, team?.let { it.name })
     }
 
     override fun toString(): String = "Player.sq:playersForTeam"
@@ -311,8 +271,9 @@ public class PlayerQueries(
           |FROM player
           |WHERE number IN $numberIndexes
           """.trimMargin(), mapper, number.size) {
-            number.forEachIndexed { index, number_ ->
-              bindLong(index, number_)
+            var parameterIndex = 0
+            number.forEach { number_ ->
+              bindLong(parameterIndex++, number_)
             }
           }
     }
@@ -338,8 +299,9 @@ public class PlayerQueries(
     |FROM player
     |WHERE (number, name) > (?, ?)
     """.trimMargin(), mapper, 2) {
-      bindLong(0, number)
-      bindString(1, name.name)
+      var parameterIndex = 0
+      bindLong(parameterIndex++, number)
+      bindString(parameterIndex++, name.name)
     }
 
     override fun toString(): String = "Player.sq:greaterThanNumberAndName"

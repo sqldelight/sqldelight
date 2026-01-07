@@ -470,6 +470,45 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `using virtual table column reference compiles`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE VIRTUAL TABLE Email USING fts5(
+      |  sender,
+      |  title,
+      |  body UNINDEXED
+      |);
+      |
+      |someSelect:
+      |SELECT sender, title, body
+      |FROM Email
+      |WHERE Email MATCH ? AND sender = ?;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.String
+      |
+      |public data class SomeSelect(
+      |  public val sender: String?,
+      |  public val title: String?,
+      |  public val body: String?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `virtual table with tokenizer has correct types`() {
     val result = FixtureCompiler.compileSql(
       """
@@ -539,6 +578,44 @@ class InterfaceGeneration {
       |public data class SomeSelect(
       |  public val text_content: String?,
       |  public val expr: Long,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `fts5 virtual table with rank has correct types`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE VIRTUAL TABLE data USING fts5(
+      |  text
+      |);
+      |
+      |someSelect:
+      |SELECT rank AS rank, rowid AS rowid
+      |FROM data
+      |WHERE data MATCH ?
+      |ORDER BY rank;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/SomeSelect.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Double
+      |import kotlin.Long
+      |
+      |public data class SomeSelect(
+      |  public val rank: Double,
+      |  public val rowid: Long,
       |)
       |
       """.trimMargin(),
@@ -870,13 +947,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id) { title, track_number, album_id_ ->
-      |    Song(
-      |      title,
-      |      track_number,
-      |      album_id_
-      |    )
-      |  }
+      |  public fun selectSongsByAlbumId(album_id: Long?): Query<Song> = selectSongsByAlbumId(album_id, ::Song)
       |
       |  private inner class SelectSongsByAlbumIdQuery<out T : Any>(
       |    public val album_id: Long?,
@@ -891,7 +962,8 @@ class InterfaceGeneration {
       |    }
       |
       |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(null, ""${'"'}SELECT song.title, song.track_number, song.album_id FROM song WHERE album_id ${'$'}{ if (album_id == null) "IS" else "=" } ?""${'"'}, mapper, 1) {
-      |      bindLong(0, album_id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, album_id)
       |    }
       |
       |    override fun toString(): String = "song.sq:selectSongsByAlbumId"
@@ -969,7 +1041,8 @@ class InterfaceGeneration {
       |        |VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
       |          check(this is JdbcPreparedStatement)
-      |          bindInt(0, user_id2)
+      |          var parameterIndex = 0
+      |          bindInt(parameterIndex++, user_id2)
       |        }
       |    notifyQueries(${result.compiledFile.namedMutators[0].id.withUnderscores}) { emit ->
       |      emit("subscriptionEntity")
@@ -997,7 +1070,8 @@ class InterfaceGeneration {
       |    |) SELECT insert_id FROM inserted_ids
       |    ""${'"'}.trimMargin(), mapper, 1) {
       |      check(this is JdbcPreparedStatement)
-      |      bindString(0, slack_user_id)
+      |      var parameterIndex = 0
+      |      bindString(parameterIndex++, slack_user_id)
       |    }
       |
       |    override fun toString(): String = "Subscription.sq:insertUser"
@@ -1080,12 +1154,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id) { id_, parent_id ->
-      |    RecursiveQuery(
-      |      id_,
-      |      parent_id
-      |    )
-      |  }
+      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id, ::RecursiveQuery)
       |
       |  private inner class RecursiveQueryQuery<out T : Any>(
       |    public val id: Long,
@@ -1113,7 +1182,120 @@ class InterfaceGeneration {
       |    |SELECT descendants.id, descendants.parent_id
       |    |FROM descendants
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
+      |    }
+      |
+      |    override fun toString(): String = "Recursive.sq:recursiveQuery"
+      |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `value types generated with recursive cte alias`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE item (
+      |    id INTEGER PRIMARY KEY AUTOINCREMENT,
+      |    parent_id INTEGER,
+      |    children INTEGER NOT NULL
+      |);
+      |
+      |recursiveQuery:
+      |WITH RECURSIVE
+      |descendants AS (
+      |    SELECT id, parent_id
+      |    FROM item
+      |    WHERE item.id = :id
+      |    UNION ALL
+      |    SELECT i.id, i.parent_id
+      |    FROM item i, descendants d
+      |    WHERE i.id = d.parent_id
+      |)
+      |SELECT descendants.id, descendants.parent_id
+      |FROM descendants;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Recursive.sq",
+    )
+
+    val query = result.compiledFile.namedQueries[0]
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQuery.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |
+      |public data class RecursiveQuery(
+      |  public val id: Long,
+      |  public val parent_id: Long?,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    val generatedQueries = result.compilerOutput.get(File(result.outputDirectory, "com/example/RecursiveQueries.kt"))
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |import app.cash.sqldelight.TransacterImpl
+      |import app.cash.sqldelight.db.QueryResult
+      |import app.cash.sqldelight.db.SqlCursor
+      |import app.cash.sqldelight.db.SqlDriver
+      |import kotlin.Any
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public class RecursiveQueries(
+      |  driver: SqlDriver,
+      |) : TransacterImpl(driver) {
+      |  public fun <T : Any> recursiveQuery(id: Long, mapper: (id: Long, parent_id: Long?) -> T): Query<T> = RecursiveQueryQuery(id) { cursor ->
+      |    mapper(
+      |      cursor.getLong(0)!!,
+      |      cursor.getLong(1)
+      |    )
+      |  }
+      |
+      |  public fun recursiveQuery(id: Long): Query<RecursiveQuery> = recursiveQuery(id, ::RecursiveQuery)
+      |
+      |  private inner class RecursiveQueryQuery<out T : Any>(
+      |    public val id: Long,
+      |    mapper: (SqlCursor) -> T,
+      |  ) : Query<T>(mapper) {
+      |    override fun addListener(listener: Query.Listener) {
+      |      driver.addListener("item", listener = listener)
+      |    }
+      |
+      |    override fun removeListener(listener: Query.Listener) {
+      |      driver.removeListener("item", listener = listener)
+      |    }
+      |
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(${query.id.withUnderscores}, ""${'"'}
+      |    |WITH RECURSIVE
+      |    |descendants AS (
+      |    |    SELECT id, parent_id
+      |    |    FROM item
+      |    |    WHERE item.id = ?
+      |    |    UNION ALL
+      |    |    SELECT i.id, i.parent_id
+      |    |    FROM item i, descendants d
+      |    |    WHERE i.id = d.parent_id
+      |    |)
+      |    |SELECT descendants.id, descendants.parent_id
+      |    |FROM descendants
+      |    ""${'"'}.trimMargin(), mapper, 1) {
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Recursive.sq:recursiveQuery"
@@ -1180,12 +1362,7 @@ class InterfaceGeneration {
       |    )
       |  }
       |
-      |  public fun selectRank(): Query<SelectRank> = selectRank { name, rank ->
-      |    SelectRank(
-      |      name,
-      |      rank
-      |    )
-      |  }
+      |  public fun selectRank(): Query<SelectRank> = selectRank(::SelectRank)
       |}
       |
       """.trimMargin(),
@@ -1311,25 +1488,7 @@ class InterfaceGeneration {
     |    )
     |  }
     |
-    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull { has_bigint, has_boolean, has_byte, has_date, has_integer, has_json, has_jsob, has_num, has_smallint, has_time, has_timestamp, has_timestamptz, has_tsvector, has_uuid, has_varchar ->
-    |    SelectIsNotNull(
-    |      has_bigint,
-    |      has_boolean,
-    |      has_byte,
-    |      has_date,
-    |      has_integer,
-    |      has_json,
-    |      has_jsob,
-    |      has_num,
-    |      has_smallint,
-    |      has_time,
-    |      has_timestamp,
-    |      has_timestamptz,
-    |      has_tsvector,
-    |      has_uuid,
-    |      has_varchar
-    |    )
-    |  }
+    |  public fun selectIsNotNull(): Query<SelectIsNotNull> = selectIsNotNull(::SelectIsNotNull)
     |}
     |
       """.trimMargin(),
@@ -1505,7 +1664,7 @@ class InterfaceGeneration {
     |    gfpf: BigDecimal?,
     |    dl: BigDecimal?,
     |  ) -> T): Query<T> = Query(89_549_764, arrayOf("Test"), driver, "Lateral.sq", "select", ""${'"'}
-    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, pf, pfb, gf, gfpf, dl
+    |  |SELECT Test.p, Test.f, Test.b, Test.l, Test.d, Test.g, _pf.pf, _pfb.pfb, _gf.gf, _gfpf.gfpf, _dl.dl
     |  |FROM Test,
     |  |LATERAL (SELECT p / f AS pf) _pf,
     |  |LATERAL (SELECT pf / b AS pfb) _pfb,
@@ -1529,21 +1688,7 @@ class InterfaceGeneration {
     |    )
     |  }
     |
-    |  public fun select(): Query<Select> = select { p, f, b, l, d, g, pf, pfb, gf, gfpf, dl ->
-    |    Select(
-    |      p,
-    |      f,
-    |      b,
-    |      l,
-    |      d,
-    |      g,
-    |      pf,
-    |      pfb,
-    |      gf,
-    |      gfpf,
-    |      dl
-    |    )
-    |  }
+    |  public fun select(): Query<Select> = select(::Select)
     |}
     |
       """.trimMargin(),

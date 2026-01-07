@@ -24,10 +24,5 @@ public class GroupQueries(
     )
   }
 
-  public fun selectFromTable2(): Query<SelectFromTable2> = selectFromTable2 { something, nice ->
-    SelectFromTable2(
-      something,
-      nice
-    )
-  }
+  public fun selectFromTable2(): Query<SelectFromTable2> = selectFromTable2(::SelectFromTable2)
 }

@@ -22,10 +22,5 @@ public class DataQueries(
     )
   }
 
-  public fun migrationSelect(): Query<New_test> = migrationSelect { first, second ->
-    New_test(
-      first,
-      second
-    )
-  }
+  public fun migrationSelect(): Query<New_test> = migrationSelect(::New_test)
 }

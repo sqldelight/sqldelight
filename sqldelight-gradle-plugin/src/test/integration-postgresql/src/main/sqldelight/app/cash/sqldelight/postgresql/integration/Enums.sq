@@ -1,0 +1,30 @@
+CREATE TYPE PRIORITY AS ENUM('low','medium','high');
+
+CREATE TABLE Requests(
+    id INT PRIMARY KEY,
+    title TEXT NOT NULL,
+    priority PRIORITY NOT NULL
+);
+
+insert:
+INSERT INTO Requests(id, title, priority) VALUES (?, ?, ?) RETURNING *;
+
+select:
+SELECT *
+FROM Requests
+ORDER BY priority;
+
+selectByPriority:
+SELECT *
+FROM Requests
+WHERE priority = ?
+ORDER BY priority;
+
+selectMinPriority:
+SELECT * FROM Requests
+WHERE priority = (SELECT MIN(priority) FROM Requests);
+
+selectEnumValues:
+SELECT enum_range(NULL::PRIORITY) values,
+ enum_first(NULL::PRIORITY) first_value,
+ enum_last(NULL::PRIORITY)  last_value;

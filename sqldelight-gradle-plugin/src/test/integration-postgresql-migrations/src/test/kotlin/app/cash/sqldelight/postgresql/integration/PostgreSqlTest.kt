@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:13.11:///my_db")
+  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -45,13 +45,14 @@ class PostgreSqlTest {
 
   @Test fun simpleOrdersSelect() {
     with(database) {
-      ordersQueries.insert(Orders(1, "sku", 3, 165.98.toBigDecimal()))
+      ordersQueries.insert(Orders(1, "sku", 3, 165.98.toBigDecimal(), null))
       assertThat(ordersQueries.selectAll().executeAsList()).containsExactly(
         Orders(
           1,
           "sku",
           3,
           165.98.toBigDecimal(),
+          null,
         ),
       )
     }

@@ -26,6 +26,7 @@ class SelectQueryable(
     val tablesSelected = select.selectStmtList.flatMap {
       it.joinClause?.tableOrSubqueryList?.mapNotNull { tableOrSubquery ->
         val resolvedTable = tableOrSubquery.tableName?.reference?.resolve() ?: return@mapNotNull null
+        if (resolvedTable.parent is SqlCteTableName) return@mapNotNull null
         PsiTreeUtil.getParentOfType(resolvedTable, Queryable::class.java)?.tableExposed()
       }.orEmpty()
     }

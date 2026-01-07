@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-  implementation("org.gradle.toolchains:foojay-resolver:0.10.0")
+  implementation("org.gradle.toolchains:foojay-resolver:1.0.0")
 }

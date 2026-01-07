@@ -1,0 +1,15 @@
+plugins {
+  id("com.android.library").version("8.13.2")
+  alias(libs.plugins.sqldelight)
+  alias(libs.plugins.kotlin.android)
+}
+
+android {
+  namespace = "com.example.sqldelight"
+
+  compileSdk = libs.versions.compileSdk.get() as int
+
+  lint {
+    textReport true
+  }
+}

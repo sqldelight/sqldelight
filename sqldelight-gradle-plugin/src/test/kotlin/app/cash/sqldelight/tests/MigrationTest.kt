@@ -172,6 +172,20 @@ class MigrationTest {
     assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun `migration verification should not perform too many comparisons when comparing tables with many foreign keys`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-foreign-key-stress-test"))
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace", "--info")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+
+    val performedComparisonsCount = Regex("Performed (\\d+) comparisons")
+      .find(output.output)
+      ?.let { it.groupValues[1].toIntOrNull() }
+    assertThat(performedComparisonsCount).isLessThan(7000)
+  }
+
   @Test fun `successful migration when folder contains db extension`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success-db-directory-name"))
@@ -341,5 +355,23 @@ class MigrationTest {
       |
       """.trimMargin(),
     )
+  }
+
+  @Test fun `successful migration works properly when initial version is not 1`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-success-initial-version-not-one"))
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test fun `compilation succeeds when verifyMigrations is set to true and initial version is not 1`() {
+    val output = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/migration-success-initial-version-not-one"))
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .build()
+
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
   }
 }

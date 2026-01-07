@@ -146,12 +146,7 @@ class AsyncQueriesTypeTest {
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
-      |    Data_(
-      |      id_,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id, ::Data_)
       |
       |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
       |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) { "Adapter types are expected to be identical." }
@@ -167,12 +162,7 @@ class AsyncQueriesTypeTest {
       |    }
       |  }
       |
-      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues { id, value_ ->
-      |    SelectAllValues(
-      |      id,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues(::SelectAllValues)
       |
       |  /**
       |   * @return The number of rows updated.
@@ -182,8 +172,9 @@ class AsyncQueriesTypeTest {
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, id)
-      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, id)
+      |          bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }.await()
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
@@ -208,7 +199,8 @@ class AsyncQueriesTypeTest {
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"

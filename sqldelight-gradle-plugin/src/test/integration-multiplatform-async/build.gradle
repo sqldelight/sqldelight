@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.multiplatform)
 }
 
 sqldelight {
@@ -17,20 +15,18 @@ sqldelight {
 }
 
 kotlin {
-  jvmToolchain(11)
-
-  targets {
-    android()
-    jvm()
+  android {
+    namespace = 'app.sqltest.shared'
+    compileSdk = libs.versions.compileSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
   }
+
+  jvm()
 
   sourceSets {
     commonMain {
       dependencies {
-        // coroutines
-        api libs.kotlin.coroutines.core
-
-        // database extension
+        api libs.kotlinx.coroutines.core
         implementation "app.cash.sqldelight:coroutines-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
         implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
       }
@@ -38,15 +34,12 @@ kotlin {
     commonTest {
       dependencies {
         implementation(kotlin("test"))
-
-        // coroutines
-        implementation libs.kotlin.coroutines.test
+        implementation libs.kotlinx.coroutines.test
       }
     }
 
     androidMain {
       dependencies {
-        // sql
         implementation("app.cash.sqldelight:android-driver:${app.cash.sqldelight.VersionKt.VERSION}")
       }
     }
@@ -59,25 +52,8 @@ kotlin {
 
     jvmMain {
       dependencies {
-        // sql
         implementation("app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}")
       }
     }
-    jvmTest { }
-  }
-}
-
-android {
-  namespace "app.sqltest.shared"
-
-  compileSdk libs.versions.compileSdk.get() as int
-
-  defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
-    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-  }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
   }
 }

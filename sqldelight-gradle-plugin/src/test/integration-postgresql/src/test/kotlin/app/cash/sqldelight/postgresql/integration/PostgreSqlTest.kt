@@ -565,8 +565,8 @@ class PostgreSqlTest {
     with(
       database.numbersQueries.sumInts().executeAsOne(),
     ) {
-      assertThat(sumSmall).isInstanceOf(Long::class.javaObjectType)
-      assertThat(sumInt).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumSmall).isInstanceOf(Short::class.javaObjectType)
+      assertThat(sumInt).isInstanceOf(Int::class.javaObjectType)
       assertThat(sumBig).isInstanceOf(Long::class.javaObjectType)
       assertThat(sumSmall).isEqualTo(3)
       assertThat(sumInt).isEqualTo(3)
@@ -695,7 +695,7 @@ class PostgreSqlTest {
     val updated = Instant.parse("2022-05-01T10:00:00.00Z")
     database.binaryArgumentsQueries.insertData(10, 5, created, updated)
     val result = database.binaryArgumentsQueries.selectDataBinaryCast2(10.0, 10).executeAsOne()
-    assertThat(result.expected_datum).isEqualTo(9.5)
+    assertThat(result.expected_datum).isEqualTo(9.5.toBigDecimal())
   }
 
   @Test
@@ -839,6 +839,64 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testSelectJsonExtractionBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionBinds("""{ "c": "cc" }""").executeAsList()) {
+      assertThat(first().ab).isEqualTo(""""bb"""")
+      assertThat(first().abb).isEqualTo("""{"b": "bb", "c": "cc"}""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonExtractionExistsBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionExistsBinds("b", "a", "bb").executeAsList()) {
+      assertThat(first().a).isEqualTo("""{ "b": "bb" }""")
+      assertThat(first().b).isEqualTo(""""bb"""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonExtractionContainsBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionContainsBinds("b", """"bb"""").executeAsList()) {
+      assertThat(first()).isEqualTo("""{"a": {"b": "bb"}}""")
+    }
+  }
+
+  @Test
+  fun testJsonAggFilter() {
+    database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonAggFilterWhere().executeAsList()) {
+      assertThat(first()).isEqualTo("""[{"color":"red","size":"small","in_stock":true}]""")
+    }
+  }
+
+  @Test
+  fun testJsonbAggFilter() {
+    database.jsonQueries.insertLiteral("""{}""", """{"color":"red","size":"small","in_stock":true}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbAggFilter().executeAsList()) {
+      assertThat(first()).isEqualTo("""["red"]""")
+    }
+  }
+
+  @Test
+  fun testJsonObjectAggFilterWhere() {
+    database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonObjectAggFilterWhere().executeAsList()) {
+      assertThat(first()).isEqualTo("""{ "red" : {"color":"red","size":"small","in_stock":true} }""")
+    }
+  }
+
+  @Test
+  fun testJsonbObjectAgg() {
+    database.jsonQueries.insertLiteral("""{}""", """{"color":"red","size":"small","in_stock":true}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbObjectAgg().executeAsList()) {
+      assertThat(first()).isEqualTo("""{"red": {"size": "small", "color": "red", "in_stock": true}}""")
+    }
+  }
+
+  @Test
   fun testUpdateSetFromId() {
     database.updatesQueries.insertTest(31)
     database.updatesQueries.insertTest2("X")
@@ -898,7 +956,22 @@ class PostgreSqlTest {
   fun testContactTsVectorRank() {
     database.textSearchQueries.insertLiteral("the rain in spain")
     with(database.textSearchQueries.rank("rain | plain").executeAsList()) {
-      assertThat(first()).isEqualTo("0.030396355")
+      assertThat(first()).isEqualTo(0.030396355)
+    }
+  }
+
+  @Test
+  fun testContactTsQueryRank() {
+    database.textSearchQueries.insertLiteral("Peter Piper picked a peck of pickled peppers")
+    with(database.textSearchQueries.plainToRank("peck").executeAsList()) {
+      assertThat(first().rank).isEqualTo(0.06079271)
+    }
+  }
+
+  @Test
+  fun testQueryPartialComparison() {
+    with(database.textSearchQueries.partialComparison("postgraduate", "postgres:*").executeAsOne()) {
+      assertThat(this).isTrue()
     }
   }
 
@@ -1200,6 +1273,62 @@ class PostgreSqlTest {
     database.unnestQueries.insertBusiness("Donut Hut", arrayOf("N12345", "QB7536", "P31879"), arrayOf(6, 12, 18))
     with(database.unnestQueries.selectBusinessExists("P31879").executeAsList()) {
       assertThat(first().name).isEqualTo("Donut Hut")
+    }
+  }
+
+  @Test
+  fun testJsonChecks() {
+    database.jsonQueries.insertTestJsonCheck()
+    with(database.jsonQueries.selectJsonChecks().executeAsList()) {
+      assertThat(first().null_).isFalse()
+      assertThat(first().not_null_).isTrue()
+      assertThat(first().json_).isTrue()
+      assertThat(first().value_).isTrue()
+      assertThat(first().not_json_).isFalse()
+      assertThat(first().scalar_).isFalse()
+      assertThat(first().object_).isTrue()
+      assertThat(first().not_object_).isFalse()
+      assertThat(first().array_).isFalse()
+      assertThat(first().array_with_unq_key_).isFalse()
+      assertThat(first().array_without_unq_key_).isFalse()
+    }
+  }
+
+  @Test
+  fun testEnums() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.select().executeAsList().let {
+      assertThat(it).containsExactly(low, med, high)
+    }
+  }
+
+  @Test
+  fun testEnumsArg() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.selectByPriority("medium").executeAsList().let {
+      assertThat(it).containsExactly(med)
+    }
+  }
+
+  @Test
+  fun testEnumsMin() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.selectMinPriority().executeAsList().let {
+      assertThat(it).containsExactly(low)
+    }
+  }
+
+  fun testEnumsFunctions() {
+    database.enumsQueries.selectEnumValues().executeAsOne().let {
+      assertThat(it.values).isEqualTo("{low,medium,high}")
+      assertThat(it.first_value).isEqualTo("low")
+      assertThat(it.last_value).isEqualTo("high")
     }
   }
 }

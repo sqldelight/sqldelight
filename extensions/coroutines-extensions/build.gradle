@@ -6,10 +6,11 @@ plugins {
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
-  id("org.jetbrains.kotlinx.atomicfu")
 }
 
-archivesBaseName = 'sqldelight-coroutines-extensions'
+base {
+  archivesName = 'sqldelight-coroutines-extensions'
+}
 
 kotlin {
   applyDefaultHierarchyTemplate {
@@ -34,12 +35,12 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       api projects.runtime
-      api libs.kotlin.coroutines.core
+      api libs.kotlinx.coroutines.core
       implementation project(":extensions:async-extensions")
     }
 
     commonTest.dependencies {
-      implementation libs.kotlin.coroutines.test
+      implementation libs.kotlinx.coroutines.test
       implementation libs.kotlin.test
       implementation libs.turbine
       implementation libs.stately.concurrency
@@ -55,9 +56,9 @@ kotlin {
       }
     }
     testableWebTest.dependencies {
-      implementation  projects.drivers.webWorkerDriver
+      implementation projects.drivers.webWorkerDriver
       implementation npm("sql.js", libs.versions.sqljs.get())
-      implementation npm("@cashapp/sqldelight-sqljs-worker", projects.drivers.webWorkerDriver.sqljs.dependencyProject.projectDir)
+      implementation npm("@cashapp/sqldelight-sqljs-worker", file("../../drivers/web-worker-driver/sqljs"))
     }
 
     testableNativeTest.dependencies {

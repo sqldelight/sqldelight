@@ -53,18 +53,11 @@ class PropertiesFileTest {
         |plugins {
         |  alias(libs.plugins.kotlin.multiplatform)
         |  alias(libs.plugins.sqldelight)
-        |  alias(libs.plugins.android.library)
+        |  alias(libs.plugins.android.multiplatform)
         |}
         |
-        |archivesBaseName = 'Test'
-        |
-        |android {
-        |  namespace 'com.example.namespace'
-        |  compileSdk libs.versions.compileSdk.get() as int
-        |
-        |  defaultConfig {
-        |    minSdk libs.versions.minSdk.get() as int
-        |  }
+        |base {
+        |  archivesName = 'Test'
         |}
         |
         |sqldelight {
@@ -77,11 +70,15 @@ class PropertiesFileTest {
         |
         |kotlin {
         |  sourceSets {
-        |    androidLibMain {
+        |    androidMain {
         |    }
         |  }
         |
-        |  android("androidLib")
+        |  android {
+        |    namespace = 'com.example.namespace'
+        |    compileSdk = libs.versions.compileSdk.get() as int
+        |    minSdk = libs.versions.minSdk.get() as int
+        |  }
         |}
         """.trimMargin(),
       )
@@ -90,7 +87,7 @@ class PropertiesFileTest {
       assertThat(database.compilationUnits).containsExactly(
         SqlDelightCompilationUnitImpl(
           name = "commonMain",
-          sourceFolders = listOf(
+          sourceFolders = setOf(
             SqlDelightSourceFolderImpl(File(fixtureRoot, "src/commonMain/sqldelight"), dependency = false),
           ),
           outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CashDatabase/commonMain"),
