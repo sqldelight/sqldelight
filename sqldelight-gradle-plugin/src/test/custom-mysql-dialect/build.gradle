@@ -1,0 +1,19 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
+}
+
+sqldelight {
+  databases {
+    customDialect {
+      packageName = "app.cash.sqldelight.customdialect"
+      dialect(project(":dialect"))
+    }
+  }
+}
+
+dependencies {
+  implementation libs.mysqlJdbc
+  implementation "app.cash.sqldelight:jdbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
+  implementation libs.truth
+}
