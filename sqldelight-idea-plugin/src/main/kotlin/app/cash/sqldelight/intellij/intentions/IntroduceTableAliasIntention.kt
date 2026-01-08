@@ -48,7 +48,7 @@ internal class IntroduceTableAliasIntention : BaseElementAtCaretIntentionAction(
       tableName.first().toString(),
       tableName.split(regex)
         .filter(String::isNotBlank)
-        .joinToString("") { it.first().toLowerCase().toString() },
+        .joinToString("") { it.first().lowercase() },
     )
       .distinct()
 
