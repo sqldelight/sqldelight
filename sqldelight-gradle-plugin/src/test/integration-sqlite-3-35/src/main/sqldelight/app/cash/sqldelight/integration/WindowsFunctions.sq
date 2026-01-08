@@ -1,6 +1,13 @@
+import example.SomeId;
+
 CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c TEXT);
 
 CREATE TABLE t2(a TEXT, b TEXT);
+
+CREATE TABLE t3(id TEXT AS SomeId PRIMARY KEY);
+
+CREATE VIEW v3 AS
+SELECT GROUP_CONCAT(id) FROM t3;
 
 insert:
 INSERT INTO t2 VALUES('a', 'one'),
@@ -44,3 +51,11 @@ selectGroup:
 SELECT a, b, group_concat(b, '.') OVER (
   ORDER BY a ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
 ) AS group_concat FROM t1;
+
+insertGroupView:
+INSERT INTO t3(id)
+VALUES('A'),('B'),(NULL),('C');
+
+selectGroupView:
+SELECT *
+FROM  v3;
