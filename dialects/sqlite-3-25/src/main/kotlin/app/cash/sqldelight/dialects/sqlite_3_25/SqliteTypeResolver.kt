@@ -1,7 +1,9 @@
 package app.cash.sqldelight.dialects.sqlite_3_25
 
 import app.cash.sqldelight.dialect.api.IntermediateType
-import app.cash.sqldelight.dialect.api.PrimitiveType.*
+import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
+import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
+import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteTypeResolver as Sqlite324TypeResolver
