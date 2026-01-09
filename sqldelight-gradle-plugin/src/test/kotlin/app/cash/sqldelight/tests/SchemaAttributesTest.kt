@@ -3,9 +3,8 @@ package app.cash.sqldelight.tests
 import app.cash.sqldelight.gradle.DatabaseNameAttribute
 import app.cash.sqldelight.gradle.PlatformTypeAttribute
 import app.cash.sqldelight.gradle.SourceNameAttribute
-import app.cash.sqldelight.gradle.registerSqlDelightAttributesSchema
+import app.cash.sqldelight.gradle.configureSqlDelightAttributesSchema
 import com.google.common.truth.Truth.assertThat
-import kotlin.apply
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.attributes.AttributeContainer
@@ -15,13 +14,13 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.junit.Before
 import org.junit.Test
 
-class SchemaAttributeTest {
+class SchemaAttributesTest {
   private lateinit var project: Project
   private lateinit var declarable: Configuration
 
   @Before fun setup() {
     project = ProjectBuilder.builder().build()
-    project.dependencies.registerSqlDelightAttributesSchema()
+    project.dependencies.configureSqlDelightAttributesSchema()
     declarable = project.configurations.create("declarable") {
       it.isCanBeResolved = false
       it.isCanBeConsumed = false

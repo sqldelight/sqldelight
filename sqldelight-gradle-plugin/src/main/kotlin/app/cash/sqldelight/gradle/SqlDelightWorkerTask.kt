@@ -34,39 +34,39 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   abstract val classpath: ConfigurableFileCollection
 
   @get:Input
-  abstract val packageName: Property<String>
+  internal abstract val packageName: Property<String>
 
   @get:Input
-  abstract val className: Property<String>
+  internal abstract val className: Property<String>
 
   @get:Input
-  abstract val sourceName: Property<String>
+  internal abstract val sourceName: Property<String>
 
   @get:Input
-  abstract val deriveSchemaFromMigrations: Property<Boolean>
+  internal abstract val deriveSchemaFromMigrations: Property<Boolean>
 
   @get:Input
-  abstract val treatNullAsUnknownForEquality: Property<Boolean>
+  internal abstract val treatNullAsUnknownForEquality: Property<Boolean>
 
   @get:Input
-  abstract val generateAsync: Property<Boolean>
+  internal abstract val generateAsync: Property<Boolean>
 
   @get:Input
-  abstract val dependencies: ListProperty<SqlDelightDatabaseNameImpl>
+  internal abstract val dependencies: ListProperty<SqlDelightDatabaseNameImpl>
 
   @get:Internal
-  abstract val rootDirectory: DirectoryProperty
+  internal abstract val rootDirectory: DirectoryProperty
 
   @get:Internal
-  abstract val schemaOutputDirectory: DirectoryProperty
+  internal abstract val schemaOutputDirectory: DirectoryProperty
 
   // Internal since it is added to source.
   @get:Internal
-  abstract val localSourceDirs: ConfigurableFileCollection
+  internal abstract val localSourceDirs: ConfigurableFileCollection
 
   // Internal since it is added to source.
   @get:Internal
-  abstract val dependencySourceDirs: ConfigurableFileCollection
+  internal abstract val dependencySourceDirs: ConfigurableFileCollection
 
   init {
     deriveSchemaFromMigrations.convention(false)
@@ -122,7 +122,7 @@ abstract class SqlDelightWorkerTask : SourceTask() {
   }
 
   internal fun resolveCompilationUnit(outputDirectory: DirectoryProperty): SqlDelightCompilationUnit {
-    val sourceFolders = buildSet {
+    val sourceFolders = buildSet(localSourceDirs.files.size + dependencySourceDirs.files.size) {
       localSourceDirs.forEach { add(SqlDelightSourceFolderImpl(it, false)) }
       dependencySourceDirs.forEach { add(SqlDelightSourceFolderImpl(it, true)) }
     }

@@ -6,6 +6,8 @@ import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.MigrationLanguage
 import app.cash.sqldelight.core.psi.SqlDelightImportStmtList
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
+import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightWorkerTask
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.psi.PsiFileFactory
@@ -16,6 +18,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -26,6 +29,14 @@ import org.gradle.workers.WorkParameters
 @CacheableTask
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
+
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var properties: SqlDelightDatabasePropertiesImpl
+
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @TaskAction
   fun generateSquashedMigrationFile() {

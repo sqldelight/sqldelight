@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed
+- [Gradle Plugin] Compatible with Gradle's isolated projects feature (#6079 by @fletchmckee).
+- [Gradle Plugin] Deprecated `properties` and `compilationUnit` for `SqlDelightWorkerTask` subclasses (#6079 by @fletchmckee).
+
+### Fixed
+- [Gradle Plugin] Fix issue 6078: KotlinSourceSet with name 'main' not found with AGP9 (#6079 by @fletchmckee).
+
 ### Added
 - [MySQL Dialect] Add support for Window Functions (#6086 by @griffio)
 - [Gradle Plugin] Fix build failure when starting schema version is not 1 and verifyMigrations is true (#6017 by @neilgmiller)
