@@ -18,7 +18,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -30,16 +30,20 @@ import org.gradle.workers.WorkParameters
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var properties: SqlDelightDatabasePropertiesImpl
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @TaskAction
   fun generateSquashedMigrationFile() {
     workQueue().submit(GenerateMigration::class.java) {
       it.moduleName.set(projectName)
-      it.properties.set(properties)
-      it.compilationUnit.set(compilationUnit)
+      it.properties.set(resolveProperties())
+      it.compilationUnit.set(resolveCompilationUnit(schemaOutputDirectory))
     }
   }
 
