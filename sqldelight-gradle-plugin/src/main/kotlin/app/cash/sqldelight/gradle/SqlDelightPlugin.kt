@@ -29,7 +29,6 @@ import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 
 internal const val MIN_GRADLE_VERSION = "8.0"
 
@@ -45,7 +44,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
-    project.dependencies.registerSqlDelightAttributesSchema()
+    project.dependencies.configureSqlDelightAttributesSchema()
 
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java).apply {
       linkSqlite.convention(true)
@@ -94,17 +93,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
 
     // Add the runtime dependency.
-    when {
-      android.get() && !isMultiplatform -> {
-        project.configurations.getByName("api").dependencies.addAll(runtimeDependencies)
-      }
-      else -> {
-        val sourceSetName = if (isMultiplatform) "commonMain" else "main"
-        val sourceSetApiConfigName =
-          project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
-
-        project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
-      }
+    val apiConfigurationName = if (isMultiplatform) "commonMainApi" else "api"
+    project.configurations.named(apiConfigurationName) { config ->
+      config.dependencies.addAll(runtimeDependencies)
     }
 
     if (extension.linkSqlite.get()) {

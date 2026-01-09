@@ -40,6 +40,14 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var properties: SqlDelightDatabasePropertiesImpl
+
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var compilationUnit: SqlDelightCompilationUnitImpl
+
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @get:Input abstract val verifyDefinitions: Property<Boolean>

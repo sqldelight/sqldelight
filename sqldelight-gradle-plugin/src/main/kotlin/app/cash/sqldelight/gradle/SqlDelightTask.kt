@@ -33,6 +33,7 @@ import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -47,6 +48,14 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
   abstract val outputDirectory: DirectoryProperty
 
   @get:Input abstract val projectName: Property<String>
+
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var properties: SqlDelightDatabasePropertiesImpl
+
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
 

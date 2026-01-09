@@ -16,7 +16,6 @@ import org.gradle.api.NamedDomainObjectProvider
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
-import org.gradle.api.attributes.Attribute
 import org.gradle.api.attributes.Category
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
@@ -119,11 +118,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   // Declarable bucket for schema dependencies.
-  // Replace `register` with `dependencyScope` when min Gradle version is >= 8.4.
-  private val schemaImplementation = project.configurations.register("schema${name}Implementation") {
-    it.isCanBeConsumed = false
-    it.isCanBeResolved = false
-  }
+  private val schemaImplementation = project.configurations.registerDeclarable("schema${name}Implementation")
 
   @Suppress("unused") // Public API used in gradle files.
   @Deprecated("use ProjectDependency", level = HIDDEN)
@@ -159,37 +154,6 @@ abstract class SqlDelightDatabase @Inject constructor(
       }
         """.trimIndent(),
       )
-    }
-
-    fun sourceFolders(source: Source): Set<SqlDelightSourceFolderImpl> {
-      val sourceFolders: Set<SqlDelightSourceFolderImpl> = buildSet {
-        for (dir in srcDirs) {
-          val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(folder = dir, dependency = false)
-          add(sqlDelightSourceFolder)
-        }
-
-        if (this.isEmpty()) {
-          for (sourceSetName in source.sourceSets) {
-            val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(
-              folder = File(project.projectDir, "src/$sourceSetName/sqldelight"),
-              dependency = false,
-            )
-            add(sqlDelightSourceFolder)
-          }
-        }
-      }
-
-      val dependencySourceFolders = project.configurations.findByName(source.schemaClasspathName)
-        ?.incoming
-        ?.artifacts
-        ?.map { artifact ->
-          SqlDelightSourceFolderImpl(
-            folder = File(project.projectDir, project.relativePath(artifact.file.absolutePath)),
-            dependency = true,
-          )
-        }.orEmpty()
-
-      return sourceFolders + dependencySourceFolders
     }
 
     return SqlDelightDatabasePropertiesImpl(
@@ -231,42 +195,64 @@ abstract class SqlDelightDatabase @Inject constructor(
     )
   }
 
-  // Replace `register` with `consumable` when min Gradle version is >= 8.4.
+  // This causes eager resolution and should only be called by the ToolingModelBuilder.
+  private fun sourceFolders(source: Source): Set<SqlDelightSourceFolderImpl> {
+    val sourceFolders: Set<SqlDelightSourceFolderImpl> = buildSet {
+      for (dir in srcDirs) {
+        val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(folder = dir, dependency = false)
+        add(sqlDelightSourceFolder)
+      }
+
+      if (this.isEmpty()) {
+        for (sourceSetName in source.sourceSets) {
+          val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(
+            folder = File(project.projectDir, "src/$sourceSetName/sqldelight"),
+            dependency = false,
+          )
+          add(sqlDelightSourceFolder)
+        }
+      }
+    }
+
+    val dependencySourceFolders = project.configurations.findByName(source.schemaClasspathName)
+      ?.incoming
+      ?.artifacts
+      ?.mapTo(mutableSetOf()) { artifact ->
+        SqlDelightSourceFolderImpl(
+          folder = File(project.projectDir, project.relativePath(artifact.file.absolutePath)),
+          dependency = true,
+        )
+      }.orEmpty()
+
+    return sourceFolders + dependencySourceFolders
+  }
+
   private fun publishSchemaArtifacts(
     source: Source,
     localSourceDirs: Provider<List<File>>,
   ) {
-    project
-      .configurations
-      .register(source.schemaElementsName) {
-        it.isCanBeConsumed = true
-        it.isCanBeResolved = false
-
-        it.extendsFrom(schemaImplementation.get())
-        it.attributes.apply {
-          attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category::class.java, "sqldelight-schema"))
-          attribute(DatabaseNameAttribute, this@SqlDelightDatabase.name)
-          attribute(SourceNameAttribute, source.name)
-          attribute(PlatformTypeAttribute, source.type.name)
-          // This should only be added to the consumable, otherwise it would affect variant matching.
-          attributeProvider(PackageNameAttribute, packageName)
-        }
-
-        it.outgoing.artifacts(localSourceDirs)
+    project.configurations.registerConsumable(source.schemaElementsName) {
+      extendsFrom(schemaImplementation.get())
+      attributes.apply {
+        attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category::class.java, "sqldelight-schema"))
+        attribute(DatabaseNameAttribute, this@SqlDelightDatabase.name)
+        attribute(SourceNameAttribute, source.name)
+        attribute(PlatformTypeAttribute, source.type.name)
+        // This should only be added to the consumable, otherwise it would affect variant matching.
+        attributeProvider(PackageNameAttribute, packageName)
       }
+
+      outgoing.artifacts(localSourceDirs)
+    }
   }
 
-  // Replace `register` with `resolvable` when min Gradle version is >= 8.4.
   private fun registerResolvableSchema(
     source: Source,
-  ): NamedDomainObjectProvider<Configuration> = project
+  ): NamedDomainObjectProvider<out Configuration> = project
     .configurations
-    .register(source.schemaClasspathName) {
-      it.isCanBeConsumed = false
-      it.isCanBeResolved = true
-
-      it.extendsFrom(schemaImplementation.get())
-      it.attributes.apply {
+    .registerResolvable(source.schemaClasspathName) {
+      extendsFrom(schemaImplementation.get())
+      attributes.apply {
         attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category::class.java, "sqldelight-schema"))
         attribute(DatabaseNameAttribute, this@SqlDelightDatabase.name)
         attribute(SourceNameAttribute, source.name)
@@ -329,7 +315,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   private fun addMigrationTasks(
-    schemaClasspath: NamedDomainObjectProvider<Configuration>,
+    schemaClasspath: NamedDomainObjectProvider<out Configuration>,
     localSourceDirs: Provider<List<File>>,
     source: Source,
   ) {
@@ -369,7 +355,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   private fun addMigrationOutputTasks(
-    schemaClasspath: NamedDomainObjectProvider<Configuration>,
+    schemaClasspath: NamedDomainObjectProvider<out Configuration>,
     localSourceDirs: Provider<List<File>>,
     source: Source,
   ) {
@@ -386,7 +372,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   private fun addSquashTask(
-    schemaClasspath: NamedDomainObjectProvider<Configuration>,
+    schemaClasspath: NamedDomainObjectProvider<out Configuration>,
     localSourceDirs: Provider<List<File>>,
     source: Source,
   ) {
@@ -401,7 +387,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   private fun SqlDelightWorkerTask.setCommonProperties(
-    schemaClasspath: NamedDomainObjectProvider<Configuration>,
+    schemaClasspath: NamedDomainObjectProvider<out Configuration>,
     localSourceDirs: Provider<List<File>>,
     source: Source,
   ) {

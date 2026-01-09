@@ -47,10 +47,14 @@ public abstract interface class app/cash/sqldelight/gradle/DriverInitializer {
 public abstract class app/cash/sqldelight/gradle/GenerateMigrationOutputTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
 	public fun <init> ()V
 	public final fun generateSchemaFile ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
 	public abstract fun getMigrationOutputExtension ()Lorg/gradle/api/provider/Property;
 	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
 }
 
 public abstract class app/cash/sqldelight/gradle/GenerateMigrationOutputTask$GenerateMigration : org/gradle/workers/WorkAction {
@@ -69,11 +73,15 @@ public abstract interface class app/cash/sqldelight/gradle/GenerateMigrationOutp
 public abstract class app/cash/sqldelight/gradle/GenerateSchemaTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
 	public fun <init> ()V
 	public final fun generateSchemaFile ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
 	public abstract fun getDriverProperties ()Lorg/gradle/api/provider/MapProperty;
 	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
 	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
 }
 
 public abstract class app/cash/sqldelight/gradle/GenerateSchemaTask$GenerateSchema : org/gradle/workers/WorkAction {
@@ -224,10 +232,14 @@ public final class app/cash/sqldelight/gradle/SqlDelightSourceFolderImpl : app/c
 public abstract class app/cash/sqldelight/gradle/SqlDelightTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
 	public fun <init> ()V
 	public final fun generateSqlDelightFiles ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
 	public abstract fun getOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
 	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
 }
 
 public abstract class app/cash/sqldelight/gradle/SqlDelightTask$GenerateInterfaces : org/gradle/workers/WorkAction {
@@ -247,23 +259,12 @@ public abstract class app/cash/sqldelight/gradle/SqlDelightWorkerTask : org/grad
 	public fun <init> ()V
 	public final fun environment (Ljava/lang/String;Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
 	public final fun environment (Ljava/util/Map;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
-	public abstract fun getClassName ()Lorg/gradle/api/provider/Property;
 	public abstract fun getClasspath ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public abstract fun getDependencies ()Lorg/gradle/api/provider/ListProperty;
-	public abstract fun getDependencySourceDirs ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public abstract fun getDeriveSchemaFromMigrations ()Lorg/gradle/api/provider/Property;
 	public final fun getEnvironment ()Lorg/gradle/api/provider/MapProperty;
-	public abstract fun getGenerateAsync ()Lorg/gradle/api/provider/Property;
 	public final fun getJvmArgs ()Lorg/gradle/api/provider/ListProperty;
-	public abstract fun getLocalSourceDirs ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public final fun getMaxHeapSize ()Lorg/gradle/api/provider/Property;
 	public final fun getMinHeapSize ()Lorg/gradle/api/provider/Property;
-	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
-	public abstract fun getRootDirectory ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getSchemaOutputDirectory ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getSourceName ()Lorg/gradle/api/provider/Property;
 	public final fun getSystemProperties ()Lorg/gradle/api/provider/MapProperty;
-	public abstract fun getTreatNullAsUnknownForEquality ()Lorg/gradle/api/provider/Property;
 	public final fun jvmArgs (Ljava/lang/Iterable;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
 	public final fun jvmArgs ([Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
 	public final fun systemProperties (Ljava/util/Map;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
@@ -272,12 +273,16 @@ public abstract class app/cash/sqldelight/gradle/SqlDelightWorkerTask : org/grad
 
 public abstract class app/cash/sqldelight/gradle/VerifyMigrationTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
 	public fun <init> ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
 	public abstract fun getDriverProperties ()Lorg/gradle/api/provider/MapProperty;
 	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
 	public abstract fun getVerifyDefinitions ()Lorg/gradle/api/provider/Property;
 	public abstract fun getVerifyMigrations ()Lorg/gradle/api/provider/Property;
 	public abstract fun getWorkingDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
 	public final fun verifyMigrations ()V
 }
 
@@ -306,8 +311,12 @@ public final class app/cash/sqldelight/gradle/squash/AnsiSqlMigrationSquasher : 
 public abstract class app/cash/sqldelight/gradle/squash/MigrationSquashTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
 	public fun <init> ()V
 	public final fun generateSquashedMigrationFile ()V
+	public abstract fun getCompilationUnit ()Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;
 	public abstract fun getProjectName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProperties ()Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun setCompilationUnit (Lapp/cash/sqldelight/gradle/SqlDelightCompilationUnitImpl;)V
+	public abstract fun setProperties (Lapp/cash/sqldelight/gradle/SqlDelightDatabasePropertiesImpl;)V
 }
 
 public abstract class app/cash/sqldelight/gradle/squash/MigrationSquashTask$GenerateMigration : org/gradle/workers/WorkAction {
