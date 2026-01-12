@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS inetXxx
+(
+    id         INT AUTO_INCREMENT
+        PRIMARY KEY,
+    ip         INT(4) UNSIGNED NOT NULL
+) CHARSET = utf8mb4;
+
+selectForTestINET_NTOA:
+SELECT id, INET_NTOA(ip) AS ip
+FROM inetXxx;
+
+insertOneForTestINET_ATON {
+    INSERT INTO inetXxx (ip)
+    VALUES (INET_ATON(?));
+    SELECT LAST_INSERT_ID();
+}

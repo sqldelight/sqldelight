@@ -1,0 +1,11 @@
+pluginManagement {
+    includeBuild("../build-logic-tests")
+}
+
+plugins {
+    id("sqldelightTests")
+}
+
+rootProject.name = 'custom-mysql-dialect'
+
+include(":dialect")
