@@ -5,44 +5,64 @@ import org.junit.Test
 
 class GradlePluginCombinationTests {
   @Test
-  fun `sqldelight fails when linkSqlite=false on native without additional linker settings`() {
+  fun `sqldelight does not link sqlite when linkSqlite is false`() {
     withTemporaryFixture {
-      gradleFile(
-        """
-    |plugins {
-    |  alias(libs.plugins.kotlin.multiplatform)
-    |  alias(libs.plugins.sqldelight)
-    |}
-    |
-    |sqldelight {
-    |  linkSqlite = false
-    |  databases {
-    |    CommonDb {
-    |      packageName = "com.sample"
-    |    }
-    |  }
-    |}
-    |
-    |kotlin {
-    |  iosX64 {
-    |    binaries { framework() }
-    |  }
-    |}
-    |
-    |import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinNativeCompile
-    |
-    |task checkForSqlite {
-    |  doLast {
-    |    // Verify no kotlin compile tasks have "-lsqlite3" in their extraOpts
-    |    tasks.withType(AbstractKotlinNativeCompile.class) { task ->
-    |      if (task.additionalCompilerOptions.get().contains("-lsqlite3")) throw new GradleException("sqlite should not be linked; linkSqlite is false")
-    |    }
-    |  }
-    |}
-    |
-        """.trimMargin(),
-      )
+      gradleFile(gradleBuildScript(false))
       configure("checkForSqlite")
     }
+  }
+
+  @Test
+  fun `sqldelight does link sqlite when linkSqlite is true`() {
+    withTemporaryFixture {
+      gradleFile(gradleBuildScript(true))
+      configure("checkForSqlite")
+    }
+  }
+
+  private fun gradleBuildScript(shouldLinkSqlite: Boolean): String {
+    val condition = if (shouldLinkSqlite) "!" else ""
+    val errorMessage = if (shouldLinkSqlite) {
+      "sqlite should be linked; linkSqlite is true"
+    } else {
+      "sqlite should not be linked; linkSqlite is false"
+    }
+
+    return """
+      |import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+      |
+      |plugins {
+      |  alias(libs.plugins.kotlin.multiplatform)
+      |  alias(libs.plugins.sqldelight)
+      |}
+      |
+      |sqldelight {
+      |  linkSqlite = $shouldLinkSqlite
+      |  databases {
+      |    CommonDb {
+      |      packageName = "com.sample"
+      |    }
+      |  }
+      |}
+      |
+      |kotlin {
+      |  iosX64 {
+      |    binaries { framework() }
+      |  }
+      |}
+      |
+      |task checkForSqlite {
+      |  doLast {
+      |    kotlin.targets.withType(KotlinNativeTarget).each { target ->
+      |      target.binaries.each { binary ->
+      |        if (${condition}binary.linkerOpts.contains("-lsqlite3")) {
+      |          throw new GradleException("$errorMessage")
+      |        }
+      |      }
+      |    }
+      |  }
+      |}
+      |
+    """.trimMargin()
   }
 }
