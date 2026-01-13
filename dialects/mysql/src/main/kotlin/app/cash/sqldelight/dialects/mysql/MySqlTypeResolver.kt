@@ -13,6 +13,7 @@ import app.cash.sqldelight.dialect.api.encapsulatingTypePreferringKotlin
 import app.cash.sqldelight.dialects.mysql.MySqlType.BIG_INT
 import app.cash.sqldelight.dialects.mysql.MySqlType.SMALL_INT
 import app.cash.sqldelight.dialects.mysql.MySqlType.TINY_INT
+import app.cash.sqldelight.dialects.mysql.grammar.mixins.WindowFunctionMixin
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlExtensionExpr
 import app.cash.sqldelight.dialects.mysql.grammar.psi.MySqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlBinaryAddExpr
@@ -32,21 +33,28 @@ class MySqlTypeResolver(
 ) : TypeResolver by parentResolver {
   override fun resolvedType(expr: SqlExpr): IntermediateType {
     return when (expr) {
-      is MySqlExtensionExpr -> encapsulatingType(
-        PsiTreeUtil.findChildrenOfType(expr.ifExpr, SqlExpr::class.java).drop(1),
-        TINY_INT,
-        SMALL_INT,
-        MySqlType.INTEGER,
-        INTEGER,
-        BIG_INT,
-        REAL,
-        MySqlType.TIMESTAMP,
-        MySqlType.DATE,
-        MySqlType.DATETIME,
-        MySqlType.TIME,
-        TEXT,
-        BLOB,
-      )
+      is MySqlExtensionExpr -> {
+        if (expr.windowFunctionExpr != null) {
+          val windowFunctionExpr = (expr.windowFunctionExpr as WindowFunctionMixin)
+          functionType(windowFunctionExpr.functionExpr)!!
+        } else {
+          encapsulatingType(
+            PsiTreeUtil.findChildrenOfType(expr.ifExpr, SqlExpr::class.java).drop(1),
+            TINY_INT,
+            SMALL_INT,
+            MySqlType.INTEGER,
+            INTEGER,
+            BIG_INT,
+            REAL,
+            MySqlType.TIMESTAMP,
+            MySqlType.DATE,
+            MySqlType.DATETIME,
+            MySqlType.TIME,
+            TEXT,
+            BLOB,
+          )
+        }
+      }
       is SqlBinaryExpr -> {
         if (expr.childOfType(
             TokenSet.create(
@@ -181,6 +189,13 @@ class MySqlTypeResolver(
     "date_add", "date_sub" -> IntermediateType(TEXT)
     "now" -> IntermediateType(TEXT)
     "char_length", "character_length" -> IntermediateType(INTEGER).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
+    "cume_dist" -> IntermediateType(REAL)
+    "dense_rank" -> IntermediateType(BIG_INT)
+    "first_value", "lag", "last_value", "lead", "nth_value" -> encapsulatingType(exprList, BLOB, TEXT, MySqlType.TIME, MySqlType.DATETIME, MySqlType.DATE, MySqlType.TIMESTAMP, MySqlType.BIT, TINY_INT, SMALL_INT, INTEGER, MySqlType.INTEGER, BIG_INT, REAL).asNullable()
+    "ntile" -> IntermediateType(BIG_INT).asNullable()
+    "percent_rank" -> IntermediateType(REAL).asNullable()
+    "rank" -> IntermediateType(BIG_INT)
+    "row_number" -> IntermediateType(BIG_INT)
     else -> null
   }
 
