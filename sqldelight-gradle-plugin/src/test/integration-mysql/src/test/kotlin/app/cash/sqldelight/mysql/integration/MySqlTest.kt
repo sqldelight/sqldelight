@@ -24,6 +24,7 @@ class MySqlTest {
   lateinit var datesQueries: DatesQueries
   lateinit var charactersQueries: CharactersQueries
   lateinit var numbersQueries: NumbersQueries
+  lateinit var windowFunctionsQueries: WindowFunctionsQueries
   lateinit var driver: JdbcDriver
 
   @Before
@@ -43,6 +44,7 @@ class MySqlTest {
     datesQueries = database.datesQueries
     charactersQueries = database.charactersQueries
     numbersQueries = database.numbersQueries
+    windowFunctionsQueries = database.windowFunctionsQueries
   }
 
   @After
@@ -312,6 +314,36 @@ class MySqlTest {
     assertThat(length).isEqualTo(2)
     val nullLength = charactersQueries.selectDescriptionCharLength().executeAsOne()
     assertThat(nullLength.char_length).isNull()
+  }
+
+  @Test
+  fun testRankOver() {
+    windowFunctionsQueries.insert("t", 2)
+    windowFunctionsQueries.insert("q", 3)
+    windowFunctionsQueries.insert("p", 1)
+
+    with(windowFunctionsQueries.selectRank().executeAsList()) {
+      assertThat(first().name).isEqualTo("q")
+      assertThat(first().rank_points).isEqualTo(1)
+    }
+  }
+
+  @Test
+  fun testOver() {
+    windowFunctionsQueries.insert("a", 10)
+    windowFunctionsQueries.insert("b", 11)
+    windowFunctionsQueries.insert("c", 12)
+
+    with(windowFunctionsQueries.selectOver().executeAsList()) {
+      assertThat(first().name).isEqualTo("a")
+      assertThat(first().dense_rank_points).isEqualTo(3)
+      assertThat(first().row_num_points).isEqualTo(3)
+      assertThat(first().lag_points).isEqualTo(3)
+      assertThat(first().lead_points).isNull()
+      assertThat(first().ntile_points).isEqualTo(3)
+      assertThat(first().cume_dist_points).isEqualTo(1)
+      assertThat(first().percent_rank_points).isEqualTo(0)
+    }
   }
 
   private class ExpectedException : Exception()
