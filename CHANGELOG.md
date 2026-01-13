@@ -2,26 +2,22 @@
 
 ## Unreleased
 
-### Changed
-- [Gradle Plugin] Compatible with Gradle's isolated projects feature (#6079 by @fletchmckee).
-- [Gradle Plugin] Deprecated `properties` and `compilationUnit` for `SqlDelightWorkerTask` subclasses (#6079 by @fletchmckee).
-
-### Fixed
-- [Gradle Plugin] Fix issue 6078: KotlinSourceSet with name 'main' not found with AGP9 (#6079 by @fletchmckee).
-
 ### Added
 - [Gradle Plugin] Fix build failure when starting schema version is not 1 and verifyMigrations is true (#6017 by @neilgmiller)
 - [Gradle Plugin] Make `SqlDelightWorkerTask` more configurable, and update default configuration to support developing on Windows (#5215 by @MSDarwish2000)
 - [SQLite Dialect] Add support for synthesized columns in FTS5 virtual tables (#5986 by @watbe)
+- [Gradle Plugin] Add support for Gradle's isolated projects feature (#6079 by @fletchmckee).
 
 ### Changed
 - [Compiler] Allow for underscores in package names. Before underscores have been sanitized which resulted in unexpected behaviours (#6027 by @BierDav)
 - [Paging Extension] Switch to AndroidX Paging (#5910 by @jeffdgr8)
+- [Gradle Plugin] Deprecate `properties` and `compilationUnit` for `SqlDelightWorkerTask` subclasses (#6079 by @fletchmckee).
 
 ### Fixed
 - [SQLite Dialect] Fix Sqlite 3.38 compilation error when using Json path operators (#6070 by @griffio)
 - [SQLite Dialect] Use String type for group_concat function when using custom column type (#6082 by @griffio)
 - [Gradle Plugin] Improve performance of `VerifyMigrationTask` to stop it from hanging on complex schemas (#6073 by @Lightwood13)
+- [Gradle Plugin] Fix KotlinSourceSet with name 'main' not found with AGP9 (#6079 by @fletchmckee).
 
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
