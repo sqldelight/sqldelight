@@ -401,10 +401,15 @@ alter_table_rules ::= (
   | alter_table_drop_column
   | alter_table_add_constraint
   | alter_table_alter_column
+  | alter_table_row_level_security
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
   override = true
+}
+
+alter_table_row_level_security ::= ( 'ENABLE' | 'FORCE' | 'DISABLE' ) 'ROW' 'LEVEL' 'SECURITY' {
+  pin = 1
 }
 
 alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO alter_table_column_alias {
@@ -631,10 +636,50 @@ at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_
 }
 
 extension_stmt ::= create_enum_type_stmt| drop_type_stmt | alter_type_stmt | drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
- alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | comment_on_extension_stmt {
+ alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | create_policy_stmt | alter_policy_stmt | drop_policy_stmt | comment_on_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
   override = true
+}
+
+policy_name ::= id | string
+
+policy_command ::= ALL | SELECT | INSERT | UPDATE | DELETE
+
+policy_role ::= id | string | 'PUBLIC' | 'CURRENT_USER' | 'SESSION_USER' | 'CURRENT_ROLE'
+
+policy_role_list ::= policy_role ( COMMA policy_role ) *
+
+create_policy_stmt ::= CREATE 'POLICY' policy_name ON [ {database_name} DOT ] {table_name}
+  [ 'AS' ( 'PERMISSIVE' | 'RESTRICTIVE' ) ]
+  [ FOR policy_command ]
+  [ TO policy_role_list ]
+  [ USING LP <<expr '-1'>> RP ]
+  [ WITH CHECK LP <<expr '-1'>> RP ] {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreatePolicyMixin"
+  pin = 2
+}
+
+alter_policy_stmt ::= ALTER 'POLICY' policy_name ON [ {database_name} DOT ] {table_name}
+  ( alter_policy_rename
+  | alter_policy_to
+  | alter_policy_using
+  | alter_policy_with_check
+  ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterPolicyMixin"
+  pin = 2
+}
+
+alter_policy_rename ::= RENAME TO policy_name
+
+alter_policy_to ::= TO policy_role_list
+
+alter_policy_using ::= USING LP <<expr '-1'>> RP
+
+alter_policy_with_check ::= WITH CHECK LP <<expr '-1'>> RP
+
+drop_policy_stmt ::= DROP 'POLICY' [ IF EXISTS ] policy_name ON [ {database_name} DOT ] {table_name} [ CASCADE | RESTRICT ] {
+  pin = 2
 }
 
 extension_name ::= id | string
@@ -830,6 +875,3 @@ with_clause ::= WITH [ RECURSIVE ] {cte_table_name} AS [ with_clause_materialize
   pin = 1
   override = true
 }
-
-
-

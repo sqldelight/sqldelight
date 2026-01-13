@@ -128,6 +128,10 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "concat" -> encapsulatingType(exprList, TEXT)
     "substring", "replace" -> IntermediateType(TEXT).nullableIf(resolvedType(exprList[0]).javaType.isNullable)
     "starts_with" -> IntermediateType(BOOLEAN)
+    "current_setting" -> {
+      val resultType = IntermediateType(TEXT)
+      if (exprList.size > 1) resultType.asNullable() else resultType
+    }
     "coalesce", "ifnull" -> {
       val exprType = exprList.first().postgreSqlType()
       if (isArrayType(exprType)) {
