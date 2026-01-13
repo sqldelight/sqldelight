@@ -13,6 +13,7 @@
 
 ### Fixed
 - [SQLite Dialect] Fix Sqlite 3.38 compilation error when using Json path operators (#6070 by @griffio)
+- [SQLite Dialect] Use String type for group_concat function when using custom column type (#6082 by @griffio)
 - [Gradle Plugin] Improve performance of `VerifyMigrationTask` to stop it from hanging on complex schemas (#6073 by @Lightwood13)
 
 ## [2.2.1] - 2025-11-13
