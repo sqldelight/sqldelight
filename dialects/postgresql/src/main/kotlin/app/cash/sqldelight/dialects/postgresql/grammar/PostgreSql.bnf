@@ -771,7 +771,8 @@ array_agg_stmt ::= 'array_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> [ ORDER BY {o
 
 set_stmt ::= 'SET' [ ('SESSION' | 'LOCAL') ] ( set_config | set_timezone | set_schema | set_names | set_seed )
 set_value ::= literal_value | {identifier} | DEFAULT
-set_config ::= {identifier} ( TO | EQ ) set_value
+set_config ::= set_config_name ( TO | EQ ) set_value
+set_config_name ::= {identifier} ( DOT {identifier} )*
 set_schema ::= 'SCHEMA' string_literal
 set_names ::= 'NAMES' set_value
 set_seed ::= 'SEED' TO ( set_value | [PLUS | MINUS]{numeric_literal} )
