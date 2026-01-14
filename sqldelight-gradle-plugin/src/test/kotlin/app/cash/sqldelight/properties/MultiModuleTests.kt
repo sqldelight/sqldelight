@@ -179,7 +179,12 @@ class MultiModuleTests {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", ":moduleA:check", "--stacktrace")
+      .withArguments(
+        "clean",
+        ":moduleA:check",
+        "--stacktrace",
+        "--configuration-cache",
+      )
       .forwardOutput()
 
     val result = runner.build()

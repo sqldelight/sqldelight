@@ -35,43 +35,46 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   @get:Inject
   abstract val registry: ToolingModelBuilderRegistry
 
-  override fun apply(project: Project) {
+  override fun apply(project: Project) = with(project) {
     require(GradleVersion.current() >= GradleVersion.version(MIN_GRADLE_VERSION)) {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
     }
 
-    project.dependencies.configureSqlDelightAttributesSchema()
+    dependencies.configureSqlDelightAttributesSchema()
 
-    val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java).apply {
+    val extension = extensions.create("sqldelight", SqlDelightExtension::class.java).apply {
       linkSqlite.convention(true)
     }
 
-    val kotlinPluginApplied: Property<Boolean> = project.objects
-      .property(Boolean::class.java)
-      .convention(false)
-
-    project.plugins.withType(KotlinBasePlugin::class.java).configureEach {
-      kotlinPluginApplied.set(true)
-    }
-
-    project.tasks.register("generateSqlDelightInterface") {
+    tasks.register("generateSqlDelightInterface") {
       it.group = GROUP
       it.description = "Aggregation task which runs every interface generation task for every given source"
     }
 
-    project.tasks.register("verifySqlDelightMigration") {
+    tasks.register("verifySqlDelightMigration") {
       it.group = GROUP
       it.description = "Aggregation task which runs every migration task for every given source"
     }
 
-    project.configureAndroid(extension)
-    project.configureKotlin(extension)
+    configureAndroid(extension)
+    configureKotlin(extension)
 
+    checkKotlinPluginApplied()
     registry.register(PropertiesModelBuilder(extension.databases))
+  }
 
-    project.afterEvaluate {
-      check(kotlinPluginApplied.get()) {
-        "SQL Delight Gradle plugin applied in project '${project.path}' but no supported Kotlin plugin was found"
+  private fun Project.checkKotlinPluginApplied() {
+    val applied: Property<Boolean> = objects
+      .property(Boolean::class.java)
+      .convention(false)
+
+    plugins.withType(KotlinBasePlugin::class.java).configureEach {
+      applied.set(true)
+    }
+
+    afterEvaluate {
+      check(applied.get()) {
+        "SQL Delight Gradle plugin applied in project '$path' but no supported Kotlin plugin was found"
       }
     }
   }

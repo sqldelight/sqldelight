@@ -18,6 +18,7 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.attributes.Category
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Property
@@ -121,8 +122,8 @@ abstract class SqlDelightDatabase @Inject constructor(
    */
   val treatNullAsUnknownForEquality: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
-  private val generatedSourcesDirectory
-    get() = File(project.buildDir, "generated/sqldelight/code/$name")
+  private val generatedSourcesDirectory: Provider<Directory> =
+    project.layout.buildDirectory.dir("generated/sqldelight/code/$name")
 
   private val sources: NamedDomainObjectContainer<Source> = project
     .objects
@@ -173,7 +174,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         SqlDelightCompilationUnitImpl(
           name = source.name,
           sourceFolders = sourceFolders(source),
-          outputDirectoryFile = source.outputDir,
+          outputDirectoryFile = source.outputDir.get().asFile,
         )
       },
       rootDirectory = project.projectDir,
@@ -325,13 +326,16 @@ abstract class SqlDelightDatabase @Inject constructor(
   ) {
     val verifyMigrationTask =
       project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
-        // Evaluates during the execution phase.
-        it.onlyIf { !deriveSchemaFromMigrations.get() }
+        // Extracted to avoid capturing SqlDelightDatabase in the task.
+        val isEnabled = deriveSchemaFromMigrations
+        it.onlyIf("deriveSchemaFromMigrations is false") { !isEnabled.get() }
         it.projectName.set(project.name)
         it.setCommonProperties(schemaClasspath, localSourceDirs, source)
         it.include("**${File.separatorChar}*.$SQLDELIGHT_EXTENSION")
         it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
-        it.workingDirectory.set(File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name"))
+        it.workingDirectory.set(
+          project.layout.buildDirectory.dir("sqldelight/migration_verification/${source.name.capitalize()}$name"),
+        )
         it.group = SqlDelightPlugin.GROUP
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
         it.verifyMigrations.set(verifyMigrations)
@@ -340,8 +344,9 @@ abstract class SqlDelightDatabase @Inject constructor(
       }
 
     project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
-      // Evaluates during the execution phase.
-      it.onlyIf { schemaOutputDirectory.isPresent }
+      // Extracted to avoid capturing SqlDelightDatabase in the task.
+      val output = schemaOutputDirectory
+      it.onlyIf("schemaOutputDirectory is set") { output.isPresent }
       it.projectName.set(project.name)
       it.setCommonProperties(schemaClasspath, localSourceDirs, source)
       it.outputDirectory.set(schemaOutputDirectory)
@@ -367,8 +372,9 @@ abstract class SqlDelightDatabase @Inject constructor(
     source: Source,
   ) {
     project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
-      // Evaluates during the execution phase.
-      it.onlyIf { migrationOutputDirectory.isPresent }
+      // Extracted to avoid capturing SqlDelightDatabase in the task.
+      val output = migrationOutputDirectory
+      it.onlyIf("migrationOutputDirectory is set") { output.isPresent }
       it.projectName.set(project.name)
       it.setCommonProperties(schemaClasspath, localSourceDirs, source)
       it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
@@ -386,8 +392,9 @@ abstract class SqlDelightDatabase @Inject constructor(
     source: Source,
   ) {
     project.tasks.register("squash${source.name.capitalize()}${name}Migrations", MigrationSquashTask::class.java) {
-      // Evaluates during the execution phase.
-      it.onlyIf { deriveSchemaFromMigrations.get() }
+      // Extracted to avoid capturing SqlDelightDatabase in the task.
+      val isEnabled = deriveSchemaFromMigrations
+      it.onlyIf("deriveSchemaFromMigrations is true") { isEnabled.get() }
       it.projectName.set(project.name)
       it.setCommonProperties(schemaClasspath, localSourceDirs, source)
       it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
@@ -402,20 +409,25 @@ abstract class SqlDelightDatabase @Inject constructor(
     localSourceDirs: Provider<List<File>>,
     source: Source,
   ) {
-    this.onlyIf { source.isEnabled(isMultiplatform.get()) }
+    // Extracted to avoid capturing SqlDelightDatabase in the task.
+    val isEnabled = isMultiplatform.map { source.isEnabled(it) }
+    this.onlyIf("Android single-platform project") { isEnabled.get() }
     this.packageName.set(this@SqlDelightDatabase.packageName)
     this.className.set(this@SqlDelightDatabase.name)
     this.sourceName.set(source.name)
     this.deriveSchemaFromMigrations.set(this@SqlDelightDatabase.deriveSchemaFromMigrations)
     this.treatNullAsUnknownForEquality.set(this@SqlDelightDatabase.treatNullAsUnknownForEquality)
     this.generateAsync.set(this@SqlDelightDatabase.generateAsync)
-    this.rootDirectory.set(project.projectDir)
+    val projectDir = project.projectDir
+    this.rootDirectory.set(projectDir)
     this.schemaOutputDirectory.set(source.outputDir)
     this.localSourceDirs.from(localSourceDirs)
     dependenciesFrom(schemaClasspath.flatMap { config -> config.incoming.artifacts.resolvedArtifacts })
   }
 
-  private val Source.outputDir get() = File(generatedSourcesDirectory, name)
+  private val Source.outputDir: Provider<Directory>
+    get() = generatedSourcesDirectory.map { it.dir(name) }
+
   private val Source.schemaClasspathName get() = "schema${this.name.capitalize()}${this@SqlDelightDatabase.name}Classpath"
   private val Source.schemaElementsName get() = "schema${this.name.capitalize()}${this@SqlDelightDatabase.name}Elements"
 }

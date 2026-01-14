@@ -63,7 +63,7 @@ private fun Component.sourceSetNames(): Set<String> = buildSet {
     .joinToString("") { (_, flavor) -> flavor.capitalize() }
     .decapitalize()
     .takeUnless { it.isBlank() }
-    ?.also { add(it) }
+    ?.let { add(it) }
 
   // Individual build types (ex. debug, release)
   buildType?.let { add(it) }
