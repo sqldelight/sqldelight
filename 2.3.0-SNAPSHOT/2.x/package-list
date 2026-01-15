@@ -12,6 +12,7 @@ app.cash.sqldelight.dialects.hsql.grammar.psi.impl
 module:mysql
 app.cash.sqldelight.dialects.mysql
 app.cash.sqldelight.dialects.mysql.grammar
+app.cash.sqldelight.dialects.mysql.grammar.mixins
 app.cash.sqldelight.dialects.mysql.grammar.psi
 app.cash.sqldelight.dialects.mysql.grammar.psi.impl
 module:postgresql

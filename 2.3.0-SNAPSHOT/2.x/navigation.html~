@@ -508,598 +508,658 @@
     </div>
    </div>
   </div>
-  <div class="toc--part" id="mysql-nav-submenu-2" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi////PointingToDeclaration//727215285" data-nesting-level="1">
+  <div class="toc--part" id="mysql-nav-submenu-2" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.mixins////PointingToDeclaration//727215285" data-nesting-level="1">
    <div class="toc--row">
-    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.mysql.grammar.psi" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-2')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>mysql.</span><wbr><span>grammar.</span><wbr><span>psi</span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.mysql.grammar.mixins" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-2')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.mixins/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>mysql.</span><wbr><span>grammar.</span><wbr><span>mixins</span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAddColumn///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-2-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.mixins/WindowDefinitionMixin///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.mixins/-window-definition-mixin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Window</span><wbr><span>Definition</span><wbr><span><span>Mixin</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+  <div class="toc--part" id="mysql-nav-submenu-3" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi////PointingToDeclaration//727215285" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.mysql.grammar.psi" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-3')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>mysql.</span><wbr><span>grammar.</span><wbr><span>psi</span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-3-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAddColumn///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-add-column/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Column</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-1" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAddConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-1" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAddConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-add-constraint/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Constraint</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-2" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAddIndex///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-2" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAddIndex///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-add-index/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span><span>Index</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-3" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAlterIndex///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-3" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableAlterIndex///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-alter-index/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span><span>Index</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-4" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableChangeColumn///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-4" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableChangeColumn///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-change-column/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Change</span><wbr><span><span>Column</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-5" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableConvertCharacterSet///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-5" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableConvertCharacterSet///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-convert-character-set/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Convert</span><wbr><span>Character</span><wbr><span><span>Set</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-6" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableDropColumn///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-6" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableDropColumn///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-drop-column/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span><span>Column</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-7" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableDropIndex///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-7" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableDropIndex///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-drop-index/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span><span>Index</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-8" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableModifyColumn///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-8" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableModifyColumn///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-modify-column/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Modify</span><wbr><span><span>Column</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-9" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableRenameIndex///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-9" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableRenameIndex///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-rename-index/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Rename</span><wbr><span><span>Index</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-10" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableRules///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-10" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAlterTableRules///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-alter-table-rules/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span><span>Rules</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-11" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlApproximateNumericDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-11" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlApproximateNumericDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-approximate-numeric-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Approximate</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-12" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAssignment///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-12" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAssignment///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-assignment/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span><span>Assignment</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-13" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAssignmentList///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-13" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAssignmentList///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-assignment-list/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span><span>List</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-14" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAssignmentValue///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-14" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlAssignmentValue///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-assignment-value/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span><span>Value</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-15" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBigIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-15" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBaseWindowName///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-base-window-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Base</span><wbr><span>Window</span><wbr><span><span>Name</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-3-16" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBigIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-big-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Big</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-16" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBinaryDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-17" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBinaryDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-binary-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Binary</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-17" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBindParameter///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-18" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBindParameter///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-bind-parameter/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Bind</span><wbr><span><span>Parameter</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-18" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBitDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-19" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBitDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-bit-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Bit</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-19" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBlobLiteral///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-20" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlBlobLiteral///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-blob-literal/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Blob</span><wbr><span><span>Literal</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-20" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCharacterType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-21" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCharacterType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-character-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Character</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-21" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlColumnConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-22" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlColumnConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-column-constraint/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Column</span><wbr><span><span>Constraint</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-22" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCommentType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-23" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCommentType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-comment-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Comment</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-23" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCompoundSelectStmt///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-24" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCompoundSelectStmt///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-compound-select-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Compound</span><wbr><span>Select</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-24" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCreateIndexStmt///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-25" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCreateIndexStmt///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-create-index-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-25" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCurrentTimestampWithOptionalNumber///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-26" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlCurrentTimestampWithOptionalNumber///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-current-timestamp-with-optional-number/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Current</span><wbr><span>Timestamp</span><wbr><span>With</span><wbr><span>Optional</span><wbr><span><span>Number</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-26" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlDateDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-27" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlDateDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-date-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Date</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-27" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlDefaultConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-28" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlDefaultConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-default-constraint/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Default</span><wbr><span><span>Constraint</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-28" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlDropTableStmt///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-29" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlDropTableStmt///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-drop-table-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Drop</span><wbr><span>Table</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-29" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlEnumSetType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-30" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlEnumSetType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-enum-set-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Enum</span><wbr><span>Set</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-30" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlExtensionExpr///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-31" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlExtensionExpr///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-extension-expr/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span><span>Expr</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-31" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlExtensionStmt///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-32" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlExtensionStmt///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-extension-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-32" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlFixedPointDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-33" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlFixedPointDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-fixed-point-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Fixed</span><wbr><span>Point</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-33" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIfExpr///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-34" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlFrameSpec///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-frame-spec/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Frame</span><wbr><span><span>Spec</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-3-35" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIfExpr///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-if-expr/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span><span>Expr</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-34" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexHint///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-36" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexHint///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-hint/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>Hint</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-35" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexHintList///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-37" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexHintList///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-hint-list/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Hint</span><wbr><span><span>List</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-36" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexList///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-38" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexList///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-list/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>List</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-37" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexVisibility///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-39" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIndexVisibility///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-index-visibility/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>Visibility</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-38" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlInsertStmt///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-40" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlInsertStmt///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-insert-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Insert</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-39" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-41" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-40" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIntervalExpression///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-42" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIntervalExpression///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-interval-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-41" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIntervalUnit///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-43" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlIntervalUnit///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-interval-unit/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span><span>Unit</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-42" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlJsonBinaryOperator///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-44" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlJsonBinaryOperator///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-json-binary-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Binary</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-43" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlJsonDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-45" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlJsonDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-json-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-44" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlJsonExpression///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-46" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlJsonExpression///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-json-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-45" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlMediumIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-47" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlMediumIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-medium-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Medium</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-46" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlOverrides///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-48" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlOverrides///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-overrides/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span><span>Overrides</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-47" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlPlacementClause///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-49" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlPlacementClause///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-placement-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Placement</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-48" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlQualifiedTableName///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-50" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlQualifiedTableName///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-qualified-table-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Qualified</span><wbr><span>Table</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-49" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlRowFormatClause///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-51" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlRowFormatClause///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-row-format-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Row</span><wbr><span>Format</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-50" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlSmallIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-52" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlSmallIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-small-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-51" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTableConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-53" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTableConstraint///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-table-constraint/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span><span>Constraint</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-52" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTableOption///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-54" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTableOption///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-table-option/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span><span>Option</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-53" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTableOrSubquery///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-55" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTableOrSubquery///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-table-or-subquery/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Or</span><wbr><span><span>Subquery</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-54" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTinyIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-56" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTinyIntDataType///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-tiny-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Tiny</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-55" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTruncateStmt///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-57" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTruncateStmt///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-truncate-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-56" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypeName///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-58" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypeName///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-type-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-57" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypes///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-59" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypes///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="MySqlTypes" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-2-57')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-types/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span><span>Types</span></span></span></span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="MySqlTypes" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-3-59')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-types/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span><span>Types</span></span></span></span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
     </div>
-    <div class="toc--part" id="mysql-nav-submenu-2-57-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypes.Factory///PointingToDeclaration//727215285" data-nesting-level="3">
+    <div class="toc--part" id="mysql-nav-submenu-3-59-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlTypes.Factory///PointingToDeclaration//727215285" data-nesting-level="3">
      <div class="toc--row">
       <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-types/-factory/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span><span>Factory</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-2-58" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlVisitor///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-60" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlVisitor///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-visitor/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span><span>Visitor</span></span></span></span></a>
     </div>
    </div>
-  </div>
-  <div class="toc--part" id="mysql-nav-submenu-3" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl////PointingToDeclaration//727215285" data-nesting-level="1">
-   <div class="toc--row">
-    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.mysql.grammar.psi.impl" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-3')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>mysql.</span><wbr><span>grammar.</span><wbr><span>psi.</span><wbr><span>impl</span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
+   <div class="toc--part" id="mysql-nav-submenu-3-61" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlWindowDefn///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-window-defn/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span><span>Defn</span></span></span></span></a>
+    </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAddColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-3-62" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlWindowFunctionExpr///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-window-function-expr/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span><span>Expr</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-3-63" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi/MySqlWindowName///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi/-my-sql-window-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span><span>Name</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+  <div class="toc--part" id="mysql-nav-submenu-4" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl////PointingToDeclaration//727215285" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.mysql.grammar.psi.impl" onclick="window.handleTocButtonClick(event, 'mysql-nav-submenu-4')"></button><a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>mysql.</span><wbr><span>grammar.</span><wbr><span>psi.</span><wbr><span>impl</span></a><a class="toc--skip-link" href="dialects/mysql/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-4-0" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAddColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-add-column-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-1" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAddConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-1" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAddConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-add-constraint-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-2" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAddIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-2" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAddIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-add-index-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Add</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-3" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAlterIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-3" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableAlterIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-alter-index-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Alter</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-4" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableChangeColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-4" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableChangeColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-change-column-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Change</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-5" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableConvertCharacterSetImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-5" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableConvertCharacterSetImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-convert-character-set-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Convert</span><wbr><span>Character</span><wbr><span>Set</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-6" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableDropColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-6" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableDropColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-drop-column-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-7" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableDropIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-7" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableDropIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-drop-index-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Drop</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-8" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableModifyColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-8" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableModifyColumnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-modify-column-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Modify</span><wbr><span>Column</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-9" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableRenameIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-9" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableRenameIndexImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-rename-index-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Rename</span><wbr><span>Index</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-10" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableRulesImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-10" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAlterTableRulesImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-alter-table-rules-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Table</span><wbr><span>Rules</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-11" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlApproximateNumericDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-11" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlApproximateNumericDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-approximate-numeric-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Approximate</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-12" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAssignmentImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-12" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAssignmentImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-assignment-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-13" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAssignmentListImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-13" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAssignmentListImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-assignment-list-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span>List</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-14" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAssignmentValueImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-14" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlAssignmentValueImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-assignment-value-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Assignment</span><wbr><span>Value</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-15" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBigIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-15" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBaseWindowNameImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-base-window-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Base</span><wbr><span>Window</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-4-16" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBigIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-big-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Big</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-16" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBinaryDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-17" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBinaryDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-binary-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Binary</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-17" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBindParameterImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-18" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBindParameterImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-bind-parameter-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Bind</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-18" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBitDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-19" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBitDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-bit-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Bit</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-19" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBlobLiteralImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-20" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlBlobLiteralImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-blob-literal-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Blob</span><wbr><span>Literal</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-20" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCharacterTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-21" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCharacterTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-character-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Character</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-21" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlColumnConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-22" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlColumnConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-column-constraint-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Column</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-22" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCommentTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-23" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCommentTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-comment-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Comment</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-23" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCompoundSelectStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-24" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCompoundSelectStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-compound-select-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Compound</span><wbr><span>Select</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-24" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCreateIndexStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-25" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCreateIndexStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-create-index-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Index</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-25" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCurrentTimestampWithOptionalNumberImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-26" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlCurrentTimestampWithOptionalNumberImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-current-timestamp-with-optional-number-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Current</span><wbr><span>Timestamp</span><wbr><span>With</span><wbr><span>Optional</span><wbr><span>Number</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-26" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlDateDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-27" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlDateDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-date-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Date</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-27" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlDefaultConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-28" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlDefaultConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-default-constraint-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Default</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-28" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlDropTableStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-29" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlDropTableStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-drop-table-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Drop</span><wbr><span>Table</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-29" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlEnumSetTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-30" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlEnumSetTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-enum-set-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Enum</span><wbr><span>Set</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-30" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlExtensionExprImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-31" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlExtensionExprImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-extension-expr-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-31" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlExtensionStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-32" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlExtensionStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-extension-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Extension</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-32" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlFixedPointDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-33" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlFixedPointDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-fixed-point-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Fixed</span><wbr><span>Point</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-33" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIfExprImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-34" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlFrameSpecImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-frame-spec-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Frame</span><wbr><span>Spec</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-4-35" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIfExprImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-if-expr-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-34" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexHintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-36" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexHintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-index-hint-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Hint</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-35" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexHintListImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-37" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexHintListImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-index-hint-list-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Hint</span><wbr><span>List</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-36" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexListImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-38" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexListImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-index-list-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>List</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-37" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexVisibilityImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-39" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIndexVisibilityImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-index-visibility-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Visibility</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-38" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlInsertStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-40" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlInsertStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-insert-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Insert</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-39" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-41" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-40" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIntervalExpressionImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-42" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIntervalExpressionImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-interval-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-41" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIntervalUnitImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-43" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlIntervalUnitImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-interval-unit-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span>Unit</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-42" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlJsonBinaryOperatorImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-44" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlJsonBinaryOperatorImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-json-binary-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Binary</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-43" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlJsonDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-45" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlJsonDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-json-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-44" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlJsonExpressionImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-46" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlJsonExpressionImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-json-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-45" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlMediumIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-47" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlMediumIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-medium-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Medium</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-46" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlOverridesImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-48" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlOverridesImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-overrides-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Overrides</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-47" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlPlacementClauseImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-49" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlPlacementClauseImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-placement-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Placement</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-48" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlQualifiedTableNameImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-50" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlQualifiedTableNameImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-qualified-table-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Qualified</span><wbr><span>Table</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-49" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlRowFormatClauseImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-51" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlRowFormatClauseImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-row-format-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Row</span><wbr><span>Format</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-50" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlSmallIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-52" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlSmallIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-small-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-51" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTableConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-53" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTableConstraintImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-table-constraint-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-52" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTableOptionImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-54" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTableOptionImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-table-option-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Option</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-53" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTableOrSubqueryImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-55" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTableOrSubqueryImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-table-or-subquery-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Or</span><wbr><span>Subquery</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-54" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTinyIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-56" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTinyIntDataTypeImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-tiny-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Tiny</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-55" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTruncateStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-57" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTruncateStmtImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-truncate-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="mysql-nav-submenu-3-56" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTypeNameImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+   <div class="toc--part" id="mysql-nav-submenu-4-58" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlTypeNameImpl///PointingToDeclaration//727215285" data-nesting-level="2">
     <div class="toc--row">
      <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-type-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-4-59" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlWindowDefnImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-window-defn-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Defn</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-4-60" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlWindowFunctionExprImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-window-function-expr-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="mysql-nav-submenu-4-61" pageid="mysql::app.cash.sqldelight.dialects.mysql.grammar.psi.impl/MySqlWindowNameImpl///PointingToDeclaration//727215285" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="dialects/mysql/app.cash.sqldelight.dialects.mysql.grammar.psi.impl/-my-sql-window-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>My</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
   </div>
