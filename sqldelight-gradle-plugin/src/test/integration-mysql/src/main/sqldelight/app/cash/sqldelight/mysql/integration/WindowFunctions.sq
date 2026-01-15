@@ -1,0 +1,32 @@
+CREATE TABLE scores (
+  name TEXT NOT NULL,
+  points INTEGER NOT NULL
+);
+
+insert:
+INSERT INTO scores (name, points)
+VALUES (?, ?);
+
+selectRank:
+SELECT
+  name,
+  RANK () OVER (
+  ORDER BY points DESC
+  ) rank_points
+FROM scores;
+
+selectOver:
+SELECT
+  name,
+  DENSE_RANK() OVER (ORDER BY points DESC) dense_rank_points,
+  ROW_NUMBER() OVER (ORDER BY points DESC) row_num_points,
+  LAG(3) OVER (ORDER BY points DESC) lag_points,
+  LEAD(points) OVER (ORDER BY points DESC) lead_points,
+  NTILE(6) OVER (ORDER BY points DESC) ntile_points,
+  CUME_DIST() OVER (ORDER BY points DESC) cume_dist_points,
+  PERCENT_RANK() OVER (
+	PARTITION BY name
+    ORDER BY points DESC
+    ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+  ) percent_rank_points
+FROM scores;
