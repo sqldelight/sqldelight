@@ -9,7 +9,7 @@ sqliter = "1.3.3"
 sqljs = "1.8.0"
 paging = "3.4.0-beta01"
 ktlint = "1.7.1"
-agp = "9.0.0-rc01"
+agp = "9.0.0"
 compileSdk = "35"
 minSdk = "21"
 sqlPsi = "0.7.2"
@@ -29,7 +29,6 @@ kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutin
 
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 
-android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 android-pluginApi = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 
 androidx-test-core = "androidx.test:core:1.7.0"
