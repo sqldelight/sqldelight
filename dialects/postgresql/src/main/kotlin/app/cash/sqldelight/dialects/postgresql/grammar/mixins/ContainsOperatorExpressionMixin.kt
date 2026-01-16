@@ -10,7 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.intellij.lang.ASTNode
 
 /**
- * The "@> <@" contain operators is used by Array, TsVector, Jsonb (not Json), TsRange, TsTzRange, TsMultiRange, TsTzMultiRange
+ * The "@> <@" contain operators is used by Array, TsVector, Ltree, Jsonb (not Json), TsRange, TsTzRange, TsMultiRange, TsTzMultiRange
  * The type annotation is performed here for these types
  * For other json operators see JsonExpressionMixin
  */
@@ -23,6 +23,7 @@ internal abstract class ContainsOperatorExpressionMixin(node: ASTNode) :
     val columnType = ((firstChild.firstChild.reference?.resolve() as? SqlColumnName)?.parent as? SqlColumnDef)?.columnType?.typeName?.text
     when {
       columnType == null ||
+        columnType == "LTREE" ||
         columnType == "JSONB" ||
         columnType == "TSVECTOR" ||
         columnType == "TSRANGE" ||
@@ -31,7 +32,7 @@ internal abstract class ContainsOperatorExpressionMixin(node: ASTNode) :
         columnType == "TSTZMULTIRANGE" ||
         columnType.endsWith("[]") -> super.annotate(annotationHolder)
       columnType == "JSON" -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of jsonb expression must be a jsonb column.")
-      else -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "expression must be ARRAY, JSONB, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.")
+      else -> annotationHolder.createErrorAnnotation(firstChild.firstChild, "expression must be ARRAY, JSONB, LTREE, TSVECTOR, TSRANGE, TSTZRANGE, TSMULTIRANGE, TSTZMULTIRANGE.")
     }
     super.annotate(annotationHolder)
   }

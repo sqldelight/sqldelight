@@ -189,6 +189,7 @@ type_name ::= (
   boolean_data_type |
   json_data_type |
   blob_data_type |
+  ltree_data_type |
   tsvector_data_type |
   tsquery_data_type |
   tstzrange |
@@ -285,6 +286,8 @@ json_data_type ::= 'JSON' | 'JSONB'
 blob_data_type ::= 'BYTEA'
 
 tsvector_data_type ::= 'TSVECTOR'
+
+ltree_data_type ::= 'LTREE'
 
 tsquery_data_type ::= 'TSQUERY'
 
@@ -531,7 +534,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | ltree_expression | ltree_function_stmt | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -585,9 +588,16 @@ json_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_exp
   pin = 2
 }
 
+ltree_expression ::= {column_expr} ( ltree_binary_operator | ltree_boolean_operator ) <<expr '-1'>> {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.LtreeExpressionMixin"
+  pin = 2
+}
+
 jsona_binary_operator ::= '->' | '->>' | '#>' | '#>>'
 jsonb_binary_operator ::= '#-'
 jsonb_boolean_operator ::= '@?' | '??|' | '??&' | '??'
+ltree_binary_operator ::= '?@>' | '?<@' | '?@' | '?~'
+ltree_boolean_operator ::= '<@' | '@>' | '@' | '~' | '^<@' | '^@>' | '^@' | '^~' | '?'
 contains_operator ::= '@>' | '<@'
 match_operator ::= '@@'
 overlaps_operator ::= '&&'
@@ -759,6 +769,8 @@ LP [ ALL | DISTINCT ] ( json_expression | {column_expr} | <<expr '-1'>> ) COMMA 
 [ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
 pin = 2
 }
+
+ltree_function_stmt ::= ( 'subltree' | 'subpath' | 'nlevel' | 'index' | 'text2ltree' | 'ltree2text' | 'lca') LP ( {table_alias} | {table_name} ) RP
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
