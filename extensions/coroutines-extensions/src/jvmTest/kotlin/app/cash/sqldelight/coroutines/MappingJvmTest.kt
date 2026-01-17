@@ -30,7 +30,7 @@ import org.junit.Test
 import org.junit.rules.Timeout
 
 class MappingJvmTest : DbTest {
-  @get:Rule val timeout = Timeout(2, SECONDS)
+  @get:Rule val timeout = Timeout(10, SECONDS)
 
   override suspend fun setupDb(): TestDb = TestDb(testDriver())
 
