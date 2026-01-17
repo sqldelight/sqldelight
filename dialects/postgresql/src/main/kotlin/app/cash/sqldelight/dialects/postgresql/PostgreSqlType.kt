@@ -40,7 +40,7 @@ enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
       INTEGER -> CodeBlock.of("bindInt(%L, %L)\n", columnIndex, value)
       BIG_INT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
       GEOMETRY, GEOGRAPHY -> CodeBlock.of("bindString(%L, %L)\n", columnIndex, value)
-      DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> CodeBlock.of(
+      DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> CodeBlock.of(
         "bindObject(%L, %L)\n",
         columnIndex,
         value,

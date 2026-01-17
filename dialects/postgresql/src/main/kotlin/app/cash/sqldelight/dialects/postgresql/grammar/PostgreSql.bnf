@@ -190,7 +190,6 @@ type_name ::= (
   json_data_type |
   blob_data_type |
   tsvector_data_type |
-  xml_data_type |
   tsquery_data_type |
   tstzrange |
   tsrange |
