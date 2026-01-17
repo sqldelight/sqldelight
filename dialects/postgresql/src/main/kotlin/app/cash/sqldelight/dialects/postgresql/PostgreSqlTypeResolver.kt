@@ -294,7 +294,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         (argument.parent.parent as SqlExpr).postgreSqlType()
       }
       is PostgreSqlGeometrySetsridFunctionStmt -> {
-        IntermediateType(INTEGER)
+        IntermediateType(PostgreSqlType.INTEGER)
       }
       is PostgreSqlGeometryPointFunctionStmt -> {
         IntermediateType(REAL)
