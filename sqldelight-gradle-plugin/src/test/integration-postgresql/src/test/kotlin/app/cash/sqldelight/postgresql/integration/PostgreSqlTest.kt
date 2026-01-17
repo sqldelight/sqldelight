@@ -1380,6 +1380,7 @@ class PostgreSqlTest {
       ).executeAsList(),
     ) {
       assertThat(size).isEqualTo(1)
+    }
   }
 
   @Test
