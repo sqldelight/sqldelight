@@ -9,7 +9,7 @@ import app.cash.sqldelight.dialects.sqlite_3_35.grammar.psi.SqliteInsertStmt
 import app.cash.sqldelight.dialects.sqlite_3_35.grammar.psi.SqliteUpdateStmtLimited
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 
-class SqliteTypeResolver(private val parentResolver: TypeResolver) : Sqlite325TypeResolver(parentResolver) {
+open class SqliteTypeResolver(private val parentResolver: TypeResolver) : Sqlite325TypeResolver(parentResolver) {
   override fun queryWithResults(sqlStmt: SqlStmt): QueryWithResults? {
     sqlStmt.insertStmt?.let { insert ->
       check(insert is SqliteInsertStmt)

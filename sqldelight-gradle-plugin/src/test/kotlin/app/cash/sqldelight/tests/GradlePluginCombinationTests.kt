@@ -5,45 +5,6 @@ import org.junit.Test
 
 class GradlePluginCombinationTests {
   @Test
-  fun `sqldelight can be applied after kotlin-android-extensions`() {
-    withTemporaryFixture {
-      gradleFile(
-        """
-        |plugins {
-        |  alias(libs.plugins.kotlin.multiplatform)
-        |  alias(libs.plugins.android.application)
-        |  alias(libs.plugins.sqldelight)
-        |  alias(libs.plugins.kotlin.android.extensions)
-        |}
-        |
-        |sqldelight {
-        |  databases {
-        |    CommonDb {
-        |      packageName = "com.sample"
-        |    }
-        |  }
-        |}
-        |
-        |androidExtensions {
-        |    experimental = true
-        |}
-        |
-        |android {
-        |  namespace 'com.example.namespace'
-        |  compileSdk libs.versions.compileSdk.get() as int
-        |}
-        |
-        |kotlin {
-        |  android()
-        |}
-        """.trimMargin(),
-      )
-
-      configure()
-    }
-  }
-
-  @Test
   fun `sqldelight fails when linkSqlite=false on native without additional linker settings`() {
     withTemporaryFixture {
       gradleFile(

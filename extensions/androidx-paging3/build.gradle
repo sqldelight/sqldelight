@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 
 plugins {
@@ -8,34 +9,75 @@ plugins {
   id("app.cash.sqldelight.toolchain.runtime")
 }
 
-archivesBaseName = 'sqldelight-androidx-paging3'
+base {
+  archivesName = 'sqldelight-androidx-paging3'
+}
 
 kotlin {
+  jvm()
+
+  [js(), wasmJs()].each {
+    it.browser {
+      it.testTask {
+        it.useKarma {
+          it.useChromeHeadless()
+        }
+        // JS & Wasm currently don't have a compatible driver
+        it.enabled = false
+      }
+    }
+    it.compilerOptions {
+      it.moduleKind.set(JsModuleKind.MODULE_UMD)
+    }
+  }
+
+  // tier 1
+  linuxX64()
   macosX64()
   macosArm64()
-  iosX64()
-  iosArm64()
   iosSimulatorArm64()
-  jvm()
-  js {
-    browser()
-  }
-  linuxX64()
+  iosX64()
+
+  // tier 2
+  linuxArm64()
+  watchosSimulatorArm64()
+  watchosX64()
+  watchosArm32()
+  watchosArm64()
+  tvosSimulatorArm64()
+  tvosX64()
+  tvosArm64()
+  iosArm64()
+
+  // tier 3
+//  androidNativeArm32()
+//  androidNativeArm64()
+//  androidNativeX86()
+//  androidNativeX64()
   mingwX64()
+  watchosDeviceArm64()
+
+  applyDefaultHierarchyTemplate {
+    it.common {
+      it.group("web") {
+        it.withJs()
+        it.withWasmJs()
+      }
+    }
+  }
 
   sourceSets {
     commonMain {
       dependencies {
         api projects.runtime
-        api libs.app.cash.paging.common
-        implementation libs.kotlin.coroutines.core
+        api libs.androidx.paging.common
+        implementation libs.kotlinx.coroutines.core
       }
     }
     commonTest {
       dependencies {
         implementation libs.kotlin.test
-        implementation libs.kotlin.coroutines.test
-        implementation libs.stately.concurrency
+        implementation libs.kotlinx.coroutines.test
       }
     }
     nativeTest {
@@ -43,20 +85,14 @@ kotlin {
         implementation projects.drivers.nativeDriver
       }
     }
-    iosTest {
-      dependencies {
-        implementation libs.app.cash.paging.runtime.uikit
-      }
-    }
     jvmTest {
       dependencies {
         implementation projects.drivers.sqliteDriver
-        implementation libs.androidx.paging3.runtime
       }
     }
   }
 
-  configure([targets.iosX64, targets.iosArm64, targets.iosSimulatorArm64, targets.macosX64, targets.macosArm64]) {
+  configure([targets.iosX64, targets.iosArm64, targets.tvosX64, targets.tvosArm64, targets.watchosX64, targets.watchosArm32, targets.watchosArm64, targets.macosX64, targets.macosArm64, targets.iosSimulatorArm64, targets.watchosSimulatorArm64, targets.tvosSimulatorArm64]) {
     binaries.configureEach {
       // we only need to link sqlite for the test binaries
       if (outputKind == NativeOutputKind.TEST) {
@@ -96,8 +132,5 @@ tasks.named("linkDebugTestLinuxX64") { enabled = HostManager.hostIsLinux }
 
 tasks.named("mingwX64Test") { enabled = HostManager.hostIsMingw }
 tasks.named("linkDebugTestMingwX64") { enabled = HostManager.hostIsMingw }
-
-// JS currently doesn't have a compatible driver
-tasks.named("jsBrowserTest") { enabled = false }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

@@ -25,8 +25,7 @@ import com.intellij.psi.tree.IElementType
 class SqlDelightHighlighter : SyntaxHighlighterBase() {
   override fun getHighlightingLexer() = SqlLexerAdapter()
 
-  override fun getTokenHighlights(tokenType: IElementType) =
-    SyntaxHighlighterBase.pack(TEXT_ATTRIBUTES_MAP[tokenType.index])
+  override fun getTokenHighlights(tokenType: IElementType) = SyntaxHighlighterBase.pack(TEXT_ATTRIBUTES_MAP[tokenType.index])
 
   companion object {
     val SQLITE_KEYWORD = TextAttributesKey.createTextAttributesKey(

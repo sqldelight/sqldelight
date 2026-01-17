@@ -50,6 +50,10 @@ class AsyncSelectQueryTypeTest {
       |    cursor.getString(0),
       |    cursor.getString(1)
       |  )
+      |}.also {
+      |  notifyQueries(-2_037_436_132) { emit ->
+      |    emit("data")
+      |  }
       |}
       |
       """.trimMargin(),
@@ -145,7 +149,8 @@ class AsyncSelectQueryTypeTest {
       |  |FROM data
       |  |WHERE id = ?
       |  ""${'"'}.trimMargin(), mapper, 1) {
-      |    bindLong(0, id)
+      |    var parameterIndex = 0
+      |    bindLong(parameterIndex++, id)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:selectForId"
@@ -183,23 +188,29 @@ class AsyncSelectQueryTypeTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public suspend fun insertTwice(`value`: kotlin.Long) {
-      |  transaction {
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public suspend fun insertTwice(`value`: kotlin.Long): app.cash.sqldelight.db.QueryResult.AsyncValue<kotlin.Long> = app.cash.sqldelight.db.QueryResult.AsyncValue {
+      |  transactionWithResult {
       |    driver.execute(${query.idForIndex(0).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, value)
       |        }.await()
       |    driver.execute(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |        |INSERT INTO data (value)
       |        |  VALUES (?)
       |        ""${'"'}.trimMargin(), 1) {
-      |          bindLong(0, value)
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, value)
       |        }.await()
-      |  }
-      |  notifyQueries(-609_468_782) { emit ->
-      |    emit("data")
+      |  }.also {
+      |    notifyQueries(-609_468_782) { emit ->
+      |      emit("data")
+      |    }
       |  }
       |}
       |
@@ -245,13 +256,18 @@ class AsyncSelectQueryTypeTest {
       |          |INSERT INTO data (value)
       |          |  VALUES (?)
       |          ""${'"'}.trimMargin(), 1) {
-      |            bindLong(0, value_)
+      |            var parameterIndex = 0
+      |            bindLong(parameterIndex++, value_)
       |          }.await()
       |      driver.executeQuery(${query.idForIndex(1).withUnderscores}, ""${'"'}
       |          |SELECT value
       |          |  FROM data
       |          |  WHERE id = last_insert_rowid()
       |          ""${'"'}.trimMargin(), mapper, 0).await()
+      |    }.also {
+      |      notifyQueries(${query.id.withUnderscores}) { emit ->
+      |        emit("data")
+      |      }
       |    }
       |  }
       |

@@ -196,4 +196,12 @@ class PostgreSqlTest {
       } catch (e: OptimisticLockException) { }
     }
   }
+
+  @Test
+  fun useExecutableBlockReturnsCount() = runTest { database ->
+    with(database) {
+      assertThat(dogQueries.insertTerrierDog().await()).isEqualTo(1L)
+      assertThat(dogQueries.deleteTerrierDogs().await()).isEqualTo(1L)
+    }
+  }
 }

@@ -10,8 +10,11 @@
   parserImports=[
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ADD"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AFTER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALTER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.AND"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.AS"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.BETWEEN"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CHECK"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
@@ -19,6 +22,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CONSTRAINT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.CURRENT_TIMESTAMP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CREATE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DEFAULT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.DIGIT"
@@ -45,9 +49,11 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.PARTITION"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.PRIMARY"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROW"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TABLE"
@@ -57,6 +63,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.USE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VALUES"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.VIRTUAL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
   ]
 }
 overrides ::= type_name
@@ -75,6 +82,7 @@ overrides ::= type_name
   | blob_literal
   | insert_stmt
   | compound_select_stmt
+  | create_index_stmt
 
 type_name ::= (
   bit_data_type |
@@ -98,9 +106,9 @@ enum_set_type
 }
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   'AUTO_INCREMENT' |
-  PRIMARY KEY [ ASC | DESC ] {conflict_clause} |
-  [ NOT ] NULL {conflict_clause} |
-  UNIQUE {conflict_clause} |
+  PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
+  [ NOT ] NULL [ {conflict_clause} ] |
+  UNIQUE [ {conflict_clause} ] |
   {check_constraint} |
   default_constraint |
   COLLATE {collation_name} |
@@ -120,8 +128,10 @@ bind_parameter ::= DEFAULT | ( '?' | ':' {identifier} ) {
   implements = "com.alecstrong.sql.psi.core.psi.SqlBindParameter"
   override = true
 }
+
+index_visibility ::= ( 'VISIBLE' | 'INVISIBLE' )
 table_constraint ::= [ CONSTRAINT {identifier} ] (
-  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP {conflict_clause} [comment_type] |
+  ( PRIMARY KEY | [ UNIQUE | 'FULLTEXT' ] KEY | [ UNIQUE | 'FULLTEXT' ] [ INDEX ] ) [{index_name}] LP {indexed_column} [ LP {signed_number} RP ] ( COMMA {indexed_column} [ LP {signed_number} RP ] ) * RP [ {conflict_clause} ] [index_visibility] [comment_type] |
   {check_constraint} |
   FOREIGN KEY LP {column_name} ( COMMA {column_name} ) * RP {foreign_key_clause}
 ) {
@@ -213,6 +223,14 @@ index_hint ::=
 
 index_list ::= LP {index_name} ( COMMA {index_name} ) * RP
 
+create_index_stmt ::= CREATE [ UNIQUE | 'FULLTEXT' ] INDEX [ IF NOT EXISTS ] [ {database_name} DOT ] {index_name} ON {table_name}
+ LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] [ index_visibility ] {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.CreateIndexMixin"
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCreateIndexStmtImpl"
+  override = true
+  pin = 6
+}
+
 alter_table_rules ::= (
   alter_table_add_column
   | {alter_table_rename_table}
@@ -221,6 +239,7 @@ alter_table_rules ::= (
   | alter_table_add_index
   | alter_table_drop_index
   | alter_table_rename_index
+  | alter_table_alter_index
   | alter_table_drop_column
   | alter_table_convert_character_set
   | row_format_clause
@@ -254,17 +273,19 @@ alter_table_modify_column ::= 'MODIFY' [ COLUMN ] {column_def} [ placement_claus
 
 alter_table_add_constraint ::= ADD table_constraint
 
-alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP
+alter_table_add_index ::= ADD [ UNIQUE ] [ INDEX | KEY ] [ {index_name} ] LP {indexed_column} ( COMMA {indexed_column} ) * RP [ index_visibility ]
 
 alter_table_drop_index ::= DROP ( INDEX | KEY ) {index_name}
 
 alter_table_rename_index ::= RENAME ( INDEX | KEY ) {index_name} TO {index_name}
 
+alter_table_alter_index ::= ALTER ( INDEX | KEY ) {index_name} index_visibility
+
 placement_clause ::= 'FIRST' | ( AFTER {column_name} )
 
 alter_table_convert_character_set ::= 'CONVERT' TO 'CHARACTER' SET {identifier} [COLLATE {identifier}]
 
-extension_expr ::= if_expr | json_expression | interval_expression {
+extension_expr ::= window_function_expr | if_expr | json_expression | interval_expression {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -321,4 +342,41 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true
+}
+
+window_function_expr ::= {function_expr}
+  ( ['FILTER' LP WHERE <<expr '-1'>> RP] 'OVER' ( window_defn | window_name) | 'WITHIN' GROUP LP ORDER BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP ) {
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.WindowFunctionMixin"
+}
+
+base_window_name ::= id
+window_name ::= id
+
+window_defn ::= LP [ base_window_name ]
+  [ PARTITION BY <<expr '-1'>> ( COMMA <<expr '-1'>> ) * ]
+  [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ]
+  [ frame_spec ]
+RP {
+  pin = 1
+  mixin = "app.cash.sqldelight.dialects.mysql.grammar.mixins.WindowDefinitionMixin"
+}
+
+frame_spec ::= ( 'RANGE' | 'ROWS' | 'GROUPS' )
+  (
+    BETWEEN (
+      'UNBOUNDED' 'PRECEDING' |
+      'CURRENT' ROW |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) AND (
+      'UNBOUNDED' 'FOLLOWING' |
+      'CURRENT' ROW |
+      <<expr '-1'>> 'PRECEDING' |
+      <<expr '-1'>> 'FOLLOWING'
+    ) |
+    'UNBOUNDED' 'PRECEDING' |
+    'CURRENT' ROW |
+    <<expr '-1'>> 'PRECEDING'
+  ) {
+  pin = 1
 }

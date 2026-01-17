@@ -1,0 +1,44 @@
+{
+  "extends": [
+    "config:recommended"
+  ],
+  "semanticCommits": "disabled",
+  "constraints": {
+    "python": "3.14"
+  },
+  "ignoreDeps": [
+    "com.jetbrains.intellij.platform",
+    "com.jetbrains.intellij.java",
+    "com.jetbrains.intellij.platform:analysis",
+    "com.jetbrains.intellij.platform:test-framework",
+    "com.jetbrains.intellij.platform:lang-impl",
+    "com.jetbrains.intellij.platform:core-ui",
+    "com.jetbrains.intellij.platform:core-impl",
+    "com.jetbrains.intellij.java:java-psi",
+    "com.jetbrains.intellij.platform:project-model-impl",
+    "com.jetbrains.intellij.platform:project-model",
+    "com.jetbrains.intellij.android:android-adt-ui-model",
+    "com.jetbrains.intellij.platform:analysis-impl",
+    "com.jetbrains.intellij.platform:lang",
+    "com.jetbrains.intellij.platform:ide-impl",
+    "com.jetbrains.intellij.platform:core",
+    "com.jetbrains.intellij.platform:util-ex",
+    "com.jetbrains.intellij.platform:util",
+    "com.jetbrains.intellij.platform:util-ui",
+    "com.jetbrains.intellij.platform:ide-core",
+    "com.jetbrains.intellij.platform:ide",
+    "us.fatehi:schemacrawler-sqlite",
+    "us.fatehi:schemacrawler-tools",
+    "com.vanniktech.maven.publish",
+    "ubuntu"
+  ],
+  "ignorePaths": [
+    ".github/workflows/requirements.txt",
+    "libs/linux/"
+  ],
+  "pip-compile": {
+    "fileMatch": [
+      ".github/workflows/requirements.txt"
+    ]
+  }
+}

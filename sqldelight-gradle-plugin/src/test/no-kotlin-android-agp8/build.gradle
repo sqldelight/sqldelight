@@ -1,0 +1,20 @@
+plugins {
+  id("com.android.application").version("8.13.2")
+  alias(libs.plugins.sqldelight)
+}
+
+android {
+  compileSdk = libs.versions.compileSdk.get() as int
+
+  lint {
+    textReport true
+  }
+}
+
+sqldelight {
+  databases {
+    Database {
+      schemaOutputDirectory = file('src/main/sqldelight/databases')
+    }
+  }
+}

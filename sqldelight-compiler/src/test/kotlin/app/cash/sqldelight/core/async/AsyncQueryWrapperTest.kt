@@ -68,8 +68,7 @@ class AsyncQueryWrapperTest {
         |internal val KClass<TestDatabase>.schema: SqlSchema<QueryResult.AsyncValue<Unit>>
         |  get() = TestDatabaseImpl.Schema
         |
-        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase =
-        |    TestDatabaseImpl(driver)
+        |internal fun KClass<TestDatabase>.newInstance(driver: SqlDriver): TestDatabase = TestDatabaseImpl(driver)
         |
         |private class TestDatabaseImpl(
         |  driver: SqlDriver,
@@ -120,8 +119,7 @@ class AsyncQueryWrapperTest {
         |      callbacks.filter { it.afterVersion in oldVersion until newVersion }
         |      .sortedBy { it.afterVersion }
         |      .forEach { callback ->
-        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion +
-        |          1).await()
+        |        migrateInternal(driver, oldVersion = lastVersion, newVersion = callback.afterVersion + 1).await()
         |        callback.block(driver)
         |        lastVersion = callback.afterVersion + 1
         |      }

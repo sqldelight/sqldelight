@@ -8,6 +8,7 @@ internal fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunn
     """
       |org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
       |android.useAndroidX=true
+      |android.newDsl=false
       |
     """.trimMargin(),
   )

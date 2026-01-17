@@ -47,18 +47,23 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun insertData(id: kotlin.Long?, value_: kotlin.String?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun insertData(id: kotlin.Long?, value_: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data
       |      |VALUES (?, ?)
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, id)
-      |        bindString(1, value_)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
+      |        bindString(parameterIndex++, value_)
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -100,16 +105,21 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(id: kotlin.Long) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteData(id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |DELETE FROM data
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 1) {
-      |        bindLong(0, id)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -152,18 +162,23 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, value_)
-      |        bindLong(1, id)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -206,19 +221,24 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, value_)
-      |        bindLong(1, id)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -261,19 +281,24 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, value_)
-      |        bindLong(1, id)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -316,18 +341,23 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteData(value_: kotlin.String?, id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE data
       |      |SET value = ?
       |      |WHERE id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, value_)
-      |        bindLong(1, id)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
+      |        bindLong(parameterIndex++, id)
       |      }
       |  notifyQueries(-1_854_133_518) { emit ->
       |    emit("data")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -370,18 +400,23 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, id)
-      |        bindString(1, value)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
+      |        bindString(parameterIndex++, value)
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -424,18 +459,23 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?) {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun upsertData(id: kotlin.Long?, `value`: kotlin.String?): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO data (id, value) VALUES (?, ?)
       |      |ON CONFLICT (id) DO UPDATE SET value = excluded.value
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindLong(0, id)
-      |        bindString(1, value)
+      |        var parameterIndex = 0
+      |        bindLong(parameterIndex++, id)
+      |        bindString(parameterIndex++, value)
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |    emit("data2")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -482,12 +522,16 @@ class TriggerNotificationTest {
 
     assertThat(generator.function().toString()).isEqualTo(
       """
-      |public fun deleteAllFoos() {
-      |  driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM foo""${'"'}, 0)
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteAllFoos(): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}DELETE FROM foo""${'"'}, 0)
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("bar")
       |    emit("foo")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),

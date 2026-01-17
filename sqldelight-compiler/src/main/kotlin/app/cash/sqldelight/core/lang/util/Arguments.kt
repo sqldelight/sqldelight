@@ -42,6 +42,7 @@ import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
+import com.alecstrong.sql.psi.core.psi.SqlLikeEscapeCharacterExpr
 import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
 import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpression
@@ -162,6 +163,8 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       }
       return argumentType(argument) ?: IntermediateType(NULL)
     }
+
+    is SqlLikeEscapeCharacterExpr -> IntermediateType(TEXT, name = argument.name)
 
     else -> throw AssertionError()
   }

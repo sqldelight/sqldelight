@@ -15,10 +15,9 @@
  */
 package app.cash.sqldelight.paging3
 
-import app.cash.paging.PagingConfig
-import app.cash.paging.PagingSourceLoadParamsRefresh
-import app.cash.paging.PagingSourceLoadResultPage
-import app.cash.paging.PagingState
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.SuspendingTransacterImpl
 import app.cash.sqldelight.TransacterBase
@@ -72,8 +71,8 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
     val expected = (0L until 10L).chunked(2).iterator()
     var nextKey: Long? = null
     do {
-      val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 2, false))
-      nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
+      val results = source.load(PagingSource.LoadParams.Refresh(nextKey, 2, false))
+      nextKey = (results as PagingSource.LoadResult.Page<Long, Long>).nextKey
       assertEquals(expected = expected.next(), actual = results.data)
     } while (nextKey != null)
   }
@@ -82,22 +81,22 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
     val expected = (0L until 10L).chunked(3).iterator()
     var nextKey: Long? = null
     do {
-      val results = source.load(PagingSourceLoadParamsRefresh(nextKey, 3, false))
-      nextKey = (results as PagingSourceLoadResultPage<Long, Long>).nextKey
+      val results = source.load(PagingSource.LoadParams.Refresh(nextKey, 3, false))
+      nextKey = (results as PagingSource.LoadResult.Page<Long, Long>).nextKey
       assertEquals(expected = expected.next(), actual = results.data)
     } while (nextKey != null)
   }
 
   @Test fun requesting_a_page_with_anchor_not_in_step_passes() = runDbTest {
-    val results = source.load(PagingSourceLoadParamsRefresh(key = 5L, loadSize = 2, false))
+    val results = source.load(PagingSource.LoadParams.Refresh(key = 5L, loadSize = 2, false))
 
-    assertEquals(listOf(5L), (results as PagingSourceLoadResultPage<Long, Long>).data)
+    assertEquals(listOf(5L), (results as PagingSource.LoadResult.Page<Long, Long>).data)
   }
 
   @Test fun misaligned_last_page_has_correct_data() = runDbTest {
-    val results = source.load(PagingSourceLoadParamsRefresh(key = 9L, loadSize = 3, false))
+    val results = source.load(PagingSource.LoadParams.Refresh(key = 9L, loadSize = 3, false))
 
-    assertEquals(expected = listOf(9L), (results as PagingSourceLoadResultPage<Long, Long>).data)
+    assertEquals(expected = listOf(9L), (results as PagingSource.LoadResult.Page<Long, Long>).data)
     assertEquals(expected = 6L, results.prevKey)
     assertEquals(expected = null, results.nextKey)
   }
@@ -116,10 +115,10 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
   }
 
   @Test fun invoking_getRefreshKey_with_loaded_first_page_returns_correct_result() = runDbTest {
-    val results = source.load(PagingSourceLoadParamsRefresh(key = null, loadSize = 3, false))
+    val results = source.load(PagingSource.LoadParams.Refresh(key = null, loadSize = 3, false))
     val refreshKey = source.getRefreshKey(
       PagingState(
-        listOf(results as PagingSourceLoadResultPage<Long, Long>),
+        listOf(results as PagingSource.LoadResult.Page<Long, Long>),
         null,
         PagingConfig(3),
         0,
@@ -130,10 +129,10 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
   }
 
   @Test fun invoking_getRefreshKey_with_single_loaded_middle_page_returns_correct_result() = runDbTest {
-    val results = source.load(PagingSourceLoadParamsRefresh(key = 6L, loadSize = 3, false))
+    val results = source.load(PagingSource.LoadParams.Refresh(key = 6L, loadSize = 3, false))
     val refreshKey = source.getRefreshKey(
       PagingState(
-        listOf(results as PagingSourceLoadResultPage<Long, Long>),
+        listOf(results as PagingSource.LoadResult.Page<Long, Long>),
         null,
         PagingConfig(3),
         0,

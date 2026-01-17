@@ -21,13 +21,13 @@ open class SqliteTypeResolver(private val parentResolver: TypeResolver) : Sqlite
   }
 
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
-    return functionExpr.sqliteFunctionType() ?: parentResolver.functionType(functionExpr)
+    return functionExpr.sqliteFunctionType() ?: super.functionType(functionExpr)
   }
 
   private fun SqlFunctionExpr.sqliteFunctionType() = when (functionName.text.lowercase()) {
     "dense_rank", "ntile", "rank", "row_number" -> IntermediateType(INTEGER)
     "cume_dist", "percent_rank" -> IntermediateType(REAL)
-    "lag", "lead", "first_value", "last_value", "nth_value", "group_concat" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT).asNullable()
+    "lag", "lead", "first_value", "last_value", "nth_value" -> encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL, TEXT).asNullable()
     else -> null
   }
 }

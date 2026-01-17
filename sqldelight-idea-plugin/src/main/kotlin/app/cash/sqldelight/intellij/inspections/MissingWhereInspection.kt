@@ -24,17 +24,13 @@ internal class MissingWhereInspection : LocalInspectionTool() {
     session: LocalInspectionToolSession,
   ): PsiElementVisitor = ensureReady(session.file) {
     object : SqlVisitor() {
-      override fun visitDeleteStmt(o: SqlDeleteStmt) =
-        ignoreInvalidElements { check(o, holder) }
+      override fun visitDeleteStmt(o: SqlDeleteStmt) = ignoreInvalidElements { check(o, holder) }
 
-      override fun visitDeleteStmtLimited(o: SqlDeleteStmtLimited) =
-        ignoreInvalidElements { check(o, holder) }
+      override fun visitDeleteStmtLimited(o: SqlDeleteStmtLimited) = ignoreInvalidElements { check(o, holder) }
 
-      override fun visitUpdateStmt(o: SqlUpdateStmt) =
-        ignoreInvalidElements { check(o, holder) }
+      override fun visitUpdateStmt(o: SqlUpdateStmt) = ignoreInvalidElements { check(o, holder) }
 
-      override fun visitUpdateStmtLimited(o: SqlUpdateStmtLimited) =
-        ignoreInvalidElements { check(o, holder) }
+      override fun visitUpdateStmtLimited(o: SqlUpdateStmtLimited) = ignoreInvalidElements { check(o, holder) }
     }
   }
 

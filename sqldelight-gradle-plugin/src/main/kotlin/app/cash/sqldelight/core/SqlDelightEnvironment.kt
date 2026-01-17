@@ -29,6 +29,7 @@ import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import com.alecstrong.sql.psi.core.AnnotationException
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -70,7 +71,7 @@ class SqlDelightEnvironment(
   private val dependencyFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && it.dependency }
     .map { it.folder },
-) : SqlCoreEnvironment(sourceFolders, dependencyFolders),
+) : SqlCoreEnvironment(sourceFolders.map { it.toPath() }, dependencyFolders.map { it.toPath() }),
   SqlDelightProjectService {
   val project = projectEnvironment.project
   val module = MockModule(project, projectEnvironment.parentDisposable)
@@ -153,38 +154,50 @@ class SqlDelightEnvironment(
 
     var sourceFile: SqlDelightFile? = null
     var topMigrationFile: MigrationFile? = null
-    forSourceFiles {
-      if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
-        if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
-        if (sourceFile == null) sourceFile = it
-      }
+    try {
+      forSourceFiles {
+        if (it is MigrationFile && properties.deriveSchemaFromMigrations) {
+          if (topMigrationFile == null || it.order > topMigrationFile!!.order) topMigrationFile = it
+          if (sourceFile == null) sourceFile = it
+        }
 
-      if (it !is SqlDelightQueriesFile) return@forSourceFiles
-      logger("----- START ${it.name} ms -------")
-      val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
-        sourceFile = it
+        if (it !is SqlDelightQueriesFile) return@forSourceFiles
+        logger("----- START ${it.name} ms -------")
+        val timeTaken = measureTimeMillis {
+          SqlDelightCompiler.writeInterfaces(module, dialect, it, writer)
+          sourceFile = it
+        }
+        logger("----- END ${it.name} in $timeTaken ms ------")
       }
-      logger("----- END ${it.name} in $timeTaken ms ------")
+    } catch (e: AnnotationException) {
+      return CompilationStatus.Failure(listOf(errorMessage(e.element!!, e.message!!)))
     }
 
     topMigrationFile?.let { migrationFile ->
       logger("----- START ${migrationFile.name} ms -------")
-      val timeTaken = measureTimeMillis {
-        SqlDelightCompiler.writeInterfaces(
-          file = migrationFile,
-          output = writer,
-          includeAll = true,
-        )
-        SqlDelightCompiler.writeImplementations(module, migrationFile, moduleName, writer)
+      val timeTaken = try {
+        measureTimeMillis {
+          SqlDelightCompiler.writeInterfaces(
+            file = migrationFile,
+            output = writer,
+            includeAll = true,
+          )
+          SqlDelightCompiler.writeImplementations(module, migrationFile, moduleName, writer)
+        }
+      } catch (e: AnnotationException) {
+        return CompilationStatus.Failure(listOf(errorMessage(e.element!!, e.message!!)))
       }
       logger("----- END ${migrationFile.name} in $timeTaken ms ------")
     }
 
     sourceFile?.let {
-      SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
-      if (it is SqlDelightQueriesFile) {
-        SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+      try {
+        SqlDelightCompiler.writeDatabaseInterface(module, it, moduleName, writer)
+        if (it is SqlDelightQueriesFile) {
+          SqlDelightCompiler.writeImplementations(module, it, moduleName, writer)
+        }
+      } catch (e: AnnotationException) {
+        return CompilationStatus.Failure(listOf(errorMessage(e.element!!, e.message!!)))
       }
     }
 
@@ -218,8 +231,7 @@ class SqlDelightEnvironment(
       }
   }
 
-  private fun errorMessage(element: PsiElement, message: String): String =
-    "${element.containingFile.virtualFile.path}:${element.lineStart}:${element.charPositionInLine} $message\n${detailText(element)}"
+  private fun errorMessage(element: PsiElement, message: String): String = "${element.containingFile.virtualFile.path}:${element.lineStart}:${element.charPositionInLine} $message\n${detailText(element)}"
 
   private fun detailText(element: PsiElement) = try {
     val context = context(element) ?: element
@@ -268,14 +280,13 @@ class SqlDelightEnvironment(
       return file.getLineNumber(textOffset + textLength) + 1
     }
 
-  private fun context(element: PsiElement?): PsiElement? =
-    when (element) {
-      null -> element
-      is SqlCreateTableStmt -> element
-      is SqlStmt -> element
-      is SqlDelightImportStmt -> element
-      else -> context(element.parent)
-    }
+  private fun context(element: PsiElement?): PsiElement? = when (element) {
+    null -> element
+    is SqlCreateTableStmt -> element
+    is SqlStmt -> element
+    is SqlDelightImportStmt -> element
+    else -> context(element.parent)
+  }
 
   sealed class CompilationStatus {
     object Success : CompilationStatus()
@@ -343,10 +354,8 @@ class SqlDelightEnvironment(
       )
     }
 
-    override fun sourceFolders(file: VirtualFile, includeDependencies: Boolean) =
-      if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
+    override fun sourceFolders(file: VirtualFile, includeDependencies: Boolean) = if (includeDependencies) virtualDirectoriesWithDependencies else virtualDirectories
 
-    override fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean) =
-      if (includeDependencies) directoriesWithDependencies else directories
+    override fun sourceFolders(file: SqlDelightFile, includeDependencies: Boolean) = if (includeDependencies) directoriesWithDependencies else directories
   }
 }

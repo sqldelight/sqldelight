@@ -41,6 +41,15 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsSqliteJsonModuleWithVersionCatalogs() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-sqlite-json-version-catalogs"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun migrationCallbackIntegrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-migration-callbacks"))
@@ -150,13 +159,22 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsSqlite_3_38() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-sqlite-3-38"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test
   fun `integration test multiplatform project with async generated code`() {
     val integrationRoot = File("src/test/integration-multiplatform-async")
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "test", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace")
       .withDebug(true)
 
     val result = runner.build()

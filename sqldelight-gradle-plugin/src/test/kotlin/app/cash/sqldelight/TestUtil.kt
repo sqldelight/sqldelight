@@ -21,22 +21,13 @@ internal fun SqlDelightDatabasePropertiesImpl.withInvariantPathSeparators(): Sql
   )
 }
 
-internal fun SqlDelightDatabasePropertiesImpl.withSortedCompilationUnits(): SqlDelightDatabasePropertiesImpl {
-  return copy(
-    compilationUnits = compilationUnits.map { it.withSortedSourceFolders() },
-  )
-}
-
 private fun SqlDelightCompilationUnitImpl.withInvariantPathSeparators(): SqlDelightCompilationUnitImpl {
   return copy(
-    sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() },
+    sourceFolders = sourceFolders.map { it.withInvariantPathSeparators() }.toSet(),
     outputDirectoryFile = File(outputDirectoryFile.path.withInvariantPathSeparators()),
   )
 }
 
-private fun SqlDelightCompilationUnitImpl.withSortedSourceFolders(): SqlDelightCompilationUnitImpl {
-  return copy(sourceFolders = sourceFolders.sortedBy { it.folder.path })
+private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators(): SqlDelightSourceFolderImpl {
+  return copy(folder = File(folder.path.withInvariantPathSeparators()))
 }
-
-private fun SqlDelightSourceFolderImpl.withInvariantPathSeparators() =
-  copy(folder = File(folder.path.withInvariantPathSeparators()))

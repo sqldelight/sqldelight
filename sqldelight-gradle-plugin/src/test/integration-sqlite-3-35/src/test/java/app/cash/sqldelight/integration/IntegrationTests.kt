@@ -119,4 +119,11 @@ class IntegrationTests {
       assertThat(last().group_concat).isEqualTo("F.G")
     }
   }
+
+  @Test fun groupConcatWithCustomType() {
+    windowsFunctionsQueries.insertGroupView()
+    with(windowsFunctionsQueries.selectGroupView().executeAsList()) {
+      assertThat(first()).isEqualTo("A,B,C")
+    }
+  }
 }

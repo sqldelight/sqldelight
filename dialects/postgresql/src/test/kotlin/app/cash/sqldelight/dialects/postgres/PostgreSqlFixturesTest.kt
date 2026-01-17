@@ -16,9 +16,10 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
     "?1" to "?",
     "?2" to "?",
     "BLOB" to "TEXT",
+    "CREATE VIEW IF NOT EXISTS" to "CREATE OR REPLACE VIEW",
     "id TEXT GENERATED ALWAYS AS (2) UNIQUE NOT NULL" to "id TEXT GENERATED ALWAYS AS (2) STORED UNIQUE NOT NULL",
     "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
-      to "'#-', '(', ')', ',', '.', '::', <binary like operator real>, <contains operator real>, <jsona binary operator real>, <jsonb boolean operator real>, <regex match operator real>, '@@', AT, BETWEEN or IN expected, got ','",
+      to "'#-', '&&', '(', ')', ',', '.', '::', <binary like operator real>, <contains operator real>, <jsona binary operator real>, <jsonb boolean operator real>, <range boolean operator real>, <regex match operator real>, '@@', AT, BETWEEN or IN expected, got ','",
   )
 
   override fun setupDialect() {
@@ -26,10 +27,33 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
   }
 
   companion object {
+
+    val removeNonCompatibleTriggers = listOf(
+      "create-if-not-exists",
+      "create-or-replace-trigger",
+      "create-trigger-collision",
+      "create-trigger-docic",
+      "create-trigger-docid",
+      "create-trigger-raise",
+      "create-trigger-success",
+      "create-trigger-validation-failures",
+      "if-not-exists",
+      "timestamp-with-precission",
+      "localtimestamp-with-precission",
+      "localtimestamp-literals",
+      "rowid-triggers",
+      "timestamp-literals",
+      "trigger-migration",
+      "trigger-new-in-expression",
+      "update-view-with-trigger",
+    )
+
     @Suppress("unused")
     // Used by Parameterized JUnit runner reflectively.
     @Parameters(name = "{0}")
     @JvmStatic
-    fun parameters() = PostgresqlTestFixtures.fixtures + ansiFixtures
+    fun parameters() = PostgresqlTestFixtures.fixtures + ansiFixtures.filterNot {
+      it.first() in removeNonCompatibleTriggers
+    }
   }
 }

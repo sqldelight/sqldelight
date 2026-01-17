@@ -37,6 +37,10 @@ class MigrationQueryTest {
     checkFixtureCompiles("varying-query-migration-packages", PostgreSqlDialect())
   }
 
+  @Test fun `create or replace view`() {
+    checkFixtureCompiles("create-or-replace-view", PostgreSqlDialect())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String, dialect: SqlDelightDialect = SqliteDialect()) {
     val result = FixtureCompiler.compileFixture(
       overrideDialect = dialect,

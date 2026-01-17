@@ -8,7 +8,6 @@ import app.cash.sqldelight.coroutines.TestDb.Companion.TABLE_MANAGER
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.atomicfu.atomic
 
 expect suspend fun testDriver(): SqlDriver
 
@@ -16,17 +15,13 @@ class TestDb(
   val db: SqlDriver,
 ) : SuspendingTransacterImpl(db),
   AutoCloseable {
-  var aliceId by atomic(0L)
-  var bobId by atomic(0L)
-  var eveId by atomic(0L)
-
   suspend fun init() {
     db.execute(null, "PRAGMA foreign_keys=ON", 0).await()
 
     db.execute(null, CREATE_EMPLOYEE, 0).await()
-    aliceId = employee(Employee("alice", "Alice Allison"))
-    bobId = employee(Employee("bob", "Bob Bobberson"))
-    eveId = employee(Employee("eve", "Eve Evenson"))
+    val aliceId = employee(Employee("alice", "Alice Allison"))
+    employee(Employee("bob", "Bob Bobberson"))
+    val eveId = employee(Employee("eve", "Eve Evenson"))
 
     db.execute(null, CREATE_MANAGER, 0).await()
     manager(eveId, aliceId)

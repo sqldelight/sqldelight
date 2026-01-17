@@ -56,10 +56,22 @@ class LogSqliteDriver(
 
   override fun newTransaction(): QueryResult<Transacter.Transaction> {
     logger("TRANSACTION BEGIN")
-    val transaction = sqlDriver.newTransaction().value
-    transaction.afterCommit { logger("TRANSACTION COMMIT") }
-    transaction.afterRollback { logger("TRANSACTION ROLLBACK") }
-    return QueryResult.Value(transaction)
+    when (val queryResult = sqlDriver.newTransaction()) {
+      is QueryResult.AsyncValue<Transacter.Transaction> -> {
+        return QueryResult.AsyncValue {
+          queryResult.await().also { it.attachLogHooks() }
+        }
+      }
+      is QueryResult.Value<Transacter.Transaction> -> {
+        val transaction = queryResult.value.also { it.attachLogHooks() }
+        return QueryResult.Value(transaction)
+      }
+    }
+  }
+
+  private fun Transacter.Transaction.attachLogHooks() {
+    afterCommit { logger("TRANSACTION COMMIT") }
+    afterRollback { logger("TRANSACTION ROLLBACK") }
   }
 
   override fun close() {
