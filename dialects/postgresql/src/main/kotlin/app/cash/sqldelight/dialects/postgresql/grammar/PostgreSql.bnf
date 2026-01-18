@@ -196,9 +196,9 @@ type_name ::= (
   tsmultirange |
   tstzmultirange |
   xml_data_type |
-  enum_data_type |
   geometry_data_type |
-  geography_data_type
+  geography_data_type |
+  enum_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlTypeName"
