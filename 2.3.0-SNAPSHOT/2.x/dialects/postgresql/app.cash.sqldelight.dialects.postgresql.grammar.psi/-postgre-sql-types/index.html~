@@ -2100,6 +2100,66 @@
               </div>
             </div>
           </div>
+<a data-name="-2037774115%2FProperties%2F-1264942193" anchor-label="GEOGRAPHY_DATA_TYPE" id="-2037774115%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-e-o-g-r-a-p-h-y_-d-a-t-a_-t-y-p-e.html"><span>GEOGRAPHY_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2037774115%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-g-e-o-g-r-a-p-h-y_-d-a-t-a_-t-y-p-e.html">GEOGRAPHY_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1529755695%2FProperties%2F-1264942193" anchor-label="GEOMETRY_DATA_TYPE" id="1529755695%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-e-o-m-e-t-r-y_-d-a-t-a_-t-y-p-e.html"><span>GEOMETRY_</span><wbr><span>DATA_</span><wbr><span>TYPE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1529755695%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-g-e-o-m-e-t-r-y_-d-a-t-a_-t-y-p-e.html">GEOMETRY_DATA_TYPE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="338484094%2FProperties%2F-1264942193" anchor-label="GEOMETRY_POINT_FUNCTION_STMT" id="338484094%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-e-o-m-e-t-r-y_-p-o-i-n-t_-f-u-n-c-t-i-o-n_-s-t-m-t.html"><span>GEOMETRY_</span><wbr><span>POINT_</span><wbr><span>FUNCTION_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="338484094%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-g-e-o-m-e-t-r-y_-p-o-i-n-t_-f-u-n-c-t-i-o-n_-s-t-m-t.html">GEOMETRY_POINT_FUNCTION_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1257713614%2FProperties%2F-1264942193" anchor-label="GEOMETRY_SETSRID_FUNCTION_STMT" id="-1257713614%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-e-o-m-e-t-r-y_-s-e-t-s-r-i-d_-f-u-n-c-t-i-o-n_-s-t-m-t.html"><span>GEOMETRY_</span><wbr><span>SETSRID_</span><wbr><span>FUNCTION_</span><wbr><span>STMT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1257713614%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-g-e-o-m-e-t-r-y_-s-e-t-s-r-i-d_-f-u-n-c-t-i-o-n_-s-t-m-t.html">GEOMETRY_SETSRID_FUNCTION_STMT</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="634632601%2FProperties%2F-1264942193" anchor-label="GLOB" id="634632601%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">

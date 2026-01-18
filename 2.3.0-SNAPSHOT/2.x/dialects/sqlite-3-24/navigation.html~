@@ -1276,6 +1276,16 @@
       <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql/-postgre-sql-type/-e-n-u-m/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon enum-class-kt"></span><span><span><span>ENUM</span></span></span></span></a>
      </div>
     </div>
+    <div class="toc--part" id="postgresql-nav-submenu-0-1-19" pageid="postgresql::app.cash.sqldelight.dialects.postgresql/PostgreSqlType.GEOMETRY///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}/-1264942193" data-nesting-level="3">
+     <div class="toc--row">
+      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql/-postgre-sql-type/-g-e-o-m-e-t-r-y/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon enum-class-kt"></span><span><span><span>GEOMETRY</span></span></span></span></a>
+     </div>
+    </div>
+    <div class="toc--part" id="postgresql-nav-submenu-0-1-20" pageid="postgresql::app.cash.sqldelight.dialects.postgresql/PostgreSqlType.GEOGRAPHY///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}/-1264942193" data-nesting-level="3">
+     <div class="toc--row">
+      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql/-postgre-sql-type/-g-e-o-g-r-a-p-h-y/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon enum-class-kt"></span><span><span><span>GEOGRAPHY</span></span></span></span></a>
+     </div>
+    </div>
    </div>
    <div class="toc--part" id="postgresql-nav-submenu-0-2" pageid="postgresql::app.cash.sqldelight.dialects.postgresql/PostgreSqlTypeResolver///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
@@ -1792,497 +1802,517 @@
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-generated-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Generated</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-90" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIdentityClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-90" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlGeographyDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-geography-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geography</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-3-91" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlGeometryDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-geometry-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geometry</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-3-92" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlGeometryPointFunctionStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-geometry-point-function-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geometry</span><wbr><span>Point</span><wbr><span>Function</span><wbr><span><span>Stmt</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-3-93" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlGeometrySetsridFunctionStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-geometry-setsrid-function-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geometry</span><wbr><span>Setsrid</span><wbr><span>Function</span><wbr><span><span>Stmt</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-3-94" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIdentityClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-identity-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Identity</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-91" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIfNotExists///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-95" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIfNotExists///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-if-not-exists/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span>Not</span><wbr><span><span>Exists</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-92" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIndexMethod///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-96" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIndexMethod///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-index-method/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span><span>Method</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-93" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlInsertStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-97" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlInsertStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-insert-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Insert</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-94" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIntDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-98" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIntDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-95" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIntervalExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-99" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIntervalExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-interval-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-96" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIsJsonExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-100" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlIsJsonExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-is-json-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Is</span><wbr><span>Json</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-97" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJoinClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-101" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJoinClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-join-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Join</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-98" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJoinOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-102" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJoinOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-join-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Join</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-99" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonaBinaryOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-103" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonaBinaryOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-jsona-binary-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Jsona</span><wbr><span>Binary</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-100" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonAggStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-104" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonAggStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-agg-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Agg</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-101" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonbBinaryOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-105" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonbBinaryOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-jsonb-binary-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Jsonb</span><wbr><span>Binary</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-102" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonbBooleanOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-106" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonbBooleanOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-jsonb-boolean-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Jsonb</span><wbr><span>Boolean</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-103" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-107" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-104" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-108" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-105" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonFunctionStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-109" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonFunctionStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-function-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Function</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-106" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonObjectAggStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-110" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlJsonObjectAggStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-object-agg-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Object</span><wbr><span>Agg</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-107" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlLateral///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-111" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlLateral///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-lateral/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Lateral</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-108" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlLiteralValue///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-112" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlLiteralValue///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-literal-value/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Literal</span><wbr><span><span>Value</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-109" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlMatchOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-113" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlMatchOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-match-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Match</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-110" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlMatchOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-114" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlMatchOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-match-operator-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-111" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlNumericDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-115" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlNumericDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-numeric-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-112" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOperatorClassStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-116" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOperatorClassStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-operator-class-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Operator</span><wbr><span>Class</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-113" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOrderingTerm///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-117" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOrderingTerm///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-ordering-term/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Ordering</span><wbr><span><span>Term</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-114" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOverlapsOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-118" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOverlapsOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-overlaps-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Overlaps</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-115" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOverlapsOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-119" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOverlapsOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-overlaps-operator-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Overlaps</span><wbr><span>Operator</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-116" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOverrides///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-120" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlOverrides///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-overrides/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Overrides</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-117" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlAssignment///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-121" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlAssignment///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-plsql-assignment/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span><span>Assignment</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-118" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlConditional///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-122" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlConditional///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-plsql-conditional/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span><span>Conditional</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-119" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlReturn///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-123" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlReturn///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-plsql-return/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span><span>Return</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-120" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlStatement///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-124" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlStatement///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-plsql-statement/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span><span>Statement</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-121" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlTriggerVarExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-125" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPlsqlTriggerVarExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-plsql-trigger-var-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span>Trigger</span><wbr><span>Var</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-122" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyCommand///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-126" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyCommand///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-policy-command/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span><span>Command</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-123" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyName///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-127" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyName///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-policy-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-124" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyRole///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-128" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyRole///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-policy-role/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span><span>Role</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-125" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyRoleList///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-129" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPolicyRoleList///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-policy-role-list/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span>Role</span><wbr><span><span>List</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-126" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPrecisionLiteral///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-130" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlPrecisionLiteral///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-precision-literal/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Precision</span><wbr><span><span>Literal</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-127" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRangeBooleanOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-131" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRangeBooleanOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-range-boolean-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Range</span><wbr><span>Boolean</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-128" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRangeOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-132" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRangeOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-range-operator-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Range</span><wbr><span>Operator</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-129" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRegexMatchOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-133" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRegexMatchOperator///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-regex-match-operator/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Regex</span><wbr><span>Match</span><wbr><span><span>Operator</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-130" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRegexMatchOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-134" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlRegexMatchOperatorExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-regex-match-operator-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Regex</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-131" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlReturningClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-135" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlReturningClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-returning-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Returning</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-132" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSelectStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-136" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSelectStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-select-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Select</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-133" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSequenceDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-137" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSequenceDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-sequence-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-134" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSequenceName///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-138" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSequenceName///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-sequence-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-135" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSequenceParameters///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-139" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSequenceParameters///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-sequence-parameters/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span><span>Parameters</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-136" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSerialDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-140" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSerialDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-serial-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Serial</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-137" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetConfig///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-141" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetConfig///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-config/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Config</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-138" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetConfigName///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-142" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetConfigName///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-config-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Config</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-139" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetNames///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-143" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetNames///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-names/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Names</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-140" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetSchema///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-144" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetSchema///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-schema/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Schema</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-141" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetSeed///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-145" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetSeed///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-seed/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Seed</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-142" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-146" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-143" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetTimezone///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-147" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetTimezone///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-timezone/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Timezone</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-144" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetValue///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-148" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSetValue///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-value/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span><span>Value</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-145" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSmallIntDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-149" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSmallIntDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-small-int-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-146" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSmallSerialDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-150" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlSmallSerialDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-small-serial-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Serial</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-147" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStorageParameter///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-151" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStorageParameter///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-storage-parameter/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Storage</span><wbr><span><span>Parameter</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-148" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStorageParameters///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-152" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStorageParameters///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-storage-parameters/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Storage</span><wbr><span><span>Parameters</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-149" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStringAggStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-153" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStringAggStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-string-agg-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>String</span><wbr><span>Agg</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-150" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStringDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-154" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStringDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-string-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>String</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-151" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStringLiteral///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-155" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlStringLiteral///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-string-literal/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>String</span><wbr><span><span>Literal</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-152" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableConstraint///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-156" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableConstraint///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-constraint/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span><span>Constraint</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-153" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableFunctionAliasName///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-157" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableFunctionAliasName///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-function-alias-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span>Alias</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-154" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableFunctionColumnAlias///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-158" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableFunctionColumnAlias///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-function-column-alias/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span>Column</span><wbr><span><span>Alias</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-155" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableFunctionTableAlias///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-159" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableFunctionTableAlias///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-function-table-alias/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span>Table</span><wbr><span><span>Alias</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-156" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableOrSubquery///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-160" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTableOrSubquery///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-or-subquery/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Or</span><wbr><span><span>Subquery</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-157" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTimeExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-161" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTimeExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-time-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Time</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-158" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTimestampExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-162" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTimestampExpression///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-timestamp-expression/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Timestamp</span><wbr><span><span>Expression</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-159" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTriggerEvent///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-163" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTriggerEvent///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-trigger-event/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Trigger</span><wbr><span><span>Event</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-160" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateDescendant///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-164" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateDescendant///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-truncate-descendant/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Descendant</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-161" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOnly///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-165" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOnly///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-truncate-only/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Only</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-162" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOption///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-166" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOption///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-truncate-option/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Option</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-163" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOptionCascade///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-167" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOptionCascade///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-truncate-option-cascade/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Option</span><wbr><span><span>Cascade</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-164" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOptionIdentity///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-168" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateOptionIdentity///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-truncate-option-identity/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Option</span><wbr><span><span>Identity</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-165" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-169" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTruncateStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-truncate-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-166" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsmultirange///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-170" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsmultirange///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-tsmultirange/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Tsmultirange</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-167" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsqueryDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-171" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsqueryDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-tsquery-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tsquery</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-168" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsrange///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-172" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsrange///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-tsrange/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Tsrange</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-169" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTstzmultirange///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-173" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTstzmultirange///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-tstzmultirange/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Tstzmultirange</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-170" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTstzrange///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-174" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTstzrange///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-tstzrange/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Tstzrange</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-171" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsvectorDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-175" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTsvectorDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-tsvector-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tsvector</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-172" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypeClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-176" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypeClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-type-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-173" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypeIdentifier///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-177" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypeIdentifier///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-type-identifier/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Identifier</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-174" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypeName///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-178" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypeName///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-type-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-175" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypes///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-179" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypes///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="PostgreSqlTypes" onclick="window.handleTocButtonClick(event, 'postgresql-nav-submenu-3-175')"></button><a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-types/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Types</span></span></span></span></a><a class="toc--skip-link" href="../dialects/postgresql/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="PostgreSqlTypes" onclick="window.handleTocButtonClick(event, 'postgresql-nav-submenu-3-179')"></button><a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-types/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Types</span></span></span></span></a><a class="toc--skip-link" href="../dialects/postgresql/">Skip to content</a>
     </div>
-    <div class="toc--part" id="postgresql-nav-submenu-3-175-0" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypes.Factory///PointingToDeclaration//-1264942193" data-nesting-level="3">
+    <div class="toc--part" id="postgresql-nav-submenu-3-179-0" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypes.Factory///PointingToDeclaration//-1264942193" data-nesting-level="3">
      <div class="toc--row">
       <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-types/-factory/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span><span>Factory</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-176" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlUnnestTableFunction///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-180" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlUnnestTableFunction///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-unnest-table-function/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Unnest</span><wbr><span>Table</span><wbr><span><span>Function</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-177" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlUpdateStmtLimited///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-181" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlUpdateStmtLimited///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-update-stmt-limited/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Update</span><wbr><span>Stmt</span><wbr><span><span>Limited</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-178" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlUuidDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-182" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlUuidDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-uuid-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Uuid</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-179" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlVisitor///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-183" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlVisitor///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-visitor/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span><span>Visitor</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-180" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWindowDefn///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-184" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWindowDefn///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-window-defn/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span><span>Defn</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-181" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWindowFunctionExpr///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-185" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWindowFunctionExpr///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-window-function-expr/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span><span>Expr</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-182" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWindowName///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-186" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWindowName///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-window-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-183" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-187" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithClause///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-with-clause/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span><span>Clause</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-184" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithClauseAuxiliaryStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-188" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithClauseAuxiliaryStmt///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-with-clause-auxiliary-stmt/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span>Auxiliary</span><wbr><span><span>Stmt</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-185" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithClauseMaterialized///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-189" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithClauseMaterialized///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-with-clause-materialized/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span><span>Materialized</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-186" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithStorageParameter///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-190" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlWithStorageParameter///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-with-storage-parameter/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameter</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-3-187" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlXmlDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-3-191" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlXmlDataType///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-xml-data-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Xml</span><wbr><span>Data</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
@@ -2742,482 +2772,502 @@
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-generated-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Generated</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-90" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIdentityClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-90" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlGeographyDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-geography-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geography</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-4-91" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlGeometryDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-geometry-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geometry</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-4-92" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlGeometryPointFunctionStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-geometry-point-function-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geometry</span><wbr><span>Point</span><wbr><span>Function</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-4-93" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlGeometrySetsridFunctionStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-geometry-setsrid-function-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Geometry</span><wbr><span>Setsrid</span><wbr><span>Function</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="postgresql-nav-submenu-4-94" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIdentityClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-identity-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Identity</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-91" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIfNotExistsImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-95" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIfNotExistsImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-if-not-exists-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>If</span><wbr><span>Not</span><wbr><span>Exists</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-92" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIndexMethodImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-96" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIndexMethodImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-index-method-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Index</span><wbr><span>Method</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-93" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlInsertStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-97" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlInsertStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-insert-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Insert</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-94" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIntDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-98" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIntDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-95" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIntervalExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-99" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIntervalExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-interval-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Interval</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-96" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIsJsonExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-100" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlIsJsonExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-is-json-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Is</span><wbr><span>Json</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-97" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJoinClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-101" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJoinClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-join-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Join</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-98" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJoinOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-102" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJoinOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-join-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Join</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-99" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonaBinaryOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-103" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonaBinaryOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-jsona-binary-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Jsona</span><wbr><span>Binary</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-100" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonAggStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-104" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonAggStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-json-agg-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Agg</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-101" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonbBinaryOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-105" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonbBinaryOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-jsonb-binary-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Jsonb</span><wbr><span>Binary</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-102" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonbBooleanOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-106" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonbBooleanOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-jsonb-boolean-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Jsonb</span><wbr><span>Boolean</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-103" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-107" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-json-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-104" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-108" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-json-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-105" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonFunctionStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-109" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonFunctionStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-json-function-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Function</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-106" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonObjectAggStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-110" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlJsonObjectAggStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-json-object-agg-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Object</span><wbr><span>Agg</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-107" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlLateralImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-111" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlLateralImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-lateral-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Lateral</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-108" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlLiteralValueImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-112" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlLiteralValueImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-literal-value-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Literal</span><wbr><span>Value</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-109" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlMatchOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-113" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlMatchOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-match-operator-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-110" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlMatchOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-114" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlMatchOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-match-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-111" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlNumericDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-115" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlNumericDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-numeric-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Numeric</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-112" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOperatorClassStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-116" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOperatorClassStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-operator-class-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Operator</span><wbr><span>Class</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-113" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOrderingTermImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-117" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOrderingTermImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-ordering-term-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Ordering</span><wbr><span>Term</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-114" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOverlapsOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-118" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOverlapsOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-overlaps-operator-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Overlaps</span><wbr><span>Operator</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-115" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOverlapsOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-119" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOverlapsOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-overlaps-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Overlaps</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-116" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOverridesImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-120" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlOverridesImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-overrides-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Overrides</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-117" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlAssignmentImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-121" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlAssignmentImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-plsql-assignment-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span>Assignment</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-118" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlConditionalImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-122" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlConditionalImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-plsql-conditional-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span>Conditional</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-119" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlReturnImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-123" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlReturnImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-plsql-return-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span>Return</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-120" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlStatementImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-124" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlStatementImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-plsql-statement-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span>Statement</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-121" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlTriggerVarExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-125" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPlsqlTriggerVarExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-plsql-trigger-var-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Plsql</span><wbr><span>Trigger</span><wbr><span>Var</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-122" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyCommandImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-126" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyCommandImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-policy-command-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span>Command</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-123" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-127" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-policy-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-124" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyRoleImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-128" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyRoleImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-policy-role-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span>Role</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-125" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyRoleListImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-129" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPolicyRoleListImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-policy-role-list-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Policy</span><wbr><span>Role</span><wbr><span>List</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-126" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPrecisionLiteralImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-130" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlPrecisionLiteralImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-precision-literal-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Precision</span><wbr><span>Literal</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-127" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRangeBooleanOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-131" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRangeBooleanOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-range-boolean-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Range</span><wbr><span>Boolean</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-128" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRangeOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-132" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRangeOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-range-operator-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Range</span><wbr><span>Operator</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-129" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRegexMatchOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-133" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRegexMatchOperatorExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-regex-match-operator-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Regex</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-130" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRegexMatchOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-134" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlRegexMatchOperatorImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-regex-match-operator-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Regex</span><wbr><span>Match</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-131" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlReturningClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-135" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlReturningClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-returning-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Returning</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-132" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSelectStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-136" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSelectStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-select-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Select</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-133" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSequenceDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-137" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSequenceDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-sequence-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-134" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSequenceNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-138" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSequenceNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-sequence-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-135" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSequenceParametersImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-139" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSequenceParametersImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-sequence-parameters-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Sequence</span><wbr><span>Parameters</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-136" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSerialDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-140" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSerialDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-serial-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Serial</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-137" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetConfigImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-141" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetConfigImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-config-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Config</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-138" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetConfigNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-142" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetConfigNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-config-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Config</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-139" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetNamesImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-143" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetNamesImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-names-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Names</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-140" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetSchemaImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-144" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetSchemaImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-schema-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Schema</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-141" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetSeedImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-145" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetSeedImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-seed-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Seed</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-142" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-146" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-143" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetTimezoneImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-147" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetTimezoneImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-timezone-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Timezone</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-144" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetValueImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-148" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSetValueImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-set-value-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Value</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-145" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSmallIntDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-149" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSmallIntDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-small-int-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Int</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-146" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSmallSerialDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-150" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlSmallSerialDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-small-serial-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Small</span><wbr><span>Serial</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-147" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStorageParameterImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-151" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStorageParameterImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-storage-parameter-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Storage</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-148" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStorageParametersImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-152" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStorageParametersImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-storage-parameters-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-149" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStringAggStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-153" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStringAggStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-string-agg-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>String</span><wbr><span>Agg</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-150" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStringDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-154" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStringDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-string-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>String</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-151" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStringLiteralImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-155" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlStringLiteralImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-string-literal-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>String</span><wbr><span>Literal</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-152" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableConstraintImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-156" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableConstraintImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-table-constraint-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Constraint</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-153" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableFunctionAliasNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-157" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableFunctionAliasNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-table-function-alias-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span>Alias</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-154" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableFunctionColumnAliasImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-158" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableFunctionColumnAliasImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-table-function-column-alias-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span>Column</span><wbr><span>Alias</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-155" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableFunctionTableAliasImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-159" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableFunctionTableAliasImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-table-function-table-alias-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span>Table</span><wbr><span>Alias</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-156" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableOrSubqueryImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-160" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTableOrSubqueryImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-table-or-subquery-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>Or</span><wbr><span>Subquery</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-157" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTimeExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-161" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTimeExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-time-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Time</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-158" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTimestampExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-162" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTimestampExpressionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-timestamp-expression-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Timestamp</span><wbr><span>Expression</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-159" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTriggerEventImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-163" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTriggerEventImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-trigger-event-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Trigger</span><wbr><span>Event</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-160" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateDescendantImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-164" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateDescendantImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-truncate-descendant-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Descendant</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-161" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOnlyImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-165" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOnlyImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-truncate-only-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Only</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-162" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOptionCascadeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-166" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOptionCascadeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-truncate-option-cascade-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Option</span><wbr><span>Cascade</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-163" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOptionIdentityImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-167" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOptionIdentityImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-truncate-option-identity-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Option</span><wbr><span>Identity</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-164" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOptionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-168" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateOptionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-truncate-option-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Option</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-165" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-169" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTruncateStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-truncate-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Truncate</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-166" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsmultirangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-170" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsmultirangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-tsmultirange-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tsmultirange</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-167" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsqueryDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-171" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsqueryDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-tsquery-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tsquery</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-168" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsrangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-172" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsrangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-tsrange-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tsrange</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-169" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTstzmultirangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-173" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTstzmultirangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-tstzmultirange-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tstzmultirange</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-170" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTstzrangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-174" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTstzrangeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-tstzrange-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tstzrange</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-171" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsvectorDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-175" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTsvectorDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-tsvector-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Tsvector</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-172" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTypeClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-176" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTypeClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-type-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-173" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTypeIdentifierImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-177" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTypeIdentifierImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-type-identifier-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span>Identifier</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-174" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTypeNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-178" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlTypeNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-type-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Type</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-175" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlUnnestTableFunctionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-179" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlUnnestTableFunctionImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-unnest-table-function-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Unnest</span><wbr><span>Table</span><wbr><span>Function</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-176" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlUpdateStmtLimitedImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-180" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlUpdateStmtLimitedImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-update-stmt-limited-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Update</span><wbr><span>Stmt</span><wbr><span>Limited</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-177" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlUuidDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-181" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlUuidDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-uuid-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Uuid</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-178" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWindowDefnImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-182" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWindowDefnImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-window-defn-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Defn</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-179" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWindowFunctionExprImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-183" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWindowFunctionExprImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-window-function-expr-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Function</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-180" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWindowNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-184" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWindowNameImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-window-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Window</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-181" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithClauseAuxiliaryStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-185" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithClauseAuxiliaryStmtImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-with-clause-auxiliary-stmt-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span>Auxiliary</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-182" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-186" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithClauseImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-with-clause-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-183" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithClauseMaterializedImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-187" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithClauseMaterializedImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-with-clause-materialized-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Clause</span><wbr><span>Materialized</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-184" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithStorageParameterImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-188" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlWithStorageParameterImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-with-storage-parameter-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="postgresql-nav-submenu-4-185" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlXmlDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
+   <div class="toc--part" id="postgresql-nav-submenu-4-189" pageid="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/PostgreSqlXmlDataTypeImpl///PointingToDeclaration//-1264942193" data-nesting-level="2">
     <div class="toc--row">
      <a href="../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-xml-data-type-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Postgre</span><wbr><span>Sql</span><wbr><span>Xml</span><wbr><span>Data</span><wbr><span>Type</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
