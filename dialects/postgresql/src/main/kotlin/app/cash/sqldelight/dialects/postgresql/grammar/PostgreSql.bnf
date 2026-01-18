@@ -196,6 +196,8 @@ type_name ::= (
   tsmultirange |
   tstzmultirange |
   xml_data_type |
+  geometry_data_type |
+  geography_data_type |
   enum_data_type
 ) [ '[]' ] {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTypeNameImpl"
@@ -289,6 +291,10 @@ tsvector_data_type ::= 'TSVECTOR'
 tsquery_data_type ::= 'TSQUERY'
 
 xml_data_type ::= 'XML'
+
+geometry_data_type ::= 'GEOMETRY' [ LP ( 'Point' | 'PointM' | 'PointZ' | 'PointZM' ) COMMA {signed_number} RP ]
+
+geography_data_type ::= 'GEOGRAPHY' [ LP ( 'Point' | 'PointM' | 'PointZ' | 'PointZM' ) COMMA {signed_number} RP ]
 
 interval_expression ::= 'INTERVAL' {string_literal}
 
@@ -531,7 +537,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= geometry_setsrid_function_stmt | geometry_point_function_stmt | json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -758,6 +764,15 @@ LP [ ALL | DISTINCT ] ( json_expression | {column_expr} | <<expr '-1'>> ) COMMA 
 [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
 pin = 2
+}
+
+geometry_point_function_stmt ::= ( ( 'ST_POINTZM' | 'ST_POINTZ' | 'ST_POINTM' | 'ST_POINT' ) LP ( {bind_expr} | {signed_number} ) ( COMMA ( {bind_expr} | {signed_number} ) ) * [ COMMA {signed_number} ] RP ) |
+( ( 'ST_MAKEPOINTM' | 'ST_MAKEPOINT' ) LP ( {bind_expr} | {signed_number} ) ( COMMA ( {bind_expr} | {signed_number} ) ) * RP ) {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.GeometryStmtExpressionMixin"
+}
+
+geometry_setsrid_function_stmt ::= 'ST_SetSRID' LP geometry_point_function_stmt COMMA ( {bind_expr} | {signed_number} ) RP {
+ mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.GeometryStmtExpressionMixin"
 }
 
 string_agg_stmt ::= 'string_agg' LP [ ALL | DISTINCT ] <<expr '-1'>> COMMA string_literal [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP

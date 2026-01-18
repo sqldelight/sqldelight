@@ -26,6 +26,8 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneO
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDoubleColonCastOperatorExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlExtensionExpr
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlGeometryPointFunctionStmt
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlGeometrySetsridFunctionStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlInsertStmt
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlJsonExpression
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTypeName
@@ -84,6 +86,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         tsmultirange != null -> PostgreSqlType.TSMULTIRANGE
         tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
+        geometryDataType != null -> PostgreSqlType.GEOMETRY
         enumDataType != null -> PostgreSqlType.ENUM
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
@@ -142,6 +145,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         })
       }
     }
+    "st_geographyfromtext" -> IntermediateType(PostgreSqlType.GEOGRAPHY)
+    "st_dwithin" -> IntermediateType(BOOLEAN)
+    "st_force2d" -> IntermediateType(PostgreSqlType.GEOMETRY)
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
     "lower", "upper" -> {
@@ -287,6 +293,12 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       is PostgreSqlDoubleColonCastOperatorExpression -> {
         (argument.parent.parent as SqlExpr).postgreSqlType()
       }
+      is PostgreSqlGeometrySetsridFunctionStmt -> {
+        IntermediateType(PostgreSqlType.INTEGER)
+      }
+      is PostgreSqlGeometryPointFunctionStmt -> {
+        IntermediateType(REAL)
+      }
       is PostgreSqlJsonExpression -> {
         IntermediateType(PostgreSqlType.JSON)
       }
@@ -339,6 +351,8 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     is PostgreSqlAtTimeZoneOperator -> IntermediateType(TEXT)
     is PostgreSqlExtensionExpr -> when {
       jsonFunctionStmt != null || jsonAggStmt != null || jsonObjectAggStmt != null -> IntermediateType(PostgreSqlType.JSON)
+
+      geometrySetsridFunctionStmt != null || geometryPointFunctionStmt != null -> IntermediateType(PostgreSqlType.GEOMETRY)
 
       arrayAggStmt != null -> {
         val typeForArray = (arrayAggStmt as AggregateExpressionMixin).expr.postgreSqlType() // same as resolvedType(expr)
