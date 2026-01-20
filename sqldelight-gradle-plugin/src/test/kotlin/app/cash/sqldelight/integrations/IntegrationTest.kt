@@ -207,4 +207,56 @@ class IntegrationTest {
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
+
+  @Test fun `agp 8_3_0 generates correct source directories`() {
+    val fixtureRoot = File("src/test/agp-8-3-0")
+    val result = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments(
+        "clean",
+        "check",
+        "--configuration-cache",
+        "--stacktrace",
+      )
+      .forwardOutput()
+      .build()
+
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+    // Verify we aren't using `addGeneratedSourceDirectory`.
+    val debugDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/debug/com/example/sqldelight/Database.kt")
+    val releaseDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/release/com/example/sqldelight/Database.kt")
+
+    assertThat(debugDatabase.exists()).isTrue()
+    // The legacy `addJavaSourceFoldersToModel` forces eager resolution, so `check` generates all variants.
+    assertThat(releaseDatabase.exists()).isTrue()
+  }
+
+  @Test fun `latest agp generates correct source directories`() {
+    val fixtureRoot = File("src/test/agp-latest")
+    val result = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments(
+        "clean",
+        "check",
+        "--configuration-cache",
+        "--stacktrace",
+      )
+      .forwardOutput()
+      .build()
+
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+    // Now `addGeneratedSourceDirectory` should generate at the correct path.
+    val debugDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/debug/com/example/sqldelight/Database.kt")
+    val releaseDatabase = File(fixtureRoot, "build/generated/sqldelight/code/Database/release/com/example/sqldelight/Database.kt")
+
+    assertThat(debugDatabase.exists()).isTrue()
+    // AGP > 8.12 lazily registers sources. Only debug is generated since `check` only compiles debug.
+    assertThat(releaseDatabase.exists()).isFalse()
+
+    val debugVerify = File(fixtureRoot, "build/tmp/verifyDebugDatabaseMigration/success.txt")
+    val releaseVerify = File(fixtureRoot, "build/tmp/verifyReleaseDatabaseMigration/success.txt")
+    // But it will execute the verification task for each variant.
+    assertThat(debugVerify.exists()).isTrue()
+    assertThat(releaseVerify.exists()).isTrue()
+  }
 }

@@ -6,6 +6,7 @@ import app.cash.sqldelight.gradle.SqlDelightExtension
 import app.cash.sqldelight.gradle.SqlDelightTask
 import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.setupDependencies
+import com.android.build.api.AndroidPluginVersion
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.Component
 import org.gradle.api.Project
@@ -19,8 +20,13 @@ internal fun Project.configureAndroid(extension: SqlDelightExtension) {
       }
       setupDependencies("api", extension)
       configureDatabases(extension)
-      androidExtension.onVariants { variant ->
-        configureAndroidVariant(variant, extension)
+      when {
+        useModernApi(androidExtension.pluginVersion) -> {
+          androidExtension.onVariants { variant ->
+            configureAndroidVariant(variant, extension)
+          }
+        }
+        else -> configureLegacyAndroidVariants(extension)
       }
     }
   }
@@ -30,8 +36,8 @@ private fun Project.configureAndroidVariant(
   variant: Component,
   extension: SqlDelightExtension,
 ) {
-  val sources = checkNotNull(variant.sources.kotlin) {
-    "Could not find Kotlin sources for $name"
+  val sources = checkNotNull(variant.sources.java) {
+    "Could not find Kotlin/Java source folders for $name"
   }
   extension.databases.configureEach { database ->
     database.registerTasksForSource(
@@ -91,3 +97,9 @@ private enum class AndroidPlugin(val id: String) {
   Application("com.android.application"),
   Library("com.android.library"),
 }
+
+// The `addGeneratedSourceDirectory` method was broken until 8.12.0-alpha06.
+// See https://issuetracker.google.com/issues/327399383
+private fun useModernApi(
+  currentVersion: AndroidPluginVersion,
+): Boolean = currentVersion >= AndroidPluginVersion(8, 12, 0).alpha(6)

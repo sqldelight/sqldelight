@@ -29,6 +29,7 @@ kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutin
 
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 
+android-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 android-pluginApi = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 
 androidx-test-core = "androidx.test:core:1.7.0"

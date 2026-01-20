@@ -1,0 +1,37 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
+plugins {
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.sqldelight)
+}
+
+android {
+  namespace = "com.example.sqldelight"
+
+  compileSdk = libs.versions.compileSdk.get() as int
+
+  defaultConfig {
+    applicationId = "com.sample"
+  }
+
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
+  lint {
+    textReport = true
+  }
+}
+
+tasks.withType(KotlinCompilationTask.class).configureEach {
+  compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+}
+
+sqldelight {
+  databases {
+    // Verifies support for lazy registration.
+    register("Database")
+  }
+}

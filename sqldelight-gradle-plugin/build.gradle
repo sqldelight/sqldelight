@@ -55,6 +55,8 @@ dependencies {
 
   implementation libs.sqlPsiEnvironment
   implementation libs.kotlin.plugin
+  // TODO Use only libs.android.pluginApi when min-supported agp >= 8.12
+  compileOnly libs.android.plugin
   compileOnly libs.android.pluginApi
 
   testImplementation libs.junit
