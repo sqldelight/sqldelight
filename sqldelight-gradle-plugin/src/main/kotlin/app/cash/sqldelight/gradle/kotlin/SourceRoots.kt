@@ -35,7 +35,7 @@ internal fun Project.configureKotlin(extension: SqlDelightExtension) {
 
 private fun Project.configureKotlinMultiplatform(
   extension: SqlDelightExtension,
-) = plugins.withId(KotlinPlugin.Multiplatform.id) {
+) = pluginManager.withPlugin(KotlinPlugin.Multiplatform.id) {
   val multiplatformExtension = checkNotNull(extensions.findByType(KotlinMultiplatformExtension::class.java)) {
     "Could not find the Kotlin Multiplatform extension for $name."
   }
@@ -61,7 +61,7 @@ private fun Project.configureKotlinMultiplatform(
 
 private fun Project.configureKotlinJs(
   extension: SqlDelightExtension,
-) = plugins.withId(KotlinPlugin.Js.id) {
+) = pluginManager.withPlugin(KotlinPlugin.Js.id) {
   val jsExtension = checkNotNull(extensions.findByType(KotlinJsProjectExtension::class.java)) {
     "Could not find the Kotlin Js extension for $name."
   }
@@ -81,7 +81,7 @@ private fun Project.configureKotlinJs(
 
 private fun Project.configureKotlinJvm(
   extension: SqlDelightExtension,
-) = plugins.withId(KotlinPlugin.Jvm.id) {
+) = pluginManager.withPlugin(KotlinPlugin.Jvm.id) {
   val sourceSets = (extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
   setupDependencies("api", extension)
   val main = sourceSets.getByName("main")

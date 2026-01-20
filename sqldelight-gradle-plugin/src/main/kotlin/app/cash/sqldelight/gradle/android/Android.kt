@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 internal fun Project.configureAndroid(extension: SqlDelightExtension) {
   AndroidPlugin.entries.forEach {
-    plugins.withId(it.id) {
+    pluginManager.withPlugin(it.id) {
       val androidExtension = checkNotNull(extensions.findByType(AndroidComponentsExtension::class.java)) {
         "Could not find the Android Gradle Plugin extension for $name."
       }
