@@ -319,7 +319,8 @@ class IntegrationTest {
   }
 
   @Test fun `selecting just null behaves correctly`() {
-    assertThat(queryWrapper.playerQueries.selectNull().executeAsOne().expr).isNull()
+    val nothing: Any? = queryWrapper.playerQueries.selectNull().executeAsOne().expr
+    assertThat(nothing).isNull()
   }
 
   @Test fun `inner type query`() {
