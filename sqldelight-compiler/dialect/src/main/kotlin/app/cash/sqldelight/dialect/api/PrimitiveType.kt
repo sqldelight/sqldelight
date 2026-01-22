@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DOUBLE
 import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.NOTHING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
 
@@ -12,7 +13,7 @@ import com.squareup.kotlinpoet.asTypeName
  */
 enum class PrimitiveType(override val javaType: TypeName) : DialectType {
   ARGUMENT(ANY.copy(nullable = true)),
-  NULL(com.squareup.kotlinpoet.NOTHING.copy(nullable = true)),
+  NULL(NOTHING.copy(nullable = true)),
   INTEGER(LONG),
   REAL(DOUBLE),
   TEXT(String::class.asTypeName()),
