@@ -42,34 +42,34 @@ abstract class SqlDelightDatabase @Inject constructor(
   val generateAsync: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
   // Used internally to lazily wire the dialect.
-  internal val dialectProperty: Property<Any> = project
-    .objects
-    .property(Any::class.java)
-    .convention("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
+  internal val dialectProperty: Property<Any> =
+    project.objects
+      .property(Any::class.java)
+      .convention("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
 
   val configurationName: String = "${name}DialectClasspath"
 
-  internal val configuration = project.configurations.create(configurationName).apply {
-    isCanBeConsumed = false
-    isVisible = false
+  internal val configuration = project.configurations.register(configurationName) {
+    it.isCanBeConsumed = false
+    it.isVisible = false
 
-    dependencies.addLater(
+    it.dependencies.addLater(
       dialectProperty.map { dialect ->
         project.dependencies.create(dialect)
       },
     )
   }
 
-  private val intellijEnv = project.configurations.create("${name}IntellijEnv").apply {
-    isCanBeConsumed = false
-    isVisible = false
-    dependencies.add(project.dependencies.create("app.cash.sqldelight:compiler-env:$VERSION"))
+  private val intellijEnv = project.configurations.register("${name}IntellijEnv") {
+    it.isCanBeConsumed = false
+    it.isVisible = false
+    it.dependencies.add(project.dependencies.create("app.cash.sqldelight:compiler-env:$VERSION"))
   }
 
-  private val migrationEnv = project.configurations.create("${name}MigrationEnv").apply {
-    isCanBeConsumed = false
-    isVisible = false
-    dependencies.add(project.dependencies.create("app.cash.sqldelight:migration-env:$VERSION"))
+  private val migrationEnv = project.configurations.register("${name}MigrationEnv") {
+    it.isCanBeConsumed = false
+    it.isVisible = false
+    it.dependencies.add(project.dependencies.create("app.cash.sqldelight:migration-env:$VERSION"))
   }
 
   fun module(module: Any) {
@@ -125,9 +125,8 @@ abstract class SqlDelightDatabase @Inject constructor(
   private val generatedSourcesDirectory: Provider<Directory> =
     project.layout.buildDirectory.dir("generated/sqldelight/code/$name")
 
-  private val sources: NamedDomainObjectContainer<Source> = project
-    .objects
-    .domainObjectContainer(Source::class.java)
+  private val sources: NamedDomainObjectContainer<Source> =
+    project.objects.domainObjectContainer(Source::class.java)
 
   @Suppress("unused") // Public API used in gradle files.
   fun methodMissing(name: String, args: Any): Any {
@@ -135,7 +134,8 @@ abstract class SqlDelightDatabase @Inject constructor(
   }
 
   // Declarable bucket for schema dependencies.
-  private val schemaImplementation = project.configurations.registerDeclarable("schema${name}Implementation")
+  private val schemaImplementation =
+    project.configurations.registerDeclarable("schema${name}Implementation")
 
   @Suppress("unused") // Public API used in gradle files.
   @Deprecated("use ProjectDependency", level = HIDDEN)
@@ -159,9 +159,10 @@ abstract class SqlDelightDatabase @Inject constructor(
   // A project can have both the Multiplatform and Android library plugins applied.
   // Using a property defers the check until task execution, avoiding plugin ordering issues.
   // This can be removed when the min-supported AGP version is 9+.
-  internal val isMultiplatform: Property<Boolean> = project.objects
-    .property(Boolean::class.java)
-    .convention(false)
+  internal val isMultiplatform: Property<Boolean> =
+    project.objects
+      .property(Boolean::class.java)
+      .convention(false)
 
   // This causes eager resolution and should only be called by the ToolingModelBuilder.
   internal fun resolveProperties(): SqlDelightDatabasePropertiesImpl {
@@ -260,8 +261,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   private fun registerResolvableSchema(
     source: Source,
-  ): NamedDomainObjectProvider<out Configuration> = project
-    .configurations
+  ): NamedDomainObjectProvider<out Configuration> = project.configurations
     .registerResolvable(source.schemaClasspathName) {
       extendsFrom(schemaImplementation.get())
       attributes.apply {

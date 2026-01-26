@@ -91,7 +91,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         databases = databases.map { it.resolveProperties() },
         currentVersion = VERSION,
         minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
-        dialectJars = databases.first().configuration.files,
+        dialectJars = databases.first().configuration.get().files,
       )
     }
   }

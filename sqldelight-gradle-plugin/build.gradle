@@ -5,10 +5,15 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
-  alias(libs.plugins.binaryCompatibilityValidator)
   id("java-gradle-plugin")
   id("jvm-test-suite")
   id("app.cash.sqldelight.toolchain.compiler")
+}
+
+kotlin {
+  abiValidation {
+    enabled = true
+  }
 }
 
 testing {

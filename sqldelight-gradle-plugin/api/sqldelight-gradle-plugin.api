@@ -257,18 +257,9 @@ public abstract interface class app/cash/sqldelight/gradle/SqlDelightTask$Genera
 
 public abstract class app/cash/sqldelight/gradle/SqlDelightWorkerTask : org/gradle/api/tasks/SourceTask {
 	public fun <init> ()V
-	public final fun environment (Ljava/lang/String;Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
-	public final fun environment (Ljava/util/Map;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
 	public abstract fun getClasspath ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public final fun getEnvironment ()Lorg/gradle/api/provider/MapProperty;
-	public final fun getJvmArgs ()Lorg/gradle/api/provider/ListProperty;
 	public final fun getMaxHeapSize ()Lorg/gradle/api/provider/Property;
 	public final fun getMinHeapSize ()Lorg/gradle/api/provider/Property;
-	public final fun getSystemProperties ()Lorg/gradle/api/provider/MapProperty;
-	public final fun jvmArgs (Ljava/lang/Iterable;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
-	public final fun jvmArgs ([Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
-	public final fun systemProperties (Ljava/util/Map;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
-	public final fun systemProperty (Ljava/lang/String;Ljava/lang/Object;)Lapp/cash/sqldelight/gradle/SqlDelightWorkerTask;
 }
 
 public abstract class app/cash/sqldelight/gradle/VerifyMigrationTask : app/cash/sqldelight/gradle/SqlDelightWorkerTask {
