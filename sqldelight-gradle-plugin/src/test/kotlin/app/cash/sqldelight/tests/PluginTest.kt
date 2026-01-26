@@ -20,10 +20,30 @@ class PluginTest {
   }
 
   @Test
-  fun `Applying the plugin without Kotlin applied throws for Android`() {
+  fun `Applying the plugin without Kotlin applied throws for Android oldDsl`() {
     val result = GradleRunner.create()
       .withCommonConfiguration(File("src/test/no-kotlin-android-agp8"))
-      .withArguments("build", "--stacktrace")
+      .withArguments(
+        "build",
+        "-Pandroid.newDsl=false",
+        "--stacktrace",
+      )
+      .buildAndFail()
+    assertThat(result.output)
+      .contains(
+        "SQL Delight Gradle plugin applied in project ':' but no supported Kotlin plugin was found",
+      )
+  }
+
+  @Test
+  fun `Applying the plugin without Kotlin applied throws for Android newDsl`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/no-kotlin-android-agp8"))
+      .withArguments(
+        "build",
+        "-Pandroid.newDsl=true",
+        "--stacktrace",
+      )
       .buildAndFail()
     assertThat(result.output)
       .contains(

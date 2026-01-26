@@ -1,15 +1,18 @@
 package app.cash.sqldelight.gradle.kotlin
 
-import org.gradle.api.Project
+import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
-internal fun Project.linkSqlite() {
-  val extension = project.extensions.findByType(KotlinMultiplatformExtension::class.java) ?: return
-  extension.targets
-    .filterIsInstance<KotlinNativeTarget>()
-    .flatMap { it.binaries }
-    .forEach { compilationUnit ->
-      compilationUnit.linkerOpts("-lsqlite3")
+internal fun KotlinMultiplatformExtension.linkSqliteIfEnabled(linkSqlite: Provider<Boolean>) {
+  targets.configureEach { target ->
+    if (target is KotlinNativeTarget) {
+      target.binaries.configureEach { binary ->
+        // Defer reading the property until the binary is realized
+        if (linkSqlite.get()) {
+          binary.linkerOpts("-lsqlite3")
+        }
+      }
     }
+  }
 }

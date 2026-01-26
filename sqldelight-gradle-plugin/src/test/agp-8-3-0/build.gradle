@@ -1,0 +1,31 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
+plugins {
+  id("com.android.application").version("8.3.0")
+  alias(libs.plugins.sqldelight)
+  alias(libs.plugins.kotlin.android)
+}
+
+android {
+  namespace = "com.example.sqldelight"
+
+  compileSdk = libs.versions.compileSdk.get() as int
+
+  defaultConfig {
+    applicationId = "com.sample"
+  }
+
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+  }
+
+  lint {
+    textReport = true
+  }
+}
+
+tasks.withType(KotlinCompilationTask.class).configureEach {
+  compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+}

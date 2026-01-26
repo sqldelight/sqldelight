@@ -14,7 +14,6 @@ import java.io.File
 import java.sql.DriverManager
 import java.util.Properties
 import java.util.ServiceLoader
-import kotlin.collections.ArrayList
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.RegularFileProperty
@@ -26,7 +25,6 @@ import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -42,9 +40,13 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var properties: SqlDelightDatabasePropertiesImpl
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @Deprecated("This property is unused. Changing its value has no effect.")
+  @get:Internal
+  abstract var compilationUnit: SqlDelightCompilationUnitImpl
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
@@ -64,9 +66,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     workQueue.submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
       it.projectName.set(projectName)
-      it.properties.set(properties)
+      it.properties.set(resolveProperties())
       it.verifyMigrations.set(verifyMigrations)
-      it.compilationUnit.set(compilationUnit)
+      it.compilationUnit.set(resolveCompilationUnit(schemaOutputDirectory))
       it.verifyDefinitions.set(verifyDefinitions)
       it.driverProperties.set(driverProperties)
       it.outputFile.set(getDummyOutputFile())

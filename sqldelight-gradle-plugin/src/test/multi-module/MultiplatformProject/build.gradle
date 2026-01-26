@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.multiplatform)
   alias(libs.plugins.sqldelight)
 }
 
@@ -15,33 +15,6 @@ sqldelight {
   }
 }
 
-android {
-  namespace = "app.cash.sqldelight.multiplatform.project"
-
-  compileSdk = libs.versions.compileSdk.get() as int
-
-  compileOptions {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-  }
-
-  buildTypes {
-    release {}
-    sqldelight {}
-  }
-
-  flavorDimensions "api"
-
-  productFlavors {
-    minApi21 {
-      dimension "api"
-    }
-    minApi23 {
-      dimension "api"
-    }
-  }
-}
-
 kotlin {
   sourceSets {
     androidLibMain {
@@ -49,7 +22,15 @@ kotlin {
   }
 
   iosX64()
-  androidTarget("androidLib")
+  android {
+    namespace = "app.cash.sqldelight.multiplatform.project"
+
+    compileSdk = libs.versions.compileSdk.get() as int
+
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_1_8)
+    }
+  }
 }
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
