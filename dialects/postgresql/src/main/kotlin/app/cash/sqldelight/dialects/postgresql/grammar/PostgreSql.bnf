@@ -139,6 +139,7 @@ overrides ::= type_name
   | extension_stmt
   | create_index_stmt
   | create_view_stmt
+  | create_table_stmt
   | select_stmt
   | ordering_term
   | binary_like_operator
@@ -244,6 +245,15 @@ create_view_stmt ::= CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] [ RECURSIVE ] VI
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateOrReplaceViewMixin"
   implements = "com.alecstrong.sql.psi.core.psi.TableElement"
   elementTypeClass = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateViewElementType"
+  stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
+  override = true
+  pin = 6
+}
+
+create_table_stmt ::= CREATE [ TEMP | TEMPORARY ] TABLE [ IF NOT EXISTS ] [ {database_name} DOT ] {table_name} ( LP {column_def} ( COMMA {column_def} ) * ( COMMA {table_constraint} ) * RP [ {table_options} ] | AS {compound_select_stmt} ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateTableMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.TableElement"
+  elementTypeClass = "com.alecstrong.sql.psi.core.psi.mixins.CreateTableElementType"
   stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6

@@ -1,0 +1,18 @@
+CREATE TABLE demo_sys_cols (
+  t TEXT
+);
+
+COMMENT ON TABLE demo_sys_cols IS 'Some Comment';
+
+INSERT INTO demo_sys_cols (t) VALUES ('first');
+
+selectSystemColumns:
+SELECT
+  to_regclass(tableoid::TEXT) AS table_name,
+  obj_description(tableoid, 'pg_class') AS table_comment,
+  xmin AS xmin,
+  cmin AS cmin,
+  xmax AS xmax,
+  cmax AS cmax,
+  ctid AS ctid
+FROM demo_sys_cols;
