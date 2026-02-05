@@ -1420,6 +1420,66 @@
               </div>
             </div>
           </div>
+<a data-name="-555638094%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlForLockingClauseImpl" id="-555638094%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-for-locking-clause-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>For</span><wbr><span>Locking</span><wbr><span>Clause</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-555638094%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-for-locking-clause-impl/index.html">PostgreSqlForLockingClauseImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-for-locking-clause/index.html">PostgreSqlForLockingClause</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-908377930%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlForLockingReferenceImpl" id="-908377930%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-for-locking-reference-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>For</span><wbr><span>Locking</span><wbr><span>Reference</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-908377930%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-for-locking-reference-impl/index.html">PostgreSqlForLockingReferenceImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-for-locking-reference/index.html">PostgreSqlForLockingReference</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="907529067%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlForLockingReferenceNameImpl" id="907529067%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-for-locking-reference-name-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>For</span><wbr><span>Locking</span><wbr><span>Reference</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="907529067%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-for-locking-reference-name-impl/index.html">PostgreSqlForLockingReferenceNameImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-for-locking-reference-mixin/index.html">ForLockingReferenceMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-for-locking-reference-name/index.html">PostgreSqlForLockingReferenceName</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-120605408%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlForLockingStrengthImpl" id="-120605408%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-for-locking-strength-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>For</span><wbr><span>Locking</span><wbr><span>Strength</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-120605408%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-for-locking-strength-impl/index.html">PostgreSqlForLockingStrengthImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-for-locking-strength/index.html">PostgreSqlForLockingStrength</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1928075627%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlFrameSpecImpl" id="1928075627%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">

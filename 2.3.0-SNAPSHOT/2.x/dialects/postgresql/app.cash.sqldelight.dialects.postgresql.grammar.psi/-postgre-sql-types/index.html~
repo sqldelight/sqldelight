@@ -2025,6 +2025,66 @@
               </div>
             </div>
           </div>
+<a data-name="-360984732%2FProperties%2F-1264942193" anchor-label="FOR_LOCKING_CLAUSE" id="-360984732%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-o-r_-l-o-c-k-i-n-g_-c-l-a-u-s-e.html"><span>FOR_</span><wbr><span>LOCKING_</span><wbr><span>CLAUSE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-360984732%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-o-r_-l-o-c-k-i-n-g_-c-l-a-u-s-e.html">FOR_LOCKING_CLAUSE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-676006660%2FProperties%2F-1264942193" anchor-label="FOR_LOCKING_REFERENCE" id="-676006660%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-o-r_-l-o-c-k-i-n-g_-r-e-f-e-r-e-n-c-e.html"><span>FOR_</span><wbr><span>LOCKING_</span><wbr><span>REFERENCE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-676006660%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-o-r_-l-o-c-k-i-n-g_-r-e-f-e-r-e-n-c-e.html">FOR_LOCKING_REFERENCE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1788469684%2FProperties%2F-1264942193" anchor-label="FOR_LOCKING_REFERENCE_NAME" id="1788469684%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-o-r_-l-o-c-k-i-n-g_-r-e-f-e-r-e-n-c-e_-n-a-m-e.html"><span>FOR_</span><wbr><span>LOCKING_</span><wbr><span>REFERENCE_</span><wbr><span>NAME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1788469684%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-o-r_-l-o-c-k-i-n-g_-r-e-f-e-r-e-n-c-e_-n-a-m-e.html">FOR_LOCKING_REFERENCE_NAME</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="814959442%2FProperties%2F-1264942193" anchor-label="FOR_LOCKING_STRENGTH" id="814959442%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-o-r_-l-o-c-k-i-n-g_-s-t-r-e-n-g-t-h.html"><span>FOR_</span><wbr><span>LOCKING_</span><wbr><span>STRENGTH</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="814959442%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-f-o-r_-l-o-c-k-i-n-g_-s-t-r-e-n-g-t-h.html">FOR_LOCKING_STRENGTH</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1407628107%2FProperties%2F-1264942193" anchor-label="FOREIGN" id="-1407628107%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
