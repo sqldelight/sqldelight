@@ -39,7 +39,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   val configurationName: String = "${name}DialectClasspath"
 
-  val expandSelectStar: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+  val expandSelectStar: Property<Boolean> = project.objects.property(Boolean::class.java).convention(true)
 
   internal val configuration = project.configurations.create(configurationName).apply {
     isCanBeConsumed = false

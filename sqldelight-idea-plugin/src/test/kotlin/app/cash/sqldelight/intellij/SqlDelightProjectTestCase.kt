@@ -74,7 +74,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       deriveSchemaFromMigrations = false,
       treatNullAsUnknownForEquality = false,
       generateAsync = false,
-      expandSelectStar = false,
+      expandSelectStar = true,
     )
   }
 
