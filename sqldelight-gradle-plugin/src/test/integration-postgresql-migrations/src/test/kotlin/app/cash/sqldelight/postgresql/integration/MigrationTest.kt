@@ -9,8 +9,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
+class MigrationTest {
+  val conn = DriverManager.getConnection("jdbc:tc:postgresql:13.11:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -21,7 +21,8 @@ class PostgreSqlTest {
   val database = MyDatabase(driver)
 
   @Before fun before() {
-    MyDatabase.Schema.create(driver)
+//    MyDatabase.Schema.create(driver)
+    MyDatabase.Schema.migrate(driver, 0, MyDatabase.Schema.version)
   }
 
   @After fun after() {
@@ -43,14 +44,13 @@ class PostgreSqlTest {
 
   @Test fun simpleOrdersSelect() {
     with(database) {
-      ordersQueries.insert(Orders(1, "sku", 3, 165.98.toBigDecimal(), null))
+      ordersQueries.insert(Orders(1, "sku", 3, 165.98.toBigDecimal()))
       assertThat(ordersQueries.selectAll().executeAsList()).containsExactly(
         Orders(
           1,
           "sku",
           3,
           165.98.toBigDecimal(),
-          null,
         ),
       )
     }

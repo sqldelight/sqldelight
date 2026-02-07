@@ -1,3 +1,12 @@
+CREATE TABLE Orders
+(
+   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+   sku TEXT NOT NULL,
+   quantity INTEGER NOT NULL,
+   price NUMERIC(10, 2) NOT NULL
+);
+
+
 insert:
 INSERT INTO Orders(sku, quantity, price)
 VALUES ?;

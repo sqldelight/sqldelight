@@ -1,3 +1,10 @@
+CREATE TABLE Products
+(
+    id                   SERIAL PRIMARY KEY,
+    sku                  VARCHAR(255) NOT NULL,
+    requiresDpi BOOLEAN DEFAULT FALSE
+);
+
 insert:
 INSERT INTO Products(sku, requiresDpi)
 VALUES ?;
