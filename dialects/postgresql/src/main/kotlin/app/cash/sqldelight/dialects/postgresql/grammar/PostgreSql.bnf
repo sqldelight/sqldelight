@@ -116,6 +116,7 @@
   ]
 }
 overrides ::= type_name
+  | column_name
   | column_constraint
   | string_literal
   | create_trigger_stmt
@@ -247,6 +248,15 @@ create_view_stmt ::= CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] [ RECURSIVE ] VI
   stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6
+}
+
+column_name ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ColumnNameMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  ]
+  override = true
 }
 
 binary_like_operator ::= ( 'ILIKE' | LIKE | GLOB | REGEXP | MATCH ) {
@@ -433,7 +443,9 @@ alter_table_column_alias ::= id | string {
   ]
 }
 
-alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
+if_exists ::= IF EXISTS
+
+alter_table_drop_column ::= DROP [ COLUMN ] [ if_exists ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableDropColumnMixin"
   pin = 1
 }
