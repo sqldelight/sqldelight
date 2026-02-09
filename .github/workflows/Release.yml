@@ -7,6 +7,9 @@ on:
     tags:
       - '*'
 
+permissions:
+  id-token: write
+
 concurrency:
   group: "release-${{ github.ref }}"
   cancel-in-progress: false
@@ -93,6 +96,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
+          registry-url: 'https://registry.npmjs.org'
       - name: Setup Gradle Java installations paths
         run: |
           cd ~/.gradle
@@ -100,9 +104,6 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
-
-      - name: Setup .npmrc
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Get Version
         run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
