@@ -474,7 +474,7 @@ alter_table_add_column ::= ADD [ COLUMN ] [ if_not_exists
 }
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
-( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
+( [ SET data_clause ] type_clause {column_type} [USING <<expr '-1'>>]
 | column_not_null_clause
 | column_default_clause | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
 | ( SET GENERATED (ALWAYS | BY DEFAULT)  |  SET sequence_parameters | 'RESTART' [ WITH {signed_number} ] ) *
