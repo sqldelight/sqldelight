@@ -7,9 +7,6 @@ on:
     tags:
       - '*'
 
-permissions:
-  id-token: write
-
 concurrency:
   group: "release-${{ github.ref }}"
   cancel-in-progress: false
@@ -79,6 +76,7 @@ jobs:
     if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
+      id-token: write
     needs: publish_archives
 
     steps:
