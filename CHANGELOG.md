@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- [PostgreSQL Dialect] Improved support for ALTER TABLE ALTER TYPE USING expressions (#6116 by @griffio)
 - [PostgreSQL Dialect] Add support for DROP COLUMN IF EXISTS (#6112 by @griffio)
 - [MySQL Dialect] Add support for Window Functions (#6086 by @griffio)
 - [Gradle Plugin] Fix build failure when starting schema version is not 1 and verifyMigrations is true (#6017 by @neilgmiller)
