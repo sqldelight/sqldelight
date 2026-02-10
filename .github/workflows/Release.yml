@@ -145,4 +145,3 @@ jobs:
 
 env:
   GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
