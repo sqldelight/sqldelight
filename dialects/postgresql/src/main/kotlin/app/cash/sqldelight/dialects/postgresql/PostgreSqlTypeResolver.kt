@@ -18,6 +18,7 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ArrayValueExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin
@@ -401,6 +402,20 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         IntermediateType(REAL).nullableIf(temporalExprType.javaType.isNullable)
       }
       plsqlTriggerVarExpression != null -> IntermediateType(TEXT)
+
+      arrayValueExpression != null -> {
+        val exprList = (arrayValueExpression as ArrayValueExpressionMixin).exprList()
+        // e.g., given an exprList containing mixed types of Int, BigInt and Numeric, the type order returns Numeric
+        val elementType = encapsulatingTypePreferringKotlin(
+          exprList,
+          PostgreSqlType.INTEGER,
+          BIG_INT,
+          REAL,
+          PostgreSqlType.NUMERIC,
+          nullability = { arrayNullable -> arrayNullable.any { it } },
+        )
+        arrayIntermediateType(elementType)
+      }
       else -> parentResolver.resolvedType(this)
     }
 
