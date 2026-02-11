@@ -454,13 +454,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TIME,
     )
 
-    private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
+    fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
         ArrayDialectType(type),
       )
     }
 
-    private fun isArrayType(type: IntermediateType): Boolean {
+    fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
     }
 

@@ -42,6 +42,7 @@
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by @DRSchlaubi)
 
 ### Changed
+- [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by [Griffio][griffio])
 - In-development snapshots are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
 - [Compiler] Simplified default generated queries using constructor references (#5814 by @jonapoul)
 
