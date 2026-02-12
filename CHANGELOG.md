@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- [Gradle Plugin] Add expandSelectStar flag to switch off Select wildcard expansions (#5813 by @griffio)
 - [PostgreSQL Dialect] Improved support for ALTER TABLE ALTER TYPE USING expressions (#6116 by @griffio)
 - [PostgreSQL Dialect] Add support for DROP COLUMN IF EXISTS (#6112 by @griffio)
 - [MySQL Dialect] Add support for Window Functions (#6086 by @griffio)
