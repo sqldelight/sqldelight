@@ -5372,7 +5372,7 @@
 
 
 <h1 id="getting-started-with-postgresql-on-jvm">Getting Started with PostgreSQL on JVM<a class="headerlink" href="#getting-started-with-postgresql-on-jvm" title="Permanent link">&para;</a></h1>
-<p>First apply the gradle plugin in your project and set your database's dialect accordingly.  </p>
+<p>First apply the gradle plugin in your project and set your database's dialect accordingly. </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Kotlin</label><label for="__tabbed_1_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -5387,7 +5387,7 @@
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">register</span><span class="p">(</span><span class="s">&quot;Database&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">packageName</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;com.example&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="n">dialect</span><span class="p">(</span><span class="s">&quot;app.cash.sqldelight:postgresql-dialect:2.3.0-SNAPSHOT&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
@@ -5407,7 +5407,7 @@
 
 <span class="n">sqldelight</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="n">databases</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">Database</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
+<span class="w">    </span><span class="n">register</span><span class="o">(</span><span class="s2">&quot;Database&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1">// This will be the name of the generated database class.</span>
 <span class="w">      </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.example&quot;</span>
 <span class="w">      </span><span class="n">dialect</span><span class="w"> </span><span class="s2">&quot;app.cash.sqldelight:postgresql-dialect:2.3.0-SNAPSHOT&quot;</span>
 <span class="w">    </span><span class="o">}</span>
