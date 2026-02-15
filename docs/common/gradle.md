@@ -261,7 +261,7 @@ Type: `Property<Boolean>`
 
 If set to true, SQLDelight will compile `SELECT *` statements expanding to the actual result columns.
 
-Defaults to `false`.
+Defaults to `true`.
 
 === "Kotlin"
     ```kotlin
