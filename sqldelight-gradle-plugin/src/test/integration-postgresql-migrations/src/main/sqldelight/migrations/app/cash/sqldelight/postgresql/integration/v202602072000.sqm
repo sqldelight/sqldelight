@@ -1,0 +1,5 @@
+ALTER TABLE SomeTable DROP COLUMN a;
+
+ALTER TABLE SomeTable DROP COLUMN IF EXISTS a;
+
+ALTER TABLE SomeTable DROP COLUMN IF EXISTS column_does_not_exist;

@@ -116,6 +116,7 @@
   ]
 }
 overrides ::= type_name
+  | column_name
   | column_constraint
   | string_literal
   | create_trigger_stmt
@@ -257,6 +258,15 @@ create_table_stmt ::= CREATE [ TEMP | TEMPORARY ] TABLE [ IF NOT EXISTS ] [ {dat
   stubClass = "com.alecstrong.sql.psi.core.psi.SchemaContributorStub"
   override = true
   pin = 6
+}
+
+column_name ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ColumnNameMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  ]
+  override = true
 }
 
 binary_like_operator ::= ( 'ILIKE' | LIKE | GLOB | REGEXP | MATCH ) {
@@ -443,7 +453,9 @@ alter_table_column_alias ::= id | string {
   ]
 }
 
-alter_table_drop_column ::= DROP [ COLUMN ] {column_name} {
+if_exists ::= IF EXISTS
+
+alter_table_drop_column ::= DROP [ COLUMN ] [ if_exists ] {column_name} {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterTableDropColumnMixin"
   pin = 1
 }
@@ -472,7 +484,7 @@ alter_table_add_column ::= ADD [ COLUMN ] [ if_not_exists
 }
 
 alter_table_alter_column ::= ALTER [COLUMN] {column_name}
-( [ SET data_clause ] type_clause {column_type} [USING {column_name}'::'{column_type}]
+( [ SET data_clause ] type_clause {column_type} [USING <<expr '-1'>>]
 | column_not_null_clause
 | column_default_clause | DROP identity_clause [ IF EXISTS ] | ADD {generated_clause}
 | ( SET GENERATED (ALWAYS | BY DEFAULT)  |  SET sequence_parameters | 'RESTART' [ WITH {signed_number} ] ) *
@@ -541,7 +553,21 @@ join_clause ::= {table_or_subquery} ( {join_operator} {table_or_subquery} [ {joi
   override = true
 }
 
-compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | COMMA ) {limiting_term} ] [ FOR UPDATE [ 'SKIP' 'LOCKED' ] ] {
+for_locking_clause ::= FOR for_locking_strength [ OF for_locking_reference ( COMMA for_locking_reference ) * ] [ 'NOWAIT' | 'SKIP' 'LOCKED' ]
+
+for_locking_strength ::= UPDATE | NO KEY UPDATE | 'SHARE' | KEY 'SHARE'
+
+for_locking_reference ::= [ {database_name} DOT ] for_locking_reference_name
+
+for_locking_reference_name ::= id | string {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ForLockingReferenceMixin"
+  implements = [
+    "com.alecstrong.sql.psi.core.psi.NamedElement";
+    "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  ]
+}
+
+compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} {select_stmt} ) * [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] [ LIMIT {limiting_term} ] [ ( OFFSET | COMMA ) {limiting_term} ] ( for_locking_clause ) * {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlCompoundSelectStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt"
   override = true

@@ -3,15 +3,19 @@
 ## Unreleased
 
 ### Added
+- [PostgreSQL Dialect] Improved support for ALTER TABLE ALTER TYPE USING expressions (#6116 by @griffio)
+- [PostgreSQL Dialect] Add support for DROP COLUMN IF EXISTS (#6112 by @griffio)
 - [MySQL Dialect] Add support for Window Functions (#6086 by @griffio)
 - [Gradle Plugin] Fix build failure when starting schema version is not 1 and verifyMigrations is true (#6017 by @neilgmiller)
 - [Gradle Plugin] Make `SqlDelightWorkerTask` more configurable, and update default configuration to support developing on Windows (#5215 by @MSDarwish2000)
 - [SQLite Dialect] Add support for synthesized columns in FTS5 virtual tables (#5986 by @watbe)
 - [PostgreSQL Dialect] Add support for Postgres row level security (#6087 by @shellderp)
+- [PostgreSQL Dialect] Extended FOR UPDATE to support OF table, NO KEY UPDATE, NO WAIT (#6104 by @shellderp)
 - [PostgreSQL Dialect] Support Postgis Point type and related functions (#5602 by @vanniktech)
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 
 ### Changed
+- [Compiler] Change compiler output type from java.lang.Void to kotlin.Nothing (#6099 by @griffio)
 - [Compiler] Allow for underscores in package names. Before underscores have been sanitized which resulted in unexpected behaviours (#6027 by @BierDav)
 - [Paging Extension] Switch to AndroidX Paging (#5910 by @jeffdgr8)
 

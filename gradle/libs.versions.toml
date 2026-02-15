@@ -67,7 +67,7 @@ intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref =
 
 sqlPsi = { module = "app.cash.sql-psi:core", version.ref = "sqlPsi" }
 sqlPsiEnvironment = { module = "app.cash.sql-psi:environment", version.ref = "sqlPsi" }
-robolectric = { module = "org.robolectric:robolectric", version = "4.16" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.16.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.12" }
 sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.51.1.0" }

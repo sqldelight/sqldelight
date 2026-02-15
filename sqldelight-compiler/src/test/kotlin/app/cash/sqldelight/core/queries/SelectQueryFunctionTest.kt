@@ -486,7 +486,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
+      |public fun <T : kotlin.Any> selectData(mapper: (expr: kotlin.Nothing?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
       |  mapper(
       |    null
       |  )

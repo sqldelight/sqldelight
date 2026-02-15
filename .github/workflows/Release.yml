@@ -76,6 +76,7 @@ jobs:
     if: github.repository == 'sqldelight/sqldelight'
     permissions:
       contents: read
+      id-token: write
     needs: publish_archives
 
     steps:
@@ -93,6 +94,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
+          registry-url: 'https://registry.npmjs.org'
       - name: Setup Gradle Java installations paths
         run: |
           cd ~/.gradle
@@ -100,9 +102,6 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
         with:
           cache-cleanup: always
-
-      - name: Setup .npmrc
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Get Version
         run: cat gradle.properties | grep --color=never VERSION_NAME >> $GITHUB_OUTPUT
@@ -144,4 +143,3 @@ jobs:
 
 env:
   GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

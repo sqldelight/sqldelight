@@ -9,3 +9,12 @@ ALTER TABLE test
 ALTER TABLE test
 -- error[col 14]: No column found with name to_drop
   DROP COLUMN to_drop;
+
+ALTER TABLE test
+  DROP COLUMN IF EXISTS to_drop;
+
+ALTER TABLE test
+  DROP COLUMN IF EXISTS id;
+
+ALTER TABLE test
+  DROP COLUMN IF EXISTS xyz;

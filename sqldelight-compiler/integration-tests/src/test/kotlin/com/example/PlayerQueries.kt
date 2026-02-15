@@ -8,9 +8,9 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import com.example.player.SelectStuff
-import java.lang.Void
 import kotlin.Any
 import kotlin.Long
+import kotlin.Nothing
 import kotlin.String
 import kotlin.collections.Collection
 
@@ -96,7 +96,7 @@ public class PlayerQueries(
 
   public fun playersForNumbers(number: Collection<Long>): Query<Player> = playersForNumbers(number, ::Player)
 
-  public fun <T : Any> selectNull(mapper: (expr: Void?) -> T): ExecutableQuery<T> = Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
+  public fun <T : Any> selectNull(mapper: (expr: Nothing?) -> T): ExecutableQuery<T> = Query(106_890_351, driver, "Player.sq", "selectNull", "SELECT NULL") { cursor ->
     mapper(
       null
     )

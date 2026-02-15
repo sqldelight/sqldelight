@@ -1,0 +1,4 @@
+CREATE TABLE SomeTable (
+   a INTEGER NOT NULL,
+   b TEXT NOT NULL
+);
