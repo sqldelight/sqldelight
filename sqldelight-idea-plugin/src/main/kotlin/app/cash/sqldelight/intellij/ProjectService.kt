@@ -18,8 +18,10 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.lang.MIGRATION_EXTENSION
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
+import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
@@ -82,7 +84,10 @@ class ProjectService(val project: Project) :
           VirtualFileManager.VFS_CHANGES,
           object : BulkFileListener {
             override fun after(events: MutableList<out VFileEvent>) {
-              events.filter { it.file?.fileType == SqlDelightFileType }.forEach { event ->
+              // Use path extension rather than VirtualFile.fileType to avoid triggering
+              // file type detection (FileTypeDetectionService.readFirstBytesFromFile), which
+              // performs blocking disk I/O on the EDT and freezes the IDE.
+              events.filter { it.path.endsWith(".$SQLDELIGHT_EXTENSION") }.forEach { event ->
                 if (event is VFileCreateEvent || event is VFileMoveEvent) {
                   PsiManager.getInstance(project).findViewProvider(event.file!!)
                     ?.contentsSynchronized()
@@ -193,7 +198,7 @@ class ProjectService(val project: Project) :
   private fun invalidateAllFiles() {
     val files = mutableListOf<VirtualFile>()
     ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
-      if (vFile.fileType != SqlDelightFileType && vFile.fileType != MigrationFileType) {
+      if (vFile.extension != SQLDELIGHT_EXTENSION && vFile.extension != MIGRATION_EXTENSION) {
         return@iterateContent true
       }
       files += vFile
