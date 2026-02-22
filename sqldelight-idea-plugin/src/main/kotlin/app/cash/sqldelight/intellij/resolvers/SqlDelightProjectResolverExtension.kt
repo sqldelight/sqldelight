@@ -9,9 +9,6 @@ import com.intellij.openapi.externalSystem.model.DataNode
 import com.intellij.openapi.externalSystem.model.Key
 import com.intellij.openapi.externalSystem.model.project.ModuleData
 import java.io.File
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Nested
 import org.gradle.tooling.model.idea.IdeaModule
 import org.jetbrains.plugins.gradle.service.project.AbstractProjectResolverExtension
 
@@ -19,7 +16,7 @@ val SQL_DELIGHT_MODEL_KEY = Key.create(SqlDelightPropertiesFile::class.java, 1)
 
 class SqlDelightProjectResolverExtension : AbstractProjectResolverExtension() {
 
-  // Grabs the model and sets the data during sync
+  // Grabs the model (proxy) and sets the data during sync
   override fun populateModuleExtraModels(gradleModule: IdeaModule, ideModule: DataNode<ModuleData>) {
     val sqlDelightModel = resolverCtx.getExtraProject(gradleModule, SqlDelightPropertiesFile::class.java)
     if (sqlDelightModel != null) { // Copy the proxy object, as it cannot be serialized, to an internal model
@@ -68,30 +65,28 @@ data class SqlDelightPropertiesFileModel(
 ) : SqlDelightPropertiesFile
 
 data class SqlDelightDatabasePropertiesModel(
-  @Input override val packageName: String,
-  @Nested override val compilationUnits: List<SqlDelightCompilationUnit>,
-  @Input override val className: String,
-  @Nested override val dependencies: List<SqlDelightDatabaseName>,
-  @Input override val deriveSchemaFromMigrations: Boolean = false,
-  @Input override val treatNullAsUnknownForEquality: Boolean = false,
-  @Input override val generateAsync: Boolean = false,
-  @Internal override val rootDirectory: File,
+  override val packageName: String,
+  override val compilationUnits: List<SqlDelightCompilationUnit>,
+  override val className: String,
+  override val dependencies: List<SqlDelightDatabaseName>,
+  override val deriveSchemaFromMigrations: Boolean = false,
+  override val treatNullAsUnknownForEquality: Boolean = false,
+  override val generateAsync: Boolean = false,
+  override val rootDirectory: File,
 ) : SqlDelightDatabaseProperties
 
 data class SqlDelightDatabaseNameModel(
-  @Input override val packageName: String,
-  @Input override val className: String,
+  override val packageName: String,
+  override val className: String,
 ) : SqlDelightDatabaseName
 
 data class SqlDelightCompilationUnitModel(
-  @Input override val name: String,
-  @Nested override val sourceFolders: Set<SqlDelightSourceFolder>,
-  // Output directory is already cached [SqlDelightTask.outputDirectory].
-  @Internal override val outputDirectoryFile: File,
+  override val name: String,
+  override val sourceFolders: Set<SqlDelightSourceFolder>,
+  override val outputDirectoryFile: File,
 ) : SqlDelightCompilationUnit
 
 data class SqlDelightSourceFolderModel(
-  // Sources are already cached [SqlDelightTask.getSources]
-  @Internal override val folder: File,
-  @Input override val dependency: Boolean = false,
+  override val folder: File,
+  override val dependency: Boolean = false,
 ) : SqlDelightSourceFolder
