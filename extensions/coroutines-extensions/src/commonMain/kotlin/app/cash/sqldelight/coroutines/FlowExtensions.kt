@@ -92,3 +92,16 @@ fun <T : Any> Flow<Query<T>>.mapToList(
     it.awaitAsList()
   }
 }
+
+/**
+ * Returns the result rows as a flow.
+ * Note: This emits an item for every row returned.
+ * It provides a streaming API to get all rows.
+ */
+fun <T : Any> Query<T>.executeAsFlow(): Flow<T> = execute { sqlCursor ->
+    flow {
+        while (sqlCursor.next()) {
+            emit(this@executeAsFlow.mapper(sqlCursor))
+        }
+    }
+}.value
