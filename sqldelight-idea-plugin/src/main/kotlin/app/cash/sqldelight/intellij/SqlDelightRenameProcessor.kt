@@ -1,6 +1,7 @@
 package app.cash.sqldelight.intellij
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.StmtIdentifier
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
@@ -15,7 +16,7 @@ import com.intellij.psi.search.SearchScope
 import com.intellij.refactoring.listeners.RefactoringElementListener
 import com.intellij.refactoring.rename.RenamePsiElementProcessor
 import com.intellij.usageView.UsageInfo
-import org.jetbrains.kotlin.idea.util.module
+import org.jetbrains.kotlin.idea.base.util.module
 import org.jetbrains.kotlin.psi.KtFile
 
 class SqlDelightRenameProcessor : RenamePsiElementProcessor() {
