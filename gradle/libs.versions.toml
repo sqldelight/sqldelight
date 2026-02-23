@@ -89,7 +89,7 @@ r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
 testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
 testContainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "testContainers" }
 testContainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "testContainers" }
-postgis-geometry = { module = "net.postgis:postgis-geometry", version = "2024.1.0" }
+postgis-geometry = { module = "net.postgis:postgis-geometry", version = "2025.1.1" }
 
 # dummy to get renovate updates.
 # The version is used in rootProject build.gradle with spotless.
