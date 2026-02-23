@@ -70,7 +70,7 @@ sqlPsiEnvironment = { module = "app.cash.sql-psi:environment", version.ref = "sq
 robolectric = { module = "org.robolectric:robolectric", version = "4.16.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.12" }
-sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.51.1.0" }
+sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version = "3.51.2.0" }
 postgresJdbc = { module = "org.postgresql:postgresql", version = "42.7.10" }
 mysqlJdbc = { module = "mysql:mysql-connector-java", version = "8.0.33" }
 
