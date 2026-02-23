@@ -1,15 +1,16 @@
 package app.cash.sqldelight.gradle.kotlin
 
 import app.cash.sqldelight.gradle.SqlDelightDatabase
+import app.cash.sqldelight.gradle.SqlDelightTask
 import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
-import java.io.File
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
-import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.provider.Provider
+import org.gradle.api.file.Directory
+import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
@@ -52,8 +53,10 @@ internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
     Source(
       type = KotlinPlatformType.jvm,
       name = "main",
-      sourceSets = listOf("main"),
-      sourceDirectorySet = sourceSets.getByName("main").kotlin,
+      sourceDirectories = listOf(project.sqldelightDirectory("main")),
+      registerSourceGeneration = { task ->
+        sourceSets.getByName("main").kotlin.srcDir(task)
+      },
     ),
   )
 }
@@ -63,8 +66,10 @@ private fun KotlinJsProjectExtension.sources(): List<Source> {
     Source(
       type = KotlinPlatformType.js,
       name = "main",
-      sourceDirectorySet = sourceSets.getByName("main").kotlin,
-      sourceSets = listOf("main"),
+      sourceDirectories = listOf(project.sqldelightDirectory("main")),
+      registerSourceGeneration = { task ->
+        sourceSets.getByName("main").kotlin.srcDir(task)
+      },
     ),
   )
 }
@@ -79,8 +84,10 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
       nativePresetName = "common",
       name = "commonMain",
       variantName = null,
-      sourceDirectorySet = sourceSets.getByName("commonMain").kotlin,
-      sourceSets = listOf("commonMain"),
+      sourceDirectories = listOf(project.sqldelightDirectory("commonMain")),
+      registerSourceGeneration = { task ->
+        sourceSets.getByName("commonMain").kotlin.srcDir(task)
+      },
     ),
   )
 }
@@ -98,23 +105,26 @@ private fun CommonExtension.sources(project: Project): List<Source> {
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
       variantName = variant.name,
-      sourceDirectorySet = kotlinSourceSets.getByName(variant.name).kotlin,
-      sourceSets = variant.sourceSets.map { it.name },
-      registerGeneratedDirectory = { outputDirectoryProvider ->
-        variant.addJavaSourceFoldersToModel(outputDirectoryProvider.get())
+      sourceDirectories = variant.sourceSets.map { project.sqldelightDirectory(it.name) },
+      registerSourceGeneration = { task ->
+        kotlinSourceSets.getByName(variant.name).kotlin.srcDir(task)
+        variant.addJavaSourceFoldersToModel(task.flatMap { it.outputDirectory.asFile }.get())
       },
     )
   }
 }
 
+private fun Project.sqldelightDirectory(sourceName: String): Directory {
+  return project.layout.projectDirectory.dir("src/$sourceName/sqldelight")
+}
+
 internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
-  val sourceDirectorySet: SourceDirectorySet,
   val name: String,
   val variantName: String? = null,
-  val sourceSets: List<String>,
-  val registerGeneratedDirectory: ((Provider<File>) -> Unit)? = null,
+  val sourceDirectories: List<Directory>,
+  val registerSourceGeneration: (TaskProvider<SqlDelightTask>) -> Unit,
 ) {
   fun closestMatch(sources: Collection<Source>): Source? {
     var matches = sources.filter {

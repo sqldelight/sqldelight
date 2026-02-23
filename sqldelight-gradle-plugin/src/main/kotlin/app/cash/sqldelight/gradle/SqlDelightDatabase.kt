@@ -193,9 +193,9 @@ abstract class SqlDelightDatabase @Inject constructor(
       }
 
       if (this.isEmpty()) {
-        for (sourceSetName in source.sourceSets) {
+        for (directory in source.sourceDirectories) {
           val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(
-            folder = File(project.projectDir, "src/$sourceSetName/sqldelight"),
+            folder = directory.asFile,
             dependency = false,
           )
           add(sqlDelightSourceFolder)
@@ -238,14 +238,8 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 
-      val outputDirectoryProvider: Provider<File> = task.flatMap { it.outputDirectory.asFile }
-
-      // Add the source dependency on the generated code.
-      // Use a Provider generated from the task to carry task dependencies
-      // See https://github.com/cashapp/sqldelight/issues/2119
-      source.sourceDirectorySet.srcDir(task)
-      // And register the output directory to the IDE if needed
-      source.registerGeneratedDirectory?.invoke(outputDirectoryProvider)
+      // Register the generated output of the task as needed
+      source.registerSourceGeneration(task)
 
       project.tasks.named("generateSqlDelightInterface").configure {
         it.dependsOn(task)
