@@ -190,12 +190,12 @@ interface SuspendingTransacter : TransacterBase {
    * An interface that can be implemented by a [SqlDriver] to provide a specific coroutine context
    * for transactions.
    */
-  interface ContextProvider {
+  interface TransactionDispatcher {
     /**
      * Used by [SuspendingTransacter] to wrap calls to [transaction] and [transactionWithResult],
      * providing an opportunity to modify the coroutine context.
      */
-    suspend fun <R> withTransactionContext(transaction: suspend () -> R): R
+    suspend fun <R> dispatch(transaction: suspend () -> R): R
   }
 }
 
@@ -402,7 +402,7 @@ abstract class SuspendingTransacterImpl(driver: SqlDriver) :
     bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,
   ): R {
     return when (driver) {
-      is SuspendingTransacter.ContextProvider -> driver.withTransactionContext {
+      is SuspendingTransacter.TransactionDispatcher -> driver.dispatch {
         transactionWithWrapper(noEnclosing, bodyWithReturn)
       }
 
@@ -415,7 +415,7 @@ abstract class SuspendingTransacterImpl(driver: SqlDriver) :
     body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   ) {
     return when (driver) {
-      is SuspendingTransacter.ContextProvider -> driver.withTransactionContext {
+      is SuspendingTransacter.TransactionDispatcher -> driver.dispatch {
         transactionWithWrapper(noEnclosing, body)
       }
 
