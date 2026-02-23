@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
 import app.cash.sqldelight.toolchain.BugsnagKey
 
@@ -32,7 +33,7 @@ intellijPlatform {
     }
     if (!project.version.endsWith("SNAPSHOT")) {
       tasks.named('patchPluginXml') {
-        changeNotes = provider { changelog.get(project.version).toHTML() }
+        changeNotes = provider { changelog.renderItem(changelog.get(project.version), Changelog.OutputType.HTML) }
       }
     } else {
       tasks.named('patchPluginXml') {
