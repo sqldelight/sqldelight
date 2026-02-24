@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
@@ -90,12 +91,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       add(project.dependencies.create("app.cash.sqldelight:runtime:$VERSION"))
       if (needsAsyncRuntime) add(project.dependencies.create("app.cash.sqldelight:async-extensions:$VERSION"))
     }
-
-    // Add the runtime dependency.
-    val sourceSetName = if (isMultiplatform) "commonMain" else "main"
-    val sourceSetApiConfigName =
-      project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName(sourceSetName).apiConfigurationName
-    project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(runtimeDependencies)
+    addRuntimeDependencies(project, runtimeDependencies)
 
     if (extension.linkSqlite.get()) {
       project.linkSqlite()
@@ -126,6 +122,31 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       }
 
       registry.register(PropertiesModelBuilder(databases))
+    }
+  }
+
+  private fun addRuntimeDependencies(project: Project, dependencies: List<Dependency>) {
+    project.pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+      val sourceSetApiConfigName = project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName("commonMain").apiConfigurationName
+      project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(dependencies)
+    }
+
+    // This plugin technically still exists...
+    project.pluginManager.withPlugin("org.jetbrains.kotlin.js") {
+      val sourceSetApiConfigName = project.extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets.getByName("main").apiConfigurationName
+      project.configurations.getByName(sourceSetApiConfigName).dependencies.addAll(dependencies)
+    }
+
+    project.pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+      dependencies.forEach { project.dependencies.add("implementation", it) }
+    }
+
+    project.pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+      dependencies.forEach { project.dependencies.add("implementation", it) }
+    }
+
+    project.pluginManager.withPlugin("com.android.base") {
+      dependencies.forEach { project.dependencies.add("implementation", it) }
     }
   }
 
