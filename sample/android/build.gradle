@@ -12,7 +12,7 @@ android {
   namespace = "com.example.sqldelight.hockey"
 
   defaultConfig {
-    minSdk 21
+    minSdk libs.versions.minSdk.get() as int
     targetSdk libs.versions.compileSdk.get() as int
 
     applicationId 'com.example.sqldelight.hockey'

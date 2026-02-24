@@ -11,7 +11,7 @@ paging = "3.4.0-beta01"
 ktlint = "1.7.1"
 agp = "9.0.0-beta04"
 compileSdk = "35"
-minSdk = "21"
+minSdk = "23"
 sqlPsi = "0.7.2"
 testContainers = "1.21.4"
 
