@@ -159,7 +159,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     override fun buildAll(modelName: String, project: Project): Any {
       return SqlDelightPropertiesFileImpl(
-        databases = databases.map { it.getProperties() },
+        databases = databases.map { it.getProperties().get() },
         currentVersion = VERSION,
         minimumSupportedVersion = MINIMUM_SUPPORTED_VERSION,
         dialectJars = databases.first().configuration.files,

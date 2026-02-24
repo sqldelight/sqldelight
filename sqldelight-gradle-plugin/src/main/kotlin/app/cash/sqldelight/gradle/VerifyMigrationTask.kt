@@ -42,9 +42,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
