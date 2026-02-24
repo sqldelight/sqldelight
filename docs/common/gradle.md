@@ -112,7 +112,7 @@ Type: `DirectoryProperty`
 The directory where `.db` schema files should be stored, relative to the project root.
 These files are used to verify that migrations yield a database with the latest schema.
 
-Defaults to `null`.  
+Defaults to `null`.
 If `null`, the migration verification tasks will not be created.
 
 === "Kotlin"
@@ -148,10 +148,10 @@ Optionally specify schema dependencies on other gradle projects [(see below)](#s
 Type: `String` or `Provider<MinimalExternalModuleDependency>`
 
 The SQL dialect you would like to target. Dialects are selected using a gradle dependency.
-These dependencies can be specified as `app.cash.sqldelight:{dialect module}:{{ versions.sqldelight }}`. 
+These dependencies can be specified as `app.cash.sqldelight:{dialect module}:{{ versions.sqldelight }}`.
 See below for available dialects.
 
-For Android projects, the SQLite version is automatically selected based on your `minSdk`. 
+For Android projects, the SQLite version is automatically selected based on your `minSdk`.
 Otherwise defaults to SQLite 3.18.
 
 Available dialects:
@@ -253,4 +253,24 @@ Defaults to `false`.
     deriveSchemaFromMigrations = true
     ```
 
+----
+
+### `expandSelectStar`
+
+Type: `Property<Boolean>`
+
+If set to true, SQLDelight will compile `SELECT *` statements expanding to the actual result columns.
+
+Defaults to `true`.
+
+=== "Kotlin"
+    ```kotlin
+    expandSelectStar.set(true)
+    ```
+=== "Groovy"
+    ```groovy
+    expandSelectStar = true
+    ```
+
 {% include 'common/gradle-dependencies.md' %}
+

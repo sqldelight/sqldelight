@@ -154,7 +154,8 @@ inline fun <reified T : PsiElement> PsiElement.nextSiblingOfType(): T {
 }
 
 private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
-  return if (this is SqlCreateViewStmt) {
+  val starExpansionEnabled = this.sqFile().expandSelectStar
+  return if (starExpansionEnabled && this is SqlCreateViewStmt) {
     emptyList()
   } else if (this is ColumnTypeMixin && javaTypeName != null) {
     listOf(
@@ -207,31 +208,35 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
         ),
       )
     }
-  } else if (this is SqlResultColumn && this.expr == null) {
-    listOf(
-      this.range to this@rangesToReplace.queryExposed().flatMap { query ->
-        query.columns.map { column ->
-          val columnElement = column.element as? PsiNamedElement ?: return@rangesToReplace emptyList()
-
-          buildString {
-            if (query.table != null) {
-              append("${query.table!!.node.text}.")
-            } else {
-              val definition = columnElement.reference?.resolve()
-              if (definition?.parent is SqlCreateViewStmt) {
-                append("${(definition.parent as SqlCreateViewStmt).viewName.node.text}.")
-              } else if (definition?.parent?.parent is SqlCreateTableStmt) {
-                append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
-              }
-            }
-            append(columnElement.node.text)
-          }
-        }
-      }.joinToString(separator = ", "),
-    )
+  } else if (starExpansionEnabled && this is SqlResultColumn && this.expr == null) {
+    selectStarExpansions(this)
   } else {
     children.flatMap { it.rangesToReplace() }
   }
+}
+
+private fun PsiElement.selectStarExpansions(resultColumns: SqlResultColumn): List<Pair<IntRange, String>> {
+  return listOf(
+    this.range to resultColumns.queryExposed().flatMap { query ->
+      query.columns.map { column ->
+        val columnElement = column.element as? PsiNamedElement ?: return@selectStarExpansions emptyList()
+
+        buildString {
+          if (query.table != null) {
+            append("${query.table!!.node.text}.")
+          } else {
+            val definition = columnElement.reference?.resolve()
+            if (definition?.parent is SqlCreateViewStmt) {
+              append("${(definition.parent as SqlCreateViewStmt).viewName.node.text}.")
+            } else if (definition?.parent?.parent is SqlCreateTableStmt) {
+              append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
+            }
+          }
+          append(columnElement.node.text)
+        }
+      }
+    }.joinToString(separator = ", "),
+  )
 }
 
 private operator fun IntRange.minus(amount: Int): IntRange {

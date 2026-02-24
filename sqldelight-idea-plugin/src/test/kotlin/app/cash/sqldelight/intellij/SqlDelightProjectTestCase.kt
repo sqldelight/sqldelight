@@ -74,6 +74,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       deriveSchemaFromMigrations = false,
       treatNullAsUnknownForEquality = false,
       generateAsync = false,
+      expandSelectStar = true,
     )
   }
 
@@ -86,6 +87,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     override val treatNullAsUnknownForEquality: Boolean,
     override val rootDirectory: File,
     override val generateAsync: Boolean,
+    override val expandSelectStar: Boolean,
   ) : SqlDelightDatabaseProperties
 
   private data class SqlDelightSourceFolderImpl(

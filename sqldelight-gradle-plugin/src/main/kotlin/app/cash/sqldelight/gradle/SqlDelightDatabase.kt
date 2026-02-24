@@ -39,6 +39,8 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   val configurationName: String = "${name}DialectClasspath"
 
+  val expandSelectStar: Property<Boolean> = project.objects.property(Boolean::class.java).convention(true)
+
   internal val configuration = project.configurations.create(configurationName).apply {
     isCanBeConsumed = false
     isVisible = false
@@ -179,6 +181,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
         treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
         generateAsync = generateAsync.get(),
+        expandSelectStar = expandSelectStar.get(),
       )
     } finally {
       recursionGuard = false

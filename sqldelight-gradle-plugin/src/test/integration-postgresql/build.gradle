@@ -10,6 +10,7 @@ sqldelight {
     MyDatabase {
       packageName = "app.cash.sqldelight.postgresql.integration"
       dialect("app.cash.sqldelight:postgresql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
+      expandSelectStar = true
     }
   }
 }

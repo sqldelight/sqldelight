@@ -58,6 +58,9 @@ abstract class SqlDelightFile(
     }
   }
 
+  val expandSelectStar: Boolean
+    get() = SqlDelightProjectService.getInstance(project).expandSelectStar
+
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile
     return super.getVirtualFile()
