@@ -4714,7 +4714,12 @@
    </div>
    <div class="toc--part" id="runtime-nav-submenu-0-7" pageid="runtime::app.cash.sqldelight/SuspendingTransacter///PointingToDeclaration//673331665" data-nesting-level="2">
     <div class="toc--row">
-     <a href="../runtime/app.cash.sqldelight/-suspending-transacter/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Suspending</span><wbr><span><span>Transacter</span></span></span></span></a>
+     <button class="toc--button" aria-expanded="false" aria-label="SuspendingTransacter" onclick="window.handleTocButtonClick(event, 'runtime-nav-submenu-0-7')"></button><a href="../runtime/app.cash.sqldelight/-suspending-transacter/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Suspending</span><wbr><span><span>Transacter</span></span></span></span></a><a class="toc--skip-link" href="../runtime/">Skip to content</a>
+    </div>
+    <div class="toc--part" id="runtime-nav-submenu-0-7-0" pageid="runtime::app.cash.sqldelight/SuspendingTransacter.TransactionDispatcher///PointingToDeclaration//673331665" data-nesting-level="3">
+     <div class="toc--row">
+      <a href="../runtime/app.cash.sqldelight/-suspending-transacter/-transaction-dispatcher/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Transaction</span><wbr><span><span>Dispatcher</span></span></span></span></a>
+     </div>
     </div>
    </div>
    <div class="toc--part" id="runtime-nav-submenu-0-8" pageid="runtime::app.cash.sqldelight/SuspendingTransacterImpl///PointingToDeclaration//673331665" data-nesting-level="2">
