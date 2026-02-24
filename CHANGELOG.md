@@ -12,6 +12,7 @@
 - [PostgreSQL Dialect] Add support for Postgres row level security (#6087 by @shellderp)
 - [PostgreSQL Dialect] Extended FOR UPDATE to support OF table, NO KEY UPDATE, NO WAIT (#6104 by @shellderp)
 - [PostgreSQL Dialect] Support Postgis Point type and related functions (#5602 by @vanniktech)
+- [Runtime] Added `SuspendingTransacter.TransactionDispatcher` that provides a mechanism for controlling the `CoroutineContext` of the transaction (#5967 by @eygraber)
 
 ### Changed
 - [Compiler] Change compiler output type from java.lang.Void to kotlin.Nothing (#6099 by @griffio)

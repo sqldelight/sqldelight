@@ -55,6 +55,10 @@ public final class app/cash/sqldelight/SuspendingTransacter$DefaultImpls {
 	public static synthetic fun transactionWithResult$default (Lapp/cash/sqldelight/SuspendingTransacter;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
+public abstract interface class app/cash/sqldelight/SuspendingTransacter$TransactionDispatcher {
+	public abstract fun dispatch (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public abstract class app/cash/sqldelight/SuspendingTransacterImpl : app/cash/sqldelight/BaseTransacterImpl, app/cash/sqldelight/SuspendingTransacter {
 	public fun <init> (Lapp/cash/sqldelight/db/SqlDriver;)V
 	public fun transaction (ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
