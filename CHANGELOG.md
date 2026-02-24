@@ -17,6 +17,7 @@
 - [Compiler] Change compiler output type from java.lang.Void to kotlin.Nothing (#6099 by @griffio)
 - [Compiler] Allow for underscores in package names. Before underscores have been sanitized which resulted in unexpected behaviours (#6027 by @BierDav)
 - [Paging Extension] Switch to AndroidX Paging (#5910 by @jeffdgr8)
+- [Android Driver] Increase Android minSdk to 23. (#6141)
 
 ### Fixed
 - [IntelliJ Plugin] Fix IDE freeze caused by blocking file type detection on the EDT during VFS refresh events.
