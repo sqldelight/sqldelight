@@ -2,6 +2,7 @@ package app.cash.sqldelight.gradle.kotlin
 
 import app.cash.sqldelight.gradle.SqlDelightDatabase
 import app.cash.sqldelight.gradle.SqlDelightTask
+import com.android.build.api.AndroidPluginVersion
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.AppExtension
@@ -12,13 +13,15 @@ import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
+import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 /**
- * @return A list of source roots and their dependencies.
+ * Invokes the [action] callback for every source root detected for the project.
  *
  * Examples:
  *   Multiplatform Environment. Ios target labeled "ios".
@@ -32,34 +35,37 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
  *
  *    Multiplatform environment with android target (oh boy)
  */
-internal fun SqlDelightDatabase.sources(project: Project): List<Source> {
+internal fun SqlDelightDatabase.configureOnSources(action: (Source) -> Unit) {
   // Multiplatform project.
-  project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let {
-    return it.sources()
+  project.extensions.findByType(KotlinMultiplatformExtension::class.java)?.let { extension ->
+    extension.sources().forEach { action(it) }
+    return
   }
 
   // kotlin.js only projects
-  project.extensions.findByType(KotlinJsProjectExtension::class.java)?.let {
-    return it.sources()
+  project.extensions.findByType(KotlinJsProjectExtension::class.java)?.let { extension ->
+    extension.sources().forEach { action(it) }
+    return
   }
 
-  // Android project.
-  project.extensions.findByName("android")?.let {
-    return (it as CommonExtension).sources(project)
+  project.extensions.findByName("androidComponents")?.let {
+    (it as AndroidComponentsExtension<*, *, *>).onSources(action)
+    return
   }
 
   // Kotlin project.
-  val sourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
-  return listOf(
-    Source(
+  project.extensions.findByType(KotlinProjectExtension::class.java)?.let { extension ->
+    val sourceSets = extension.sourceSets
+    val kotlinSource = Source(
       type = KotlinPlatformType.jvm,
       name = "main",
       sourceDirectories = project.provider { listOf(project.sqldelightDirectory("main")) },
       registerSourceGeneration = { task ->
         sourceSets.getByName("main").kotlin.srcDir(task)
       },
-    ),
-  )
+    )
+    action(kotlinSource)
+  }
 }
 
 private fun KotlinJsProjectExtension.sources(): List<Source> {
@@ -93,25 +99,28 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   )
 }
 
-private fun CommonExtension.sources(project: Project): List<Source> {
-  val variants: DomainObjectSet<out BaseVariant> = when (this) {
-    is AppExtension -> applicationVariants
-    is LibraryExtension -> libraryVariants
-    else -> throw IllegalStateException("Unknown Android plugin $this")
-  }
+private fun AndroidComponentsExtension<*, *, *>.onSources(action: (Source) -> Unit) {
+  registerSourceType("sqldelight")
 
-  val kotlinSourceSets = (project.extensions.getByName("kotlin") as KotlinProjectExtension).sourceSets
-  return variants.map { variant ->
-    Source(
+  onVariants { variant ->
+    val source = Source(
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
       variantName = variant.name,
-      sourceDirectories = project.provider { variant.sourceSets.map { project.sqldelightDirectory(it.name) } },
+      sourceDirectories = variant.sources.getByName("sqldelight").all,
       registerSourceGeneration = { task ->
-        kotlinSourceSets.getByName(variant.name).kotlin.srcDir(task)
-        variant.addJavaSourceFoldersToModel(task.flatMap { it.outputDirectory.asFile }.get())
+        if (pluginVersion < AndroidPluginVersion(9, 0)) {
+          // AGP versions before 9.0 wouldn't pick up the task dependency correctly when using the kotlin sources here,
+          // so we use the java ones instead
+          // https://issuetracker.google.com/issues/446220448
+          variant.sources.java?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+        } else {
+          variant.sources.kotlin?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+        }
       },
     )
+
+    action(source)
   }
 }
 
@@ -124,10 +133,19 @@ internal data class Source(
   val nativePresetName: String? = null,
   val name: String,
   val variantName: String? = null,
-  val sourceDirectories: Provider<List<Directory>>,
+  val sourceDirectories: Provider<out Collection<Directory>>,
   val registerSourceGeneration: (TaskProvider<SqlDelightTask>) -> Unit,
 ) {
-  fun closestMatch(sources: Collection<Source>): Source? {
+  internal data class Key(
+    val type: KotlinPlatformType,
+    val name: String,
+    val variantName: String?,
+    val nativePresetName: String?,
+  )
+
+  val key get() = Key(type, name, variantName, nativePresetName)
+
+  fun closestMatch(sources: Collection<Key>): Key? {
     var matches = sources.filter {
       type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
     }
