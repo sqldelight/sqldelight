@@ -224,7 +224,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="compilation-unit.html">compilationUnit</a><span class="token operator">: </span><a href="../../app.cash.sqldelight.gradle/-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="compilation-unit.html">compilationUnit</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="../../app.cash.sqldelight.gradle/-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -689,7 +689,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="properties.html">properties</a><span class="token operator">: </span><a href="../../app.cash.sqldelight.gradle/-sql-delight-database-properties-impl/index.html">SqlDelightDatabasePropertiesImpl</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="properties.html">properties</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="../../app.cash.sqldelight.gradle/-sql-delight-database-properties-impl/index.html">SqlDelightDatabasePropertiesImpl</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
