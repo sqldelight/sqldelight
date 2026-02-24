@@ -21,6 +21,7 @@ import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.android.packageName
 import app.cash.sqldelight.gradle.android.sqliteVersion
 import app.cash.sqldelight.gradle.kotlin.linkSqlite
+import com.android.build.api.variant.AndroidComponentsExtension
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import org.gradle.api.Plugin
@@ -52,7 +53,7 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     project.plugins.withId("com.android.base") {
       android.set(true)
-      project.afterEvaluate {
+      project.extensions.getByType(AndroidComponentsExtension::class.java).finalizeDsl {
         project.setupSqlDelightTasks(afterAndroid = true, extension)
       }
     }
@@ -73,6 +74,9 @@ abstract class SqlDelightPlugin : Plugin<Project> {
 
     project.afterEvaluate {
       project.setupSqlDelightTasks(afterAndroid = false, extension)
+
+      // Always do this last so that the lazy properties are definitely populated
+      registry.register(PropertiesModelBuilder(extension.databases))
     }
   }
 
@@ -120,8 +124,6 @@ abstract class SqlDelightPlugin : Plugin<Project> {
         }
         database.registerTasks()
       }
-
-      registry.register(PropertiesModelBuilder(databases))
     }
   }
 
