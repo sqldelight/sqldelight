@@ -71,7 +71,7 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
       countQuery(),
       transacter,
       EmptyCoroutineContext,
-      ::query,
+      queryProvider = ::query,
     )
   }
 
@@ -383,7 +383,7 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
       countQuery(),
       transacter,
       EmptyCoroutineContext,
-      ::query,
+      queryProvider = ::query,
     )
     val result2 = pagingSource2.refresh(key = refreshKey) as PagingSource.LoadResult.Page<Int, TestItem>
 
@@ -438,7 +438,7 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
       countQuery(),
       transacter,
       EmptyCoroutineContext,
-      ::query,
+      queryProvider = ::query,
     )
     // assume user was viewing first few items with anchorPosition = 0 and refresh key
     // clips to 0
@@ -483,7 +483,7 @@ abstract class BaseOffsetQueryPagingSourceTest : DbTest {
       countQuery(),
       transacter,
       EmptyCoroutineContext,
-      ::query,
+      queryProvider = ::query,
     )
     // assume user was viewing first few items with anchorPosition = 0 and refresh key
     // clips to 0
