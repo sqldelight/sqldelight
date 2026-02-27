@@ -105,13 +105,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1700929631%2FProperties%2F-593535378"><span>ARRAY_</span><wbr><span>FACTORY</span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#1700929631%2FProperties%2F-593535378"><span>ARRAY_</span><wbr><span>FACTORY</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1700929631%2FProperties%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1700929631%2FProperties%2F-593535378">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-overrides/index.html#1700929631%2FProperties%2F-593535378">ARRAY_FACTORY</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.util/ArrayFactory///PointingToDeclaration/">ArrayFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -120,13 +120,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#702897020%2FProperties%2F-593535378"><span>EMPTY_</span><wbr><span>ARRAY</span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#702897020%2FProperties%2F-593535378"><span>EMPTY_</span><wbr><span>ARRAY</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702897020%2FProperties%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#702897020%2FProperties%2F-593535378">EMPTY_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-overrides/index.html#702897020%2FProperties%2F-593535378">EMPTY_ARRAY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -135,13 +135,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#904140966%2FProperties%2F-593535378"><span>ICON_</span><wbr><span>FLAG_</span><wbr><span>READ_</span><wbr><span>STATUS</span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#904140966%2FProperties%2F-593535378"><span>ICON_</span><wbr><span>FLAG_</span><wbr><span>READ_</span><wbr><span>STATUS</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="904140966%2FProperties%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#904140966%2FProperties%2F-593535378">ICON_FLAG_READ_STATUS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-overrides/index.html#904140966%2FProperties%2F-593535378">ICON_FLAG_READ_STATUS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -150,13 +150,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1410006311%2FProperties%2F-593535378"><span>ICON_</span><wbr><span>FLAG_</span><wbr><span>VISIBILITY</span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#1410006311%2FProperties%2F-593535378"><span>ICON_</span><wbr><span>FLAG_</span><wbr><span>VISIBILITY</span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1410006311%2FProperties%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1410006311%2FProperties%2F-593535378">ICON_FLAG_VISIBILITY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="../-sqlite-overrides/index.html#1410006311%2FProperties%2F-593535378">ICON_FLAG_VISIBILITY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -664,13 +664,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1732016110%2FFunctions%2F-593535378"><span>get</span><wbr><span>Own</span><wbr><span><span>Declarations</span></span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#1732016110%2FFunctions%2F-593535378"><span>get</span><wbr><span>Own</span><wbr><span><span>Declarations</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1732016110%2FFunctions%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1732016110%2FFunctions%2F-593535378"><span class="token function">getOwnDeclarations</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.model.psi/PsiSymbolDeclaration///PointingToDeclaration/">PsiSymbolDeclaration</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../-sqlite-overrides/index.html#1732016110%2FFunctions%2F-593535378"><span class="token function">getOwnDeclarations</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.model.psi/PsiSymbolDeclaration///PointingToDeclaration/">PsiSymbolDeclaration</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -679,13 +679,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1957705983%2FFunctions%2F-593535378"><span>get</span><wbr><span>Own</span><wbr><span><span>References</span></span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#1957705983%2FFunctions%2F-593535378"><span>get</span><wbr><span>Own</span><wbr><span><span>References</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1957705983%2FFunctions%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#1957705983%2FFunctions%2F-593535378"><span class="token function">getOwnReferences</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.model.psi/PsiSymbolReference///PointingToDeclaration/">PsiSymbolReference</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../-sqlite-overrides/index.html#1957705983%2FFunctions%2F-593535378"><span class="token function">getOwnReferences</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.model.psi/PsiSymbolReference///PointingToDeclaration/">PsiSymbolReference</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -889,13 +889,13 @@
           <div class="table-row table-row_content" data-filterable-current=":dialects:sqlite-3-33/main" data-filterable-set=":dialects:sqlite-3-33/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#-1333419410%2FFunctions%2F-593535378"><span>get</span><wbr><span>Text</span><wbr><span>Range</span><wbr><span>In</span><wbr><span><span>Parent</span></span></a></div>
+                  <div><a href="../-sqlite-overrides/index.html#-1333419410%2FFunctions%2F-593535378"><span>get</span><wbr><span>Text</span><wbr><span>Range</span><wbr><span>In</span><wbr><span><span>Parent</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1333419410%2FFunctions%2F-593535378"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.dialects.sqlite_3_33.grammar.psi.impl/-sqlite-overrides-impl/index.html#-1333419410%2FFunctions%2F-593535378"><span class="token function">getTextRangeInParent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.openapi.util/TextRange///PointingToDeclaration/">TextRange</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:sqlite-3-33/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../-sqlite-overrides/index.html#-1333419410%2FFunctions%2F-593535378"><span class="token function">getTextRangeInParent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.openapi.util/TextRange///PointingToDeclaration/">TextRange</span></div></div></div>
                 </div>
               </div>
             </div>
