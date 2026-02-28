@@ -285,6 +285,25 @@ fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>): NativeSqliteDriv
 )
 
 /**
+ * Helper function to create an in-memory driver. In-memory drivers have a single connection, so
+ * concurrent access will be block
+ */
+fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>, extendedConfig: Extended = Extended()): NativeSqliteDriver = NativeSqliteDriver(
+  DatabaseConfiguration(
+    name = null,
+    inMemory = true,
+    version = if (schema.version > Int.MAX_VALUE) error("Schema version is larger than Int.MAX_VALUE: ${schema.version}.") else schema.version.toInt(),
+    create = { connection ->
+      wrapConnection(connection) { schema.create(it) }
+    },
+    upgrade = { connection, oldVersion, newVersion ->
+      wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(), newVersion.toLong()) }
+    },
+    extendedConfig = extendedConfig
+  )
+)
+
+/**
  * Sqliter's DatabaseConfiguration takes lambda arguments for it's create and upgrade operations,
  * which each take a DatabaseConnection argument. Use wrapConnection to have SqlDelight access this
  * passed connection and avoid the pooling that the full SqlDriver instance performs.
