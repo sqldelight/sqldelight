@@ -129,9 +129,8 @@ jobs:
       matrix:
         # https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
         idea:
-          - '2023.2.5'   # IC / Iguana
-          - '2024.1'   # IC
-          # - '2024.2'   # IC - This is failing trying to get the android plugin dependency for unknown reasons.
+          - '2025.1'   # AS
+          - '2025.2'   # IC
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
