@@ -563,7 +563,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= geometry_setsrid_function_stmt | geometry_point_function_stmt | json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= geometry_setsrid_function_stmt | geometry_point_function_stmt | json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | array_value_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
@@ -653,7 +653,7 @@ regex_match_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr}
 
 double_colon_cast_operator ::= '::' type_name
 
-double_colon_cast_operator_expression ::= ( {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
+double_colon_cast_operator_expression ::= ( array_value_expression | {bind_expr} | {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) double_colon_cast_operator [ double_colon_cast_operator ] * {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin"
   pin = 2
 }
@@ -665,6 +665,10 @@ at_time_zone_operator ::= 'AT' 'TIME' 'ZONE' <<expr '-1'>> {
 at_time_zone_operator_expression ::= ( {literal_expr} | {cast_expr} | {function_expr} | {column_expr} ) at_time_zone_operator [ at_time_zone_operator ] *  {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin"
   pin = 2
+}
+
+array_value_expression ::= 'ARRAY' ( '[]' | '['  <<expr '-1'>> [ ( COMMA <<expr '-1'>> ) * ] ']' ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ArrayValueExpressionMixin"
 }
 
 extension_stmt ::= create_enum_type_stmt| drop_type_stmt | alter_type_stmt | drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |

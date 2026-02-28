@@ -432,6 +432,17 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testArrayLiterals() {
+    with(database.arraysQueries.selectArrayLiterals().executeAsOne()) {
+      assertThat(intArray).isEqualTo(arrayOf(1, 2, 3))
+      assertThat(bigIntArray).isEqualTo(arrayOf(1L, 2L, 3L))
+      assertThat(numericArray).isEqualTo(arrayOf(1.1.toBigDecimal(), 2.2.toBigDecimal(), 3.3.toBigDecimal()))
+      assertThat(numericArrayWithNull).isEqualTo(arrayOf(1.0.toBigDecimal(), null, 3.toBigDecimal()))
+      assertThat(textArray).isEqualTo(arrayOf("a", "b", "c"))
+      assertThat(booleanArray).isEqualTo(arrayOf(true, false))
+    }
+  }
+
   @Test fun now() {
     val now = database.datesQueries.selectNow().executeAsOne()
     assertThat(now).isNotNull()

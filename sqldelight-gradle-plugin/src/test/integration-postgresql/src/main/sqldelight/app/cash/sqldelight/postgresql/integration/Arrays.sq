@@ -27,3 +27,12 @@ overlaps:
 SELECT *
 FROM arrays
 WHERE intArray && ?;
+
+selectArrayLiterals:
+SELECT
+ARRAY[1, 2, 3] AS intArray,
+ARRAY[1::BIGINT, 2, 3] AS bigIntArray,
+ARRAY[1.1, 2.2, 3.3] AS numericArray,
+ARRAY[1.0::NUMERIC, NULL, 3::BIGINT] AS numericArrayWithNull,
+ARRAY['a', 'b', 'c'] AS textArray,
+ARRAY[TRUE, FALSE] AS booleanArray;
