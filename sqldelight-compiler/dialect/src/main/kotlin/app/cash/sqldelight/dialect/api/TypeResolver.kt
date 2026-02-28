@@ -67,6 +67,7 @@ fun TypeResolver.encapsulatingType(
 ): IntermediateType {
   val types = exprList.map { resolvedType(it) }
   val sqlTypes = types.map { it.dialectType }
+  val dialectJavaTypes = typeOrder.map { it.javaType }
 
   if (PrimitiveType.ARGUMENT in sqlTypes) {
     if (typeOrder.size == 1) {
@@ -79,9 +80,14 @@ fun TypeResolver.encapsulatingType(
     throw AnnotationException("The Kotlin type of the argument cannot be inferred, use CAST instead.", exprList.first())
   }
 
+  val dialectTypesGroup = types.groupBy { it.dialectType }
+
+  val isTypeAlias = dialectTypesGroup.size == 1 &&
+    dialectTypesGroup.values.first().filterNot { it.javaType in dialectJavaTypes }.distinct().size == 1
   // stripping nullability because that shouldn't affect the type comparison
   val isTypesHomogeneous = types.map { it.dialectType to it.javaType.copy(nullable = false) }.distinct().size == 1
-  val type = if (preferKotlinType && isTypesHomogeneous) {
+
+  val type = if (preferKotlinType && (isTypesHomogeneous || isTypeAlias)) {
     types.first()
   } else {
     IntermediateType(typeOrder.last { it in sqlTypes })
