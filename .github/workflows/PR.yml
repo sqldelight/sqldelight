@@ -74,25 +74,33 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         run: |
           ./gradlew build -x :sqldelight-idea-plugin:build -x :sqldelight-gradle-plugin:test -x linuxX64Test -x dokkaGeneratePublicationHtml
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_ubuntu-latest}}"
       - name: Run gradle plugin tests
         if: matrix.os == 'macOS-14' && matrix.job == 'gradle-plugin-tests'
         run: ./gradlew :sqldelight-gradle-plugin:test :sqldelight-gradle-plugin:grammarkitTest --parallel -x dokkaGeneratePublicationHtml
         env:
-          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_macOS-14}}"
 
       - name: Run the IntelliJ plugin
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         run: ./gradlew :sqldelight-idea-plugin:build -x dokkaGeneratePublicationHtml
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_ubuntu-latest}}"
 
       # Windows tests
       - name: Run windows tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew mingwX64Test sqldelight-idea-plugin:check
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_windows-latest}}"
 
       - name: Run linux tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel -x dokkaGeneratePublicationHtml
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_ubuntu-latest}}"
 
       # android tests
       - name: Enable KVM group perms
@@ -101,6 +109,8 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_ubuntu-latest}}"
       - name: Run instrumentation tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
         uses: reactivecircus/android-emulator-runner@v2
@@ -111,13 +121,15 @@ jobs:
           profile: Nexus One
           disk-size: 2048M
           script: ./gradlew :sqldelight-gradle-plugin:instrumentationTest --parallel -x dokkaGeneratePublicationHtml
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_ubuntu-latest}}"
 
       # ios tests
       - name: Run ios tests
         if: matrix.os == 'macOS-14' && matrix.job == 'test'
         run: ./gradlew iosX64Test --parallel
         env:
-          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_macOS-14}}"
 
       - name: Check for changed files
         run: test -z "$(git status --porcelain)"
@@ -224,3 +236,6 @@ jobs:
 
 env:
   GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
+  JAVA_OPTS_macOS-14: -Xmx4g -Xms2g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+  JAVA_OPTS_windows-latest: -Xmx8g -Xms4g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+  JAVA_OPTS_ubuntu-latest: -Xmx8g -Xms4g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
