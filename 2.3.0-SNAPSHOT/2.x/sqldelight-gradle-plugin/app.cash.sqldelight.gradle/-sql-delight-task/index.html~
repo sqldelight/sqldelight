@@ -724,6 +724,21 @@
               </div>
             </div>
           </div>
+<a data-name="936537521%2FProperties%2F-879533229" anchor-label="reasonsNotToTrackState" id="936537521%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#936537521%2FProperties%2F-879533229"><span>reasons</span><wbr><span>Not</span><wbr><span>To</span><wbr><span>Track</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="936537521%2FProperties%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#936537521%2FProperties%2F-879533229">reasonsNotToTrackState</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1280133512%2FProperties%2F-879533229" anchor-label="reasonTaskIsIncompatibleWithConfigurationCache" id="-1280133512%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
@@ -1073,6 +1088,21 @@
               </div>
             </div>
           </div>
+<a data-name="-974528569%2FFunctions%2F-879533229" anchor-label="doNotTrackStateIf" id="-974528569%2FFunctions%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#-974528569%2FFunctions%2F-879533229"><span>do</span><wbr><span>Not</span><wbr><span>Track</span><wbr><span>State</span><wbr><span><span>If</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-974528569%2FFunctions%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#-974528569%2FFunctions%2F-879533229"><span class="token function">doNotTrackStateIf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">reason<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">spec<span class="token operator">: </span><span data-unresolved-link="org.gradle.api.specs/Spec///PointingToDeclaration/">Spec</span><span class="token operator">&lt;</span><span class="token keyword">in </span><span data-unresolved-link="org.gradle.api.internal/TaskInternal///PointingToDeclaration/">TaskInternal</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="302169369%2FFunctions%2F-879533229" anchor-label="exclude" id="302169369%2FFunctions%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
@@ -1249,6 +1279,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#-426323884%2FFunctions%2F-879533229"><span class="token function">property</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">propertyName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-598014834%2FFunctions%2F-879533229" anchor-label="restoreOnlyIf" id="-598014834%2FFunctions%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#-598014834%2FFunctions%2F-879533229"><span>restore</span><wbr><span>Only</span><wbr><span><span>If</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-598014834%2FFunctions%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#-598014834%2FFunctions%2F-879533229"><span class="token function">restoreOnlyIf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onlyIf<span class="token operator">: </span><span data-unresolved-link="org.gradle.api.specs/Spec///PointingToDeclaration/">Spec</span><span class="token operator">&lt;</span><span class="token keyword">in </span><span data-unresolved-link="org.gradle.api.internal/TaskInternal///PointingToDeclaration/">TaskInternal</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2127734593%2FFunctions%2F-879533229" anchor-label="restoreTaskActions" id="2127734593%2FFunctions%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#2127734593%2FFunctions%2F-879533229"><span>restore</span><wbr><span>Task</span><wbr><span><span>Actions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2127734593%2FFunctions%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../app.cash.sqldelight.gradle.squash/-migration-squash-task/index.html#2127734593%2FFunctions%2F-879533229"><span class="token function">restoreTaskActions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">taskActions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="org.gradle.api.internal.tasks/InputChangesAwareTaskAction///PointingToDeclaration/">InputChangesAwareTaskAction</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
