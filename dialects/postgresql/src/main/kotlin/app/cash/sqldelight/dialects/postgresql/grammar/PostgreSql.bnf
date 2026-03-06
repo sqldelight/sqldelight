@@ -242,11 +242,11 @@ create_index_stmt ::= CREATE [ UNIQUE ] INDEX [ 'CONCURRENTLY' ] [ IF NOT EXISTS
   pin = 6
 }
 
-create_table_with_storage_parameters ::= [ {identifier} DOT ] {identifier}
+table_with_storage_parameter ::= [ {identifier} DOT ] {identifier}
 
-create_table_with ::= WITH LP create_table_with_storage_parameters [ EQ ( storage_parameter ) ] ( COMMA create_table_with_storage_parameters [ EQ ( storage_parameter ) ] ) * RP
+table_with_storage_parameters ::= LP table_with_storage_parameter [ EQ ( storage_parameter ) ] ( COMMA table_with_storage_parameter [ EQ ( storage_parameter ) ] ) * RP
 
-create_table_stmt ::= CREATE [ TEMP | TEMPORARY | 'UNLOGGED' ] TABLE [ IF NOT EXISTS ] [ {database_name} DOT ] {table_name} ( LP {column_def} ( COMMA {column_def} ) * ( COMMA {table_constraint} ) * RP [ create_table_with ] | AS {compound_select_stmt} ) {
+create_table_stmt ::= CREATE [ TEMP | TEMPORARY | 'UNLOGGED' ] TABLE [ IF NOT EXISTS ] [ {database_name} DOT ] {table_name} ( LP {column_def} ( COMMA {column_def} ) * ( COMMA {table_constraint} ) * RP [ WITH table_with_storage_parameters ] | AS {compound_select_stmt} ) {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CreateTableMixin"
   implements = "com.alecstrong.sql.psi.core.psi.TableElement"
   elementTypeClass = "com.alecstrong.sql.psi.core.psi.mixins.CreateTableElementType"
@@ -432,11 +432,14 @@ alter_table_rules ::= (
   | alter_table_add_constraint
   | alter_table_alter_column
   | alter_table_row_level_security
+  | alter_set_storage_parameters
 ) {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlAlterTableRulesImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlAlterTableRules"
   override = true
 }
+
+alter_set_storage_parameters ::= ( SET | 'RESET' ) table_with_storage_parameters
 
 alter_table_row_level_security ::= ( 'ENABLE' | 'FORCE' | 'DISABLE' ) 'ROW' 'LEVEL' 'SECURITY' {
   pin = 1
