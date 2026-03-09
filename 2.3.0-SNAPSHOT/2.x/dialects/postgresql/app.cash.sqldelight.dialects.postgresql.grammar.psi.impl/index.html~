@@ -205,6 +205,21 @@
               </div>
             </div>
           </div>
+<a data-name="1665145370%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAlterSetStorageParametersImpl" id="1665145370%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-alter-set-storage-parameters-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Set</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1665145370%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-alter-set-storage-parameters-impl/index.html">PostgreSqlAlterSetStorageParametersImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-alter-set-storage-parameters/index.html">PostgreSqlAlterSetStorageParameters</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="2064432180%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAlterTableAddColumnImpl" id="2064432180%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -1041,6 +1056,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-create-sequence-stmt-impl/index.html">PostgreSqlCreateSequenceStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-sequence-mixin/index.html">CreateSequenceMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-create-sequence-stmt/index.html">PostgreSqlCreateSequenceStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-475056935%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlCreateTableStmtImpl" id="-475056935%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-create-table-stmt-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Table</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-475056935%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-create-table-stmt-impl/index.html">PostgreSqlCreateTableStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-create-table-mixin/index.html">CreateTableMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-create-table-stmt/index.html">PostgreSqlCreateTableStmt</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -2601,6 +2631,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-table-or-subquery-impl/index.html">PostgreSqlTableOrSubqueryImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-table-or-subquery-mixin/index.html">TableOrSubqueryMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-or-subquery/index.html">PostgreSqlTableOrSubquery</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-631659215%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlTableWithStorageParameterImpl" id="-631659215%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-table-with-storage-parameter-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span>Parameter</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-631659215%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-table-with-storage-parameter-impl/index.html">PostgreSqlTableWithStorageParameterImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-with-storage-parameter/index.html">PostgreSqlTableWithStorageParameter</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1090704610%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlTableWithStorageParametersImpl" id="-1090704610%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-table-with-storage-parameters-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1090704610%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-table-with-storage-parameters-impl/index.html">PostgreSqlTableWithStorageParametersImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-table-with-storage-parameters/index.html">PostgreSqlTableWithStorageParameters</a></div></div></div>
                 </div>
               </div>
             </div>

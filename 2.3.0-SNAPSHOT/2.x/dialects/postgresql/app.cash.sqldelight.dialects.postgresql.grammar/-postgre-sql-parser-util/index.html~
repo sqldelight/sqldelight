@@ -206,6 +206,21 @@
               </div>
             </div>
           </div>
+<a data-name="1089402153%2FProperties%2F-1264942193" anchor-label="alter_set_storage_parameters" id="1089402153%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter_set_storage_parameters.html"><span>alter_</span><wbr><span>set_</span><wbr><span>storage_</span><wbr><span>parameters</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1089402153%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="alter_set_storage_parameters.html">alter_set_storage_parameters</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1944816881%2FProperties%2F-1264942193" anchor-label="alter_table_add_column" id="-1944816881%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -1042,6 +1057,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="create_sequence_stmt.html">create_sequence_stmt</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1594498015%2FProperties%2F-1264942193" anchor-label="create_table_stmt" id="-1594498015%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create_table_stmt.html"><span>create_</span><wbr><span>table_</span><wbr><span>stmt</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1594498015%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="create_table_stmt.html">create_table_stmt</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -2621,6 +2651,36 @@
               </div>
             </div>
           </div>
+<a data-name="932176256%2FProperties%2F-1264942193" anchor-label="table_with_storage_parameter" id="932176256%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="table_with_storage_parameter.html"><span>table_</span><wbr><span>with_</span><wbr><span>storage_</span><wbr><span>parameter</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="932176256%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="table_with_storage_parameter.html">table_with_storage_parameter</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="398947655%2FProperties%2F-1264942193" anchor-label="table_with_storage_parameters" id="398947655%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="table_with_storage_parameters.html"><span>table_</span><wbr><span>with_</span><wbr><span>storage_</span><wbr><span>parameters</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="398947655%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="table_with_storage_parameters.html">table_with_storage_parameters</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1003821395%2FProperties%2F-1264942193" anchor-label="time_expression" id="1003821395%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -3161,6 +3221,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="alter-sequence-stmt-ext.html"><span class="token function">alterSequenceStmtExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">alter_sequence_stmt<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="522716369%2FFunctions%2F-1264942193" anchor-label="alterSetStorageParametersExt" id="522716369%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="alter-set-storage-parameters-ext.html"><span>alter</span><wbr><span>Set</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="522716369%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="alter-set-storage-parameters-ext.html"><span class="token function">alterSetStorageParametersExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">alter_set_storage_parameters<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -4001,6 +4076,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="create-sequence-stmt-ext.html"><span class="token function">createSequenceStmtExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">create_sequence_stmt<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="503885008%2FFunctions%2F-1264942193" anchor-label="createTableStmtExt" id="503885008%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-table-stmt-ext.html"><span>create</span><wbr><span>Table</span><wbr><span>Stmt</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="503885008%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="create-table-stmt-ext.html"><span class="token function">createTableStmtExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">create_table_stmt<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -5591,6 +5681,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="table-or-subquery-ext.html"><span class="token function">tableOrSubqueryExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">table_or_subquery<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1605637544%2FFunctions%2F-1264942193" anchor-label="tableWithStorageParameterExt" id="1605637544%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="table-with-storage-parameter-ext.html"><span>table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span>Parameter</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1605637544%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="table-with-storage-parameter-ext.html"><span class="token function">tableWithStorageParameterExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">table_with_storage_parameter<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-199913767%2FFunctions%2F-1264942193" anchor-label="tableWithStorageParametersExt" id="-199913767%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="table-with-storage-parameters-ext.html"><span>table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Ext</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-199913767%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="table-with-storage-parameters-ext.html"><span class="token function">tableWithStorageParametersExt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/PsiBuilder///PointingToDeclaration/">PsiBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">level<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">table_with_storage_parameters<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang.parser/GeneratedParserUtilBase.Parser///PointingToDeclaration/">GeneratedParserUtilBase.Parser</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>

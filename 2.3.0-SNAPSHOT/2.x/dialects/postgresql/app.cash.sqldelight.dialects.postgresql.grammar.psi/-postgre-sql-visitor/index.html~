@@ -259,6 +259,21 @@
               </div>
             </div>
           </div>
+<a data-name="-759194650%2FFunctions%2F-1264942193" anchor-label="visitAlterSetStorageParameters" id="-759194650%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-alter-set-storage-parameters.html"><span>visit</span><wbr><span>Alter</span><wbr><span>Set</span><wbr><span>Storage</span><wbr><span><span>Parameters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-759194650%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-alter-set-storage-parameters.html"><span class="token function">visitAlterSetStorageParameters</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-alter-set-storage-parameters/index.html">PostgreSqlAlterSetStorageParameters</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1234533082%2FFunctions%2F-1264942193" anchor-label="visitAlterTableAddColumn" id="-1234533082%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -1125,6 +1140,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-create-sequence-stmt.html"><span class="token function">visitCreateSequenceStmt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-create-sequence-stmt/index.html">PostgreSqlCreateSequenceStmt</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1690712442%2FFunctions%2F-1264942193" anchor-label="visitCreateTableStmt" id="-1690712442%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-create-table-stmt.html"><span>visit</span><wbr><span>Create</span><wbr><span>Table</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1690712442%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-create-table-stmt.html"><span class="token function">visitCreateTableStmt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-create-table-stmt/index.html">PostgreSqlCreateTableStmt</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -3225,6 +3255,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-table-or-subquery.html"><span class="token function">visitTableOrSubquery</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-table-or-subquery/index.html">PostgreSqlTableOrSubquery</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-759229498%2FFunctions%2F-1264942193" anchor-label="visitTableWithStorageParameter" id="-759229498%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-table-with-storage-parameter.html"><span>visit</span><wbr><span>Table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-759229498%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-table-with-storage-parameter.html"><span class="token function">visitTableWithStorageParameter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-table-with-storage-parameter/index.html">PostgreSqlTableWithStorageParameter</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="189715570%2FFunctions%2F-1264942193" anchor-label="visitTableWithStorageParameters" id="189715570%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="visit-table-with-storage-parameters.html"><span>visit</span><wbr><span>Table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="189715570%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="visit-table-with-storage-parameters.html"><span class="token function">visitTableWithStorageParameters</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>o<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="../-postgre-sql-table-with-storage-parameters/index.html">PostgreSqlTableWithStorageParameters</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>

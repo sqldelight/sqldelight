@@ -205,6 +205,21 @@
               </div>
             </div>
           </div>
+<a data-name="-1468991506%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAlterSetStorageParameters" id="-1468991506%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-alter-set-storage-parameters/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Set</span><wbr><span>Storage</span><wbr><span><span>Parameters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1468991506%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-alter-set-storage-parameters/index.html">PostgreSqlAlterSetStorageParameters</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-129526264%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAlterTableAddColumn" id="-129526264%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -1041,6 +1056,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-sequence-stmt/index.html">PostgreSqlCreateSequenceStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="909529901%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlCreateTableStmt" id="909529901%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-create-table-stmt/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Create</span><wbr><span>Table</span><wbr><span><span>Stmt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="909529901%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-create-table-stmt/index.html">PostgreSqlCreateTableStmt</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/TableElement///PointingToDeclaration/">TableElement</span>, <span data-unresolved-link="com.intellij.psi/StubBasedPsiElement///PointingToDeclaration/">StubBasedPsiElement</span><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SchemaContributorStub///PointingToDeclaration/">SchemaContributorStub</span><span class="token operator">&gt; </span></div></div></div>
                 </div>
               </div>
             </div>
@@ -2601,6 +2631,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-table-or-subquery/index.html">PostgreSqlTableOrSubquery</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlTableOrSubquery///PointingToDeclaration/">SqlTableOrSubquery</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1799464581%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlTableWithStorageParameter" id="1799464581%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-table-with-storage-parameter/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1799464581%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-table-with-storage-parameter/index.html">PostgreSqlTableWithStorageParameter</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-132290742%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlTableWithStorageParameters" id="-132290742%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-table-with-storage-parameters/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Table</span><wbr><span>With</span><wbr><span>Storage</span><wbr><span><span>Parameters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-132290742%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-postgre-sql-table-with-storage-parameters/index.html">PostgreSqlTableWithStorageParameters</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElement///PointingToDeclaration/">SqlCompositeElement</span></div></div></div>
                 </div>
               </div>
             </div>
