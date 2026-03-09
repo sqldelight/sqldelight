@@ -14,6 +14,7 @@
 - [PostgreSQL Dialect] Support Postgis Point type and related functions (#5602 by @vanniktech)
 - [Runtime] Added `SuspendingTransacter.TransactionDispatcher` that provides a mechanism for controlling the `CoroutineContext` of the transaction (#5967 by @eygraber)
 - [Gradle Plugin] Full compatibility with Android Gradle Plugin 9.0's new DSL. (#6140)
+- [PostgreSQL Dialect] Support PostgreSql CREATE TABLE storage parameters (#6148 by @griffio)
 
 ### Changed
 - [Compiler] Change compiler output type from java.lang.Void to kotlin.Nothing (#6099 by @griffio)
