@@ -39,6 +39,7 @@ class SqlDelightProjectResolverExtension : AbstractProjectResolverExtension() {
             databaseProperties.treatNullAsUnknownForEquality,
             databaseProperties.generateAsync,
             databaseProperties.rootDirectory,
+            databaseProperties.expandSelectStar,
           )
         },
         sqlDelightModel.dialectJars.toMutableList(),
@@ -73,6 +74,7 @@ data class SqlDelightDatabasePropertiesModel(
   override val treatNullAsUnknownForEquality: Boolean = false,
   override val generateAsync: Boolean = false,
   override val rootDirectory: File,
+  override val expandSelectStar: Boolean = true,
 ) : SqlDelightDatabaseProperties
 
 data class SqlDelightDatabaseNameModel(
