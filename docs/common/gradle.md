@@ -259,7 +259,20 @@ Defaults to `false`.
 
 Type: `Property<Boolean>`
 
-If set to true, SQLDelight will compile `SELECT *` statements expanding to the actual result columns.
+If set to true, SQLDelight will rewrite `SELECT *` statements to explicitly reference each of the actual resulting columns.
+
+For example, the `getAll` query below
+```sql
+CREATE TABLE hockey_player (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  number INTEGER NOT NULL
+);
+
+getAll:
+SELECT * FROM hockey_player;
+```
+will be rewritten as `SELECT hockey_player.id, hockey_player.name, hockey_player.number FROM hockey_player;`.
 
 Defaults to `true`.
 
