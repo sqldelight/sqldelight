@@ -1,4 +1,6 @@
 import org.jetbrains.changelog.Changelog
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
 import app.cash.sqldelight.toolchain.BugsnagKey
 
@@ -17,7 +19,9 @@ intellijPlatform {
     name = 'SQLDelight'
     dependencies {
       intellijPlatform {
-        intellijIdeaCommunity(libs.versions.idea, false)
+        intellijIdea(libs.versions.idea) {
+          useInstaller = false
+        }
         bundledPlugin("org.jetbrains.kotlin")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("com.intellij.java")
@@ -25,10 +29,9 @@ intellijPlatform {
 
         pluginVerifier()
         zipSigner()
-        instrumentationTools()
 
-        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform.INSTANCE, libs.versions.idea.get())
-        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Plugin.Java.INSTANCE, libs.versions.idea.get())
+        testFramework(TestFrameworkType.Platform.INSTANCE)
+        testFramework(TestFrameworkType.Plugin.Java.INSTANCE)
       }
     }
     if (!project.version.endsWith("SNAPSHOT")) {
@@ -50,7 +53,7 @@ intellijPlatform {
     def version = providers.systemProperty("ideaVersion").getOrElse(null)
     if (version != null) {
       ides {
-        ide(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity, version)
+        create(IntelliJPlatformType.IntellijIdea, version)
       }
     }
 
