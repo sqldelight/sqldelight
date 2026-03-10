@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>SqlDelightDatabasePropertiesImpl</title>
+    <title>expandSelectStar</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -43,7 +43,7 @@
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
-                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":sqldelight-gradle-plugin/main">jvm</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":sqldelight-compiler/main">jvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
@@ -54,7 +54,7 @@
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":sqldelight-gradle-plugin/main" data-filter=":sqldelight-gradle-plugin/main">
+                                <input type="checkbox" class="checkbox--input" id=":sqldelight-compiler/main" data-filter=":sqldelight-compiler/main">
                                 <span class="checkbox--icon"></span>
                                 jvm
                             </label>
@@ -90,12 +90,12 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="member" id="content" pageids="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabasePropertiesImpl/SqlDelightDatabasePropertiesImpl/#kotlin.String#kotlin.collections.List[app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl]#kotlin.String#kotlin.collections.List[app.cash.sqldelight.gradle.SqlDelightDatabaseNameImpl]#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#java.io.File/PointingToDeclaration//-879533229">
-  <div class="breadcrumbs"><a href="../../index.html">sqldelight-gradle-plugin</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.gradle</a><span class="delimiter">/</span><a href="index.html">SqlDelightDatabasePropertiesImpl</a><span class="delimiter">/</span><span class="current">SqlDelightDatabasePropertiesImpl</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightDatabaseProperties/expandSelectStar/#/PointingToDeclaration//121786803">
+  <div class="breadcrumbs"><a href="../../index.html">sqldelight-compiler</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.core</a><span class="delimiter">/</span><a href="index.html">SqlDelightDatabaseProperties</a><span class="delimiter">/</span><span class="current">expandSelectStar</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Properties</span><wbr><span><span>Impl</span></span></h1>
+    <h1 class="cover"><span>expand</span><wbr><span>Select</span><wbr><span><span>Star</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">packageName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">compilationUnits<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">className<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">dependencies<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-database-name-impl/index.html">SqlDelightDatabaseNameImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">deriveSchemaFromMigrations<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">treatNullAsUnknownForEquality<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">generateAsync<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">expandSelectStar<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">rootDirectory<span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></span></span><span class="token punctuation">)</span></div></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="expand-select-star.html">expandSelectStar</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
 </div>
     <div class="footer">
         <div class="footer--container">

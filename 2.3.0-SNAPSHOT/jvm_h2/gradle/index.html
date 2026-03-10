@@ -3399,6 +3399,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#expandselectstar" class="md-nav__link">
+    <span class="md-ellipsis">
+      expandSelectStar
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5564,6 +5573,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#expandselectstar" class="md-nav__link">
+    <span class="md-ellipsis">
+      expandSelectStar
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5708,7 +5726,7 @@ Another option that may work is adding <code>sqlite3</code> to the cocoapods <a 
 <p>Type: <code>DirectoryProperty</code></p>
 <p>The directory where <code>.db</code> schema files should be stored, relative to the project root.
 These files are used to verify that migrations yield a database with the latest schema.</p>
-<p>Defaults to <code>null</code>.<br />
+<p>Defaults to <code>null</code>.
 If <code>null</code>, the migration verification tasks will not be created.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Kotlin</label><label for="__tabbed_6_2">Groovy</label></div>
 <div class="tabbed-content">
@@ -5742,9 +5760,9 @@ If <code>null</code>, the migration verification tasks will not be created.</p>
 <h3 id="dialect"><code>dialect</code><a class="headerlink" href="#dialect" title="Permanent link">&para;</a></h3>
 <p>Type: <code>String</code> or <code>Provider&lt;MinimalExternalModuleDependency&gt;</code></p>
 <p>The SQL dialect you would like to target. Dialects are selected using a gradle dependency.
-These dependencies can be specified as <code>app.cash.sqldelight:{dialect module}:2.3.0-SNAPSHOT</code>. 
+These dependencies can be specified as <code>app.cash.sqldelight:{dialect module}:2.3.0-SNAPSHOT</code>.
 See below for available dialects.</p>
-<p>For Android projects, the SQLite version is automatically selected based on your <code>minSdk</code>. 
+<p>For Android projects, the SQLite version is automatically selected based on your <code>minSdk</code>.
 Otherwise defaults to SQLite 3.18.</p>
 <p>Available dialects:</p>
 <ul>
@@ -5840,9 +5858,37 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 </div>
 </div>
 </div>
+<hr />
+<h3 id="expandselectstar"><code>expandSelectStar</code><a class="headerlink" href="#expandselectstar" title="Permanent link">&para;</a></h3>
+<p>Type: <code>Property&lt;Boolean&gt;</code></p>
+<p>If set to true, SQLDelight will rewrite <code>SELECT *</code> statements to explicitly reference each of the actual resulting columns.</p>
+<p>For example, the <code>getAll</code> query below
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hockey_player</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">AUTOINCREMENT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="nb">number</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="n">getAll</span><span class="p">:</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hockey_player</span><span class="p">;</span>
+</code></pre></div>
+will be rewritten as <code>SELECT hockey_player.id, hockey_player.name, hockey_player.number FROM hockey_player;</code>.</p>
+<p>Defaults to <code>true</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Kotlin</label><label for="__tabbed_13_2">Groovy</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">expandSelectStar</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">expandSelectStar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="schema-dependencies">Schema Dependencies<a class="headerlink" href="#schema-dependencies" title="Permanent link">&para;</a></h2>
 <p>You can specify schema dependencies on another module:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Kotlin</label><label for="__tabbed_13_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Kotlin</label><label for="__tabbed_14_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle.kts</span>
@@ -5875,7 +5921,7 @@ If false, your schema is defined in <code>.sq</code> files.</p>
 <p>This looks for <code>MyDatabase</code> in <code>ProjectB</code> and includes it's schema when compiling. For this to work,
 ProjectB must have a database with the same name (<code>MyDatabase</code> in this case) but generate in a
 different package, so here is what <code>ProjectB</code>'s gradle might look like:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Kotlin</label><label for="__tabbed_14_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Kotlin</label><label for="__tabbed_15_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle.kts</span>
