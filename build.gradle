@@ -5,6 +5,8 @@ buildscript {
         strictly '4.4.1'
       }
     }
+    // https://github.com/JetBrains/intellij-platform-gradle-plugin/issues/2062
+    classpath(libs.kotlinx.serialization.json)
   }
 }
 
