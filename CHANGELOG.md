@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+* Nothing here yet!
+
+## [2.3.0] - 2026-03-12
+[2.3.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.0
+
 ### Added
 - [PostgreSQL Dialect] Improved support for ALTER TABLE ALTER TYPE USING expressions (#6116 by @griffio)
 - [PostgreSQL Dialect] Add support for DROP COLUMN IF EXISTS (#6112 by @griffio)
