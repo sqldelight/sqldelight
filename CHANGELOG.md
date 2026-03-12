@@ -4,8 +4,8 @@
 
 * Nothing here yet!
 
-## [2.3.0] - 2026-03-12
-[2.3.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.0
+## [2.3.1] - 2026-03-12
+[2.3.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.1
 
 ### Added
 - [PostgreSQL Dialect] Improved support for ALTER TABLE ALTER TYPE USING expressions (#6116 by @griffio)
@@ -35,6 +35,11 @@
 - [Gradle Plugin] Improve performance of `VerifyMigrationTask` to stop it from hanging on complex schemas (#6073 by @Lightwood13)
 - [Intellij Plugin] Fix Plugin initialization exceptions and update deprecated methods (#6040 by @griffio)
 - [Gradle Plugin] Fix compatibility with Android Gradle Plugin's built-in Kotlin (#6139)
+
+## [2.3.0] - 2025-03-12
+[2.3.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.0
+
+Failed release. Use 2.3.1!
 
 ## [2.2.1] - 2025-11-13
 [2.2.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.2.1
