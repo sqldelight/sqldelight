@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-* Nothing here yet!
+### Changed
+* [Paging Extension] Upgrade to paging 3.4.1, and removed X64 apple targets. (#6166)
 
 ## [2.3.1] - 2026-03-12
 [2.3.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.1
