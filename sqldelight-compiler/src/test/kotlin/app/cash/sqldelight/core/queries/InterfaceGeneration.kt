@@ -1695,6 +1695,39 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `postgres nullable column with unique table constraint has nullable result column`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE SomeText(
+      |  id INTEGER PRIMARY KEY,
+      |  txt TEXT,
+      |  UNIQUE(txt)
+      |);
+      |
+      """.trimMargin(),
+      temporaryFolder,
+      overrideDialect = PostgreSqlDialect(),
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(File(result.outputDirectory, "com/example/SomeText.kt"))
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Int
+      |import kotlin.String
+      |
+      |public data class SomeText(
+      |  public val id: Int,
+      |  public val txt: String?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String) {
     val result = FixtureCompiler.compileFixture(
       fixtureRoot = "src/test/query-interface-fixtures/$fixtureRoot",
