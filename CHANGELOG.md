@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-Nothing here yet!
+### Added
+- [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
@@ -21,7 +22,6 @@ Nothing here yet!
 - [Runtime] Added `SuspendingTransacter.TransactionDispatcher` that provides a mechanism for controlling the `CoroutineContext` of the transaction (#5967 by @eygraber)
 - [Gradle Plugin] Full compatibility with Android Gradle Plugin 9.0's new DSL. (#6140)
 - [PostgreSQL Dialect] Support PostgreSql CREATE TABLE storage parameters (#6148 by @griffio)
-- [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 - [PostgreSQL Dialect] Fix PostgreSql unique table constraint nullable result column (#6167 by @griffio)
 
 ### Changed
