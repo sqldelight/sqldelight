@@ -4,6 +4,12 @@
 
 ### Added
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
+- [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
+
+### Changed
+- [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
+
+### Fixed
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
@@ -69,7 +75,6 @@ Failed release. Use 2.3.2!
 - [Gradle Plugin] Add support for version catalogs when adding modules (#5755 by @DRSchlaubi)
 
 ### Changed
-- [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by [Griffio][griffio])
 - In-development snapshots are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
 - [Compiler] Simplified default generated queries using constructor references (#5814 by @jonapoul)
 
