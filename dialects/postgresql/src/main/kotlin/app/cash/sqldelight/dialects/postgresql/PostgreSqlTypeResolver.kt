@@ -269,7 +269,10 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     // Primary key columns are non null always.
     val columnDef = intermediateType.column ?: return intermediateType
     val tableDef = columnDef.parent as? SqlCreateTableStmt ?: return intermediateType
-    tableDef.tableConstraintList.forEach {
+    tableDef.tableConstraintList.filter {
+      it.node.findChildByType(SqlTypes.PRIMARY) != null &&
+        it.node.findChildByType(SqlTypes.KEY) != null
+    }.forEach {
       if (columnDef.columnName.name in it.indexedColumnList.mapNotNull {
           val expr = it.expr
           if (expr is SqlColumnExpr) expr.columnName.name else null
@@ -455,13 +458,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TIME,
     )
 
-    private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
+    fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
         ArrayDialectType(type),
       )
     }
 
-    private fun isArrayType(type: IntermediateType): Boolean {
+    fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
     }
 

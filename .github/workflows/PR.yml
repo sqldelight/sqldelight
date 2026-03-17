@@ -91,6 +91,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'test'
         # not parallel otherwise NativeTransacterTest fails.
         run: ./gradlew linuxX64Test --no-parallel -x dokkaGeneratePublicationHtml
+        env:
+          GRADLE_OPTS: ${{env.GRADLE_OPTS}} -Dorg.gradle.jvmargs="${{env.JAVA_OPTS_ubuntu-latest}}"
 
       # android tests
       - name: Enable KVM group perms
@@ -220,3 +222,4 @@ jobs:
 
 env:
   GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.logging.stacktrace=full
+  JAVA_OPTS_ubuntu-latest: -Xmx12g -Xms4g -XX:MaxMetaspaceSize=4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8

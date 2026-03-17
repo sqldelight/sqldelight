@@ -47,8 +47,9 @@ internal class FileIndexMap {
       }
 
       val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
+
       val shouldInvalidate = pluginDescriptor.addDialect(
-        propertiesFile.dialectJars.map { it.toURI() },
+        propertiesFile.dialectJars.filterNot { it.path.contains("org.jetbrains.kotlin") }.map { it.toURI() },
       )
 
       val database = propertiesFile.databases.first()
