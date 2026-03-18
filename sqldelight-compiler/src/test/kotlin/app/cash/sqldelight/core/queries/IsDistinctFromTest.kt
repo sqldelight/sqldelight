@@ -31,27 +31,28 @@ class IsDistinctFromTest {
     val generator = SelectQueryGenerator(insert)
 
     assertThat(generator.querySubtype().toString()).isEqualTo(
-        """
+      """
         |private inner class SelectOthersQuery<out T : kotlin.Any>(
         |  public val id: kotlin.Long,
         |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
         |) : app.cash.sqldelight.Query<T>(mapper) {
-        |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.addListener(listener, arrayOf("data"))
+        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+        |    driver.addListener("data", listener = listener)
         |  }
         |
-        |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.removeListener(listener, arrayOf("data"))
+        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+        |    driver.removeListener("data", listener = listener)
         |  }
         |
-        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-572843204, ""${'"'}SELECT * FROM data WHERE id IS DISTINCT FROM ?""${'"'}, mapper, 1) {
-        |    bindLong(0, id)
+        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-572_843_204, ""${'"'}SELECT data.id, data.data FROM data WHERE id IS DISTINCT FROM ?""${'"'}, mapper, 1) {
+        |    var parameterIndex = 0
+        |    bindLong(parameterIndex++, id)
         |  }
         |
-        |  public override fun toString(): kotlin.String = "Test.sq:selectOthers"
+        |  override fun toString(): kotlin.String = "Test.sq:selectOthers"
         |}
         |
-        """.trimMargin(),
+      """.trimMargin(),
     )
   }
 
@@ -74,27 +75,28 @@ class IsDistinctFromTest {
     val generator = SelectQueryGenerator(insert)
 
     assertThat(generator.querySubtype().toString()).isEqualTo(
-        """
+      """
         |private inner class SelectItQuery<out T : kotlin.Any>(
         |  public val id: kotlin.Long,
         |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
         |) : app.cash.sqldelight.Query<T>(mapper) {
-        |  public override fun addListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.addListener(listener, arrayOf("data"))
+        |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
+        |    driver.addListener("data", listener = listener)
         |  }
         |
-        |  public override fun removeListener(listener: app.cash.sqldelight.Query.Listener): kotlin.Unit {
-        |    driver.removeListener(listener, arrayOf("data"))
+        |  override fun removeListener(listener: app.cash.sqldelight.Query.Listener) {
+        |    driver.removeListener("data", listener = listener)
         |  }
         |
-        |  public override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> R): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-157443708, ""${'"'}SELECT * FROM data WHERE id IS NOT DISTINCT FROM ?""${'"'}, mapper, 1) {
-        |    bindLong(0, id)
+        |  override fun <R> execute(mapper: (app.cash.sqldelight.db.SqlCursor) -> app.cash.sqldelight.db.QueryResult<R>): app.cash.sqldelight.db.QueryResult<R> = driver.executeQuery(-157_443_708, ""${'"'}SELECT data.id, data.data FROM data WHERE id IS NOT DISTINCT FROM ?""${'"'}, mapper, 1) {
+        |    var parameterIndex = 0
+        |    bindLong(parameterIndex++, id)
         |  }
         |
-        |  public override fun toString(): kotlin.String = "Test.sq:selectIt"
+        |  override fun toString(): kotlin.String = "Test.sq:selectIt"
         |}
         |
-        """.trimMargin(),
+      """.trimMargin(),
     )
   }
 }
