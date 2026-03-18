@@ -5,6 +5,7 @@
 ### Added
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
+- [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)

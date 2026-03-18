@@ -5,12 +5,12 @@ CREATE TABLE IF NOT EXISTS inetXxx
     ip         INT(4) UNSIGNED NOT NULL
 ) CHARSET = utf8mb4;
 
-selectForTestINET_NTOA:
 SELECT id, INET_NTOA(ip) AS ip
 FROM inetXxx;
 
-insertOneForTestINET_ATON {
-    INSERT INTO inetXxx (ip)
-    VALUES (INET_ATON(?));
-    SELECT LAST_INSERT_ID();
-}
+SELECT INET_ATON('127.0.0.1');
+
+SELECT INET6_ATON('::1');
+
+SELECT INET6_NTOA(ip)
+FROM inetXxx;
