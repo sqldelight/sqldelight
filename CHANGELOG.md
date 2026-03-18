@@ -5,9 +5,11 @@
 ### Added
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
+- [PostgreSQL Dialect] Add basic LTREE support (#5880 by @yesitskev @griffio)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
+- [Gradle Plugin] Implement stricter MigrationFile versioning (#5730 by @madisp)
 
 ### Fixed
 
