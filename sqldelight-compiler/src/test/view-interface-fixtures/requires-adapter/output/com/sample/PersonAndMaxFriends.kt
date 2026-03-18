@@ -7,12 +7,12 @@ import kotlin.Long
 import kotlin.String
 
 public data class PersonAndMaxFriends(
-  public val _id: Long,
-  public val name: String,
+  public val _id: Long?,
+  public val name: String?,
   public val last_name: String?,
-  public val is_cool: Boolean,
+  public val is_cool: Boolean?,
   public val friends: List<Person>?,
   @Redacted
-  public val shhh_its_secret: String,
+  public val shhh_its_secret: String?,
   public val max_friends: List<Person>?,
 )
