@@ -288,7 +288,7 @@ fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>): NativeSqliteDriv
  * Helper function to create an in-memory driver. In-memory drivers have a single connection, so
  * concurrent access will be block
  */
-fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>, extendedConfig: Extended = Extended()): NativeSqliteDriver = NativeSqliteDriver(
+fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>, extendedConfig: DatabaseConfiguration.Extended = DatabaseConfiguration.Extended()): NativeSqliteDriver = NativeSqliteDriver(
   DatabaseConfiguration(
     name = null,
     inMemory = true,
@@ -299,8 +299,8 @@ fun inMemoryDriver(schema: SqlSchema<QueryResult.Value<Unit>>, extendedConfig: E
     upgrade = { connection, oldVersion, newVersion ->
       wrapConnection(connection) { schema.migrate(it, oldVersion.toLong(), newVersion.toLong()) }
     },
-    extendedConfig = extendedConfig
-  )
+    extendedConfig = extendedConfig,
+  ),
 )
 
 /**
