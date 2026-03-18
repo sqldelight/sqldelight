@@ -43,7 +43,9 @@ import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
+import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
+import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
 import com.squareup.kotlinpoet.ClassName
@@ -216,6 +218,13 @@ data class NamedQuery(
   private fun QueryElement.typesExposed(
     namesUsed: LinkedHashSet<String>,
   ): List<IntermediateType> {
+    val selectStmt = this as? SqlSelectStmt
+    val hasGroupBy = selectStmt?.groupBy != null
+    val hasAggregate = selectStmt?.resultColumnList?.any { resultColumn ->
+      val expr = resultColumn.expr
+      expr is SqlFunctionExpr && expr.functionName.text.lowercase() in AGGREGATE_FUNCTIONS
+    } ?: false
+
     return queryExposed().flatMap {
       val table = it.table?.name
       return@flatMap it.columns.map { queryColumn ->
@@ -225,7 +234,22 @@ data class NamedQuery(
           while (!namesUsed.add(name)) name += "_"
         }
 
-        return@map queryColumn.type().copy(name = name)
+        var type = queryColumn.type().copy(name = name)
+
+        if (hasAggregate) {
+          val isAggregate = queryColumn.element is SqlFunctionExpr &&
+            (queryColumn.element as SqlFunctionExpr).functionName.text.lowercase() in AGGREGATE_FUNCTIONS
+
+          // Goup by statements filter out empty groups so we don't have to
+          // worry about non-null columns returning as nullable.
+          if (!hasGroupBy && !isAggregate) {
+            type = type.asNullable()
+          } else if (hasGroupBy && isAggregate) {
+            type = type.asNonNullable()
+          }
+        }
+
+        return@map type
       }
     }
   }
@@ -241,4 +265,16 @@ data class NamedQuery(
     // sqlFile.name -> test.sq
     // name -> query name
     get() = getUniqueQueryIdentifier(statement.sqFile().let { "${it.packageName}:${it.name}:$name" })
+
+  companion object {
+    private val AGGREGATE_FUNCTIONS = setOf(
+      "count",
+      "max",
+      "min",
+      "sum",
+      "avg",
+      "total",
+      "group_concat",
+    )
+  }
 }
