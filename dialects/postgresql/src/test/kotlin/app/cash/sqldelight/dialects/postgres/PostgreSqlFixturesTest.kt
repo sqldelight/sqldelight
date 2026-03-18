@@ -19,7 +19,7 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
     "CREATE VIEW IF NOT EXISTS" to "CREATE OR REPLACE VIEW",
     "id TEXT GENERATED ALWAYS AS (2) UNIQUE NOT NULL" to "id TEXT GENERATED ALWAYS AS (2) STORED UNIQUE NOT NULL",
     "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
-      to "'#-', '&&', '(', ')', ',', '.', '::', <binary like operator real>, <contains operator real>, <jsona binary operator real>, <jsonb boolean operator real>, <range boolean operator real>, <regex match operator real>, '@@', AT, BETWEEN or IN expected, got ','",
+      to "'#-', '&&', '(', ')', ',', '.', '::', <binary like operator real>, <contains operator real>, <jsona binary operator real>, <jsonb boolean operator real>, <range boolean operator real>, <regex match operator real>, '??', '@@', AT, BETWEEN or IN expected, got ','",
   )
 
   override fun setupDialect() {
@@ -37,6 +37,7 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
       "create-trigger-raise",
       "create-trigger-success",
       "create-trigger-validation-failures",
+      "if-not-exists",
       "timestamp-with-precission",
       "localtimestamp-with-precission",
       "localtimestamp-literals",
@@ -45,6 +46,7 @@ class PostgreSqlFixturesTest(name: String, fixtureRoot: File) : FixturesTest(nam
       "trigger-migration",
       "trigger-new-in-expression",
       "update-view-with-trigger",
+      "rowid-orderby",
     )
 
     @Suppress("unused")

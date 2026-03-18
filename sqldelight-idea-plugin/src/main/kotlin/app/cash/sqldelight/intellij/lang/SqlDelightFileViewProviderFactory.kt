@@ -136,7 +136,6 @@ private class SqlDelightFileViewProvider(
       {
         ReadAction.nonBlocking(
           Callable {
-            DumbService.getInstance(module.project).waitForSmartMode()
             file.findChildrenOfType<TableElement>().forEach { queryable ->
               val affectedFiles = ReferencesSearch.search(queryable.tableExposed().tableName)
                 .mapNotNull { it.element.containingFile as? SqlDelightFile }
@@ -148,6 +147,7 @@ private class SqlDelightFileViewProvider(
             }
           },
         ).expireWhen(thisCondition)
+          .inSmartMode(module.project)
           .submit(NonUrgentExecutor.getInstance())
       },
       1,

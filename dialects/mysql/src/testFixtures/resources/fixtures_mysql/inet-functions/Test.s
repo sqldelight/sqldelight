@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS inetXxx
+(
+    id         INT AUTO_INCREMENT
+        PRIMARY KEY,
+    ip         INT(4) UNSIGNED NOT NULL
+) CHARSET = utf8mb4;
+
+SELECT id, INET_NTOA(ip) AS ip
+FROM inetXxx;
+
+SELECT INET_ATON('127.0.0.1');
+
+SELECT INET6_ATON('::1');
+
+SELECT INET6_NTOA(ip)
+FROM inetXxx;

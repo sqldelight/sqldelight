@@ -24,6 +24,7 @@ nav:
       - 'Types': android_sqlite/types.md
       - 'Transactions': android_sqlite/transactions.md
       - 'Grouping Statements': android_sqlite/grouping_statements.md
+      - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
     - 'Extensions':
         - 'RxJava': android_sqlite/rxjava.md
         - 'Coroutines': android_sqlite/coroutines.md
@@ -51,6 +52,7 @@ nav:
           - 'Types': multiplatform_sqlite/types.md
           - 'Transactions': multiplatform_sqlite/transactions.md
           - 'Grouping Statements': multiplatform_sqlite/grouping_statements.md
+          - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
       - 'Extensions':
           - 'Coroutines': multiplatform_sqlite/coroutines.md
           - 'AndroidX Paging': multiplatform_sqlite/androidx_paging.md
@@ -122,6 +124,7 @@ nav:
         - 'Types': native_sqlite/types.md
         - 'Transactions': native_sqlite/transactions.md
         - 'Grouping Statements': native_sqlite/grouping_statements.md
+        - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
     - 'Extensions':
         - 'Coroutines': native_sqlite/coroutines.md
         - 'AndroidX Paging': native_sqlite/androidx_paging.md
@@ -142,6 +145,7 @@ nav:
         - 'Types': jvm_sqlite/types.md
         - 'Transactions': jvm_sqlite/transactions.md
         - 'Grouping Statements': jvm_sqlite/grouping_statements.md
+        - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
     - 'Extensions':
         - 'RxJava': jvm_sqlite/rxjava.md
         - 'Coroutines': jvm_sqlite/coroutines.md
@@ -168,6 +172,7 @@ nav:
           - 'Types': js_sqlite/types.md
           - 'Transactions': js_sqlite/transactions.md
           - 'Grouping Statements': js_sqlite/grouping_statements.md
+          - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
       - 'Extensions':
           - 'Coroutines': js_sqlite/coroutines.md
           - 'AndroidX Paging': js_sqlite/androidx_paging.md
@@ -231,8 +236,8 @@ markdown_extensions:
   - md_in_html
   - attr_list
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 plugins:
   - search

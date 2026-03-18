@@ -100,3 +100,34 @@ SELECT
   data IS JSON ARRAY WITHOUT UNIQUE KEYS "array without unq key?"
 FROM TestJsonCheck
 WHERE data IS NOT NULL;
+
+selectJsonExtractionBinds:
+SELECT 'abc', datab -> 'a' -> 'b' AS ab, datab -> 'a' || :json::JSONB AS abb
+FROM TestJson;
+
+selectJsonExtractionExistsBinds:
+SELECT 'abc', datab -> 'a' -> ? AS b, data -> ? AS a
+FROM TestJson
+WHERE datab -> 'a' -> 'b' ?? :text::TEXT;
+
+selectJsonExtractionContainsBinds:
+SELECT datab
+FROM TestJson
+WHERE datab -> 'a' -> :key @> :contains::JSONB;
+
+selectJsonAggFilterWhere:
+SELECT json_agg(data) FILTER (WHERE (data->>'in_stock')::BOOLEAN) AS in_stock_rows
+FROM TestJson;
+
+selectJsonbAggFilter:
+SELECT jsonb_agg(datab->'color') AS colors
+FROM TestJson
+WHERE datab ?? 'color';
+
+selectJsonObjectAggFilterWhere:
+SELECT json_object_agg(data->>'color', data) FILTER (WHERE (data->'size') IS NOT NULL)
+FROM TestJson;
+
+selectJsonbObjectAgg:
+SELECT jsonb_object_agg(datab->>'color', datab)
+FROM TestJson;

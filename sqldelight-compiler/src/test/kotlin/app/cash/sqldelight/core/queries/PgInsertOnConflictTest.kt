@@ -45,9 +45,10 @@ class PgInsertOnConflictTest {
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?
             |      ""${'"'}.trimMargin(), 3) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindInt(0, id)
-            |        bindString(1, c1)
-            |        bindString(2, c1)
+            |        var parameterIndex = 0
+            |        bindInt(parameterIndex++, id)
+            |        bindString(parameterIndex++, c1)
+            |        bindString(parameterIndex++, c1)
             |      }
             |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
@@ -99,12 +100,13 @@ class PgInsertOnConflictTest {
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?
             |      ""${'"'}.trimMargin(), 6) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindInt(0, id)
-            |        bindString(1, c1)
-            |        bindString(2, c2)
-            |        bindString(3, c3)
-            |        bindString(4, c1)
-            |        bindString(5, c2)
+            |        var parameterIndex = 0
+            |        bindInt(parameterIndex++, id)
+            |        bindString(parameterIndex++, c1)
+            |        bindString(parameterIndex++, c2)
+            |        bindString(parameterIndex++, c3)
+            |        bindString(parameterIndex++, c1)
+            |        bindString(parameterIndex++, c2)
             |      }
             |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")
@@ -156,13 +158,14 @@ class PgInsertOnConflictTest {
             |      |ON CONFLICT (id) DO UPDATE SET col1 = ?, col2 = ?, col3 = ?
             |      ""${'"'}.trimMargin(), 7) {
             |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-            |        bindInt(0, id)
-            |        bindString(1, c1)
-            |        bindString(2, c2)
-            |        bindString(3, c3)
-            |        bindString(4, c1)
-            |        bindString(5, c2)
-            |        bindString(6, c3)
+            |        var parameterIndex = 0
+            |        bindInt(parameterIndex++, id)
+            |        bindString(parameterIndex++, c1)
+            |        bindString(parameterIndex++, c2)
+            |        bindString(parameterIndex++, c3)
+            |        bindString(parameterIndex++, c1)
+            |        bindString(parameterIndex++, c2)
+            |        bindString(parameterIndex++, c3)
             |      }
             |  notifyQueries(${insert.id.withUnderscores}) { emit ->
             |    emit("data")

@@ -9,17 +9,27 @@ import com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.intellij.lang.ASTNode
 
+/**
+ * This checks that a Sql column datatype used in the expression is JSON or JSONB.
+ * Additionally, checks the `jsonb operators` '#-' | '@?' | '??|' | '??&' | '??' are only used with a JSONB column.
+ */
 internal abstract class JsonExpressionMixin(node: ASTNode) :
   SqlCompositeElementImpl(node),
   SqlBinaryExpr,
   PostgreSqlJsonExpression {
   override fun annotate(annotationHolder: SqlAnnotationHolder) {
-    val columnType = ((firstChild.firstChild.reference?.resolve() as? SqlColumnName)?.parent as? SqlColumnDef)?.columnType?.typeName?.text
-    if (columnType == null || columnType !in arrayOf("JSON", "JSONB")) {
-      annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of json expression must be a json column.")
-    }
-    if ((jsonbBinaryOperator != null || jsonbBooleanOperator != null) && columnType != "JSONB") {
-      annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of jsonb expression must be a jsonb column.")
+    (firstChild.firstChild.reference?.resolve() as? SqlColumnName)?.let { sqlColumn ->
+      (sqlColumn.parent as? SqlColumnDef)?.columnType?.typeName?.text.let { columnType ->
+        if (columnType !in arrayOf("JSON", "JSONB")) {
+          annotationHolder.createErrorAnnotation(
+            firstChild.firstChild,
+            "Left side of json expression must be a json column.",
+          )
+        }
+        if ((jsonbBinaryOperator != null || jsonbBooleanOperator != null) && columnType != "JSONB") {
+          annotationHolder.createErrorAnnotation(firstChild.firstChild, "Left side of jsonb expression must be a jsonb column.")
+        }
+      }
     }
     super.annotate(annotationHolder)
   }

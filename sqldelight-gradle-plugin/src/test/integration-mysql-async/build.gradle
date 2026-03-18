@@ -9,6 +9,7 @@ sqldelight {
       packageName = "app.cash.sqldelight.mysql.integration.async"
       dialect("app.cash.sqldelight:mysql-dialect:${app.cash.sqldelight.VersionKt.VERSION}")
       generateAsync = true
+      expandSelectStar = true
     }
   }
 }
@@ -17,11 +18,11 @@ dependencies {
   implementation libs.mysqlJdbc
   implementation libs.testContainers.mysql
   implementation libs.testContainers.r2dbc
-  implementation "org.mariadb:r2dbc-mariadb:1.3.0"
+  implementation "org.mariadb:r2dbc-mariadb:1.4.0"
   implementation "app.cash.sqldelight:r2dbc-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation "app.cash.sqldelight:async-extensions:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
-  implementation libs.kotlin.coroutines.core
-  implementation libs.kotlin.coroutines.test
-  implementation libs.kotlin.coroutines.reactive
+  implementation libs.kotlinx.coroutines.core
+  implementation libs.kotlinx.coroutines.test
+  implementation libs.kotlinx.coroutines.reactive
 }

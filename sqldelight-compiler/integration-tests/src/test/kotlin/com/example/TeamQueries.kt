@@ -67,7 +67,8 @@ public class TeamQueries(
     |FROM team
     |WHERE coach = ?
     """.trimMargin(), mapper, 1) {
-      bindString(0, coach)
+      var parameterIndex = 0
+      bindString(parameterIndex++, coach)
     }
 
     override fun toString(): String = "Team.sq:teamForCoach"
@@ -90,7 +91,8 @@ public class TeamQueries(
     |FROM team
     |WHERE inner_type ${ if (inner_type == null) "IS" else "=" } ?
     """.trimMargin(), mapper, 1) {
-      bindString(0, inner_type?.let { teamAdapter.inner_typeAdapter.encode(it) })
+      var parameterIndex = 0
+      bindString(parameterIndex++, inner_type?.let { teamAdapter.inner_typeAdapter.encode(it) })
     }
 
     override fun toString(): String = "Team.sq:forInnerType"
