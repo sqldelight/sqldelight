@@ -88,6 +88,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
         geometryDataType != null -> PostgreSqlType.GEOMETRY
+        ltreeDataType != null -> PostgreSqlType.LTREE
         enumDataType != null -> PostgreSqlType.ENUM
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
@@ -247,6 +248,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "enum_last" -> IntermediateType(TEXT)
     "obj_description" -> IntermediateType(TEXT)
     "to_regclass" -> IntermediateType(TEXT)
+    "subpath" -> IntermediateType(PostgreSqlType.LTREE)
     else -> null
   }
 
@@ -384,6 +386,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         regexMatchOperatorExpression != null ||
         booleanNotExpression != null ||
         containsOperatorExpression != null ||
+        existsOperatorExpression != null ||
         overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
@@ -449,6 +452,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TSMULTIRANGE,
       PostgreSqlType.TSTZMULTIRANGE,
       PostgreSqlType.TSQUERY,
+      PostgreSqlType.LTREE,
       PostgreSqlType.ENUM,
       BOOLEAN, // is last as expected that boolean expression resolve to boolean
     )
