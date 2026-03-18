@@ -145,6 +145,28 @@ class SqlDelightEnvironment(
     }
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
 
+    // Check migration files for parse errors. Migration files may be excluded from
+    // forSourceFiles (e.g. when deriveSchemaFromMigrations=false) but are still used
+    // by DatabaseGenerator for migration code generation. Without this check, parse
+    // errors in .sqm files would be silently ignored, producing empty migration steps.
+    val psiManager = PsiManager.getInstance(projectEnvironment.project)
+    for (migrationFile in sourceFolders
+      .mapNotNull { localFileSystem.findFileByPath(it.absolutePath) }
+      .mapNotNull { psiManager.findDirectory(it) }
+      .flatMap { it.migrationFiles() }
+    ) {
+      val errorElements = ArrayList<PsiErrorElement>()
+      PsiTreeUtil.processElements(migrationFile) { element ->
+        if (element is PsiErrorElement) errorElements.add(element)
+        true
+      }
+      if (errorElements.isNotEmpty()) {
+        return CompilationStatus.Failure(
+          errorElements.map { errorMessage(it, it.errorDescription) },
+        )
+      }
+    }
+
     val writer = writer@{ fileName: String ->
       val file = File(fileName)
       if (!file.exists()) {

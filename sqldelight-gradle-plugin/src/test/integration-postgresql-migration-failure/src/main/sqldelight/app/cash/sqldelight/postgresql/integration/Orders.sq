@@ -1,0 +1,9 @@
+CREATE TABLE Orders
+(
+   id BIGINT PRIMARY KEY,
+   sku TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM Orders;

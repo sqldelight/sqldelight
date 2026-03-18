@@ -1,0 +1,5 @@
+CREATE TABLE Orders
+(
+   id BIGINT PRIMARY KEY,
+   sku TEXT NOT NULL
+);
