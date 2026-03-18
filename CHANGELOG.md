@@ -9,6 +9,7 @@
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
+- [Gradle Plugin] Implement stricter MigrationFile versioning (#5730 by @madisp)
 
 ### Fixed
 
