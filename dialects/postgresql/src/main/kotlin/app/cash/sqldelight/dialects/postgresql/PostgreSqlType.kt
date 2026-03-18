@@ -10,7 +10,7 @@ import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 
-internal enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
+enum class PostgreSqlType(override val javaType: TypeName) : DialectType {
   SMALL_INT(SHORT),
   INTEGER(INT),
   BIG_INT(LONG),
@@ -18,12 +18,20 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
   TIME(ClassName("java.time", "LocalTime")),
   TIMESTAMP(ClassName("java.time", "LocalDateTime")),
   TIMESTAMP_TIMEZONE(ClassName("java.time", "OffsetDateTime")),
-  INTERVAL(ClassName("org.postgresql.util", "PGInterval")),
+  INTERVAL(STRING),
   UUID(ClassName("java.util", "UUID")),
   NUMERIC(ClassName("java.math", "BigDecimal")),
   JSON(STRING),
   TSVECTOR(STRING),
+  TSTZRANGE(STRING),
+  TSRANGE(STRING),
+  TSMULTIRANGE(STRING),
+  TSTZMULTIRANGE(STRING),
   XML(STRING),
+  TSQUERY(STRING),
+  ENUM(STRING),
+  GEOMETRY(STRING),
+  GEOGRAPHY(STRING),
   ;
 
   override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock): CodeBlock {
@@ -31,14 +39,14 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
       SMALL_INT -> CodeBlock.of("bindShort(%L, %L)\n", columnIndex, value)
       INTEGER -> CodeBlock.of("bindInt(%L, %L)\n", columnIndex, value)
       BIG_INT -> CodeBlock.of("bindLong(%L, %L)\n", columnIndex, value)
-      DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> CodeBlock.of(
+      GEOMETRY, GEOGRAPHY -> CodeBlock.of("bindString(%L, %L)\n", columnIndex, value)
+      DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> CodeBlock.of(
         "bindObject(%L, %L)\n",
         columnIndex,
         value,
       )
-
       NUMERIC -> CodeBlock.of("bindBigDecimal(%L, %L)\n", columnIndex, value)
-      JSON, TSVECTOR -> CodeBlock.of(
+      ENUM, INTERVAL, JSON, TSVECTOR, TSTZRANGE, TSRANGE, TSMULTIRANGE, TSTZMULTIRANGE, TSQUERY -> CodeBlock.of(
         "bindObject(%L, %L, %M)\n",
         columnIndex,
         value,
@@ -59,9 +67,9 @@ internal enum class PostgreSqlType(override val javaType: TypeName) : DialectTyp
         SMALL_INT -> "$cursorName.getShort($columnIndex)"
         INTEGER -> "$cursorName.getInt($columnIndex)"
         BIG_INT -> "$cursorName.getLong($columnIndex)"
-        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, INTERVAL, UUID -> "$cursorName.getObject<%T>($columnIndex)"
+        DATE, TIME, TIMESTAMP, TIMESTAMP_TIMEZONE, UUID -> "$cursorName.getObject<%T>($columnIndex)"
         NUMERIC -> "$cursorName.getBigDecimal($columnIndex)"
-        JSON, TSVECTOR, XML -> "$cursorName.getString($columnIndex)"
+        ENUM, INTERVAL, JSON, TSVECTOR, TSTZRANGE, TSRANGE, TSMULTIRANGE, TSTZMULTIRANGE, XML, TSQUERY, GEOMETRY, GEOGRAPHY -> "$cursorName.getString($columnIndex)"
       },
       javaType,
     )

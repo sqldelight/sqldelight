@@ -7,6 +7,7 @@ SET test TO DEFAULT;
 
 SET SESSION test = yes;
 SET LOCAL test = yes;
+SET LOCAL test.test = 'test';
 
 SET TIME ZONE 'PST8PDT';
 SET TIME ZONE 'Europe/Paris';

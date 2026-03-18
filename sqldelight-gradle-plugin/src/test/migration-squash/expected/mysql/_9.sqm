@@ -1,0 +1,37 @@
+import kotlin.collections.List;
+
+CREATE TABLE test3 (
+  value VARCHAR(8)
+);
+
+CREATE INDEX idx_value ON test3(value);
+
+
+CREATE VIEW view1 AS
+SELECT *
+FROM test3;
+
+
+CREATE TRIGGER trigger1
+BEFORE INSERT ON test3
+BEGIN
+  INSERT INTO test3 VALUES('sup');
+END;
+
+
+CREATE TABLE test4(
+  stuff5 TEXT,
+  stuff8 VARCHAR(8),
+  stuff VARCHAR(8) AS List,
+  stuff3 VARCHAR(8) AS List,
+  INDEX new_index(stuff8),
+  CONSTRAINT new_constraint UNIQUE(stuff8)
+) CHARACTER SET utf8 COLLATE noscope ROW_FORMAT = DYNAMIC;
+CREATE TABLE test_index_visibility (
+  i INT,
+  j INT,
+  k INT,
+  INDEX j_idx(j) INVISIBLE,
+  INDEX i_idx(i)
+);
+CREATE INDEX k_idx ON test_index_visibility(k) INVISIBLE;

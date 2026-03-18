@@ -30,9 +30,9 @@ import org.gradle.workers.WorkParameters
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @TaskAction
   fun generateSquashedMigrationFile() {

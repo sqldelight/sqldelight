@@ -98,11 +98,14 @@ class OptimisticLockTest {
     val generator = MutatorQueryGenerator(mutator)
     assertThat(generator.function().toString()).isEqualTo(
       """
+      |/**
+      | * @return The number of rows updated.
+      | */
       |public fun updateText(
       |  text: kotlin.String,
       |  version: com.example.Test.Version,
       |  id: com.example.Test.Id,
-      |) {
+      |): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
       |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET
@@ -113,15 +116,17 @@ class OptimisticLockTest {
       |      |  version = ?
       |      ""${'"'}.trimMargin(), 4) {
       |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
-      |        bindString(0, text)
-      |        bindInt(1, version.version)
-      |        bindInt(2, id.id)
-      |        bindInt(3, version.version)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, text)
+      |        bindInt(parameterIndex++, version.version)
+      |        bindInt(parameterIndex++, id.id)
+      |        bindInt(parameterIndex++, version.version)
       |      }
       |  if (result.value == 0L) throw app.cash.sqldelight.db.OptimisticLockException("UPDATE on test failed because optimistic lock version did not match")
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),

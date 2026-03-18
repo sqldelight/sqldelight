@@ -1,0 +1,19 @@
+CREATE TYPE BUG_STATUS AS ENUM ('new', 'open', 'closed');
+
+CREATE TYPE COLORS AS ENUM ('red', 'green', 'purple');
+
+ALTER TYPE COLORS RENAME VALUE 'purple' TO 'mauve';
+
+ALTER TYPE COLORS ADD VALUE 'orange' AFTER 'red';
+
+DROP TYPE BUG_STATUS;
+
+DROP TYPE IF EXISTS COLORS CASCADE;
+
+CREATE TYPE ABC AS ENUM ('a', 'b', 'c');
+
+CREATE TABLE X  (
+   t1 ABC,
+   t2 ABC NOT NULL
+);
+

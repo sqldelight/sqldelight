@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.views
 
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.dialects.sqlite_3_38.SqliteDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.google.common.truth.Truth.assertThat
@@ -95,6 +96,47 @@ class InterfaceGeneration {
       |public data class SomeView(
       |  public val val_: Boolean,
       |  public val val__: Boolean,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `view with inner cte compiles`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE Test (
+      |  id INTEGER NOT NULL,
+      |  txt TEXT NOT NULL
+      |);
+      |
+      |CREATE VIEW SomeView AS
+      |WITH SomeCte AS (
+      |  SELECT id, txt
+      |  FROM Test
+      |)
+      |SELECT id, txt
+      |FROM SomeCte;
+      |
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/Test.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |package com.example
+      |
+      |import kotlin.Long
+      |import kotlin.String
+      |
+      |public data class Test(
+      |  public val id: Long,
+      |  public val txt: String,
       |)
       |
       """.trimMargin(),

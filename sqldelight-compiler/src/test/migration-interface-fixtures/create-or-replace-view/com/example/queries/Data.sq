@@ -1,0 +1,3 @@
+select:
+SELECT a, b, c
+FROM v_test;

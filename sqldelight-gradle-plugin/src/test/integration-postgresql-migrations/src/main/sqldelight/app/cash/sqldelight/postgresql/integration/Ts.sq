@@ -1,0 +1,6 @@
+insert:
+INSERT INTO ts(ts1, ts2)
+VALUES ?;
+
+select:
+SELECT ts1, ts2 FROM ts;

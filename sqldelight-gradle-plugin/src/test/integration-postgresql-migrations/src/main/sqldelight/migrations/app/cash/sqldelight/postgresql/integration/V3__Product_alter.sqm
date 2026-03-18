@@ -1,1 +1,2 @@
 ALTER TABLE Products RENAME COLUMN requires_dpi TO requiresDpi;
+COMMENT ON COLUMN Products.requiresDpi IS 'requiresDpi is false by default';
