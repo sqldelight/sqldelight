@@ -22,7 +22,7 @@ class PluginTest {
   @Test
   fun `Applying the plugin without Kotlin applied throws for Android`() {
     val result = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/no-kotlin-android"))
+      .withCommonConfiguration(File("src/test/no-kotlin-android-agp8"))
       .withArguments("build", "--stacktrace")
       .buildAndFail()
     assertThat(result.output)
@@ -35,6 +35,15 @@ class PluginTest {
   fun `Applying the android plugin works fine for library projects`() {
     val result = GradleRunner.create()
       .withCommonConfiguration(File("src/test/library-project"))
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  fun `Applying the android plugin works fine for library projects AGP 8`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/library-project-agp8"))
       .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -168,7 +177,7 @@ class PluginTest {
 
   @Test
   fun `the old sqldelight build folder is deleted`() {
-    val fixtureRoot = File("src/test/library-project")
+    val fixtureRoot = File("src/test/library-project-agp8")
     val outputFolder = File(fixtureRoot, "build/generated/sqldelight").apply { mkdirs() }
     val garbage = File(outputFolder, "sup.txt").apply { createNewFile() }
 

@@ -1,0 +1,26 @@
+CREATE TABLE users (
+  user_id INTEGER NOT NULL PRIMARY KEY,
+  username TEXT NOT NULL
+);
+
+CREATE TABLE profiles (
+  profile_id INTEGER NOT NULL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE posts (
+  post_id INTEGER NOT NULL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  profile_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (profile_id) REFERENCES profiles(profile_id)
+);
+
+CREATE TABLE comments (
+  comment_id INTEGER NOT NULL PRIMARY KEY,
+  profile_id INTEGER NOT NULL,
+  post_id INTEGER NOT NULL,
+  FOREIGN KEY (profile_id) REFERENCES profiles(profile_id),
+  FOREIGN KEY (post_id) REFERENCES posts(post_id)
+);

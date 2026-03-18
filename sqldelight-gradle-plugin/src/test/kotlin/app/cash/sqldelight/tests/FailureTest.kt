@@ -45,4 +45,23 @@ class FailureTest {
       """.trimMargin(),
     )
   }
+
+  @Test fun `compiler annotation exception in generated interface`() {
+    val fixtureRoot = File("src/test/compiler-annotation-error")
+
+    val output = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .buildAndFail()
+
+    assertThat(output.output).contains(
+      """
+      |Test1.sq:8:10 The Kotlin type of the argument cannot be inferred, use CAST instead.
+      |6    SELECT 1
+      |7    FROM dummy
+      |8    WHERE MAX(:input) > 1
+      |               ^^^^^^
+      """.trimMargin(),
+    )
+  }
 }
