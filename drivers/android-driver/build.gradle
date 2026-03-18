@@ -1,25 +1,25 @@
 plugins {
   alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.runtime")
   alias(libs.plugins.binaryCompatibilityValidator)
 }
 
-archivesBaseName = 'sqldelight-android-driver'
+base {
+  archivesName = 'sqldelight-android-driver'
+}
 
 android {
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
   namespace = "app.cash.sqldelight.driver.android"
 
   lint {
     textReport true
-    textOutput file("$reportsDir/lint-results.txt")
   }
 
   defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
   }
 
   buildFeatures {

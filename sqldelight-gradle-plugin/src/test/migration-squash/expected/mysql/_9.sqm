@@ -27,3 +27,11 @@ CREATE TABLE test4(
   INDEX new_index(stuff8),
   CONSTRAINT new_constraint UNIQUE(stuff8)
 ) CHARACTER SET utf8 COLLATE noscope ROW_FORMAT = DYNAMIC;
+CREATE TABLE test_index_visibility (
+  i INT,
+  j INT,
+  k INT,
+  INDEX j_idx(j) INVISIBLE,
+  INDEX i_idx(i)
+);
+CREATE INDEX k_idx ON test_index_visibility(k) INVISIBLE;

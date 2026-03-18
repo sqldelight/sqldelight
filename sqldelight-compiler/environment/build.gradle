@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.shadow)
@@ -63,9 +65,11 @@ tasks.named("jar") {
   enabled = false
 }
 
-tasks.named("shadowJar") {
-  archiveClassifier.set("")
+tasks.named('shadowJar', ShadowJar) {
+  archiveClassifier = ''
   configurations = [project.configurations.shadow]
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  failOnDuplicateEntries = true
 
   /**
    Before minimizing
@@ -81,32 +85,32 @@ tasks.named("shadowJar") {
   */
   minimize {
     // Needed for MockProject and MockModule.
-    exclude(dependency(libs.intellij.testFramework.get()))
+    exclude(dependency(libs.intellij.testFramework))
 
     // Needed for general utils like PsiTreeUtil.
-    exclude(dependency(libs.intellij.util.get()))
+    exclude(dependency(libs.intellij.util))
 
     // Base intellij platform.
-    exclude(dependency(libs.intellij.core.get()))
-    exclude(dependency(libs.intellij.coreImpl.get()))
+    exclude(dependency(libs.intellij.core))
+    exclude(dependency(libs.intellij.coreImpl))
 
     // Base required language support.
-    exclude(dependency(libs.intellij.lang.get()))
-    exclude(dependency(libs.intellij.langImpl.get()))
+    exclude(dependency(libs.intellij.lang))
+    exclude(dependency(libs.intellij.langImpl))
 
     // Base required analysis support, like resolve references.
-    exclude(dependency(libs.intellij.analysis.get()))
-    exclude(dependency(libs.intellij.analysisImpl.get()))
+    exclude(dependency(libs.intellij.analysis))
+    exclude(dependency(libs.intellij.analysisImpl))
 
     // Needed for resolving files and the file index.
-    exclude(dependency(libs.intellij.projectModel.get()))
-    exclude(dependency(libs.intellij.projectModelImpl.get()))
+    exclude(dependency(libs.intellij.projectModel))
+    exclude(dependency(libs.intellij.projectModelImpl))
 
     // Don't minimize coroutines support.
-    exclude(dependency(libs.intellij.utilEx.get()))
+    exclude(dependency(libs.intellij.utilEx))
 
     // Needed for Icon support.
-    exclude(dependency(libs.intellij.utilUi.get()))
+    exclude(dependency(libs.intellij.utilUi))
   }
 
   include '*.jar'

@@ -3,5 +3,6 @@ CREATE TABLE Orders
    id BIGINT PRIMARY KEY,
    sku VARCHAR(25) NOT NULL,
    quantity SMALLINT NOT NULL,
-   price NUMERIC(10, 2) NOT NULL
+   price NUMERIC(10, 2) NOT NULL,
+   updated_at TIMESTAMPTZ
 );

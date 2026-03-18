@@ -32,6 +32,17 @@ object GradleCompatibility {
     return CompatibilityReport.Compatible
   }
 
+  // Fallback on default value of `expandSelectStar` when gradle version is older than 2.3.0
+  fun readExpandSelectStar(propertiesFile: SqlDelightPropertiesFile, databaseProperties: SqlDelightDatabaseProperties): Boolean {
+    val currentGradleVersion = SemVer(propertiesFile.currentVersion)
+
+    if (currentGradleVersion < SemVer("2.3.0")) {
+      return true
+    }
+
+    return databaseProperties.expandSelectStar
+  }
+
   private data class SemVer(
     val major: Int,
     val minor: Int,

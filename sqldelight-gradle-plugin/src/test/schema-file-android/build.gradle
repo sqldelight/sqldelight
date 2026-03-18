@@ -1,13 +1,12 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.kotlin.android)
 }
 
 android {
-  namespace "com.example.sqldelight"
+  namespace = "com.example.sqldelight"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   lint {
     textReport true

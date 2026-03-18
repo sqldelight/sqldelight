@@ -85,7 +85,7 @@ interface SqlDelightFileIndex {
     fun getInstance(module: Module) = SqlDelightProjectService.getInstance(module.project).fileIndex(module)
 
     fun sanitizeDirectoryName(name: String): String {
-      return name.filter { it.isLetterOrDigit() }
+      return name.filter { it.isLetterOrDigit() || it == '_' }
     }
   }
 }

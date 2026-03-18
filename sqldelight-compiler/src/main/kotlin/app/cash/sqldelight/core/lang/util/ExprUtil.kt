@@ -48,6 +48,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
+import com.alecstrong.sql.psi.core.psi.SqlLikeEscapeCharacterExpr
 import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlOtherExpr
@@ -187,7 +188,6 @@ private fun SqlExpr.type(): IntermediateType {
  *          | between_expr
  *          | is_expr
  *          | null_expr
- *          | like_expr
  *          | collate_expr
  *          | cast_expr
  *          | paren_expr
@@ -195,6 +195,8 @@ private fun SqlExpr.type(): IntermediateType {
  *          | binary_expr
  *          | unary_expr
  *          | bind_expr
+ *          | like_escape_character_expr
+ *          | like_expr
  *          | literal_expr
  *          | column_expr )
  */
@@ -278,6 +280,8 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
   is SqlOtherExpr -> {
     extensionExpr.type()
   }
+
+  is SqlLikeEscapeCharacterExpr -> expr.type()
 
   else -> throw IllegalStateException("Unknown expression type $this")
 }

@@ -1,0 +1,2 @@
+Sample.s line 9:65 - No table found in the FROM clause with name example_table
+Sample.s line 15:16 - No table found in the FROM clause with name example_table

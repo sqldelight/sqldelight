@@ -1,0 +1,13 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
+}
+
+sqldelight {
+  databases {
+    Database {
+      packageName = "com.example"
+      verifyMigrations = true
+    }
+  }
+}

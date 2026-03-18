@@ -35,8 +35,10 @@ import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.core.lang.util.queryFiles
 import app.cash.sqldelight.core.lang.util.rawSqlText
+import com.alecstrong.sql.psi.core.psi.SchemaContributor
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.openapi.module.Module
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -346,6 +348,12 @@ internal class DatabaseGenerator(
     dropTriggerStmt != null -> true
     dropViewStmt != null -> true
     pragmaStmt != null -> true
+    extensionStmt != null -> {
+      PsiTreeUtil.getChildOfType(
+        extensionStmt,
+        SchemaContributor::class.java,
+      ) != null
+    }
     else -> false
   }
 }

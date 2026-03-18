@@ -26,11 +26,13 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RECURSIVE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
@@ -38,6 +40,7 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
     "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParserUtil.alterTableRenameColumnExt"
     "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParser.alter_table_rename_column_real"
@@ -49,6 +52,7 @@ overrides ::= alter_table_rules
               | update_stmt_limited
               | delete_stmt
               | delete_stmt_limited
+              | with_clause
 
 alter_table_rules ::= (
   {alter_table_add_column}
@@ -118,3 +122,11 @@ returning_clause ::= 'RETURNING' {result_column} ( COMMA {result_column} ) * {
 }
 
 private alter_table_rename_column_inherited ::= <<alterTableRenameColumnExt <<alter_table_rename_column_real>>>>
+
+with_clause_materialized ::= NOT 'MATERIALIZED' | 'MATERIALIZED'
+with_clause ::= WITH [ RECURSIVE ] {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ( COMMA {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ) * {
+  mixin = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlWithClause"
+  pin = 1
+  override = true
+}
