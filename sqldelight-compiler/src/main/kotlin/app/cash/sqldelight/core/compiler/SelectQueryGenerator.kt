@@ -64,43 +64,12 @@ class SelectQueryGenerator(
     val argNameAllocator = NameAllocator()
     val parametersAndTypes = query.parameters.map { argNameAllocator.newName(it.name, it) to it.argumentType() }
 
-    val function = defaultResultTypeFunctionInterface(parametersAndTypes)
-    val params = parametersAndTypes.map { (name) -> CodeBlock.of(name) }
+    val params = parametersAndTypes.map { (name, _) -> CodeBlock.of(name) }
+    val ctorCall = CodeBlock.of("::%T", query.interfaceType)
+    val queryCall = (params + ctorCall).joinToCode(", ", "${query.name}(", ")")
 
-    val columnArgs = query.resultColumns.map { argument ->
-      argNameAllocator.newName(argument.name, argument)
-    }
-
-    val lamdaParams = columnArgs.joinToString(separator = ", ")
-    val ctorParams = columnArgs.joinToString(separator = ",\n", postfix = "\n")
-
-    val trailingLambda = CodeBlock.builder()
-      .add(CodeBlock.of("·{ $lamdaParams ->\n"))
-      .indent()
-      .add("%T(\n", query.interfaceType)
-      .indent()
-      .add(ctorParams)
-      .unindent()
-      .add(")\n")
-      .unindent()
-      .add("}")
-      .build()
-
-    return function
-      .addStatement(
-        "return %L",
-        CodeBlock
-          .builder()
-          .add(
-            if (params.isEmpty()) {
-              CodeBlock.of(query.name)
-            } else {
-              params.joinToCode(", ", "${query.name}(", ")")
-            },
-          )
-          .add(trailingLambda)
-          .build(),
-      )
+    return defaultResultTypeFunctionInterface(parametersAndTypes)
+      .addStatement("return %L", queryCall)
       .build()
   }
 
@@ -221,11 +190,19 @@ class SelectQueryGenerator(
     } else {
       mapperLambda.add(query.resultColumns.single().cursorGetter(0)).add("\n")
     }
-    mapperLambda.unindent().add("}\n")
 
     if (!query.needsQuerySubType()) {
       // No need for a custom query type, return an instance of Query:
       // return Query(statement, selectForId) { resultSet -> ... }
+      if (tablesUpdated().isNotEmpty()) {
+        mapperLambda.unindent()
+        mapperLambda.add("}.also {\n")
+        mapperLambda.indent()
+        mapperLambda.add(notifyQueriesBlock())
+      }
+
+      mapperLambda.unindent().add("}\n")
+
       val tablesObserved = query.tablesObserved
       if (tablesObserved.isNullOrEmpty()) {
         function.addCode(
@@ -250,6 +227,7 @@ class SelectQueryGenerator(
         )
       }
     } else {
+      mapperLambda.unindent().add("}\n")
       // Custom type is needed to handle dirtying events, return an instance of custom type:
       // return SelectForId(id) { resultSet -> ... }
       function.addCode(
@@ -271,12 +249,11 @@ class SelectQueryGenerator(
       .joinToCode(", ", prefix = "arrayOf(", suffix = ")")
   }
 
-  private fun NamedQuery.supertype() =
-    if (tablesObserved.isNullOrEmpty()) {
-      EXECUTABLE_QUERY_TYPE
-    } else {
-      QUERY_TYPE
-    }
+  private fun NamedQuery.supertype() = if (tablesObserved.isNullOrEmpty()) {
+    EXECUTABLE_QUERY_TYPE
+  } else {
+    QUERY_TYPE
+  }
 
   /**
    * The private query subtype for this specific query.

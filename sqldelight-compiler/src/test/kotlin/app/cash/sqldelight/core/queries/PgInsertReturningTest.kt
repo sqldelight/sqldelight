@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.queries
 
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
+import app.cash.sqldelight.core.test.fileContents
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
@@ -33,14 +34,13 @@ class PgInsertReturningTest {
     val insert = file.namedQueries.first()
     val generator = SelectQueryGenerator(insert)
 
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(generator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
-        |public fun insertReturn(data_: com.example.Data_): app.cash.sqldelight.ExecutableQuery<com.example.Data_> = insertReturn(data_) { id, data__ ->
-        |  com.example.Data_(
-        |    id,
-        |    data__
-        |  )
-        |}
+        |package com.example
+        |
+        |import app.cash.sqldelight.ExecutableQuery
+        |
+        |public fun insertReturn(data_: Data_): ExecutableQuery<Data_> = insertReturn(data_, ::Data_)
         |
       """.trimMargin(),
     )
@@ -79,14 +79,13 @@ class PgInsertReturningTest {
     val insert = file.namedQueries.first()
     val generator = SelectQueryGenerator(insert)
 
-    assertThat(generator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(generator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
-        |public fun insertReturn(data_: com.example.Data_): app.cash.sqldelight.ExecutableQuery<com.example.InsertReturn> = insertReturn(data_) { data__, id ->
-        |  com.example.InsertReturn(
-        |    data__,
-        |    id
-        |  )
-        |}
+        |package com.example
+        |
+        |import app.cash.sqldelight.ExecutableQuery
+        |
+        |public fun insertReturn(data_: Data_): ExecutableQuery<InsertReturn> = insertReturn(data_, ::InsertReturn)
         |
       """.trimMargin(),
     )

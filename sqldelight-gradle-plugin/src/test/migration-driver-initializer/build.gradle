@@ -8,6 +8,7 @@ sqldelight {
     Database {
       packageName = "com.example"
       verifyMigrations = true
+      schemaOutputDirectory = file('src/main/sqldelight/databases')
 
       dependencies.add(configurationName, project(":driverInit"))
     }

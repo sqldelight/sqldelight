@@ -1,7 +1,7 @@
 package com.example
 
-import java.lang.Void
+import kotlin.Nothing
 
 public data class SelectNull(
-  public val expr: Void?,
+  public val expr: Nothing?,
 )

@@ -1,0 +1,19 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+plugins {
+  alias(libs.plugins.kotlin.jvm) apply false
+}
+
+allprojects {
+  tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+  }
+
+  tasks.withType(KotlinJvmCompile).configureEach {
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_11
+    }
+  }
+}

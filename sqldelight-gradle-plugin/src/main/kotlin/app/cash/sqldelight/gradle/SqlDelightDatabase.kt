@@ -5,13 +5,15 @@ import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.lang.MIGRATION_EXTENSION
 import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.gradle.kotlin.Source
-import app.cash.sqldelight.gradle.kotlin.sources
+import app.cash.sqldelight.gradle.kotlin.configureOnSources
 import app.cash.sqldelight.gradle.squash.MigrationSquashTask
 import groovy.lang.GroovyObject
 import java.io.File
 import javax.inject.Inject
+import kotlin.DeprecationLevel.HIDDEN
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
@@ -37,9 +39,13 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   val configurationName: String = "${name}DialectClasspath"
 
+  val expandSelectStar: Property<Boolean> = project.objects.property(Boolean::class.java).convention(true)
+
   internal val configuration = project.configurations.create(configurationName).apply {
     isCanBeConsumed = false
     isVisible = false
+    exclude(mapOf("group" to "org.jetbrains.kotlin", "module" to "kotlin-stdlib"))
+    exclude(mapOf("group" to "org.jetbrains.kotlin", "module" to "kotlin-reflect"))
   }
 
   private val intellijEnv = project.configurations.create("${name}IntellijEnv").apply {
@@ -57,7 +63,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   internal var addedDialect: Boolean = false
 
   fun module(module: Any) {
-    configuration.dependencies.add(project.dependencies.create(module))
+    project.dependencies.add(configuration.name, module)
   }
 
   fun dialect(dialect: Any) {
@@ -107,17 +113,22 @@ abstract class SqlDelightDatabase @Inject constructor(
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
-  private val sources by lazy { sources(project) }
   private val dependencies = mutableListOf<SqlDelightDatabase>()
 
   private var recursionGuard = false
+
+  private val sourceCollector = SqlDelightSourceCollector()
 
   fun methodMissing(name: String, args: Any): Any {
     return (project as GroovyObject).invokeMethod(name, args)
   }
 
   @Suppress("unused") // Public API used in gradle files.
-  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(delegatedProject.dependencyProject)
+  @Deprecated("use ProjectDependency", level = HIDDEN)
+  fun dependency(delegatedProject: DelegatingProjectDependency) = dependency(project.project(delegatedProject.path))
+
+  @Suppress("unused") // Public API used in gradle files.
+  fun dependency(delegatedProject: ProjectDependency) = dependency(project.project(delegatedProject.path))
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
@@ -135,91 +146,24 @@ abstract class SqlDelightDatabase @Inject constructor(
     srcDirs.from(srcPaths)
   }
 
-  internal fun getProperties(): SqlDelightDatabasePropertiesImpl {
-    require(packageName.isPresent) { "property packageName for $name database must be provided" }
-
-    check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
-    recursionGuard = true
-
-    if (!addedDialect) {
-      throw GradleException(
-        """
-      A dialect is needed for SQLDelight. For example for sqlite:
-
-      sqldelight {
-        $name {
-          dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
-        }
-      }
-        """.trimIndent(),
-      )
-    }
-
-    try {
-      return SqlDelightDatabasePropertiesImpl(
-        packageName = packageName.get(),
-        compilationUnits = sources.map { source ->
-          SqlDelightCompilationUnitImpl(
-            name = source.name,
-            sourceFolders = sourceFolders(source).sortedBy { it.folder.absolutePath },
-            outputDirectoryFile = source.outputDir,
-          )
-        },
-        rootDirectory = project.projectDir,
-        className = name,
-        dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName.get(), it.name) },
-        deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
-        treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
-        generateAsync = generateAsync.get(),
-      )
-    } finally {
-      recursionGuard = false
-    }
+  internal fun getProperties(): Provider<SqlDelightDatabasePropertiesImpl> {
+    return sourceCollector.databaseProperties()
   }
 
-  private fun sourceFolders(source: Source): List<SqlDelightSourceFolderImpl> {
-    val sourceFolders: List<SqlDelightSourceFolderImpl> = buildList {
-      for (dir in srcDirs) {
-        val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(folder = dir, dependency = false)
-        add(sqlDelightSourceFolder)
-      }
-
-      if (this.isEmpty()) {
-        for (sourceSetName in source.sourceSets) {
-          val sqlDelightSourceFolder = SqlDelightSourceFolderImpl(
-            folder = File(project.projectDir, "src/$sourceSetName/sqldelight"),
-            dependency = false,
-          )
-          add(sqlDelightSourceFolder)
-        }
-      }
-    }
-
-    return sourceFolders + dependencies.flatMap { dependency ->
-      val dependencySource = source.closestMatch(dependency.sources)
-        ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
-      val compilationUnit = dependency.getProperties().compilationUnits
-        .single { it.name == dependencySource.name }
-
-      return@flatMap compilationUnit.sourceFolders.map {
-        SqlDelightSourceFolderImpl(
-          folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
-          dependency = true,
-        )
-      }
-    }.distinct()
+  internal fun sourceKeys(): Provider<Set<Source.Key>> {
+    return project.provider { sourceCollector.sourceKeys() }
   }
 
   internal fun registerTasks() {
-    sources.forEach { source ->
-      val allFiles = sourceFolders(source)
-      val sourceFiles = project.files(*allFiles.map { it.folder }.toTypedArray())
+    configureOnSources { source ->
+      val allFiles = sourceCollector.sourceFolders(source)
+      val sourceFiles = project.files(allFiles.map { folders -> folders.map { it.folder } })
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
         it.projectName.set(project.name)
-        it.properties = getProperties()
-        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+        it.properties.set(sourceCollector.databaseProperties())
+        it.compilationUnit.set(sourceCollector.compilationUnits().map { units -> units.single { unit -> unit.name == source.name } })
         it.outputDirectory.set(source.outputDir)
         it.source(sourceFiles)
         it.include("**${File.separatorChar}*.$SQLDELIGHT_EXTENSION")
@@ -230,14 +174,8 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 
-      val outputDirectoryProvider: Provider<File> = task.flatMap { it.outputDirectory.asFile }
-
-      // Add the source dependency on the generated code.
-      // Use a Provider generated from the task to carry task dependencies
-      // See https://github.com/cashapp/sqldelight/issues/2119
-      source.sourceDirectorySet.srcDir(task)
-      // And register the output directory to the IDE if needed
-      source.registerGeneratedDirectory?.invoke(outputDirectoryProvider)
+      // Register the generated output of the task as needed
+      source.registerSourceGeneration(task)
 
       project.tasks.named("generateSqlDelightInterface").configure {
         it.dependsOn(task)
@@ -264,14 +202,14 @@ abstract class SqlDelightDatabase @Inject constructor(
     val verifyMigrationTask =
       project.tasks.register("verify${source.name.capitalize()}${name}Migration", VerifyMigrationTask::class.java) {
         it.projectName.set(project.name)
-        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+        it.compilationUnit.set(sourceCollector.compilationUnits().map { units -> units.single { unit -> unit.name == source.name } })
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.$SQLDELIGHT_EXTENSION")
         it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
         it.workingDirectory.set(File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name"))
         it.group = SqlDelightPlugin.GROUP
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
-        it.properties = getProperties()
+        it.properties.set(sourceCollector.databaseProperties())
         it.verifyMigrations.set(verifyMigrations)
         it.verifyDefinitions.set(verifyDefinitions)
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
@@ -280,14 +218,14 @@ abstract class SqlDelightDatabase @Inject constructor(
     if (schemaOutputDirectory.isPresent) {
       project.tasks.register("generate${source.name.capitalize()}${name}Schema", GenerateSchemaTask::class.java) {
         it.projectName.set(project.name)
-        it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+        it.compilationUnit.set(sourceCollector.compilationUnits().map { units -> units.single { unit -> unit.name == source.name } })
         it.outputDirectory.set(schemaOutputDirectory)
         it.source(sourceSet)
         it.include("**${File.separatorChar}*.$SQLDELIGHT_EXTENSION")
         it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
-        it.properties = getProperties()
+        it.properties.set(sourceCollector.databaseProperties())
         it.verifyMigrations.set(verifyMigrations)
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
@@ -306,14 +244,14 @@ abstract class SqlDelightDatabase @Inject constructor(
   ) {
     project.tasks.register("generate${source.name.capitalize()}${name}Migrations", GenerateMigrationOutputTask::class.java) {
       it.projectName.set(project.name)
-      it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+      it.compilationUnit.set(sourceCollector.compilationUnits().map { units -> units.single { unit -> unit.name == source.name } })
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
       it.migrationOutputExtension.set(migrationOutputFileFormat)
       it.outputDirectory.set(migrationOutputDirectory)
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
-      it.properties = getProperties()
+      it.properties.set(sourceCollector.databaseProperties())
       it.classpath.setFrom(intellijEnv, configuration)
     }
   }
@@ -324,15 +262,111 @@ abstract class SqlDelightDatabase @Inject constructor(
   ) {
     project.tasks.register("squash${source.name.capitalize()}${name}Migrations", MigrationSquashTask::class.java) {
       it.projectName.set(project.name)
-      it.compilationUnit = getProperties().compilationUnits.single { it.name == source.name }
+      it.compilationUnit.set(sourceCollector.compilationUnits().map { units -> units.single { unit -> unit.name == source.name } })
       it.source(sourceSet)
       it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
       it.group = SqlDelightPlugin.GROUP
       it.description = "Squash migrations into a single file for ${source.name} $name."
-      it.properties = getProperties()
+      it.properties.set(sourceCollector.databaseProperties())
       it.classpath.setFrom(intellijEnv, configuration)
     }
   }
 
   private val Source.outputDir get() = File(generatedSourcesDirectory, name)
+
+  // Collects compilation units as sourceFolders are defined so that they can be lazily provided to downstream consumers
+  private inner class SqlDelightSourceCollector {
+    private val compilationUnits = mutableMapOf<Source.Key, Provider<SqlDelightCompilationUnitImpl>>()
+
+    fun sourceKeys(): Set<Source.Key> = compilationUnits.keys
+
+    fun databaseProperties(): Provider<SqlDelightDatabasePropertiesImpl> {
+      require(packageName.isPresent) { "property packageName for $name database must be provided" }
+
+      check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
+      recursionGuard = true
+
+      if (!addedDialect) {
+        throw GradleException(
+          """
+      A dialect is needed for SQLDelight. For example for sqlite:
+
+      sqldelight {
+        $name {
+          dialect("app.cash.sqldelight:sqlite-3-18-dialect:$VERSION")
+        }
+      }
+          """.trimIndent(),
+        )
+      }
+
+      try {
+        return project.provider {
+          SqlDelightDatabasePropertiesImpl(
+            packageName = packageName.get(),
+            compilationUnits = compilationUnits().get(),
+            rootDirectory = project.projectDir,
+            className = name,
+            dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName.get(), it.name) },
+            deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
+            treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
+            generateAsync = generateAsync.get(),
+            expandSelectStar = expandSelectStar.get(),
+          )
+        }
+      } finally {
+        recursionGuard = false
+      }
+    }
+
+    fun compilationUnits(): Provider<List<SqlDelightCompilationUnitImpl>> = project.provider {
+      compilationUnits.values.map { it.get() }
+    }
+
+    fun sourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
+      val folderProvider = provideSourceFolders(source)
+
+      compilationUnits[source.key] = project.provider {
+        SqlDelightCompilationUnitImpl(
+          name = source.name,
+          sourceFolders = folderProvider.get(),
+          outputDirectoryFile = source.outputDir,
+        )
+      }
+
+      return folderProvider
+    }
+
+    private fun provideSourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
+      val sourceFolders = source.sourceDirectories.map { dirs ->
+        val declaredSet = srcDirs.mapTo(mutableSetOf()) { dir ->
+          SqlDelightSourceFolderImpl(folder = dir, dependency = false)
+        }
+
+        if (declaredSet.isEmpty()) {
+          dirs.mapTo(mutableSetOf()) { SqlDelightSourceFolderImpl(folder = it.asFile, dependency = false) }
+        } else {
+          declaredSet
+        }
+      }
+
+      val dependencySet = project.provider {
+        dependencies.flatMap { dependency ->
+          val dependencySourceKey = source.closestMatch(dependency.sourceKeys().get())
+            ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
+          val compilationUnit = dependency.getProperties().get().compilationUnits
+            .single { it.name == dependencySourceKey.name }
+
+          return@flatMap compilationUnit.sourceFolders.map {
+            SqlDelightSourceFolderImpl(
+              folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
+              dependency = true,
+            )
+          }
+        }
+      }
+
+      return sourceFolders.zip(dependencySet) { folders, dependencies -> folders + dependencies }
+    }
+  }
 }

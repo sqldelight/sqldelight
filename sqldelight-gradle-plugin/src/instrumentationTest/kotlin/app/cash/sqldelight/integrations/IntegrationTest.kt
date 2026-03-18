@@ -120,7 +120,7 @@ class IntegrationTest {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "test", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -135,7 +135,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "iosTest", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

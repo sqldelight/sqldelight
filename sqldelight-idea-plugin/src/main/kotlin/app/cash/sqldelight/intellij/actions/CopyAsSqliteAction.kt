@@ -19,6 +19,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import com.alecstrong.sql.psi.core.psi.SqlStmt
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
@@ -37,6 +38,10 @@ class CopyAsSqliteAction : AnAction() {
     e.presentation.isVisible =
       e.getData(PlatformDataKeys.VIRTUAL_FILE)?.extension == SqlDelightFileType.defaultExtension &&
       e.sqlElementAtCaret() != null
+  }
+
+  override fun getActionUpdateThread(): ActionUpdateThread {
+    return ActionUpdateThread.BGT
   }
 
   private fun AnActionEvent.sqlElementAtCaret(): SqlStmt? {

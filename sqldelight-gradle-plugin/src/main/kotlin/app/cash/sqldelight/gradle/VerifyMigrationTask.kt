@@ -42,9 +42,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
@@ -163,6 +163,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         buildString(diff::printTo)
       }
 
+      logger.info("Performed ${databaseComparator.performedComparisonsCount} comparisons")
+
       check(diffReport.isEmpty()) {
         "Error migrating from ${dbFile.name}, fresh database looks" +
           " different from migration database:\n$diffReport"
@@ -202,21 +204,21 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         lastMigrationVersion = actual
       }
     }
-
-    private fun MapProperty<String, String>.toProperties(): Properties {
-      val connectionProperties = Properties()
-      get().forEach { (key, value) ->
-        connectionProperties[key] = value
-      }
-      return connectionProperties
-    }
   }
 }
 
 /**
  * Allows consumers to configure and register (with [DriverManager]) their custom drivers prior to
- * running migration verification task.
+ * running VerifyMigrationTask and GenerateSchemaTask tasks.
  */
 interface DriverInitializer {
   fun execute(properties: SqlDelightDatabaseProperties, driverProperties: Properties)
+}
+
+internal fun MapProperty<String, String>.toProperties(): Properties {
+  val properties = Properties()
+  get().forEach { (key, value) ->
+    properties[key] = value
+  }
+  return properties
 }

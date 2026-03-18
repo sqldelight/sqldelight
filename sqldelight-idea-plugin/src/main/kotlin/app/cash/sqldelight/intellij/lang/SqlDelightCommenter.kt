@@ -31,8 +31,7 @@ class SqlDelightCommenter : CodeDocumentationAwareCommenter {
   override fun getBlockCommentSuffix(): String? = null
 
   override fun getDocumentationCommentTokenType(): IElementType = SqlTypes.JAVADOC
-  override fun isDocumentationComment(psiComment: PsiComment?) =
-    psiComment?.tokenType == documentationCommentTokenType
+  override fun isDocumentationComment(psiComment: PsiComment?) = psiComment?.tokenType == documentationCommentTokenType
 
   override fun getDocumentationCommentPrefix() = "/**"
   override fun getDocumentationCommentLinePrefix() = "*"

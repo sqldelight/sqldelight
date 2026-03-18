@@ -24,3 +24,7 @@ tasks.withType(AbstractArchiveTask).configureEach {
     setPreserveFileTimestamps false
     setReproducibleFileOrder true
 }
+
+rootProject.dependencies {
+  dokka(project(path))
+}

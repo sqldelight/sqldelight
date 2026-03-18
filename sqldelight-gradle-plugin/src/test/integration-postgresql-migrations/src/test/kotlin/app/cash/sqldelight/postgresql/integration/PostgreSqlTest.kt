@@ -5,14 +5,17 @@ import app.cash.sqldelight.driver.jdbc.JdbcDriver
 import com.google.common.truth.Truth.assertThat
 import java.sql.Connection
 import java.sql.DriverManager
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import migrations.app.cash.sqldelight.postgresql.integration.Orders
 import migrations.app.cash.sqldelight.postgresql.integration.Products
+import migrations.app.cash.sqldelight.postgresql.integration.Ts
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:13.11:///my_db")
+  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -45,14 +48,26 @@ class PostgreSqlTest {
 
   @Test fun simpleOrdersSelect() {
     with(database) {
-      ordersQueries.insert(Orders(1, "sku", 3, 165.98.toBigDecimal()))
+      ordersQueries.insert(Orders(1, "sku", 3, 165.98.toBigDecimal(), null))
       assertThat(ordersQueries.selectAll().executeAsList()).containsExactly(
         Orders(
           1,
           "sku",
           3,
           165.98.toBigDecimal(),
+          null,
         ),
+      )
+    }
+  }
+
+  @Test fun migrateTimeStampToTimeStampWithTimeZone() {
+    val ts1 = OffsetDateTime.of(1980, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0))
+    val ts2 = OffsetDateTime.of(1981, 4, 9, 20, 15, 45, 0, ZoneOffset.ofHours(0))
+    with(database) {
+      tsQueries.insert(Ts(ts1, ts2))
+      assertThat(tsQueries.select().executeAsList()).containsExactly(
+        Ts(ts1, ts2),
       )
     }
   }

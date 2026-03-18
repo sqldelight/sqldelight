@@ -1,9 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.kotlin.android)
 }
 
 dependencies {
@@ -25,19 +25,19 @@ sqldelight {
 }
 
 android {
-  namespace "app.cash.sqldelight.integration"
+  namespace = "app.cash.sqldelight.integration"
 
-  compileSdk libs.versions.compileSdk.get() as int
+  compileSdk = libs.versions.compileSdk.get() as int
 
   defaultConfig {
-    minSdk libs.versions.minSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
 
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
-  lint {
-    textOutput file("$reportsDir/lint-results.txt")
-    textReport true
+  compileOptions {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
   }
 
   packagingOptions {
@@ -46,5 +46,5 @@ android {
 }
 
 tasks.withType(KotlinCompilationTask.class).configureEach {
-  compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+  compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }

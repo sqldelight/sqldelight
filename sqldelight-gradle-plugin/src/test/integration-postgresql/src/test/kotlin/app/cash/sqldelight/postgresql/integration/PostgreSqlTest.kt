@@ -15,13 +15,16 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import net.postgis.jdbc.geometry.Point
+import net.postgis.jdbc.geometry.binary.BinaryParser
+import net.postgis.jdbc.geometry.binary.BinaryWriter
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
 class PostgreSqlTest {
-  val conn = DriverManager.getConnection("jdbc:tc:postgresql:latest:///my_db")
+  val conn = DriverManager.getConnection("jdbc:tc:postgis:latest:///my_db")
   val driver = object : JdbcDriver() {
     override fun getConnection() = conn
     override fun closeConnection(connection: Connection) = Unit
@@ -29,15 +32,19 @@ class PostgreSqlTest {
     override fun removeListener(vararg queryKeys: String, listener: Query.Listener) = Unit
     override fun notifyListeners(vararg queryKeys: String) = Unit
   }
+
+  private val pointAdapter = object : ColumnAdapter<Point, String> {
+    override fun encode(value: Point) = BinaryWriter().writeHexed(value)
+    override fun decode(databaseValue: String) = BinaryParser().parse(databaseValue) as Point
+  }
+
   val database = MyDatabase(
     driver,
     arraysAdapter = Arrays.Adapter(
       object : ColumnAdapter<Array<UInt>, Array<Int>> {
-        override fun decode(databaseValue: Array<Int>): Array<UInt> =
-          databaseValue.map { it.toUInt() }.toTypedArray()
+        override fun decode(databaseValue: Array<Int>): Array<UInt> = databaseValue.map { it.toUInt() }.toTypedArray()
 
-        override fun encode(value: Array<UInt>): Array<Int> =
-          value.map { it.toInt() }.toTypedArray()
+        override fun encode(value: Array<UInt>): Array<Int> = value.map { it.toInt() }.toTypedArray()
       },
     ),
     data_Adapter = Data_.Adapter(
@@ -60,10 +67,18 @@ class PostgreSqlTest {
         }
       },
     ),
+    locationsAdapter = Locations.Adapter(
+      pointAdapter = pointAdapter,
+      pointMAdapter = pointAdapter,
+      pointZAdapter = pointAdapter,
+      pointZMAdapter = pointAdapter,
+    ),
   )
 
   @Before fun before() {
     driver.execute(null, "SET timezone TO UTC", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS postgis ", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS ltree ", 0)
     MyDatabase.Schema.create(driver)
   }
 
@@ -418,6 +433,17 @@ class PostgreSqlTest {
     }
   }
 
+  @Test fun testArrayLiterals() {
+    with(database.arraysQueries.selectArrayLiterals().executeAsOne()) {
+      assertThat(intArray).isEqualTo(arrayOf(1, 2, 3))
+      assertThat(bigIntArray).isEqualTo(arrayOf(1L, 2L, 3L))
+      assertThat(numericArray).isEqualTo(arrayOf(1.1.toBigDecimal(), 2.2.toBigDecimal(), 3.3.toBigDecimal()))
+      assertThat(numericArrayWithNull).isEqualTo(arrayOf(1.0.toBigDecimal(), null, 3.toBigDecimal()))
+      assertThat(textArray).isEqualTo(arrayOf("a", "b", "c"))
+      assertThat(booleanArray).isEqualTo(arrayOf(true, false))
+    }
+  }
+
   @Test fun now() {
     val now = database.datesQueries.selectNow().executeAsOne()
     assertThat(now).isNotNull()
@@ -443,20 +469,19 @@ class PostgreSqlTest {
   @Test fun interval() {
     val interval = database.datesQueries.selectInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
+    assertThat(interval).isEqualTo("1 day")
   }
 
   @Test fun intervalBinaryMultiplyExpression() {
     val interval = database.datesQueries.selectMultiplyInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(31)
+    assertThat(interval).isEqualTo("31 days")
   }
 
   @Test fun intervalBinaryAddExpression() {
     val interval = database.datesQueries.selectAddInterval().executeAsOne()
     assertThat(interval).isNotNull()
-    assertThat(interval.getDays()).isEqualTo(1)
-    assertThat(interval.getHours()).isEqualTo(3)
+    assertThat(interval).isEqualTo("1 day 03:00:00")
   }
 
   @Test fun successfulOptimisticLock() {
@@ -568,8 +593,8 @@ class PostgreSqlTest {
     with(
       database.numbersQueries.sumInts().executeAsOne(),
     ) {
-      assertThat(sumSmall).isInstanceOf(Long::class.javaObjectType)
-      assertThat(sumInt).isInstanceOf(Long::class.javaObjectType)
+      assertThat(sumSmall).isInstanceOf(Short::class.javaObjectType)
+      assertThat(sumInt).isInstanceOf(Int::class.javaObjectType)
       assertThat(sumBig).isInstanceOf(Long::class.javaObjectType)
       assertThat(sumSmall).isEqualTo(3)
       assertThat(sumInt).isEqualTo(3)
@@ -698,7 +723,7 @@ class PostgreSqlTest {
     val updated = Instant.parse("2022-05-01T10:00:00.00Z")
     database.binaryArgumentsQueries.insertData(10, 5, created, updated)
     val result = database.binaryArgumentsQueries.selectDataBinaryCast2(10.0, 10).executeAsOne()
-    assertThat(result.expected_datum).isEqualTo(9.5)
+    assertThat(result.expected_datum).isEqualTo(9.5.toBigDecimal())
   }
 
   @Test
@@ -842,6 +867,64 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testSelectJsonExtractionBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionBinds("""{ "c": "cc" }""").executeAsList()) {
+      assertThat(first().ab).isEqualTo(""""bb"""")
+      assertThat(first().abb).isEqualTo("""{"b": "bb", "c": "cc"}""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonExtractionExistsBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionExistsBinds("b", "a", "bb").executeAsList()) {
+      assertThat(first().a).isEqualTo("""{ "b": "bb" }""")
+      assertThat(first().b).isEqualTo(""""bb"""")
+    }
+  }
+
+  @Test
+  fun testSelectJsonExtractionContainsBinds() {
+    database.jsonQueries.insertLiteral("""{"a": { "b": "bb" } }""", """{"a": { "b": "bb" } }""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonExtractionContainsBinds("b", """"bb"""").executeAsList()) {
+      assertThat(first()).isEqualTo("""{"a": {"b": "bb"}}""")
+    }
+  }
+
+  @Test
+  fun testJsonAggFilter() {
+    database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonAggFilterWhere().executeAsList()) {
+      assertThat(first()).isEqualTo("""[{"color":"red","size":"small","in_stock":true}]""")
+    }
+  }
+
+  @Test
+  fun testJsonbAggFilter() {
+    database.jsonQueries.insertLiteral("""{}""", """{"color":"red","size":"small","in_stock":true}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbAggFilter().executeAsList()) {
+      assertThat(first()).isEqualTo("""["red"]""")
+    }
+  }
+
+  @Test
+  fun testJsonObjectAggFilterWhere() {
+    database.jsonQueries.insertLiteral("""{"color":"red","size":"small","in_stock":true}""", """{}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonObjectAggFilterWhere().executeAsList()) {
+      assertThat(first()).isEqualTo("""{ "red" : {"color":"red","size":"small","in_stock":true} }""")
+    }
+  }
+
+  @Test
+  fun testJsonbObjectAgg() {
+    database.jsonQueries.insertLiteral("""{}""", """{"color":"red","size":"small","in_stock":true}""", """{}""", emptyArray<String>())
+    with(database.jsonQueries.selectJsonbObjectAgg().executeAsList()) {
+      assertThat(first()).isEqualTo("""{"red": {"size": "small", "color": "red", "in_stock": true}}""")
+    }
+  }
+
+  @Test
   fun testUpdateSetFromId() {
     database.updatesQueries.insertTest(31)
     database.updatesQueries.insertTest2("X")
@@ -901,7 +984,22 @@ class PostgreSqlTest {
   fun testContactTsVectorRank() {
     database.textSearchQueries.insertLiteral("the rain in spain")
     with(database.textSearchQueries.rank("rain | plain").executeAsList()) {
-      assertThat(first()).isEqualTo("0.030396355")
+      assertThat(first()).isEqualTo(0.030396355)
+    }
+  }
+
+  @Test
+  fun testContactTsQueryRank() {
+    database.textSearchQueries.insertLiteral("Peter Piper picked a peck of pickled peppers")
+    with(database.textSearchQueries.plainToRank("peck").executeAsList()) {
+      assertThat(first().rank).isEqualTo(0.06079271)
+    }
+  }
+
+  @Test
+  fun testQueryPartialComparison() {
+    with(database.textSearchQueries.partialComparison("postgraduate", "postgres:*").executeAsOne()) {
+      assertThat(this).isTrue()
     }
   }
 
@@ -1114,6 +1212,404 @@ class PostgreSqlTest {
       assertThat(first().home_region_id).isEqualTo(1)
       assertThat(first().home_region_name).isEqualTo("North America")
       assertThat(first().total_sales).isEqualTo(BigDecimal("1000.50"))
+    }
+  }
+
+  @Test
+  fun testSelectAppointments() {
+    val slotBegin = LocalDateTime.of(2009, 1, 1, 9, 0).atOffset(ZoneOffset.UTC)
+    val slotEnd = slotBegin.plusMinutes(30)
+
+    database.temporalRangesQueries.insert("[$slotBegin, $slotEnd)")
+    database.temporalRangesQueries.insert("[$slotEnd, ${slotEnd.plusMinutes(30)})")
+
+    with(database.temporalRangesQueries.appointments().executeAsList()) {
+      assertThat(first().begin).isEqualTo(slotBegin)
+      assertThat(first().end).isEqualTo(slotEnd)
+    }
+
+    val multiRangeSlots = "{[$slotBegin, $slotEnd), [$slotEnd, ${slotEnd.plusMinutes(30)})}"
+    with(database.temporalRangesQueries.selectAvailableAppointments(multiRangeSlots, "[$slotBegin, $slotEnd)").executeAsList()) {
+      assertThat(first()).isEqualTo("""{["2009-01-01 09:30:00+00","2009-01-01 10:00:00+00")}""")
+    }
+
+    with(database.temporalRangesQueries.selectAppointmentContainsRange().executeAsList()) {
+      assertThat(first()).isFalse()
+    }
+  }
+
+  @Test
+  fun testSelectContainsTemporalRange() {
+    with(database.temporalRangesQueries.selectMultiRangeContainsTimestamp().executeAsList()) {
+      assertThat(first()).isTrue()
+    }
+  }
+
+  @Test
+  fun testUnnestSelect() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(76, 12, 18))
+    with(database.unnestQueries.selectHeadcount().executeAsList()) {
+      assertThat(first().headcount).isEqualTo(76)
+    }
+  }
+
+  @Test
+  fun testUnnestSelectFrom() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(6, 12, 18))
+    with(database.unnestQueries.selectBusinesses().executeAsList()) {
+      assertThat(first().name).isEqualTo("Ok Burger")
+      assertThat(first().zipcode).isEqualTo("A12345")
+      assertThat(first().headcount).isEqualTo(6)
+    }
+    with(database.unnestQueries.selectLocation("AB5522").executeAsList()) {
+      assertThat(first().name).isEqualTo("Ok Burger")
+    }
+  }
+
+  @Test
+  fun testUnnestInsertSelect() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Aaaa")
+      assertThat(first().age).isEqualTo(32)
+    }
+  }
+
+  @Test
+  fun testUnnestUpdate() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    database.unnestQueries.updateUsersAge(arrayOf("Aaaa"), arrayOf(39))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Aaaa")
+      assertThat(first().age).isEqualTo(39)
+    }
+  }
+
+  @Test
+  fun testUnnestDelete() {
+    database.unnestQueries.insertUsers(arrayOf("Aaaa", "Bbbb", "Cccc"), arrayOf(32, 21, 65))
+    database.unnestQueries.deleteUsers(arrayOf("Aaaa"), arrayOf(32))
+    with(database.unnestQueries.selectUserProfiles().executeAsList()) {
+      assertThat(first().name).isEqualTo("Bbbb")
+      assertThat(first().age).isEqualTo(21)
+    }
+  }
+
+  @Test
+  fun testUnnestWhere() {
+    database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(6, 12, 18))
+    database.unnestQueries.insertBusiness("Donut Hut", arrayOf("N12345", "QB7536", "P31879"), arrayOf(6, 12, 18))
+    with(database.unnestQueries.selectBusinessExists("P31879").executeAsList()) {
+      assertThat(first().name).isEqualTo("Donut Hut")
+    }
+  }
+
+  @Test
+  fun testJsonChecks() {
+    database.jsonQueries.insertTestJsonCheck()
+    with(database.jsonQueries.selectJsonChecks().executeAsList()) {
+      assertThat(first().null_).isFalse()
+      assertThat(first().not_null_).isTrue()
+      assertThat(first().json_).isTrue()
+      assertThat(first().value_).isTrue()
+      assertThat(first().not_json_).isFalse()
+      assertThat(first().scalar_).isFalse()
+      assertThat(first().object_).isTrue()
+      assertThat(first().not_object_).isFalse()
+      assertThat(first().array_).isFalse()
+      assertThat(first().array_with_unq_key_).isFalse()
+      assertThat(first().array_without_unq_key_).isFalse()
+    }
+  }
+
+  @Test
+  fun testEnums() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.select().executeAsList().let {
+      assertThat(it).containsExactly(low, med, high)
+    }
+  }
+
+  @Test
+  fun testEnumsArg() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.selectByPriority("medium").executeAsList().let {
+      assertThat(it).containsExactly(med)
+    }
+  }
+
+  @Test
+  fun testEnumsMin() {
+    val low = database.enumsQueries.insert(111, "Testing Low", "low").executeAsOne()
+    val med = database.enumsQueries.insert(122, "Testing Medium", "medium").executeAsOne()
+    val high = database.enumsQueries.insert(133, "Testing High", "high").executeAsOne()
+    database.enumsQueries.selectMinPriority().executeAsList().let {
+      assertThat(it).containsExactly(low)
+    }
+  }
+
+  @Test
+  fun testEnumsFunctions() {
+    database.enumsQueries.selectEnumValues().executeAsOne().let {
+      assertThat(it.values).isEqualTo("{low,medium,high}")
+      assertThat(it.first_value).isEqualTo("low")
+      assertThat(it.last_value).isEqualTo("high")
+    }
+  }
+
+  @Test
+  fun testPostgisInsertMakePoint() {
+    val x = -74.0060
+    val y = 40.7128
+    val srid = 4326
+
+    database.postgisQueries.insertMakePoint(x = x, y = y, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point?.srid).isEqualTo(srid)
+      assertThat(first().point?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().point?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().point?.m).isEqualTo(0.0)
+      assertThat(first().point?.z).isEqualTo(0.0)
+    }
+
+    with(database.postgisQueries.selectLocationByDistanceHardcoded(distanceMeters = 0.0).executeAsList()) {
+      assertThat(size).isEqualTo(1)
+    }
+
+    val point = database.postgisQueries.selectPoints().executeAsList().first()
+
+    with(
+      database.postgisQueries.selectLocationByDistance(
+        geometry = pointAdapter.encode(point),
+        distanceMeters = 0.0,
+        useSpheroid = true,
+      ).executeAsList(),
+    ) {
+      assertThat(size).isEqualTo(1)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertMakePointM() {
+    val x = -74.0060
+    val y = 40.7128
+    val m = 3.0
+    val srid = 4326
+
+    database.postgisQueries.insertMakePointM(x = x, y = y, m = m, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointM?.srid).isEqualTo(srid)
+      assertThat(first().pointM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointM?.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertMakePointZ() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 50.0
+    val srid = 4326
+
+    database.postgisQueries.insertMakePointZ(x = x, y = y, z = z, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZ?.srid).isEqualTo(srid)
+      assertThat(first().pointZ?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZ?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZ?.m).isEqualTo(0.0)
+      assertThat(first().pointZ?.z).isWithin(1.0e-5).of(z)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertMakePointZM() {
+    val x = -74.0060
+    val y = 40.7128
+    val m = 3.0
+    val z = 50.0
+    val srid = 4326
+
+    database.postgisQueries.insertMakePointZM(x = x, y = y, z = z, m = m, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZM?.srid).isEqualTo(srid)
+      assertThat(first().pointZM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointZM?.z).isWithin(1.0e-5).of(z)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPoint() {
+    val x = -74.0060
+    val y = 40.7128
+    val srid = 4326
+
+    database.postgisQueries.insertPoint(x = x, y = y, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().point?.srid).isEqualTo(4326)
+      assertThat(first().point?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().point?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().point?.m).isEqualTo(0.0)
+      assertThat(first().point?.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointM() {
+    val x = -74.0060
+    val y = 40.7128
+    val m = 3.0
+    val srid = 4326
+
+    database.postgisQueries.insertPointM(x = x, y = y, m = m, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointM?.srid).isEqualTo(4326)
+      assertThat(first().pointM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointM?.z).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointZ() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 3.0
+    val srid = 4326
+
+    database.postgisQueries.insertPointZ(x = x, y = y, z = z, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZ?.srid).isEqualTo(4326)
+      assertThat(first().pointZ?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZ?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZ?.m).isEqualTo(0.0)
+      assertThat(first().pointZ?.z).isWithin(1.0e-5).of(z)
+    }
+  }
+
+  @Test
+  fun testPostgisInsertPointZM() {
+    val x = -74.0060
+    val y = 40.7128
+    val z = 3.0
+    val m = 0.2
+    val srid = 4326
+
+    database.postgisQueries.insertPointZM(x = x, y = y, z = z, m = m, srid = srid)
+
+    with(database.postgisQueries.select().executeAsList()) {
+      assertThat(first().name).isEqualTo("New York")
+      assertThat(first().pointZM?.srid).isEqualTo(4326)
+      assertThat(first().pointZM?.x).isWithin(1.0e-5).of(x)
+      assertThat(first().pointZM?.y).isWithin(1.0e-5).of(y)
+      assertThat(first().pointZM?.m).isWithin(1.0e-5).of(m)
+      assertThat(first().pointZM?.z).isWithin(1.0e-5).of(z)
+    }
+
+    with(database.postgisQueries.selectSingleForce2d().executeAsOne()) {
+      assertThat(srid).isEqualTo(4326)
+      assertThat(x).isWithin(1.0e-5).of(x)
+      assertThat(y).isWithin(1.0e-5).of(y)
+      // https://postgis.net/docs/ST_Force2D.html supports 3d and will not drop the z-index.
+      assertThat(m).isWithin(1.0e-5).of(m)
+      assertThat(z).isWithin(1.0e-5).of(z)
+    }
+  }
+
+  @Test
+  fun testPostgisSelectWithin() {
+    assertThat(
+      database.postgisQueries.selectWithin(
+        distanceMeters = 530100.0,
+        useSpheroid = false,
+      ).executeAsOne(),
+    ).isFalse()
+
+    assertThat(
+      database.postgisQueries.selectWithin(
+        distanceMeters = 530200.0,
+        useSpheroid = false,
+      ).executeAsOne(),
+    ).isTrue()
+
+    assertThat(
+      database.postgisQueries.selectWithin(
+        distanceMeters = 531400.0,
+        useSpheroid = true,
+      ).executeAsOne(),
+    ).isFalse()
+
+    assertThat(
+      database.postgisQueries.selectWithin(
+        distanceMeters = 531500.0,
+        useSpheroid = true,
+      ).executeAsOne(),
+    ).isTrue()
+  }
+
+  fun testSysColumns() {
+    database.systemTablesQueries.selectSystemColumns().executeAsOne().let {
+      assertThat(it.table_name).isEqualTo("demo_sys_cols")
+      assertThat(it.table_comment).isEqualTo("Some Comment")
+      assertThat(it.xmin).isNotNull()
+      assertThat(it.xmax).isNotNull()
+      assertThat(it.cmin).isNotNull()
+      assertThat(it.cmax).isNotNull()
+      assertThat(it.ctid).isNotNull()
+    }
+  }
+
+  @Test
+  fun testLtreeContains() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathContains().executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science",
+        "Top.Science.Astronomy",
+        "Top.Science.Astronomy.Astrophysics",
+        "Top.Science.Astronomy.Cosmology",
+      )
+    }
+  }
+
+  @Test
+  fun testLtreeExists() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathExists("{Top.Science.Astronomy.Astrophysics, Top.Science.Astronomy.Cosmology}").executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science.Space.Astronomy.Astrophysics",
+        "Top.Science.Space.Astronomy.Cosmology",
+      )
     }
   }
 }

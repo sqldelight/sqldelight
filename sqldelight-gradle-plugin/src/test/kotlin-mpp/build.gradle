@@ -12,29 +12,26 @@ sqldelight {
 }
 
 kotlin {
-  targetFromPreset(presets.jvm, 'jvm')
-  js(IR) { }
-  targetFromPreset(presets.iosArm64, 'iosArm64') {
+  jvm()
+  js().nodejs()
+  iosX64 {
     binaries {
       framework()
     }
   }
-  targetFromPreset(presets.iosX64, 'iosX64') {
+  iosArm64 {
     binaries {
       framework()
     }
   }
-  targetFromPreset(presets.macosX64, 'macosX64') {
+  macosArm64 {
     binaries {
       framework()
     }
   }
-}
-
-// https://youtrack.jetbrains.com/issue/KT-55751
-configurations {
-  def myAttribute = Attribute.of("dummy.attribute", String)
-
-  debugFrameworkMacosX64 { attributes.attribute(myAttribute, "dummy-value") }
-  releaseFrameworkMacosX64 { attributes.attribute(myAttribute, "dummy-value") }
+  macosX64 {
+    binaries {
+      framework()
+    }
+  }
 }

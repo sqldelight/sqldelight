@@ -1,11 +1,14 @@
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
 import app.cash.sqldelight.toolchain.BugsnagKey
 
 plugins {
   alias(libs.plugins.intellij)
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlin.plugin.serialization)
   alias(libs.plugins.changelog)
-  alias(libs.plugins.ksp)
   id("app.cash.sqldelight.toolchain.compiler")
 }
 
@@ -16,7 +19,9 @@ intellijPlatform {
     name = 'SQLDelight'
     dependencies {
       intellijPlatform {
-        intellijIdeaCommunity(libs.versions.idea, false)
+        intellijIdea(libs.versions.idea) {
+          useInstaller = false
+        }
         bundledPlugin("org.jetbrains.kotlin")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("com.intellij.java")
@@ -24,15 +29,14 @@ intellijPlatform {
 
         pluginVerifier()
         zipSigner()
-        instrumentationTools()
 
-        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform.INSTANCE, libs.versions.idea.get())
-        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Plugin.Java.INSTANCE, libs.versions.idea.get())
+        testFramework(TestFrameworkType.Platform.INSTANCE)
+        testFramework(TestFrameworkType.Plugin.Java.INSTANCE)
       }
     }
     if (!project.version.endsWith("SNAPSHOT")) {
       tasks.named('patchPluginXml') {
-        changeNotes = provider { changelog.get(project.version).toHTML() }
+        changeNotes = provider { changelog.renderItem(changelog.get(project.version), Changelog.OutputType.HTML) }
       }
     } else {
       tasks.named('patchPluginXml') {
@@ -49,7 +53,7 @@ intellijPlatform {
     def version = providers.systemProperty("ideaVersion").getOrElse(null)
     if (version != null) {
       ides {
-        ide(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity, version)
+        create(IntelliJPlatformType.IntellijIdea, version)
       }
     }
 
@@ -92,14 +96,12 @@ repositories {
 }
 
 dependencies {
-  ksp libs.moshiCodegen
-
   implementation projects.sqldelightCompiler
 
   implementation libs.sqliteJdbc
   implementation libs.bugsnag
   implementation libs.picnic
-  implementation libs.moshi
+  implementation libs.kotlinx.serialization.json
 
   testImplementation libs.truth
   testImplementation libs.intellij.android

@@ -27,7 +27,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import com.intellij.ui.popup.list.ListPopupImpl
 import javax.swing.Icon
-import org.jetbrains.kotlin.idea.inspections.findExistingEditor
+import org.jetbrains.kotlin.idea.codeinsight.utils.findExistingEditor
 
 internal class AddImportIntention(
   private val element: PsiElement,
