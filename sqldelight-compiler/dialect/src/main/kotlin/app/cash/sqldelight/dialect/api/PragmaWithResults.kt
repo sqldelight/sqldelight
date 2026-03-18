@@ -14,7 +14,9 @@ class PragmaWithResults(pragmaStmt: SqlPragmaStmt) : QueryWithResults {
   override val pureTable: NamedElement? = null
 }
 
-class SqlDelightPragmaName(node: ASTNode?) : SqlPragmaNameImpl(node), QueryElement {
+class SqlDelightPragmaName(node: ASTNode?) :
+  SqlPragmaNameImpl(node),
+  QueryElement {
   override fun queryExposed() = listOf(
     QueryResult(
       column = this,

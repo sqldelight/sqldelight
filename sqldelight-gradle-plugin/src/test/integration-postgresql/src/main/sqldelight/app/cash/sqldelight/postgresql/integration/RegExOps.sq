@@ -1,0 +1,16 @@
+CREATE TABLE regexops(
+  t TEXT NOT NULL
+);
+
+insert:
+INSERT INTO regexops (t) VALUES (?);
+
+matchRegExOps:
+SELECT concat(t, 'test') ~ ?, t ~* ?, t !~ ?, t !~* ?
+FROM regexops;
+
+matchRegExWhere:
+SELECT t
+FROM regexops
+WHERE t ~ ?;
+

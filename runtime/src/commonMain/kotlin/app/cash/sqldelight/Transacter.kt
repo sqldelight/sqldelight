@@ -185,13 +185,26 @@ interface SuspendingTransacter : TransacterBase {
     noEnclosing: Boolean = false,
     body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   )
+
+  /**
+   * An interface that can be implemented by a [SqlDriver] to provide a specific coroutine context
+   * for transactions.
+   */
+  interface TransactionDispatcher {
+    /**
+     * Used by [SuspendingTransacter] to wrap calls to [transaction] and [transactionWithResult],
+     * providing an opportunity to modify the coroutine context.
+     */
+    suspend fun <R> dispatch(transaction: suspend () -> R): R
+  }
 }
 
 private class RollbackException(val value: Any? = null) : Throwable()
 
 private class TransactionWrapper<R>(
   val transaction: Transaction,
-) : TransactionWithoutReturn, TransactionWithReturn<R> {
+) : TransactionWithoutReturn,
+  TransactionWithReturn<R> {
   override fun rollback(): Nothing {
     transaction.checkThreadConfinement()
     throw RollbackException()
@@ -226,7 +239,8 @@ private class TransactionWrapper<R>(
 
 private class SuspendingTransactionWrapper<R>(
   val transaction: Transaction,
-) : SuspendingTransactionWithoutReturn, SuspendingTransactionWithReturn<R> {
+) : SuspendingTransactionWithoutReturn,
+  SuspendingTransactionWithReturn<R> {
   override fun rollback(): Nothing {
     transaction.checkThreadConfinement()
     throw RollbackException()
@@ -323,12 +337,12 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
   }
 
   /**
-   * For internal use, creates a string in the format (?, ?, ?) where there are [count] offset.
+   * For internal use, creates a string in the format (?, ?, ?) where there are [count] question marks.
    */
   protected fun createArguments(count: Int): String {
     if (count == 0) return "()"
 
-    return buildString(count + 2) {
+    return buildString(count * 2 + 1) {
       append("(?")
       repeat(count - 1) {
         append(",?")
@@ -341,7 +355,9 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
 /**
  * A transaction-aware [SqlDriver] wrapper which can begin a [Transaction] on the current connection.
  */
-abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), Transacter {
+abstract class TransacterImpl(driver: SqlDriver) :
+  BaseTransacterImpl(driver),
+  Transacter {
   override fun transaction(
     noEnclosing: Boolean,
     body: TransactionWithoutReturn.() -> Unit,
@@ -378,19 +394,33 @@ abstract class TransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), T
   }
 }
 
-abstract class SuspendingTransacterImpl(driver: SqlDriver) : BaseTransacterImpl(driver), SuspendingTransacter {
+abstract class SuspendingTransacterImpl(driver: SqlDriver) :
+  BaseTransacterImpl(driver),
+  SuspendingTransacter {
   override suspend fun <R> transactionWithResult(
     noEnclosing: Boolean,
     bodyWithReturn: suspend SuspendingTransactionWithReturn<R>.() -> R,
   ): R {
-    return transactionWithWrapper(noEnclosing, bodyWithReturn)
+    return when (driver) {
+      is SuspendingTransacter.TransactionDispatcher -> driver.dispatch {
+        transactionWithWrapper(noEnclosing, bodyWithReturn)
+      }
+
+      else -> transactionWithWrapper(noEnclosing, bodyWithReturn)
+    }
   }
 
   override suspend fun transaction(
     noEnclosing: Boolean,
     body: suspend SuspendingTransactionWithoutReturn.() -> Unit,
   ) {
-    return transactionWithWrapper(noEnclosing, body)
+    return when (driver) {
+      is SuspendingTransacter.TransactionDispatcher -> driver.dispatch {
+        transactionWithWrapper(noEnclosing, body)
+      }
+
+      else -> transactionWithWrapper(noEnclosing, body)
+    }
   }
 
   private suspend fun <R> transactionWithWrapper(noEnclosing: Boolean, wrapperBody: suspend SuspendingTransactionWrapper<R>.() -> R): R {

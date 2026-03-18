@@ -5,10 +5,10 @@ import app.cash.sqldelight.core.SqlDelightDatabaseName
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.core.SqlDelightSourceFolder
+import java.io.File
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
-import java.io.File
 
 data class SqlDelightPropertiesFileImpl(
   override val databases: List<SqlDelightDatabasePropertiesImpl>,
@@ -25,6 +25,7 @@ data class SqlDelightDatabasePropertiesImpl(
   @Input override val deriveSchemaFromMigrations: Boolean = false,
   @Input override val treatNullAsUnknownForEquality: Boolean = false,
   @Input override val generateAsync: Boolean = false,
+  @Input override val expandSelectStar: Boolean = true,
   // Only used by intellij plugin to help with resolution.
   @Internal override val rootDirectory: File,
 ) : SqlDelightDatabaseProperties
@@ -36,7 +37,7 @@ data class SqlDelightDatabaseNameImpl(
 
 data class SqlDelightCompilationUnitImpl(
   @Input override val name: String,
-  @Nested override val sourceFolders: List<SqlDelightSourceFolderImpl>,
+  @Nested override val sourceFolders: Set<SqlDelightSourceFolderImpl>,
   // Output directory is already cached [SqlDelightTask.outputDirectory].
   @Internal override val outputDirectoryFile: File,
 ) : SqlDelightCompilationUnit

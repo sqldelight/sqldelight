@@ -1,5 +1,6 @@
 package app.cash.sqldelight.driver.jdbc.sqlite
 
+import app.cash.sqldelight.TransacterImpl
 import app.cash.sqldelight.db.AfterVersion
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
@@ -24,14 +25,18 @@ fun JdbcSqliteDriver(
   vararg callbacks: AfterVersion,
 ): JdbcSqliteDriver {
   val driver = JdbcSqliteDriver(url, properties)
-  val version = driver.getVersion()
+  val transacter = object : TransacterImpl(driver) {}
 
-  if (version == 0L && !migrateEmptySchema) {
-    schema.create(driver).value
-    driver.setVersion(schema.version)
-  } else if (version < schema.version) {
-    schema.migrate(driver, version, schema.version, *callbacks).value
-    driver.setVersion(schema.version)
+  transacter.transaction {
+    val version = driver.getVersion()
+
+    if (version == 0L && !migrateEmptySchema) {
+      schema.create(driver).value
+      driver.setVersion(schema.version)
+    } else if (version < schema.version) {
+      schema.migrate(driver, version, schema.version, *callbacks).value
+      driver.setVersion(schema.version)
+    }
   }
 
   return driver

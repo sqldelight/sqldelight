@@ -1,0 +1,3 @@
+Sample.s line 1:13 - No trigger found with name orders_set_updated_at
+Sample.s line 1:38 - No table found with name Order
+Sample.s line 3:48 - No table found with name Order

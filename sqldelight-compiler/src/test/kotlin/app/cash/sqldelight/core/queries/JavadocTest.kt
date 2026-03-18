@@ -6,14 +6,12 @@ import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.compiler.SelectQueryGenerator
 import app.cash.sqldelight.core.dialects.binderCheck
 import app.cash.sqldelight.core.dialects.cursorCheck
-import app.cash.sqldelight.core.dialects.intKotlinType
 import app.cash.sqldelight.core.dialects.textType
+import app.cash.sqldelight.core.test.fileContents
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
-import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.LONG
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -39,17 +37,16 @@ class JavadocTest {
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(selectGenerator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
-      |  )
-      |}
+      |public fun selectAll(): Query<Test> = selectAll(::Test)
       |
       """.trimMargin(),
     )
@@ -78,17 +75,16 @@ class JavadocTest {
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(selectGenerator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
-      |  )
-      |}
+      |public fun selectAll(): Query<Test> = selectAll(::Test)
       |
       """.trimMargin(),
     )
@@ -113,20 +109,19 @@ class JavadocTest {
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(selectGenerator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |
       |/**
       | * Queries all values.
       | * Returns values as a List.
       | *
       | * @deprecated Don't use it!
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
-      |  )
-      |}
+      |public fun selectAll(): Query<Test> = selectAll(::Test)
       |
       """.trimMargin(),
     )
@@ -151,20 +146,19 @@ class JavadocTest {
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(selectGenerator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |
       |/**
       | * Queries all values. **
       | * Returns values as a * List.
       | *
       | * ** @deprecated Don't use it!
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
-      |  )
-      |}
+      |public fun selectAll(): Query<Test> = selectAll(::Test)
       |
       """.trimMargin(),
     )
@@ -175,8 +169,7 @@ class JavadocTest {
       createTable(testDialect) + """
       |/** Queries all values. */
       |selectAll:
-      |SELECT *
-      |FROM test;
+      |SELECT CAST(:input AS ${testDialect.textType});
       |
       """.trimMargin(),
       tempFolder,
@@ -184,40 +177,29 @@ class JavadocTest {
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(selectGenerator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
+      |package com.example
+      |
+      |import app.cash.sqldelight.ExecutableQuery
+      |import kotlin.String
+      |
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
-      |  )
-      |}
+      |public fun selectAll(input: String?): ExecutableQuery<SelectAll> = selectAll(input, ::SelectAll)
       |
       """.trimMargin(),
     )
-
-    val int = testDialect.intKotlinType
-    val toInt = when (int) {
-      LONG -> ""
-      INT -> ".toInt()"
-      else -> error("Unknown kotlinType $int")
-    }
 
     assertThat(selectGenerator.customResultTypeFunction().toString()).isEqualTo(
       """
       |/**
       | * Queries all values.
       | */
-      |public fun <T : kotlin.Any> selectAll(mapper: (_id: $int, value_: kotlin.String) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(-585_795_480, arrayOf("test"), driver, "Test.sq", "selectAll", ""${'"'}
-      ||SELECT *
-      ||FROM test
-      |""${'"'}.trimMargin()) { cursor ->
+      |public fun <T : kotlin.Any> selectAll(input: kotlin.String?, mapper: (expr: kotlin.String?) -> T): app.cash.sqldelight.ExecutableQuery<T> = SelectAllQuery(input) { cursor ->
       |  ${testDialect.cursorCheck(2)}mapper(
-      |    cursor.getLong(0)!!$toInt,
-      |    cursor.getString(1)!!
+      |    cursor.getString(0)
       |  )
       |}
       |
@@ -241,17 +223,16 @@ class JavadocTest {
     )
 
     val selectGenerator = SelectQueryGenerator(file.namedQueries.first())
-    assertThat(selectGenerator.defaultResultTypeFunction().toString()).isEqualTo(
+    assertThat(selectGenerator.defaultResultTypeFunction().fileContents()).isEqualTo(
       """
+      |package com.example
+      |
+      |import app.cash.sqldelight.Query
+      |
       |/**
       | * Queries all values.
       | */
-      |public fun selectAll(): app.cash.sqldelight.Query<com.example.Test> = selectAll { _id, value_ ->
-      |  com.example.Test(
-      |    _id,
-      |    value_
-      |  )
-      |}
+      |public fun selectAll(): Query<Test> = selectAll(::Test)
       |
       """.trimMargin(),
     )
@@ -279,17 +260,21 @@ class JavadocTest {
       """
       |/**
       | * Insert new value.
+      | *
+      | * @return The number of rows updated.
       | */
-      |public fun insertValue(value_: kotlin.String) {
-      |  driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |public fun insertValue(value_: kotlin.String): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |      |INSERT INTO test(value)
       |      |VALUES (?)
       |      ""${'"'}.trimMargin(), 1) {
-      |        ${testDialect.binderCheck}bindString(0, value_)
+      |        ${testDialect.binderCheck}var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
       |      }
       |  notifyQueries(${insert.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -318,19 +303,23 @@ class JavadocTest {
       """
       |/**
       | * Update value by id.
+      | *
+      | * @return The number of rows updated.
       | */
-      |public fun updateById(value_: kotlin.String, _id: kotlin.Long) {
-      |  driver.execute(${update.id.withUnderscores}, ""${'"'}
+      |public fun updateById(value_: kotlin.String, _id: kotlin.Long): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${update.id.withUnderscores}, ""${'"'}
       |      |UPDATE test
       |      |SET value = ?
       |      |WHERE _id = ?
       |      ""${'"'}.trimMargin(), 2) {
-      |        bindString(0, value_)
-      |        bindLong(1, _id)
+      |        var parameterIndex = 0
+      |        bindString(parameterIndex++, value_)
+      |        bindLong(parameterIndex++, _id)
       |      }
       |  notifyQueries(${update.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),
@@ -358,12 +347,15 @@ class JavadocTest {
       """
       |/**
       | * Delete all.
+      | *
+      | * @return The number of rows updated.
       | */
-      |public fun deleteAll() {
-      |  driver.execute(${delete.id.withUnderscores}, ""${'"'}DELETE FROM test""${'"'}, 0)
+      |public fun deleteAll(): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${delete.id.withUnderscores}, ""${'"'}DELETE FROM test""${'"'}, 0)
       |  notifyQueries(${delete.id.withUnderscores}) { emit ->
       |    emit("test")
       |  }
+      |  return result
       |}
       |
       """.trimMargin(),

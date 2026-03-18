@@ -20,7 +20,7 @@
 }
 overrides ::= table_or_subquery
 
-table_or_subquery ::= ( json_function_name LP <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP
+table_or_subquery ::= ( json_function_name LP <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP [ [ AS ] {table_alias} ]
                       | [ {database_name} DOT ] {table_name} [ [ AS ] {table_alias} ] [ INDEXED BY {index_name} | NOT INDEXED ]
                       | LP ( {table_or_subquery} ( COMMA {table_or_subquery} ) * | {join_clause} ) RP
                       | LP {compound_select_stmt} RP [ [ AS ] {table_alias} ] ) {

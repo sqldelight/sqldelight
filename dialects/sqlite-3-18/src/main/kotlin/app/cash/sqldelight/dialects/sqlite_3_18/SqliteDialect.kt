@@ -47,7 +47,7 @@ open class SqliteDialect : SqlDelightDialect {
     ApplicationManager.getApplication()?.apply {
       if (extensionArea.hasExtensionPoint(StubElementTypeHolderEP.EP_NAME)) {
         val exPoint = extensionArea.getExtensionPoint(StubElementTypeHolderEP.EP_NAME)
-        if (!exPoint.extensions().anyMatch { it.holderClass == SqliteTypes::class.java.name }) {
+        if (!exPoint.extensions.any { it.holderClass == SqliteTypes::class.java.name }) {
           Timber.i("Registering Stub extension point")
           exPoint.registerExtension(
             StubElementTypeHolderEP().apply {

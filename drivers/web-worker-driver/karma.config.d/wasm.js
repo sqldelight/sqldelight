@@ -25,3 +25,6 @@ config.files.push({
   watched: false,
   included: false,
 });
+
+// TODO: Figure out why on earth this is necessary. Presumably a karma-webpack bug???
+delete config.webpack.optimization;

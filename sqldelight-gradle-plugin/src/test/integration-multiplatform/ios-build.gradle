@@ -12,19 +12,15 @@ sqldelight {
 }
 
 kotlin {
-  targets {
-    def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
-    def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-    targetFromPreset(iosPreset, 'ios') {
-      binaries { framework() }
-    }
-  }
+  iosX64()
+  iosArm64()
+
+  applyDefaultHierarchyTemplate()
 
   sourceSets {
     commonTest {
       dependencies {
         implementation libs.kotlin.test
-        implementation libs.stately.core
         implementation libs.stately.concurrency
         implementation "app.cash.sqldelight:runtime:${app.cash.sqldelight.VersionKt.VERSION}"
       }
@@ -35,12 +31,4 @@ kotlin {
       }
     }
   }
-}
-
-// https://youtrack.jetbrains.com/issue/KT-55751
-configurations {
-  def myAttribute = Attribute.of("dummy.attribute", String)
-
-  debugFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
-  releaseFrameworkIos { attributes.attribute(myAttribute, "dummy-value") }
 }

@@ -1,0 +1,11 @@
+public final class app/cash/sqldelight/rx3/RxQuery {
+	public static final fun mapToList (Lio/reactivex/rxjava3/core/Observable;)Lio/reactivex/rxjava3/core/Observable;
+	public static final fun mapToOne (Lio/reactivex/rxjava3/core/Observable;)Lio/reactivex/rxjava3/core/Observable;
+	public static final fun mapToOneNonNull (Lio/reactivex/rxjava3/core/Observable;)Lio/reactivex/rxjava3/core/Observable;
+	public static final fun mapToOneOrDefault (Lio/reactivex/rxjava3/core/Observable;Ljava/lang/Object;)Lio/reactivex/rxjava3/core/Observable;
+	public static final fun mapToOptional (Lio/reactivex/rxjava3/core/Observable;)Lio/reactivex/rxjava3/core/Observable;
+	public static final fun toObservable (Lapp/cash/sqldelight/Query;)Lio/reactivex/rxjava3/core/Observable;
+	public static final fun toObservable (Lapp/cash/sqldelight/Query;Lio/reactivex/rxjava3/core/Scheduler;)Lio/reactivex/rxjava3/core/Observable;
+	public static synthetic fun toObservable$default (Lapp/cash/sqldelight/Query;Lio/reactivex/rxjava3/core/Scheduler;ILjava/lang/Object;)Lio/reactivex/rxjava3/core/Observable;
+}
+

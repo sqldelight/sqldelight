@@ -2,71 +2,23 @@ package app.cash.sqldelight.core.compiler
 
 import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.model.NamedExecute
-import app.cash.sqldelight.core.compiler.model.NamedMutator
+import app.cash.sqldelight.core.lang.ASYNC_RESULT_TYPE
+import app.cash.sqldelight.core.lang.QUERY_RESULT_TYPE
 import app.cash.sqldelight.core.lang.argumentType
-import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
-import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
-import com.alecstrong.sql.psi.core.psi.SqlDeleteStmtLimited
-import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
-import com.alecstrong.sql.psi.core.psi.SqlUpdateStmtLimited
-import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.KModifier.SUSPEND
+import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 
 open class ExecuteQueryGenerator(
   private val query: NamedExecute,
 ) : QueryGenerator(query) {
-  internal open fun tablesUpdated(): List<TableNameElement> {
-    if (query.statement is SqlDelightStmtClojureStmtList) {
-      return PsiTreeUtil.findChildrenOfAnyType(
-        query.statement,
-        SqlUpdateStmtLimited::class.java,
-        SqlDeleteStmtLimited::class.java,
-        SqlInsertStmt::class.java,
-      ).flatMap {
-        MutatorQueryGenerator(
-          when (it) {
-            is SqlUpdateStmtLimited -> NamedMutator.Update(it, query.identifier as StmtIdentifierMixin)
-            is SqlDeleteStmtLimited -> NamedMutator.Delete(it, query.identifier as StmtIdentifierMixin)
-            is SqlInsertStmt -> NamedMutator.Insert(it, query.identifier as StmtIdentifierMixin)
-            else -> throw IllegalArgumentException("Unexpected statement $it")
-          },
-        ).tablesUpdated()
-      }.distinctBy { it.name }
-    }
-    return emptyList()
-  }
-
-  private fun FunSpec.Builder.notifyQueries(): FunSpec.Builder {
-    val tablesUpdated = tablesUpdated()
-
-    if (tablesUpdated.isEmpty()) return this
-
-    // The list of affected tables:
-    // notifyQueries { emit ->
-    //     emit("players")
-    //     emit("teams")
-    // }
-    addCode(
-      CodeBlock.builder()
-        .beginControlFlow("notifyQueries(%L) { emit ->", query.id)
-        .apply {
-          tablesUpdated.sortedBy { it.name }.forEach {
-            addStatement("emit(\"${it.name}\")")
-          }
-        }
-        .endControlFlow()
-        .build(),
-    )
-
-    return this
-  }
 
   /**
    * The public api to execute [query]
@@ -74,7 +26,7 @@ open class ExecuteQueryGenerator(
   fun function(): FunSpec {
     return interfaceFunction()
       .addCode(executeBlock())
-      .notifyQueries()
+      .apply { if (mutatorReturns) addCode("return result") }
       .build()
   }
 
@@ -87,6 +39,14 @@ open class ExecuteQueryGenerator(
           ParameterSpec.builder(it.name, it.argumentType()).build()
         },
       )
+      .apply {
+        val type = when {
+          generateAsync && query.statement is SqlDelightStmtClojureStmtList -> ASYNC_RESULT_TYPE.parameterizedBy(LONG)
+          generateAsync -> LONG
+          else -> QUERY_RESULT_TYPE.parameterizedBy(LONG)
+        }
+        returns(type, CodeBlock.of("The number of rows updated."))
+      }
   }
 
   fun value(): PropertySpec {

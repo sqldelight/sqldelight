@@ -29,7 +29,7 @@ class ReturningQueryable(
       ?: return@lazy null
     val requestedColumnsAreIdenticalToTable = table.query.columns.flattenCompounded() == pureColumns
     if (requestedColumnsAreIdenticalToTable) {
-      tableName
+      table.tableName
     } else {
       null
     }

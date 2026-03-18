@@ -1,0 +1,78 @@
+public abstract interface class app/cash/sqldelight/driver/jdbc/ConnectionManager {
+	public abstract fun beginTransaction (Ljava/sql/Connection;)V
+	public abstract fun close ()V
+	public abstract fun closeConnection (Ljava/sql/Connection;)V
+	public abstract fun endTransaction (Ljava/sql/Connection;)V
+	public abstract fun getConnection ()Ljava/sql/Connection;
+	public abstract fun getTransaction ()Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;
+	public abstract fun rollbackTransaction (Ljava/sql/Connection;)V
+	public abstract fun setTransaction (Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;)V
+}
+
+public final class app/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction : app/cash/sqldelight/Transacter$Transaction {
+	public fun <init> (Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;Lapp/cash/sqldelight/driver/jdbc/ConnectionManager;Ljava/sql/Connection;)V
+	public final fun getConnection ()Ljava/sql/Connection;
+	public synthetic fun getEnclosingTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
+}
+
+public final class app/cash/sqldelight/driver/jdbc/JdbcCursor : app/cash/sqldelight/db/SqlCursor {
+	public fun <init> (Ljava/sql/ResultSet;)V
+	public final fun getArray (I)[Ljava/lang/Object;
+	public final fun getBigDecimal (I)Ljava/math/BigDecimal;
+	public fun getBoolean (I)Ljava/lang/Boolean;
+	public final fun getByte (I)Ljava/lang/Byte;
+	public fun getBytes (I)[B
+	public final fun getDate (I)Ljava/sql/Date;
+	public fun getDouble (I)Ljava/lang/Double;
+	public final fun getFloat (I)Ljava/lang/Float;
+	public final fun getInt (I)Ljava/lang/Integer;
+	public fun getLong (I)Ljava/lang/Long;
+	public final fun getResultSet ()Ljava/sql/ResultSet;
+	public final fun getShort (I)Ljava/lang/Short;
+	public fun getString (I)Ljava/lang/String;
+	public final fun getTime (I)Ljava/sql/Time;
+	public final fun getTimestamp (I)Ljava/sql/Timestamp;
+	public synthetic fun next ()Lapp/cash/sqldelight/db/QueryResult;
+	public fun next-mlR-ZEE ()Ljava/lang/Object;
+}
+
+public abstract class app/cash/sqldelight/driver/jdbc/JdbcDriver : app/cash/sqldelight/db/SqlDriver, app/cash/sqldelight/driver/jdbc/ConnectionManager {
+	public fun <init> ()V
+	public fun beginTransaction (Ljava/sql/Connection;)V
+	public fun close ()V
+	public final fun connectionAndClose ()Lkotlin/Pair;
+	public fun currentTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
+	public fun endTransaction (Ljava/sql/Connection;)V
+	public fun execute (Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
+	public fun executeQuery (Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/functions/Function1;)Lapp/cash/sqldelight/db/QueryResult;
+	public fun getTransaction ()Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;
+	public fun newTransaction ()Lapp/cash/sqldelight/db/QueryResult;
+	public fun rollbackTransaction (Ljava/sql/Connection;)V
+	public fun setTransaction (Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;)V
+}
+
+public final class app/cash/sqldelight/driver/jdbc/JdbcDrivers {
+	public static final fun fromDataSource (Ljavax/sql/DataSource;)Lapp/cash/sqldelight/driver/jdbc/JdbcDriver;
+}
+
+public final class app/cash/sqldelight/driver/jdbc/JdbcPreparedStatement : app/cash/sqldelight/db/SqlPreparedStatement {
+	public fun <init> (Ljava/sql/PreparedStatement;)V
+	public final fun bindBigDecimal (ILjava/math/BigDecimal;)V
+	public fun bindBoolean (ILjava/lang/Boolean;)V
+	public final fun bindByte (ILjava/lang/Byte;)V
+	public fun bindBytes (I[B)V
+	public final fun bindDate (ILjava/sql/Date;)V
+	public fun bindDouble (ILjava/lang/Double;)V
+	public final fun bindFloat (ILjava/lang/Float;)V
+	public final fun bindInt (ILjava/lang/Integer;)V
+	public fun bindLong (ILjava/lang/Long;)V
+	public final fun bindObject (ILjava/lang/Object;)V
+	public final fun bindObject (ILjava/lang/Object;I)V
+	public final fun bindShort (ILjava/lang/Short;)V
+	public fun bindString (ILjava/lang/String;)V
+	public final fun bindTime (ILjava/sql/Time;)V
+	public final fun bindTimestamp (ILjava/sql/Timestamp;)V
+	public final fun execute ()J
+	public final fun executeQuery (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+

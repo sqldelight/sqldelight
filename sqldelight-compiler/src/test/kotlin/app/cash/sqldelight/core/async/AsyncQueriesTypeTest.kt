@@ -3,10 +3,10 @@ package app.cash.sqldelight.core.async
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
 
 class AsyncQueriesTypeTest {
   @get:Rule val temporaryFolder = TemporaryFolder()
@@ -80,7 +80,8 @@ class AsyncQueriesTypeTest {
       |  driver: SqlDriver,
       |  data_Adapter: Data_.Adapter,
       |  otherAdapter: Other.Adapter,
-      |) : SuspendingTransacterImpl(driver), TestDatabase {
+      |) : SuspendingTransacterImpl(driver),
+      |    TestDatabase {
       |  override val dataQueries: DataQueries = DataQueries(driver, data_Adapter, otherAdapter)
       |
       |  public object Schema : SqlSchema<QueryResult.AsyncValue<Unit>> {
@@ -138,24 +139,17 @@ class AsyncQueriesTypeTest {
       |  private val data_Adapter: Data_.Adapter,
       |  private val otherAdapter: Other.Adapter,
       |) : SuspendingTransacterImpl(driver) {
-      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> =
-      |      SelectForIdQuery(id) { cursor ->
+      |  public fun <T : Any> selectForId(id: Long, mapper: (id: Long, value_: List?) -> T): Query<T> = SelectForIdQuery(id) { cursor ->
       |    mapper(
       |      cursor.getLong(0)!!,
       |      cursor.getString(1)?.let { data_Adapter.value_Adapter.decode(it) }
       |    )
       |  }
       |
-      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id) { id_, value_ ->
-      |    Data_(
-      |      id_,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectForId(id: Long): Query<Data_> = selectForId(id, ::Data_)
       |
       |  public fun <T : Any> selectAllValues(mapper: (id: Long, value_: List?) -> T): Query<T> {
-      |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) {
-      |        "Adapter types are expected to be identical." }
+      |    check(setOf(dataAdapter.value_Adapter, otherAdapter.value_Adapter).size == 1) { "Adapter types are expected to be identical." }
       |    return Query(424_911_250, arrayOf("data", "other"), driver, "Data.sq", "selectAllValues", ""${'"'}
       |    |SELECT id, value FROM data
       |    |UNION
@@ -168,24 +162,24 @@ class AsyncQueriesTypeTest {
       |    }
       |  }
       |
-      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues { id, value_ ->
-      |    SelectAllValues(
-      |      id,
-      |      value_
-      |    )
-      |  }
+      |  public fun selectAllValues(): Query<SelectAllValues> = selectAllValues(::SelectAllValues)
       |
-      |  public suspend fun insertData(id: Long?, value_: List?) {
-      |    driver.execute(${insert.id.withUnderscores}, ""${'"'}
+      |  /**
+      |   * @return The number of rows updated.
+      |   */
+      |  public suspend fun insertData(id: Long?, value_: List?): Long {
+      |    val result = driver.execute(${insert.id.withUnderscores}, ""${'"'}
       |        |INSERT INTO data
       |        |VALUES (?, ?)
       |        ""${'"'}.trimMargin(), 2) {
-      |          bindLong(0, id)
-      |          bindString(1, value_?.let { data_Adapter.value_Adapter.encode(it) })
+      |          var parameterIndex = 0
+      |          bindLong(parameterIndex++, id)
+      |          bindString(parameterIndex++, value_?.let { data_Adapter.value_Adapter.encode(it) })
       |        }.await()
       |    notifyQueries(${insert.id.withUnderscores}) { emit ->
       |      emit("data")
       |    }
+      |    return result
       |  }
       |
       |  private inner class SelectForIdQuery<out T : Any>(
@@ -200,13 +194,13 @@ class AsyncQueriesTypeTest {
       |      driver.removeListener("data", listener = listener)
       |    }
       |
-      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> =
-      |        driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
-      |    |SELECT *
+      |    override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> = driver.executeQuery(${select.id.withUnderscores}, ""${'"'}
+      |    |SELECT data.id, data.value
       |    |FROM data
       |    |WHERE id = ?
       |    ""${'"'}.trimMargin(), mapper, 1) {
-      |      bindLong(0, id)
+      |      var parameterIndex = 0
+      |      bindLong(parameterIndex++, id)
       |    }
       |
       |    override fun toString(): String = "Data.sq:selectForId"

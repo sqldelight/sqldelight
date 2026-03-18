@@ -18,6 +18,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.LogicalPosition
 import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.openapi.module.ModuleUtilCore.findModuleForFile
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.InputValidatorEx
@@ -25,8 +27,8 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
-import org.jetbrains.kotlin.idea.util.findModule
 import java.util.Properties
+import org.jetbrains.kotlin.idea.util.findModule
 
 /**
  * Creates a new SqlDelight file/table/migration from a template (see [fileTemplates.internal])
@@ -84,7 +86,7 @@ class SqlDelightCreateFileAction :
     val project = CommonDataKeys.PROJECT.getData(dataContext) ?: return false
     val file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext) ?: return false
 
-    val module = file.findModule(project) ?: return false
+    val module = findModuleForFile(file, project) ?: return false
 
     return SqlDelightFileIndex.getInstance(module).isConfigured
   }

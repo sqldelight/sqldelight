@@ -61,7 +61,7 @@ class QueriesTypeGenerator(
           type.addFunction(generator.defaultResultTypeFunction())
         }
 
-        if (query.arguments.isNotEmpty()) {
+        if (query.needsQuerySubType()) {
           type.addType(generator.querySubtype())
         }
       }

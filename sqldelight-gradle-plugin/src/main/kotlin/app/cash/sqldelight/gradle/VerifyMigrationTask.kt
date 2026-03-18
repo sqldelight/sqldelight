@@ -10,6 +10,11 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqlite.migrations.CatalogDatabase
 import app.cash.sqlite.migrations.ObjectDifferDatabaseComparator
 import app.cash.sqlite.migrations.findDatabaseFiles
+import java.io.File
+import java.sql.DriverManager
+import java.util.Properties
+import java.util.ServiceLoader
+import kotlin.collections.ArrayList
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.RegularFileProperty
@@ -29,11 +34,6 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.sql.DriverManager
-import java.util.Properties
-import java.util.ServiceLoader
-import kotlin.collections.ArrayList
 
 @CacheableTask
 abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
@@ -42,9 +42,9 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
@@ -123,7 +123,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         .findDatabaseFiles()
 
       check(!parameters.verifyMigrations.get() || databaseFiles.count() > 0) {
-        "Verifying a migration requires a database file to be present. To generate one, use the generate Gradle task."
+        "Verifying a migration requires a database file to be present. To generate one, use the generate schema Gradle task for your database. A quick way to find the task name(s) is to run `gradle :module:tasks | grep generate`."
       }
 
       databaseFiles.forEach { dbFile ->
@@ -162,6 +162,8 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       val diffReport = databaseComparator.compare(currentDb, actualCatalog).let { diff ->
         buildString(diff::printTo)
       }
+
+      logger.info("Performed ${databaseComparator.performedComparisonsCount} comparisons")
 
       check(diffReport.isEmpty()) {
         "Error migrating from ${dbFile.name}, fresh database looks" +
@@ -202,21 +204,21 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
         lastMigrationVersion = actual
       }
     }
-
-    private fun MapProperty<String, String>.toProperties(): Properties {
-      val connectionProperties = Properties()
-      get().forEach { (key, value) ->
-        connectionProperties[key] = value
-      }
-      return connectionProperties
-    }
   }
 }
 
 /**
  * Allows consumers to configure and register (with [DriverManager]) their custom drivers prior to
- * running migration verification task.
+ * running VerifyMigrationTask and GenerateSchemaTask tasks.
  */
 interface DriverInitializer {
   fun execute(properties: SqlDelightDatabaseProperties, driverProperties: Properties)
+}
+
+internal fun MapProperty<String, String>.toProperties(): Properties {
+  val properties = Properties()
+  get().forEach { (key, value) ->
+    properties[key] = value
+  }
+  return properties
 }

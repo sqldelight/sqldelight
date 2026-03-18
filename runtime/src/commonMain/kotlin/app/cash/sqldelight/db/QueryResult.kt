@@ -32,7 +32,7 @@ sealed interface QueryResult<T> {
   }
 
   @JvmInline
-  value class AsyncValue<T>(private inline val getter: suspend () -> T) : QueryResult<T> {
+  value class AsyncValue<T>(private val getter: suspend () -> T) : QueryResult<T> {
     override suspend fun await() = getter()
   }
 

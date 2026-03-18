@@ -26,8 +26,8 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import org.junit.rules.TemporaryFolder
 import java.io.File
+import org.junit.rules.TemporaryFolder
 
 private typealias CompilationMethod = (Module, SqlDelightDialect, SqlDelightQueriesFile, (String) -> Appendable) -> Unit
 

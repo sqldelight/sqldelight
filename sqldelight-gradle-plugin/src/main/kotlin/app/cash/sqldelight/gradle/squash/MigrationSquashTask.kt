@@ -11,6 +11,8 @@ import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightWorkerTask
 import com.alecstrong.sql.psi.core.SqlFileBase
 import com.intellij.psi.PsiFileFactory
+import java.io.File
+import java.util.ServiceLoader
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
@@ -23,16 +25,14 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.util.ServiceLoader
 
 @CacheableTask
 abstract class MigrationSquashTask : SqlDelightWorkerTask() {
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @TaskAction
   fun generateSquashedMigrationFile() {

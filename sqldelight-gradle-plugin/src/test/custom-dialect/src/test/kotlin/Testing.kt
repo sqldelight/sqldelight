@@ -1,10 +1,10 @@
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.driver.jdbc.JdbcDriver
-import org.junit.Test
-import schema.FooQueries
 import java.sql.Connection
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import org.junit.Test
+import schema.FooQueries
 
 class Testing {
   val fakeDriver = object : JdbcDriver() {

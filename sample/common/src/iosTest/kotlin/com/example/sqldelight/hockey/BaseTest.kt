@@ -5,7 +5,13 @@ import com.example.sqldelight.hockey.data.Db
 import com.example.sqldelight.hockey.data.Schema
 
 actual suspend fun createDriver() {
-  Db.dbSetup(NativeSqliteDriver(Schema, "sampledb"))
+  Db.dbSetup(
+    NativeSqliteDriver(Schema, "sampledb", onConfiguration = {
+      it.copy(
+        inMemory = true,
+      )
+    }),
+  )
 }
 
 actual suspend fun closeDriver() {

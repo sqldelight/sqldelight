@@ -3,8 +3,8 @@ package app.cash.sqldelight.core.errors
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.splitLines
 import com.google.common.truth.Truth.assertWithMessage
-import org.junit.Test
 import java.io.File
+import org.junit.Test
 
 class ErrorTest {
 

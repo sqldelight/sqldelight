@@ -17,10 +17,10 @@ package app.cash.sqldelight.integrations
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
-import java.io.File
 
 class IntegrationTest {
   @Test
@@ -120,7 +120,7 @@ class IntegrationTest {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "test", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -135,7 +135,7 @@ class IntegrationTest {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "iosTest", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")

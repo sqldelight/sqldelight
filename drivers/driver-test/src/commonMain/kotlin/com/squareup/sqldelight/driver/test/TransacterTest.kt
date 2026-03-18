@@ -192,7 +192,7 @@ abstract class TransacterTest {
   fun anExceptionThrownInPostRollbackFunctionIsCombinedWithTheExceptionInTheMainBody() {
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
-    val t = assertFailsWith<Throwable>() {
+    val t = assertFailsWith<Throwable> {
       transacter.transaction {
         afterRollback {
           throw ExceptionA()

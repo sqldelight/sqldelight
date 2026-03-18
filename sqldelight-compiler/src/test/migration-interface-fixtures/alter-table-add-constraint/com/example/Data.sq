@@ -1,0 +1,8 @@
+selectSingle:
+SELECT *
+FROM TestSingle;
+
+selectCompound:
+SELECT *
+FROM TestCompound;
+

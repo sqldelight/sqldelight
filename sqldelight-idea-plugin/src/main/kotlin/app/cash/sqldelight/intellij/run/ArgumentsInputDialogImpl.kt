@@ -2,7 +2,8 @@ package app.cash.sqldelight.intellij.run
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import javax.swing.JComponent
 
 internal interface ArgumentsInputDialog {
@@ -18,7 +19,8 @@ internal interface ArgumentsInputDialog {
 internal class ArgumentsInputDialogImpl(
   project: Project,
   private val parameters: List<SqlParameter>,
-) : DialogWrapper(project), ArgumentsInputDialog {
+) : DialogWrapper(project),
+  ArgumentsInputDialog {
 
   init {
     init()
@@ -31,7 +33,7 @@ internal class ArgumentsInputDialogImpl(
     return panel {
       parameters.forEach { parameter ->
         row("${parameter.name}:") {
-          textField(parameter::value, {
+          textField().bindText(parameter::value, {
             _result.add(parameter.copy(value = it))
           })
         }

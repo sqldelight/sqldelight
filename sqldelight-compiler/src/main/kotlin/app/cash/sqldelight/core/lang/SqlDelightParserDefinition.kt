@@ -35,7 +35,7 @@ class SqlDelightParserDefinition : SqlParserDefinition() {
   override fun createElement(node: ASTNode): PsiElement {
     try {
       return super.createElement(node)
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
       throw IllegalStateException(
         """
         Failed to create element for node ${node.text}
@@ -53,6 +53,8 @@ class SqlDelightParserDefinition : SqlParserDefinition() {
   }
 
   companion object {
-    private val FILE = ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage)
+    private val FILE = object : ILightStubFileElementType<PsiFileStub<SqlFileBase>>(SqlDelightLanguage) {
+      override fun getExternalId(): String = "SqlDelight"
+    }
   }
 }

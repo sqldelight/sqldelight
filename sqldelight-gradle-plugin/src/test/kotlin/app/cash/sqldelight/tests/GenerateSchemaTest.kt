@@ -2,9 +2,9 @@ package app.cash.sqldelight.tests
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class GenerateSchemaTest {
   @Test fun `schema file generates correctly`() {
@@ -85,5 +85,25 @@ class GenerateSchemaTest {
 
     // verify
     assertThat(schemaFile.exists()).isTrue()
+  }
+
+  @Test fun `driver initializer is executed`() {
+    val fixtureRoot = File("src/test/migration-driver-initializer")
+    val schemaFile = File(fixtureRoot, "src/main/sqldelight/databases/2.db")
+    if (schemaFile.exists()) schemaFile.delete()
+
+    val output = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .build()
+
+    // verify
+    assertThat(output.output).contains("DriverInitializerImpl executed!")
+    assertThat(output.output).contains("CustomDriver is used for connection.")
+    assertThat(output.output).contains("BUILD SUCCESSFUL")
+    assertThat(schemaFile.exists())
+      .isTrue()
+
+    schemaFile.delete()
   }
 }

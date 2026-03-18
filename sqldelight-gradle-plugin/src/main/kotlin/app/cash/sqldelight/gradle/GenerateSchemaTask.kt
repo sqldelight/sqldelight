@@ -6,8 +6,14 @@ import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.core.lang.util.forInitializationStatements
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
+import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.util.ServiceLoader
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
+import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.IgnoreEmptyDirectories
@@ -21,11 +27,6 @@ import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
-import java.io.File
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.util.ServiceLoader
 
 @CacheableTask
 abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
@@ -34,11 +35,13 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
 
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract var properties: SqlDelightDatabasePropertiesImpl
+  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
 
-  @get:Nested abstract var compilationUnit: SqlDelightCompilationUnitImpl
+  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
+
+  @get:Input abstract val driverProperties: MapProperty<String, String>
 
   @TaskAction
   fun generateSchemaFile() {
@@ -48,6 +51,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
       it.properties.set(properties)
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
+      it.driverProperties.set(driverProperties)
     }
   }
 
@@ -65,6 +69,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
     val properties: Property<SqlDelightDatabaseProperties>
     val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
+    val driverProperties: MapProperty<String, String>
   }
 
   abstract class GenerateSchema : WorkAction<GenerateSchemaWorkParameters> {
@@ -73,6 +78,10 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
       get() = parameters.compilationUnit.get().sourceFolders.map { it.folder }
 
     override fun execute() {
+      ServiceLoader.load(DriverInitializer::class.java).firstOrNull()?.execute(
+        parameters.properties.get(),
+        parameters.driverProperties.toProperties(),
+      )
       val environment = SqlDelightEnvironment(
         sourceFolders = sourceFolders.filter { it.exists() },
         dependencyFolders = emptyList(),

@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION orders_set_updated_at()
+RETURNS TRIGGER LANGUAGE PLPGSQL AS
+$$
+BEGIN
+  new.updated_at := NOW();
+  RETURN new;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER orders_set_updated_at
+BEFORE UPDATE ON Orders
+FOR EACH ROW
+EXECUTE FUNCTION orders_set_updated_at();
+
+

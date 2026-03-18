@@ -18,8 +18,10 @@ package app.cash.sqldelight.intellij
 import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
+import app.cash.sqldelight.core.lang.MIGRATION_EXTENSION
 import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
+import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
@@ -51,14 +53,16 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerImpl
-import org.jetbrains.kotlin.idea.util.projectStructure.getModule
-import timber.log.Timber
 import java.io.PrintStream
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.reflect.jvm.jvmName
+import org.jetbrains.kotlin.idea.util.projectStructure.getModule
+import timber.log.Timber
 
-class ProjectService(val project: Project) : SqlDelightProjectService, Disposable {
+class ProjectService(val project: Project) :
+  SqlDelightProjectService,
+  Disposable {
   private var fileIndexes: FileIndexMap?
   private val loggingTree = LoggerTree(Logger.getInstance("SQLDelight[${project.name}]"))
 
@@ -80,7 +84,10 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
           VirtualFileManager.VFS_CHANGES,
           object : BulkFileListener {
             override fun after(events: MutableList<out VFileEvent>) {
-              events.filter { it.file?.fileType == SqlDelightFileType }.forEach { event ->
+              // Use path extension rather than VirtualFile.fileType to avoid triggering
+              // file type detection (FileTypeDetectionService.readFirstBytesFromFile), which
+              // performs blocking disk I/O on the EDT and freezes the IDE.
+              events.filter { it.path.endsWith(".$SQLDELIGHT_EXTENSION") }.forEach { event ->
                 if (event is VFileCreateEvent || event is VFileMoveEvent) {
                   PsiManager.getInstance(project).findViewProvider(event.file!!)
                     ?.contentsSynchronized()
@@ -128,7 +135,6 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
   }
 
   override fun clearIndex() {
-    fileIndexes?.close()
     fileIndexes = null
   }
 
@@ -162,6 +168,8 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   override var generateAsync: Boolean = false
 
+  override var expandSelectStar: Boolean = true
+
   override var dialect: SqlDelightDialect = MissingDialect()
 
   override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {
@@ -192,7 +200,7 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
   private fun invalidateAllFiles() {
     val files = mutableListOf<VirtualFile>()
     ProjectRootManager.getInstance(project).fileIndex.iterateContent { vFile ->
-      if (vFile.fileType != SqlDelightFileType && vFile.fileType != MigrationFileType) {
+      if (vFile.extension != SQLDELIGHT_EXTENSION && vFile.extension != MIGRATION_EXTENSION) {
         return@iterateContent true
       }
       files += vFile
@@ -221,7 +229,9 @@ class ProjectService(val project: Project) : SqlDelightProjectService, Disposabl
 
   private class MissingDialect : SqlDelightDialect {
     override val icon = AllIcons.Providers.Sqlite
-    override fun setup() { SqlParserUtil.reset() }
+    override fun setup() {
+      SqlParserUtil.reset()
+    }
     override fun typeResolver(parentResolver: TypeResolver) = parentResolver
   }
 }

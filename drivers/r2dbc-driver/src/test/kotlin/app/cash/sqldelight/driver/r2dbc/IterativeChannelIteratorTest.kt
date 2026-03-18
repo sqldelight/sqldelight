@@ -1,13 +1,13 @@
 package app.cash.sqldelight.driver.r2dbc
 
+import kotlin.test.Test
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.reactive.asPublisher
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 class IterativeChannelIteratorTest {

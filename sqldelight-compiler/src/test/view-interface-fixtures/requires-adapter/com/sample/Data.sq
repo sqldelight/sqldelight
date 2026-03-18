@@ -19,3 +19,7 @@ FROM person;
 CREATE VIEW personCool AS
 SELECT *, CASE is_cool WHEN 1 THEN "cool" ELSE "lame" END AS how_cool
 FROM person;
+
+CREATE VIEW personAndMaxFriends AS
+SELECT *, MAX( friends ) AS max_friends
+FROM person;

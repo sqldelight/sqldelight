@@ -36,6 +36,12 @@ Container for databases. Configures SQLDelight to create each database with the 
 Type: `Property<Boolean>`
 
 For native targets. Whether sqlite should be automatically linked.
+This adds the necessary metadata for linking sqlite when the project is compiled to a dynamic framework (which is the default in recent versions of KMP).
+
+Note that for a static framework, this flag has no effect.
+The XCode build that imports the project should add `-lsqlite3` to the linker flags.
+Alternatively [add a project dependency](https://kotlinlang.org/docs/native-cocoapods-libraries.html) on the [sqlite3](https://cocoapods.org/pods/sqlite3) pod via the cocoapods plugin.
+Another option that may work is adding `sqlite3` to the cocoapods [`spec.libraries` setting](https://guides.cocoapods.org/syntax/podspec.html#libraries) e.g. in Gradle Kotlin DSL: `extraSpecAttributes["libraries"] = "'c++', 'sqlite3'".`
 
 Defaults to `true`.
 
@@ -106,7 +112,7 @@ Type: `DirectoryProperty`
 The directory where `.db` schema files should be stored, relative to the project root.
 These files are used to verify that migrations yield a database with the latest schema.
 
-Defaults to `null`.  
+Defaults to `null`.
 If `null`, the migration verification tasks will not be created.
 
 === "Kotlin"
@@ -142,10 +148,10 @@ Optionally specify schema dependencies on other gradle projects [(see below)](#s
 Type: `String` or `Provider<MinimalExternalModuleDependency>`
 
 The SQL dialect you would like to target. Dialects are selected using a gradle dependency.
-These dependencies can be specified as `app.cash.sqldelight:{dialect module}:{{ versions.sqldelight }}`. 
+These dependencies can be specified as `app.cash.sqldelight:{dialect module}:{{ versions.sqldelight }}`.
 See below for available dialects.
 
-For Android projects, the SQLite version is automatically selected based on your `minSdk`. 
+For Android projects, the SQLite version is automatically selected based on your `minSdk`.
 Otherwise defaults to SQLite 3.18.
 
 Available dialects:
@@ -214,7 +220,7 @@ Defaults to `false`.
 
 Type: `Property<Boolean>`
 
-If set to true, SQLDelight will generate suspending query methods for us with asynchronous drivers.
+If set to true, SQLDelight will generate suspending query methods for use with asynchronous drivers.
 
 Defaults to `false`.
 
@@ -247,4 +253,37 @@ Defaults to `false`.
     deriveSchemaFromMigrations = true
     ```
 
+----
+
+### `expandSelectStar`
+
+Type: `Property<Boolean>`
+
+If set to true, SQLDelight will rewrite `SELECT *` statements to explicitly reference each of the actual resulting columns.
+
+For example, the `getAll` query below
+```sql
+CREATE TABLE hockey_player (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  number INTEGER NOT NULL
+);
+
+getAll:
+SELECT * FROM hockey_player;
+```
+will be rewritten as `SELECT hockey_player.id, hockey_player.name, hockey_player.number FROM hockey_player;`.
+
+Defaults to `true`.
+
+=== "Kotlin"
+    ```kotlin
+    expandSelectStar.set(true)
+    ```
+=== "Groovy"
+    ```groovy
+    expandSelectStar = true
+    ```
+
 {% include 'common/gradle-dependencies.md' %}
+

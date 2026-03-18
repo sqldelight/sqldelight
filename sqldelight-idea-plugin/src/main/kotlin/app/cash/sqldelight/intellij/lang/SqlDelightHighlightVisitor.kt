@@ -20,7 +20,9 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 
-class SqlDelightHighlightVisitor : SqlVisitor(), HighlightVisitor {
+class SqlDelightHighlightVisitor :
+  SqlVisitor(),
+  HighlightVisitor {
 
   private var myHolder: HighlightInfoHolder? = null
 

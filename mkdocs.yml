@@ -1,7 +1,7 @@
 site_name: SQLDelight
-site_url: https://cashapp.github.io/sqldelight/
+site_url: https://sqldelight.github.io/sqldelight/
 repo_name: sqldelight
-repo_url: https://github.com/cashapp/sqldelight
+repo_url: https://github.com/sqldelight/sqldelight
 site_description: "SQLDelight - Generates typesafe Kotlin APIs from SQL"
 site_author: Square, Inc.
 copyright: 'Copyright &copy; 2023 Square, Inc.'
@@ -24,6 +24,7 @@ nav:
       - 'Types': android_sqlite/types.md
       - 'Transactions': android_sqlite/transactions.md
       - 'Grouping Statements': android_sqlite/grouping_statements.md
+      - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
     - 'Extensions':
         - 'RxJava': android_sqlite/rxjava.md
         - 'Coroutines': android_sqlite/coroutines.md
@@ -32,7 +33,6 @@ nav:
     - 'Testing': android_sqlite/testing.md
     - 'IntelliJ Plugin': android_sqlite/intellij_plugin.md
     - 'Gradle': android_sqlite/gradle.md
-    - 'Upgrading Pre-1.0': android_sqlite/upgrading.md
     - '2.x API':
         - 'coroutines-extensions': 2.x/extensions/coroutines-extensions/index.html
         - 'rxjava2-extensions': 2.x/extensions/rxjava2-extensions/index.html
@@ -52,6 +52,7 @@ nav:
           - 'Types': multiplatform_sqlite/types.md
           - 'Transactions': multiplatform_sqlite/transactions.md
           - 'Grouping Statements': multiplatform_sqlite/grouping_statements.md
+          - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
       - 'Extensions':
           - 'Coroutines': multiplatform_sqlite/coroutines.md
           - 'AndroidX Paging': multiplatform_sqlite/androidx_paging.md
@@ -123,6 +124,7 @@ nav:
         - 'Types': native_sqlite/types.md
         - 'Transactions': native_sqlite/transactions.md
         - 'Grouping Statements': native_sqlite/grouping_statements.md
+        - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
     - 'Extensions':
         - 'Coroutines': native_sqlite/coroutines.md
         - 'AndroidX Paging': native_sqlite/androidx_paging.md
@@ -143,6 +145,7 @@ nav:
         - 'Types': jvm_sqlite/types.md
         - 'Transactions': jvm_sqlite/transactions.md
         - 'Grouping Statements': jvm_sqlite/grouping_statements.md
+        - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
     - 'Extensions':
         - 'RxJava': jvm_sqlite/rxjava.md
         - 'Coroutines': jvm_sqlite/coroutines.md
@@ -169,6 +172,7 @@ nav:
           - 'Types': js_sqlite/types.md
           - 'Transactions': js_sqlite/transactions.md
           - 'Grouping Statements': js_sqlite/grouping_statements.md
+          - 'FTS5 Virtual Tables': android_sqlite/fts5_virtual_tables.md
       - 'Extensions':
           - 'Coroutines': js_sqlite/coroutines.md
           - 'AndroidX Paging': js_sqlite/androidx_paging.md
@@ -185,13 +189,14 @@ nav:
 theme:
   name: 'material'
   favicon: images/icon-cashapp.png
-  logo: images/icon-cashapp.png
+  logo: images/icon-sqldelight.svg
+  custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
       media: "(prefers-color-scheme: light)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -199,8 +204,8 @@ theme:
     # Palette toggle for dark mode
     - scheme: slate
       media: "(prefers-color-scheme: dark)"
-      primary: 'deep purple'
-      accent: 'pink'
+      primary: custom
+      accent: 'green'
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -209,6 +214,7 @@ theme:
     - content.tabs.link
     - content.code.annotate
     - content.action.view
+    - announce.dismiss
 
 extra_css:
   - 'css/app.css'
@@ -230,8 +236,8 @@ markdown_extensions:
   - md_in_html
   - attr_list
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 plugins:
   - search

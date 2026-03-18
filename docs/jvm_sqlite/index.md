@@ -20,19 +20,17 @@ your project.
     }
     ```
 
-An instance of the driver can be constructed as shown below. The constructor accepts a JDBC 
+An instance of the driver can be constructed as shown below. The constructor accepts a JDBC
 connection string that specifies the location of the database file. The `IN_MEMORY`
 constant can also be passed to the constructor to create an in-memory database.
 
 === "On-Disk"
     ```kotlin
-    val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:test.db")
-    Database.Schema.create(driver)
+    val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:test.db", Properties(), Database.Schema)
     ```
 === "In-Memory"
     ```kotlin
-    val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    Database.Schema.create(driver)
+    val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY, Properties(), Database.Schema)
     ```
 
 {% include 'common/index_queries.md' %}

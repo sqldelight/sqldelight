@@ -1,0 +1,16 @@
+CREATE TABLE TypeCast(
+  answer TEXT NOT NULL,
+  ts TEXT
+);
+
+insert:
+INSERT INTO TypeCast (answer, ts) VALUES(?, ?);
+
+select:
+SELECT '1'::TEXT, 3.14::TEXT, '42'::INTEGER, 'false'::BOOLEAN, concat('tru','e')::BOOLEAN,
+'2023-05-01 12:34:56'::TIMESTAMP, '6ba7b810-9dad-11d1-80b4-00c04fd430c8'::UUID, '{"a":42}'::JSON,
+'{1,2,3}'::INT[], 42::BIGINT, 3.14::DOUBLE PRECISION, 'f'::BOOLEAN, 'hello world'::VARCHAR(5),
+'2023-04-25 10:30:00+02'::TIMESTAMP WITH TIME ZONE, '2023-04-25 10:30:00+02'::TIMESTAMP::DATE,
+answer::INTEGER, ts::TIMESTAMP,
+?::INTEGER
+FROM TypeCast;

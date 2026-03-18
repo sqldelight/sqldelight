@@ -28,9 +28,9 @@ If you are using the SQLite that comes bundled with Android (rather than shippin
 
 ```groovy
 dependencies {
-  testImplementation('org.xerial:sqlite-jdbc:3.8.10.2') {
+  testImplementation('org.xerial:sqlite-jdbc') {
     // Override the version of sqlite used by sqlite-driver to match Android API 23
-    force = true
+    version { strictly('3.8.10.2') }
   }
 }
 ```

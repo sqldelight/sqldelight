@@ -1,7 +1,7 @@
 import app.sqltest.shared.common.data.SharedDatabase
+import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DbTest : MultiPlatformTest() {

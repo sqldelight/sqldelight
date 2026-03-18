@@ -1,4 +1,5 @@
-// ktlint-disable filename
+@file:Suppress("ktlint:standard:filename")
+
 package com.example
 
 fun main() {

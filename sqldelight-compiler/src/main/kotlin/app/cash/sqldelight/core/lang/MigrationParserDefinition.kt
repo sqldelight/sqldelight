@@ -25,6 +25,7 @@ class MigrationParserDefinition : SqlParserDefinition() {
 
     private val FILE = object : ILightStubFileElementType<PsiFileStub<SqlFileBase>>(MigrationLanguage) {
       override fun getStubVersion(): Int = this@Companion.stubVersion
+      override fun getExternalId(): String = "SqlDelight.MIGRATION"
     }
   }
 }

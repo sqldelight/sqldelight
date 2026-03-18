@@ -4,7 +4,7 @@
 
 SQLDelight generates typesafe Kotlin APIs from your SQL statements. It verifies your schema, statements, and migrations at compile-time and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple.
 
-SQLDelight understands your existing SQL schema.
+SQLDelight takes your existing SQL schema,
 
 ```sql
 CREATE TABLE hockey_player (
@@ -14,7 +14,7 @@ CREATE TABLE hockey_player (
 );
 ```
 
-It generates typesafe code for any labeled SQL statements.
+and generates typesafe code to run your SQL statements and queries.
 
 ![intro.gif](images/intro.gif)
 
@@ -56,12 +56,32 @@ SQLDelight supports a variety of SQL dialects and platforms.
 </div>
 </div>
 
+### Third party dialects
+
+<div class="cash-grid" markdown="1">
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-cockroachlabs:{ .lg .middle } __CockroachDB__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/Faire/sqldelight-cockroachdb-dialect/)  
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-ibm:{ .lg .middle } __DB2__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/hfhbd/sqldelight-db2-dialect)  
+</div>
+<div class="cash-grid-item" markdown="1">
+<p class="cash-grid-title" markdown="1">:simple-oracle:{ .lg .middle } __Oracle DB__</p>
+<hr />
+[:octicons-arrow-right-24: __JVM__](https://github.com/hfhbd/sqldelight-oracle-dialect)  
+</div>
+</div>
+
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/squareup/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
+[the Central Portal Snapshots repository](https://central.sonatype.com/repository/maven-snapshots). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
 
-Documentation pages for the latest snapshot version can be [found here](https://cashapp.github.io/sqldelight/snapshot).
+Documentation pages for the latest snapshot version can be [found here](https://sqldelight.github.io/sqldelight/snapshot).
 
 === "Kotlin"
     ```kotlin
@@ -69,7 +89,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     pluginManagement {
         repositories {
             gradlePluginPortal()
-            maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+            maven(url = "https://central.sonatype.com/repository/maven-snapshots")
         }
     }
     
@@ -79,7 +99,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     }
     
     repositories {
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://central.sonatype.com/repository/maven-snapshots")
     }
     ```
 === "Groovy"
@@ -88,7 +108,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     pluginManagement {
         repositories {
             gradlePluginPortal()
-            maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+            maven { url "https://central.sonatype.com/repository/maven-snapshots" }
         }
     }
     
@@ -98,7 +118,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     }
     
     repositories {
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://central.sonatype.com/repository/maven-snapshots" }
     }
     ```
 

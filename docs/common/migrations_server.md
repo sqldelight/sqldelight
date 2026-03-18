@@ -8,7 +8,7 @@ services to read from:
 sqldelight {
   databases {
     Database {
-      migrationOutputDirectory = file("$buildDir/resources/main/migrations")
+      migrationOutputDirectory = layout.buildDirectory.dir("resources/main/migrations")
       migrationOutputFileFormat = ".sql" // Defaults to .sql
   }
 }

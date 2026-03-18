@@ -13,12 +13,14 @@ import com.intellij.openapi.editor.ReadOnlyModificationException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.idea.inspections.findExistingEditor
+import org.jetbrains.kotlin.idea.codeinsight.utils.findExistingEditor
 
 class AddOptimisticLockIntention(
   private val updateElement: PsiElement,
   private val lock: ColumnDefMixin,
-) : BaseElementAtCaretIntentionAction(), HintAction, QuestionAction {
+) : BaseElementAtCaretIntentionAction(),
+  HintAction,
+  QuestionAction {
   override fun getFamilyName() = INTENTIONS_FAMILY_NAME_LOCK_FIX
 
   override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
@@ -45,9 +47,7 @@ class AddOptimisticLockIntention(
 
     val whereClause = when (updateElement) {
       is SqlUpdateStmt -> updateElement.expr
-      is SqlUpdateStmtLimited ->
-        updateElement.exprList
-          .single { it.node.treePrev.treePrev.text == "WHERE" }
+      is SqlUpdateStmtLimited -> updateElement.expr
       else -> throw IllegalStateException()
     }
 

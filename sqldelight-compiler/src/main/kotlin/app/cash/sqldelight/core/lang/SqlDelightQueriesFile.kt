@@ -43,12 +43,6 @@ class SqlDelightQueriesFile(
   viewProvider: FileViewProvider,
 ) : SqlDelightFile(viewProvider, SqlDelightLanguage),
   SqlAnnotatedElement {
-  override val packageName by lazy {
-    module?.let { module ->
-      SqlDelightFileIndex.getInstance(module).packageName(this)
-    }
-  }
-
   val namedQueries by lazy {
     transactions().filterIsInstance<NamedQuery>() + sqlStatements()
       .filter { typeResolver.queryWithResults(it.statement) != null && it.identifier.name != null }
@@ -95,15 +89,15 @@ class SqlDelightQueriesFile(
   }
 
   internal val namedExecutes by lazy {
-    val statements = sqlStatements()
-      .filter {
-        it.identifier.name != null &&
-          it.statement.deleteStmtLimited == null &&
-          it.statement.insertStmt == null &&
-          it.statement.updateStmtLimited == null &&
-          it.statement.compoundSelectStmt == null
+    val statements = sqlStatements().filter { it.identifier.name != null && typeResolver.queryWithResults(it.statement) == null }
+      .mapNotNull {
+        when {
+          it.statement.deleteStmtLimited != null -> null
+          it.statement.insertStmt != null -> null
+          it.statement.updateStmtLimited != null -> null
+          else -> NamedExecute(it.identifier, it.statement)
+        }
       }
-      .map { NamedExecute(it.identifier, it.statement) }
 
     return@lazy transactions().filterIsInstance<NamedExecute>() + statements
   }

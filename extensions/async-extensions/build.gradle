@@ -3,16 +3,28 @@ plugins {
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.multiplatform")
   id("app.cash.sqldelight.toolchain.runtime")
+  alias(libs.plugins.binaryCompatibilityValidator)
 }
 
-archivesBaseName = 'sqldelight-async-extensions'
+base {
+  archivesName = 'sqldelight-async-extensions'
+}
 
 kotlin {
+  applyDefaultHierarchyTemplate {
+    it.common {
+      it.group("concurrent") {
+        it.withJvm()
+        it.group("native") { }
+      }
+    }
+  }
+
   sourceSets {
     commonMain {
       dependencies {
         implementation projects.runtime
-        api libs.kotlin.coroutines.core
+        api libs.kotlinx.coroutines.core
       }
     }
   }

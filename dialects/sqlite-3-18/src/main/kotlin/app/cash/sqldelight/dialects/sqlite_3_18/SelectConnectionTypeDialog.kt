@@ -7,8 +7,12 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.RecentsManager
 import com.intellij.ui.TextFieldWithHistoryWithBrowseButton
+import com.intellij.ui.components.textFieldWithHistoryWithBrowseButton
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.MutableProperty
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.layout.ValidationInfoBuilder
-import com.intellij.ui.layout.panel
 import java.io.File
 import javax.swing.JComponent
 import javax.swing.JTextField
@@ -35,28 +39,29 @@ internal class SelectConnectionTypeDialog(
   override fun createCenterPanel(): JComponent {
     return panel {
       row("Connection Name") {
-        textField(
-          getter = { connectionName },
-          setter = { connectionName = it },
-        ).withValidationOnApply(validateKey())
-          .withValidationOnInput(validateKey())
+        textField().bindText({ connectionName }, { connectionName = it })
+          .validationOnApply(validateKey())
+          .validationOnInput(validateKey())
       }
       row(label = "DB File Path") {
-        textFieldWithHistoryWithBrowseButton(
-          browseDialogTitle = "Choose File",
-          getter = { filePath },
-          setter = { filePath = it },
-          fileChooserDescriptor = FileTypeDescriptor("Choose File", "db"),
-          historyProvider = { recentsManager.getRecentEntries(RECENT_DB_PATH).orEmpty() },
-          fileChosen = { vFile ->
-            vFile.path.also { path ->
-              filePath = path
-              recentsManager.registerRecentEntry(RECENT_DB_PATH, path)
-            }
-          },
-        )
-          .withValidationOnInput(validateFilePath())
-          .withValidationOnApply(validateFilePath())
+        cell(
+          textFieldWithHistoryWithBrowseButton(
+            browseDialogTitle = "Choose File",
+            project = null,
+            fileChooserDescriptor = FileTypeDescriptor("Choose File", "db"),
+            historyProvider = { recentsManager.getRecentEntries(RECENT_DB_PATH).orEmpty() },
+            fileChosen = { vFile ->
+              vFile.path.also { path ->
+                filePath = path
+                recentsManager.registerRecentEntry(RECENT_DB_PATH, path)
+              }
+            },
+          ),
+        ).align(AlignX.FILL)
+          .resizableColumn()
+          .bind({ it.text }, { button, text -> button.text = text }, MutableProperty({ filePath }, { filePath = it }))
+          .validationOnApply(validateFilePath())
+          .validationOnInput(validateFilePath())
       }
     }.also {
       validate()
@@ -64,22 +69,20 @@ internal class SelectConnectionTypeDialog(
   }
 }
 
-private fun validateKey(): ValidationInfoBuilder.(JTextField) -> ValidationInfo? =
-  {
-    if (it.text.isNullOrEmpty()) {
-      error("You must supply a connection key.")
-    } else {
-      null
-    }
+private fun validateKey(): ValidationInfoBuilder.(JTextField) -> ValidationInfo? = {
+  if (it.text.isNullOrEmpty()) {
+    error("You must supply a connection name.")
+  } else {
+    null
   }
+}
 
-private fun validateFilePath(): ValidationInfoBuilder.(TextFieldWithHistoryWithBrowseButton) -> ValidationInfo? =
-  {
-    if (it.text.isEmpty()) {
-      error("The file path is empty.")
-    } else if (!File(it.text).exists()) {
-      error("This file does not exist.")
-    } else {
-      null
-    }
+private fun validateFilePath(): ValidationInfoBuilder.(TextFieldWithHistoryWithBrowseButton) -> ValidationInfo? = {
+  if (it.text.isEmpty()) {
+    error("The file path is empty.")
+  } else if (!File(it.text).exists()) {
+    error("This file does not exist.")
+  } else {
+    null
   }
+}

@@ -7,18 +7,24 @@
   extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
   psiClassPrefix = "Sqlite"
 
-  parserImports=[]
+  parserImports=[
+    "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParser.window_function_expr_real"
+    "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParserUtil.windowFunctionExprExt"
+  ]
 }
+
 overrides ::= extension_expr
 
-extension_expr ::= json_expression {
-  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
-  implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
+extension_expr ::= sqlite_3_25_window_function_expr | json_expression {
+  extends = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.impl.SqliteExtensionExprImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.SqliteExtensionExpr"
   override = true
 }
 
-json_expression ::= {column_name} json_binary_operator <<expr '-1'>> {
+json_expression ::= {column_expr} json_binary_operator <<expr '-1'>> {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_38.grammar.mixins.JsonExpressionMixin"
   pin = 2
 }
 json_binary_operator ::= '->' | '->>'
+
+private sqlite_3_25_window_function_expr ::= <<windowFunctionExprExt <<window_function_expr_real>>>>

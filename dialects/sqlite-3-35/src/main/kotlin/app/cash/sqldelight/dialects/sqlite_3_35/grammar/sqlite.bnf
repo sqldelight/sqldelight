@@ -26,11 +26,13 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.INTO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LIMIT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOT"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.NOTHING"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OFFSET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ON"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.OR"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.RECURSIVE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.RENAME"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.REPLACE"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROLLBACK"
@@ -38,7 +40,10 @@
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.SET"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.TO"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.UPDATE"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITH"
     "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+    "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParserUtil.alterTableRenameColumnExt"
+    "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParser.alter_table_rename_column_real"
   ]
 }
 overrides ::= alter_table_rules
@@ -47,22 +52,17 @@ overrides ::= alter_table_rules
               | update_stmt_limited
               | delete_stmt
               | delete_stmt_limited
+              | with_clause
 
 alter_table_rules ::= (
   {alter_table_add_column}
   | {alter_table_rename_table}
-  | alter_table_rename_column
+  | alter_table_rename_column_inherited
   | alter_table_drop_column
 ) {
   extends = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.impl.SqliteAlterTableRulesImpl"
   implements = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.SqliteAlterTableRules"
   override = true
-}
-
-alter_table_rename_column ::= RENAME [ COLUMN ] {column_name} TO {column_alias} {
-  mixin = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.mixins.AlterTableRenameColumnMixin"
-  implements = "app.cash.sqldelight.dialects.sqlite_3_25.grammar.psi.SqliteAlterTableRenameColumn"
-  pin = 1
 }
 
 alter_table_drop_column ::= DROP COLUMN {column_name} {
@@ -73,16 +73,14 @@ alter_table_drop_column ::= DROP COLUMN {column_name} {
 insert_stmt ::= [ {with_clause} ]
   ( INSERT OR REPLACE | REPLACE | INSERT OR ROLLBACK | INSERT OR ABORT | INSERT OR FAIL | INSERT OR IGNORE | INSERT )
   INTO [ {database_name} DOT ] {table_name} [ AS {table_alias} ]
-  [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ upsert_clause ] [ returning_clause ] {
-  extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteInsertStmtImpl"
-  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteInsertStmt"
+  [ LP {column_name} ( COMMA {column_name} ) * RP ] {insert_stmt_values} [ ( upsert_clause ) * ] [ returning_clause ] {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_35.grammar.mixins.InsertStmtMixin"
   pin = 5
   override = true
 }
 
-upsert_clause ::= ON CONFLICT ( upsert_conflict_target DO UPDATE upsert_do_update | [ upsert_conflict_target ] DO NOTHING ) {
+upsert_clause ::= ON CONFLICT [ upsert_conflict_target ] DO UPDATE upsert_do_update | ON CONFLICT [ upsert_conflict_target ] DO NOTHING {
   extends = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.impl.SqliteUpsertClauseImpl"
-  implements = "app.cash.sqldelight.dialects.sqlite_3_24.grammar.psi.SqliteUpsertClause"
 }
 
 upsert_conflict_target ::= LP {indexed_column} ( COMMA {indexed_column} ) * RP [ WHERE <<expr '-1'>> ] {
@@ -121,4 +119,14 @@ delete_stmt_limited ::= [ {with_clause} ] DELETE FROM {qualified_table_name} [ W
 returning_clause ::= 'RETURNING' {result_column} ( COMMA {result_column} ) * {
   mixin = "app.cash.sqldelight.dialects.sqlite_3_35.grammar.mixins.ReturningClauseMixin"
   implements = "com.alecstrong.sql.psi.core.psi.QueryElement"
+}
+
+private alter_table_rename_column_inherited ::= <<alterTableRenameColumnExt <<alter_table_rename_column_real>>>>
+
+with_clause_materialized ::= NOT 'MATERIALIZED' | 'MATERIALIZED'
+with_clause ::= WITH [ RECURSIVE ] {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ( COMMA {cte_table_name} AS [ with_clause_materialized ] LP {with_clause_auxiliary_stmt} RP ) * {
+  mixin = "com.alecstrong.sql.psi.core.psi.impl.SqlWithClauseImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlWithClause"
+  pin = 1
+  override = true
 }

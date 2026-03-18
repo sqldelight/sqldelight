@@ -93,3 +93,13 @@ button.dl {
     width: 100%;
   }
 }
+
+:root {
+  --md-primary-fg-color:        #d2522b;
+  --md-primary-fg-color--light: #d8633f;
+  --md-primary-fg-color--dark:  #bd4a27;
+}
+
+.md-logo:hover img {
+  content: url('../images/icon-cashapp.png');
+}

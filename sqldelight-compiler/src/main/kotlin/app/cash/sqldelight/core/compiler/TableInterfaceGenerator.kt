@@ -22,6 +22,7 @@ import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columnDefSource
+import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
@@ -51,11 +52,15 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
 
     val constructor = FunSpec.constructorBuilder()
 
-    table.query.columns.map { it.element as NamedElement }.forEach { column ->
+    table.query.columns.forEach { queryColumn ->
+      val column = queryColumn.element as NamedElement
       val columnName = allocateName(column)
       val columnDef = column.columnDefSource()!!
       val columnType = columnDef.columnType as ColumnTypeMixin
-      val javaType = columnType.type().javaType
+      val javaType = queryColumn.nullable?.let { isNullable ->
+        if (isNullable) columnType.type().asNullable().javaType else columnType.type().asNonNullable().javaType
+      } ?: columnType.type().javaType
+
       val typeWithoutAnnotations = javaType.copy(annotations = emptyList())
       typeSpec.addProperty(
         PropertySpec.builder(columnName, typeWithoutAnnotations)

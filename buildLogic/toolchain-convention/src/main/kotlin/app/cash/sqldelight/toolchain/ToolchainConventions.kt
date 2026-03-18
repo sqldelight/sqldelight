@@ -7,6 +7,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -21,6 +22,7 @@ abstract class ToolchainConventions(private val targetJdkVersion: String) : Plug
     project.tasks.withType(KotlinCompile::class.java).configureEach { task ->
       task.compilerOptions {
         jvmTarget.set(JvmTarget.fromTarget(targetJdkVersion))
+        jvmDefault.set(JvmDefaultMode.DISABLE)
       }
     }
 
@@ -44,4 +46,4 @@ abstract class ToolchainConventions(private val targetJdkVersion: String) : Plug
 class RuntimeToolchainConventions : ToolchainConventions("1.8")
 
 // Controls the minimum JDK version required to run the SQLDelight plugin and compiler
-class CompilerToolchainConventions : ToolchainConventions("11")
+class CompilerToolchainConventions : ToolchainConventions("17")

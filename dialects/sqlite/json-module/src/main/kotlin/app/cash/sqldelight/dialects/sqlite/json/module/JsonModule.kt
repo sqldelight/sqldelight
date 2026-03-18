@@ -8,8 +8,7 @@ import app.cash.sqldelight.dialects.sqlite.json.module.grammar.JsonParserUtil
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 
 class JsonModule : SqlDelightModule {
-  override fun typeResolver(parentResolver: TypeResolver): TypeResolver =
-    JsonTypeResolver(parentResolver)
+  override fun typeResolver(parentResolver: TypeResolver): TypeResolver = JsonTypeResolver(parentResolver)
 
   override fun setup() {
     JsonParserUtil.reset()
@@ -17,8 +16,7 @@ class JsonModule : SqlDelightModule {
   }
 }
 
-private class JsonTypeResolver(private val parentResolver: TypeResolver) :
-  TypeResolver by parentResolver {
+private class JsonTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
   override fun functionType(functionExpr: SqlFunctionExpr): IntermediateType? {
     when (functionExpr.functionName.text) {
       "json_array", "json", "json_insert", "json_replace", "json_set", "json_object", "json_patch",

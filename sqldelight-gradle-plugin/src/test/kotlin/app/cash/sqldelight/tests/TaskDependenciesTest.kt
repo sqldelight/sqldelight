@@ -2,10 +2,10 @@ package app.cash.sqldelight.tests
 
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
-import java.io.File
 
 class TaskDependenciesTest {
   @Test

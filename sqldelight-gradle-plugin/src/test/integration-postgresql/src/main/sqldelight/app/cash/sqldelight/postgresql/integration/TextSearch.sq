@@ -1,0 +1,37 @@
+CREATE TABLE search(
+  content TSVECTOR NOT NULL
+);
+
+insertLiteral:
+INSERT INTO search (content) VALUES (?);
+
+contains:
+SELECT content @@ ?
+FROM search;
+
+search:
+SELECT *
+FROM search WHERE content @@ ?;
+
+tsQuery:
+SELECT to_tsquery(?);
+
+tsVector:
+SELECT to_tsvector(?);
+
+concat:
+SELECT content || to_tsvector(?)
+FROM search;
+
+rank:
+SELECT ts_rank(content, ?::TSQUERY)
+FROM search;
+
+plainToRank:
+SELECT *, ts_rank(content, plainto_tsquery('english', :search::TEXT)) AS rank
+FROM search
+WHERE content @@ plainto_tsquery('english', :search::TEXT)
+ORDER BY rank DESC;
+
+partialComparison:
+SELECT to_tsvector(?::TEXT) @@ to_tsquery(?::TEXT) AS matches;

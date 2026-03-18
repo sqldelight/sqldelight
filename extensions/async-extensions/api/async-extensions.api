@@ -1,0 +1,19 @@
+public final class app/cash/sqldelight/async/coroutines/DriverExtensionsKt {
+	public static final fun await (Lapp/cash/sqldelight/db/SqlDriver;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun await$default (Lapp/cash/sqldelight/db/SqlDriver;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun awaitCreate (Lapp/cash/sqldelight/db/SqlSchema;Lapp/cash/sqldelight/db/SqlDriver;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun awaitMigrate (Lapp/cash/sqldelight/db/SqlSchema;Lapp/cash/sqldelight/db/SqlDriver;JJLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun awaitQuery (Lapp/cash/sqldelight/db/SqlDriver;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitQuery$default (Lapp/cash/sqldelight/db/SqlDriver;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class app/cash/sqldelight/async/coroutines/QueryExtensionsKt {
+	public static final fun awaitAsList (Lapp/cash/sqldelight/ExecutableQuery;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun awaitAsOne (Lapp/cash/sqldelight/ExecutableQuery;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun awaitAsOneOrNull (Lapp/cash/sqldelight/ExecutableQuery;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class app/cash/sqldelight/async/coroutines/SynchronousKt {
+	public static final fun synchronous (Lapp/cash/sqldelight/db/SqlSchema;)Lapp/cash/sqldelight/db/SqlSchema;
+}
+

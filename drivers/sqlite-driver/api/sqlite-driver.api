@@ -1,0 +1,26 @@
+public final class app/cash/sqldelight/driver/jdbc/sqlite/JdbcSqliteDriver : app/cash/sqldelight/driver/jdbc/JdbcDriver, app/cash/sqldelight/driver/jdbc/ConnectionManager {
+	public static final field Companion Lapp/cash/sqldelight/driver/jdbc/sqlite/JdbcSqliteDriver$Companion;
+	public static final field IN_MEMORY Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/util/Properties;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/Properties;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
+	public fun beginTransaction (Ljava/sql/Connection;)V
+	public fun close ()V
+	public fun closeConnection (Ljava/sql/Connection;)V
+	public fun endTransaction (Ljava/sql/Connection;)V
+	public fun getConnection ()Ljava/sql/Connection;
+	public fun getTransaction ()Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;
+	public fun notifyListeners ([Ljava/lang/String;)V
+	public fun removeListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
+	public fun rollbackTransaction (Ljava/sql/Connection;)V
+	public fun setTransaction (Lapp/cash/sqldelight/driver/jdbc/ConnectionManager$Transaction;)V
+}
+
+public final class app/cash/sqldelight/driver/jdbc/sqlite/JdbcSqliteDriver$Companion {
+}
+
+public final class app/cash/sqldelight/driver/jdbc/sqlite/JdbcSqliteSchemaKt {
+	public static final fun JdbcSqliteDriver (Ljava/lang/String;Ljava/util/Properties;Lapp/cash/sqldelight/db/SqlSchema;Z[Lapp/cash/sqldelight/db/AfterVersion;)Lapp/cash/sqldelight/driver/jdbc/sqlite/JdbcSqliteDriver;
+	public static synthetic fun JdbcSqliteDriver$default (Ljava/lang/String;Ljava/util/Properties;Lapp/cash/sqldelight/db/SqlSchema;Z[Lapp/cash/sqldelight/db/AfterVersion;ILjava/lang/Object;)Lapp/cash/sqldelight/driver/jdbc/sqlite/JdbcSqliteDriver;
+}
+

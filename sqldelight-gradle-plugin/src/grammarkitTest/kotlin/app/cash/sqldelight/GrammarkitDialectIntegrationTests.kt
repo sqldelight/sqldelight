@@ -1,9 +1,9 @@
 package app.cash.sqldelight
 
 import com.google.common.truth.Truth
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
-import java.io.File
 
 class GrammarkitDialectIntegrationTests {
   @Test
@@ -33,6 +33,6 @@ class GrammarkitDialectIntegrationTests {
       |
       """.trimMargin(),
     )
-    return withProjectDir(projectRoot)
+    return withProjectDir(projectRoot).withTestKitDir(File("build/gradle-test-kit").absoluteFile)
   }
 }

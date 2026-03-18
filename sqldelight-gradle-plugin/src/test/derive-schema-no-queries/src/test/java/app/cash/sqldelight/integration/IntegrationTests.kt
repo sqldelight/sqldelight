@@ -2,9 +2,9 @@ package app.cash.sqldelight.integration
 
 import app.cash.sqldelight.derive.schema.from.migrations.no.queries.NoQueries
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import java.io.File
 import org.junit.After
 import org.junit.Test
-import java.io.File
 
 class IntegrationTests {
   @After fun after() {

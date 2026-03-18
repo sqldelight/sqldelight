@@ -1,0 +1,24 @@
+public final class app/cash/sqldelight/adapter/primitive/FloatColumnAdapter : app/cash/sqldelight/ColumnAdapter {
+	public static final field INSTANCE Lapp/cash/sqldelight/adapter/primitive/FloatColumnAdapter;
+	public fun decode (D)Ljava/lang/Float;
+	public synthetic fun decode (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun encode (F)Ljava/lang/Double;
+	public synthetic fun encode (Ljava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class app/cash/sqldelight/adapter/primitive/IntColumnAdapter : app/cash/sqldelight/ColumnAdapter {
+	public static final field INSTANCE Lapp/cash/sqldelight/adapter/primitive/IntColumnAdapter;
+	public fun decode (J)Ljava/lang/Integer;
+	public synthetic fun decode (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun encode (I)Ljava/lang/Long;
+	public synthetic fun encode (Ljava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class app/cash/sqldelight/adapter/primitive/ShortColumnAdapter : app/cash/sqldelight/ColumnAdapter {
+	public static final field INSTANCE Lapp/cash/sqldelight/adapter/primitive/ShortColumnAdapter;
+	public fun decode (J)Ljava/lang/Short;
+	public synthetic fun decode (Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun encode (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun encode (S)Ljava/lang/Long;
+}
+

@@ -1,10 +1,11 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlin.plugin.serialization)
   alias(libs.plugins.grammarKitComposer)
   alias(libs.plugins.publish)
   alias(libs.plugins.dokka)
   id("app.cash.sqldelight.toolchain.compiler")
+  id("java-test-fixtures")
 }
 
 grammarKit {
@@ -12,24 +13,20 @@ grammarKit {
 }
 
 dependencies {
-  ksp libs.moshiCodegen
-
   api libs.postgresJdbc
   api projects.sqldelightCompiler.dialect
 
   compileOnly(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  compileOnly libs.moshi
+  compileOnly libs.kotlinx.serialization.json
 
-  testImplementation(projects.sqldelightCompiler.environment) {
+  testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
+  testFixturesApi testFixtures(libs.sqlPsi)
+
   testImplementation libs.junit
-  testImplementation libs.truth
-  testImplementation(libs.sqlPsiTestFixtures) {
-    exclude group: "com.jetbrains.intellij.platform"
-  }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

@@ -3,6 +3,8 @@ package app.cash.sqldelight.intellij.run.window
 import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.intellij.run.ConnectionOptions
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.actionSystem.ActionUpdateThread
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowManager
@@ -44,6 +46,8 @@ internal class ConnectionListPanel(
       connectionOptions.unselectOption()
       updateModel()
     }
+
+    override fun getActionUpdateThread() = ActionUpdateThread.EDT
   }
 
   init {
@@ -62,7 +66,7 @@ internal class ConnectionListPanel(
         }
         .setMoveUpAction { moveSelected(list.selectedIndex - 1) }
         .setMoveDownAction { moveSelected(list.selectedIndex + 1) }
-        .addExtraAction(clearSelectedConnection)
+        .addExtraAction(clearSelectedConnection as AnAction)
         .createPanel(),
       GridBagConstraints().apply {
         fill = GridBagConstraints.BOTH

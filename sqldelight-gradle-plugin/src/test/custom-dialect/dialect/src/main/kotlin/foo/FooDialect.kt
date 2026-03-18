@@ -26,7 +26,9 @@ class FooDialect : SqlDelightDialect by SqliteDialect() {
     }
 
     override fun definitionType(typeName: SqlTypeName): IntermediateType {
-      return when (typeName) { else -> IntermediateType(ExtensionType) }
+      return when (typeName) {
+        else -> IntermediateType(ExtensionType)
+      }
     }
   }
 

@@ -18,8 +18,7 @@ import com.intellij.psi.PsiParserFacade
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfTypes
 
-internal class SqlDelightSuppressInspectionQuickFix(toolId: String) :
-  SuppressByCommentFix(toolId, PsiElement::class.java) {
+internal class SqlDelightSuppressInspectionQuickFix(toolId: String) : SuppressByCommentFix(toolId, PsiElement::class.java) {
 
   override fun createSuppression(project: Project, element: PsiElement, container: PsiElement) {
     val commenter = LanguageCommenters.INSTANCE.forLanguage(SqlDelightLanguage)
