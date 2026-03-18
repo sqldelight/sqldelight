@@ -18,6 +18,7 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ArrayValueExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin
@@ -87,6 +88,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         tstzmultirange != null -> PostgreSqlType.TSTZMULTIRANGE
         xmlDataType != null -> PostgreSqlType.XML
         geometryDataType != null -> PostgreSqlType.GEOMETRY
+        ltreeDataType != null -> PostgreSqlType.LTREE
         enumDataType != null -> PostgreSqlType.ENUM
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${this.text}")
       },
@@ -244,7 +246,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "enum_range" -> IntermediateType(TEXT)
     "enum_first" -> IntermediateType(TEXT)
     "enum_last" -> IntermediateType(TEXT)
-
+    "obj_description" -> IntermediateType(TEXT)
+    "to_regclass" -> IntermediateType(TEXT)
+    "subpath" -> IntermediateType(PostgreSqlType.LTREE)
     else -> null
   }
 
@@ -268,7 +272,10 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     // Primary key columns are non null always.
     val columnDef = intermediateType.column ?: return intermediateType
     val tableDef = columnDef.parent as? SqlCreateTableStmt ?: return intermediateType
-    tableDef.tableConstraintList.forEach {
+    tableDef.tableConstraintList.filter {
+      it.node.findChildByType(SqlTypes.PRIMARY) != null &&
+        it.node.findChildByType(SqlTypes.KEY) != null
+    }.forEach {
       if (columnDef.columnName.name in it.indexedColumnList.mapNotNull {
           val expr = it.expr
           if (expr is SqlColumnExpr) expr.columnName.name else null
@@ -379,6 +386,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         regexMatchOperatorExpression != null ||
         booleanNotExpression != null ||
         containsOperatorExpression != null ||
+        existsOperatorExpression != null ||
         overlapsOperatorExpression != null -> {
         IntermediateType(BOOLEAN)
       }
@@ -401,6 +409,20 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         IntermediateType(REAL).nullableIf(temporalExprType.javaType.isNullable)
       }
       plsqlTriggerVarExpression != null -> IntermediateType(TEXT)
+
+      arrayValueExpression != null -> {
+        val exprList = (arrayValueExpression as ArrayValueExpressionMixin).exprList()
+        // e.g., given an exprList containing mixed types of Int, BigInt and Numeric, the type order returns Numeric
+        val elementType = encapsulatingTypePreferringKotlin(
+          exprList,
+          PostgreSqlType.INTEGER,
+          BIG_INT,
+          REAL,
+          PostgreSqlType.NUMERIC,
+          nullability = { arrayNullable -> arrayNullable.any { it } },
+        )
+        arrayIntermediateType(elementType)
+      }
       else -> parentResolver.resolvedType(this)
     }
 
@@ -430,6 +452,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TSMULTIRANGE,
       PostgreSqlType.TSTZMULTIRANGE,
       PostgreSqlType.TSQUERY,
+      PostgreSqlType.LTREE,
       PostgreSqlType.ENUM,
       BOOLEAN, // is last as expected that boolean expression resolve to boolean
     )
@@ -454,13 +477,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       PostgreSqlType.TIME,
     )
 
-    private fun arrayIntermediateType(type: IntermediateType): IntermediateType {
+    fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
         ArrayDialectType(type),
       )
     }
 
-    private fun isArrayType(type: IntermediateType): Boolean {
+    fun isArrayType(type: IntermediateType): Boolean {
       return type.javaType.toString().startsWith("kotlin.Array")
     }
 

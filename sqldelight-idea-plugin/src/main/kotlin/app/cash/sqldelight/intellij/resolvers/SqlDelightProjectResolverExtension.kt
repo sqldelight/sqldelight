@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.resolvers
 
+import app.cash.sqldelight.core.GradleCompatibility
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseName
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
@@ -39,7 +40,7 @@ class SqlDelightProjectResolverExtension : AbstractProjectResolverExtension() {
             databaseProperties.treatNullAsUnknownForEquality,
             databaseProperties.generateAsync,
             databaseProperties.rootDirectory,
-            databaseProperties.expandSelectStar,
+            GradleCompatibility.readExpandSelectStar(sqlDelightModel, databaseProperties),
           )
         },
         sqlDelightModel.dialectJars.toMutableList(),

@@ -77,7 +77,8 @@ class PostgreSqlTest {
 
   @Before fun before() {
     driver.execute(null, "SET timezone TO UTC", 0)
-    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS postgis", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS postgis ", 0)
+    driver.execute(null, "CREATE EXTENSION IF NOT EXISTS ltree ", 0)
     MyDatabase.Schema.create(driver)
   }
 
@@ -429,6 +430,17 @@ class PostgreSqlTest {
       assertThat(first().intArray!!.asList()).containsExactly(1u, 2u).inOrder()
       assertThat(first().textArray!!.asList()).containsExactly("one", "two").inOrder()
       assertThat(first().vcharArray!!.asList()).containsExactly("a", "b").inOrder()
+    }
+  }
+
+  @Test fun testArrayLiterals() {
+    with(database.arraysQueries.selectArrayLiterals().executeAsOne()) {
+      assertThat(intArray).isEqualTo(arrayOf(1, 2, 3))
+      assertThat(bigIntArray).isEqualTo(arrayOf(1L, 2L, 3L))
+      assertThat(numericArray).isEqualTo(arrayOf(1.1.toBigDecimal(), 2.2.toBigDecimal(), 3.3.toBigDecimal()))
+      assertThat(numericArrayWithNull).isEqualTo(arrayOf(1.0.toBigDecimal(), null, 3.toBigDecimal()))
+      assertThat(textArray).isEqualTo(arrayOf("a", "b", "c"))
+      assertThat(booleanArray).isEqualTo(arrayOf(true, false))
     }
   }
 
@@ -1555,5 +1567,49 @@ class PostgreSqlTest {
         useSpheroid = true,
       ).executeAsOne(),
     ).isTrue()
+  }
+
+  fun testSysColumns() {
+    database.systemTablesQueries.selectSystemColumns().executeAsOne().let {
+      assertThat(it.table_name).isEqualTo("demo_sys_cols")
+      assertThat(it.table_comment).isEqualTo("Some Comment")
+      assertThat(it.xmin).isNotNull()
+      assertThat(it.xmax).isNotNull()
+      assertThat(it.cmin).isNotNull()
+      assertThat(it.cmax).isNotNull()
+      assertThat(it.ctid).isNotNull()
+    }
+  }
+
+  @Test
+  fun testLtreeContains() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathContains().executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science",
+        "Top.Science.Astronomy",
+        "Top.Science.Astronomy.Astrophysics",
+        "Top.Science.Astronomy.Cosmology",
+      )
+    }
+  }
+
+  @Test
+  fun testLtreeExists() {
+    database.ltreeQueries.insertPath("Top")
+    database.ltreeQueries.insertPath("Top.Science")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Astrophysics")
+    database.ltreeQueries.insertPath("Top.Science.Astronomy.Cosmology")
+    database.ltreeQueries.selectPathExists("{Top.Science.Astronomy.Astrophysics, Top.Science.Astronomy.Cosmology}").executeAsList().let {
+      assertThat(it).containsExactly(
+        "Top.Science.Space.Astronomy.Astrophysics",
+        "Top.Science.Space.Astronomy.Cosmology",
+      )
+    }
   }
 }
