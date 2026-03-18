@@ -4,14 +4,6 @@ CREATE TABLE test (
   date2 TEXT NOT NULL DEFAULT LOCALTIMESTAMP(3)
 );
 
--- Throws no errors.
-CREATE TRIGGER on_update_trigger
-AFTER UPDATE
-ON test
-BEGIN
-  UPDATE test SET date1 = LOCALTIME(1) WHERE new._id = old._id;
-END;
-
 UPDATE test
 SET date1 = LOCALTIME(6),
     date2 = LOCALTIMESTAMP(2);

@@ -26,6 +26,23 @@ FROM myTable;
 SELECT data ->> 'a', datab -> 'b', data #> '{aa}', datab #>> '{bb}', datab || datab, datab - 'b', datab - 1, datab @@ '$.b[*] > 0'
 FROM myTable;
 
+SELECT data -> 'a' -> 'b', datab -> 'a' -> 'b'
+FROM myTable;
+
+SELECT t
+FROM myTable
+WHERE t = :txt
+  AND data -> 'a' @> :a
+  AND datab -> 'aa' -> 'bb' ?? :bb;
+
+SELECT
+    data -> 'a' -> 'b',
+    data -> 'a' ->> 'b',
+    data #> '{a}' -> 'b',
+    data #>> '{a}',
+    datab - '{a}' -> 'a'
+FROM myTable;
+
 SELECT row_to_json(myTable) FROM myTable;
 
 SELECT json_agg(myTable) FROM myTable;
@@ -45,3 +62,23 @@ SELECT row_to_json(r)
 FROM (
   SELECT t FROM myTable
 ) r;
+
+SELECT jsonb_agg(myTable) FILTER (WHERE (datab->>'in_stock')::BOOLEAN) FROM myTable;
+
+SELECT jsonb_agg(datab->'color') FILTER (WHERE datab ?? 'color') AS colors
+FROM myTable;
+
+SELECT jsonb_object_agg(datab->>'color', datab)
+FROM myTable;
+
+SELECT jsonb_object_agg(t, datab) FILTER (WHERE t IS NOT NULL)
+FROM myTable;
+
+SELECT json_object_agg_unique(t, data)
+FROM myTable;
+
+SELECT jsonb_object_agg_strict(t, datab)
+FROM myTable;
+
+SELECT jsonb_object_agg_strict(t, datab ORDER BY t DESC)
+FROM myTable;

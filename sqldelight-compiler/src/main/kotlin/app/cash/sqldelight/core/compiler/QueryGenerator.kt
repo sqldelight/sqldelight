@@ -110,7 +110,6 @@ abstract class QueryGenerator(
 
     val bindStatements = CodeBlock.builder()
     val replacements = mutableListOf<Pair<IntRange, String>>()
-    val argumentCounts = mutableListOf<String>()
 
     var needsFreshStatement = false
 
@@ -123,11 +122,9 @@ abstract class QueryGenerator(
     // A list of [SqlBindExpr] in order of appearance in the query.
     val orderedBindArgs = positionToArgument.sortedBy { it.first }
 
-    // The number of non-array bindArg's we've encountered so far.
-    var nonArrayBindArgsCount = 0
-
-    // A list of arrays we've encountered so far.
-    val precedingArrays = mutableListOf<String>()
+    // Track parameter counts for efficient calculation
+    var regularParameterCount = 0
+    val arrayParameterSizes = mutableListOf<String>()
 
     val extractedVariables = mutableMapOf<IntermediateType, String>()
     // extract the variable for duplicate types, so we don't encode twice
@@ -138,14 +135,13 @@ abstract class QueryGenerator(
       extractedVariables[type] = variableName
       bindStatements.add("val %N = $encodedJavaType\n", variableName)
     }
+
+    // Add parameter index counter variable
+    bindStatements.add("var parameterIndex = 0\n")
+
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
       val type = argument.type
-      // Need to replace the single argument with a group of indexed arguments, calculated at
-      // runtime from the list parameter:
-      // val idIndexes = id.mapIndexed { index, _ -> "?${previousArray.size + index}" }.joinToString(prefix = "(", postfix = ")")
-      val offset = (precedingArrays.map { "$it.size" } + "$nonArrayBindArgsCount")
-        .joinToString(separator = " + ").replace(" + 0", "")
       if (bindArg?.isArrayParameter() == true) {
         needsFreshStatement = true
 
@@ -161,35 +157,21 @@ abstract class QueryGenerator(
         // WHERE id IN ${idIndexes}
         replacements.add(bindArg.range to "\$${type.name}Indexes")
 
-        // Perform the necessary binds:
-        // id.forEachIndex { index, parameter ->
-        //   statement.bindLong(previousArray.size + index, parameter)
-        // }
-        val indexCalculator = CodeBlock.of(
-          if (offset == "0") {
-            "index"
-          } else {
-            "index + %L"
-          },
-          offset,
-        )
+        // Perform the necessary binds using the appropriate indexing strategy
         val elementName = argumentNameAllocator.newName(type.name)
         bindStatements.add(
           """
-          |${type.name}.forEachIndexed { index, $elementName ->
+          |${type.name}.forEach { $elementName ->
           |  %L}
           |
           """.trimMargin(),
-          type.copy(name = elementName).preparedStatementBinder(indexCalculator),
+          type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
         )
 
-        precedingArrays.add(type.name)
-        argumentCounts.add("${type.name}.size")
+        arrayParameterSizes.add("${type.name}.size")
       } else {
         val bindParameter = bindArg?.bindParameter as? BindParameterMixin
         if (bindParameter == null || bindParameter.text != "DEFAULT") {
-          nonArrayBindArgsCount += 1
-
           if (!treatNullAsUnknownForEquality && type.javaType.isNullable) {
             val parent = bindArg?.parent
             if (parent is SqlBinaryEqualityExpr) {
@@ -209,15 +191,15 @@ abstract class QueryGenerator(
             }
           }
 
-          // Binds each parameter to the statement:
-          // statement.bindLong(0, id)
-          bindStatements.add(type.preparedStatementBinder(CodeBlock.of(offset), extractedVariables[type]))
+          // Binds each parameter to the statement using its index
+          bindStatements.add(type.preparedStatementBinder(CodeBlock.of("parameterIndex++"), extractedVariables[type]))
 
           // Replace the named argument with a non named/indexed argument.
           // This allows us to use the same algorithm for non Sqlite dialects
           // :name becomes ?
+          regularParameterCount += 1
           if (bindParameter != null) {
-            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = nonArrayBindArgsCount))
+            replacements.add(bindArg.range to bindParameter.replaceWith(generateAsync, index = regularParameterCount))
           }
         }
       }
@@ -234,21 +216,28 @@ abstract class QueryGenerator(
       null
     }
 
+    // Calculate total argument count using the most efficient approach
+    val totalArgumentCount = when {
+      regularParameterCount > 0 && arrayParameterSizes.isNotEmpty() ->
+        "$regularParameterCount + ${arrayParameterSizes.joinToString(" + ")}"
+      regularParameterCount > 0 -> regularParameterCount.toString()
+      arrayParameterSizes.isNotEmpty() -> arrayParameterSizes.joinToString(" + ")
+      else -> "0"
+    }
+
     // Adds the actual SqlPreparedStatement:
     // statement = database.prepareStatement("SELECT * FROM test")
     val isNamedQuery = query is NamedQuery &&
       (statement == query.statement || statement == query.statement.children.filterIsInstance<SqlStmt>().last())
-    if (nonArrayBindArgsCount != 0) {
-      argumentCounts.add(0, nonArrayBindArgsCount.toString())
-    }
+
     val arguments = mutableListOf<Any>(
       statement.rawSqlText(replacements),
-      argumentCounts.ifEmpty { listOf(0) }.joinToString(" + "),
+      totalArgumentCount,
     )
 
     var binder: String
 
-    if (argumentCounts.isEmpty()) {
+    if (totalArgumentCount == "0") {
       binder = ""
     } else {
       val binderLambda = CodeBlock.builder()

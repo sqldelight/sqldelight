@@ -79,7 +79,7 @@ SQLDelight supports a variety of SQL dialects and platforms.
 ## Snapshots
 
 Snapshots of the development version (including the IDE plugin zip) are available in
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/app/cash/sqldelight/). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
+[the Central Portal Snapshots repository](https://central.sonatype.com/repository/maven-snapshots). Note that all coordinates are app.cash.sqldelight instead of com.squareup.sqldelight for 2.0.0+ SNAPSHOTs.
 
 Documentation pages for the latest snapshot version can be [found here](https://sqldelight.github.io/sqldelight/snapshot).
 
@@ -89,7 +89,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     pluginManagement {
         repositories {
             gradlePluginPortal()
-            maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+            maven(url = "https://central.sonatype.com/repository/maven-snapshots")
         }
     }
     
@@ -99,7 +99,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     }
     
     repositories {
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://central.sonatype.com/repository/maven-snapshots")
     }
     ```
 === "Groovy"
@@ -108,7 +108,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     pluginManagement {
         repositories {
             gradlePluginPortal()
-            maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+            maven { url "https://central.sonatype.com/repository/maven-snapshots" }
         }
     }
     
@@ -118,7 +118,7 @@ Documentation pages for the latest snapshot version can be [found here](https://
     }
     
     repositories {
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://central.sonatype.com/repository/maven-snapshots" }
     }
     ```
 

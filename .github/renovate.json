@@ -4,7 +4,7 @@
   ],
   "semanticCommits": "disabled",
   "constraints": {
-    "python": "==3.11"
+    "python": "3.14"
   },
   "ignoreDeps": [
     "com.jetbrains.intellij.platform",
@@ -34,7 +34,8 @@
   ],
   "ignorePaths": [
     ".github/workflows/requirements.txt",
-    "libs/linux/"
+    "libs/linux/",
+    "sqldelight-gradle-plugin/src/test/library-project-agp8/"
   ],
   "pip-compile": {
     "fileMatch": [

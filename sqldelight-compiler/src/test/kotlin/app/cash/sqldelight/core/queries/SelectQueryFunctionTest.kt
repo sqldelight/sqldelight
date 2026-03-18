@@ -313,11 +313,12 @@ class SelectQueryFunctionTest {
       |        |FROM data
       |        |WHERE id IN ${"$"}goodIndexes AND id NOT IN ${"$"}badIndexes
       |        ""${'"'}.trimMargin(), mapper, good.size + bad.size) {
-      |          good.forEachIndexed { index, good_ ->
-      |            bindLong(index, good_)
+      |          var parameterIndex = 0
+      |          good.forEach { good_ ->
+      |            bindLong(parameterIndex++, good_)
       |          }
-      |          bad.forEachIndexed { index, bad_ ->
-      |            bindLong(index + good.size, bad_)
+      |          bad.forEach { bad_ ->
+      |            bindLong(parameterIndex++, bad_)
       |          }
       |        }
       |  }
@@ -399,8 +400,9 @@ class SelectQueryFunctionTest {
       |  |FROM person
       |  |WHERE first_name = ? AND last_name = ?
       |  ""${'"'}.trimMargin(), mapper, 2) {
-      |    bindString(0, name)
-      |    bindString(1, name)
+      |    var parameterIndex = 0
+      |    bindString(parameterIndex++, name)
+      |    bindString(parameterIndex++, name)
       |  }
       |
       |  override fun toString(): kotlin.String = "Test.sq:equivalentNamesNamed"
@@ -484,7 +486,7 @@ class SelectQueryFunctionTest {
 
     assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
       """
-      |public fun <T : kotlin.Any> selectData(mapper: (expr: java.lang.Void?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
+      |public fun <T : kotlin.Any> selectData(mapper: (expr: kotlin.Nothing?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectData", "SELECT NULL") { cursor ->
       |  mapper(
       |    null
       |  )
