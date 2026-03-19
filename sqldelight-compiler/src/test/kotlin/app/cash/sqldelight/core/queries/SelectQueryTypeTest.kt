@@ -2117,4 +2117,53 @@ class SelectQueryTypeTest {
       """.trimMargin(),
     )
   }
+
+  @Test
+  fun `coalesce with left join makes result nullable when left joined column is not null`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE customer(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  phone VARCHAR(255)
+      |);
+      |
+      |CREATE TABLE customer_phone(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  phone VARCHAR(255) NOT NULL
+      |);
+      |
+      |findById:
+      |SELECT
+      |  C.id,
+      |  COALESCE(CP.phone, C.phone) AS phone
+      |FROM customer C
+      |LEFT JOIN customer_phone CP ON CP.id = C.id;
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> findById(mapper: (id: kotlin.Int, phone: kotlin.String?) -> T): app.cash.sqldelight.Query<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, arrayOf("customer", "customer_phone"), driver, "Test.sq", "findById", ""${'"'}
+      ||SELECT
+      ||  C.id,
+      ||  COALESCE(CP.phone, C.phone) AS phone
+      ||FROM customer C
+      ||LEFT JOIN customer_phone CP ON CP.id = C.id
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getInt(0)!!,
+      |    cursor.getString(1)
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
 }
