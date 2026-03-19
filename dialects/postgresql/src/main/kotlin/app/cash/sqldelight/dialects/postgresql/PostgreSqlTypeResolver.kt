@@ -140,7 +140,8 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "coalesce", "ifnull" -> {
       val exprType = exprList.first().postgreSqlType()
       if (isArrayType(exprType)) {
-        exprType
+        val exprListNullability = exprList.map { resolvedType(it).javaType.isNullable }
+        exprType.nullableIf(exprListNullability.all { it })
       } else {
         encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, nullability = { exprListNullability ->
           exprListNullability.all { it }
