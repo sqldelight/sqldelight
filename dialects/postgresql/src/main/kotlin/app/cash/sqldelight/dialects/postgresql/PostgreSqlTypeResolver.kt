@@ -162,14 +162,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       }
     }
     "sum" -> {
-      val type = resolvedType(exprList.single())
-      when (type.dialectType) {
-        REAL -> IntermediateType(REAL).asNullable()
-        PostgreSqlType.NUMERIC -> IntermediateType(PostgreSqlType.NUMERIC).asNullable()
-        SMALL_INT -> IntermediateType(PostgreSqlType.SMALL_INT).asNullable()
-        PostgreSqlType.INTEGER -> IntermediateType(PostgreSqlType.INTEGER).asNullable()
-        else -> IntermediateType(PostgreSqlType.BIG_INT).asNullable()
-      }
+      encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, PostgreSqlType.NUMERIC) { true }
     }
     "to_hex", "quote_literal", "quote_ident", "md5" -> IntermediateType(TEXT)
     "quote_nullable" -> IntermediateType(TEXT).asNullable()
@@ -327,7 +320,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
         IntermediateType(BOOLEAN)
       } else {
-        encapsulatingType(
+        encapsulatingTypePreferringKotlin(
           exprList = getExprList(),
           nullability = { exprListNullability ->
             (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
