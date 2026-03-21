@@ -312,7 +312,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       if (node.findChildByType(binaryExprChildTypesResolvingToBool) != null) {
         IntermediateType(BOOLEAN)
       } else {
-        encapsulatingType(
+        encapsulatingTypePreferringKotlin(
           exprList = getExprList(),
           nullability = { exprListNullability ->
             (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
