@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/main.css" rel="Stylesheet">
@@ -165,13 +164,13 @@
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html#-876259466%2FFunctions%2F-1243068833"><span>is</span><wbr><span><span>Physical</span></span></a></div>
+                  <div><a href="../-table-function-row-type/index.html#-876259466%2FProperties%2F-1243068833"><span>is</span><wbr><span><span>Physical</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-876259466%2FProperties%2F-1243068833"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html#-876259466%2FFunctions%2F-1243068833">isPhysical</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-table-function-row-type/index.html#-876259466%2FProperties%2F-1243068833">isPhysical</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -180,13 +179,13 @@
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html#361021585%2FFunctions%2F-1243068833"><span>is</span><wbr><span><span>Valid</span></span></a></div>
+                  <div><a href="../-table-function-row-type/index.html#361021585%2FProperties%2F-1243068833"><span>is</span><wbr><span><span>Valid</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="361021585%2FProperties%2F-1243068833"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html#361021585%2FFunctions%2F-1243068833">isValid</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-table-function-row-type/index.html#361021585%2FProperties%2F-1243068833">isValid</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -195,13 +194,13 @@
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="../../app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html#1860724941%2FFunctions%2F-1243068833"><span>is</span><wbr><span><span>Writable</span></span></a></div>
+                  <div><a href="../-table-function-row-type/index.html#1860724941%2FProperties%2F-1243068833"><span>is</span><wbr><span><span>Writable</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1860724941%2FProperties%2F-1243068833"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../../app.cash.sqldelight.dialect.grammar.mixins/-bind-parameter-mixin/index.html#1860724941%2FFunctions%2F-1243068833">isWritable</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler:dialect/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-table-function-row-type/index.html#1860724941%2FProperties%2F-1243068833">isWritable</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>

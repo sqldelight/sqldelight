@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/main.css" rel="Stylesheet">
@@ -43,7 +42,7 @@
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
-                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/nativeMain">native</button>
+                <button class="platform-tag platform-selector native-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/nativeMain">native</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
@@ -52,7 +51,7 @@
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
-                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                        <li role="option" class="dropdown--option platform-selector-option native-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":drivers:native-driver/nativeMain" data-filter=":drivers:native-driver/nativeMain">
                                 <span class="checkbox--icon"></span>
@@ -90,7 +89,7 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="native-driver::app.cash.sqldelight.driver.native/ConnectionWrapper///PointingToDeclaration//-1591203224">
+<div class="main-content" data-page-type="classlike" id="content" pageids="native-driver::app.cash.sqldelight.driver.native/ConnectionWrapper///PointingToDeclaration//-813053508">
   <div class="breadcrumbs"><a href="../../index.html">native-driver</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.driver.native</a><span class="delimiter">/</span><span class="current">ConnectionWrapper</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Connection</span><wbr><span><span>Wrapper</span></span></h1>
@@ -103,63 +102,63 @@
     <div class="tabs-section-body">
       <div data-togglable="FUNCTION">
         <h2 class="tableheader">Functions</h2>
-        <div class="table"><a data-name="-788022143%2FFunctions%2F-1591203224" anchor-label="addListener" id="-788022143%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+        <div class="table"><a data-name="255338983%2FFunctions%2F-813053508" anchor-label="addListener" id="255338983%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-788022143%2FFunctions%2F-1591203224"><span>add</span><wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-788022143%2FFunctions%2F-1591203224"></span>
+                  <div><a href="index.html#255338983%2FFunctions%2F-813053508"><span>add</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="255338983%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain" data-active="" data-toggle=":drivers:native-driver/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-788022143%2FFunctions%2F-1591203224"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>queryKeys<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">listener<span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight/-query/-listener/index.html">Query.Listener</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#255338983%2FFunctions%2F-813053508"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>queryKeys<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">listener<span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight/-query/-listener/index.html">Query.Listener</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2115731642%2FFunctions%2F-1591203224" anchor-label="close" id="2115731642%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="2115731642%2FFunctions%2F-813053508" anchor-label="close" id="2115731642%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#2115731642%2FFunctions%2F-1591203224"><span><span>close</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2115731642%2FFunctions%2F-1591203224"></span>
+                  <div><a href="index.html#2115731642%2FFunctions%2F-813053508"><span><span>close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2115731642%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain" data-active="" data-toggle=":drivers:native-driver/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#2115731642%2FFunctions%2F-1591203224"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#2115731642%2FFunctions%2F-813053508"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1580878809%2FFunctions%2F-1591203224" anchor-label="currentTransaction" id="-1580878809%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="-1580878809%2FFunctions%2F-813053508" anchor-label="currentTransaction" id="-1580878809%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-1580878809%2FFunctions%2F-1591203224"><span>current</span><wbr><span><span>Transaction</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1580878809%2FFunctions%2F-1591203224"></span>
+                  <div><a href="index.html#-1580878809%2FFunctions%2F-813053508"><span>current</span><wbr><span><span>Transaction</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1580878809%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain" data-active="" data-toggle=":drivers:native-driver/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-1580878809%2FFunctions%2F-1591203224"><span class="token function">currentTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight/-transacter/-transaction/index.html">Transacter.Transaction</a><span class="token operator">?</span></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-1580878809%2FFunctions%2F-813053508"><span class="token function">currentTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight/-transacter/-transaction/index.html">Transacter.Transaction</a><span class="token operator">?</span></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1116142036%2FFunctions%2F-1591203224" anchor-label="execute" id="-1116142036%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="-1116142036%2FFunctions%2F-813053508" anchor-label="execute" id="-1116142036%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="execute.html"><span><span>execute</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1116142036%2FFunctions%2F-1591203224"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1116142036%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -171,12 +170,12 @@
               </div>
             </div>
           </div>
-<a data-name="-1285856478%2FFunctions%2F-1591203224" anchor-label="executeQuery" id="-1285856478%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="-1285856478%2FFunctions%2F-813053508" anchor-label="executeQuery" id="-1285856478%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="execute-query.html"><span>execute</span><wbr><span><span>Query</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1285856478%2FFunctions%2F-1591203224"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1285856478%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -188,53 +187,53 @@
               </div>
             </div>
           </div>
-<a data-name="-634361778%2FFunctions%2F-1591203224" anchor-label="newTransaction" id="-634361778%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="-634361778%2FFunctions%2F-813053508" anchor-label="newTransaction" id="-634361778%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-634361778%2FFunctions%2F-1591203224"><span>new</span><wbr><span><span>Transaction</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-634361778%2FFunctions%2F-1591203224"></span>
+                  <div><a href="index.html#-634361778%2FFunctions%2F-813053508"><span>new</span><wbr><span><span>Transaction</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-634361778%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain" data-active="" data-toggle=":drivers:native-driver/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-634361778%2FFunctions%2F-1591203224"><span class="token function">newTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight.db/-query-result/index.html">QueryResult</a><span class="token operator">&lt;</span><a href="../../../../runtime/app.cash.sqldelight/-transacter/-transaction/index.html">Transacter.Transaction</a><span class="token operator">&gt;</span></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-634361778%2FFunctions%2F-813053508"><span class="token function">newTransaction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight.db/-query-result/index.html">QueryResult</a><span class="token operator">&lt;</span><a href="../../../../runtime/app.cash.sqldelight/-transacter/-transaction/index.html">Transacter.Transaction</a><span class="token operator">&gt;</span></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="518857356%2FFunctions%2F-1591203224" anchor-label="notifyListeners" id="518857356%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="-166185498%2FFunctions%2F-813053508" anchor-label="notifyListeners" id="-166185498%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#518857356%2FFunctions%2F-1591203224"><span>notify</span><wbr><span><span>Listeners</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="518857356%2FFunctions%2F-1591203224"></span>
+                  <div><a href="index.html#-166185498%2FFunctions%2F-813053508"><span>notify</span><wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-166185498%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain" data-active="" data-toggle=":drivers:native-driver/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#518857356%2FFunctions%2F-1591203224"><span class="token function">notifyListeners</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>queryKeys<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-166185498%2FFunctions%2F-813053508"><span class="token function">notifyListeners</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>queryKeys<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="257412220%2FFunctions%2F-1591203224" anchor-label="removeListener" id="257412220%2FFunctions%2F-1591203224" data-filterable-set=":drivers:native-driver/nativeMain"></a>
+<a data-name="1596067554%2FFunctions%2F-813053508" anchor-label="removeListener" id="1596067554%2FFunctions%2F-813053508" data-filterable-set=":drivers:native-driver/nativeMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#257412220%2FFunctions%2F-1591203224"><span>remove</span><wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="257412220%2FFunctions%2F-1591203224"></span>
+                  <div><a href="index.html#1596067554%2FFunctions%2F-813053508"><span>remove</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1596067554%2FFunctions%2F-813053508"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":drivers:native-driver/nativeMain" data-filterable-set=":drivers:native-driver/nativeMain" data-active="" data-toggle=":drivers:native-driver/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#257412220%2FFunctions%2F-1591203224"><span class="token function">removeListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>queryKeys<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">listener<span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight/-query/-listener/index.html">Query.Listener</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":drivers:native-driver/nativeMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#1596067554%2FFunctions%2F-813053508"><span class="token function">removeListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>queryKeys<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">listener<span class="token operator">: </span><a href="../../../../runtime/app.cash.sqldelight/-query/-listener/index.html">Query.Listener</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
                 </div>
               </div>
             </div>

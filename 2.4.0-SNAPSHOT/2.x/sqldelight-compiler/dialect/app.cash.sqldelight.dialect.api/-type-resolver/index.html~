@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/main.css" rel="Stylesheet">
@@ -131,12 +130,12 @@
               </div>
             </div>
           </div>
-<a data-name="1526229250%2FFunctions%2F-1243068833" anchor-label="encapsulatingType" id="1526229250%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+<a data-name="-151965346%2FFunctions%2F-1243068833" anchor-label="encapsulatingType" id="-151965346%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
           <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../encapsulating-type.html"><span>encapsulating</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1526229250%2FFunctions%2F-1243068833"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-151965346%2FFunctions%2F-1243068833"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -146,12 +145,12 @@
               </div>
             </div>
           </div>
-<a data-name="-1510368495%2FFunctions%2F-1243068833" anchor-label="encapsulatingTypePreferringKotlin" id="-1510368495%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
+<a data-name="-1281332763%2FFunctions%2F-1243068833" anchor-label="encapsulatingTypePreferringKotlin" id="-1281332763%2FFunctions%2F-1243068833" data-filterable-set=":sqldelight-compiler:dialect/main"></a>
           <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":sqldelight-compiler:dialect/main" data-filterable-set=":sqldelight-compiler:dialect/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../encapsulating-type-preferring-kotlin.html"><span>encapsulating</span><wbr><span>Type</span><wbr><span>Preferring</span><wbr><span><span>Kotlin</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1510368495%2FFunctions%2F-1243068833"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1281332763%2FFunctions%2F-1243068833"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>

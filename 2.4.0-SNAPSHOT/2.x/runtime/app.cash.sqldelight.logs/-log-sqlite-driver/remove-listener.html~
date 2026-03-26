@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/main.css" rel="Stylesheet">
@@ -90,7 +89,7 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="member" id="content" pageids="runtime::app.cash.sqldelight.logs/LogSqliteDriver/removeListener/#kotlin.String#app.cash.sqldelight.Query.Listener/PointingToDeclaration//673331665">
+<div class="main-content" data-page-type="member" id="content" pageids="runtime::app.cash.sqldelight.logs/LogSqliteDriver/removeListener/#vararg(kotlin.String)#app.cash.sqldelight.Query.Listener/PointingToDeclaration//673331665">
   <div class="breadcrumbs"><a href="../../index.html">runtime</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.logs</a><span class="delimiter">/</span><a href="index.html">LogSqliteDriver</a><span class="delimiter">/</span><span class="current">removeListener</span></div>
   <div class="cover ">
     <h1 class="cover"><span>remove</span><wbr><span><span>Listener</span></span></h1>

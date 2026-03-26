@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/main.css" rel="Stylesheet">
@@ -43,7 +42,7 @@
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
-                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/nativeMain">native</button>
+                <button class="platform-tag platform-selector native-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/nativeMain">native</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
@@ -52,7 +51,7 @@
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
-                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                        <li role="option" class="dropdown--option platform-selector-option native-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":drivers:native-driver/nativeMain" data-filter=":drivers:native-driver/nativeMain">
                                 <span class="checkbox--icon"></span>
@@ -90,7 +89,7 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="member" id="content" pageids="native-driver::app.cash.sqldelight.driver.native/NativeSqliteDriver/currentTransaction/#/PointingToDeclaration//-1591203224">
+<div class="main-content" data-page-type="member" id="content" pageids="native-driver::app.cash.sqldelight.driver.native/NativeSqliteDriver/currentTransaction/#/PointingToDeclaration//-813053508">
   <div class="breadcrumbs"><a href="../../index.html">native-driver</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.driver.native</a><span class="delimiter">/</span><a href="index.html">NativeSqliteDriver</a><span class="delimiter">/</span><span class="current">currentTransaction</span></div>
   <div class="cover ">
     <h1 class="cover"><span>current</span><wbr><span><span>Transaction</span></span></h1>

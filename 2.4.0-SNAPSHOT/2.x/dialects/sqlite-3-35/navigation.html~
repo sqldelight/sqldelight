@@ -4394,6 +4394,31 @@
    </div>
   </div>
  </div>
+ <div class="toc--part" id="android-driver-nav-submenu" pageid="android-driver::////PointingToDeclaration//-1462081981" data-nesting-level="0">
+  <div class="toc--row">
+   <button class="toc--button" aria-expanded="false" aria-label="android-driver" onclick="window.handleTocButtonClick(event, 'android-driver-nav-submenu')"></button><a href="../drivers/android-driver/index.html" class="toc--link"><span><span>android-driver</span></span></a><a class="toc--skip-link" href="../drivers/android-driver/">Skip to content</a>
+  </div>
+  <div class="toc--part" id="android-driver-nav-submenu-0" pageid="android-driver::app.cash.sqldelight.driver.android////PointingToDeclaration//-1462081981" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.driver.android" onclick="window.handleTocButtonClick(event, 'android-driver-nav-submenu-0')"></button><a href="../drivers/android-driver/app.cash.sqldelight.driver.android/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>driver.</span><wbr><span>android</span></a><a class="toc--skip-link" href="../drivers/android-driver/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="android-driver-nav-submenu-0-0" pageid="android-driver::app.cash.sqldelight.driver.android/AndroidSqliteDriver///PointingToDeclaration//-1462081981" data-nesting-level="2">
+    <div class="toc--row">
+     <button class="toc--button" aria-expanded="false" aria-label="AndroidSqliteDriver" onclick="window.handleTocButtonClick(event, 'android-driver-nav-submenu-0-0')"></button><a href="../drivers/android-driver/app.cash.sqldelight.driver.android/-android-sqlite-driver/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Android</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></span></span></a><a class="toc--skip-link" href="../drivers/android-driver/">Skip to content</a>
+    </div>
+    <div class="toc--part" id="android-driver-nav-submenu-0-0-0" pageid="android-driver::app.cash.sqldelight.driver.android/AndroidSqliteDriver.Callback///PointingToDeclaration//-1462081981" data-nesting-level="3">
+     <div class="toc--row">
+      <a href="../drivers/android-driver/app.cash.sqldelight.driver.android/-android-sqlite-driver/-callback/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span><span>Callback</span></span></span></span></a>
+     </div>
+    </div>
+    <div class="toc--part" id="android-driver-nav-submenu-0-0-1" pageid="android-driver::app.cash.sqldelight.driver.android/AndroidSqliteDriver.Transaction///PointingToDeclaration//-1462081981" data-nesting-level="3">
+     <div class="toc--row">
+      <a href="../drivers/android-driver/app.cash.sqldelight.driver.android/-android-sqlite-driver/-transaction/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span><span>Transaction</span></span></span></span></a>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
  <div class="toc--part" id="jdbc-driver-nav-submenu" pageid="jdbc-driver::////PointingToDeclaration//-1813608135" data-nesting-level="0">
   <div class="toc--row">
    <button class="toc--button" aria-expanded="false" aria-label="jdbc-driver" onclick="window.handleTocButtonClick(event, 'jdbc-driver-nav-submenu')"></button><a href="../drivers/jdbc-driver/index.html" class="toc--link"><span><span>jdbc-driver</span></span></a><a class="toc--skip-link" href="../drivers/jdbc-driver/">Skip to content</a>
@@ -4434,40 +4459,40 @@
    </div>
   </div>
  </div>
- <div class="toc--part" id="native-driver-nav-submenu" pageid="native-driver::////PointingToDeclaration//-1644003084" data-nesting-level="0">
+ <div class="toc--part" id="native-driver-nav-submenu" pageid="native-driver::////PointingToDeclaration//-450442552" data-nesting-level="0">
   <div class="toc--row">
    <button class="toc--button" aria-expanded="false" aria-label="native-driver" onclick="window.handleTocButtonClick(event, 'native-driver-nav-submenu')"></button><a href="../drivers/native-driver/index.html" class="toc--link"><span><span>native-driver</span></span></a><a class="toc--skip-link" href="../drivers/native-driver/">Skip to content</a>
   </div>
-  <div class="toc--part" id="native-driver-nav-submenu-0" pageid="native-driver::app.cash.sqldelight.driver.native////PointingToDeclaration//-1591203224" data-nesting-level="1">
+  <div class="toc--part" id="native-driver-nav-submenu-0" pageid="native-driver::app.cash.sqldelight.driver.native////PointingToDeclaration//-813053508" data-nesting-level="1">
    <div class="toc--row">
     <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.driver.native" onclick="window.handleTocButtonClick(event, 'native-driver-nav-submenu-0')"></button><a href="../drivers/native-driver/app.cash.sqldelight.driver.native/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>driver.</span><wbr><span>native</span></a><a class="toc--skip-link" href="../drivers/native-driver/">Skip to content</a>
    </div>
-   <div class="toc--part" id="native-driver-nav-submenu-0-0" pageid="native-driver::app.cash.sqldelight.driver.native/ConnectionWrapper///PointingToDeclaration//-1591203224" data-nesting-level="2">
+   <div class="toc--part" id="native-driver-nav-submenu-0-0" pageid="native-driver::app.cash.sqldelight.driver.native/ConnectionWrapper///PointingToDeclaration//-813053508" data-nesting-level="2">
     <div class="toc--row">
      <a href="../drivers/native-driver/app.cash.sqldelight.driver.native/-connection-wrapper/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Connection</span><wbr><span><span>Wrapper</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="native-driver-nav-submenu-0-1" pageid="native-driver::app.cash.sqldelight.driver.native//inMemoryDriver/#app.cash.sqldelight.db.SqlSchema[app.cash.sqldelight.db.QueryResult.Value[kotlin.Unit]]/PointingToDeclaration//-1591203224" data-nesting-level="2">
+   <div class="toc--part" id="native-driver-nav-submenu-0-1" pageid="native-driver::app.cash.sqldelight.driver.native//inMemoryDriver/#app.cash.sqldelight.db.SqlSchema[app.cash.sqldelight.db.QueryResult.Value[kotlin.Unit]]/PointingToDeclaration//-813053508" data-nesting-level="2">
     <div class="toc--row">
      <a href="../drivers/native-driver/app.cash.sqldelight.driver.native/in-memory-driver.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon function"></span><span><span>in</span><wbr><span>Memory</span><wbr><span><span>Driver()</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="native-driver-nav-submenu-0-2" pageid="native-driver::app.cash.sqldelight.driver.native/NativeSqliteDriver///PointingToDeclaration//-1591203224" data-nesting-level="2">
+   <div class="toc--part" id="native-driver-nav-submenu-0-2" pageid="native-driver::app.cash.sqldelight.driver.native/NativeSqliteDriver///PointingToDeclaration//-813053508" data-nesting-level="2">
     <div class="toc--row">
      <a href="../drivers/native-driver/app.cash.sqldelight.driver.native/-native-sqlite-driver/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Native</span><wbr><span>Sqlite</span><wbr><span><span>Driver</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="native-driver-nav-submenu-0-3" pageid="native-driver::app.cash.sqldelight.driver.native//wrapConnection/#co.touchlab.sqliter.DatabaseConnection#kotlin.Function1[app.cash.sqldelight.db.SqlDriver,kotlin.Unit]/PointingToDeclaration//-1591203224" data-nesting-level="2">
+   <div class="toc--part" id="native-driver-nav-submenu-0-3" pageid="native-driver::app.cash.sqldelight.driver.native//wrapConnection/#co.touchlab.sqliter.DatabaseConnection#kotlin.Function1[app.cash.sqldelight.db.SqlDriver,kotlin.Unit]/PointingToDeclaration//-813053508" data-nesting-level="2">
     <div class="toc--row">
      <a href="../drivers/native-driver/app.cash.sqldelight.driver.native/wrap-connection.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon function"></span><span><span>wrap</span><wbr><span><span>Connection()</span></span></span></span></a>
     </div>
    </div>
   </div>
-  <div class="toc--part" id="native-driver-nav-submenu-1" pageid="native-driver::app.cash.sqldelight.driver.native.util////PointingToDeclaration//-1769794176" data-nesting-level="1">
+  <div class="toc--part" id="native-driver-nav-submenu-1" pageid="native-driver::app.cash.sqldelight.driver.native.util////PointingToDeclaration//593042176" data-nesting-level="1">
    <div class="toc--row">
     <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.driver.native.util" onclick="window.handleTocButtonClick(event, 'native-driver-nav-submenu-1')"></button><a href="../drivers/native-driver/app.cash.sqldelight.driver.native.util/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>driver.</span><wbr><span>native.</span><wbr><span>util</span></a><a class="toc--skip-link" href="../drivers/native-driver/">Skip to content</a>
    </div>
-   <div class="toc--part" id="native-driver-nav-submenu-1-0" pageid="native-driver::app.cash.sqldelight.driver.native.util//pthread_mutex_recursive/#/PointingToDeclaration//-1769794176" data-nesting-level="2">
+   <div class="toc--part" id="native-driver-nav-submenu-1-0" pageid="native-driver::app.cash.sqldelight.driver.native.util//pthread_mutex_recursive/#/PointingToDeclaration//593042176" data-nesting-level="2">
     <div class="toc--row">
      <a href="../drivers/native-driver/app.cash.sqldelight.driver.native.util/pthread_mutex_recursive.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon val"></span><span><span>pthread_</span><wbr><span>mutex_</span><wbr><span>recursive</span></span></span></a>
     </div>
@@ -4522,7 +4547,7 @@
      </div>
     </div>
    </div>
-   <div class="toc--part" id="sqlite-driver-nav-submenu-0-1" pageid="sqlite-driver::app.cash.sqldelight.driver.jdbc.sqlite//JdbcSqliteDriver/#kotlin.String#java.util.Properties#app.cash.sqldelight.db.SqlSchema[app.cash.sqldelight.db.QueryResult.Value[kotlin.Unit]]#kotlin.Boolean#app.cash.sqldelight.db.AfterVersion/PointingToDeclaration//2135471368" data-nesting-level="2">
+   <div class="toc--part" id="sqlite-driver-nav-submenu-0-1" pageid="sqlite-driver::app.cash.sqldelight.driver.jdbc.sqlite//JdbcSqliteDriver/#kotlin.String#java.util.Properties#app.cash.sqldelight.db.SqlSchema[app.cash.sqldelight.db.QueryResult.Value[kotlin.Unit]]#kotlin.Boolean#vararg(app.cash.sqldelight.db.AfterVersion)/PointingToDeclaration//2135471368" data-nesting-level="2">
     <div class="toc--row">
      <a href="../drivers/sqlite-driver/app.cash.sqldelight.driver.jdbc.sqlite/-jdbc-sqlite-driver.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon function"></span><span><span>Jdbc</span><wbr><span>Sqlite</span><wbr><span><span>Driver()</span></span></span></span></a>
     </div>
@@ -4749,7 +4774,7 @@
    </div>
   </div>
  </div>
- <div class="toc--part" id="runtime-nav-submenu" pageid="runtime::////PointingToDeclaration//-662451703" data-nesting-level="0">
+ <div class="toc--part" id="runtime-nav-submenu" pageid="runtime::////PointingToDeclaration//-855295651" data-nesting-level="0">
   <div class="toc--row">
    <button class="toc--button" aria-expanded="false" aria-label="runtime" onclick="window.handleTocButtonClick(event, 'runtime-nav-submenu')"></button><a href="../runtime/index.html" class="toc--link"><span><span>runtime</span></span></a><a class="toc--skip-link" href="../runtime/">Skip to content</a>
   </div>
@@ -4923,11 +4948,11 @@
     </div>
    </div>
   </div>
-  <div class="toc--part" id="runtime-nav-submenu-2" pageid="runtime::app.cash.sqldelight.internal////PointingToDeclaration//2050281947" data-nesting-level="1">
+  <div class="toc--part" id="runtime-nav-submenu-2" pageid="runtime::app.cash.sqldelight.internal////PointingToDeclaration//-666588409" data-nesting-level="1">
    <div class="toc--row">
     <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.internal" onclick="window.handleTocButtonClick(event, 'runtime-nav-submenu-2')"></button><a href="../runtime/app.cash.sqldelight.internal/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>internal</span></a><a class="toc--skip-link" href="../runtime/">Skip to content</a>
    </div>
-   <div class="toc--part" id="runtime-nav-submenu-2-0" pageid="runtime::app.cash.sqldelight.internal//currentThreadId/#/PointingToDeclaration//2050281947" data-nesting-level="2">
+   <div class="toc--part" id="runtime-nav-submenu-2-0" pageid="runtime::app.cash.sqldelight.internal//currentThreadId/#/PointingToDeclaration//-666588409" data-nesting-level="2">
     <div class="toc--row">
      <a href="../runtime/app.cash.sqldelight.internal/current-thread-id.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon function"></span><span><span>current</span><wbr><span>Thread</span><wbr><span><span>Id()</span></span></span></span></a>
     </div>
@@ -5632,12 +5657,12 @@
      <a href="../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/-dialect-type/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Dialect</span><wbr><span><span>Type</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="dialect-nav-submenu-0-3" pageid="dialect::app.cash.sqldelight.dialect.api//encapsulatingType/app.cash.sqldelight.dialect.api.TypeResolver#kotlin.collections.List[com.alecstrong.sql.psi.core.psi.SqlExpr]#app.cash.sqldelight.dialect.api.DialectType/PointingToDeclaration//-1243068833" data-nesting-level="2">
+   <div class="toc--part" id="dialect-nav-submenu-0-3" pageid="dialect::app.cash.sqldelight.dialect.api//encapsulatingType/app.cash.sqldelight.dialect.api.TypeResolver#kotlin.collections.List[com.alecstrong.sql.psi.core.psi.SqlExpr]#vararg(app.cash.sqldelight.dialect.api.DialectType)/PointingToDeclaration//-1243068833" data-nesting-level="2">
     <div class="toc--row">
      <a href="../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/encapsulating-type.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon function"></span><span><span>encapsulating</span><wbr><span><span>Type()</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="dialect-nav-submenu-0-4" pageid="dialect::app.cash.sqldelight.dialect.api//encapsulatingTypePreferringKotlin/app.cash.sqldelight.dialect.api.TypeResolver#kotlin.collections.List[com.alecstrong.sql.psi.core.psi.SqlExpr]#app.cash.sqldelight.dialect.api.DialectType#kotlin.Function1[kotlin.collections.List[kotlin.Boolean],kotlin.Boolean]?/PointingToDeclaration//-1243068833" data-nesting-level="2">
+   <div class="toc--part" id="dialect-nav-submenu-0-4" pageid="dialect::app.cash.sqldelight.dialect.api//encapsulatingTypePreferringKotlin/app.cash.sqldelight.dialect.api.TypeResolver#kotlin.collections.List[com.alecstrong.sql.psi.core.psi.SqlExpr]#vararg(app.cash.sqldelight.dialect.api.DialectType)#kotlin.Function1[kotlin.collections.List[kotlin.Boolean],kotlin.Boolean]?/PointingToDeclaration//-1243068833" data-nesting-level="2">
     <div class="toc--row">
      <a href="../sqldelight-compiler/dialect/app.cash.sqldelight.dialect.api/encapsulating-type-preferring-kotlin.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon function"></span><span><span>encapsulating</span><wbr><span>Type</span><wbr><span>Preferring</span><wbr><span><span>Kotlin()</span></span></span></span></a>
     </div>

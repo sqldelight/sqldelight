@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/main.css" rel="Stylesheet">
@@ -158,12 +157,12 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="tableheader">Functions</h2>
-        <div class="table"><a data-name="-28906381%2FFunctions%2F2135471368" anchor-label="addListener" id="-28906381%2FFunctions%2F2135471368" data-filterable-set=":drivers:sqlite-driver/main"></a>
+        <div class="table"><a data-name="1183401945%2FFunctions%2F2135471368" anchor-label="addListener" id="1183401945%2FFunctions%2F2135471368" data-filterable-set=":drivers:sqlite-driver/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:sqlite-driver/main" data-filterable-set=":drivers:sqlite-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="add-listener.html"><span>add</span><wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28906381%2FFunctions%2F2135471368"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1183401945%2FFunctions%2F2135471368"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -323,12 +322,12 @@
               </div>
             </div>
           </div>
-<a data-name="561031386%2FFunctions%2F2135471368" anchor-label="notifyListeners" id="561031386%2FFunctions%2F2135471368" data-filterable-set=":drivers:sqlite-driver/main"></a>
+<a data-name="-997224908%2FFunctions%2F2135471368" anchor-label="notifyListeners" id="-997224908%2FFunctions%2F2135471368" data-filterable-set=":drivers:sqlite-driver/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:sqlite-driver/main" data-filterable-set=":drivers:sqlite-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="notify-listeners.html"><span>notify</span><wbr><span><span>Listeners</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="561031386%2FFunctions%2F2135471368"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-997224908%2FFunctions%2F2135471368"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -338,12 +337,12 @@
               </div>
             </div>
           </div>
-<a data-name="2072264522%2FFunctions%2F2135471368" anchor-label="removeListener" id="2072264522%2FFunctions%2F2135471368" data-filterable-set=":drivers:sqlite-driver/main"></a>
+<a data-name="-1479683152%2FFunctions%2F2135471368" anchor-label="removeListener" id="-1479683152%2FFunctions%2F2135471368" data-filterable-set=":drivers:sqlite-driver/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:sqlite-driver/main" data-filterable-set=":drivers:sqlite-driver/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="remove-listener.html"><span>remove</span><wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2072264522%2FFunctions%2F2135471368"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1479683152%2FFunctions%2F2135471368"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>

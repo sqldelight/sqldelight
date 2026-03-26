@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/main.css" rel="Stylesheet">
@@ -394,12 +393,12 @@
               </div>
             </div>
           </div>
-<a data-name="-1242433102%2FFunctions%2F-879533229" anchor-label="srcDirs" id="-1242433102%2FFunctions%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="1715764736%2FFunctions%2F-879533229" anchor-label="srcDirs" id="1715764736%2FFunctions%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="src-dirs.html"><span>src</span><wbr><span><span>Dirs</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1242433102%2FFunctions%2F-879533229"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1715764736%2FFunctions%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>

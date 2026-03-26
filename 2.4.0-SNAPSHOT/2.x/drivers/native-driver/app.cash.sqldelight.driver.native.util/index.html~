@@ -18,7 +18,6 @@
         }
       }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/main.css" rel="Stylesheet">
@@ -43,8 +42,8 @@
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
-                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/appleMain">apple</button>
-                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/linuxMain">linux</button>
+                <button class="platform-tag platform-selector native-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/appleMain">apple</button>
+                <button class="platform-tag platform-selector native-like" data-active="" aria-pressed="true" data-filter=":drivers:native-driver/linuxMain">linux</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
@@ -53,14 +52,14 @@
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
-                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                        <li role="option" class="dropdown--option platform-selector-option native-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":drivers:native-driver/appleMain" data-filter=":drivers:native-driver/appleMain">
                                 <span class="checkbox--icon"></span>
                                 apple
                             </label>
                         </li>
-                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                        <li role="option" class="dropdown--option platform-selector-option native-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":drivers:native-driver/linuxMain" data-filter=":drivers:native-driver/linuxMain">
                                 <span class="checkbox--icon"></span>
@@ -98,7 +97,7 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="package" id="content" pageids="native-driver::app.cash.sqldelight.driver.native.util////PointingToDeclaration//-1769794176">
+<div class="main-content" data-page-type="package" id="content" pageids="native-driver::app.cash.sqldelight.driver.native.util////PointingToDeclaration//593042176">
   <div class="breadcrumbs"><a href="../index.html">native-driver</a><span class="delimiter">/</span><span class="current">app.cash.sqldelight.driver.native.util</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -108,12 +107,12 @@
     <div class="tabs-section-body">
       <div data-togglable="PROPERTY">
         <h2 class="tableheader">Properties</h2>
-        <div class="table"><a data-name="138175324%2FProperties%2F-1769794176" anchor-label="pthread_mutex_recursive" id="138175324%2FProperties%2F-1769794176" data-filterable-set=":drivers:native-driver/appleMain,:drivers:native-driver/linuxMain"></a>
+        <div class="table"><a data-name="138175324%2FProperties%2F593042176" anchor-label="pthread_mutex_recursive" id="138175324%2FProperties%2F593042176" data-filterable-set=":drivers:native-driver/appleMain,:drivers:native-driver/linuxMain"></a>
           <div class="table-row table-row_content" data-filterable-current=":drivers:native-driver/appleMain,:drivers:native-driver/linuxMain" data-filterable-set=":drivers:native-driver/appleMain,:drivers:native-driver/linuxMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="pthread_mutex_recursive.html"><span>pthread_</span><wbr><span>mutex_</span><wbr><span>recursive</span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="138175324%2FProperties%2F-1769794176"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="138175324%2FProperties%2F593042176"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
