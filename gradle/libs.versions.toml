@@ -39,7 +39,7 @@ androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", versio
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.4.0" }
 
-kotlinPoet = { module = "com.squareup:kotlinpoet", version = "2.2.0" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version = "2.3.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
 jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.2" }
 truth = { module = "com.google.truth:truth", version = "1.4.5" }
