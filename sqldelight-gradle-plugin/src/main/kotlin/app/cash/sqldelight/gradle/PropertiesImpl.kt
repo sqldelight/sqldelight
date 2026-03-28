@@ -19,7 +19,11 @@ data class SqlDelightPropertiesFileImpl(
 
 data class SqlDelightDatabasePropertiesImpl(
   @Input override val packageName: String,
-  @Nested override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
+  // Not a cache input: the task-specific compilationUnit property already captures the relevant
+  // compilation unit. Including all variants here makes the cache key depend on how many AGP
+  // variants are configured at build time (e.g. CI configures all variants; assembleDebug only
+  // configures debug), causing cache misses between environments.
+  @Internal override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
   @Input override val className: String,
   @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
   @Input override val deriveSchemaFromMigrations: Boolean = false,
