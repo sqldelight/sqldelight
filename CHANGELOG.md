@@ -16,6 +16,7 @@
 ### Fixed
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
+- [Gradle Plugin] Fix build cache miss for generateDatabaseInterface when the list of AGP variants differ between builds
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
