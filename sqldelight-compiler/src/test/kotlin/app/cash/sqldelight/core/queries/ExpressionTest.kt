@@ -1078,4 +1078,39 @@ class ExpressionTest {
 
     assertThat(file.errors).isEmpty()
   }
+
+  @Test fun `coalesce returns the custom Kotlin type for given argument types`(dialect: TestDialect) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import com.example.Foo;
+      |
+      |CREATE TABLE test (
+      |  bar INTEGER,
+      |  foo1 INTEGER AS Foo,
+      |  foo2 INTEGER AS Foo NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT coalesce(foo1, 0),
+      |       coalesce(foo2, bar),
+      |       coalesce(foo1, foo2, bar)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val integerKotlinType = when (dialect) {
+      POSTGRESQL, HSQL, MYSQL -> INT
+      else -> LONG
+    }
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+
+      ClassName("com.example", "Foo"),
+      ClassName("com.example", "Foo"),
+      ClassName("com.example", "Foo"),
+    ).inOrder()
+  }
 }
