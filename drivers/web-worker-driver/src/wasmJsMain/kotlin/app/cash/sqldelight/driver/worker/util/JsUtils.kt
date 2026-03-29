@@ -5,7 +5,10 @@ import org.khronos.webgl.set
 
 internal fun jsonStringify(value: JsAny?, replacer: JsArray<JsString>? = null, space: String? = null): String = js("JSON.stringify(value, replacer, space)")
 
-internal fun objectEntries(value: JsAny?): JsArray<JsArray<JsString>> = js("Object.entries(value)")
+internal fun objectEntries(value: JsAny?): JsArray<JsArray<JsAny?>> {
+  if (js("value == null") as Boolean) return JsArray()
+  return js("Object.entries(value)")
+}
 
 internal fun isArray(value: JsAny?): Boolean = js("Array.isArray(value)")
 
