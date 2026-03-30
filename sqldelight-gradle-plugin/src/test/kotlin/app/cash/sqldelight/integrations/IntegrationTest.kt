@@ -199,6 +199,46 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  /**
+   * When the release variant is disabled (e.g. via debugOnly=true), the number of compilation units
+   * in SqlDelightDatabasePropertiesImpl.compilationUnits changes. The debug generate task should
+   * still get a cache hit because compilationUnits is @Internal. The task-level compilationUnit
+   * property already captures the relevant unit.
+   */
+  @Test fun `sqldelight output is cacheable when AGP variants change`() {
+    val fixtureRoot = File("src/test/cache-variant")
+    fixtureRoot.resolve("build").deleteRecursively()
+    fixtureRoot.resolve("build-cache").deleteRecursively()
+
+    val gradleRunner = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+
+    // First run: both debug and release configured, populates the cache for debug.
+    val firstRun = gradleRunner
+      .withArguments("generateDebugTestDbInterface", "--build-cache", "--stacktrace")
+      .build()
+
+    with(firstRun.task(":generateDebugTestDbInterface")) {
+      assertThat(this).isNotNull()
+      assertThat(this!!.outcome).isNotEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    fixtureRoot.resolve("build").deleteRecursively()
+
+    // Second run: release variant disabled but the debug unit is unchanged so we expect a cache hit.
+    val secondRun = gradleRunner
+      .withArguments("generateDebugTestDbInterface", "--build-cache", "-PdebugOnly=true", "--stacktrace")
+      .build()
+
+    with(secondRun.task(":generateDebugTestDbInterface")) {
+      assertThat(this).isNotNull()
+      assertThat(this!!.outcome).isEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    fixtureRoot.resolve("build").deleteRecursively()
+    fixtureRoot.resolve("build-cache").deleteRecursively()
+  }
+
   @Test fun `deriveSchemaFromMigrations creates a db without queries`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/derive-schema-no-queries"))
