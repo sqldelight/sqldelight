@@ -1,5 +1,7 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlCreateTriggerStmt
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.impl.PostgreSqlCreateTriggerStmtImpl
 import com.alecstrong.sql.psi.core.SqlSchemaContributorElementType
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SchemaContributorStub
@@ -26,7 +28,11 @@ internal abstract class CreateTriggerMixin : SqlCreateTriggerStmtImpl {
   }
 }
 
-internal class CreateTriggerElementType(name: String) : SqlSchemaContributorElementType<SqlCreateTriggerStmt>(name, SqlCreateTriggerStmt::class.java) {
+internal class CreateTriggerElementType(name: String) :
+  SqlSchemaContributorElementType<PostgreSqlCreateTriggerStmt>(
+    name = "postgresql.$name",
+    schemaClass = PostgreSqlCreateTriggerStmt::class.java,
+  ) {
   override fun nameType() = SqlTypes.TRIGGER_NAME
-  override fun createPsi(stub: SchemaContributorStub) = SqlCreateTriggerStmtImpl(stub, this)
+  override fun createPsi(stub: SchemaContributorStub) = PostgreSqlCreateTriggerStmtImpl(stub, this)
 }
