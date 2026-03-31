@@ -1,5 +1,6 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.impl.PostgreSqlCreateViewStmtImpl
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.SqlSchemaContributorElementType
 import com.alecstrong.sql.psi.core.psi.QueryElement
@@ -7,6 +8,7 @@ import com.alecstrong.sql.psi.core.psi.SchemaContributorStub
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.alecstrong.sql.psi.core.psi.TableElement
 import com.alecstrong.sql.psi.core.psi.impl.SqlCreateViewStmtImpl
+import com.alecstrong.sql.psi.core.psi.mixins.CreateViewElementType
 import com.intellij.lang.ASTNode
 import com.intellij.psi.stubs.IStubElementType
 
@@ -32,7 +34,6 @@ abstract class CreateOrReplaceViewMixin : SqlCreateViewStmtImpl {
   }
 }
 
-class CreateViewElementType(name: String) : SqlSchemaContributorElementType<TableElement>(name, TableElement::class.java) {
-  override fun nameType() = SqlTypes.VIEW_NAME
-  override fun createPsi(stub: SchemaContributorStub) = SqlCreateViewStmtImpl(stub, this)
+class CreateViewElementType(name: String) : CreateViewElementType("postgresql.$name") {
+  override fun createPsi(stub: SchemaContributorStub) = PostgreSqlCreateViewStmtImpl(stub, this)
 }
