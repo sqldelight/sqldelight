@@ -93,7 +93,7 @@
   <div class="breadcrumbs"><a href="../../index.html">postgresql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.postgresql.grammar.mixins</a><span class="delimiter">/</span><span class="current">CreateViewElementType</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Create</span><wbr><span>View</span><wbr><span>Element</span><wbr><span><span>Type</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">CreateViewElementType</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="com.alecstrong.sql.psi.core/SqlSchemaContributorElementType///PointingToDeclaration/">SqlSchemaContributorElementType</span><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/TableElement///PointingToDeclaration/">TableElement</span><span class="token operator">&gt; </span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">CreateViewElementType</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi.mixins/CreateViewElementType///PointingToDeclaration/">CreateViewElementType</span></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -208,7 +208,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="create-psi.html"><span class="token function">createPsi</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">stub<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SchemaContributorStub///PointingToDeclaration/">SchemaContributorStub</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi.impl/SqlCreateViewStmtImpl///PointingToDeclaration/">SqlCreateViewStmtImpl</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="create-psi.html"><span class="token function">createPsi</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">stub<span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SchemaContributorStub///PointingToDeclaration/">SchemaContributorStub</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi.impl/-postgre-sql-create-view-stmt-impl/index.html">PostgreSqlCreateViewStmtImpl</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -288,17 +288,17 @@
               </div>
             </div>
           </div>
-<a data-name="-922345318%2FFunctions%2F-1264942193" anchor-label="nameType" id="-922345318%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+<a data-name="1158252079%2FFunctions%2F-1264942193" anchor-label="nameType" id="1158252079%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="name-type.html"><span>name</span><wbr><span><span>Type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-922345318%2FFunctions%2F-1264942193"></span>
+                  <div><a href="index.html#1158252079%2FFunctions%2F-1264942193"><span>name</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1158252079%2FFunctions%2F-1264942193"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="name-type.html"><span class="token function">nameType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1158252079%2FFunctions%2F-1264942193"><span class="token function">nameType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
