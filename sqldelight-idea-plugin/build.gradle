@@ -68,8 +68,16 @@ intellijPlatform {
   }
 }
 
+
 tasks.named('runIde') {
   maxHeapSize = "4g"
+}
+
+intellijPlatformTesting.runIde {
+  customRun {
+    type = IntelliJPlatformType.IntellijIdea
+    version = "2026.1"
+  }
 }
 
 changelog {

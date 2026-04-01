@@ -1,5 +1,7 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDropTriggerStmt
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.impl.PostgreSqlDropTriggerStmtImpl
 import com.alecstrong.sql.psi.core.SqlSchemaContributorElementType
 import com.alecstrong.sql.psi.core.psi.SchemaContributorStub
 import com.alecstrong.sql.psi.core.psi.SqlCreateTriggerStmt
@@ -14,7 +16,11 @@ internal abstract class DropTriggerMixin : SqlDropTriggerStmtImpl {
   constructor(stub: SchemaContributorStub, stubType: IStubElementType<*, *>) : super(stub, stubType)
 }
 
-internal class DropTriggerElementType(name: String) : SqlSchemaContributorElementType<SqlCreateTriggerStmt>(name, SqlCreateTriggerStmt::class.java) {
+internal class DropTriggerElementType(name: String) :
+  SqlSchemaContributorElementType<PostgreSqlDropTriggerStmt>(
+    name = "postgresql.$name",
+    PostgreSqlDropTriggerStmt::class.java,
+  ) {
   override fun nameType() = SqlTypes.TRIGGER_NAME
-  override fun createPsi(stub: SchemaContributorStub) = SqlCreateTriggerStmtImpl(stub, this)
+  override fun createPsi(stub: SchemaContributorStub) = PostgreSqlDropTriggerStmtImpl(stub, this)
 }
