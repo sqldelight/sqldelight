@@ -214,6 +214,7 @@ object SqlDelightCompiler {
     }
 
   private fun FileSpec.writeToAndClose(appendable: Appendable) {
+    appendable.append("@file:Suppress(\"RedundantVisibilityModifier\", \"ASSIGNED_VALUE_IS_NEVER_READ\")\n\n")
     writeTo(appendable)
     if (appendable is Closeable) appendable.close()
   }
