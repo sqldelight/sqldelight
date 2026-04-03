@@ -47,6 +47,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.ColumnAdapter
@@ -93,6 +95,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import kotlin.String
@@ -372,6 +376,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import kotlin.Long
@@ -410,6 +416,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import kotlin.Int

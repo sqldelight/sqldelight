@@ -14,6 +14,7 @@
 - [Gradle Plugin] Implement stricter MigrationFile versioning (#5730 by @madisp)
 
 ### Fixed
+- [Compiler] Suppress Kotlin extra warnings in generated code (#6029 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
 - [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
