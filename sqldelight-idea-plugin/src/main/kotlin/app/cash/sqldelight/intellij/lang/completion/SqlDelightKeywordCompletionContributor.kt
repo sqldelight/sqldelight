@@ -93,9 +93,7 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
             context.put(dialectKey, it)
           }
       }
-      if (!dialect.isSqlite) {
-        return
-      }
+
       val position = parameters.position
       if (position.node.elementType == SqlTypes.COMMENT) {
         return
