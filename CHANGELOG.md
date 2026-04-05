@@ -17,6 +17,7 @@
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
 - [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
+- [PostgreSQL Dialect] Improve IDE plugin for PostgreSQL dialect (#6209 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
