@@ -87,7 +87,7 @@ class SqlDelightKeywordCompletionContributor : CompletionContributor() {
     ) {
       val originalFile = parameters.originalFile
       val project = originalFile.project
-      val dialect = context.get(dialectKey) ?: run {
+      context.get(dialectKey) ?: run {
         SqlDelightProjectService.getInstance(project).dialect
           .also {
             context.put(dialectKey, it)
