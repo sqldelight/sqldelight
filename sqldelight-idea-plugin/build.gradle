@@ -25,7 +25,7 @@ intellijPlatform {
         bundledPlugin("org.jetbrains.kotlin")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("com.intellij.java")
-        bundledPlugin("org.jetbrains.android")
+        plugin("org.jetbrains.android:${libs.versions.idea.get()}")
 
         pluginVerifier()
         zipSigner()
@@ -112,7 +112,6 @@ dependencies {
   implementation libs.kotlinx.serialization.json
 
   testImplementation libs.truth
-  testImplementation libs.intellij.android
   testImplementation projects.dialects.sqlite318
 }
 
