@@ -17,7 +17,7 @@ class VariantTest {
       .withCommonConfiguration(fixtureRoot)
 
     val result = runner
-      .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateInternalDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
     assertThat(result.output).contains(
       """
@@ -33,6 +33,7 @@ class VariantTest {
       "generateReleaseDatabaseInterface",
       "--stacktrace",
       "-Dsqldelight.skip.runtime=true",
+      "-Dorg.gradle.unsafe.isolated-projects=true",
     )
       .build()
   }
@@ -45,7 +46,7 @@ class VariantTest {
       .withCommonConfiguration(fixtureRoot)
 
     val result = runner
-      .withArguments("clean", "assemble", "--stacktrace", "--continue")
+      .withArguments("clean", "assemble", "--stacktrace", "--continue", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
     assertThat(result.output).contains(
       """
@@ -63,7 +64,7 @@ class VariantTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace", "--continue")
+      .withArguments("clean", "--stacktrace", "--continue", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify

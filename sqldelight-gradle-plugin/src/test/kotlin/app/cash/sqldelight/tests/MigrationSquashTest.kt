@@ -17,7 +17,7 @@ class MigrationSquashTest {
   ) {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-squash"))
-      .withArguments("clean", "squashMain${dialect}DatabaseMigrations", "--stacktrace")
+      .withArguments("clean", "squashMain${dialect}DatabaseMigrations", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .withDebug(true)
       .build()
 

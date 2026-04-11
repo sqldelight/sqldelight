@@ -10,7 +10,7 @@ class MigrationTest {
   @Test fun `verification enabled fails when database file is missing`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/missing-database-file-verification-enabled"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace","-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(
@@ -21,7 +21,7 @@ class MigrationTest {
   @Test fun `verification disabled succeeds when database file is missing`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/missing-database-file-verification-disabled"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -30,7 +30,7 @@ class MigrationTest {
   @Test fun `verification disabled succeeds with hsql dialect`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/verify-migration-disabled-no-errors"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -39,7 +39,7 @@ class MigrationTest {
   @Test fun `driver initializer is executed`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-driver-initializer"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .withDebug(true)
       .build()
 
@@ -51,7 +51,7 @@ class MigrationTest {
   @Test fun `failing migration errors properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-failure"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(
@@ -95,7 +95,7 @@ class MigrationTest {
   @Test fun `schema definition changes fail migration properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-definition-failure"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(
@@ -136,7 +136,7 @@ class MigrationTest {
   @Test fun `migration file with errors reports file errors`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-syntax-failure"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(
@@ -150,7 +150,7 @@ class MigrationTest {
   @Test fun `deriving schema from migration introduces failures in migration files`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-schema-failure"))
-      .withArguments("clean", "build", "--stacktrace")
+      .withArguments("clean", "build", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(
@@ -166,7 +166,7 @@ class MigrationTest {
   @Test fun `successful migration works properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success"))
-      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -175,7 +175,7 @@ class MigrationTest {
   @Test fun `migration verification should not perform too many comparisons when comparing tables with many foreign keys`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-foreign-key-stress-test"))
-      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace", "--info")
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace", "--info", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -189,7 +189,7 @@ class MigrationTest {
   @Test fun `successful migration when folder contains db extension`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success-db-directory-name"))
-      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -200,14 +200,14 @@ class MigrationTest {
 
     var output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "check", "verifyMainDatabaseAMigration", "--stacktrace")
+      .withArguments("clean", "check", "verifyMainDatabaseAMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
 
     output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "check", "verifyMainDatabaseBMigration", "--stacktrace")
+      .withArguments("clean", "check", "verifyMainDatabaseBMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -216,7 +216,7 @@ class MigrationTest {
   @Test fun `don't print java-object-diff warnings on default log level`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).doesNotContain("Detected circular reference in node at path")
@@ -225,7 +225,7 @@ class MigrationTest {
   @Test fun `print java-object-diff warnings on debug log level`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "--debug")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "--debug", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("""Detected circular reference in node at path /tables[test]/indexes[test.testIndex]/columns[test."value"]/index Going deeper would cause an infinite loop, so I'll stop looking at this instance along the current path.""")
@@ -234,7 +234,7 @@ class MigrationTest {
   @Test fun `migrations with a gap errors properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-gap-failure"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains("""Gap in migrations detected. Expected migration 2, got 3.""")
@@ -243,7 +243,7 @@ class MigrationTest {
   @Test fun `migrations with bad name errors properly`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-failure-name"))
-      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains("Migration files must have an integer value somewhere in their filename but nope.sqm does not.")
@@ -252,7 +252,7 @@ class MigrationTest {
   @Test fun `compilation fails when verifyMigrations is set to true but the migrations are incomplete`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-incomplete"))
-      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
+      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains("1.sqm:1:12 No table found with name test")
@@ -263,7 +263,7 @@ class MigrationTest {
 
     val output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug")
+      .withArguments("clean", "generateSqlDelightInterface", "--stacktrace", "--debug", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -360,7 +360,7 @@ class MigrationTest {
   @Test fun `successful migration works properly when initial version is not 1`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success-initial-version-not-one"))
-      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace")
+      .withArguments("clean", "check", "verifyMainDatabaseMigration", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")
@@ -369,7 +369,7 @@ class MigrationTest {
   @Test fun `compilation succeeds when verifyMigrations is set to true and initial version is not 1`() {
     val output = GradleRunner.create()
       .withCommonConfiguration(File("src/test/migration-success-initial-version-not-one"))
-      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     assertThat(output.output).contains("BUILD SUCCESSFUL")

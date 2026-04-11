@@ -4,4 +4,4 @@ CREATE TABLE middleATest(
 
 selectFromBottom:
 SELECT *
-FROM bottom;
+FROM bottomTest;

@@ -45,7 +45,7 @@ class KotlinVersionsTest(val kotlinVersion: String) {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "compileKotlin", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion")
+      .withArguments("clean", "compileKotlin", "--stacktrace", "-PoverwriteKotlinVersion=$kotlinVersion", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
