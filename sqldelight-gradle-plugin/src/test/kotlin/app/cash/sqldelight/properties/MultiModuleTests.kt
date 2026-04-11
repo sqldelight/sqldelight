@@ -12,14 +12,13 @@ import org.junit.Ignore
 import org.junit.Test
 
 class MultiModuleTests {
-  @Ignore
   @Test
   fun `sqldelight dependencies are added to the compilation unit`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace")
+      .withArguments("clean", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -37,36 +36,33 @@ class MultiModuleTests {
     }
   }
 
-  @Ignore
   @Test
   fun integrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-module"))
-      .withArguments("clean", ":ProjectA:check", "--stacktrace")
+      .withArguments("clean", ":ProjectA:check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
-  @Ignore
   @Test
   fun `android multi module integration tests`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-module"))
-      .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace")
+      .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
-  @Ignore
   @Test
   fun `the android target of a multiplatform module is a dependency for an android only module`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace")
+      .withArguments("clean", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .forwardOutput()
       .build()
 
@@ -151,7 +147,7 @@ class MultiModuleTests {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace")
+      .withArguments("clean", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .forwardOutput()
       .build()
 
@@ -175,12 +171,45 @@ class MultiModuleTests {
   }
 
   @Test
+  fun `the same package for two modules is not allowed`() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/multi-project-duplicated-package"))
+      .withArguments("clean", ":app:assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+
+    val result = runner.buildAndFail()
+    assertThat(result.output).contains("The package 'com.example.bottom' is defined in multiple projects [':bottomB', ':bottomA'], which are used in the project ':app'")
+  }
+
+  @Test
+  fun `the same package for two direct connected modules is not allowed`() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/multi-project-duplicated-package-direct-dependency"))
+      .withArguments("clean", ":app:assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+
+    val result = runner.buildAndFail()
+    assertThat(result.output).contains("The package 'com.example.app' is defined in multiple projects [':app', ':bottom'], which are used in the project ':app'")
+  }
+
+  @Test
+  fun `diamond dependency is buildable`() {
+    val fixtureRoot = File("src/test/diamond-dependency").absoluteFile
+
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean", ":app:assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .forwardOutput()
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
   fun `dependency adapter is correctly resolved`() {
     val fixtureRoot = File("src/test/dependency-adapter").absoluteFile
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", ":moduleA:check", "--stacktrace")
+      .withArguments("clean", ":moduleA:check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .forwardOutput()
 
     val result = runner.build()
@@ -193,7 +222,7 @@ class MultiModuleTests {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", ":moduleA:check", "--stacktrace")
+      .withArguments("clean", ":moduleA:check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .forwardOutput()
       .withDebug(true)
 

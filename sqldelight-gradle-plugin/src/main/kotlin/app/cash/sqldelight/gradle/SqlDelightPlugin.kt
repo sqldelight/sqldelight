@@ -31,9 +31,10 @@ import org.gradle.tooling.provider.model.ToolingModelBuilder
 import org.gradle.tooling.provider.model.ToolingModelBuilderRegistry
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 
-internal const val MIN_GRADLE_VERSION = "8.0"
+internal const val MIN_GRADLE_VERSION = "8.2.1"
 
 abstract class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)
@@ -45,6 +46,16 @@ abstract class SqlDelightPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     require(GradleVersion.current() >= GradleVersion.version(MIN_GRADLE_VERSION)) {
       "SQLDelight requires Gradle version $MIN_GRADLE_VERSION or greater."
+    }
+
+    project.dependencies.attributesSchema { attributesSchema ->
+      attributesSchema.attribute(SqlDelightPackageAttribute.ATTR) { matchingStrategy ->
+        matchingStrategy.compatibilityRules.add(
+          SqlDelightPackageAttributeCompatibilityRule::class.java,
+        )
+      }
+
+      KotlinPlatformType.setupAttributesMatchingStrategy(attributesSchema)
     }
 
     val extension = project.extensions.create("sqldelight", SqlDelightExtension::class.java).apply {

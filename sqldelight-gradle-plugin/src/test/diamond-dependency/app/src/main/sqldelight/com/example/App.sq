@@ -4,7 +4,7 @@ CREATE TABLE AppTest(
 
 selectFromBottom:
 SELECT *
-FROM bottom;
+FROM bottomTest;
 
 selectFromMiddleA:
 SELECT *

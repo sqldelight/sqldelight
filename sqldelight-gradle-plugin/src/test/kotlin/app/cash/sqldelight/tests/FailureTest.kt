@@ -12,7 +12,7 @@ class FailureTest {
 
     val output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains("Compiling with dialect app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect")
@@ -32,7 +32,7 @@ class FailureTest {
 
     val output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(
@@ -51,7 +51,7 @@ class FailureTest {
 
     val output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
 
     assertThat(output.output).contains(

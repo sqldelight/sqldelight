@@ -11,7 +11,7 @@ class PluginTest {
   fun `Applying the plugin without Kotlin applied throws`() {
     val result = GradleRunner.create()
       .withCommonConfiguration(File("src/test/no-kotlin"))
-      .withArguments("build", "--stacktrace")
+      .withArguments("build", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
     assertThat(result.output)
       .contains(
@@ -23,7 +23,7 @@ class PluginTest {
   fun `Applying the plugin without Kotlin applied throws for Android`() {
     val result = GradleRunner.create()
       .withCommonConfiguration(File("src/test/no-kotlin-android-agp8"))
-      .withArguments("build", "--stacktrace")
+      .withArguments("build", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .buildAndFail()
     assertThat(result.output)
       .contains(
@@ -35,7 +35,7 @@ class PluginTest {
   fun `Applying the android plugin works fine for library projects`() {
     val result = GradleRunner.create()
       .withCommonConfiguration(File("src/test/library-project"))
-      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
@@ -44,7 +44,7 @@ class PluginTest {
   fun `Applying the android plugin works fine for library projects AGP 8`() {
     val result = GradleRunner.create()
       .withCommonConfiguration(File("src/test/library-project-agp8"))
-      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
@@ -55,13 +55,13 @@ class PluginTest {
       .withCommonConfiguration(File("src/test/kotlin-js"))
 
     val result = runner
-      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
     // Assert the plugin added the common dependency
     val dependenciesResult = runner
-      .withArguments("dependencies", "--stacktrace")
+      .withArguments("dependencies", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
     assertThat(dependenciesResult.output).contains("app.cash.sqldelight:runtime:")
   }
@@ -72,13 +72,13 @@ class PluginTest {
       .withCommonConfiguration(File("src/test/kotlin-mpp"))
 
     val result = runner
-      .withArguments("clean", "generateCommonMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateCommonMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
 
     // Assert the plugin added the common dependency
     val dependenciesResult = runner
-      .withArguments("dependencies", "--stacktrace")
+      .withArguments("dependencies", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
     assertThat(dependenciesResult.output).contains("app.cash.sqldelight:runtime")
   }

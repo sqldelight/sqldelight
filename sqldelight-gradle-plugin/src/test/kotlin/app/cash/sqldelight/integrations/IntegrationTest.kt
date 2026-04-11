@@ -26,7 +26,7 @@ class IntegrationTest {
   @Test fun integrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -35,7 +35,7 @@ class IntegrationTest {
   @Test fun integrationTestsSqliteJsonModule() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-sqlite-json"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -44,7 +44,7 @@ class IntegrationTest {
   @Test fun integrationTestsSqliteJsonModuleWithVersionCatalogs() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-sqlite-json-version-catalogs"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -53,7 +53,7 @@ class IntegrationTest {
   @Test fun migrationCallbackIntegrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-migration-callbacks"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -67,7 +67,7 @@ class IntegrationTest {
       .withCommonConfiguration(fixtureRoot)
 
     val firstRun = gradleRunner
-      .withArguments("build", "--build-cache", "--stacktrace")
+      .withArguments("build", "--build-cache", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     with(firstRun.task(":generateMainQueryWrapperInterface")) {
@@ -78,7 +78,7 @@ class IntegrationTest {
     fixtureRoot.resolve("build").deleteRecursively()
 
     val secondRun = gradleRunner
-      .withArguments("build", "--build-cache", "--stacktrace")
+      .withArguments("build", "--build-cache", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     with(secondRun.task(":generateMainQueryWrapperInterface")) {
@@ -135,7 +135,7 @@ class IntegrationTest {
   @Test fun integrationTests_multithreaded_sqlite() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multithreaded-sqlite"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -144,7 +144,7 @@ class IntegrationTest {
   @Test fun integrationTestsSqlite_3_24() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-sqlite-3-24"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -153,7 +153,7 @@ class IntegrationTest {
   @Test fun integrationTestsSqlite_3_35() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-sqlite-3-35"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -162,7 +162,7 @@ class IntegrationTest {
   @Test fun integrationTestsSqlite_3_38() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-sqlite-3-38"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -174,7 +174,7 @@ class IntegrationTest {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .withDebug(true)
 
     val result = runner.build()
@@ -184,7 +184,7 @@ class IntegrationTest {
   @Test fun adapterQuestionmarkTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/adapter-questionmark"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -193,7 +193,7 @@ class IntegrationTest {
   @Test fun selectWithoutFromTest() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/selectWithoutFrom"))
-      .withArguments("clean", "assemble", "--stacktrace")
+      .withArguments("clean", "assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -202,7 +202,7 @@ class IntegrationTest {
   @Test fun `deriveSchemaFromMigrations creates a db without queries`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/derive-schema-no-queries"))
-      .withArguments("clean", "build", "--stacktrace")
+      .withArguments("clean", "build", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
