@@ -39,9 +39,9 @@ androidx-sqliteFramework = { module = "androidx.sqlite:sqlite-framework", versio
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
 androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version = "1.4.0" }
 
-kotlinPoet = { module = "com.squareup:kotlinpoet", version = "2.2.0" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version = "2.3.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
-jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.2" }
+jgrapht = { module = "org.jgrapht:jgrapht-core", version = "1.5.3" }
 truth = { module = "com.google.truth:truth", version = "1.4.5" }
 turbine = { module = "app.cash.turbine:turbine", version = "1.2.1" }
 bugsnag = { module = "com.bugsnag:bugsnag", version = "3.8.0" }
@@ -83,7 +83,7 @@ stately-concurrency = { module = "co.touchlab:stately-concurrency", version = "2
 
 testhelp = { module = "co.touchlab:testhelp", version = "0.6.13" }
 burst = { module = "com.squareup.burst:burst-junit4", version = "1.2.0" }
-testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.21" }
+testParameterInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version = "1.22" }
 
 r2dbc = { module = "io.r2dbc:r2dbc-spi", version = "1.0.0.RELEASE" }
 testContainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testContainers" }
