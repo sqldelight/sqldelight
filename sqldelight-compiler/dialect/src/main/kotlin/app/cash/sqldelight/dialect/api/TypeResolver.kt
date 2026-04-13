@@ -6,6 +6,7 @@ import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.intellij.psi.PsiElement
+import com.squareup.kotlinpoet.TypeName
 
 interface TypeResolver {
   /**
@@ -78,10 +79,10 @@ fun TypeResolver.encapsulatingType(
     }
     throw AnnotationException("The Kotlin type of the argument cannot be inferred, use CAST instead.", exprList.first())
   }
-
-  // stripping nullability because that shouldn't affect the type comparison
+  // stripping nullability on the java type is required for comparison with dialect java type
   val isTypesHomogeneous = types.map { it.dialectType to it.javaType.copy(nullable = false) }.distinct().size == 1
-  val type = if (preferKotlinType && isTypesHomogeneous) {
+
+  val type = if (preferKotlinType && (isTypesHomogeneous || hasTypeAlias(types, typeOrder.map { it.javaType }))) {
     types.first()
   } else {
     IntermediateType(typeOrder.last { it in sqlTypes })
@@ -95,4 +96,12 @@ fun TypeResolver.encapsulatingType(
     }
     else -> type.nullableIf(nullability(exprListNullability))
   }
+}
+
+// Prefer custom java types if all the dialect types are the same,
+// such as when the dialect types are all INTEGER and all the java types are not dialect java types
+private fun hasTypeAlias(resolvedTypes: List<IntermediateType>, javaTypes: List<TypeName>): Boolean {
+  val dialectTypesGroup = resolvedTypes.groupBy { it.dialectType }
+  return dialectTypesGroup.size == 1 &&
+    dialectTypesGroup.values.first().map { it.javaType.copy(nullable = false) }.filterNot { it in javaTypes }.distinct().size == 1
 }
