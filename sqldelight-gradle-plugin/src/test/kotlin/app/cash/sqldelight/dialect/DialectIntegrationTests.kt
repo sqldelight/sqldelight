@@ -14,7 +14,7 @@ class DialectIntegrationTests {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(integrationRoot)
-      .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace")
+      .withArguments("clean", "generateMainMyDatabaseMigrations", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -26,7 +26,7 @@ class DialectIntegrationTests {
   @Test fun integrationTestsHsql() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-hsql"))
-      .withArguments("clean", "check", "--stacktrace")
+      .withArguments("clean", "check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -35,7 +35,7 @@ class DialectIntegrationTests {
   @Test fun integrationTestWithModule() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-module"))
-      .withArguments("clean", "build", "--stacktrace")
+      .withArguments("clean", "build", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -44,7 +44,7 @@ class DialectIntegrationTests {
   @Test fun integrationTestsMultiDialect() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-multi-dialect-modules"))
-      .withArguments("clean", "build", "--stacktrace")
+      .withArguments("clean", "build", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
 
     val result = runner.build()
     Truth.assertThat(result.output).contains("BUILD SUCCESSFUL")

@@ -12,6 +12,8 @@
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
 - [Gradle Plugin] Implement stricter MigrationFile versioning (#5730 by @madisp)
+- [Gradle Plugin] Increase minimal support gradle to 8.2.1 (#6217 by @maxsav)
+- [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
 
 ### Fixed
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable

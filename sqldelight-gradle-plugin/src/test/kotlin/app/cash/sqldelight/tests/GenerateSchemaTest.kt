@@ -14,7 +14,7 @@ class GenerateSchemaTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -31,7 +31,7 @@ class GenerateSchemaTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -46,7 +46,7 @@ class GenerateSchemaTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--rerun-tasks", "generateMainDatabaseSchema", "--stacktrace")
+      .withArguments("clean", "--rerun-tasks", "generateMainDatabaseSchema", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -61,7 +61,7 @@ class GenerateSchemaTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -80,7 +80,7 @@ class GenerateSchemaTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateDebugDatabaseSchema", "--stacktrace")
+      .withArguments("clean", "generateDebugDatabaseSchema", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -94,7 +94,7 @@ class GenerateSchemaTest {
 
     val output = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseSchema", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify

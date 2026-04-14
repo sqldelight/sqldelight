@@ -17,7 +17,7 @@ class PropertiesFileTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateMainDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify
@@ -38,7 +38,7 @@ class PropertiesFileTest {
 
     GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
+      .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
       .build()
 
     // verify

@@ -3,19 +3,13 @@ package app.cash.sqldelight.gradle.kotlin
 import app.cash.sqldelight.gradle.SqlDelightDatabase
 import app.cash.sqldelight.gradle.SqlDelightTask
 import com.android.build.api.AndroidPluginVersion
-import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.api.BaseVariant
-import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
-import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -144,17 +138,4 @@ internal data class Source(
   )
 
   val key get() = Key(type, name, variantName, nativePresetName)
-
-  fun closestMatch(sources: Collection<Key>): Key? {
-    var matches = sources.filter {
-      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
-    }
-    if (matches.size <= 1) return matches.singleOrNull()
-
-    // Multiplatform native matched or android variants matched.
-    matches = matches.filter {
-      nativePresetName == it.nativePresetName && variantName == it.variantName
-    }
-    return matches.singleOrNull()
-  }
 }
