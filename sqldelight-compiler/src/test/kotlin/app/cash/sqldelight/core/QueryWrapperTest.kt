@@ -33,6 +33,8 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -113,7 +115,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -200,7 +204,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -294,7 +300,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -380,7 +388,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -464,7 +474,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -539,7 +551,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -618,7 +632,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -713,7 +729,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -828,7 +846,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile).isNotNull()
     assertThat(queryWrapperFile.toString()).isEqualTo(
       """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
@@ -941,7 +961,9 @@ class QueryWrapperTest {
     assertThat(queryWrapperFile.toString()).apply {
       startsWith(
         """
-        |package com.example.testmodule
+        |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example.testmodule
         |
         |import app.cash.sqldelight.TransacterImpl
         |import app.cash.sqldelight.db.AfterVersion

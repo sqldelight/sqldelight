@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+
 package com.sample
 
 public data class PreferKotlinType(

@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+
 package app.cash.sqldelight.core.integration
 
 import app.cash.sqldelight.EnumColumnAdapter

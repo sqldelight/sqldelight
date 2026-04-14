@@ -51,6 +51,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -119,6 +121,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.Query
@@ -235,6 +239,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -291,6 +297,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -343,6 +351,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -420,6 +430,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -476,6 +488,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.Query
@@ -577,6 +591,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example.testmodule
       |
       |import app.cash.sqldelight.TransacterImpl
@@ -631,6 +647,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.Query
@@ -757,6 +775,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.Query
@@ -859,6 +879,8 @@ class QueriesTypeTest {
     val queryString = result.compilerOutput[dataQueries].toString()
     assertThat(queryString).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.ExecutableQuery
@@ -916,6 +938,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+        @file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+
         package com.example
 
         import app.cash.sqldelight.TransacterImpl
@@ -963,6 +987,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+        @file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+
         package com.example
 
         import app.cash.sqldelight.TransacterImpl
@@ -1011,6 +1037,8 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import app.cash.sqldelight.ExecutableQuery

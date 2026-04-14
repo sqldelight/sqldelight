@@ -47,6 +47,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import kotlin.Boolean
@@ -89,6 +91,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import kotlin.Boolean
@@ -129,6 +133,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
+      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
       |package com.example
       |
       |import kotlin.Long
