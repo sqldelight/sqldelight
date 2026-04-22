@@ -21,6 +21,7 @@
 - [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
 - [PostgreSQL Dialect] Improve IDE plugin for PostgreSQL dialect (#6209 by @griffio)
 - [Intellij Plugin] IDE plugin can perform code completions for all dialects (#6210 by @griffio)
+- [Gradle Plugin] Fix circular dependency error running verify database task (#6221 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2

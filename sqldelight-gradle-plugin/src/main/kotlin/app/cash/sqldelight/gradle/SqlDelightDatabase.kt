@@ -397,6 +397,13 @@ abstract class SqlDelightDatabase @Inject constructor(
       return folderProvider
     }
 
+    fun sourceFoldersFor(sourceKey: Source.Key): Provider<Set<SqlDelightSourceFolderImpl>> {
+      return project.provider {
+        compilationUnits[sourceKey]?.get()?.sourceFolders
+          ?: emptySet()
+      }
+    }
+
     private fun provideSourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
       val sourceFolders = source.sourceDirectories.map { dirs ->
         val declaredSet = srcDirs.mapTo(mutableSetOf()) { dir ->
@@ -422,7 +429,6 @@ abstract class SqlDelightDatabase @Inject constructor(
           val components = acc.getOrPut(packageName) { mutableSetOf() }
           val component = latestVariant.owner as ProjectComponentIdentifier
           components.add(component.projectPath)
-          acc[packageName] = components
           acc
         }
           .filter { entry ->
