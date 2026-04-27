@@ -39,9 +39,9 @@ internal class TemporaryFixture : AutoCloseable {
     File(fixtureRoot, "build.gradle").apply { createNewFile() }.writeText(text)
   }
 
-  internal fun configure(runTask: String = "clean") {
+  internal fun configure(runTask: String = "clean", enableIsolatedProject: Boolean = true) {
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(fixtureRoot, enableIsolatedProject)
       .withArguments(runTask, "--stacktrace")
       .forwardOutput()
       .build()

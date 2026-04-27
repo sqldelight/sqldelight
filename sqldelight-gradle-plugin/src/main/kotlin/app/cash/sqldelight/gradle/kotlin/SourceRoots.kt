@@ -5,7 +5,6 @@ import app.cash.sqldelight.gradle.SqlDelightTask
 import com.android.build.api.AndroidPluginVersion
 import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
@@ -84,7 +83,6 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
       type = KotlinPlatformType.common,
       nativePresetName = "common",
       name = "commonMain",
-      variantName = null,
       sourceDirectories = project.provider { listOf(project.sqldelightDirectory("commonMain")) },
       registerSourceGeneration = { task ->
         sourceSets.getByName("commonMain").kotlin.srcDir(task)
@@ -100,7 +98,8 @@ private fun AndroidComponentsExtension<*, *, *>.onSources(project: Project, acti
     val source = Source(
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
-      variantName = variant.name,
+      buildType = variant.buildType,
+      flavours = variant.productFlavors,
       sourceDirectories = variant.sources.getByName("sqldelight").all,
       registerSourceGeneration = { task ->
         when {
@@ -139,16 +138,18 @@ internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
   val name: String,
-  val variantName: String? = null,
+  val buildType: String? = null,
+  val flavours: List<Pair<String, String>>? = null,
   val sourceDirectories: Provider<out Collection<Directory>>,
   val registerSourceGeneration: (TaskProvider<SqlDelightTask>) -> Unit,
 ) {
   internal data class Key(
     val type: KotlinPlatformType,
     val name: String,
-    val variantName: String?,
+    val buildType: String?,
+    val flavours: List<Pair<String, String>>?,
     val nativePresetName: String?,
   )
 
-  val key get() = Key(type, name, variantName, nativePresetName)
+  val key get() = Key(type, name, buildType, flavours, nativePresetName)
 }

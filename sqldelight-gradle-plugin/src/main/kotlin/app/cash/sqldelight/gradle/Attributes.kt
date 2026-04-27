@@ -5,7 +5,6 @@ import org.gradle.api.attributes.Attribute
 import org.gradle.api.attributes.AttributeCompatibilityRule
 import org.gradle.api.attributes.CompatibilityCheckDetails
 
-
 interface SqlDelightPackageAttribute : Named {
 
   companion object {
@@ -26,10 +25,12 @@ interface SqlDelightDatabaseNameAttribute : Named {
   }
 }
 
-class SqlDelightPackageAttributeCompatibilityRule :
-  AttributeCompatibilityRule<SqlDelightPackageAttribute> {
-  override fun execute(details: CompatibilityCheckDetails<SqlDelightPackageAttribute>) {
-    // The check will be during dependency resolution
-    details.compatible()
+interface SqlDelightAndroidVariantNameAttribute : Named {
+
+  companion object {
+    val ATTR = Attribute.of(
+      "app.cash.sqldelight.gradle.android.variant",
+      SqlDelightDatabaseNameAttribute::class.java,
+    )
   }
 }
