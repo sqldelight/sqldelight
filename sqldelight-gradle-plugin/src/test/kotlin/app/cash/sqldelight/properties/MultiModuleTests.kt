@@ -17,8 +17,11 @@ class MultiModuleTests {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
 
     GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
+      .withArguments("clean", "--stacktrace")
       .build()
 
     // verify
@@ -28,7 +31,12 @@ class MultiModuleTests {
     assertThat(properties.compilationUnits).hasSize(1)
 
     with(properties.compilationUnits[0]) {
-      assertThat(outputDirectoryFile).isEqualTo(File(fixtureRoot, "build/generated/sqldelight/code/Database/main"))
+      assertThat(outputDirectoryFile).isEqualTo(
+        File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/Database/main",
+        ),
+      )
       assertThat(sourceFolders).containsExactly(
         SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
         SqlDelightSourceFolderImpl(File(fixtureRoot, "../ProjectB/src/main/sqldelight"), true),
@@ -40,7 +48,12 @@ class MultiModuleTests {
   fun integrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-module"))
-      .withArguments("clean", ":ProjectA:check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments(
+        "clean",
+        ":ProjectA:check",
+        "--stacktrace",
+        "-Dorg.gradle.unsafe.isolated-projects=true",
+      )
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -50,19 +63,27 @@ class MultiModuleTests {
   fun `android multi module integration tests`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-module"))
-      .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments(
+        "clean",
+        ":AndroidProject:connectedCheck",
+        "--stacktrace",
+        "-Dorg.gradle.unsafe.isolated-projects=true",
+      )
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
   @Test
-  fun `the android target of a multiplatform module is a dependency for an android only module`() {
+  fun `the android target of a multiple modules for an android only module`() {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
 
     GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
+      .withArguments("clean", "--stacktrace")
       .forwardOutput()
       .build()
 
@@ -75,68 +96,392 @@ class MultiModuleTests {
       SqlDelightCompilationUnitImpl(
         name = "minApi23Debug",
         sourceFolders = setOf(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../MultiplatformProject/src/commonMain/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/debug/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi23/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi23Debug/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/debug/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18Debug/sqldelight",
+            ),
+            true,
+          ),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Debug/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23Debug"),
+        outputDirectoryFile = File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/CommonDb/minApi23Debug",
+        ),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi23Release",
         sourceFolders = setOf(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../MultiplatformProject/src/commonMain/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi23/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi23Release/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/release/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18Release/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/release/sqldelight"),
+            true,
+          ),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Release/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23Release"),
+        outputDirectoryFile = File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/CommonDb/minApi23Release",
+        ),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi23Sqldelight",
         sourceFolders = setOf(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../MultiplatformProject/src/commonMain/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi23/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi23Sqldelight/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/sqldelight/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18Staging/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/staging/sqldelight"),
+            true,
+          ),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi23Sqldelight/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi23Sqldelight"),
+        outputDirectoryFile = File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/CommonDb/minApi23Sqldelight",
+        ),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi21Debug",
         sourceFolders = setOf(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../MultiplatformProject/src/commonMain/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/debug/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi21/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi21Debug/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/debug/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18Debug/sqldelight",
+            ),
+            true,
+          ),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/debug/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Debug/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21Debug"),
+        outputDirectoryFile = File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/CommonDb/minApi21Debug",
+        ),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi21Release",
         sourceFolders = setOf(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../MultiplatformProject/src/commonMain/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi21/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi21Release/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/release/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18Release/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/release/sqldelight"),
+            true,
+          ),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Release/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/release/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21Release"),
+        outputDirectoryFile = File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/CommonDb/minApi21Release",
+        ),
       ),
       SqlDelightCompilationUnitImpl(
         name = "minApi21Sqldelight",
         sourceFolders = setOf(
-          SqlDelightSourceFolderImpl(File(fixtureRoot, "../MultiplatformProject/src/commonMain/sqldelight"), true),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../MultiplatformProject/src/commonMain/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryA/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi21/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/minApi21Sqldelight/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryA/src/sqldelight/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/main/sqldelight"),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(
+              fixtureRoot,
+              "../AndroidLibraryB/src/minApi18Staging/sqldelight",
+            ),
+            true,
+          ),
+          SqlDelightSourceFolderImpl(
+            File(fixtureRoot, "../AndroidLibraryB/src/staging/sqldelight"),
+            true,
+          ),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/main/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/minApi21Sqldelight/sqldelight"), false),
           SqlDelightSourceFolderImpl(File(fixtureRoot, "src/sqldelight/sqldelight"), false),
         ),
-        outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/minApi21Sqldelight"),
+        outputDirectoryFile = File(
+          fixtureRoot,
+          "build/generated/sqldelight/code/CommonDb/minApi21Sqldelight",
+        ),
       ),
     )
   }
@@ -146,8 +491,11 @@ class MultiModuleTests {
     var fixtureRoot = File("src/test/diamond-dependency").absoluteFile
 
     GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
+      .withArguments("clean", "--stacktrace")
       .forwardOutput()
       .build()
 
@@ -174,7 +522,7 @@ class MultiModuleTests {
   fun `the same package for two modules is not allowed`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-project-duplicated-package"))
-      .withArguments("clean", ":app:assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments("clean", ":app:assemble", "--stacktrace")
 
     val result = runner.buildAndFail()
     assertThat(result.output).contains("The package 'com.example.bottom' is defined in multiple projects [':bottomB', ':bottomA'], which are used in the project ':app'")
@@ -184,7 +532,7 @@ class MultiModuleTests {
   fun `the same package for two direct connected modules is not allowed`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-project-duplicated-package-direct-dependency"))
-      .withArguments("clean", ":app:assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments("clean", ":app:assemble", "--stacktrace")
 
     val result = runner.buildAndFail()
     assertThat(result.output).contains("The package 'com.example.app' is defined in multiple projects [':app', ':bottom'], which are used in the project ':app'")
@@ -196,7 +544,7 @@ class MultiModuleTests {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", ":app:assemble", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments("clean", ":app:assemble", "--stacktrace")
       .forwardOutput()
 
     val result = runner.build()
@@ -209,7 +557,7 @@ class MultiModuleTests {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", ":moduleA:check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments("clean", ":moduleA:check", "--stacktrace")
       .forwardOutput()
 
     val result = runner.build()
@@ -222,7 +570,7 @@ class MultiModuleTests {
 
     val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot)
-      .withArguments("clean", ":moduleA:check", "--stacktrace", "-Dorg.gradle.unsafe.isolated-projects=true")
+      .withArguments("clean", ":moduleA:check", "--stacktrace")
       .forwardOutput()
       .withDebug(true)
 

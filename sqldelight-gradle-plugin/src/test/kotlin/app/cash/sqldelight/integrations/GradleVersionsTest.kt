@@ -48,7 +48,10 @@ class GradleVersionsTest(private val gradleVersion: String) {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withGradleVersion(gradleVersion)
-      .withCommonConfiguration(integrationRoot)
+      .withCommonConfiguration(
+        projectRoot = integrationRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlin", "--stacktrace").apply {
         // Don't cache all Gradle versions on CI, this will break GH actions size limit.
         if (System.getenv("CI") == "true") {
@@ -68,7 +71,10 @@ class GradleVersionsTest(private val gradleVersion: String) {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withGradleVersion(gradleVersion)
-      .withCommonConfiguration(integrationRoot)
+      .withCommonConfiguration(
+        projectRoot = integrationRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlin", "--stacktrace").apply {
         // Don't cache all Gradle versions on CI, this will break GH actions size limit.
         if (System.getenv("CI") == "true") {
