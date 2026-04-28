@@ -8,7 +8,6 @@ import app.cash.sqldelight.withInvariantPathSeparators
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
 import org.junit.Test
 
 class MultiModuleTests {
