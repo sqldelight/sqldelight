@@ -33,6 +33,7 @@
 - [Gradle Plugin] Fix generated sources not being picked up by Kotlin compilation on AGP 8.9 through 8.11
 - [PostgreSQL Dialect] Fix lower and upper functions using Primitive bind argument to default as TEXT (#6262 by @griffio)
 - [Compiler] Use nullable bind argument with null safe operators(IS and IS DISTINCT FROM) (#6265 by @griffio)
+- [Gradle Plugin] Use AGP's variant resolution for project dependencies (#6217 by @maxsav)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
