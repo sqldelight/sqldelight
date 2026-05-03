@@ -10,7 +10,7 @@ CREATE TABLE t3(
   id INTEGER,
   txt TEXT,
   PRIMARY KEY (id, txt) -- NULLs are not allowed with STRICT on composite primary key fields
-) STRICT;
+) WITHOUT ROWID, STRICT;
 
 CREATE TABLE t4(
    id INTEGER,
