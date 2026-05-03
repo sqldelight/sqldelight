@@ -13,7 +13,8 @@ import com.alecstrong.sql.psi.core.psi.SqlTypes
  * This class extends 3_35 SqliteTypeResolver as we need to call the inherited resolvers for previous dialects
  *
  * Strict Table Rules:
- * INTEGER PRIMARY KEY column, SQLite STRICT Table still accepts nullable.
+ * INTEGER PRIMARY KEY column, although SQLite STRICT Table still accepts nullable, SqlDelight considers it non-nullable as
+ * rowid is always returned and treated as a field with a default value.
  * Columns in a table-level composite PRIMARY KEY, SQlite STRICT table are non-nullable.
  * see https://www.sqlite.org/stricttables.html
  * */
@@ -25,7 +26,8 @@ open class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite335TypeResol
     val columnDef = simplifiedType.column ?: return simplifiedType
     val tableDef = columnDef.parent as? SqlCreateTableStmt ?: return simplifiedType
 
-    val isStrict = tableDef.tableOptions?.tableOptionList?.any { it.node.findChildByType(SqliteTypes337.STRICT) != null } == true
+    val isStrict =
+      tableDef.tableOptions?.tableOptionList?.any { it.node.findChildByType(SqliteTypes337.STRICT) != null } ?: false
 
     if (!isStrict) return simplifiedType
 
@@ -37,7 +39,7 @@ open class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite335TypeResol
     }
 
     if (isColumnPrimaryKey) {
-      return simplifiedType.nullableIf(simplifiedType.dialectType == PrimitiveType.INTEGER)
+      return simplifiedType.asNonNullable()
     }
 
     val isTablePrimaryKey = tableDef.tableConstraintList
