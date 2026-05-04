@@ -2,7 +2,7 @@
 kotlin = "2.3.10"
 dokka = "2.2.0"
 kotlinx-coroutines = "1.10.2"
-idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+idea = "253.30387.90" # Panda 2 | 2025.3.2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.6.2"
 schemaCrawler = "16.19.2"
 sqliter = "1.3.3"
@@ -58,7 +58,6 @@ intellij-lang = { module = "com.jetbrains.intellij.platform:lang", version.ref =
 intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "idea" }
-intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-model", version.ref = "idea" }
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
 intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.ref = "idea" }
