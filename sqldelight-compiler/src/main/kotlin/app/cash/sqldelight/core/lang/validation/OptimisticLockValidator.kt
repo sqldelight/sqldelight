@@ -76,14 +76,17 @@ open class OptimisticLockValidator : Annotator {
       return
     }
 
-    // Confirm the statement has SET lock = :arg + 1
-    if (!(
-        setter.expr is SqlBinaryAddExpr &&
-          setter.expr.node.getChildren(null).any { it.text == "+" } &&
-          (setter.expr as SqlBinaryExpr).getExprList()[0] is SqlBindExpr &&
-          (setter.expr as SqlBinaryExpr).getExprList()[1].textMatches("1")
-        )
-    ) {
+    val setterExpressions = (setter.expr as? SqlBinaryExpr)?.getExprList()
+    val selfIncrementsByOne = setter.expr is SqlBinaryAddExpr &&
+      setter.expr.node.getChildren(null).any { it.text == "+" } &&
+      setterExpressions?.getOrNull(1)?.textMatches("1") ?: false
+    val bindIncrement = selfIncrementsByOne &&
+      setterExpressions.getOrNull(0) is SqlBindExpr
+    val selfIncrements = selfIncrementsByOne &&
+      (setterExpressions.getOrNull(0) as? SqlColumnExpr)?.columnName?.textMatches(lock.columnName.name) ?: false
+
+    // Confirm the statement has SET lock = :arg + 1 or SET lock = lock + 1
+    if (!bindIncrement && !selfIncrements) {
       displayError(
         element,
         lock,
@@ -95,6 +98,8 @@ open class OptimisticLockValidator : Annotator {
       )
       return
     }
+
+    if (selfIncrements) return // Don't need to check the WHERE clause.
 
     val whereExpression = when (element) {
       is SqlUpdateStmt -> element.expr
