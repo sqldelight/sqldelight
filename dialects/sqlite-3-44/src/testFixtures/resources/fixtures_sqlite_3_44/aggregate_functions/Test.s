@@ -8,6 +8,12 @@ CREATE TABLE users (
 SELECT GROUP_CONCAT(name, ', ' ORDER BY created_at)
 FROM users;
 
+SELECT GROUP_CONCAT(name, ', ' ORDER BY created_at ASC NULLS FIRST)
+FROM users;
+
+SELECT GROUP_CONCAT(name, ', ' ORDER BY created_at DESC NULLS LAST)
+FROM users;
+
 SELECT GROUP_CONCAT(DISTINCT name ORDER BY created_at)
 FROM users;
 
