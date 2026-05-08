@@ -31,6 +31,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.TableFunctionRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
@@ -218,7 +219,7 @@ private fun PsiElement.rangesToReplace(): List<Pair<IntRange, String>> {
 private fun PsiElement.selectStarExpansions(resultColumns: SqlResultColumn): List<Pair<IntRange, String>> {
   return listOf(
     this.range to resultColumns.queryExposed().flatMap { query ->
-      query.columns.map { column ->
+      query.columns.filterCodegenExcludedColumns { it.element as? NamedElement }.map { column ->
         val columnElement = column.element as? PsiNamedElement ?: return@selectStarExpansions emptyList()
 
         buildString {

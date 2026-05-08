@@ -75,6 +75,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
       treatNullAsUnknownForEquality = false,
       generateAsync = false,
       expandSelectStar = true,
+      codegenExcludedColumns = emptySet(),
     )
   }
 
@@ -88,6 +89,7 @@ abstract class SqlDelightProjectTestCase : LightJavaCodeInsightFixtureTestCase()
     override val rootDirectory: File,
     override val generateAsync: Boolean,
     override val expandSelectStar: Boolean,
+    override val codegenExcludedColumns: Set<String>,
   ) : SqlDelightDatabaseProperties
 
   private data class SqlDelightSourceFolderImpl(

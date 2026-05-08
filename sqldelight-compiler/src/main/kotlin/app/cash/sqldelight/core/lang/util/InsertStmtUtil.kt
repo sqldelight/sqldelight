@@ -10,6 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 internal val SqlInsertStmt.columns: List<NamedElement>
   get() {
     val columns = table.query.columns
+      .filterCodegenExcludedColumns { it.element as? NamedElement }
       .map { (it.element as NamedElement) }
     if (columnNameList.isEmpty()) return columns
 

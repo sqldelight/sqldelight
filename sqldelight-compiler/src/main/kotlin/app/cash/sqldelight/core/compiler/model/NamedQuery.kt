@@ -23,6 +23,7 @@ import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.parentAdapter
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
+import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
 import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.tablesObserved
@@ -227,30 +228,32 @@ data class NamedQuery(
 
     return queryExposed().flatMap {
       val table = it.table?.name
-      return@flatMap it.columns.map { queryColumn ->
-        var name = queryColumn.element.functionName()
-        if (!namesUsed.add(name)) {
-          if (table != null) name = "${table}_$name"
-          while (!namesUsed.add(name)) name += "_"
-        }
-
-        var type = queryColumn.type().copy(name = name)
-
-        if (hasAggregate) {
-          val isAggregate = queryColumn.element is SqlFunctionExpr &&
-            (queryColumn.element as SqlFunctionExpr).functionName.text.lowercase() in AGGREGATE_FUNCTIONS
-
-          // Goup by statements filter out empty groups so we don't have to
-          // worry about non-null columns returning as nullable.
-          if (!hasGroupBy && !isAggregate) {
-            type = type.asNullable()
-          } else if (hasGroupBy && isAggregate) {
-            type = type.asNonNullable()
+      return@flatMap it.columns
+        .filterCodegenExcludedColumns { queryColumn -> queryColumn.element as? NamedElement }
+        .map { queryColumn ->
+          var name = queryColumn.element.functionName()
+          if (!namesUsed.add(name)) {
+            if (table != null) name = "${table}_$name"
+            while (!namesUsed.add(name)) name += "_"
           }
-        }
 
-        return@map type
-      }
+          var type = queryColumn.type().copy(name = name)
+
+          if (hasAggregate) {
+            val isAggregate = queryColumn.element is SqlFunctionExpr &&
+              (queryColumn.element as SqlFunctionExpr).functionName.text.lowercase() in AGGREGATE_FUNCTIONS
+
+            // Goup by statements filter out empty groups so we don't have to
+            // worry about non-null columns returning as nullable.
+            if (!hasGroupBy && !isAggregate) {
+              type = type.asNullable()
+            } else if (hasGroupBy && isAggregate) {
+              type = type.asNonNullable()
+            }
+          }
+
+          return@map type
+        }
     }
   }
 

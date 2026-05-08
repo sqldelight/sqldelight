@@ -32,7 +32,9 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.AnnotationException
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
+import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
@@ -65,6 +67,7 @@ class SqlDelightEnvironment(
   private val verifyMigrations: Boolean,
   override var dialect: SqlDelightDialect,
   moduleName: String,
+  override var codegenExcludedColumns: Set<String> = properties.codegenExcludedColumns,
   private val sourceFolders: List<File> = compilationUnit.sourceFolders
     .filter { it.folder.exists() && !it.dependency }
     .map { it.folder },
@@ -111,6 +114,36 @@ class SqlDelightEnvironment(
 
   override fun clearIndex() = throw UnsupportedOperationException()
 
+  fun validateCodegenExcludedColumns(): List<String> {
+    if (codegenExcludedColumns.isEmpty()) return emptyList()
+
+    val sourceFiles = mutableListOf<SqlFileBase>()
+    forSourceFiles { sourceFiles += it }
+
+    val tables = linkedMapOf<String, MutableSet<String>>()
+    sourceFiles.forEach { file ->
+      PsiTreeUtil.findChildrenOfType(file, SqlCreateTableStmt::class.java).forEach { table ->
+        tables.getOrPut(table.tableName.name.lowercase()) { linkedSetOf() }
+          .addAll(table.columnDefList.map { it.columnName.name.lowercase() })
+      }
+      PsiTreeUtil.findChildrenOfType(file, SqlCreateVirtualTableStmt::class.java).forEach { table ->
+        tables.getOrPut(table.tableName.name.lowercase()) { linkedSetOf() }
+          .addAll(PsiTreeUtil.findChildrenOfType(table, SqlColumnDef::class.java).map { it.columnName.name.lowercase() })
+      }
+    }
+
+    return codegenExcludedColumns.mapNotNull { excludedColumn ->
+      val spec = excludedColumn.toCodegenExcludedColumnSpec()
+        ?: return@mapNotNull invalidCodegenExcludedColumnMessage(excludedColumn)
+      val tableColumns = tables[spec.tableName.lowercase()]
+        ?: return@mapNotNull "Unknown table '${spec.tableName}' referenced by codegenExcludedColumns value '${spec.rawValue}'."
+      if (spec.columnName.lowercase() !in tableColumns) {
+        return@mapNotNull "Unknown column '${spec.columnName}' on table '${spec.tableName}' referenced by codegenExcludedColumns value '${spec.rawValue}'."
+      }
+      null
+    }.sorted()
+  }
+
   @JvmName("forSqlFileBases")
   fun forSourceFiles(action: (SqlFileBase) -> Unit) {
     forSourceFiles<SqlFileBase>(action)
@@ -144,6 +177,9 @@ class SqlDelightEnvironment(
       errors[key]!!.add(errorMessage(element, message))
     }
     if (errors.isNotEmpty()) return CompilationStatus.Failure(errors.values.flatten())
+
+    val codegenExcludedColumnErrors = validateCodegenExcludedColumns()
+    if (codegenExcludedColumnErrors.isNotEmpty()) return CompilationStatus.Failure(codegenExcludedColumnErrors)
 
     val writer = writer@{ fileName: String ->
       val file = File(fileName)
@@ -290,10 +326,33 @@ class SqlDelightEnvironment(
     else -> context(element.parent)
   }
 
+  private fun invalidCodegenExcludedColumnMessage(excludedColumn: String): String {
+    return "Invalid codegenExcludedColumns value '$excludedColumn'. Expected format: table.column"
+  }
+
+  private fun String.toCodegenExcludedColumnSpec(): CodegenExcludedColumnSpec? {
+    val trimmed = trim()
+    val splitIndex = trimmed.indexOf('.')
+    if (splitIndex <= 0 || splitIndex == trimmed.lastIndex || trimmed.indexOf('.', splitIndex + 1) != -1) {
+      return null
+    }
+    return CodegenExcludedColumnSpec(
+      rawValue = trimmed,
+      tableName = trimmed.substring(0, splitIndex),
+      columnName = trimmed.substring(splitIndex + 1),
+    )
+  }
+
   sealed class CompilationStatus {
     object Success : CompilationStatus()
     class Failure(val errors: List<String>) : CompilationStatus()
   }
+
+  private data class CodegenExcludedColumnSpec(
+    val rawValue: String,
+    val tableName: String,
+    val columnName: String,
+  )
 
   private inner class FileIndex : SqlDelightFileIndex {
     override val contentRoot

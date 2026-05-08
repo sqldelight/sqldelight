@@ -20,6 +20,7 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 
 @SqlDelightDsl
 abstract class SqlDelightDatabase @Inject constructor(
@@ -40,6 +41,7 @@ abstract class SqlDelightDatabase @Inject constructor(
   val configurationName: String = "${name}DialectClasspath"
 
   val expandSelectStar: Property<Boolean> = project.objects.property(Boolean::class.java).convention(true)
+  val codegenExcludedColumns: SetProperty<String> = project.objects.setProperty(String::class.java).convention(emptySet())
 
   internal val configuration = project.configurations.create(configurationName).apply {
     isCanBeConsumed = false
@@ -316,6 +318,7 @@ abstract class SqlDelightDatabase @Inject constructor(
             treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
             generateAsync = generateAsync.get(),
             expandSelectStar = expandSelectStar.get(),
+            codegenExcludedColumns = codegenExcludedColumns.get(),
           )
         }
       } finally {

@@ -58,6 +58,7 @@ internal class FileIndexMap {
         setDialect(dialect, shouldInvalidate)
         treatNullAsUnknownForEquality = database.treatNullAsUnknownForEquality
         generateAsync = database.generateAsync
+        codegenExcludedColumns = database.codegenExcludedColumns
       }
 
       return@computeIfAbsent FileIndex(database)
