@@ -177,6 +177,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate ${source.name} Kotlin interface for $name"
         it.verifyMigrations.set(verifyMigrations)
+        it.excludedColumns.convention(emptyList())
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
 

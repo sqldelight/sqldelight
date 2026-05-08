@@ -28,6 +28,7 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.logging.LogLevel.ERROR
 import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.logging.Logging
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.IgnoreEmptyDirectories
@@ -39,6 +40,7 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.options.Option
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 
@@ -55,6 +57,8 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
+  @get:Input abstract val excludedColumns: ListProperty<String>
+
   @TaskAction
   fun generateSqlDelightFiles() {
     workQueue().submit(GenerateInterfaces::class.java) {
@@ -62,8 +66,21 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
       it.projectName.set(projectName)
       it.properties.set(properties)
       it.verifyMigrations.set(verifyMigrations)
+      it.excludedColumns.set(excludedColumns)
       it.compilationUnit.set(compilationUnit)
     }
+  }
+
+  @Option(
+    option = "exclude-column",
+    description = "Exclude a table column from generated code. Format: table.column",
+  )
+  fun excludeColumn(column: String) {
+    val trimmed = column.trim()
+    require(trimmed.count { it == '.' } == 1 && !trimmed.startsWith('.') && !trimmed.endsWith('.')) {
+      "Invalid value '$column' for --exclude-column. Expected format: table.column"
+    }
+    excludedColumns.add(trimmed)
   }
 
   @InputFiles
@@ -80,6 +97,7 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
     val properties: Property<SqlDelightDatabaseProperties>
     val compilationUnit: Property<SqlDelightCompilationUnit>
     val verifyMigrations: Property<Boolean>
+    val excludedColumns: ListProperty<String>
   }
 
   abstract class GenerateInterfaces : WorkAction<GenerateInterfacesWorkParameters> {
@@ -87,12 +105,14 @@ abstract class SqlDelightTask : SqlDelightWorkerTask() {
 
     override fun execute() {
       parameters.outputDirectory.get().asFile.deleteRecursively()
+      val properties = parameters.properties.get()
       val environment = SqlDelightEnvironment(
         compilationUnit = parameters.compilationUnit.get(),
-        properties = parameters.properties.get(),
+        properties = properties,
         moduleName = parameters.projectName.get(),
         verifyMigrations = parameters.verifyMigrations.get(),
         dialect = ServiceLoader.load(SqlDelightDialect::class.java).first(),
+        codegenExcludedColumns = properties.codegenExcludedColumns + parameters.excludedColumns.get().toSet(),
       )
 
       val generationStatus = environment.generateSqlDelightFiles { info ->

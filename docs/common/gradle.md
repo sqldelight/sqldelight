@@ -316,4 +316,13 @@ Defaults to empty.
     codegenExcludedColumns = ["hockey_player.number"]
     ```
 
+Generate tasks also accept a repeatable `--exclude-column=table.column` option for one-off code generation overrides.
+These command-line exclusions are combined with `codegenExcludedColumns` for the task invocation.
+
+```shell
+./gradlew generateMainDatabaseInterface \
+  --exclude-column=hockey_player.number \
+  --exclude-column=team.legacy_name
+```
+
 {% include 'common/gradle-dependencies.md' %}
