@@ -1,0 +1,16 @@
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY,
+  name TEXT,
+  active INTEGER
+);
+
+INSERT INTO users (name, active) VALUES ('User One', 1);
+INSERT INTO users (name, active) VALUES ('User Two', 0);
+INSERT INTO users (name, active) VALUES ('User Three', 1);
+INSERT INTO users (name, active) VALUES ('User Four', 0);
+
+selectActiveNames:
+SELECT GROUP_CONCAT(name, ', ' ORDER BY name COLLATE NOCASE, id)
+  FILTER (WHERE active = 1) AS activeNames
+FROM users;
+

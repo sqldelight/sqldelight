@@ -10,7 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlExpr
 This class extends 3_35 SqliteTypeResolver as we need to call the inherited resolvers for previous dialects
 Supports type resolution for path operators (->, ->>) in result columns
  */
-class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite335TypeResolver(parentResolver) {
+open class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite335TypeResolver(parentResolver) {
 
   override fun resolvedType(expr: SqlExpr): IntermediateType {
     return if (expr is SqliteExtensionExpr) {
