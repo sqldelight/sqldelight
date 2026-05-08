@@ -168,6 +168,15 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsSqlite_3_44() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-sqlite-3-44"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test
   fun `integration test multiplatform project with async generated code`() {
     val integrationRoot = File("src/test/integration-multiplatform-async")
