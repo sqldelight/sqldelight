@@ -8,6 +8,7 @@
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
 - [PostgreSQL Dialect] Add basic LTREE support (#5880 by @yesitskev @griffio)
 - [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
+- [SQLite Dialect] Add support for SQLite 3.44 aggregate functions DISTINCT, ORDER BY and FILTER (#6236 by @griffio)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
