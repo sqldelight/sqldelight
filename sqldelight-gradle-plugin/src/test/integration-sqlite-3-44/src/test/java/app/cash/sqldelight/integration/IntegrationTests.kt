@@ -19,6 +19,6 @@ class IntegrationTests {
 
   @Test fun selectGroupConcat() {
     val names = aggregateQueries.selectActiveNames().executeAsOne()
-    assertThat(names).isEqualTo("User One, User Three")
+    assertThat(names).isEqualTo(SelectActiveNames("User One, User Three"))
   }
 }
