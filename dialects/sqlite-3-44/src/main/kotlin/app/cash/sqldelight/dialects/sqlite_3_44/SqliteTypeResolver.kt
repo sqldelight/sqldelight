@@ -15,7 +15,7 @@ class SqliteTypeResolver(parentResolver: TypeResolver) : Sqlite338TypeResolver(p
 
   override fun resolvedType(expr: SqlExpr): IntermediateType {
     if (expr is SqliteExtensionExpr && expr.aggregateFunctionExpr != null) {
-      return IntermediateType(PrimitiveType.TEXT)
+      return IntermediateType(PrimitiveType.TEXT).asNullable()
     }
 
     return super.resolvedType(expr)
