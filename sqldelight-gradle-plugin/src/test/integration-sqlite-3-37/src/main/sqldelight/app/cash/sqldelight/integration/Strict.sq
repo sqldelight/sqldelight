@@ -1,0 +1,22 @@
+CREATE TABLE t1(
+   id INTEGER PRIMARY KEY,
+   txt TEXT
+) STRICT;
+
+INSERT INTO t1 (txt) VALUES ('Some Text'); -- strict id returns rowid default value and is therefore not null
+
+CREATE TABLE t2(
+  id INTEGER,
+  txt TEXT,
+  PRIMARY KEY (id, txt)
+) WITHOUT ROWID, STRICT;
+
+INSERT INTO t2 (id, txt) VALUES (99, 'Some Text'); -- strict composite primary keys must be not null
+
+selectTable1:
+SELECT id
+FROM t1;
+
+selectTable2:
+SELECT id, txt
+FROM t2;
