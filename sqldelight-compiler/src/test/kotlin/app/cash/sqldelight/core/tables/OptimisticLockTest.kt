@@ -36,6 +36,27 @@ class OptimisticLockTest {
     )
   }
 
+  @Test fun `multi row updates with self increment are allowed`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER AS VALUE NOT NULL,
+      |  version INTEGER AS LOCK NOT NULL,
+      |  text TEXT NOT NULL
+      |);
+      |
+      |updateText:
+      |UPDATE test
+      |SET text = :text
+      |, version = version + 1;
+      |
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+  }
+
   @Test fun `optimistic lock generates a value type`() {
     val result = FixtureCompiler.compileSql(
       """
