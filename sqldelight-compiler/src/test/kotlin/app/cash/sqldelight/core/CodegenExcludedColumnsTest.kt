@@ -1,5 +1,6 @@
 package app.cash.sqldelight.core
 
+import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import java.io.File
@@ -28,6 +29,42 @@ class CodegenExcludedColumnsTest {
       |FROM test;
       """.trimMargin(),
       tempFolder,
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/Test.kt")]
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).contains("value_: String")
+    assertThat(generatedInterface.toString()).doesNotContain("removed")
+
+    val generatedQueries = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).contains("INSERT INTO test (id, value)")
+    assertThat(generatedQueries.toString()).contains("SELECT test.id, test.value")
+    assertThat(generatedQueries.toString()).doesNotContain("removed")
+  }
+
+  @Test fun `codegen excluded columns are omitted with mysql dialect`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id BIGINT NOT NULL PRIMARY KEY,
+      |  value VARCHAR(191) NOT NULL,
+      |  removed VARCHAR(191)
+      |);
+      |
+      |insertTest:
+      |INSERT INTO test
+      |VALUES ?;
+      |
+      |selectAll:
+      |SELECT *
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      overrideDialect = MySqlDialect(),
       codegenExcludedColumns = setOf("test.removed"),
     )
 
