@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core
 
 import app.cash.sqldelight.dialects.mysql.MySqlDialect
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import com.google.common.truth.Truth.assertThat
 import java.io.File
@@ -65,6 +66,42 @@ class CodegenExcludedColumnsTest {
       """.trimMargin(),
       tempFolder,
       overrideDialect = MySqlDialect(),
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/Test.kt")]
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).contains("value_: String")
+    assertThat(generatedInterface.toString()).doesNotContain("removed")
+
+    val generatedQueries = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).contains("INSERT INTO test (id, value)")
+    assertThat(generatedQueries.toString()).contains("SELECT test.id, test.value")
+    assertThat(generatedQueries.toString()).doesNotContain("removed")
+  }
+
+  @Test fun `codegen excluded columns are omitted with postgresql dialect`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id BIGINT NOT NULL PRIMARY KEY,
+      |  value TEXT NOT NULL,
+      |  removed TEXT
+      |);
+      |
+      |insertTest:
+      |INSERT INTO test
+      |VALUES ?;
+      |
+      |selectAll:
+      |SELECT *
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      overrideDialect = PostgreSqlDialect(),
       codegenExcludedColumns = setOf("test.removed"),
     )
 
