@@ -300,6 +300,10 @@ explicitly lists a codegen-excluded column.
 Because this is codegen-only, applications are responsible for ensuring any still-existing excluded
 column can be omitted from writes until it is dropped, for example with a nullable column or default value.
 
+If your `.sq` files contain `CREATE TABLE` schema definitions, keep the excluded column in the schema
+definition until the physical schema migration drops it. Remove explicit query references to the column,
+but leave the schema source reflecting the current database shape.
+
 Defaults to empty.
 
 === "Kotlin"
