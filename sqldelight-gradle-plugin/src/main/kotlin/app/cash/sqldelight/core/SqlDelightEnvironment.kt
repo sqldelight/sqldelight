@@ -26,6 +26,7 @@ import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.core.lang.SqlDelightParserDefinition
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
+import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.util.migrationFiles
 import app.cash.sqldelight.core.psi.SqlDelightImportStmt
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
@@ -35,6 +36,7 @@ import com.alecstrong.sql.psi.core.SqlFileBase
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
@@ -132,7 +134,8 @@ class SqlDelightEnvironment(
       }
     }
 
-    return codegenExcludedColumns.mapNotNull { excludedColumn ->
+    val specs = codegenExcludedColumns.mapNotNull { it.toCodegenExcludedColumnSpec() }
+    val schemaErrors = codegenExcludedColumns.mapNotNull { excludedColumn ->
       val spec = excludedColumn.toCodegenExcludedColumnSpec()
         ?: return@mapNotNull invalidCodegenExcludedColumnMessage(excludedColumn)
       val tableColumns = tables[spec.tableName.lowercase()]
@@ -141,7 +144,31 @@ class SqlDelightEnvironment(
         return@mapNotNull "Unknown column '${spec.columnName}' on table '${spec.tableName}' referenced by codegenExcludedColumns value '${spec.rawValue}'."
       }
       null
-    }.sorted()
+    }
+
+    return (schemaErrors + validateExplicitCodegenExcludedColumnReferences(sourceFiles, specs)).sorted()
+  }
+
+  private fun validateExplicitCodegenExcludedColumnReferences(
+    sourceFiles: List<SqlFileBase>,
+    specs: List<CodegenExcludedColumnSpec>,
+  ): List<String> {
+    return sourceFiles
+      .filter { it.fileType != MigrationFileType }
+      .flatMap { file ->
+        PsiTreeUtil.findChildrenOfType(file, SqlInsertStmt::class.java).flatMap { insertStmt ->
+          if (!insertStmt.acceptsTableInterface()) return@flatMap emptyList()
+
+          insertStmt.columnNameList.mapNotNull { columnName ->
+            val spec = specs.firstOrNull { it.matches(insertStmt.tableName.name, columnName.name) }
+              ?: return@mapNotNull null
+
+            "Column '${spec.columnName}' on table '${spec.tableName}' is excluded from codegen " +
+              "but is explicitly listed in an INSERT statement. Remove it from the query or " +
+              "from codegenExcludedColumns value '${spec.rawValue}'."
+          }
+        }
+      }
   }
 
   @JvmName("forSqlFileBases")
@@ -352,7 +379,12 @@ class SqlDelightEnvironment(
     val rawValue: String,
     val tableName: String,
     val columnName: String,
-  )
+  ) {
+    fun matches(tableName: String, columnName: String): Boolean {
+      return this.tableName.equals(tableName, ignoreCase = true) &&
+        this.columnName.equals(columnName, ignoreCase = true)
+    }
+  }
 
   private inner class FileIndex : SqlDelightFileIndex {
     override val contentRoot

@@ -153,6 +153,29 @@ class CodegenExcludedColumnsTest {
     )
   }
 
+  @Test fun `explicit insert column list with codegen excluded column fails compilation`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT NOT NULL,
+      |  removed TEXT
+      |);
+      |
+      |insertTest:
+      |INSERT INTO test (id, value, removed)
+      |VALUES ?;
+      """.trimMargin(),
+      tempFolder,
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Column 'removed' on table 'test' is excluded from codegen but is explicitly listed in an INSERT statement. " +
+        "Remove it from the query or from codegenExcludedColumns value 'test.removed'.",
+    )
+  }
+
   @Test fun `malformed codegen excluded column fails compilation`() {
     val result = FixtureCompiler.compileSql(
       """

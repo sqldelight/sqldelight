@@ -295,7 +295,8 @@ A set of `table.column` values to omit from generated models and expanded `SELEC
 This only affects code generation; it does not change the SQL schema or generated migration output.
 
 This can be used to update generated Kotlin APIs before a follow-up schema migration drops the column.
-SQLDelight fails compilation if a configured table or column does not exist.
+SQLDelight fails compilation if a configured table or column does not exist, or if a model-bound insert
+explicitly lists a codegen-excluded column.
 
 Defaults to empty.
 
