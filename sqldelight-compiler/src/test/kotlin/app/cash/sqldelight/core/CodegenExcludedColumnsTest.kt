@@ -229,6 +229,36 @@ class CodegenExcludedColumnsTest {
     )
   }
 
+  @Test fun `model insert with explicit column list ignores excluded columns for default validation`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT NOT NULL,
+      |  removed TEXT NOT NULL
+      |);
+      |
+      |insertTest:
+      |INSERT INTO test (id, value)
+      |VALUES ?;
+      """.trimMargin(),
+      tempFolder,
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/Test.kt")]
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).contains("value_: String")
+    assertThat(generatedInterface.toString()).doesNotContain("removed")
+
+    val generatedQueries = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).contains("INSERT INTO test (id, value)")
+    assertThat(generatedQueries.toString()).doesNotContain("removed")
+  }
+
   @Test fun `malformed codegen excluded column fails compilation`() {
     val result = FixtureCompiler.compileSql(
       """

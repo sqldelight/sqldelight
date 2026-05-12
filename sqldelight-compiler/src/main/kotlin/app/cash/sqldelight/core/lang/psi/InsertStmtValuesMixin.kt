@@ -2,6 +2,7 @@ package app.cash.sqldelight.core.lang.psi
 
 import app.cash.sqldelight.core.lang.acceptsTableInterface
 import app.cash.sqldelight.core.lang.util.columnDefSource
+import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
 import app.cash.sqldelight.core.psi.SqlDelightInsertStmtValues
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojure
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
@@ -25,15 +26,16 @@ open class InsertStmtValuesMixin(
       }
 
       val table = tableAvailable(this, parent.tableName.name).firstOrNull() ?: return
-      val columns = table.columns.map { (it.element as NamedElement).name }
+      val columns = table.columns.filterCodegenExcludedColumns { it.element as? NamedElement }
+      val columnNames = columns.map { (it.element as NamedElement).name }
       val setColumns =
         if (parent.columnNameList.isEmpty()) {
-          columns
+          columnNames
         } else {
           parent.columnNameList.mapNotNull { it.name }
         }
 
-      val needsDefaultValue = table.columns
+      val needsDefaultValue = columns
         .filter { (element, _) ->
           element is NamedElement &&
             element.name !in setColumns &&
