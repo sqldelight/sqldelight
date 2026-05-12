@@ -2,10 +2,13 @@ package app.cash.sqldelight.core.lang.util
 
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn
+import com.alecstrong.sql.psi.core.psi.SqlAlterTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
+import com.intellij.psi.util.PsiTreeUtil
 
 internal fun <T> Iterable<T>.filterCodegenExcludedColumns(
   columnOf: (T) -> NamedElement?,
@@ -19,6 +22,7 @@ internal fun NamedElement.isExcludedFromCodegen(): Boolean {
 
   val columnDef = columnDefSourceForCodegenExclusion() ?: return false
   val tableName = when (val parent = columnDef.parent) {
+    is SqlAlterTableAddColumn -> PsiTreeUtil.getParentOfType(parent, SqlAlterTableStmt::class.java)?.tableName?.name
     is SqlCreateTableStmt -> parent.tableName.name
     is SqlCreateVirtualTableStmt -> parent.tableName.name
     else -> null

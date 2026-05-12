@@ -33,9 +33,9 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.AnnotationException
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
-import com.alecstrong.sql.psi.core.psi.SqlColumnDef
+import com.alecstrong.sql.psi.core.psi.LazyQuery
+import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
-import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.core.CoreApplicationEnvironment
@@ -123,15 +123,9 @@ class SqlDelightEnvironment(
     forSourceFiles { sourceFiles += it }
 
     val tables = linkedMapOf<String, MutableSet<String>>()
-    sourceFiles.forEach { file ->
-      PsiTreeUtil.findChildrenOfType(file, SqlCreateTableStmt::class.java).forEach { table ->
-        tables.getOrPut(table.tableName.name.lowercase()) { linkedSetOf() }
-          .addAll(table.columnDefList.map { it.columnName.name.lowercase() })
-      }
-      PsiTreeUtil.findChildrenOfType(file, SqlCreateVirtualTableStmt::class.java).forEach { table ->
-        tables.getOrPut(table.tableName.name.lowercase()) { linkedSetOf() }
-          .addAll(PsiTreeUtil.findChildrenOfType(table, SqlColumnDef::class.java).map { it.columnName.name.lowercase() })
-      }
+    schemaTables(sourceFiles).forEach { table ->
+      tables.getOrPut(table.tableName.name.lowercase()) { linkedSetOf() }
+        .addAll(table.query.columns.mapNotNull { ((it.element as? NamedElement)?.name)?.lowercase() })
     }
 
     val specs = codegenExcludedColumns.mapNotNull { it.toCodegenExcludedColumnSpec() }
@@ -147,6 +141,18 @@ class SqlDelightEnvironment(
     }
 
     return (schemaErrors + validateExplicitCodegenExcludedColumnReferences(sourceFiles, specs)).sorted()
+  }
+
+  private fun schemaTables(sourceFiles: List<SqlFileBase>): Collection<LazyQuery> {
+    if (properties.deriveSchemaFromMigrations) {
+      val topMigration = sourceFiles.filterIsInstance<MigrationFile>().maxByOrNull { it.version }
+      if (topMigration != null) return topMigration.tables(true)
+    }
+
+    return sourceFiles
+      .filterIsInstance<SqlDelightFile>()
+      .filter { it.fileType != MigrationFileType }
+      .flatMap { it.tables(false) }
   }
 
   private fun validateExplicitCodegenExcludedColumnReferences(
