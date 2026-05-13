@@ -155,6 +155,31 @@ class CodegenExcludedColumnsTest {
     assertThat(generatedQueries.toString()).doesNotContain("removed")
   }
 
+  @Test fun `returning clause with codegen excluded column fails compilation`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT NOT NULL,
+      |  removed TEXT NOT NULL
+      |);
+      |
+      |insertTest:
+      |INSERT INTO test (id, value)
+      |VALUES ?
+      |RETURNING id, value, removed AS removed_value;
+      """.trimMargin(),
+      tempFolder,
+      overrideDialect = PostgreSqlDialect(),
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Column 'removed' on table 'test' is excluded from codegen but is explicitly listed in a RETURNING clause. " +
+        "Remove it from the query or from codegenExcludedColumns value 'test.removed'.",
+    )
+  }
+
   @Test fun `codegen excluded columns added by migrations are omitted from generated models`() {
     FixtureCompiler.writeSql(
       """

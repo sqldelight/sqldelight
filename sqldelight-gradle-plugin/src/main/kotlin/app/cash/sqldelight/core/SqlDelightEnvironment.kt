@@ -33,11 +33,18 @@ import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import com.alecstrong.sql.psi.core.AnnotationException
 import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.alecstrong.sql.psi.core.SqlFileBase
+import com.alecstrong.sql.psi.core.psi.FromQuery
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
+import com.alecstrong.sql.psi.core.psi.SqlAlterTableAddColumn
+import com.alecstrong.sql.psi.core.psi.SqlAlterTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
+import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlStmt
+import com.alecstrong.sql.psi.core.psi.mixins.ColumnDefMixin
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockModule
 import com.intellij.openapi.extensions.ExtensionPointName
@@ -173,8 +180,57 @@ class SqlDelightEnvironment(
               "but is explicitly listed in an INSERT statement. Remove it from the query or " +
               "from codegenExcludedColumns value '${spec.rawValue}'."
           }
-        }
+        } + validateExplicitReturningColumnReferences(file, specs)
       }
+  }
+
+  private fun validateExplicitReturningColumnReferences(
+    file: SqlFileBase,
+    specs: List<CodegenExcludedColumnSpec>,
+  ): List<String> {
+    return PsiTreeUtil.findChildrenOfType(file, SqlResultColumn::class.java).flatMap { resultColumn ->
+      if (resultColumn.returningClause() == null) return@flatMap emptyList()
+
+      val expr = resultColumn.expr ?: return@flatMap emptyList()
+      PsiTreeUtil.findChildrenOfType(expr, SqlColumnName::class.java).mapNotNull { columnName ->
+        val spec = columnName.codegenExcludedColumnSpec(specs) ?: return@mapNotNull null
+
+        "Column '${spec.columnName}' on table '${spec.tableName}' is excluded from codegen " +
+          "but is explicitly listed in a RETURNING clause. Remove it from the query or " +
+          "from codegenExcludedColumns value '${spec.rawValue}'."
+      }
+    }.distinct()
+  }
+
+  private fun SqlResultColumn.returningClause(): PsiElement? {
+    var element = parent
+    while (element != null && element !is SqlStmt) {
+      if (element is FromQuery && element.text.trimStart().startsWith("RETURNING", ignoreCase = true)) {
+        return element
+      }
+      element = element.parent
+    }
+    return null
+  }
+
+  private fun SqlColumnName.codegenExcludedColumnSpec(
+    specs: List<CodegenExcludedColumnSpec>,
+  ): CodegenExcludedColumnSpec? {
+    val columnDef = columnDefSourceForCodegenExclusion() ?: return null
+    val tableName = when (val parent = columnDef.parent) {
+      is SqlAlterTableAddColumn -> PsiTreeUtil.getParentOfType(parent, SqlAlterTableStmt::class.java)?.tableName?.name
+      is SqlCreateTableStmt -> parent.tableName.name
+      is SqlCreateVirtualTableStmt -> parent.tableName.name
+      else -> null
+    } ?: return null
+
+    return specs.firstOrNull { it.matches(tableName, columnDef.columnName.name) }
+  }
+
+  private fun SqlColumnName.columnDefSourceForCodegenExclusion(): ColumnDefMixin? {
+    val resolved = reference?.resolve()
+    if (resolved?.parent is ColumnDefMixin) return resolved.parent as ColumnDefMixin
+    return (resolved as? SqlColumnName)?.columnDefSourceForCodegenExclusion()
   }
 
   @JvmName("forSqlFileBases")

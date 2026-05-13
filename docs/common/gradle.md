@@ -296,7 +296,7 @@ This only affects code generation; it does not change the SQL schema or generate
 
 This can be used to update generated Kotlin APIs before a follow-up schema migration drops the column.
 SQLDelight fails compilation if a configured table or column does not exist, or if a model-bound insert
-explicitly lists a codegen-excluded column.
+or `RETURNING` clause explicitly lists a codegen-excluded column.
 Because this is codegen-only, applications are responsible for ensuring any still-existing excluded
 column can be omitted from writes until it is dropped, for example with a nullable column or default value.
 
