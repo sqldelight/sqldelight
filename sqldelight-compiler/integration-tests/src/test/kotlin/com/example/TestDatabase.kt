@@ -6,7 +6,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import com.example.testmodule.newInstance
 import com.example.testmodule.schema
+import kotlin.String
 import kotlin.Unit
+import kotlin.collections.List
 
 public interface TestDatabase : Transacter {
   public val groupQueries: GroupQueries
@@ -24,5 +26,7 @@ public interface TestDatabase : Transacter {
       playerAdapter: Player.Adapter,
       teamAdapter: Team.Adapter,
     ): TestDatabase = TestDatabase::class.newInstance(driver, playerAdapter, teamAdapter)
+
+    public fun allTableNames(): List<String> = listOf("player", "group", "myftstable", "myftstable2", "team")
   }
 }
