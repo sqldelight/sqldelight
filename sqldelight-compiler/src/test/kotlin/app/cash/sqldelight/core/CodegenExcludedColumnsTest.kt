@@ -120,6 +120,41 @@ class CodegenExcludedColumnsTest {
     assertThat(generatedQueries.toString()).doesNotContain("removed")
   }
 
+  @Test fun `insert returning with codegen excluded columns uses generated table model`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT NOT NULL,
+      |  removed TEXT NOT NULL,
+      |  created_at TEXT NOT NULL
+      |);
+      |
+      |insertTest:
+      |INSERT INTO test (id, value, created_at)
+      |VALUES ?
+      |RETURNING id, value, created_at;
+      """.trimMargin(),
+      tempFolder,
+      overrideDialect = PostgreSqlDialect(),
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val generatedInterface = result.compilerOutput[File(result.outputDirectory, "com/example/Test.kt")]
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).contains("created_at: String")
+    assertThat(generatedInterface.toString()).doesNotContain("removed")
+
+    assertThat(result.compilerOutput[File(result.outputDirectory, "com/example/InsertTest.kt")]).isNull()
+
+    val generatedQueries = result.compilerOutput[File(result.outputDirectory, "com/example/TestQueries.kt")]
+    assertThat(generatedQueries).isNotNull()
+    assertThat(generatedQueries.toString()).contains("ExecutableQuery<Test>")
+    assertThat(generatedQueries.toString()).doesNotContain("removed")
+  }
+
   @Test fun `codegen excluded columns added by migrations are omitted from generated models`() {
     FixtureCompiler.writeSql(
       """

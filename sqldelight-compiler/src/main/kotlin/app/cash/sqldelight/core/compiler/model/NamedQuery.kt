@@ -26,6 +26,7 @@ import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
 import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
+import app.cash.sqldelight.core.lang.util.table
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
@@ -45,6 +46,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
@@ -58,7 +60,7 @@ data class NamedQuery(
   private val statementIdentifier: StmtIdentifierMixin? = null,
 ) : BindableQuery(statementIdentifier, queryable.statement) {
   internal val select get() = queryable.statement
-  internal val pureTable get() = queryable.pureTable
+  internal val pureTable: NamedElement? by lazy { queryable.pureTable ?: codegenExcludedPureTable() }
 
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
@@ -146,6 +148,21 @@ data class NamedQuery(
   internal fun needsWrapper() = (resultColumns.size > 1 || resultColumns[0].javaType.isNullable)
 
   internal fun needsQuerySubType() = arguments.isNotEmpty() || statement is SqlDelightStmtClojureStmtList
+
+  private fun codegenExcludedPureTable(): NamedElement? {
+    if (queryable.select.sqFile().codegenExcludedColumns.isEmpty()) return null
+    val insertStmt = statement as? SqlInsertStmt ?: return null
+    val pureColumns = queryable.select.queryExposed().singleOrNull()?.columns
+      ?.flattenCompoundedForCodegen()
+      ?.filterCodegenExcludedColumns { queryColumn -> queryColumn.element as? NamedElement }
+      ?: return null
+    val table = insertStmt.table
+    val tableColumns = table.query.columns
+      .flattenCompoundedForCodegen()
+      .filterCodegenExcludedColumns { queryColumn -> queryColumn.element as? NamedElement }
+
+    return if (tableColumns == pureColumns) table.tableName else null
+  }
 
   internal val tablesObserved: List<TableNameElement>? by lazy {
     if (queryable is SelectQueryable && queryable.select == queryable.statement) {
@@ -261,6 +278,16 @@ data class NamedQuery(
     var rootType = element.type()
     nullable?.let { rootType = rootType.nullableIf(it) }
     return compounded.fold(rootType) { type, column -> superType(type, column.type()) }
+  }
+
+  private fun List<QueryElement.QueryColumn>.flattenCompoundedForCodegen(): List<QueryElement.QueryColumn> {
+    return map { column ->
+      if (column.compounded.none { it.element != column.element || it.nullable != column.nullable }) {
+        column.copy(compounded = emptyList())
+      } else {
+        column
+      }
+    }
   }
 
   override val id: Int
