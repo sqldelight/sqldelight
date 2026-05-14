@@ -6,6 +6,7 @@ import app.cash.sqldelight.dialects.sqlite_3_25.SqliteTestFixtures as Sqlite_3_2
 import app.cash.sqldelight.dialects.sqlite_3_30.SqliteTestFixtures as Sqlite_3_30SqliteTestFixtures
 import app.cash.sqldelight.dialects.sqlite_3_33.SqliteTestFixtures as Sqlite_3_33SqliteTestFixtures
 import app.cash.sqldelight.dialects.sqlite_3_35.SqliteTestFixtures as Sqlite_3_35SqliteTestFixtures
+import app.cash.sqldelight.dialects.sqlite_3_37.SqliteTestFixtures as Sqlite_3_37SqliteTestFixtures
 import app.cash.sqldelight.dialects.sqlite_3_38.SqliteTestFixtures as Sqlite_3_38SqliteTestFixtures
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
 import java.io.File
@@ -37,6 +38,7 @@ class Sqlite344FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
         Sqlite_3_30SqliteTestFixtures.fixtures +
         Sqlite_3_33SqliteTestFixtures.fixtures +
         Sqlite_3_35SqliteTestFixtures.fixtures +
+        Sqlite_3_37SqliteTestFixtures.fixtures +
         Sqlite_3_38SqliteTestFixtures.fixtures +
         SqliteTestFixtures.fixtures + ansiFixtures
   }
