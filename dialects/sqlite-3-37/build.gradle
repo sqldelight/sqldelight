@@ -12,7 +12,7 @@ grammarKit {
 }
 
 dependencies {
-  api projects.dialects.sqlite337
+  api projects.dialects.sqlite335
 
   compileOnly(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
@@ -21,7 +21,7 @@ dependencies {
   testFixturesApi(projects.sqldelightCompiler.environment) {
     targetConfiguration = "shadow"
   }
-  testFixturesApi(testFixtures(projects.dialects.sqlite337))
+  testFixturesApi(testFixtures(projects.dialects.sqlite335))
   testFixturesApi(testFixtures(libs.sqlPsi))
 
   testImplementation libs.junit

@@ -75,6 +75,7 @@ tasks.named('test') {
       ":dialects:sqlite-3-30:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-33:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-35:publishAllPublicationsToInstallLocallyRepository",
+      ":dialects:sqlite-3-37:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-38:publishAllPublicationsToInstallLocallyRepository",
       ":dialects:sqlite-3-44:publishAllPublicationsToInstallLocallyRepository",
       ":sqldelight-compiler:dialect:publishAllPublicationsToInstallLocallyRepository",
