@@ -4209,6 +4209,96 @@
    </div>
   </div>
  </div>
+ <div class="toc--part" id="sqlite-3-37-nav-submenu" pageid="sqlite-3-37::////PointingToDeclaration//-738308494" data-nesting-level="0">
+  <div class="toc--row">
+   <button class="toc--button" aria-expanded="false" aria-label="sqlite-3-37" onclick="window.handleTocButtonClick(event, 'sqlite-3-37-nav-submenu')"></button><a href="../dialects/sqlite-3-37/index.html" class="toc--link"><span><span>sqlite-3-37</span></span></a><a class="toc--skip-link" href="../dialects/sqlite-3-37/">Skip to content</a>
+  </div>
+  <div class="toc--part" id="sqlite-3-37-nav-submenu-0" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37////PointingToDeclaration//-738308494" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.sqlite_3_37" onclick="window.handleTocButtonClick(event, 'sqlite-3-37-nav-submenu-0')"></button><a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span><span>sqlite_3_37</span></span></a><a class="toc--skip-link" href="../dialects/sqlite-3-37/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-0-0" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37/SqliteDialect///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37/-sqlite-dialect/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sqlite</span><wbr><span><span>Dialect</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-0-1" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37/SqliteTypeResolver///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37/-sqlite-type-resolver/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sqlite</span><wbr><span>Type</span><wbr><span><span>Resolver</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+  <div class="toc--part" id="sqlite-3-37-nav-submenu-1" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar////PointingToDeclaration//-738308494" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.sqlite_3_37.grammar" onclick="window.handleTocButtonClick(event, 'sqlite-3-37-nav-submenu-1')"></button><a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>sqlite_3_37.</span><wbr><span>grammar</span></a><a class="toc--skip-link" href="../dialects/sqlite-3-37/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-1-0" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar/SqliteParser///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar/-sqlite-parser/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Sqlite</span><wbr><span><span>Parser</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-1-1" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar/SqliteParserUtil///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar/-sqlite-parser-util/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon object"></span><span><span>Sqlite</span><wbr><span>Parser</span><wbr><span><span>Util</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+  <div class="toc--part" id="sqlite-3-37-nav-submenu-2" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi////PointingToDeclaration//-738308494" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi" onclick="window.handleTocButtonClick(event, 'sqlite-3-37-nav-submenu-2')"></button><a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>sqlite_3_37.</span><wbr><span>grammar.</span><wbr><span>psi</span></a><a class="toc--skip-link" href="../dialects/sqlite-3-37/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-2-0" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/SqliteOverrides///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/-sqlite-overrides/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Sqlite</span><wbr><span><span>Overrides</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-2-1" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/SqliteStrict///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/-sqlite-strict/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Sqlite</span><wbr><span><span>Strict</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-2-2" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/SqliteTableOption///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/-sqlite-table-option/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Sqlite</span><wbr><span>Table</span><wbr><span><span>Option</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-2-3" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/SqliteTypes///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <button class="toc--button" aria-expanded="false" aria-label="SqliteTypes" onclick="window.handleTocButtonClick(event, 'sqlite-3-37-nav-submenu-2-3')"></button><a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/-sqlite-types/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface"></span><span><span>Sqlite</span><wbr><span><span>Types</span></span></span></span></a><a class="toc--skip-link" href="../dialects/sqlite-3-37/">Skip to content</a>
+    </div>
+    <div class="toc--part" id="sqlite-3-37-nav-submenu-2-3-0" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/SqliteTypes.Factory///PointingToDeclaration//-738308494" data-nesting-level="3">
+     <div class="toc--row">
+      <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/-sqlite-types/-factory/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span><span>Factory</span></span></span></span></a>
+     </div>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-2-4" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/SqliteVisitor///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi/-sqlite-visitor/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Sqlite</span><wbr><span><span>Visitor</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+  <div class="toc--part" id="sqlite-3-37-nav-submenu-3" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl////PointingToDeclaration//-738308494" data-nesting-level="1">
+   <div class="toc--row">
+    <button class="toc--button" aria-expanded="false" aria-label="app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl" onclick="window.handleTocButtonClick(event, 'sqlite-3-37-nav-submenu-3')"></button><a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/index.html" class="toc--link"><span>app.</span><wbr><span>cash.</span><wbr><span>sqldelight.</span><wbr><span>dialects.</span><wbr><span>sqlite_3_37.</span><wbr><span>grammar.</span><wbr><span>psi.</span><wbr><span>impl</span></a><a class="toc--skip-link" href="../dialects/sqlite-3-37/">Skip to content</a>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-3-0" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/SqliteOverridesImpl///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/-sqlite-overrides-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Sqlite</span><wbr><span>Overrides</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-3-1" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/SqliteStrictImpl///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/-sqlite-strict-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Sqlite</span><wbr><span>Strict</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqlite-3-37-nav-submenu-3-2" pageid="sqlite-3-37::app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/SqliteTableOptionImpl///PointingToDeclaration//-738308494" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="../dialects/sqlite-3-37/app.cash.sqldelight.dialects.sqlite_3_37.grammar.psi.impl/-sqlite-table-option-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Sqlite</span><wbr><span>Table</span><wbr><span>Option</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+  </div>
+ </div>
  <div class="toc--part" id="sqlite-3-38-nav-submenu" pageid="sqlite-3-38::////PointingToDeclaration//1372981875" data-nesting-level="0">
   <div class="toc--row">
    <button class="toc--button" aria-expanded="false" aria-label="sqlite-3-38" onclick="window.handleTocButtonClick(event, 'sqlite-3-38-nav-submenu')"></button><a href="../dialects/sqlite-3-38/index.html" class="toc--link"><span><span>sqlite-3-38</span></span></a><a class="toc--skip-link" href="../dialects/sqlite-3-38/">Skip to content</a>
