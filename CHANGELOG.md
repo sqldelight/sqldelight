@@ -10,7 +10,7 @@
 - [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
 - [SQLite Dialect] Add support for SQLite 3.44 aggregate functions DISTINCT, ORDER BY and FILTER (#6236 by @griffio)
 - [SQLite Dialect] Add support for SQLite 3.37 STRICT table (#6230 by @griffio)
-- [Compiler] add allTableNames function
+- [Compiler] Add `allTableNames` function to schema (#6245 by @edenman)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
