@@ -266,6 +266,24 @@ class CodegenExcludedColumnsTest {
     )
   }
 
+  @Test fun `codegen excluded column names must match schema case`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  removed TEXT
+      |);
+      """.trimMargin(),
+      tempFolder,
+      codegenExcludedColumns = setOf("Test.removed", "test.Removed"),
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Unknown column 'Removed' on table 'test' referenced by codegenExcludedColumns value 'test.Removed'.",
+      "Unknown table 'Test' referenced by codegenExcludedColumns value 'Test.removed'.",
+    )
+  }
+
   @Test fun `explicit insert column list with codegen excluded column fails compilation`() {
     val result = FixtureCompiler.compileSql(
       """

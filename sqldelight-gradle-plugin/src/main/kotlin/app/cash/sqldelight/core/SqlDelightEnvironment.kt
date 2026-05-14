@@ -131,17 +131,17 @@ class SqlDelightEnvironment(
 
     val tables = linkedMapOf<String, MutableSet<String>>()
     schemaTables(sourceFiles).forEach { table ->
-      tables.getOrPut(table.tableName.name.lowercase()) { linkedSetOf() }
-        .addAll(table.query.columns.mapNotNull { ((it.element as? NamedElement)?.name)?.lowercase() })
+      tables.getOrPut(table.tableName.name) { linkedSetOf() }
+        .addAll(table.query.columns.mapNotNull { (it.element as? NamedElement)?.name })
     }
 
     val specs = codegenExcludedColumns.mapNotNull { it.toCodegenExcludedColumnSpec() }
     val schemaErrors = codegenExcludedColumns.mapNotNull { excludedColumn ->
       val spec = excludedColumn.toCodegenExcludedColumnSpec()
         ?: return@mapNotNull invalidCodegenExcludedColumnMessage(excludedColumn)
-      val tableColumns = tables[spec.tableName.lowercase()]
+      val tableColumns = tables[spec.tableName]
         ?: return@mapNotNull "Unknown table '${spec.tableName}' referenced by codegenExcludedColumns value '${spec.rawValue}'."
-      if (spec.columnName.lowercase() !in tableColumns) {
+      if (spec.columnName !in tableColumns) {
         return@mapNotNull "Unknown column '${spec.columnName}' on table '${spec.tableName}' referenced by codegenExcludedColumns value '${spec.rawValue}'."
       }
       null
@@ -443,8 +443,7 @@ class SqlDelightEnvironment(
     val columnName: String,
   ) {
     fun matches(tableName: String, columnName: String): Boolean {
-      return this.tableName.equals(tableName, ignoreCase = true) &&
-        this.columnName.equals(columnName, ignoreCase = true)
+      return this.tableName == tableName && this.columnName == columnName
     }
   }
 

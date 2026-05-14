@@ -292,6 +292,7 @@ Defaults to `true`.
 Type: `SetProperty<String>`
 
 A set of `table.column` values to omit from generated models and expanded `SELECT *` projections.
+Table and column names must use the same case as the SQLDelight schema source.
 This only affects code generation; it does not change the SQL schema or generated migration output.
 
 This can be used to update generated Kotlin APIs before a follow-up schema migration drops the column.

@@ -63,7 +63,6 @@ private data class CodegenExcludedColumnSpec(
   val columnName: String,
 ) {
   fun matches(tableName: String, columnName: String): Boolean {
-    return this.tableName.equals(tableName, ignoreCase = true) &&
-      this.columnName.equals(columnName, ignoreCase = true)
+    return this.tableName == tableName && this.columnName == columnName
   }
 }
