@@ -5,6 +5,7 @@ import app.cash.sqldelight.core.compiler.TableInterfaceGenerator
 import app.cash.sqldelight.dialects.hsql.HsqlDialect
 import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
+import app.cash.sqldelight.dialects.sqlite_3_37.SqliteDialect as SqliteDialect337
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withInvariantLineSeparators
 import com.google.common.truth.Truth.assertThat
@@ -419,6 +420,55 @@ class InterfaceGeneration {
       |  public val bioguide_id: String,
       |  public val score_year: Int,
       |  public val score: Int,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `strict table integer primary key generates non-nullable type to represent default rowid`() {
+    val result = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A (
+      |  id INTEGER PRIMARY KEY
+      |) STRICT;
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = SqliteDialect337(),
+    )
+
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class A(
+      |  public val id: kotlin.Long,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `strict table composite primary key generates non-null types as there are no default values`() {
+    val result = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE A (
+      |  id INTEGER,
+      |  txt TEXT,
+      |  PRIMARY KEY(id, txt)
+      |) STRICT;
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = SqliteDialect337(),
+    )
+
+    val generator = TableInterfaceGenerator(result.sqlStatements().first().statement.createTableStmt!!.tableExposed())
+    assertThat(generator.kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class A(
+      |  public val id: kotlin.Long,
+      |  public val txt: kotlin.String,
       |)
       |
       """.trimMargin(),

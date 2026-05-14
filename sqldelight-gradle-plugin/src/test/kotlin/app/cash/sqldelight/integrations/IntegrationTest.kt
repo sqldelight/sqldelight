@@ -159,6 +159,15 @@ class IntegrationTest {
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
+  @Test fun integrationTestsSqlite_3_37() {
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/integration-sqlite-3-37"))
+      .withArguments("clean", "check", "--stacktrace")
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
   @Test fun integrationTestsSqlite_3_38() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/integration-sqlite-3-38"))
