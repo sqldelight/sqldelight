@@ -352,4 +352,26 @@ class OptimisticLockAnnotatorTest : SqlDelightProjectTestCase() {
 
     myFixture.checkHighlighting()
   }
+
+  fun testMultiRowUpdateIsAllowed() {
+    myFixture.configureByText(
+      SqlDelightFileType,
+      """
+        |CREATE TABLE test(
+        |  id TEXT AS VALUE NOT NULL,
+        |  version INTEGER AS LOCK NOT NULL,
+        |  text TEXT NOT NULL
+        |);
+        |
+        |updateText:
+        |UPDATE test
+        |SET
+        |  text = :text,
+        |  version = version + 1
+        |;
+      """.trimMargin(),
+    )
+
+    myFixture.checkHighlighting()
+  }
 }

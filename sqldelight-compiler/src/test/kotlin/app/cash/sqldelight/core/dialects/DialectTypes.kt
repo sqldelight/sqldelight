@@ -9,7 +9,9 @@ import app.cash.sqldelight.core.TestDialect.SQLITE_3_24
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_25
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_30
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_35
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_37
 import app.cash.sqldelight.core.TestDialect.SQLITE_3_38
+import app.cash.sqldelight.core.TestDialect.SQLITE_3_44
 import app.cash.sqldelight.dialects.hsql.HsqlDialect
 import app.cash.sqldelight.dialects.mysql.MySqlDialect
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
@@ -18,24 +20,24 @@ import com.squareup.kotlinpoet.LONG
 
 internal val TestDialect.textType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_38, POSTGRESQL -> "TEXT"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_37, SQLITE_3_38, SQLITE_3_44, POSTGRESQL -> "TEXT"
     HSQL -> "VARCHAR(8)"
   }
 
 internal val TestDialect.blobType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_38, HSQL -> "BLOB"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_37, SQLITE_3_38, SQLITE_3_44, HSQL -> "BLOB"
     POSTGRESQL -> "BYTEA"
   }
 
 internal val TestDialect.intType
   get() = when (this) {
-    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_38, POSTGRESQL, HSQL -> "INTEGER"
+    MYSQL, SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_37, SQLITE_3_38, SQLITE_3_44, POSTGRESQL, HSQL -> "INTEGER"
   }
 
 internal val TestDialect.intKotlinType
   get() = when (this) {
-    SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_38 -> LONG
+    SQLITE_3_24, SQLITE_3_18, SQLITE_3_25, SQLITE_3_30, SQLITE_3_35, SQLITE_3_37, SQLITE_3_38, SQLITE_3_44 -> LONG
     MYSQL, POSTGRESQL, HSQL -> INT
   }
 

@@ -1,0 +1,50 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.ASC"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.DESC"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.ALL"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.BY"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.COLLATE"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.DISTINCT"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.LP"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.ORDER"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.RP"
+      "static com.alecstrong.sql.psi.core.psi.SqlTypes.WHERE"
+      "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParser.window_function_expr_real"
+      "static app.cash.sqldelight.dialects.sqlite_3_25.grammar.SqliteParserUtil.windowFunctionExprExt"
+      "static app.cash.sqldelight.dialects.sqlite_3_38.grammar.SqliteParser.json_expression_real"
+      "static app.cash.sqldelight.dialects.sqlite_3_38.grammar.SqliteParserUtil.jsonExpressionExt"
+  ]
+}
+
+overrides ::= extension_expr
+
+extension_expr ::= sqlite_3_25_window_function_expr | sqlite_3_38_json_expr | aggregate_function_expr {
+  extends = "app.cash.sqldelight.dialects.sqlite_3_38.grammar.psi.impl.SqliteExtensionExprImpl"
+  implements = "app.cash.sqldelight.dialects.sqlite_3_38.grammar.psi.SqliteExtensionExpr"
+  override = true
+}
+
+ordering_term ::= <<expr '-1'>> [ COLLATE {collation_name} ] [ ASC | DESC ] [ 'NULLS' ( 'FIRST' | 'LAST' ) ] {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlOrderingTermImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlOrderingTerm"
+  override = true
+}
+
+aggregate_function_expr ::= ('string_agg' | 'group_concat') LP [ DISTINCT ] <<expr '-1'>> [ COMMA {string_literal} ] [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+[ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+}
+
+private sqlite_3_25_window_function_expr ::= <<windowFunctionExprExt <<window_function_expr_real>>>>
+private sqlite_3_38_json_expr ::= <<jsonExpressionExt <<json_expression_real>>>>
+

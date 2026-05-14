@@ -8,6 +8,8 @@
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
 - [PostgreSQL Dialect] Add basic LTREE support (#5880 by @yesitskev @griffio)
 - [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
+- [SQLite Dialect] Add support for SQLite 3.44 aggregate functions DISTINCT, ORDER BY and FILTER (#6236 by @griffio)
+- [SQLite Dialect] Add support for SQLite 3.37 STRICT table (#6230 by @griffio)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
@@ -17,6 +19,10 @@
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
 - [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
+- [PostgreSQL Dialect] Improve IDE plugin for PostgreSQL dialect (#6209 by @griffio)
+- [Intellij Plugin] IDE plugin can perform code completions for all dialects (#6210 by @griffio)
+- [Gradle Plugin] Fix circular dependency error running verify database task (#6221 by @griffio)
+- [Compiler] Fix optimistic lock for multirow update (#6240 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2

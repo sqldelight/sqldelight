@@ -154,6 +154,10 @@ abstract class SqlDelightDatabase @Inject constructor(
     return project.provider { sourceCollector.sourceKeys() }
   }
 
+  internal fun sourceFoldersFor(sourceKey: Source.Key): Provider<Set<SqlDelightSourceFolderImpl>> {
+    return sourceCollector.sourceFoldersFor(sourceKey)
+  }
+
   internal fun registerTasks() {
     configureOnSources { source ->
       val allFiles = sourceCollector.sourceFolders(source)
@@ -337,6 +341,13 @@ abstract class SqlDelightDatabase @Inject constructor(
       return folderProvider
     }
 
+    fun sourceFoldersFor(sourceKey: Source.Key): Provider<Set<SqlDelightSourceFolderImpl>> {
+      return project.provider {
+        compilationUnits[sourceKey]?.get()?.sourceFolders
+          ?: emptySet()
+      }
+    }
+
     private fun provideSourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
       val sourceFolders = source.sourceDirectories.map { dirs ->
         val declaredSet = srcDirs.mapTo(mutableSetOf()) { dir ->
@@ -354,10 +365,10 @@ abstract class SqlDelightDatabase @Inject constructor(
         dependencies.flatMap { dependency ->
           val dependencySourceKey = source.closestMatch(dependency.sourceKeys().get())
             ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
-          val compilationUnit = dependency.getProperties().get().compilationUnits
-            .single { it.name == dependencySourceKey.name }
 
-          return@flatMap compilationUnit.sourceFolders.map {
+          val dependencyFolders = dependency.sourceFoldersFor(dependencySourceKey).get()
+
+          return@flatMap dependencyFolders.map {
             SqlDelightSourceFolderImpl(
               folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
               dependency = true,

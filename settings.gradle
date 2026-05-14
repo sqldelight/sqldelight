@@ -9,7 +9,7 @@ pluginManagement {
 }
 
 plugins {
-    id "com.gradle.develocity" version "4.4.0"
+    id "com.gradle.develocity" version "4.4.1"
     id "org.gradle.toolchains.foojay-resolver-convention" version "1.0.0"
 }
 
@@ -39,7 +39,9 @@ include ':dialects:sqlite-3-25'
 include ':dialects:sqlite-3-30'
 include ':dialects:sqlite-3-33'
 include ':dialects:sqlite-3-35'
+include ':dialects:sqlite-3-37'
 include ':dialects:sqlite-3-38'
+include ':dialects:sqlite-3-44'
 include ':drivers:android-driver'
 include ':drivers:jdbc-driver'
 include ':drivers:r2dbc-driver'

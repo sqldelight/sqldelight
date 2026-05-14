@@ -1,0 +1,30 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.grammarKitComposer)
+  alias(libs.plugins.publish)
+  alias(libs.plugins.dokka)
+  id("app.cash.sqldelight.toolchain.compiler")
+  id("java-test-fixtures")
+}
+
+grammarKit {
+  intellijRelease.set(libs.versions.idea)
+}
+
+dependencies {
+  api projects.dialects.sqlite338
+
+  compileOnly(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
+  }
+
+  testFixturesApi(projects.sqldelightCompiler.environment) {
+    targetConfiguration = "shadow"
+  }
+  testFixturesApi(testFixtures(projects.dialects.sqlite338))
+  testFixturesApi(testFixtures(libs.sqlPsi))
+
+  testImplementation libs.junit
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

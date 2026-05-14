@@ -1,10 +1,10 @@
 package app.cash.sqldelight.dialects.sqlite_3_38
 
 import app.cash.sqldelight.dialect.api.TypeResolver
-import app.cash.sqldelight.dialects.sqlite_3_35.SqliteDialect as Sqlite335Dialect
+import app.cash.sqldelight.dialects.sqlite_3_37.SqliteDialect as Sqlite337Dialect
 import app.cash.sqldelight.dialects.sqlite_3_38.grammar.SqliteParserUtil
 
-class SqliteDialect : Sqlite335Dialect() {
+open class SqliteDialect : Sqlite337Dialect() {
   override fun setup() {
     super.setup()
     SqliteParserUtil.reset()
