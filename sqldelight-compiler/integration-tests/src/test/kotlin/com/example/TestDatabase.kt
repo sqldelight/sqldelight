@@ -27,6 +27,6 @@ public interface TestDatabase : Transacter {
       teamAdapter: Team.Adapter,
     ): TestDatabase = TestDatabase::class.newInstance(driver, playerAdapter, teamAdapter)
 
-    public fun allTableNames(): List<String> = listOf("player", "group", "myftstable", "myftstable2", "team")
+    public fun allTableNames(): List<String> = listOf("group", "myftstable", "myftstable2", "player", "team")
   }
 }

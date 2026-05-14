@@ -1,0 +1,23 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+   "static com.alecstrong.sql.psi.core.psi.SqlTypes.ROWID"
+   "static com.alecstrong.sql.psi.core.psi.SqlTypes.WITHOUT"
+  ]
+}
+
+overrides ::= table_option
+
+strict ::= 'STRICT'
+
+table_option ::= WITHOUT ROWID | strict {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlTableOptionImpl"
+  override = true
+}

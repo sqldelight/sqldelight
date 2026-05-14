@@ -135,9 +135,10 @@ internal class DatabaseGenerator(
   }
 
   private fun buildTableNamesFunc(): FunSpec {
-    val tableNames: Set<String> = moduleFolders.flatMap { it.queryFiles() }
+    val tableNames: List<String> = moduleFolders.flatMap { it.queryFiles() }
       .flatMap { it.tables(includeAll = true).map { table -> table.tableName.name } }
-      .toSet()
+      .distinct()
+      .sorted()
     val tableNameParamsStr = tableNames.joinToString(transform = { "%S" }, separator = ", ")
     val tableNamesFunction = FunSpec.builder("allTableNames")
       .returns(LIST.parameterizedBy(String::class.asTypeName()))
