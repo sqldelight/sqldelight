@@ -180,6 +180,29 @@ class CodegenExcludedColumnsTest {
     )
   }
 
+  @Test fun `select result column with codegen excluded column fails compilation`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test(
+      |  id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT NOT NULL,
+      |  removed TEXT NOT NULL
+      |);
+      |
+      |selectTest:
+      |SELECT id, removed AS removed_value, value
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      codegenExcludedColumns = setOf("test.removed"),
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Column 'removed' on table 'test' is excluded from codegen but is explicitly listed in a SELECT statement. " +
+        "Remove it from the query or from codegenExcludedColumns value 'test.removed'.",
+    )
+  }
+
   @Test fun `codegen excluded columns added by migrations are omitted from generated models`() {
     FixtureCompiler.writeSql(
       """

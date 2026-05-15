@@ -180,23 +180,27 @@ class SqlDelightEnvironment(
               "but is explicitly listed in an INSERT statement. Remove it from the query or " +
               "from codegenExcludedColumns value '${spec.rawValue}'."
           }
-        } + validateExplicitReturningColumnReferences(file, specs)
+        } + validateExplicitResultColumnReferences(file, specs)
       }
   }
 
-  private fun validateExplicitReturningColumnReferences(
+  private fun validateExplicitResultColumnReferences(
     file: SqlFileBase,
     specs: List<CodegenExcludedColumnSpec>,
   ): List<String> {
     return PsiTreeUtil.findChildrenOfType(file, SqlResultColumn::class.java).flatMap { resultColumn ->
-      if (resultColumn.returningClause() == null) return@flatMap emptyList()
-
       val expr = resultColumn.expr ?: return@flatMap emptyList()
+      val referenceContext = if (resultColumn.returningClause() == null) {
+        "SELECT statement"
+      } else {
+        "RETURNING clause"
+      }
+
       PsiTreeUtil.findChildrenOfType(expr, SqlColumnName::class.java).mapNotNull { columnName ->
         val spec = columnName.codegenExcludedColumnSpec(specs) ?: return@mapNotNull null
 
         "Column '${spec.columnName}' on table '${spec.tableName}' is excluded from codegen " +
-          "but is explicitly listed in a RETURNING clause. Remove it from the query or " +
+          "but is explicitly listed in a $referenceContext. Remove it from the query or " +
           "from codegenExcludedColumns value '${spec.rawValue}'."
       }
     }.distinct()
@@ -228,9 +232,14 @@ class SqlDelightEnvironment(
   }
 
   private fun SqlColumnName.columnDefSourceForCodegenExclusion(): ColumnDefMixin? {
+    return columnDefSourceForCodegenExclusion(mutableSetOf())
+  }
+
+  private fun SqlColumnName.columnDefSourceForCodegenExclusion(seen: MutableSet<SqlColumnName>): ColumnDefMixin? {
+    if (!seen.add(this)) return null
     val resolved = reference?.resolve()
     if (resolved?.parent is ColumnDefMixin) return resolved.parent as ColumnDefMixin
-    return (resolved as? SqlColumnName)?.columnDefSourceForCodegenExclusion()
+    return (resolved as? SqlColumnName)?.columnDefSourceForCodegenExclusion(seen)
   }
 
   @JvmName("forSqlFileBases")
