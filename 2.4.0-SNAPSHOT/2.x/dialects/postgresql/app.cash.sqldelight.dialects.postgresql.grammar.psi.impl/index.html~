@@ -114,6 +114,21 @@
               </div>
             </div>
           </div>
+<a data-name="1485307947%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAlterIndexStmtImpl" id="1485307947%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-alter-index-stmt-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Alter</span><wbr><span>Index</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1485307947%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-alter-index-stmt-impl/index.html">PostgreSqlAlterIndexStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-alter-index-mixin/index.html">AlterIndexMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-alter-index-stmt/index.html">PostgreSqlAlterIndexStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1889539923%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAlterPolicyRenameImpl" id="-1889539923%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -2304,6 +2319,36 @@
               </div>
             </div>
           </div>
+<a data-name="-1872393940%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlReindexStmtImpl" id="-1872393940%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-reindex-stmt-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Reindex</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1872393940%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-reindex-stmt-impl/index.html">PostgreSqlReindexStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-reindex-stmt/index.html">PostgreSqlReindexStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1468754311%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlResetStorageParametersImpl" id="-1468754311%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-reset-storage-parameters-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Reset</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1468754311%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-reset-storage-parameters-impl/index.html">PostgreSqlResetStorageParametersImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-reset-storage-parameters/index.html">PostgreSqlResetStorageParameters</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-898069358%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlReturningClauseImpl" id="-898069358%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -2480,6 +2525,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-set-stmt-impl/index.html">PostgreSqlSetStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-stmt/index.html">PostgreSqlSetStmt</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="886092748%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlSetStorageParametersImpl" id="886092748%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-set-storage-parameters-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Set</span><wbr><span>Storage</span><wbr><span>Parameters</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="886092748%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-set-storage-parameters-impl/index.html">PostgreSqlSetStorageParametersImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-set-storage-parameters/index.html">PostgreSqlSetStorageParameters</a></div></div></div>
                 </div>
               </div>
             </div>
