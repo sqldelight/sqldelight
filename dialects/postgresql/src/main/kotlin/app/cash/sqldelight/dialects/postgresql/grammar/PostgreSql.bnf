@@ -697,7 +697,7 @@ array_value_expression ::= 'ARRAY' ( '[]' | '['  <<expr '-1'>> [ ( COMMA <<expr 
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.ArrayValueExpressionMixin"
 }
 
-extension_stmt ::= create_enum_type_stmt| drop_type_stmt | alter_type_stmt | drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
+extension_stmt ::= reindex_stmt | alter_index_stmt | create_enum_type_stmt| drop_type_stmt | alter_type_stmt | drop_function_stmt | create_function_stmt | create_sequence_stmt | copy_stdin | truncate_stmt | set_stmt | drop_sequence_stmt |
  alter_sequence_stmt | create_extension_stmt | drop_extension_stmt | alter_extension_stmt | create_policy_stmt | alter_policy_stmt | drop_policy_stmt | comment_on_extension_stmt {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionStmtImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionStmt"
@@ -756,6 +756,16 @@ alter_extension_stmt ::= ALTER 'EXTENSION' [ IF EXISTS ] extension_name ( UPDATE
 
 copy_stdin ::= 'COPY' [ {database_name} DOT ] {table_name} [ AS {table_alias} ] [ LP {column_name} ( COMMA {column_name} ) * RP ] FROM 'STDIN' [ [ WITH ] LP copy_option ( COMMA copy_option) * RP ] [ WHERE <<expr '-1'>> ] {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.CopyMixin"
+}
+
+set_storage_parameters ::= SET LP storage_parameters EQ ( storage_parameter ) ( COMMA storage_parameters EQ ( storage_parameter ) ) * RP
+reset_storage_parameters ::= 'RESET' LP storage_parameters ( COMMA storage_parameters ) * RP
+
+reindex_stmt ::= 'REINDEX' ( INDEX [ 'CONCURRENTLY' ] {index_name} | TABLE [ 'CONCURRENTLY' ] {table_name} )
+
+alter_index_stmt ::= ALTER INDEX [ IF EXISTS ] {index_name} ( reset_storage_parameters | set_storage_parameters | RENAME TO {index_name} ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AlterIndexMixin"
+  pin = 2
 }
 
 sequence_name ::= id | string

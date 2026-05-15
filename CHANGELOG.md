@@ -8,6 +8,7 @@
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
 - [PostgreSQL Dialect] Add basic LTREE support (#5880 by @yesitskev @griffio)
 - [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
+- [PostgreSQL Dialect] Add support for ALTER INDEX (#6224 by @griffio)
 - [SQLite Dialect] Add support for SQLite 3.44 aggregate functions DISTINCT, ORDER BY and FILTER (#6236 by @griffio)
 - [SQLite Dialect] Add support for SQLite 3.37 STRICT table (#6230 by @griffio)
 - [Compiler] Add `allTableNames` function to schema (#6245 by @edenman)
