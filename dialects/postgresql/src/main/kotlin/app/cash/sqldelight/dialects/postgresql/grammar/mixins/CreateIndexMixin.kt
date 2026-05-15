@@ -34,26 +34,26 @@ internal abstract class CreateIndexMixin :
             "brin" -> when (sp.first.text) {
               "autosummarize" -> autoSummarize(sp.second, annotationHolder)
               "pages_per_range" -> pagesPerRange(sp.second, annotationHolder)
-              else -> unrecongizedParameter(sp.first, annotationHolder)
+              else -> unrecognizedParameter(sp.first, annotationHolder)
             }
             "btree" -> when (sp.first.text) {
               "fillfactor" -> fillFactor(sp.second, annotationHolder)
               "deduplicate_items" -> deduplicateItems(sp.second, annotationHolder)
-              else -> unrecongizedParameter(sp.first, annotationHolder)
+              else -> unrecognizedParameter(sp.first, annotationHolder)
             }
             "gin" -> when (sp.first.text) {
               "fastupdate" -> fastUpdate(sp.second, annotationHolder)
               "gin_pending_list_limit" -> ginPendingListLimit(sp.second, annotationHolder)
-              else -> unrecongizedParameter(sp.first, annotationHolder)
+              else -> unrecognizedParameter(sp.first, annotationHolder)
             }
             "gist" -> when (sp.first.text) {
               "fillfactor" -> fillFactor(sp.second, annotationHolder)
               "buffering" -> buffering(sp.second, annotationHolder)
-              else -> unrecongizedParameter(sp.first, annotationHolder)
+              else -> unrecognizedParameter(sp.first, annotationHolder)
             }
             "hash" -> when (sp.first.text) {
               "fillfactor" -> fillFactor(sp.second, annotationHolder)
-              else -> unrecongizedParameter(sp.first, annotationHolder)
+              else -> unrecognizedParameter(sp.first, annotationHolder)
             }
           }
         }
@@ -146,7 +146,7 @@ internal abstract class CreateIndexMixin :
       }
     }
 
-    fun unrecongizedParameter(input: PsiElement, annotationHolder: SqlAnnotationHolder) {
+    fun unrecognizedParameter(input: PsiElement, annotationHolder: SqlAnnotationHolder) {
       input.text.let { parameter ->
         annotationHolder.createErrorAnnotation(
           input,

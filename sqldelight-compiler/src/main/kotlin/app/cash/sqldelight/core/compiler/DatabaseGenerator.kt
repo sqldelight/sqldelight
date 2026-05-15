@@ -46,6 +46,7 @@ import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.KModifier.VARARG
+import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -99,7 +100,6 @@ internal class DatabaseGenerator(
       invoke.addParameter(it.name, it.type)
       invokeReturn.add(", %L", it.name)
     }
-
     return typeSpec
       .addType(
         TypeSpec.companionObjectBuilder()
@@ -128,9 +128,23 @@ internal class DatabaseGenerator(
               )
               .build(),
           )
+          .addFunction(buildTableNamesFunc())
           .build(),
       )
       .build()
+  }
+
+  private fun buildTableNamesFunc(): FunSpec {
+    val tableNames: List<String> = moduleFolders.flatMap { it.queryFiles() }
+      .flatMap { it.tables(includeAll = true).map { table -> table.tableName.name } }
+      .distinct()
+      .sorted()
+    val tableNameParamsStr = tableNames.joinToString(transform = { "%S" }, separator = ", ")
+    val tableNamesFunction = FunSpec.builder("allTableNames")
+      .returns(LIST.parameterizedBy(String::class.asTypeName()))
+      .addStatement("return listOf($tableNameParamsStr)", *tableNames.toTypedArray())
+      .build()
+    return tableNamesFunction
   }
 
   private fun forAdapters(

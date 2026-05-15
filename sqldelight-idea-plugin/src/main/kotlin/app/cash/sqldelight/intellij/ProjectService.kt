@@ -19,11 +19,9 @@ import app.cash.sqldelight.core.SqlDelightFileIndex
 import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.MIGRATION_EXTENSION
-import app.cash.sqldelight.core.lang.MigrationFileType
 import app.cash.sqldelight.core.lang.MigrationParserDefinition
 import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.core.lang.SqlDelightFile
-import app.cash.sqldelight.core.lang.SqlDelightFileType
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialect.api.TypeResolver
 import app.cash.sqldelight.intellij.gradle.FileIndexMap
@@ -39,6 +37,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -57,7 +56,6 @@ import java.io.PrintStream
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.reflect.jvm.jvmName
-import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import timber.log.Timber
 
 class ProjectService(val project: Project) :
@@ -121,7 +119,7 @@ class ProjectService(val project: Project) :
   }
 
   private fun VirtualFile.findConfiguredFileIndex(): SqlDelightFileIndex? {
-    val module = getModule(project) ?: return null
+    val module = ModuleUtilCore.findModuleForFile(this, project) ?: return null
     val fileIndex = SqlDelightFileIndex.getInstance(module)
     return fileIndex.takeIf { it.isConfigured }
   }
