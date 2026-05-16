@@ -27,6 +27,7 @@ import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.DumbService
@@ -42,7 +43,6 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.childrenOfType
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
-import org.jetbrains.kotlin.idea.util.projectStructure.getModule
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
@@ -69,7 +69,7 @@ class SqlDelightGotoDeclarationHandler : GotoDeclarationHandler {
     val function = targetData.function
     val elementFile = targetData.containingFile
 
-    val module = elementFile?.getModule(function.project) ?: return emptyArray()
+    val module = elementFile?.let { ModuleUtilCore.findModuleForFile(it, function.project) } ?: return emptyArray()
 
     // Only handle files under the generated sqlite directory.
     val fileIndex = SqlDelightFileIndex.getInstance(module)
