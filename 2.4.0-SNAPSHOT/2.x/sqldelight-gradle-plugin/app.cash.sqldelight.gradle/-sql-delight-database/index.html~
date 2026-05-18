@@ -119,7 +119,22 @@
       </div>
       <div data-togglable="PROPERTY">
         <h2 class="tableheader">Properties</h2>
-        <div class="table"><a data-name="1043156794%2FProperties%2F-879533229" anchor-label="configurationName" id="1043156794%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+        <div class="table"><a data-name="-411918961%2FProperties%2F-879533229" anchor-label="codegenExcludedColumns" id="-411918961%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="codegen-excluded-columns.html"><span>codegen</span><wbr><span>Excluded</span><wbr><span><span>Columns</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-411918961%2FProperties%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="codegen-excluded-columns.html">codegenExcludedColumns</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/SetProperty///PointingToDeclaration/">SetProperty</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1043156794%2FProperties%2F-879533229" anchor-label="configurationName" id="1043156794%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">

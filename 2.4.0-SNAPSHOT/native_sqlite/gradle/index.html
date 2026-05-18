@@ -3948,6 +3948,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#codegenexcludedcolumns" class="md-nav__link">
+    <span class="md-ellipsis">
+      codegenExcludedColumns
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5582,6 +5591,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#codegenexcludedcolumns" class="md-nav__link">
+    <span class="md-ellipsis">
+      codegenExcludedColumns
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5886,9 +5904,36 @@ will be rewritten as <code>SELECT hockey_player.id, hockey_player.name, hockey_p
 </div>
 </div>
 </div>
+<hr />
+<h3 id="codegenexcludedcolumns"><code>codegenExcludedColumns</code><a class="headerlink" href="#codegenexcludedcolumns" title="Permanent link">&para;</a></h3>
+<p>Type: <code>SetProperty&lt;String&gt;</code></p>
+<p>A set of <code>table.column</code> values to omit from generated models and expanded <code>SELECT *</code> projections.
+Table and column names must use the same case as the SQLDelight schema source.
+This only affects code generation; it does not change the SQL schema or generated migration output.</p>
+<p>This can be used to update generated Kotlin APIs before a follow-up schema migration drops the column.
+SQLDelight fails compilation if a configured table or column does not exist, or if a model-bound insert,
+<code>SELECT</code> result column, or <code>RETURNING</code> clause explicitly lists a codegen-excluded column.
+Because this is codegen-only, applications are responsible for ensuring any still-existing excluded
+column can be omitted from writes until it is dropped, for example with a nullable column or default value.</p>
+<p>If your <code>.sq</code> files contain <code>CREATE TABLE</code> schema definitions, keep the excluded column in the schema
+definition until the physical schema migration drops it. Remove explicit query references to the column,
+but leave the schema source reflecting the current database shape.</p>
+<p>Defaults to empty.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Kotlin</label><label for="__tabbed_14_2">Groovy</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">codegenExcludedColumns</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">setOf</span><span class="p">(</span><span class="s">&quot;hockey_player.number&quot;</span><span class="p">))</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">codegenExcludedColumns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hockey_player.number&quot;</span><span class="o">]</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="schema-dependencies">Schema Dependencies<a class="headerlink" href="#schema-dependencies" title="Permanent link">&para;</a></h2>
 <p>You can specify schema dependencies on another module:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Kotlin</label><label for="__tabbed_14_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Kotlin</label><label for="__tabbed_15_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-a/build.gradle.kts</span>
@@ -5921,7 +5966,7 @@ will be rewritten as <code>SELECT hockey_player.id, hockey_player.name, hockey_p
 <p>This looks for <code>MyDatabase</code> in <code>ProjectB</code> and includes it's schema when compiling. For this to work,
 ProjectB must have a database with the same name (<code>MyDatabase</code> in this case) but generate in a
 different package, so here is what <code>ProjectB</code>'s gradle might look like:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Kotlin</label><label for="__tabbed_15_2">Groovy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Kotlin</label><label for="__tabbed_16_2">Groovy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="c1">// project-b/build.gradle.kts</span>
