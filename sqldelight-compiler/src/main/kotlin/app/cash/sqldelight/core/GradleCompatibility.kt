@@ -43,6 +43,17 @@ object GradleCompatibility {
     return databaseProperties.expandSelectStar
   }
 
+  // Fallback on default value of `codegenExcludedColumns` when gradle version is older than 2.4.0
+  fun readCodegenExcludedColumns(propertiesFile: SqlDelightPropertiesFile, databaseProperties: SqlDelightDatabaseProperties): Set<String> {
+    val currentGradleVersion = SemVer(propertiesFile.currentVersion)
+
+    if (currentGradleVersion < SemVer("2.4.0")) {
+      return emptySet()
+    }
+
+    return databaseProperties.codegenExcludedColumns
+  }
+
   private data class SemVer(
     val major: Int,
     val minor: Int,

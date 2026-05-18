@@ -61,6 +61,9 @@ abstract class SqlDelightFile(
   val expandSelectStar: Boolean
     get() = SqlDelightProjectService.getInstance(project).expandSelectStar
 
+  internal val codegenExcludedColumns: Set<String>
+    get() = SqlDelightProjectService.getInstance(project).codegenExcludedColumns
+
   override fun getVirtualFile(): VirtualFile? {
     if (myOriginalFile != null) return myOriginalFile.virtualFile
     return super.getVirtualFile()

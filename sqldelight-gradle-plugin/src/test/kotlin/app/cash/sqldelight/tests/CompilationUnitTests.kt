@@ -66,6 +66,7 @@ class CompilationUnitTests {
         |      packageName = "com.sample.otherdb"
         |      srcDirs('src/main/sqldelight', 'src/main/otherdb')
         |      treatNullAsUnknownForEquality = true
+        |      codegenExcludedColumns.set(['test.removed'])
         |    }
         |  }
         |}
@@ -103,6 +104,7 @@ class CompilationUnitTests {
             dependencies = emptyList(),
             rootDirectory = fixtureRoot,
             treatNullAsUnknownForEquality = true,
+            codegenExcludedColumns = setOf("test.removed"),
           ),
         )
       }

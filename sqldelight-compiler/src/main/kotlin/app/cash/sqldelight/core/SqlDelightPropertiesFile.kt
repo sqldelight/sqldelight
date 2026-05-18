@@ -37,6 +37,7 @@ interface SqlDelightDatabaseProperties : Serializable {
   val rootDirectory: File
   val generateAsync: Boolean
   val expandSelectStar: Boolean
+  val codegenExcludedColumns: Set<String>
 }
 
 /**

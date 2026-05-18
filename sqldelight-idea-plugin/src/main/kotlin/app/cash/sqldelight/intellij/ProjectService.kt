@@ -168,6 +168,8 @@ class ProjectService(val project: Project) :
 
   override var expandSelectStar: Boolean = true
 
+  override var codegenExcludedColumns: Set<String> = emptySet()
+
   override var dialect: SqlDelightDialect = MissingDialect()
 
   override fun setDialect(dialect: SqlDelightDialect, shouldInvalidate: Boolean) {

@@ -285,5 +285,35 @@ Defaults to `true`.
     expandSelectStar = true
     ```
 
-{% include 'common/gradle-dependencies.md' %}
+----
 
+### `codegenExcludedColumns`
+
+Type: `SetProperty<String>`
+
+A set of `table.column` values to omit from generated models and expanded `SELECT *` projections.
+Table and column names must use the same case as the SQLDelight schema source.
+This only affects code generation; it does not change the SQL schema or generated migration output.
+
+This can be used to update generated Kotlin APIs before a follow-up schema migration drops the column.
+SQLDelight fails compilation if a configured table or column does not exist, or if a model-bound insert,
+`SELECT` result column, or `RETURNING` clause explicitly lists a codegen-excluded column.
+Because this is codegen-only, applications are responsible for ensuring any still-existing excluded
+column can be omitted from writes until it is dropped, for example with a nullable column or default value.
+
+If your `.sq` files contain `CREATE TABLE` schema definitions, keep the excluded column in the schema
+definition until the physical schema migration drops it. Remove explicit query references to the column,
+but leave the schema source reflecting the current database shape.
+
+Defaults to empty.
+
+=== "Kotlin"
+    ```kotlin
+    codegenExcludedColumns.set(setOf("hockey_player.number"))
+    ```
+=== "Groovy"
+    ```groovy
+    codegenExcludedColumns = ["hockey_player.number"]
+    ```
+
+{% include 'common/gradle-dependencies.md' %}
