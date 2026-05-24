@@ -1,10 +1,10 @@
 package app.cash.sqldelight.core
 
-import app.cash.sqldelight.core.lang.argumentType
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.core.lang.util.isArrayParameter
+import app.cash.sqldelight.core.lang.util.isAnyExprArrayParameter
+import app.cash.sqldelight.core.lang.util.isSqlInExprArrayParameter
 import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteDialect
@@ -12,6 +12,8 @@ import app.cash.sqldelight.test.util.FixtureCompiler
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnDef
 import com.google.common.truth.Truth.assertThat
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.asClassName
 import java.time.Instant
 import kotlin.test.assertFailsWith
@@ -284,7 +286,7 @@ class BindArgsTest {
       assertThat(it.javaType).isEqualTo(List::class.asClassName())
       assertThat(it.name).isEqualTo("id")
       assertThat(it.column).isSameInstanceAs(column)
-      assertThat(it.bindArg!!.isArrayParameter()).isTrue()
+      assertThat(it.bindArg!!.isSqlInExprArrayParameter()).isTrue()
     }
   }
 
@@ -561,4 +563,60 @@ class BindArgsTest {
   }
 
   private fun SqlBindExpr.argumentType() = typeResolver.argumentType(this)
+
+  @Test fun `bind args for postgresql ANY operator inherit column type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER NOT NULL,
+      |  txt TEXT NOT NULL
+      |);
+      |
+      |selectWithAny:
+      |SELECT *
+      |FROM data
+      |WHERE data.id = ANY (?);
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
+    assertThat(bindArgType.bindArg!!.isAnyExprArrayParameter()).isTrue()
+    // The dialectType for ANY operator is ArrayDialectType, not the primitive type
+    assertThat(bindArgType.dialectType.javaType.toString()).isEqualTo("kotlin.Array<kotlin.Int>")
+    assertThat(bindArgType.javaType.toString()).isEqualTo("kotlin.Array<kotlin.Int>")
+    // For ANY operator, the argument name defaults to "value" because it's wrapped in parentheses
+    assertThat(bindArgType.name).isEqualTo("value")
+    assertThat(bindArgType.column).isSameInstanceAs(column)
+  }
+
+  @Test fun `bind args for postgresql ANY operator with custom adapter inherit type`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER AS example.AnyId NOT NULL,
+      |  txt TEXT NOT NULL
+      |);
+      |
+      |selectWithAnyAdapter:
+      |SELECT *
+      |FROM data
+      |WHERE data.id = ANY (?);
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val column = file.findChildrenOfType<SqlColumnDef>().first()
+    val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
+    assertThat(bindArgType.bindArg!!.isAnyExprArrayParameter()).isTrue()
+    // The dialectType for ANY operator is ArrayDialectType, not the primitive type
+    assertThat(bindArgType.dialectType.javaType).isEqualTo(Array<Any>::class.asClassName().parameterizedBy(ClassName("example", "AnyId")))
+    assertThat(bindArgType.javaType).isEqualTo(Array<Any>::class.asClassName().parameterizedBy(ClassName("example", "AnyId")))
+    // For ANY operator, the argument name defaults to "value" because it's wrapped in parentheses
+    assertThat(bindArgType.name).isEqualTo("value")
+    assertThat(bindArgType.column).isSameInstanceAs(column)
+  }
 }
