@@ -60,8 +60,13 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.asClassName
 
-internal fun SqlBindExpr.isArrayParameter(): Boolean {
+internal fun SqlBindExpr.isSqlInExprArrayParameter(): Boolean {
   return (parent is SqlInExpr && this == parent.lastChild)
+}
+
+internal fun SqlBindExpr.isAnyExprArrayParameter(): Boolean {
+  val child = parent.firstChild
+  return ((child.textMatches("ANY") || child.textMatches("SOME")) && parent.children.last() == this)
 }
 
 internal fun SqlExpr.inferredType(): IntermediateType {
