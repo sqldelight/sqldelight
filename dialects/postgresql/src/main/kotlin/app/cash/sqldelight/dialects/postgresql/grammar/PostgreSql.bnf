@@ -515,6 +515,14 @@ select_stmt ::= SELECT ( distinct_on_expr | [ DISTINCT | ALL ] ) {result_column}
   pin = 1
 }
 
+any_operator ::= ( 'ANY' | 'SOME' )
+
+any_operator_expr ::= any_operator LP ( {compound_select_stmt} | {bind_expr} | <<expr '-1'>> ) RP {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AnyOperatorExprMixin"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  pin = 2
+}
+
 lateral ::= 'LATERAL'
 join_operator ::= ( COMMA [ lateral ]
                   | [ NATURAL ] [ ( {left_join_operator} | {right_join_operator} | {full_join_operator} ) [ OUTER ] | INNER | CROSS ] JOIN [ lateral ] ) {
@@ -583,7 +591,7 @@ compound_select_stmt ::= [ {with_clause} ] {select_stmt}  ( {compound_operator} 
   override = true
 }
 
-extension_expr ::= geometry_setsrid_function_stmt | geometry_point_function_stmt | json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | array_value_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | exists_operator_expression | boolean_not_expression | window_function_expr {
+extension_expr ::= any_operator_expr | geometry_setsrid_function_stmt | geometry_point_function_stmt | json_object_agg_stmt | json_agg_stmt | plsql_trigger_var_expression | is_json_expression | overlaps_operator_expression | range_operator_expression | extract_temporal_expression | double_colon_cast_operator_expression | array_value_expression | contains_operator_expression | at_time_zone_operator_expression | regex_match_operator_expression | match_operator_expression | json_function_stmt | array_agg_stmt| string_agg_stmt | json_expression | exists_operator_expression | boolean_not_expression | window_function_expr {
   extends = "com.alecstrong.sql.psi.core.psi.impl.SqlExtensionExprImpl"
   implements = "com.alecstrong.sql.psi.core.psi.SqlExtensionExpr"
   override = true
