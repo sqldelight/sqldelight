@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.TestDialect
 import app.cash.sqldelight.core.compiler.ExecuteQueryGenerator
 import app.cash.sqldelight.core.compiler.MutatorQueryGenerator
 import app.cash.sqldelight.core.dialects.intType
+import app.cash.sqldelight.dialects.postgresql.PostgreSqlDialect
 import app.cash.sqldelight.test.util.FixtureCompiler
 import app.cash.sqldelight.test.util.withUnderscores
 import com.google.common.truth.Truth.assertThat
@@ -1020,6 +1021,56 @@ class MutatorQueryTypeTest {
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
       |  }
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `delete using ANY operator with custom adapter uses encodedJavaTypeForAnyExprArray`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |import example.MyId;
+      |
+      |CREATE TABLE data (
+      |  id Integer AS MyId PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |deleteByIds:
+      |DELETE FROM data
+      |WHERE id = ANY (?);
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
+      dialect = PostgreSqlDialect(),
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    val functionStr = generator.function().toString()
+
+    assertThat(functionStr).contains("Array(value.size) { data_Adapter.idAdapter.encode(value[it]) }")
+
+    assertThat(functionStr).isEqualTo(
+      """
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteByIds(`value`: kotlin.Array<example.MyId>): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |      |DELETE FROM data
+      |      |WHERE id = ANY (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
+      |        var parameterIndex = 0
+      |        bindObject(parameterIndex++, Array(value.size) { data_Adapter.idAdapter.encode(value[it]) })
+      |      }
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
+      |    emit("data")
+      |  }
+      |  return result
       |}
       |
       """.trimMargin(),

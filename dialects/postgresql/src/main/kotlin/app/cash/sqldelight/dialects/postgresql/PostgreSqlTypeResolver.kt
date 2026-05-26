@@ -18,11 +18,13 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AnyOperatorExprMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ArrayValueExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAnyOperatorExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneOperator
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDoubleColonCastOperatorExpression
@@ -310,6 +312,11 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       is PostgreSqlJsonExpression -> {
         IntermediateType(PostgreSqlType.JSON)
       }
+      is PostgreSqlAnyOperatorExpr -> {
+        // the column expr required to resolve the java type is not part of the ANY extension expression
+        val anyType = (parent.parent.parent.parent.firstChild as SqlExpr).postgreSqlType()
+        arrayIntermediateType(anyType) // The assumption is that any bind parameter is an array
+      }
       else -> {
         parentResolver.argumentType(parent, argument)
       }
@@ -424,6 +431,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         )
         arrayIntermediateType(elementType)
       }
+
+      anyOperatorExpr != null -> resolvedType((anyOperatorExpr as AnyOperatorExprMixin).expr)
+
       else -> parentResolver.resolvedType(this)
     }
 
@@ -481,6 +491,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
         ArrayDialectType(type),
+        column = type.column,
       )
     }
 

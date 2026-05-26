@@ -18,7 +18,8 @@ package app.cash.sqldelight.core.lang
 import app.cash.sqldelight.core.compiler.integration.adapterName
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
-import app.cash.sqldelight.core.lang.util.isArrayParameter
+import app.cash.sqldelight.core.lang.util.isAnyExprArrayParameter
+import app.cash.sqldelight.core.lang.util.isSqlInExprArrayParameter
 import app.cash.sqldelight.dialect.api.IntermediateType
 import com.alecstrong.sql.psi.core.psi.Queryable
 import com.intellij.psi.util.PsiTreeUtil
@@ -27,7 +28,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.asClassName
 
-internal fun IntermediateType.argumentType() = if (bindArg?.isArrayParameter() == true) {
+internal fun IntermediateType.argumentType() = if (bindArg?.isSqlInExprArrayParameter() == true) {
   Collection::class.asClassName().parameterizedBy(javaType)
 } else {
   javaType
@@ -42,7 +43,7 @@ internal fun IntermediateType.preparedStatementBinder(
   columnIndex: CodeBlock,
   extractedVariable: String? = null,
 ): CodeBlock {
-  val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaType()
+  val codeBlock = extractedVariable?.let { CodeBlock.of(it) } ?: encodedJavaTypeForAnyExprArray() ?: encodedJavaType()
   if (codeBlock != null) {
     return dialectType.prepareStatementBinder(columnIndex, codeBlock)
   }
@@ -74,6 +75,17 @@ internal fun IntermediateType.encodedJavaType(): CodeBlock? {
     } else {
       value
     }
+  }
+}
+
+internal fun IntermediateType.encodedJavaTypeForAnyExprArray(): CodeBlock? {
+  if (!((bindArg?.isAnyExprArrayParameter()) ?: false)) return null
+
+  val name = this.name
+  return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
+    val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
+    val adapterName = parent!!.tableExposed().adapterName
+    CodeBlock.of("Array($name.size) { %N.%N.encode($name[it]) }", adapterName, adapter)
   }
 }
 

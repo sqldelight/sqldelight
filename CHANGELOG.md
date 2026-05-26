@@ -13,6 +13,7 @@
 - [SQLite Dialect] Add support for SQLite 3.37 STRICT table (#6230 by @griffio)
 - [Gradle Plugin] Add support for excluding columns from generated models with `codegenExcludedColumns` (#6243 by @sokolikp)
 - [Compiler] Add `allTableNames` function to schema (#6245 by @edenman)
+- [PostgreSQL Dialect] Add support for ANY operator (#6253 by @griffio)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
