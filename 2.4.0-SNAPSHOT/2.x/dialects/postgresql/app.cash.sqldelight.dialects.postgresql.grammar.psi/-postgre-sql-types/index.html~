@@ -554,6 +554,36 @@
               </div>
             </div>
           </div>
+<a data-name="-577604038%2FProperties%2F-1264942193" anchor-label="ANY_OPERATOR" id="-577604038%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-n-y_-o-p-e-r-a-t-o-r.html"><span>ANY_</span><wbr><span>OPERATOR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-577604038%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-n-y_-o-p-e-r-a-t-o-r.html">ANY_OPERATOR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="80118540%2FProperties%2F-1264942193" anchor-label="ANY_OPERATOR_EXPR" id="80118540%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-a-n-y_-o-p-e-r-a-t-o-r_-e-x-p-r.html"><span>ANY_</span><wbr><span>OPERATOR_</span><wbr><span>EXPR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="80118540%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-a-n-y_-o-p-e-r-a-t-o-r_-e-x-p-r.html">ANY_OPERATOR_EXPR</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1214022953%2FProperties%2F-1264942193" anchor-label="APPROXIMATE_NUMERIC_DATA_TYPE" id="-1214022953%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">

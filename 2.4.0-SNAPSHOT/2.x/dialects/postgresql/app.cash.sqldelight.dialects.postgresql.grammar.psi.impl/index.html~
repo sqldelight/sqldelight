@@ -429,6 +429,36 @@
               </div>
             </div>
           </div>
+<a data-name="2090550030%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAnyOperatorExprImpl" id="2090550030%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-any-operator-expr-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Any</span><wbr><span>Operator</span><wbr><span>Expr</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2090550030%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-any-operator-expr-impl/index.html">PostgreSqlAnyOperatorExprImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-any-operator-expr-mixin/index.html">AnyOperatorExprMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-any-operator-expr/index.html">PostgreSqlAnyOperatorExpr</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1698367997%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlAnyOperatorImpl" id="-1698367997%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-postgre-sql-any-operator-impl/index.html"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Any</span><wbr><span>Operator</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1698367997%2FClasslikes%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-any-operator-impl/index.html">PostgreSqlAnyOperatorImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-any-operator/index.html">PostgreSqlAnyOperator</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-2115585134%2FClasslikes%2F-1264942193" anchor-label="PostgreSqlApproximateNumericDataTypeImpl" id="-2115585134%2FClasslikes%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
