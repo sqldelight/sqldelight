@@ -185,7 +185,7 @@ class ExpressionTest {
     )
 
     val query = file.namedQueries.first()
-    assertThat(query.resultColumns.single().javaType).isEqualTo(DOUBLE.copy(nullable = true))
+    assertThat(query.resultColumns.single().javaType).isEqualTo(LONG.copy(nullable = true))
   }
 
   @Test fun `string functions return nullable string only if parameter is nullable`() {
