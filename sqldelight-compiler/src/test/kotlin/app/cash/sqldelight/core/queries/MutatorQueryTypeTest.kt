@@ -1051,8 +1051,6 @@ class MutatorQueryTypeTest {
 
     val functionStr = generator.function().toString()
 
-    assertThat(functionStr).contains("value.map { data_Adapter.idAdapter.encode(it) }.toTypedArray()")
-
     assertThat(functionStr).isEqualTo(
       """
       |/**
@@ -1065,7 +1063,11 @@ class MutatorQueryTypeTest {
       |      ""${'"'}.trimMargin(), 1) {
       |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
       |        var parameterIndex = 0
-      |        bindObject(parameterIndex++, value.map { data_Adapter.idAdapter.encode(it) }.toTypedArray())
+      |        bindObject(parameterIndex++, run {
+      |          val iter0 = `value`.iterator()
+      |          Array(`value`.size) { data_Adapter.idAdapter.encode(iter0.next()) }
+      |        }
+      |        )
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
