@@ -465,7 +465,7 @@ abstract class SqlDelightDatabase @Inject constructor(
               separator = "\n",
             )
             .takeIf { it.isNotEmpty() }
-            ?.let { throw IllegalStateException(it) }
+            ?.let { throw GradleException(it) }
 
           resolvedArtifactResults
             .map {

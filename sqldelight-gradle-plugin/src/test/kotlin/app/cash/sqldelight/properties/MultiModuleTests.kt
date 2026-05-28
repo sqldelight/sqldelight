@@ -16,10 +16,7 @@ class MultiModuleTests {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
 
     GradleRunner.create()
-      .withCommonConfiguration(
-        projectRoot = fixtureRoot,
-        enableIsolatedProject = false,
-      )
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace")
       .build()
 
@@ -47,12 +44,7 @@ class MultiModuleTests {
   fun integrationTests() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-module"))
-      .withArguments(
-        "clean",
-        ":ProjectA:check",
-        "--stacktrace",
-        "-Dorg.gradle.unsafe.isolated-projects=true",
-      )
+      .withArguments("clean", ":ProjectA:check", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -62,12 +54,7 @@ class MultiModuleTests {
   fun `android multi module integration tests`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/multi-module"))
-      .withArguments(
-        "clean",
-        ":AndroidProject:connectedCheck",
-        "--stacktrace",
-        "-Dorg.gradle.unsafe.isolated-projects=true",
-      )
+      .withArguments("clean", ":AndroidProject:connectedCheck", "--stacktrace")
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
@@ -78,10 +65,7 @@ class MultiModuleTests {
     var fixtureRoot = File("src/test/multi-module").absoluteFile
 
     GradleRunner.create()
-      .withCommonConfiguration(
-        projectRoot = fixtureRoot,
-        enableIsolatedProject = false,
-      )
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace")
       .forwardOutput()
       .build()
@@ -490,10 +474,7 @@ class MultiModuleTests {
     var fixtureRoot = File("src/test/diamond-dependency").absoluteFile
 
     GradleRunner.create()
-      .withCommonConfiguration(
-        projectRoot = fixtureRoot,
-        enableIsolatedProject = false,
-      )
+      .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "--stacktrace")
       .forwardOutput()
       .build()
@@ -548,6 +529,47 @@ class MultiModuleTests {
 
     val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  fun `dependency source changes trigger re-generation in downstream project`() {
+    val fixtureRoot = File("src/test/diamond-dependency").absoluteFile
+    val bottomSqFile = File(fixtureRoot, "bottom/src/main/sqldelight/com/example/BottomTest.sq")
+    val originalContent = bottomSqFile.readText()
+
+    try {
+      // Initial build
+      GradleRunner.create()
+        .withCommonConfiguration(fixtureRoot)
+        .withArguments("clean", ":app:assemble", "--stacktrace")
+        .forwardOutput()
+        .build()
+
+      // Rebuild without changes — task should be UP-TO-DATE
+      val upToDateResult = GradleRunner.create()
+        .withCommonConfiguration(fixtureRoot)
+        .withArguments(":app:generateMainDatabaseInterface", "--stacktrace")
+        .forwardOutput()
+        .build()
+      assertThat(upToDateResult.output).contains("UP-TO-DATE")
+
+      // Modify a source file in the dependency project
+      bottomSqFile.writeText(
+        originalContent + "\nCREATE TABLE bottomExtra(\n  extra TEXT\n);\n",
+      )
+
+      // Rebuild — task should NOT be UP-TO-DATE
+      val rebuiltResult = GradleRunner.create()
+        .withCommonConfiguration(fixtureRoot)
+        .withArguments(":app:generateMainDatabaseInterface", "--stacktrace")
+        .forwardOutput()
+        .build()
+      assertThat(rebuiltResult.output).doesNotContain(":app:generateMainDatabaseInterface UP-TO-DATE")
+      assertThat(rebuiltResult.output).contains("BUILD SUCCESSFUL")
+    } finally {
+      // Restore original file
+      bottomSqFile.writeText(originalContent)
+    }
   }
 
   @Test

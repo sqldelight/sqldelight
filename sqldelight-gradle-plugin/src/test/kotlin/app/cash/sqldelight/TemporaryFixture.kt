@@ -10,6 +10,8 @@ import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.tooling.BuildAction
+import org.gradle.tooling.BuildController
 import org.gradle.tooling.GradleConnector
 
 internal class TemporaryFixture : AutoCloseable {
@@ -62,7 +64,10 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
   val propertiesFile = GradleConnector.newConnector()
     .forProjectDirectory(fixtureRoot)
     .connect()
-    .getModel(SqlDelightPropertiesFile::class.java)
+    .use { connection ->
+      connection.action(FetchSqlDelightModel(fixtureRoot))
+        .run()
+    }
 
   return SqlDelightPropertiesFileImpl(
     currentVersion = VERSION,
@@ -97,6 +102,17 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
       )
     },
   )
+}
+
+private class FetchSqlDelightModel(
+  private val projectDir: File,
+) : BuildAction<SqlDelightPropertiesFile> {
+  override fun execute(controller: BuildController): SqlDelightPropertiesFile {
+    val target = controller.buildModel.projects.first {
+      it.projectDirectory == projectDir
+    }
+    return controller.getModel(target, SqlDelightPropertiesFile::class.java)
+  }
 }
 
 internal fun withTemporaryFixture(body: TemporaryFixture.() -> Unit) {
