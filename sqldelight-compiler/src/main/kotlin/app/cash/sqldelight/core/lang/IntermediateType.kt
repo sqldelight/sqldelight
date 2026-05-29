@@ -85,13 +85,16 @@ internal fun IntermediateType.encodedJavaTypeForAnyExprArray(): CodeBlock? {
   return (column?.columnType as ColumnTypeMixin?)?.adapter()?.let { adapter ->
     val parent = PsiTreeUtil.getParentOfType(column, Queryable::class.java)
     val adapterName = parent!!.tableExposed().adapterName
+
     CodeBlock.builder()
-      .beginControlFlow("run")
+      .add("run {\n")
+      .indent()
       .add("val iter0 = %N.iterator()", name)
       .add("\n")
       .add("Array(%N.size) { %N.%N.encode(iter0.next()) }", name, adapterName, adapter)
       .add("\n")
-      .endControlFlow()
+      .unindent()
+      .add("}")
       .build()
   } ?: CodeBlock.of("$name.toTypedArray()")
 }
