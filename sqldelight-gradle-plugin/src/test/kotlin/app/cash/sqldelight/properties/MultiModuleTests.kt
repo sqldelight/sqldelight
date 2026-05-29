@@ -532,6 +532,26 @@ class MultiModuleTests {
   }
 
   @Test
+  fun `database dependency uses database specific source directories`() {
+    val fixtureRoot = File("src/test/multi-database-srcdirs-dependency").absoluteFile
+
+    val runner = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean", ":app:generateMainDatabaseInterface", "--stacktrace")
+      .forwardOutput()
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+
+    val databaseImpl = File(
+      fixtureRoot,
+      "app/build/generated/sqldelight/code/Database/main/com/example/app/app/DatabaseImpl.kt",
+    ).readText()
+    assertThat(databaseImpl).contains("import com.example.dependency.old.AnalyticsMessageQueries")
+    assertThat(databaseImpl).doesNotContain("import com.example.dependency.new.AnalyticsMessageQueries")
+  }
+
+  @Test
   fun `dependency source changes trigger re-generation in downstream project`() {
     val fixtureRoot = File("src/test/diamond-dependency").absoluteFile
     val bottomSqFile = File(fixtureRoot, "bottom/src/main/sqldelight/com/example/BottomTest.sq")

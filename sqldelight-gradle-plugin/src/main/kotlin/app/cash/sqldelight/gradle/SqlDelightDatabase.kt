@@ -197,7 +197,7 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   internal fun registerTasks() {
     configureOnSources { source ->
-      registerSourceAsVariant(source)
+      registerSourceAsVariant(source, sourceCollector.localSourceFolders(source))
       val allFiles = sourceCollector.sourceFolders(source)
       val sourceFiles = project.files(allFiles.map { folders -> folders.map { it.folder } })
 
@@ -314,14 +314,17 @@ abstract class SqlDelightDatabase @Inject constructor(
     }
   }
 
-  private fun registerSourceAsVariant(source: Source) {
+  private fun registerSourceAsVariant(
+    source: Source,
+    localFiles: Provider<Set<File>>,
+  ) {
     consumableDatabaseConfiguration.configure { configuration ->
       configuration.outgoing { configurationPublications ->
         configurationPublications.variants.create(
           source.name,
         ) { variant ->
-          source.sourceDirectories.get().forEach {
-            variant.artifact(it)
+          localFiles.get().forEach { folder ->
+            variant.artifact(folder)
           }
           variant.attributes.attribute(KotlinPlatformType.attribute, source.type)
           source.buildType?.let { buildTypeName ->
@@ -421,17 +424,16 @@ abstract class SqlDelightDatabase @Inject constructor(
       return folderProvider
     }
 
-    private fun provideSourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
-      val sourceFolders = source.sourceDirectories.map { dirs ->
-        val declaredSet = srcDirs.mapTo(mutableSetOf()) { dir ->
-          SqlDelightSourceFolderImpl(folder = dir, dependency = false)
-        }
+    fun localSourceFolders(source: Source): Provider<Set<File>> {
+      return source.sourceDirectories.map { dirs ->
+        val declared = srcDirs.toSet()
+        if (declared.isEmpty()) dirs.mapTo(mutableSetOf()) { it.asFile } else declared
+      }
+    }
 
-        if (declaredSet.isEmpty()) {
-          dirs.mapTo(mutableSetOf()) { SqlDelightSourceFolderImpl(folder = it.asFile, dependency = false) }
-        } else {
-          declaredSet
-        }
+    private fun provideSourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
+      val sourceFolders = localSourceFolders(source).map { folders ->
+        folders.mapTo(mutableSetOf()) { SqlDelightSourceFolderImpl(folder = it, dependency = false) }
       }
 
       val dependencySet = projectDependenciesConfiguration.flatMap { configuration ->
