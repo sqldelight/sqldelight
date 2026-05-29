@@ -49,7 +49,7 @@ internal fun SqlDelightDatabase.configureOnSources(action: (Source) -> Unit) {
   }
 
   project.extensions.findByName("androidComponents")?.let {
-    (it as AndroidComponentsExtension<*, *, *>).onSources(action)
+    (it as AndroidComponentsExtension<*, *, *>).onSources(project, action)
     return
   }
 
@@ -99,7 +99,7 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   )
 }
 
-private fun AndroidComponentsExtension<*, *, *>.onSources(action: (Source) -> Unit) {
+private fun AndroidComponentsExtension<*, *, *>.onSources(project: Project, action: (Source) -> Unit) {
   registerSourceType("sqldelight")
 
   onVariants { variant ->
@@ -109,13 +109,26 @@ private fun AndroidComponentsExtension<*, *, *>.onSources(action: (Source) -> Un
       variantName = variant.name,
       sourceDirectories = variant.sources.getByName("sqldelight").all,
       registerSourceGeneration = { task ->
-        if (pluginVersion < AndroidPluginVersion(9, 0)) {
-          // AGP versions before 9.0 wouldn't pick up the task dependency correctly when using the kotlin sources here,
-          // so we use the java ones instead
-          // https://issuetracker.google.com/issues/446220448
-          variant.sources.java?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
-        } else {
-          variant.sources.kotlin?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+        when {
+          pluginVersion < AndroidPluginVersion(8, 12, 0) -> {
+            // AGP 8.9-8.11 addGeneratedSourceDirectory overwrites the task's
+            // @OutputDirectory (DirectoryProperty.set vs .convention), so AGP registers
+            // an empty path as the variant source. Fixed in AGP 8.12.0. Bypass AGP and
+            // wire directly into KGP's variant source set.
+            val kotlinSourceSets =
+              project.extensions.getByType(KotlinProjectExtension::class.java).sourceSets
+            kotlinSourceSets.named(variant.name) { it.kotlin.srcDir(task) }
+          }
+          pluginVersion < AndroidPluginVersion(9, 0) -> {
+            // kotlin-android on AGP 8.x only wires AndroidSourceSet.java into Kotlin
+            // compilation; variant.sources.kotlin registrations are ignored. AGP 9.0's
+            // built-in Kotlin makes variant.sources.kotlin the canonical path.
+            // https://issuetracker.google.com/issues/446220448
+            variant.sources.java?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+          }
+          else -> {
+            variant.sources.kotlin?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+          }
         }
       },
     )
