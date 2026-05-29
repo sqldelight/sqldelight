@@ -1066,8 +1066,7 @@ class MutatorQueryTypeTest {
       |        bindObject(parameterIndex++, run {
       |          val iter0 = `value`.iterator()
       |          Array(`value`.size) { data_Adapter.idAdapter.encode(iter0.next()) }
-      |        }
-      |        )
+      |        })
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")
