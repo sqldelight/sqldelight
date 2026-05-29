@@ -28,6 +28,7 @@
 - [Gradle Plugin] Fix circular dependency error running verify database task (#6221 by @griffio)
 - [Compiler] Fix optimistic lock for multirow update (#6240 by @griffio)
 - [Intellij Plugin] Fix deprecations causing crash in IDEA 2026.2 (#6247 by @griffio)
+- [Gradle Plugin] Fix generated sources not being picked up by Kotlin compilation on AGP 8.9 through 8.11
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2

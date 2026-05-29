@@ -1,0 +1,7 @@
+CREATE TABLE hockeyPlayer (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM hockeyPlayer;
