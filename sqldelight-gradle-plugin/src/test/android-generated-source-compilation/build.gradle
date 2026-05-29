@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
-  id("com.android.library").version("8.9.1")
+  id("com.android.library").version("8.13.2")
   alias(libs.plugins.sqldelight)
   alias(libs.plugins.kotlin.android)
 }
