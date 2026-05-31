@@ -517,7 +517,7 @@ select_stmt ::= SELECT ( distinct_on_expr | [ DISTINCT | ALL ] ) {result_column}
 
 any_operator ::= ( 'ANY' | 'SOME' )
 
-any_operator_expr ::= any_operator LP ( {compound_select_stmt} | {bind_expr} | <<expr '-1'>> ) RP {
+any_operator_expr ::= any_operator LP ( {compound_select_stmt} | <<expr '-1'>> ) RP {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.AnyOperatorExprMixin"
   implements = "com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
   pin = 2
