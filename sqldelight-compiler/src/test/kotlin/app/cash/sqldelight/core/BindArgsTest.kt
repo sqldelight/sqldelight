@@ -584,9 +584,9 @@ class BindArgsTest {
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
     assertThat(bindArgType.bindArg!!.isAnyExprArrayParameter()).isTrue()
-    // The dialectType for ANY operator is ArrayDialectType, not the primitive type
-    assertThat(bindArgType.dialectType.javaType.toString()).isEqualTo("kotlin.Array<kotlin.Int>")
-    assertThat(bindArgType.javaType.toString()).isEqualTo("kotlin.Array<kotlin.Int>")
+    // The dialectType for ANY operator is CollectionDialectType, not the primitive type
+    assertThat(bindArgType.dialectType.javaType.toString()).isEqualTo("kotlin.collections.Collection<kotlin.Int>")
+    assertThat(bindArgType.javaType.toString()).isEqualTo("kotlin.collections.Collection<kotlin.Int>")
     // For ANY operator, the argument name defaults to "value" because it's wrapped in parentheses
     assertThat(bindArgType.name).isEqualTo("value")
     assertThat(bindArgType.column).isSameInstanceAs(column)
@@ -612,9 +612,9 @@ class BindArgsTest {
     val column = file.findChildrenOfType<SqlColumnDef>().first()
     val bindArgType = file.findChildrenOfType<SqlBindExpr>().first().argumentType()
     assertThat(bindArgType.bindArg!!.isAnyExprArrayParameter()).isTrue()
-    // The dialectType for ANY operator is ArrayDialectType, not the primitive type
-    assertThat(bindArgType.dialectType.javaType).isEqualTo(Array<Any>::class.asClassName().parameterizedBy(ClassName("example", "AnyId")))
-    assertThat(bindArgType.javaType).isEqualTo(Array<Any>::class.asClassName().parameterizedBy(ClassName("example", "AnyId")))
+    // The dialectType for ANY operator is CollectionDialectType, not the primitive type
+    assertThat(bindArgType.dialectType.javaType).isEqualTo(Collection::class.asClassName().parameterizedBy(ClassName("example", "AnyId")))
+    assertThat(bindArgType.javaType).isEqualTo(Collection::class.asClassName().parameterizedBy(ClassName("example", "AnyId")))
     // For ANY operator, the argument name defaults to "value" because it's wrapped in parentheses
     assertThat(bindArgType.name).isEqualTo("value")
     assertThat(bindArgType.column).isSameInstanceAs(column)

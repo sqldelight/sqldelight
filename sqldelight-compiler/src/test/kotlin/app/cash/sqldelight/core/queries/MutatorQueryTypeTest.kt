@@ -1051,21 +1051,70 @@ class MutatorQueryTypeTest {
 
     val functionStr = generator.function().toString()
 
-    assertThat(functionStr).contains("Array(value.size) { data_Adapter.idAdapter.encode(value[it]) }")
-
     assertThat(functionStr).isEqualTo(
       """
       |/**
       | * @return The number of rows updated.
       | */
-      |public fun deleteByIds(`value`: kotlin.Array<example.MyId>): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |public fun deleteByIds(`value`: kotlin.collections.Collection<example.MyId>): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
       |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
       |      |DELETE FROM data
       |      |WHERE id = ANY (?)
       |      ""${'"'}.trimMargin(), 1) {
       |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
       |        var parameterIndex = 0
-      |        bindObject(parameterIndex++, Array(value.size) { data_Adapter.idAdapter.encode(value[it]) })
+      |        bindObject(parameterIndex++, run {
+      |          val iter0 = `value`.iterator()
+      |          Array(`value`.size) { data_Adapter.idAdapter.encode(iter0.next()) }
+      |        })
+      |      }
+      |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
+      |    emit("data")
+      |  }
+      |  return result
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `delete using ANY operator with no adapter uses encodedJavaTypeForAnyExprArray`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id Integer PRIMARY KEY,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |deleteByIds:
+      |DELETE FROM data
+      |WHERE id = ANY (?);
+      """.trimMargin(),
+      tempFolder,
+      fileName = "Data.sq",
+      dialect = PostgreSqlDialect(),
+    )
+
+    val mutator = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(mutator)
+
+    val functionStr = generator.function().toString()
+
+    assertThat(functionStr).contains("value.toTypedArray()")
+
+    assertThat(functionStr).isEqualTo(
+      """
+      |/**
+      | * @return The number of rows updated.
+      | */
+      |public fun deleteByIds(`value`: kotlin.collections.Collection<kotlin.Int>): app.cash.sqldelight.db.QueryResult<kotlin.Long> {
+      |  val result = driver.execute(${mutator.id.withUnderscores}, ""${'"'}
+      |      |DELETE FROM data
+      |      |WHERE id = ANY (?)
+      |      ""${'"'}.trimMargin(), 1) {
+      |        check(this is app.cash.sqldelight.driver.jdbc.JdbcPreparedStatement)
+      |        var parameterIndex = 0
+      |        bindObject(parameterIndex++, value.toTypedArray())
       |      }
       |  notifyQueries(${mutator.id.withUnderscores}) { emit ->
       |    emit("data")

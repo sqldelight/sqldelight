@@ -1615,7 +1615,7 @@ class PostgreSqlTest {
 
   @Test
   fun testAny() {
-    val ids = arrayOf(1, 2, 3)
+    val ids = listOf(1, 2, 3)
     database.anyQueries.selectAny(ids).executeAsList().let {
       assertThat(it).containsExactly(1, 2, 3)
     }
@@ -1623,7 +1623,7 @@ class PostgreSqlTest {
 
   @Test
   fun testSome() {
-    val txts = arrayOf("%alpha", "%beta", "%gamma")
+    val txts = listOf("%alpha", "%beta", "%gamma")
     database.anyQueries.selectSome(txts).executeAsList().let {
       assertThat(it).containsExactly("alpha", "beta", "gamma")
     }

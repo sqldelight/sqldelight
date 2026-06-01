@@ -2,6 +2,7 @@ package app.cash.sqldelight.dialects.postgresql
 
 import app.cash.sqldelight.dialect.api.DialectType
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
 import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
@@ -52,6 +53,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 
 open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
@@ -313,9 +315,8 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         IntermediateType(PostgreSqlType.JSON)
       }
       is PostgreSqlAnyOperatorExpr -> {
-        // the column expr required to resolve the java type is not part of the ANY extension expression
         val anyType = (parent.parent.parent.parent.firstChild as SqlExpr).postgreSqlType()
-        arrayIntermediateType(anyType) // The assumption is that any bind parameter is an array
+        IntermediateType(CollectionDialectType(anyType), column = anyType.column)
       }
       else -> {
         parentResolver.argumentType(parent, argument)
@@ -502,6 +503,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     // ArrayDialectType stores the original IntermediateType as parameterizedType so that the type can be returned by unnested
     private class ArrayDialectType(val parameterizedType: IntermediateType) : DialectType {
       override val javaType = Array::class.asTypeName().parameterizedBy(parameterizedType.javaType)
+      override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+      override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
+    }
+
+    // CollectionDialectType is used for ANY/ALL bind args where a Collection<T> is preferred over Array<T> - cursorGetter is not used
+    private class CollectionDialectType(val parameterizedType: IntermediateType) : DialectType {
+      override val javaType = Collection::class.asTypeName().parameterizedBy(parameterizedType.javaType)
       override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
       override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
     }
