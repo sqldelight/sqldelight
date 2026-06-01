@@ -1246,6 +1246,15 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testLowerUpperFunctionWithTemporalRange() {
+    val range = "[2020-07-01 09:00+00, 2020-07-01 17:00+00]"
+    with(database.temporalRangesQueries.selectLowerUpper(range, range).executeAsOne()) {
+      assertThat(low).isEqualTo(OffsetDateTime.of(2020, 7, 1, 9, 0, 0, 0, ZoneOffset.ofHours(0)))
+      assertThat(high).isEqualTo(OffsetDateTime.of(2020, 7, 1, 17, 0, 0, 0, ZoneOffset.ofHours(0)))
+    }
+  }
+
+  @Test
   fun testUnnestSelect() {
     database.unnestQueries.insertBusiness("Ok Burger", arrayOf("A12345", "AB5522", "T74134"), arrayOf(76, 12, 18))
     with(database.unnestQueries.selectHeadcount().executeAsList()) {
