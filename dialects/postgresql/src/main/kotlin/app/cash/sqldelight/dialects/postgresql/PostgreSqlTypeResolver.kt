@@ -159,7 +159,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
     "lower", "upper" -> {
       if (resolvedType(exprList.first()).dialectType == PrimitiveType.ARGUMENT) {
-        IntermediateType(TEXT)
+        IntermediateType(TEXT).asNullable()
       } else {
         val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
         when (exprType.dialectType) {
