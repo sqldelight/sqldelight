@@ -33,7 +33,7 @@ class IsDistinctFromTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
         |private inner class SelectOthersQuery<out T : kotlin.Any>(
-        |  public val id: kotlin.Long,
+        |  public val id: kotlin.Long?,
         |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
         |) : app.cash.sqldelight.Query<T>(mapper) {
         |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
@@ -77,7 +77,7 @@ class IsDistinctFromTest {
     assertThat(generator.querySubtype().toString()).isEqualTo(
       """
         |private inner class SelectItQuery<out T : kotlin.Any>(
-        |  public val id: kotlin.Long,
+        |  public val id: kotlin.Long?,
         |  mapper: (app.cash.sqldelight.db.SqlCursor) -> T,
         |) : app.cash.sqldelight.Query<T>(mapper) {
         |  override fun addListener(listener: app.cash.sqldelight.Query.Listener) {
