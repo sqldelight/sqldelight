@@ -41,6 +41,7 @@ import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
+import com.alecstrong.sql.psi.core.psi.SqlIsDistinctFromExpr
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
 import com.alecstrong.sql.psi.core.psi.SqlLikeEscapeCharacterExpr
 import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
@@ -125,7 +126,12 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       }
     }
 
-    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlIsExpr, is SqlBinaryBooleanExpr -> {
+    is SqlIsExpr, is SqlIsDistinctFromExpr -> {
+      val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      (validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()).asNullable()
+    }
+
+    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlBinaryBooleanExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
       validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }
