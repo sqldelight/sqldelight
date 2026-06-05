@@ -1,7 +1,7 @@
 package com.example
 
-import Instant
 import app.cash.sqldelight.ColumnAdapter
+import java.time.Instant
 import java.time.OffsetDateTime
 
 public data class Test(
