@@ -23,8 +23,8 @@ import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.childOfType
-import app.cash.sqldelight.core.lang.util.columns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.lang.util.queryColumns
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.IntermediateType
@@ -75,14 +75,16 @@ abstract class BindableQuery(
    */
   val arguments: List<Argument> by lazy {
     if (statement is SqlInsertStmt && statement.acceptsTableInterface()) {
-      return@lazy statement.columns.mapIndexed { index, column ->
+      return@lazy statement.queryColumns.mapIndexed { index, queryColumn ->
+        val element = queryColumn.element
+        val type = element.type().let {
+          if (queryColumn.nullable != null) it.nullableIf(queryColumn.nullable!!) else it
+        }
         Argument(
           index + 1,
-          column.type().let {
-            it.copy(
-              name = "${allocateName(statement.tableName)}.${it.name}",
-            )
-          },
+          type.copy(
+            name = "${allocateName(statement.tableName)}.${type.name}",
+          ),
         )
       }
     }
