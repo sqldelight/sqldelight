@@ -93,24 +93,24 @@
   <div class="breadcrumbs"><a href="../../../index.html">sqldelight-gradle-plugin</a><span class="delimiter">/</span><a href="../../index.html">app.cash.sqldelight.gradle</a><span class="delimiter">/</span><a href="../index.html">SqlDelightPlugin</a><span class="delimiter">/</span><span class="current">PropertiesModelBuilder</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Properties</span><wbr><span>Model</span><wbr><span><span>Builder</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">PropertiesModelBuilder</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">databases<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><a href="../../-sql-delight-database/index.html">SqlDelightDatabase</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="org.gradle.tooling.provider.model/ToolingModelBuilder///PointingToDeclaration/">ToolingModelBuilder</span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">PropertiesModelBuilder</a> : <span data-unresolved-link="org.gradle.tooling.provider.model/ToolingModelBuilder///PointingToDeclaration/">ToolingModelBuilder</span></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="tableheader">Constructors</h2>
-        <div class="table"><a data-name="-1267481469%2FConstructors%2F-879533229" anchor-label="PropertiesModelBuilder" id="-1267481469%2FConstructors%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+        <div class="table"><a data-name="-2013931565%2FConstructors%2F-879533229" anchor-label="PropertiesModelBuilder" id="-2013931565%2FConstructors%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-properties-model-builder.html"><span>Properties</span><wbr><span>Model</span><wbr><span><span>Builder</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1267481469%2FConstructors%2F-879533229"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2013931565%2FConstructors%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">databases<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><a href="../../-sql-delight-database/index.html">SqlDelightDatabase</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>

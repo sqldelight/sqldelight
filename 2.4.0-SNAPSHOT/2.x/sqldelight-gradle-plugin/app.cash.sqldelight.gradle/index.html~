@@ -174,6 +174,21 @@
               </div>
             </div>
           </div>
+<a data-name="1688587825%2FClasslikes%2F-879533229" anchor-label="SqlDelightDatabaseNameAttribute" id="1688587825%2FClasslikes%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sql-delight-database-name-attribute/index.html"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Name</span><wbr><span><span>Attribute</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1688587825%2FClasslikes%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sql-delight-database-name-attribute/index.html">SqlDelightDatabaseNameAttribute</a> : <span data-unresolved-link="org.gradle.api/Named///PointingToDeclaration/">Named</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-464856203%2FClasslikes%2F-879533229" anchor-label="SqlDelightDatabaseNameImpl" id="-464856203%2FClasslikes%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
@@ -230,6 +245,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sql-delight-extension/index.html">SqlDelightExtension</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-101071259%2FClasslikes%2F-879533229" anchor-label="SqlDelightPackageAttribute" id="-101071259%2FClasslikes%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sql-delight-package-attribute/index.html"><span>Sql</span><wbr><span>Delight</span><wbr><span>Package</span><wbr><span><span>Attribute</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-101071259%2FClasslikes%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-sql-delight-package-attribute/index.html">SqlDelightPackageAttribute</a> : <span data-unresolved-link="org.gradle.api/Named///PointingToDeclaration/">Named</span></div></div></div>
                 </div>
               </div>
             </div>
