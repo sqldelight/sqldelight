@@ -3,19 +3,12 @@ package app.cash.sqldelight.gradle.kotlin
 import app.cash.sqldelight.gradle.SqlDelightDatabase
 import app.cash.sqldelight.gradle.SqlDelightTask
 import com.android.build.api.AndroidPluginVersion
-import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.api.BaseVariant
-import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
-import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -90,7 +83,6 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
       type = KotlinPlatformType.common,
       nativePresetName = "common",
       name = "commonMain",
-      variantName = null,
       sourceDirectories = project.provider { listOf(project.sqldelightDirectory("commonMain")) },
       registerSourceGeneration = { task ->
         sourceSets.getByName("commonMain").kotlin.srcDir(task)
@@ -106,7 +98,8 @@ private fun AndroidComponentsExtension<*, *, *>.onSources(project: Project, acti
     val source = Source(
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
-      variantName = variant.name,
+      buildType = variant.buildType,
+      flavours = variant.productFlavors,
       sourceDirectories = variant.sources.getByName("sqldelight").all,
       registerSourceGeneration = { task ->
         when {
@@ -145,29 +138,18 @@ internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
   val name: String,
-  val variantName: String? = null,
+  val buildType: String? = null,
+  val flavours: List<Pair<String, String>>? = null,
   val sourceDirectories: Provider<out Collection<Directory>>,
   val registerSourceGeneration: (TaskProvider<SqlDelightTask>) -> Unit,
 ) {
   internal data class Key(
     val type: KotlinPlatformType,
     val name: String,
-    val variantName: String?,
+    val buildType: String?,
+    val flavours: List<Pair<String, String>>?,
     val nativePresetName: String?,
   )
 
-  val key get() = Key(type, name, variantName, nativePresetName)
-
-  fun closestMatch(sources: Collection<Key>): Key? {
-    var matches = sources.filter {
-      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
-    }
-    if (matches.size <= 1) return matches.singleOrNull()
-
-    // Multiplatform native matched or android variants matched.
-    matches = matches.filter {
-      nativePresetName == it.nativePresetName && variantName == it.variantName
-    }
-    return matches.singleOrNull()
-  }
+  val key get() = Key(type, name, buildType, flavours, nativePresetName)
 }

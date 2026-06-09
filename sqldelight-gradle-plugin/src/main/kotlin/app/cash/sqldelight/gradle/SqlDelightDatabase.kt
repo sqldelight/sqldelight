@@ -7,6 +7,8 @@ import app.cash.sqldelight.core.lang.SQLDELIGHT_EXTENSION
 import app.cash.sqldelight.gradle.kotlin.Source
 import app.cash.sqldelight.gradle.kotlin.configureOnSources
 import app.cash.sqldelight.gradle.squash.MigrationSquashTask
+import com.android.build.api.attributes.BuildTypeAttr
+import com.android.build.api.attributes.ProductFlavorAttr
 import groovy.lang.GroovyObject
 import java.io.File
 import javax.inject.Inject
@@ -14,6 +16,10 @@ import kotlin.DeprecationLevel.HIDDEN
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
+import org.gradle.api.artifacts.ResolvableDependencies
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedVariantResult
+import org.gradle.api.attributes.Usage
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
@@ -21,6 +27,9 @@ import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.SetProperty
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+
+private const val SQLDELIGHT_SCHEMA_USAGE = "sqldelight-schema"
 
 @SqlDelightDsl
 abstract class SqlDelightDatabase @Inject constructor(
@@ -61,6 +70,49 @@ abstract class SqlDelightDatabase @Inject constructor(
     isVisible = false
     dependencies.add(project.dependencies.create("app.cash.sqldelight:migration-env:$VERSION"))
   }
+
+  private val dependencyScope = project.configurations.register("sqlDelightDatabase$name") {
+    it.isCanBeConsumed = false
+    it.isCanBeResolved = false
+  }
+
+  private val projectDependenciesConfiguration =
+    project.configurations.register("sqlDelightDatabase${name}Dependencies") {
+      it.extendsFrom(dependencyScope.get())
+      it.isCanBeConsumed = false
+      it.isCanBeResolved = true
+      it.isVisible = false
+      it.attributes.attribute(
+        Usage.USAGE_ATTRIBUTE,
+        project.objects.named(Usage::class.java, SQLDELIGHT_SCHEMA_USAGE),
+      )
+      it.attributes.attribute(
+        SqlDelightDatabaseNameAttribute.ATTR,
+        project.objects.named(SqlDelightDatabaseNameAttribute::class.java, name),
+      )
+    }
+
+  private val consumableDatabaseConfiguration =
+    project.configurations.register("sqlDelightDatabase${name}Elements") {
+      it.extendsFrom(dependencyScope.get())
+      it.isCanBeConsumed = true
+      it.isCanBeResolved = false
+      it.isVisible = false
+      it.attributes.attribute(
+        Usage.USAGE_ATTRIBUTE,
+        project.objects.named(Usage::class.java, SQLDELIGHT_SCHEMA_USAGE),
+      )
+      it.attributes.attribute(
+        SqlDelightDatabaseNameAttribute.ATTR,
+        project.objects.named(SqlDelightDatabaseNameAttribute::class.java, name),
+      )
+      it.attributes.attributeProvider(
+        SqlDelightPackageAttribute.ATTR,
+        packageName.map {
+          project.objects.named(SqlDelightPackageAttribute::class.java, it)
+        },
+      )
+    }
 
   internal var addedDialect: Boolean = false
 
@@ -115,10 +167,6 @@ abstract class SqlDelightDatabase @Inject constructor(
   private val generatedSourcesDirectory
     get() = File(project.buildDir, "generated/sqldelight/code/$name")
 
-  private val dependencies = mutableListOf<SqlDelightDatabase>()
-
-  private var recursionGuard = false
-
   private val sourceCollector = SqlDelightSourceCollector()
 
   fun methodMissing(name: String, args: Any): Any {
@@ -134,14 +182,9 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   @Suppress("unused") // Public API used in gradle files.
   fun dependency(dependencyProject: Project) {
-    project.evaluationDependsOn(dependencyProject.path)
-
-    val dependency = dependencyProject.extensions.findByType(SqlDelightExtension::class.java)
-      ?: throw IllegalStateException("Cannot depend on a module with no sqldelight plugin.")
-    val database = dependency.databases.singleOrNull { it.name == name }
-      ?: throw IllegalStateException("No database named $name in $dependencyProject")
-    check(database.packageName.get() != packageName.get()) { "Detected a schema that already has the package name ${packageName.get()} in project $dependencyProject" }
-    dependencies.add(database)
+    dependencyScope.configure {
+      it.dependencies.add(project.dependencies.create(dependencyProject))
+    }
   }
 
   fun srcDirs(vararg srcPaths: Any) {
@@ -152,16 +195,9 @@ abstract class SqlDelightDatabase @Inject constructor(
     return sourceCollector.databaseProperties()
   }
 
-  internal fun sourceKeys(): Provider<Set<Source.Key>> {
-    return project.provider { sourceCollector.sourceKeys() }
-  }
-
-  internal fun sourceFoldersFor(sourceKey: Source.Key): Provider<Set<SqlDelightSourceFolderImpl>> {
-    return sourceCollector.sourceFoldersFor(sourceKey)
-  }
-
   internal fun registerTasks() {
     configureOnSources { source ->
+      registerSourceAsVariant(source, sourceCollector.localSourceFolders(source))
       val allFiles = sourceCollector.sourceFolders(source)
       val sourceFiles = project.files(allFiles.map { folders -> folders.map { it.folder } })
 
@@ -278,19 +314,50 @@ abstract class SqlDelightDatabase @Inject constructor(
     }
   }
 
+  private fun registerSourceAsVariant(
+    source: Source,
+    localFiles: Provider<Set<File>>,
+  ) {
+    consumableDatabaseConfiguration.configure { configuration ->
+      configuration.outgoing { configurationPublications ->
+        configurationPublications.variants.create(
+          source.name,
+        ) { variant ->
+          localFiles.get().forEach { folder ->
+            variant.artifact(folder)
+          }
+          variant.attributes.attribute(KotlinPlatformType.attribute, source.type)
+          source.buildType?.let { buildTypeName ->
+            variant.attributes.attribute(
+              BuildTypeAttr.ATTRIBUTE,
+              project.objects.named(
+                BuildTypeAttr::class.java,
+                buildTypeName,
+              ),
+            )
+            source.flavours?.forEach {
+              variant.attributes.attribute(
+                ProductFlavorAttr.of(it.first),
+                project.objects.named(
+                  ProductFlavorAttr::class.java,
+                  it.second,
+                ),
+              )
+            }
+          }
+        }
+      }
+    }
+  }
+
   private val Source.outputDir get() = File(generatedSourcesDirectory, name)
 
   // Collects compilation units as sourceFolders are defined so that they can be lazily provided to downstream consumers
   private inner class SqlDelightSourceCollector {
     private val compilationUnits = mutableMapOf<Source.Key, Provider<SqlDelightCompilationUnitImpl>>()
 
-    fun sourceKeys(): Set<Source.Key> = compilationUnits.keys
-
     fun databaseProperties(): Provider<SqlDelightDatabasePropertiesImpl> {
       require(packageName.isPresent) { "property packageName for $name database must be provided" }
-
-      check(!recursionGuard) { "Found a circular dependency in $project with database $name" }
-      recursionGuard = true
 
       if (!addedDialect) {
         throw GradleException(
@@ -306,14 +373,29 @@ abstract class SqlDelightDatabase @Inject constructor(
         )
       }
 
-      try {
-        return project.provider {
+      return projectDependenciesConfiguration.flatMap { config ->
+        project.provider {
           SqlDelightDatabasePropertiesImpl(
             packageName = packageName.get(),
             compilationUnits = compilationUnits().get(),
             rootDirectory = project.projectDir,
             className = name,
-            dependencies = dependencies.map { SqlDelightDatabaseNameImpl(it.packageName.get(), it.name) },
+            dependencies =
+            compilationUnits.keys.flatMap { compilationUnit ->
+              config.incoming
+                .filterByVariant(compilationUnit.buildType, compilationUnit.flavours)
+                .artifacts
+                .map { artifactResult ->
+                  SqlDelightDatabaseNameImpl(
+                    artifactResult.variant.latest().attributes.getAttribute(
+                      SqlDelightPackageAttribute.ATTR,
+                    )!!.name,
+                    artifactResult.variant.latest().attributes.getAttribute(
+                      SqlDelightDatabaseNameAttribute.ATTR,
+                    )!!.name,
+                  )
+                }
+            },
             deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
             treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
             generateAsync = generateAsync.get(),
@@ -321,8 +403,6 @@ abstract class SqlDelightDatabase @Inject constructor(
             codegenExcludedColumns = codegenExcludedColumns.get(),
           )
         }
-      } finally {
-        recursionGuard = false
       }
     }
 
@@ -344,43 +424,93 @@ abstract class SqlDelightDatabase @Inject constructor(
       return folderProvider
     }
 
-    fun sourceFoldersFor(sourceKey: Source.Key): Provider<Set<SqlDelightSourceFolderImpl>> {
-      return project.provider {
-        compilationUnits[sourceKey]?.get()?.sourceFolders
-          ?: emptySet()
+    fun localSourceFolders(source: Source): Provider<Set<File>> {
+      return source.sourceDirectories.map { dirs ->
+        val declared = srcDirs.toSet()
+        if (declared.isEmpty()) dirs.mapTo(mutableSetOf()) { it.asFile } else declared
       }
     }
 
     private fun provideSourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
-      val sourceFolders = source.sourceDirectories.map { dirs ->
-        val declaredSet = srcDirs.mapTo(mutableSetOf()) { dir ->
-          SqlDelightSourceFolderImpl(folder = dir, dependency = false)
-        }
-
-        if (declaredSet.isEmpty()) {
-          dirs.mapTo(mutableSetOf()) { SqlDelightSourceFolderImpl(folder = it.asFile, dependency = false) }
-        } else {
-          declaredSet
-        }
+      val sourceFolders = localSourceFolders(source).map { folders ->
+        folders.mapTo(mutableSetOf()) { SqlDelightSourceFolderImpl(folder = it, dependency = false) }
       }
 
-      val dependencySet = project.provider {
-        dependencies.flatMap { dependency ->
-          val dependencySourceKey = source.closestMatch(dependency.sourceKeys().get())
-            ?: return@flatMap emptyList<SqlDelightSourceFolderImpl>()
+      val dependencySet = projectDependenciesConfiguration.flatMap { configuration ->
+        project.provider {
+          val resolvedArtifactResults = configuration.incoming
+            .filterByVariant(source.buildType, source.flavours)
+            .artifacts
 
-          val dependencyFolders = dependency.sourceFoldersFor(dependencySourceKey).get()
-
-          return@flatMap dependencyFolders.map {
-            SqlDelightSourceFolderImpl(
-              folder = File(project.projectDir, project.relativePath(it.folder.absolutePath)),
-              dependency = true,
-            )
+          resolvedArtifactResults.fold(mutableMapOf(packageName.get() to mutableSetOf(project.path))) { acc, resolvedArtifactResult ->
+            val latestVariant = resolvedArtifactResult.variant.latest()
+            val packageName =
+              latestVariant.attributes.getAttribute(SqlDelightPackageAttribute.ATTR)!!.name
+            val components = acc.getOrPut(packageName) { mutableSetOf() }
+            val component = latestVariant.owner as ProjectComponentIdentifier
+            components.add(component.projectPath)
+            acc
           }
+            .filter { entry ->
+              entry.value.size > 1
+            }
+            .map { entry ->
+              val projectsPaths = entry.value.joinToString(
+                prefix = "[",
+                postfix = "]",
+              ) { projectPath ->
+                "'$projectPath'"
+              }
+              "The package '${entry.key}' is defined in multiple projects $projectsPaths, which are used in the project '${project.path}'."
+            }
+            .joinToString(
+              separator = "\n",
+            )
+            .takeIf { it.isNotEmpty() }
+            ?.let { throw GradleException(it) }
+
+          resolvedArtifactResults
+            .map {
+              SqlDelightSourceFolderImpl(
+                folder = File(project.projectDir, project.relativePath(it.file)),
+                dependency = true,
+              )
+            }
         }
       }
+      return sourceFolders.zip(dependencySet) { files, dependencies -> files + dependencies }
+    }
 
-      return sourceFolders.zip(dependencySet) { folders, dependencies -> folders + dependencies }
+    private fun ResolvedVariantResult.latest(): ResolvedVariantResult {
+      var variant: ResolvedVariantResult = this
+      while (variant.externalVariant.isPresent) {
+        variant = variant.externalVariant.get()
+      }
+      return variant
+    }
+
+    private fun ResolvableDependencies.filterByVariant(
+      buildType: String?,
+      flavours: List<Pair<String, String>>?,
+    ) = artifactView { viewConfiguration ->
+      buildType?.let { buildTypeName ->
+        viewConfiguration.attributes.attribute(
+          BuildTypeAttr.ATTRIBUTE,
+          project.objects.named(
+            BuildTypeAttr::class.java,
+            buildTypeName,
+          ),
+        )
+        flavours?.forEach {
+          viewConfiguration.attributes.attribute(
+            ProductFlavorAttr.of(it.first),
+            project.objects.named(
+              ProductFlavorAttr::class.java,
+              it.second,
+            ),
+          )
+        }
+      }
     }
   }
 }

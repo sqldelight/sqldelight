@@ -1,0 +1,17 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
+}
+
+sqldelight {
+  databases {
+    Database {
+      packageName = "com.example.dependency.old"
+      srcDirs "src/main/old"
+    }
+    OtherDatabase {
+      packageName = "com.example.dependency.new"
+      srcDirs "src/main/sqldelight"
+    }
+  }
+}

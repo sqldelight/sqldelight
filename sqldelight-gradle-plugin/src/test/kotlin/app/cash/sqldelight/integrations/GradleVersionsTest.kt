@@ -48,7 +48,33 @@ class GradleVersionsTest(private val gradleVersion: String) {
     val runner = GradleRunner.create()
       .forwardOutput()
       .withGradleVersion(gradleVersion)
-      .withCommonConfiguration(integrationRoot)
+      .withCommonConfiguration(
+        projectRoot = integrationRoot,
+        enableIsolatedProject = false,
+      )
+      .withArguments("clean", "compileKotlin", "--stacktrace").apply {
+        // Don't cache all Gradle versions on CI, this will break GH actions size limit.
+        if (System.getenv("CI") == "true") {
+          val tmp = Files.createTempDirectory("gradleVersionTest")
+          withArguments(arguments + "-Dgradle.user.home=$tmp")
+        }
+      }
+
+    val result = runner.build()
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  fun `integration jvm multi module compiles successfully with different Gradle versions`() {
+    val integrationRoot = File("src/test/diamond-dependency")
+
+    val runner = GradleRunner.create()
+      .forwardOutput()
+      .withGradleVersion(gradleVersion)
+      .withCommonConfiguration(
+        projectRoot = integrationRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlin", "--stacktrace").apply {
         // Don't cache all Gradle versions on CI, this will break GH actions size limit.
         if (System.getenv("CI") == "true") {

@@ -33,7 +33,7 @@ import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 
-internal const val MIN_GRADLE_VERSION = "8.0"
+internal const val MIN_GRADLE_VERSION = "8.2.1"
 
 abstract class SqlDelightPlugin : Plugin<Project> {
   private val android = AtomicBoolean(false)
@@ -72,11 +72,10 @@ abstract class SqlDelightPlugin : Plugin<Project> {
       it.description = "Aggregation task which runs every migration task for every given source"
     }
 
+    registry.register(PropertiesModelBuilder())
+
     project.afterEvaluate {
       project.setupSqlDelightTasks(afterAndroid = false, extension)
-
-      // Always do this last so that the lazy properties are definitely populated
-      registry.register(PropertiesModelBuilder(extension.databases))
     }
   }
 
@@ -152,14 +151,13 @@ abstract class SqlDelightPlugin : Plugin<Project> {
     }
   }
 
-  class PropertiesModelBuilder(
-    private val databases: Iterable<SqlDelightDatabase>,
-  ) : ToolingModelBuilder {
+  class PropertiesModelBuilder : ToolingModelBuilder {
     override fun canBuild(modelName: String): Boolean {
       return modelName == SqlDelightPropertiesFile::class.java.name
     }
 
     override fun buildAll(modelName: String, project: Project): Any {
+      val databases = project.extensions.getByType(SqlDelightExtension::class.java).databases
       return SqlDelightPropertiesFileImpl(
         databases = databases.map { it.getProperties().get() },
         currentVersion = VERSION,

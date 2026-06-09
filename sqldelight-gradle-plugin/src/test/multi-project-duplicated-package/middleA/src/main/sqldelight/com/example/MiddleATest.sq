@@ -1,0 +1,7 @@
+CREATE TABLE middleATest(
+  value TEXT
+);
+
+selectFromBottom:
+SELECT *
+FROM bottom;

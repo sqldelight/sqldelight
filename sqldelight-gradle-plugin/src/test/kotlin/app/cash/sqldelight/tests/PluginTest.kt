@@ -106,7 +106,10 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlinJs", "--stacktrace")
       .build()
     assertThat(result.output).contains("generateCommonMainDatabaseInterface")
@@ -120,7 +123,10 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlinJvm", "--stacktrace")
       .build()
     assertThat(result.output).contains("generateCommonMainDatabaseInterface")
@@ -134,7 +140,10 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false, // isolated projects currently not supported configureondemand
+      )
       .also {
         File(fixtureRoot, "gradle.properties").appendText("\norg.gradle.configureondemand=true")
       }

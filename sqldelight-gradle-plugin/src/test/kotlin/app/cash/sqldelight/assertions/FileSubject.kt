@@ -21,7 +21,9 @@ internal class FileSubject private constructor(
     assertThat(actual).exists()
     assertThat(other).exists()
     val buildOutput = ArrayDeque<File>().apply {
-      actual.listFiles()!!.forEach { addFirst(it) }
+      actual.listFiles()!!
+        .filter { it.name != "reports" }
+        .forEach { addFirst(it) }
     }
     val expectedOutput = ArrayDeque<File>().apply {
       other.listFiles()!!.forEach { addFirst(it) }

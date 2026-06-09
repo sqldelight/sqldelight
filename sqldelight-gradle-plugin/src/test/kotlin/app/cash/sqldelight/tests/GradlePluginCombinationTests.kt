@@ -42,7 +42,7 @@ class GradlePluginCombinationTests {
     |
         """.trimMargin(),
       )
-      configure("checkForSqlite")
+      configure(runTask = "checkForSqlite", enableIsolatedProject = false)
     }
   }
 }

@@ -4,12 +4,16 @@ import java.io.File
 import java.util.Properties
 import org.gradle.testkit.runner.GradleRunner
 
-internal fun GradleRunner.withCommonConfiguration(projectRoot: File): GradleRunner {
+internal fun GradleRunner.withCommonConfiguration(
+  projectRoot: File,
+  enableIsolatedProject: Boolean = true,
+): GradleRunner {
   File(projectRoot, "gradle.properties").writeText(
     """
       |org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
       |android.useAndroidX=true
       |android.newDsl=true
+      |org.gradle.unsafe.isolated-projects=$enableIsolatedProject
       |
     """.trimMargin(),
   )
