@@ -1498,8 +1498,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface.toString()).isEqualTo(
       """
     |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
-      |
-      |package com.example
+    |
+    |package com.example
     |
     |import app.cash.sqldelight.Query
     |import app.cash.sqldelight.TransacterImpl
@@ -1717,8 +1717,8 @@ class InterfaceGeneration {
     assertThat(generatedInterface.toString()).isEqualTo(
       """
     |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
-      |
-      |package com.example
+    |
+    |package com.example
     |
     |import app.cash.sqldelight.Query
     |import app.cash.sqldelight.TransacterImpl

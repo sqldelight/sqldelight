@@ -54,8 +54,8 @@ class AsyncQueryWrapperTest {
     Truth.assertThat(queryWrapperFile.toString()).isEqualTo(
       """
         |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
-      |
-      |package com.example.testmodule
+        |
+        |package com.example.testmodule
         |
         |import app.cash.sqldelight.SuspendingTransacterImpl
         |import app.cash.sqldelight.db.AfterVersion
