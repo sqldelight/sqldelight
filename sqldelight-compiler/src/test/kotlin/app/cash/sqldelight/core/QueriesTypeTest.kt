@@ -51,7 +51,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example.testmodule
       |
@@ -121,7 +121,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -239,7 +239,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example.testmodule
       |
@@ -297,7 +297,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -351,7 +351,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example.testmodule
       |
@@ -430,7 +430,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example.testmodule
       |
@@ -488,7 +488,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -591,7 +591,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(database)
     assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example.testmodule
       |
@@ -647,7 +647,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -775,7 +775,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -879,7 +879,7 @@ class QueriesTypeTest {
     val queryString = result.compilerOutput[dataQueries].toString()
     assertThat(queryString).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -938,7 +938,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-        @file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+        @file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
 
         package com.example
 
@@ -987,7 +987,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-        @file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+        @file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
 
         package com.example
 
@@ -1037,7 +1037,7 @@ class QueriesTypeTest {
     assertThat(result.compilerOutput).containsKey(dataQueries)
     assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |

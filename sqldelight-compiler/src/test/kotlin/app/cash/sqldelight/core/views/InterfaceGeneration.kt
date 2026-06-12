@@ -47,7 +47,7 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -91,7 +91,7 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
@@ -133,7 +133,7 @@ class InterfaceGeneration {
     assertThat(generatedInterface).isNotNull()
     assertThat(generatedInterface.toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |

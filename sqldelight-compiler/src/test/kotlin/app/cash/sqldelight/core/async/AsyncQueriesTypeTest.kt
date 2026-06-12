@@ -52,7 +52,7 @@ class AsyncQueriesTypeTest {
     Truth.assertThat(result.compilerOutput).containsKey(database)
     Truth.assertThat(result.compilerOutput[database].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example.testmodule
       |
@@ -122,7 +122,7 @@ class AsyncQueriesTypeTest {
     Truth.assertThat(result.compilerOutput).containsKey(dataQueries)
     Truth.assertThat(result.compilerOutput[dataQueries].toString()).isEqualTo(
       """
-      |@file:Suppress("RedundantVisibilityModifier", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
       |
       |package com.example
       |
