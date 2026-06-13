@@ -371,9 +371,59 @@ class ExpressionTest {
     )
 
     val query = file.namedQueries.first()
+    // MAX over a nullable column stays nullable even with a GROUP BY: the group whose key is
+    // NULL contains only NULL values, so MAX(id) returns NULL for it.
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
       LONG.copy(nullable = true),
+      LONG.copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `group_concat over a nullable column stays nullable with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       group_concat(name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
       LONG,
+      String::class.asClassName().copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `group_concat over a non null column is non null with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       group_concat(name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      String::class.asClassName(),
     ).inOrder()
   }
 

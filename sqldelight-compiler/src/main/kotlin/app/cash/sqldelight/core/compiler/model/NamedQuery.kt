@@ -239,8 +239,7 @@ data class NamedQuery(
     val selectStmt = this as? SqlSelectStmt
     val hasGroupBy = selectStmt?.groupBy != null
     val hasAggregate = selectStmt?.resultColumnList?.any { resultColumn ->
-      val expr = resultColumn.expr
-      expr is SqlFunctionExpr && expr.functionName.text.lowercase() in AGGREGATE_FUNCTIONS
+      resultColumn.expr?.asAggregateFunction() != null
     } ?: false
 
     return queryExposed().flatMap {
@@ -254,24 +253,29 @@ data class NamedQuery(
             while (!namesUsed.add(name)) name += "_"
           }
 
-          var type = queryColumn.type().copy(name = name)
+          val type = queryColumn.type().copy(name = name)
+          val aggregate = queryColumn.element.asAggregateFunction()
 
-          if (hasAggregate) {
-            val isAggregate = queryColumn.element is SqlFunctionExpr &&
-              (queryColumn.element as SqlFunctionExpr).functionName.text.lowercase() in AGGREGATE_FUNCTIONS
-
-            // Goup by statements filter out empty groups so we don't have to
-            // worry about non-null columns returning as nullable.
-            if (!hasGroupBy && !isAggregate) {
-              type = type.asNullable()
-            } else if (hasGroupBy && isAggregate) {
-              type = type.asNonNullable()
-            }
+          return@map when {
+            !hasAggregate -> type
+            // Without a GROUP BY the aggregate collapses every row, so other columns may
+            // read from no row and become nullable.
+            !hasGroupBy && aggregate == null -> type.asNullable()
+            // A grouped aggregate is non-null only when it can never return NULL.
+            hasGroupBy && aggregate != null && aggregate.alwaysReturnsNonNull() -> type.asNonNullable()
+            else -> type
           }
-
-          return@map type
         }
     }
+  }
+
+  private fun PsiElement.asAggregateFunction(): SqlFunctionExpr? = (this as? SqlFunctionExpr)?.takeIf { it.functionName.text.lowercase() in AGGREGATE_FUNCTIONS }
+
+  // count/total always return a value; max/min/sum/avg/group_concat return NULL when their
+  // argument is NULL (e.g. group_concat over a nullable LEFT JOIN column).
+  private fun SqlFunctionExpr.alwaysReturnsNonNull(): Boolean {
+    if (functionName.text.lowercase() in NON_NULLABLE_AGGREGATE_FUNCTIONS) return true
+    return exprList.isNotEmpty() && exprList.none { it.type().javaType.isNullable }
   }
 
   private fun QueryElement.QueryColumn.type(): IntermediateType {
@@ -305,6 +309,11 @@ data class NamedQuery(
       "avg",
       "total",
       "group_concat",
+    )
+
+    private val NON_NULLABLE_AGGREGATE_FUNCTIONS = setOf(
+      "count",
+      "total",
     )
   }
 }
