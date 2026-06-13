@@ -22,7 +22,7 @@
 - [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
 
 ### Fixed
-- [Compiler] Suppress Kotlin extra warnings in generated code (#6029 by @eyupcanakman)
+- [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
 - [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
