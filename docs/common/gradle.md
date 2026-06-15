@@ -165,7 +165,10 @@ Available dialects:
 * SQLite 3.30: `sqlite-3-30-dialect`
 * SQLite 3.33: `sqlite-3-33-dialect`
 * SQLite 3.35: `sqlite-3-35-dialect`
+* SQLite 3.37: `sqlite-3-37-dialect`
 * SQLite 3.38: `sqlite-3-38-dialect`
+* SQLite 3.39: `sqlite-3-39-dialect`
+* SQLite 3.44: `sqlite-3-44-dialect`
 
 === "Kotlin"
     ```kotlin
