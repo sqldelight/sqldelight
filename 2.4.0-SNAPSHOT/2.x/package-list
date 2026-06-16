@@ -63,6 +63,11 @@ app.cash.sqldelight.dialects.sqlite_3_38
 app.cash.sqldelight.dialects.sqlite_3_38.grammar
 app.cash.sqldelight.dialects.sqlite_3_38.grammar.psi
 app.cash.sqldelight.dialects.sqlite_3_38.grammar.psi.impl
+module:sqlite-3-39
+app.cash.sqldelight.dialects.sqlite_3_39
+app.cash.sqldelight.dialects.sqlite_3_39.grammar
+app.cash.sqldelight.dialects.sqlite_3_39.grammar.psi
+app.cash.sqldelight.dialects.sqlite_3_39.grammar.psi.impl
 module:sqlite-3-44
 app.cash.sqldelight.dialects.sqlite_3_44
 app.cash.sqldelight.dialects.sqlite_3_44.grammar
