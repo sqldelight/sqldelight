@@ -33,6 +33,7 @@
 - [Intellij Plugin] Fix deprecations causing crash in IDEA 2026.2 (#6247 by @griffio)
 - [Gradle Plugin] Fix generated sources not being picked up by Kotlin compilation on AGP 8.9 through 8.11
 - [PostgreSQL Dialect] Fix lower and upper functions using Primitive bind argument to default as TEXT (#6262 by @griffio)
+- [Compiler] Fix insert values with data class binding using adapters and migrations changing nullability (#6269 by griffio)
 - [Compiler] Use nullable bind argument with null safe operators(IS and IS DISTINCT FROM) (#6265 by @griffio)
 - [Gradle Plugin] Use AGP's variant resolution for project dependencies (#6217 by @maxsav)
 - [Gradle Plugin] Fix build cache miss for generateDatabaseInterface when the list of AGP variants differ between builds
