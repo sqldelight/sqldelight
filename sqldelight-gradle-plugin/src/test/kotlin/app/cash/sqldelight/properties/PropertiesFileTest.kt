@@ -95,4 +95,24 @@ class PropertiesFileTest {
       )
     }
   }
+
+  @Test fun `properties model builds when plugin is applied without any databases`() {
+    withTemporaryFixture {
+      gradleFile(
+        """|
+        |plugins {
+        |  alias(libs.plugins.kotlin.multiplatform)
+        |  alias(libs.plugins.sqldelight)
+        |}
+        |
+        |kotlin {
+        |  jvm()
+        |}
+        """.trimMargin(),
+      )
+
+      // Fetching the tooling model must not throw when no databases are configured.
+      assertThat(properties().databases).isEmpty()
+    }
+  }
 }
