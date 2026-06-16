@@ -14,6 +14,7 @@ enum class TestDialect(val dialect: SqlDelightDialect) {
   SQLITE_3_35(app.cash.sqldelight.dialects.sqlite_3_35.SqliteDialect()),
   SQLITE_3_37(app.cash.sqldelight.dialects.sqlite_3_37.SqliteDialect()),
   SQLITE_3_38(app.cash.sqldelight.dialects.sqlite_3_38.SqliteDialect()),
+  SQLITE_3_39(app.cash.sqldelight.dialects.sqlite_3_39.SqliteDialect()),
   SQLITE_3_44(app.cash.sqldelight.dialects.sqlite_3_44.SqliteDialect()),
   POSTGRESQL(PostgreSqlDialect()),
   HSQL(HsqlDialect()),

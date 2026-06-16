@@ -1,4 +1,4 @@
-package app.cash.sqldelight.dialects.sqlite_3_44
+package app.cash.sqldelight.dialects.sqlite_3_39
 
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteTestFixtures as Sqlite_3_18SqliteTestFixtures
 import app.cash.sqldelight.dialects.sqlite_3_24.SqliteTestFixtures as Sqlite_3_24SqliteTestFixtures
@@ -8,7 +8,6 @@ import app.cash.sqldelight.dialects.sqlite_3_33.SqliteTestFixtures as Sqlite_3_3
 import app.cash.sqldelight.dialects.sqlite_3_35.SqliteTestFixtures as Sqlite_3_35SqliteTestFixtures
 import app.cash.sqldelight.dialects.sqlite_3_37.SqliteTestFixtures as Sqlite_3_37SqliteTestFixtures
 import app.cash.sqldelight.dialects.sqlite_3_38.SqliteTestFixtures as Sqlite_3_38SqliteTestFixtures
-import app.cash.sqldelight.dialects.sqlite_3_39.SqliteTestFixtures as Sqlite_3_39SqliteTestFixtures
 import com.alecstrong.sql.psi.test.fixtures.FixturesTest
 import java.io.File
 import org.junit.runner.RunWith
@@ -16,13 +15,12 @@ import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 
 @RunWith(Parameterized::class)
-class Sqlite344FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
+class Sqlite339FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name, fixtureRoot) {
   override val replaceRules = arrayOf(
     "ORDER or WHERE expected" to "ORDER, WHERE or WINDOW expected",
     "'(', ')', ',', '.', <binary like operator real>, BETWEEN or IN expected, got ','"
       to "'(', ')', ',', '.', <binary like operator real>, <json binary operator real>, BETWEEN or IN expected, got ','",
   )
-
   override fun setupDialect() {
     SqliteDialect().setup()
   }
@@ -41,7 +39,6 @@ class Sqlite344FixturesTest(name: String, fixtureRoot: File) : FixturesTest(name
         Sqlite_3_35SqliteTestFixtures.fixtures +
         Sqlite_3_37SqliteTestFixtures.fixtures +
         Sqlite_3_38SqliteTestFixtures.fixtures +
-        Sqlite_3_39SqliteTestFixtures.fixtures +
         SqliteTestFixtures.fixtures + ansiFixtures
   }
 }
