@@ -828,17 +828,13 @@ json_function_stmt ::= ( 'row_to_json' | 'to_json' | 'to_jsonb' ) LP ( {table_al
 
 json_agg_stmt ::= ( 'json_agg' | 'jsonb_agg' | 'json_agg_strict' | 'jsonb_agg_strict')
 LP [ ALL | DISTINCT ] ( json_expression | {table_alias} | {table_name} | <<expr '-1'>> ) [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
-[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
-pin = 2
-}
+[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ]
 
 json_object_agg_stmt ::= ('json_object_agg' | 'jsonb_object_agg' | 'json_object_agg_strict' | 'jsonb_object_agg_strict'
 | 'json_object_agg_unique' | 'jsonb_object_agg_unique' | 'json_object_agg_unique_strict' | 'jsonb_object_agg_unique_strict' ) {
 LP [ ALL | DISTINCT ] ( json_expression | {column_expr} | <<expr '-1'>> ) COMMA ( json_expression | {column_expr} | <<expr '-1'>> )
 [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
-[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ] {
-pin = 2
-}
+[ 'FILTER' LP WHERE <<expr '-1'>> [ double_colon_cast_operator ] RP ]
 
 geometry_point_function_stmt ::= ( ( 'ST_POINTZM' | 'ST_POINTZ' | 'ST_POINTM' | 'ST_POINT' ) LP ( {bind_expr} | {signed_number} ) ( COMMA ( {bind_expr} | {signed_number} ) ) * [ COMMA {signed_number} ] RP ) |
 ( ( 'ST_MAKEPOINTM' | 'ST_MAKEPOINT' ) LP ( {bind_expr} | {signed_number} ) ( COMMA ( {bind_expr} | {signed_number} ) ) * RP ) {
