@@ -19,7 +19,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
@@ -51,7 +51,7 @@ jobs:
       contents: read
     needs: publish_archives
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
@@ -85,7 +85,7 @@ jobs:
     needs: publish_archives
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       # https://github.com/gradle/gradle-build-action/issues/561
       - name: Create Gradle files
         run: |
@@ -133,7 +133,7 @@ jobs:
       - publish_plugin
       - publish_npm_packages
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Extract release notes
         id: release_notes
