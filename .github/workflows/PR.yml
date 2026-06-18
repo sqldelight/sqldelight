@@ -151,7 +151,7 @@ jobs:
         run: echo "All IntelliJ plugin verification checks passed!"
 
   buildSample:
-    runs-on: macos-15
+    runs-on: macos-26
     permissions:
       contents: read
     steps:
@@ -166,7 +166,7 @@ jobs:
       - run: ./gradlew -p sample build --parallel
 
   buildWebSample:
-    runs-on: macos-15
+    runs-on: macos-26
     permissions:
       contents: read
     steps:
