@@ -39,6 +39,7 @@
 - [Gradle Plugin] Use AGP's variant resolution for project dependencies (#6217 by @maxsav)
 - [Gradle Plugin] Fix build cache miss for generateDatabaseInterface when the list of AGP variants differ between builds
 - [Gradle Plugin] Fix IDE sync crash when the plugin is applied without configuring any databases (#6088)
+- [PostgreSQL Dialect] Fix json aggregate functions when using nested function call (#6281 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
