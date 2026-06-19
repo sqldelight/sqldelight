@@ -29,6 +29,9 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -142,6 +145,26 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
     assertEquals(6L, refreshKey)
   }
 
+  @Test fun empty_database_initial_load_returns_empty_page() = runDbTest {
+    clearTable()
+    val results = source.load(PagingSource.LoadParams.Refresh(key = null, loadSize = 2, false))
+
+    assertIs<PagingSource.LoadResult.Page<Long, Long>>(results)
+    assertTrue(results.data.isEmpty())
+    assertNull(results.prevKey)
+    assertNull(results.nextKey)
+  }
+
+  @Test fun empty_database_load_registers_observer_and_invalidates_on_insert() = runDbTest {
+    clearTable()
+    val results = source.load(PagingSource.LoadParams.Refresh(key = null, loadSize = 2, false))
+
+    assertIs<PagingSource.LoadResult.Page<Long, Long>>(results)
+    assertFalse(source.invalid)
+    insert(0L)
+    assertTrue(source.invalid)
+  }
+
   private fun pageBoundaries(anchor: Long?, limit: Long): Query<Long> {
     val sql = """
       |SELECT value
@@ -165,8 +188,8 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
         bindLong(1, anchor)
       }
 
-      override fun addListener(listener: Listener) = Unit
-      override fun removeListener(listener: Listener) = Unit
+      override fun addListener(listener: Listener) = driver.addListener("testTable", listener = listener)
+      override fun removeListener(listener: Listener) = driver.removeListener("testTable", listener = listener)
     }
   }
 
@@ -185,8 +208,8 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
         bindLong(1, endExclusive)
       }
 
-      override fun addListener(listener: Listener) = Unit
-      override fun removeListener(listener: Listener) = Unit
+      override fun addListener(listener: Listener) = driver.addListener("testTable", listener = listener)
+      override fun removeListener(listener: Listener) = driver.removeListener("testTable", listener = listener)
     }
   }
 
@@ -194,5 +217,11 @@ abstract class BaseKeyedQueryPagingSourceTest : DbTest {
     db.execute(0, "INSERT INTO testTable (value) VALUES (?)", 1) {
       bindLong(0, value)
     }
+    db.notifyListeners("testTable")
+  }
+
+  private fun clearTable() {
+    driver.execute(null, "DELETE FROM testTable", 0)
+    driver.notifyListeners("testTable")
   }
 }
