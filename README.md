@@ -27,7 +27,7 @@ SQLite
 * [Android](https://sqldelight.github.io/sqldelight/android_sqlite)
 * [Native (iOS, macOS, or Windows)](https://sqldelight.github.io/sqldelight/native_sqlite)
 * [JVM](https://sqldelight.github.io/sqldelight/jvm_sqlite)
-* [Javascript](https://sqldelight.github.io/sqldelight/js_sqlite)
+* [JavaScript](https://sqldelight.github.io/sqldelight/js_sqlite)
 * [Multiplatform](https://sqldelight.github.io/sqldelight/multiplatform_sqlite)
 
 [MySQL (JVM)](https://sqldelight.github.io/sqldelight/jvm_mysql/)

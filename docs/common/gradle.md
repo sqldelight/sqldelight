@@ -79,7 +79,7 @@ Type: `ConfigurableFileCollection`
 
 A collection of folders that the plugin will look in for your `.sq` and `.sqm` files.
 
-Defaults to `src/[prefix]main/sqldelight` with prefix depending on the applied kotlin plugin eg common for multiplatform.
+Defaults to `src/[prefix]main/sqldelight` with prefix depending on the applied Kotlin plugin, e.g., `common` for multiplatform.
 
 === "Kotlin"
     ```kotlin
