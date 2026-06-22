@@ -23,6 +23,69 @@ import org.junit.runner.RunWith
 class SelectQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
+  @Test fun `generate_series set returning function with column alias generates a query function - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectSeries:
+      |SELECT s.a AS dates
+      |FROM generate_series(0, 14, 7) AS s(a);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // generate_series observes no underlying table, so the query is an ExecutableQuery with no notifyQueries block.
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun selectSeries(): app.cash.sqldelight.ExecutableQuery<kotlin.Int> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectSeries", ""${'"'}
+      ||SELECT s.a AS dates
+      ||FROM generate_series(0, 14, 7) AS s(a)
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  cursor.getInt(0)!!
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `json_each set returning function with column aliases generates a query function - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectEach:
+      |SELECT t.key, t.value
+      |FROM json_each('{"a":1}') AS t(key, value);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // json_each observes no underlying table, so the query is an ExecutableQuery with no notifyQueries block.
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> selectEach(mapper: (key: kotlin.String, value_: kotlin.String) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectEach", ""${'"'}
+      ||SELECT t.key, t.value
+      ||FROM json_each('{"a":1}') AS t(key, value)
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getString(0)!!,
+      |    cursor.getString(1)!!
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `returning clause correctly generates a query function`(dialect: TestDialect) {
     assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
     val file = FixtureCompiler.parseSql(

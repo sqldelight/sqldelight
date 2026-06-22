@@ -28,7 +28,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
-import app.cash.sqldelight.dialect.api.TableFunctionRowType
+import app.cash.sqldelight.dialect.api.TableFunctionExprRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.NamedElement
@@ -88,7 +88,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
-  is TableFunctionRowType -> (sqFile().typeResolver.definitionType(columnType()).asNullable())
+  is TableFunctionExprRowType -> rowType(sqFile().typeResolver)
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
