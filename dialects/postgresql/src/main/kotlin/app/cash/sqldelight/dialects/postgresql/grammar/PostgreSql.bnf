@@ -539,6 +539,27 @@ unnest_table_function ::= 'unnest' {
        ]
 }
 
+generate_series_table_function ::= 'generate_series' {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.GenerateSeriesTableFunctionMixin"
+  implements = [
+         "com.alecstrong.sql.psi.core.psi.NamedElement";
+         "com.alecstrong.sql.psi.core.psi.SqlCompositeElement";
+         "app.cash.sqldelight.dialect.api.TableFunctionExprRowType"
+       ]
+}
+
+json_table_function ::= ( 'json_each' | 'jsonb_each' | 'json_each_text' | 'jsonb_each_text'
+                        | 'json_array_elements' | 'jsonb_array_elements'
+                        | 'json_array_elements_text' | 'jsonb_array_elements_text'
+                        | 'json_object_keys' | 'jsonb_object_keys' ) {
+  mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.JsonTableFunctionMixin"
+  implements = [
+         "com.alecstrong.sql.psi.core.psi.NamedElement";
+         "com.alecstrong.sql.psi.core.psi.SqlCompositeElement";
+         "app.cash.sqldelight.dialect.api.TableFunctionExprRowType"
+       ]
+}
+
 table_function_column_alias ::= ID | STRING {
   mixin = "app.cash.sqldelight.dialects.postgresql.grammar.mixins.TableFunctionColumnAliasMixin"
   implements = [
@@ -558,6 +579,8 @@ table_function_table_alias ::= ID | STRING {
 table_function_alias_name ::= table_function_table_alias [ LP table_function_column_alias ( COMMA table_function_column_alias ) * RP ]
 
 table_or_subquery ::= ( unnest_table_function LP <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP [ AS table_function_alias_name ]
+                      | generate_series_table_function LP <<expr '-1'>> ( COMMA <<expr '-1'>> ) * RP [ AS table_function_alias_name ]
+                      | json_table_function LP <<expr '-1'>> RP [ AS table_function_alias_name ]
                       | [ {database_name} DOT ] {table_name} [ [ AS ] {table_alias} ] [ INDEXED BY {index_name} | NOT INDEXED ]
                       | LP ( {table_or_subquery} ( COMMA {table_or_subquery} ) * | {join_clause} ) RP
                       | LP {compound_select_stmt} RP [ [ AS ] {table_alias} ] ) {
