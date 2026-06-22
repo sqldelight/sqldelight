@@ -224,7 +224,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "json_array_length", "jsonb_array_length" -> IntermediateType(PostgreSqlType.INTEGER)
     "jsonb_path_exists", "jsonb_path_match", "jsonb_path_exists_tz", "jsonb_path_match_tz" -> IntermediateType(BOOLEAN)
     "currval", "lastval", "nextval", "setval" -> IntermediateType(BIG_INT)
-    "generate_series" -> encapsulatingType(exprList, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP)
+    "generate_series" -> generateSeriesRowType(exprList)
     "regexp_count", "regexp_instr" -> IntermediateType(PostgreSqlType.INTEGER)
     "regexp_like" -> IntermediateType(BOOLEAN)
     "regexp_replace", "regexp_substr" -> IntermediateType(TEXT)
@@ -518,8 +518,12 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     }
 
     // assumes that arrayIntermediateType is ArrayDialectType
-    private fun unNestType(arrayIntermediateType: IntermediateType): IntermediateType {
+    internal fun unNestType(arrayIntermediateType: IntermediateType): IntermediateType {
       return (arrayIntermediateType.dialectType as ArrayDialectType).parameterizedType
     }
   }
 }
+
+internal fun TypeResolver.generateSeriesRowType(exprList: List<SqlExpr>): IntermediateType = encapsulatingType(exprList, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP)
+
+internal fun TypeResolver.unnestRowType(columnType: SqlTypeName): IntermediateType = PostgreSqlTypeResolver.unNestType(definitionType(columnType)).asNullable()
