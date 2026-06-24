@@ -53,6 +53,59 @@ class SelectQueryTypeTest {
     )
   }
 
+  @Test fun `unnest of an array literal cast resolves the row type from the cast - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectUnnest:
+      |SELECT u.a
+      |FROM UNNEST('{1,2}'::INTEGER[]) AS u(a);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // The unnest column unwraps the INTEGER[] cast to a nullable INTEGER, and observes no underlying table.
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> selectUnnest(mapper: (a: kotlin.Int?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectUnnest", ""${'"'}
+      ||SELECT u.a
+      ||FROM UNNEST('{1,2}'::INTEGER[]) AS u(a)
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getInt(0)
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `unnest of multiple array cast bind args resolves the row types from the casts - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectUnnestPairs:
+      |SELECT u.name, u.age
+      |FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS u(name, age);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // The unnest columns unwrap the TEXT[] / INTEGER[] casts to nullable TEXT / INTEGER.
+    assertThat(generator.customResultTypeFunction().toString()).contains(
+      "mapper: (name: kotlin.String?, age: kotlin.Int?)",
+    )
+  }
+
   @Test fun `json_each set returning function with column aliases generates a query function - postgres`() {
     val file = FixtureCompiler.parseSql(
       """
