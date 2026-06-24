@@ -41,6 +41,7 @@
 - [Gradle Plugin] Fix IDE sync crash when the plugin is applied without configuring any databases (#6088)
 - [PostgreSQL Dialect] Fix json aggregate functions when using nested function call (#6281 by @griffio)
 - [Paging3 Extension] Fix KeyedQueryPagingSource crash on empty database (#6284 by @woods-marshes)
+- [PostgreSQL Dialect] Improve support for set/table returning functions (#6289 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
