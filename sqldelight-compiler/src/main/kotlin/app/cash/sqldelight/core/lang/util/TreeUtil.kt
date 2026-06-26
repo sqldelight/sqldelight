@@ -28,7 +28,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.INTEGER
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
-import app.cash.sqldelight.dialect.api.TableFunctionRowType
+import app.cash.sqldelight.dialect.api.TableFunctionExprRowType
 import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.AliasElement
 import com.alecstrong.sql.psi.core.psi.NamedElement
@@ -88,7 +88,7 @@ internal fun PsiElement.type(): IntermediateType = when (this) {
       }
     }
   }
-  is TableFunctionRowType -> (sqFile().typeResolver.definitionType(columnType()).asNullable())
+  is TableFunctionExprRowType -> rowType(sqFile().typeResolver)
   is SqlExpr -> sqFile().typeResolver.resolvedType(this)
   is SqlResultColumn -> sqFile().typeResolver.resolvedType(expr!!)
   else -> throw IllegalStateException("Cannot get function type for psi type ${this.javaClass}")
@@ -224,7 +224,7 @@ private fun PsiElement.selectStarExpansions(resultColumns: SqlResultColumn): Lis
 
         buildString {
           if (query.table != null) {
-            append("${query.table!!.node.text}.")
+            append("${query.table!!.starExpansionLowerCaseName()}.")
           } else {
             val definition = columnElement.reference?.resolve()
             if (definition?.parent is SqlCreateViewStmt) {
@@ -233,12 +233,14 @@ private fun PsiElement.selectStarExpansions(resultColumns: SqlResultColumn): Lis
               append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
             }
           }
-          append(columnElement.node.text)
+          append(columnElement.starExpansionLowerCaseName())
         }
       }
     }.joinToString(separator = ", "),
   )
 }
+
+private fun PsiElement.starExpansionLowerCaseName(): String = if (this is TableFunctionExprRowType) node.text.lowercase() else node.text
 
 private operator fun IntRange.minus(amount: Int): IntRange {
   return IntRange(start - amount, endInclusive - amount)

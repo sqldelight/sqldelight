@@ -89,3 +89,24 @@ SELECT jsonb_agg(t)
 FROM ( SELECT 1 AS id) AS t;
 
 SELECT json_build_object('foo', 1, 2, row(3,'bar'));
+
+SELECT json_object_keys
+FROM json_object_keys('{"a":1,"b":2}');
+
+SELECT json_object_keys
+FROM json_object_keys(?::JSON);
+
+SELECT t
+FROM json_object_keys('{"a":1,"b":2}') AS t;
+
+SELECT t.value
+FROM json_array_elements('[1,2,3]') AS t(value);
+
+SELECT t.value
+FROM json_array_elements_text('["x","y"]') AS t(value);
+
+SELECT t.key, t.value
+FROM json_each('{"a":1,"b":2}') AS t(key, value);
+
+SELECT t.key, t.value
+FROM json_each_text('{"a":1,"b":2}') AS t(key, value);

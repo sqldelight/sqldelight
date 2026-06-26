@@ -23,6 +23,122 @@ import org.junit.runner.RunWith
 class SelectQueryTypeTest {
   @get:Rule val tempFolder = TemporaryFolder()
 
+  @Test fun `generate_series set returning function with column alias generates a query function - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectSeries:
+      |SELECT s.a AS dates
+      |FROM generate_series(0, 14, 7) AS s(a);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // generate_series observes no underlying table, so the query is an ExecutableQuery with no notifyQueries block.
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun selectSeries(): app.cash.sqldelight.ExecutableQuery<kotlin.Int> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectSeries", ""${'"'}
+      ||SELECT s.a AS dates
+      ||FROM generate_series(0, 14, 7) AS s(a)
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  cursor.getInt(0)!!
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `unnest of an array literal cast resolves the row type from the cast - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectUnnest:
+      |SELECT u.a
+      |FROM UNNEST('{1,2}'::INTEGER[]) AS u(a);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // The unnest column unwraps the INTEGER[] cast to a nullable INTEGER, and observes no underlying table.
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> selectUnnest(mapper: (a: kotlin.Int?) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectUnnest", ""${'"'}
+      ||SELECT u.a
+      ||FROM UNNEST('{1,2}'::INTEGER[]) AS u(a)
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getInt(0)
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `unnest of multiple array cast bind args resolves the row types from the casts - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectUnnestPairs:
+      |SELECT u.name, u.age
+      |FROM UNNEST(?::TEXT[], ?::INTEGER[]) AS u(name, age);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // The unnest columns unwrap the TEXT[] / INTEGER[] casts to nullable TEXT / INTEGER.
+    assertThat(generator.customResultTypeFunction().toString()).contains(
+      "mapper: (name: kotlin.String?, age: kotlin.Int?)",
+    )
+  }
+
+  @Test fun `json_each set returning function with column aliases generates a query function - postgres`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |selectEach:
+      |SELECT t.key, t.value
+      |FROM json_each('{"a":1}') AS t(key, value);
+      |
+      """.trimMargin(),
+      tempFolder,
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.first()
+    val generator = SelectQueryGenerator(query)
+
+    // json_each observes no underlying table, so the query is an ExecutableQuery with no notifyQueries block.
+    assertThat(generator.customResultTypeFunction().toString()).isEqualTo(
+      """
+      |public fun <T : kotlin.Any> selectEach(mapper: (key: kotlin.String, value_: kotlin.String) -> T): app.cash.sqldelight.ExecutableQuery<T> = app.cash.sqldelight.Query(${query.id.withUnderscores}, driver, "Test.sq", "selectEach", ""${'"'}
+      ||SELECT t.key, t.value
+      ||FROM json_each('{"a":1}') AS t(key, value)
+      |""${'"'}.trimMargin()) { cursor ->
+      |  check(cursor is app.cash.sqldelight.driver.jdbc.JdbcCursor)
+      |  mapper(
+      |    cursor.getString(0)!!,
+      |    cursor.getString(1)!!
+      |  )
+      |}
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `returning clause correctly generates a query function`(dialect: TestDialect) {
     assumeTrue(dialect in listOf(TestDialect.POSTGRESQL, TestDialect.SQLITE_3_35))
     val file = FixtureCompiler.parseSql(

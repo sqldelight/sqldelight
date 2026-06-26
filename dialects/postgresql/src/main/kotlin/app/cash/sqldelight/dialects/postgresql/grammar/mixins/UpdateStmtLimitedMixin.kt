@@ -4,6 +4,7 @@ import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlUpdateStmtL
 import com.alecstrong.sql.psi.core.psi.FromQuery
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.QueryElement
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlJoinClause
 import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.alecstrong.sql.psi.core.psi.SqlWithClauseAuxiliaryStmt
@@ -11,13 +12,18 @@ import com.alecstrong.sql.psi.core.psi.impl.SqlUpdateStmtLimitedImpl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 
+/**
+ * The left-hand side of a SET assignment targets the table being updated and must only resolve
+ * against it, never against the FROM/join tables. Exposing the FROM columns here lets a `SET col = ...` target
+ * wrongly resolve to a same-named FROM column (e.g. a UNNEST `AS u(a, b)`
+ */
 internal abstract class UpdateStmtLimitedMixin(
   node: ASTNode,
 ) : SqlUpdateStmtLimitedImpl(node),
   PostgreSqlUpdateStmtLimited,
   FromQuery {
   override fun queryAvailable(child: PsiElement): Collection<QueryElement.QueryResult> {
-    if (child != joinClause && joinClause != null) {
+    if (child !is SqlColumnName && child != joinClause && joinClause != null) {
       return super.queryAvailable(child) +
         joinClause!!.queryExposed().map { it.copy(adjacent = true) }
     }

@@ -1314,6 +1314,73 @@ class PostgreSqlTest {
   }
 
   @Test
+  fun testGenerateSeriesInt() {
+    assertThat(database.generateSeriesQueries.selectSeriesInt().executeAsList())
+      .containsExactly(1, 2, 3, 4, 5).inOrder()
+  }
+
+  @Test
+  fun testGenerateSeriesStep() {
+    assertThat(database.generateSeriesQueries.selectSeriesStep().executeAsList())
+      .containsExactly(0, 5, 10).inOrder()
+  }
+
+  @Test
+  fun testGenerateSeriesColumnAlias() {
+    assertThat(database.generateSeriesQueries.selectSeriesColumnAlias().executeAsList())
+      .containsExactly(0, 7, 14).inOrder()
+  }
+
+  @Test
+  fun testGenerateSeriesNoAlias() {
+    assertThat(database.generateSeriesQueries.selectSeriesNoAlias().executeAsList())
+      .containsExactly(1, 2, 3).inOrder()
+  }
+
+  @Test
+  fun testJsonObjectKeys() {
+    assertThat(database.jsonFunctionsQueries.selectObjectKeys().executeAsList())
+      .containsExactly("a", "b").inOrder()
+  }
+
+  @Test
+  fun testJsonArrayElements() {
+    assertThat(database.jsonFunctionsQueries.selectArrayElements().executeAsList())
+      .containsExactly("1", "2", "3").inOrder()
+  }
+
+  @Test
+  fun testJsonArrayElementsText() {
+    assertThat(database.jsonFunctionsQueries.selectArrayElementsText().executeAsList())
+      .containsExactly("x", "y").inOrder()
+  }
+
+  @Test
+  fun testJsonEach() {
+    with(database.jsonFunctionsQueries.selectEach().executeAsList()) {
+      assertThat(map { it.key }).containsExactly("a", "b").inOrder()
+      assertThat(map { it.value_ }).containsExactly("1", "2").inOrder()
+    }
+  }
+
+  @Test
+  fun testJsonEachText() {
+    with(database.jsonFunctionsQueries.selectEachText().executeAsList()) {
+      assertThat(map { it.key }).containsExactly("a", "b").inOrder()
+      assertThat(map { it.value_ }).containsExactly("1", "2").inOrder()
+    }
+  }
+
+  @Test
+  fun testGenerateSeriesTimestamp() {
+    with(database.generateSeriesQueries.selectSeriesTimestamp().executeAsList()) {
+      assertThat(this).hasSize(4)
+      assertThat(first()).isEqualTo(LocalDateTime.of(2024, 3, 29, 0, 0))
+      assertThat(last()).isEqualTo(LocalDateTime.of(2024, 3, 29, 3, 0))
+    }
+  }
+
+  @Test
   fun testJsonChecks() {
     database.jsonQueries.insertTestJsonCheck()
     with(database.jsonQueries.selectJsonChecks().executeAsList()) {

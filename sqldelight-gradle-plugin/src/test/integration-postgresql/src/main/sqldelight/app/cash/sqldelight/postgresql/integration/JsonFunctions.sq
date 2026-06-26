@@ -1,0 +1,19 @@
+selectObjectKeys:
+SELECT json_object_keys
+FROM json_object_keys('{"a":1,"b":2}');
+
+selectArrayElements:
+SELECT t.value
+FROM json_array_elements('[1,2,3]') AS t(value);
+
+selectArrayElementsText:
+SELECT t.value
+FROM json_array_elements_text('["x","y"]') AS t(value);
+
+selectEach:
+SELECT t.key, t.value
+FROM json_each('{"a":1,"b":2}') AS t(key, value);
+
+selectEachText:
+SELECT t.key, t.value
+FROM json_each_text('{"a":1,"b":2}') AS t(key, value);

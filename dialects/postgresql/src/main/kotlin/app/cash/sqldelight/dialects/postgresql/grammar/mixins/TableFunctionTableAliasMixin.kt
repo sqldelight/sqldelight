@@ -1,13 +1,27 @@
 package app.cash.sqldelight.dialects.postgresql.grammar.mixins
 
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlTableOrSubquery
 import com.alecstrong.sql.psi.core.psi.impl.SqlTableAliasImpl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 
 internal abstract class TableFunctionTableAliasMixin(
   node: ASTNode,
 ) : SqlTableAliasImpl(node) {
   override fun source(): PsiElement {
-    return (parent.parent.parent as SqlJoinClauseMixin).tablesAvailable(this).map { it.tableName }.first() // TODO fix
+    // `generate_series(...) AS g` / `json_object_keys(...) AS k`: the alias renames the function's
+    // single output column, so the alias resolves to the function node whose row type the column
+    // type is derived from.
+    val tableOrSubquery = PsiTreeUtil.getParentOfType(this, PostgreSqlTableOrSubquery::class.java)
+    tableOrSubquery?.let {
+      it.generateSeriesTableFunction?.let { fn -> return fn }
+      it.jsonTableFunction?.let { fn -> return fn }
+    }
+    // `UNNEST(...) AS u(...)`: when the array comes from a sibling table column (e.g. `FROM Business,
+    // UNNEST(zipcodes)`) the alias resolves to that observed table; a standalone `UNNEST('{1,2}'::INT[])`
+    // observes no table, so the alias resolves to the function node like generate_series.
+    return (parent.parent.parent as SqlJoinClauseMixin).tablesAvailable(this).map { it.tableName }.firstOrNull()
+      ?: tableOrSubquery!!.unnestTableFunction!!
   }
 }

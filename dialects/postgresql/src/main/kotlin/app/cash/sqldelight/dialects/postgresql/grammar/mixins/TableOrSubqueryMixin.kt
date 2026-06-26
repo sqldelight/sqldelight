@@ -45,6 +45,54 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode) :
       }
     }
 
+    if (generateSeriesTableFunction != null) {
+      // generate_series exposes a single output column. Three aliasing forms:
+      //  - `AS s(a)`  : table `s`, column named `a`        e.g. `SELECT s.a FROM generate_series(0, 14, 7) AS s(a)`
+      //  - `AS s`     : the table alias renames the column e.g. `SELECT s FROM generate_series(1, 2, 10) AS s`
+      //  - no alias   : the column is named `generate_series`
+      val tableFunctionAlias = children.filterIsInstance<PostgreSqlTableFunctionAliasName>().firstOrNull()
+
+      if (tableFunctionAlias != null) {
+        val tableName = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionTableAlias>().single()
+        val aliasColumns = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionColumnAlias>()
+        val column: PsiElement = aliasColumns.singleOrNull() ?: tableName
+        return@lazy listOf(
+          QueryResult(
+            table = tableName,
+            columns = listOf(QueryElement.QueryColumn(column)),
+          ),
+        )
+      }
+
+      return@lazy listOf(
+        QueryResult(
+          table = generateSeriesTableFunction!!,
+          columns = listOf(QueryElement.QueryColumn(generateSeriesTableFunction!!)),
+        ),
+      )
+    }
+
+    if (jsonTableFunction != null) {
+      // JSON set-returning functions. `*_object_keys` may be un-aliased (column named after the
+      // function); `*_array_elements`/`*_each` require column aliases (enforced in JsonTableFunctionMixin).
+      val tableFunctionAlias = children.filterIsInstance<PostgreSqlTableFunctionAliasName>().firstOrNull()
+
+      if (tableFunctionAlias != null) {
+        val tableName = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionTableAlias>().single()
+        val aliasColumns = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionColumnAlias>()
+        val columns =
+          if (aliasColumns.isNotEmpty()) aliasColumns.map { QueryElement.QueryColumn(it) } else listOf(QueryElement.QueryColumn(tableName))
+        return@lazy listOf(QueryResult(table = tableName, columns = columns))
+      }
+
+      return@lazy listOf(
+        QueryResult(
+          table = jsonTableFunction!!,
+          columns = listOf(QueryElement.QueryColumn(jsonTableFunction!!)),
+        ),
+      )
+    }
+
     // Default to parent implementation for non-UNNEST cases
     super.queryExposed()
   }
@@ -74,6 +122,50 @@ internal abstract class TableOrSubqueryMixin(node: ASTNode) :
             columns = listOf(QueryElement.QueryColumn(unnestTableFunction!!)),
           )
         }
+      }
+    }
+
+    if (generateSeriesTableFunction != null) {
+      val tableFunctionAlias = children.filterIsInstance<PostgreSqlTableFunctionAliasName>().firstOrNull()
+
+      if (tableFunctionAlias != null) {
+        val tableName = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionTableAlias>().single()
+        val aliasColumns = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionColumnAlias>()
+        val column: PsiElement = aliasColumns.singleOrNull() ?: tableName
+        return super.tablesAvailable(child) + LazyQuery(tableName) {
+          QueryResult(
+            table = tableName,
+            columns = listOf(QueryElement.QueryColumn(column)),
+          )
+        }
+      }
+
+      return super.tablesAvailable(child) + LazyQuery(generateSeriesTableFunction!!) {
+        QueryResult(
+          table = generateSeriesTableFunction!!,
+          columns = listOf(QueryElement.QueryColumn(generateSeriesTableFunction!!)),
+        )
+      }
+    }
+
+    if (jsonTableFunction != null) {
+      val tableFunctionAlias = children.filterIsInstance<PostgreSqlTableFunctionAliasName>().firstOrNull()
+
+      if (tableFunctionAlias != null) {
+        val tableName = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionTableAlias>().single()
+        val aliasColumns = tableFunctionAlias.children.filterIsInstance<PostgreSqlTableFunctionColumnAlias>()
+        val columns =
+          if (aliasColumns.isNotEmpty()) aliasColumns.map { QueryElement.QueryColumn(it) } else listOf(QueryElement.QueryColumn(tableName))
+        return super.tablesAvailable(child) + LazyQuery(tableName) {
+          QueryResult(table = tableName, columns = columns)
+        }
+      }
+
+      return super.tablesAvailable(child) + LazyQuery(jsonTableFunction!!) {
+        QueryResult(
+          table = jsonTableFunction!!,
+          columns = listOf(QueryElement.QueryColumn(jsonTableFunction!!)),
+        )
       }
     }
 

@@ -1692,6 +1692,205 @@ class InterfaceGeneration {
   }
 
   @Test
+  fun `postgres generate_series as a set returning function in from clause`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |seriesAliased:
+        |SELECT g
+        |FROM generate_series(1, 2, 10) AS g;
+        |
+        |seriesColumnAliased:
+        |SELECT s.a AS dates
+        |FROM generate_series(0, 14, 7) AS s(a);
+        |
+        |seriesNoAlias:
+        |SELECT *
+        |FROM generate_series(1, 10);
+        |
+        |seriesTimestamp:
+        |SELECT g
+        |FROM generate_series('2024-03-29 00:00:00'::TIMESTAMP, '2024-03-29 23:00:00'::TIMESTAMP, '1 hour'::INTERVAL) AS g;
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "GenerateSeries.sq",
+      dialect = PostgreSqlDialect(),
+    )
+
+    val (aliased, columnAliased, noAlias, timestamp) = file.namedQueries
+
+    assertThat(QueryInterfaceGenerator(aliased).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class SeriesAliased(
+      |  public val g: kotlin.Int,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    assertThat(QueryInterfaceGenerator(columnAliased).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class SeriesColumnAliased(
+      |  public val dates: kotlin.Int,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    assertThat(QueryInterfaceGenerator(noAlias).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class SeriesNoAlias(
+      |  public val generate_series: kotlin.Int,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    assertThat(QueryInterfaceGenerator(timestamp).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class SeriesTimestamp(
+      |  public val g: java.time.LocalDateTime,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `postgres unnest set returning function row types resolve from the source array column`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |CREATE TABLE Business(
+        |  id SERIAL PRIMARY KEY,
+        |  name TEXT NOT NULL,
+        |  zipcodes TEXT[] NOT NULL,
+        |  headcounts INTEGER[] NOT NULL
+        |);
+        |
+        |selectBusinesses:
+        |SELECT name, location.headcount, location.zipcode
+        |FROM Business, UNNEST(zipcodes, headcounts) AS location(zipcode, headcount);
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "Unnest.sq",
+      dialect = PostgreSqlDialect(),
+    )
+
+    val query = file.namedQueries.single()
+
+    // The unnest columns unwrap the source `TEXT[]` / `INTEGER[]` element types to nullable TEXT / INTEGER.
+    assertThat(QueryInterfaceGenerator(query).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class SelectBusinesses(
+      |  public val name: kotlin.String,
+      |  public val headcount: kotlin.Int?,
+      |  public val zipcode: kotlin.String?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `postgres json set returning functions expose fixed String columns`() {
+    val file = FixtureCompiler.parseSql(
+      """
+        |objectKeys:
+        |SELECT json_object_keys
+        |FROM json_object_keys('{"a":1,"b":2}');
+        |
+        |arrayElements:
+        |SELECT t.value
+        |FROM json_array_elements('[1,2,3]') AS t(value);
+        |
+        |arrayElementsText:
+        |SELECT t.value
+        |FROM json_array_elements_text('["x","y"]') AS t(value);
+        |
+        |each:
+        |SELECT t.key, t.value
+        |FROM json_each('{"a":1}') AS t(key, value);
+        |
+        |eachText:
+        |SELECT t.key, t.value
+        |FROM json_each_text('{"a":1}') AS t(key, value);
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "JsonFunctions.sq",
+      dialect = PostgreSqlDialect(),
+    )
+
+    val (objectKeys, arrayElements, arrayElementsText, each, eachText) = file.namedQueries
+
+    // object_keys: un-aliased; the column is named after the function (no OUT parameter in Postgres).
+    assertThat(QueryInterfaceGenerator(objectKeys).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class ObjectKeys(
+      |  public val json_object_keys: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    // array_elements: column aliased `value` (json -> String).
+    assertThat(QueryInterfaceGenerator(arrayElements).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class ArrayElements(
+      |  public val value_: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    // array_elements_text: column aliased `value` (text -> String).
+    assertThat(QueryInterfaceGenerator(arrayElementsText).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class ArrayElementsText(
+      |  public val value_: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    // json_each: columns aliased `key`, `value` (text, json -> String).
+    assertThat(QueryInterfaceGenerator(each).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class Each(
+      |  public val key: kotlin.String,
+      |  public val value_: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+
+    // json_each_text: columns aliased `key`, `value` (text, text -> String).
+    assertThat(QueryInterfaceGenerator(eachText).kotlinImplementationSpec().toString()).isEqualTo(
+      """
+      |public data class EachText(
+      |  public val key: kotlin.String,
+      |  public val value_: kotlin.String,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test
+  fun `postgres json_each without column aliases is an error`() {
+    val result = FixtureCompiler.compileSql(
+      """
+        |eachNoAlias:
+        |SELECT *
+        |FROM json_each('{"a":1}');
+      """.trimMargin(),
+      temporaryFolder,
+      fileName = "JsonEachError.sq",
+      overrideDialect = PostgreSqlDialect(),
+    )
+
+    assertThat(result.errors.any { "requires 2 column aliases" in it }).isTrue()
+  }
+
+  @Test
   fun `postgres using numeric window function returns BigDecimal`() {
     val file = FixtureCompiler.parseSql(
       """

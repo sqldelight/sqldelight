@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.lang.util
 
 import app.cash.sqldelight.core.lang.util.TableNameElement.CreateTableName
+import app.cash.sqldelight.dialect.api.TableFunctionExprRowType
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -33,6 +34,7 @@ internal fun PsiElement.referencedTables(
   compoundSelectStmt: SqlCompoundSelectStmt? = null,
 ): List<TableNameElement> = when (this) {
   is SqlCompoundSelectStmt -> tablesObserved()
+  is TableFunctionExprRowType -> emptyList() // Set/Table returning functions observe no underlying table
   is SqlTableAlias -> source().referencedTables()
   is SqlNewTableName -> {
     listOf(TableNameElement.NewTableName(this))
