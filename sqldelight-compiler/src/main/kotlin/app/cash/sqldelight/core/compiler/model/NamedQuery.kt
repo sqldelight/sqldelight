@@ -40,6 +40,7 @@ import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
 import app.cash.sqldelight.dialect.api.PrimitiveType.TEXT
 import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.SelectQueryable
+import app.cash.sqldelight.dialect.api.TableFunctionExprRowType
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
@@ -227,6 +228,7 @@ data class NamedQuery(
   }
 
   private fun PsiElement.functionName() = when (this) {
+    is TableFunctionExprRowType -> allocateName(this as NamedElement).lowercase()
     is NamedElement -> allocateName(this)
     is SqlExpr -> name
     is SqlPragmaName -> text

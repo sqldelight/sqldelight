@@ -224,7 +224,7 @@ private fun PsiElement.selectStarExpansions(resultColumns: SqlResultColumn): Lis
 
         buildString {
           if (query.table != null) {
-            append("${query.table!!.node.text}.")
+            append("${query.table!!.starExpansionLowerCaseName()}.")
           } else {
             val definition = columnElement.reference?.resolve()
             if (definition?.parent is SqlCreateViewStmt) {
@@ -233,12 +233,14 @@ private fun PsiElement.selectStarExpansions(resultColumns: SqlResultColumn): Lis
               append("${(definition.parent.parent as SqlCreateTableStmt).tableName.node.text}.")
             }
           }
-          append(columnElement.node.text)
+          append(columnElement.starExpansionLowerCaseName())
         }
       }
     }.joinToString(separator = ", "),
   )
 }
+
+private fun PsiElement.starExpansionLowerCaseName(): String = if (this is TableFunctionExprRowType) node.text.lowercase() else node.text
 
 private operator fun IntRange.minus(amount: Int): IntRange {
   return IntRange(start - amount, endInclusive - amount)
