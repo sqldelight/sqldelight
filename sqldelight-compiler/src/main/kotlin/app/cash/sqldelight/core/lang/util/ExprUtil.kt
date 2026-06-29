@@ -111,12 +111,7 @@ internal object AnsiSqlTypeResolver : TypeResolver {
      *
      */
     "sum" -> {
-      val type = exprList[0].type()
-      if (type.dialectType == INTEGER && !type.javaType.isNullable) {
-        type.asNullable()
-      } else {
-        IntermediateType(REAL).asNullable()
-      }
+      encapsulatingTypePreferringKotlin(exprList, INTEGER, REAL) { true }
     }
 
     "lower", "ltrim", "replace", "rtrim", "substr", "trim", "upper", "group_concat" -> {
@@ -234,17 +229,16 @@ private fun SqlExpr.ansiType(): IntermediateType = when (this) {
     ) {
       IntermediateType(PrimitiveType.BOOLEAN)
     } else {
-      typeResolver.encapsulatingType(
-        exprList = getExprList(),
-        nullability = { exprListNullability ->
-          (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
-            exprListNullability.any { it }
-        },
+      typeResolver.encapsulatingTypePreferringKotlin(
+        getExprList(),
         INTEGER,
         REAL,
         TEXT,
         BLOB,
-      )
+      ) { exprListNullability ->
+        (this is SqlBinaryAddExpr || this is SqlBinaryMultExpr || this is SqlBinaryPipeExpr) &&
+          exprListNullability.any { it }
+      }
     }
   }
 
