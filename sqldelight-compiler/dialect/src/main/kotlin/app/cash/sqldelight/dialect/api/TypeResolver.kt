@@ -74,7 +74,16 @@ fun TypeResolver.encapsulatingType(
     }
     val otherFunctionParameters = sqlTypes.distinct() - PrimitiveType.ARGUMENT
     if (otherFunctionParameters.size == 1) {
-      return IntermediateType(otherFunctionParameters.single())
+      val nonArgumentTypes = types.filter { it.dialectType != PrimitiveType.ARGUMENT }
+      val first = nonArgumentTypes.first()
+      val customType = first.javaType.copy(nullable = false)
+      val hasCustomType = customType != first.dialectType.javaType.copy(nullable = false)
+      val homogeneous = nonArgumentTypes.all { it.javaType.copy(nullable = false) == customType }
+      return if (hasCustomType && homogeneous) {
+        first.asNonNullable()
+      } else {
+        IntermediateType(otherFunctionParameters.single())
+      }
     }
     throw AnnotationException("The Kotlin type of the argument cannot be inferred, use CAST instead.", exprList.first())
   }
