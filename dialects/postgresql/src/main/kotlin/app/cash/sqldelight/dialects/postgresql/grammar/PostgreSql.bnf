@@ -920,7 +920,9 @@ plsql_trigger_var_expression ::= 'TG_OP' | 'TG_WHEN' | 'TG_LEVEL' | 'TG_OP' | 'T
 plsql_assignment ::= {column_expr} ':=' <<expr '-1'>>
 plsql_conditional ::= IF <<expr '-1'>> 'THEN' plsql_statement [ ( 'ELSIF' <<expr '-1'>> 'THEN' plsql_statement ) * ] [ 'ELSE' plsql_statement ] END IF
 plsql_return ::= 'RETURN' ( 'NEW' | 'OLD' | NULL )
-plsql_statement ::= ( plsql_return SEMI | plsql_conditional SEMI | plsql_assignment SEMI | delete_stmt_limited SEMI | insert_stmt SEMI | update_stmt_limited SEMI ) *
+plsql_raise_level ::= 'EXCEPTION' | 'WARNING' | 'NOTICE'
+plsql_raise ::= 'RAISE' plsql_raise_level string_literal ( COMMA <<expr '-1'>> ) * [ USING 'ERRCODE' EQ string_literal ]
+plsql_statement ::= ( plsql_return SEMI | plsql_conditional SEMI | plsql_assignment SEMI | plsql_raise SEMI | delete_stmt_limited SEMI | insert_stmt SEMI | update_stmt_limited SEMI ) *
 
 create_function_stmt ::= CREATE [ OR REPLACE ] 'FUNCTION' {function_expr} 'RETURNS' TRIGGER [ 'LANGUAGE' 'PLPGSQL' ] AS
 '$$'
