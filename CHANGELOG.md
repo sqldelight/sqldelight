@@ -15,6 +15,7 @@
 - [Compiler] Add `allTableNames` function to schema (#6245 by @edenman)
 - [PostgreSQL Dialect] Add support for ANY operator (#6253 by @griffio)
 - [SQLite Dialect] Add SQLite 3.39 support RIGHT JOIN and FULL JOIN (#6273 by @griffio)
+- [PostgreSQL Dialect] Add support for `RAISE` statement in trigger functions (#6297 by @griffio)
 
 ### Changed
 - [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
