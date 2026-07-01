@@ -137,3 +137,27 @@ CREATE OR REPLACE TRIGGER accounts_check_balance
     BEFORE UPDATE OF balance ON accounts
     FOR EACH ROW
     EXECUTE FUNCTION accounts_check_balance();
+
+CREATE OR REPLACE FUNCTION accounts_sync_audit()
+RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+BEGIN
+    UPDATE accounts_audit SET balance = new.balance, changed_on = NOW() WHERE account_id = new.id;
+
+    IF FOUND THEN
+        RETURN new;
+    END IF;
+
+    INSERT INTO accounts_audit(account_id, balance, changed_on) VALUES (new.id, new.balance, NOW());
+
+    IF NOT FOUND THEN
+        RETURN NULL;
+    END IF;
+
+    RETURN new;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER accounts_sync_audit
+    AFTER INSERT OR UPDATE OF balance ON accounts
+    FOR EACH ROW
+    EXECUTE FUNCTION accounts_sync_audit();
