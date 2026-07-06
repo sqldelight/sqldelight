@@ -146,6 +146,7 @@ overrides ::= type_name
   | binary_like_operator
   | literal_value
   | with_clause
+  | function_name
 
 column_constraint ::= [ CONSTRAINT {identifier} ] (
   PRIMARY KEY [ ASC | DESC ] [ {conflict_clause} ] |
@@ -278,6 +279,12 @@ binary_like_operator ::= ( 'ILIKE' | LIKE | GLOB | REGEXP | MATCH ) {
    extends = "com.alecstrong.sql.psi.core.psi.impl.SqlBinaryLikeOperatorImpl"
    implements = "com.alecstrong.sql.psi.core.psi.SqlBinaryLikeOperator"
    override = true
+}
+
+function_name ::= id | REPLACE {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlFunctionNameImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlFunctionName"
+  override = true
 }
 
 identity_clause ::= 'IDENTITY' [ LP [ 'SEQUENCE' 'NAME' sequence_name ] [ sequence_parameters* ] RP ]

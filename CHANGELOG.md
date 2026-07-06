@@ -7,6 +7,7 @@
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
 - [PostgreSQL Dialect] Add basic LTREE support (#5880 by @yesitskev @griffio)
+- [PostgreSQL Dialect] Support uppercase REPLACE as a function name (#6301 by @eyupcanakman)
 - [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
 - [PostgreSQL Dialect] Add support for ALTER INDEX (#6224 by @griffio)
 - [SQLite Dialect] Add support for SQLite 3.44 aggregate functions DISTINCT, ORDER BY and FILTER (#6236 by @griffio)
