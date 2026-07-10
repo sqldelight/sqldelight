@@ -111,3 +111,53 @@ $$;
 CREATE TRIGGER emp_audit
 AFTER INSERT OR UPDATE OR DELETE ON emp
   FOR EACH ROW EXECUTE FUNCTION process_emp_audit();
+
+CREATE OR REPLACE FUNCTION accounts_check_balance()
+RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+BEGIN
+    RAISE NOTICE 'checking balance for account %', new.id;
+
+    IF new.balance IS NULL THEN
+        RAISE WARNING 'balance is null for account %', new.id;
+    END IF;
+
+    IF new.balance < old.balance THEN
+        RAISE EXCEPTION 'balance decreased for account %', new.id USING ERRCODE = 'check_violation';
+    END IF;
+
+    IF new.balance < 0 THEN
+        RAISE EXCEPTION 'negative balance not allowed' USING ERRCODE = '23514';
+    END IF;
+
+    RETURN new;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER accounts_check_balance
+    BEFORE UPDATE OF balance ON accounts
+    FOR EACH ROW
+    EXECUTE FUNCTION accounts_check_balance();
+
+CREATE OR REPLACE FUNCTION accounts_sync_audit()
+RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+BEGIN
+    UPDATE accounts_audit SET balance = new.balance, changed_on = NOW() WHERE account_id = new.id;
+
+    IF FOUND THEN
+        RETURN new;
+    END IF;
+
+    INSERT INTO accounts_audit(account_id, balance, changed_on) VALUES (new.id, new.balance, NOW());
+
+    IF NOT FOUND THEN
+        RETURN NULL;
+    END IF;
+
+    RETURN new;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER accounts_sync_audit
+    AFTER INSERT OR UPDATE OF balance ON accounts
+    FOR EACH ROW
+    EXECUTE FUNCTION accounts_sync_audit();
