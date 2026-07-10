@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>PLSQL_TRIGGER_VAR_EXPRESSION_REAL_7_0</title>
+    <title>getPlsqlFoundExpression</title>
 <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
     <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -29,7 +29,7 @@
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script><link rel="icon" href="/sqldelight/2.4.0-SNAPSHOT/images/icon-cashapp.png"></head>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
 <div class="root">
     <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
@@ -89,12 +89,12 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="member" id="content" pageids="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlTypes/PLSQL_TRIGGER_VAR_EXPRESSION_REAL_7_0/#/PointingToDeclaration//-1264942193">
-  <div class="breadcrumbs"><a href="../../index.html">postgresql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.postgresql.grammar.psi</a><span class="delimiter">/</span><a href="index.html">PostgreSqlTypes</a><span class="delimiter">/</span><span class="current">PLSQL_TRIGGER_VAR_EXPRESSION_REAL_7_0</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids="postgresql::app.cash.sqldelight.dialects.postgresql.grammar.psi/PostgreSqlBooleanNotExpression/getPlsqlFoundExpression/#/PointingToDeclaration//-1264942193">
+  <div class="breadcrumbs"><a href="../../index.html">postgresql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.postgresql.grammar.psi</a><span class="delimiter">/</span><a href="index.html">PostgreSqlBooleanNotExpression</a><span class="delimiter">/</span><span class="current">getPlsqlFoundExpression</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>PLSQL_</span><wbr><span>TRIGGER_</span><wbr><span>VAR_</span><wbr><span>EXPRESSION_</span><wbr><span>REAL_</span><wbr><span>7_</span><wbr><span>0</span></h1>
+    <h1 class="cover"><span>get</span><wbr><span>Plsql</span><wbr><span>Found</span><wbr><span><span>Expression</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-s-q-l_-t-r-i-g-g-e-r_-v-a-r_-e-x-p-r-e-s-s-i-o-n_-r-e-a-l_7_0.html">PLSQL_TRIGGER_VAR_EXPRESSION_REAL_7_0</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-plsql-found-expression.html"><span class="token function">getPlsqlFoundExpression</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="../-postgre-sql-plsql-found-expression/index.html">PostgreSqlPlsqlFoundExpression</a></div></div></div>
 </div>
     <div class="footer">
         <div class="footer--container">

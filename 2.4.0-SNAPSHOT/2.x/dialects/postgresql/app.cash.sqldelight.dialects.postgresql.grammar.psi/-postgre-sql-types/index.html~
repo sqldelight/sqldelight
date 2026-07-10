@@ -3299,6 +3299,51 @@
               </div>
             </div>
           </div>
+<a data-name="220675919%2FProperties%2F-1264942193" anchor-label="PLSQL_FOUND_EXPRESSION" id="220675919%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-l-s-q-l_-f-o-u-n-d_-e-x-p-r-e-s-s-i-o-n.html"><span>PLSQL_</span><wbr><span>FOUND_</span><wbr><span>EXPRESSION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="220675919%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-s-q-l_-f-o-u-n-d_-e-x-p-r-e-s-s-i-o-n.html">PLSQL_FOUND_EXPRESSION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="950846026%2FProperties%2F-1264942193" anchor-label="PLSQL_RAISE" id="950846026%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-l-s-q-l_-r-a-i-s-e.html"><span>PLSQL_</span><wbr><span>RAISE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="950846026%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-s-q-l_-r-a-i-s-e.html">PLSQL_RAISE</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="544303557%2FProperties%2F-1264942193" anchor-label="PLSQL_RAISE_LEVEL" id="544303557%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-l-s-q-l_-r-a-i-s-e_-l-e-v-e-l.html"><span>PLSQL_</span><wbr><span>RAISE_</span><wbr><span>LEVEL</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="544303557%2FProperties%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-s-q-l_-r-a-i-s-e_-l-e-v-e-l.html">PLSQL_RAISE_LEVEL</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1983966508%2FProperties%2F-1264942193" anchor-label="PLSQL_RETURN" id="-1983966508%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -3340,21 +3385,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-s-q-l_-t-r-i-g-g-e-r_-v-a-r_-e-x-p-r-e-s-s-i-o-n.html">PLSQL_TRIGGER_VAR_EXPRESSION</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1297005383%2FProperties%2F-1264942193" anchor-label="PLSQL_TRIGGER_VAR_EXPRESSION_REAL_7_0" id="1297005383%2FProperties%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
-          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-p-l-s-q-l_-t-r-i-g-g-e-r_-v-a-r_-e-x-p-r-e-s-s-i-o-n_-r-e-a-l_7_0.html"><span>PLSQL_</span><wbr><span>TRIGGER_</span><wbr><span>VAR_</span><wbr><span>EXPRESSION_</span><wbr><span>REAL_</span><wbr><span>7_</span><wbr><span>0</span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1297005383%2FProperties%2F-1264942193"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-p-l-s-q-l_-t-r-i-g-g-e-r_-v-a-r_-e-x-p-r-e-s-s-i-o-n_-r-e-a-l_7_0.html">PLSQL_TRIGGER_VAR_EXPRESSION_REAL_7_0</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.tree/IElementType///PointingToDeclaration/">IElementType</span></div></div></div>
                 </div>
               </div>
             </div>
