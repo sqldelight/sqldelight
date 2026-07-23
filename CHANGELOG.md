@@ -25,6 +25,7 @@
 
 ### Fixed
 - [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
+- [SQLite Dialect] Validate optimistic lock column and WHERE clause in INSERT ... ON CONFLICT DO UPDATE (#6306 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
 - [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
