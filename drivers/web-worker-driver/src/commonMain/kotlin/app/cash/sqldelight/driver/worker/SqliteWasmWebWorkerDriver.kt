@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2026 Block, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package app.cash.sqldelight.driver.worker
 
 import app.cash.sqldelight.db.AfterVersion
@@ -27,15 +12,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * Configuration for the SQLite Wasm OPFS worker.
- *
- * @property databaseName database file name, relative to the origin-private file system root.
- */
-data class SqliteWasmWorkerConfig(
-  val databaseName: String = "sqldelight.db",
-)
-
-/**
  * A SQLite Wasm OPFS [SqlDriver] backed by an ECMAScript module Web Worker.
  *
  * Instances are created by [createSqliteWasmWebWorkerDriver]. Call [closeAndAwait] when
@@ -48,6 +24,8 @@ class SqliteWasmWebWorkerDriver internal constructor(
   private val driver: WebWorkerDriver,
   private val lifecycleWrapper: WorkerWrapper,
 ) : SqlDriver by driver {
+  // JS and Wasm run on a single thread, so this serializes suspending lifecycle sections against
+  // each other rather than guarding against parallel threads.
   private val lifecycleMutex = Mutex()
   private var released = false
 
@@ -99,12 +77,13 @@ class SqliteWasmWebWorkerDriver internal constructor(
 }
 
 /**
- * Creates a SQLite Wasm OPFS driver after the native worker has opened the configured database.
+ * Creates a SQLite Wasm OPFS driver after the native worker has opened [databaseName].
  *
- * The function returns only after the worker acknowledges a successful configure handshake.
+ * [databaseName] is a file name relative to the origin-private file system root. The function
+ * returns only after the worker acknowledges a successful configure handshake.
  */
 suspend fun createSqliteWasmWebWorkerDriver(
-  config: SqliteWasmWorkerConfig = SqliteWasmWorkerConfig(),
+  databaseName: String = DEFAULT_DATABASE_NAME,
 ): SqliteWasmWebWorkerDriver {
   val worker = createSqliteWasmWorker()
   val lifecycleWrapper = WorkerWrapper(worker)
@@ -115,7 +94,7 @@ suspend fun createSqliteWasmWebWorkerDriver(
         action = WorkerActions.configure,
         sql = null,
         statement = null,
-        databaseName = config.databaseName,
+        databaseName = databaseName,
       ),
     )
   } catch (throwable: Throwable) {
@@ -137,11 +116,11 @@ suspend fun createSqliteWasmWebWorkerDriver(
  */
 suspend fun createSqliteWasmWebWorkerDriver(
   schema: SqlSchema<QueryResult.AsyncValue<Unit>>,
-  config: SqliteWasmWorkerConfig = SqliteWasmWorkerConfig(),
+  databaseName: String = DEFAULT_DATABASE_NAME,
   migrateEmptySchema: Boolean = false,
   vararg callbacks: AfterVersion,
 ): SqliteWasmWebWorkerDriver {
-  val driver = createSqliteWasmWebWorkerDriver(config)
+  val driver = createSqliteWasmWebWorkerDriver(databaseName)
   return try {
     initializeSchema(driver, schema, migrateEmptySchema, callbacks)
     driver
@@ -156,3 +135,5 @@ suspend fun createSqliteWasmWebWorkerDriver(
 }
 
 internal expect fun createSqliteWasmWorker(): Worker
+
+private const val DEFAULT_DATABASE_NAME = "sqldelight.db"

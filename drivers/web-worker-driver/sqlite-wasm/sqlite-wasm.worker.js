@@ -1,20 +1,8 @@
-/*
- * Copyright (C) 2026 Block, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import sqlite3InitModule from "@sqlite.org/sqlite-wasm";
+
+// The OPFS file is locked by whichever connection is writing, so a second tab's write fails with
+// SQLITE_BUSY unless SQLite is told to retry. Applications can override this with a PRAGMA.
+const BUSY_TIMEOUT_MILLIS = 5000;
 
 let sqlite3 = null;
 let database = null;
@@ -91,6 +79,7 @@ async function configure(data) {
   }
 
   const openedDatabase = new initializedSqlite3.oo1.OpfsDb(path, "cw");
+  openedDatabase.exec(`PRAGMA busy_timeout = ${BUSY_TIMEOUT_MILLIS};`);
   sqlite3 = initializedSqlite3;
   database = openedDatabase;
   databasePath = path;

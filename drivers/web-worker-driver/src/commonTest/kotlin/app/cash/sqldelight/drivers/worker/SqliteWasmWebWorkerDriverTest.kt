@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2026 Block, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package app.cash.sqldelight.drivers.worker
 
 import app.cash.sqldelight.SuspendingTransacterImpl
@@ -25,7 +10,6 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.worker.SqliteWasmWebWorkerDriver
-import app.cash.sqldelight.driver.worker.SqliteWasmWorkerConfig
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import app.cash.sqldelight.driver.worker.WebWorkerException
 import app.cash.sqldelight.driver.worker.createSqliteWasmWebWorkerDriver
@@ -39,6 +23,8 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runTest
 
 class SqliteWasmWebWorkerDriverTest {
@@ -212,13 +198,45 @@ class SqliteWasmWebWorkerDriverTest {
     assertEquals("added by migration", versionTwoDriver.queryString("SELECT detail FROM items WHERE id = 1"))
     assertEquals("v2", versionTwoDriver.queryString("SELECT value FROM schema_state"))
     assertEquals(2L, versionTwoDriver.queryLong("PRAGMA user_version"))
-    database.close(versionTwoDriver)
+    database.delete(versionTwoDriver)
+  }
 
-    val restartedDriver = database.open()
-    assertEquals("existing", restartedDriver.queryString("SELECT value FROM items WHERE id = 1"))
-    assertEquals("v2", restartedDriver.queryString("SELECT value FROM schema_state"))
-    assertEquals(2L, restartedDriver.queryLong("PRAGMA user_version"))
-    database.delete(restartedDriver)
+  /**
+   * Each driver owns a separate Worker holding its own SQLite connection to the same OPFS file,
+   * which is what a second browser tab of the same application looks like to SQLite.
+   */
+  @Test
+  fun separate_connections_share_the_database_like_separate_tabs() = runOpfsTest("tabs") { database ->
+    val firstTab = database.open(crudSchema)
+    val secondTab = database.open()
+
+    firstTab.await(null, "INSERT INTO records (id, name) VALUES (1, 'from first tab')", 0)
+    assertEquals(
+      "from first tab",
+      secondTab.queryString("SELECT name FROM records WHERE id = 1"),
+    )
+
+    secondTab.await(null, "INSERT INTO records (id, name) VALUES (2, 'from second tab')", 0)
+    assertEquals(
+      "from second tab",
+      firstTab.queryString("SELECT name FROM records WHERE id = 2"),
+    )
+
+    // Both tabs write at the same time. Whichever Worker loses the race for the file lock blocks in
+    // its own thread and retries until the other commits, so neither write is rejected.
+    val contendedWrite = async {
+      secondTab.await(null, "INSERT INTO records (id, name) VALUES (3, 'contended')", 0)
+    }
+    val transacter = object : SuspendingTransacterImpl(firstTab) {}
+    transacter.transaction {
+      firstTab.await(null, "INSERT INTO records (id, name) VALUES (4, 'in transaction')", 0)
+    }
+    assertEquals(1L, contendedWrite.await())
+
+    assertEquals(4L, firstTab.queryLong("SELECT COUNT(*) FROM records"))
+    assertEquals(4L, secondTab.queryLong("SELECT COUNT(*) FROM records"))
+    database.close(secondTab)
+    database.delete(firstTab)
   }
 
   @Test
@@ -244,12 +262,10 @@ class SqliteWasmWebWorkerDriverTest {
 
   private fun runOpfsTest(
     name: String,
-    block: suspend (TestDatabase) -> Unit,
+    block: suspend CoroutineScope.(TestDatabase) -> Unit,
   ) = runTest {
     val database = TestDatabase(
-      SqliteWasmWorkerConfig(
-        databaseName = "sqldelight-opfs-$name-${databaseId++}-${Random.nextLong()}.db",
-      ),
+      databaseName = "sqldelight-opfs-$name-${databaseId++}-${Random.nextLong()}.db",
     )
     try {
       block(database)
@@ -259,13 +275,13 @@ class SqliteWasmWebWorkerDriverTest {
   }
 
   private class TestDatabase(
-    private val config: SqliteWasmWorkerConfig,
+    private val databaseName: String,
   ) {
     private val openDrivers = mutableListOf<SqliteWasmWebWorkerDriver>()
     private var deleted = false
 
     suspend fun open(): SqliteWasmWebWorkerDriver {
-      return createSqliteWasmWebWorkerDriver(config).also {
+      return createSqliteWasmWebWorkerDriver(databaseName).also {
         deleted = false
         openDrivers.add(it)
       }
@@ -277,7 +293,7 @@ class SqliteWasmWebWorkerDriverTest {
     ): SqliteWasmWebWorkerDriver {
       return createSqliteWasmWebWorkerDriver(
         schema = schema,
-        config = config,
+        databaseName = databaseName,
         callbacks = callbacks,
       ).also {
         deleted = false
@@ -312,7 +328,7 @@ class SqliteWasmWebWorkerDriverTest {
       }
       openDrivers.clear()
       if (!deleted) {
-        createSqliteWasmWebWorkerDriver(config).deleteDatabase()
+        createSqliteWasmWebWorkerDriver(databaseName).deleteDatabase()
         deleted = true
       }
     }

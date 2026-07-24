@@ -4,9 +4,9 @@ SQLDelight's SQLite Wasm worker runs the official [SQLite Wasm] build in a dedic
 module Web Worker. It opens the configured database with SQLite's standard `OpfsDb` VFS, which
 stores SQLite pages in the browser's origin-private file system (OPFS).
 
-Unlike SQL.js full-database exports, this integration does not persist by serializing and replacing
-the entire database. SQLite writes database pages through its OPFS VFS, so committed transactions
-have real SQLite transaction durability.
+The [SQL.js Worker] keeps its database in memory and loses it when the page goes away. This worker
+instead lets SQLite write its own pages to a real file, so a committed transaction is durable and
+survives a reload without exporting and rewriting the whole database.
 
 !!! warning
     This worker intentionally fails during initialization when standard OPFS support is unavailable.
@@ -101,12 +101,9 @@ headers in production.
 OPFS database:
 
 ```kotlin
-import app.cash.sqldelight.driver.worker.SqliteWasmWorkerConfig
 import app.cash.sqldelight.driver.worker.createSqliteWasmWebWorkerDriver
 
-val driver = createSqliteWasmWebWorkerDriver(
-  config = SqliteWasmWorkerConfig(databaseName = "app.db"),
-)
+val driver = createSqliteWasmWebWorkerDriver(databaseName = "app.db")
 ```
 
 `databaseName` is relative to the current origin's OPFS root. The default is `sqldelight.db`.
@@ -118,7 +115,6 @@ is migrated before the driver is returned:
 
 ```kotlin
 import app.cash.sqldelight.db.AfterVersion
-import app.cash.sqldelight.driver.worker.SqliteWasmWorkerConfig
 import app.cash.sqldelight.driver.worker.createSqliteWasmWebWorkerDriver
 import com.example.db.Database
 
@@ -130,7 +126,7 @@ val callbacks = arrayOf(
 
 val driver = createSqliteWasmWebWorkerDriver(
   schema = Database.Schema,
-  config = SqliteWasmWorkerConfig(databaseName = "app.db"),
+  databaseName = "app.db",
   migrateEmptySchema = false,
   callbacks = callbacks,
 )
@@ -159,19 +155,39 @@ To remove the database, call `deleteDatabase()` on its open driver:
 driver.deleteDatabase()
 ```
 
-`deleteDatabase()` closes the database, removes the configured file from OPFS, and releases the
-worker. Lifecycle calls are idempotent on a driver instance. If `close()` or `closeAndAwait()` has
-already released that instance, a later `deleteDatabase()` call on it does nothing; open a driver
-with the same configuration and delete that instance instead.
+`deleteDatabase()` closes the database, removes its file from OPFS, and releases the worker.
+Lifecycle calls are idempotent on a driver instance. If `close()` or `closeAndAwait()` has already
+released that instance, a later `deleteDatabase()` call on it does nothing; open a driver for the
+same database name and delete that instance instead.
 
-## Locking and multiple tabs
+## Concurrency
 
-The standard OPFS VFS uses SQLite and browser file locking, but this integration does not coordinate
-database ownership across tabs or promise concurrent-write behavior. Multiple tabs or workers that
-open the same database can contend, and operations may fail with `SQLITE_BUSY` or an I/O error.
-Prefer a single active owner for a database. If multiple browsing contexts must access it,
-coordinate them at the application level and handle lock contention.
+Kotlin/JS and Kotlin/Wasm run your application on a single thread, so coroutines in the page
+interleave but never execute in parallel. The Worker is what actually runs SQLite off that thread,
+and it handles one request at a time in the order it receives them. A query therefore never blocks
+the page, but two queries issued from two coroutines still run one after the other.
+
+Because the driver tracks the current transaction for the connection it owns, run a transaction to
+completion before starting another one on the same driver.
+
+## Multiple tabs
+
+Each driver owns one Worker holding one SQLite connection, so a second tab of your application is
+simply a second connection to the same OPFS file. Committed writes are visible to the other
+connection on its next read.
+
+Only one connection can write at a time. The OPFS file is locked for the duration of a write
+transaction, and the losing connection blocks inside its own Worker and retries until the lock is
+released. The worker sets `PRAGMA busy_timeout = 5000` so ordinary contention resolves by waiting
+rather than failing; a write that cannot get the lock within that window fails with `SQLITE_BUSY` or
+an I/O error. Keep write transactions short, and raise or lower the timeout for your workload by
+executing `PRAGMA busy_timeout` through the driver.
+
+SQLite's own [persistence documentation] notes that roughly 8-10 concurrent connections are
+practical when locking is kept brief. Deleting a database requires that no other connection has it
+open.
 
 [SQLite Wasm]: https://sqlite.org/wasm/doc/trunk/index.md
 [SQL.js Worker]: sqljs_worker.md
+[persistence documentation]: https://sqlite.org/wasm/doc/trunk/persistence.md
 [cross-origin isolated]: https://developer.mozilla.org/en-US/docs/Web/API/Window/crossOriginIsolated
