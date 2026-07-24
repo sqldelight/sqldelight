@@ -25,6 +25,9 @@
 - [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
 
 ### Fixed
+- [JS Driver] Read SQLite's numeric booleans correctly from `SqlCursor.getBoolean` (by @colintheshots)
+- [JS Driver] Fail pending worker requests when the driver is closed or the worker errors, instead of suspending forever (by @colintheshots)
+- [JS Driver] Clear the current transaction when `BEGIN`, `COMMIT`, or `ROLLBACK` fails (by @colintheshots)
 - [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull

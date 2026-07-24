@@ -29,7 +29,6 @@ class WebWorkerDriver internal constructor(
   constructor(worker: Worker) : this(WorkerWrapper(worker))
 
   private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
-  private var messageCounter = 0
   private var transaction: Transacter.Transaction? = null
 
   override fun <R> executeQuery(
@@ -129,10 +128,8 @@ class WebWorkerDriver internal constructor(
     sql: String? = null,
     statement: WorkerSqlPreparedStatement? = null,
   ): WorkerResultWithRowCount {
-    val id = messageCounter++
     return execute(
       WorkerWrapperRequest(
-        id = id,
         action = action,
         sql = sql,
         statement = statement,

@@ -18,6 +18,7 @@ internal actual class WorkerWrapper actual constructor(
   private val worker: Worker,
 ) {
   private val pendingRequests = mutableMapOf<Int, CancellableContinuation<WorkerResultWithRowCount>>()
+  private var nextRequestId = 0
   private var closed = false
   private var closureCause: WebWorkerException? = null
 
@@ -68,22 +69,16 @@ internal actual class WorkerWrapper actual constructor(
         return@suspendCancellableCoroutine
       }
 
-      if (pendingRequests.containsKey(request.id)) {
-        continuation.resumeWithException(
-          WebWorkerException("A Web Worker request with id ${request.id} is already pending"),
-        )
-        return@suspendCancellableCoroutine
-      }
-
-      pendingRequests[request.id] = continuation
+      val id = nextRequestId++
+      pendingRequests[id] = continuation
       continuation.invokeOnCancellation {
-        if (pendingRequests[request.id] === continuation) {
-          pendingRequests.remove(request.id)
+        if (pendingRequests[id] === continuation) {
+          pendingRequests.remove(id)
         }
       }
 
       val messageObject = buildRequest {
-        this.id = request.id
+        this.id = id
         this.action = request.action
         this.sql = request.sql
         this.params = request.statement?.parameters?.toTypedArray()
@@ -93,7 +88,7 @@ internal actual class WorkerWrapper actual constructor(
       try {
         worker.postMessage(messageObject)
       } catch (throwable: Throwable) {
-        completeExceptionally(request.id, throwable)
+        completeExceptionally(id, throwable)
       }
     }
   }

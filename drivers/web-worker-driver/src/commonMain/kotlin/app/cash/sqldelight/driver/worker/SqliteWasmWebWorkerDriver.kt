@@ -47,7 +47,6 @@ data class SqliteWasmWorkerConfig(
 class SqliteWasmWebWorkerDriver internal constructor(
   private val driver: WebWorkerDriver,
   private val lifecycleWrapper: WorkerWrapper,
-  private var lifecycleRequestId: Int,
 ) : SqlDriver by driver {
   private val lifecycleMutex = Mutex()
   private var released = false
@@ -87,7 +86,6 @@ class SqliteWasmWebWorkerDriver internal constructor(
       try {
         lifecycleWrapper.execute(
           WorkerWrapperRequest(
-            id = lifecycleRequestId--,
             action = action,
             sql = null,
             statement = null,
@@ -114,7 +112,6 @@ suspend fun createSqliteWasmWebWorkerDriver(
   try {
     lifecycleWrapper.execute(
       WorkerWrapperRequest(
-        id = CONFIGURE_REQUEST_ID,
         action = WorkerActions.configure,
         sql = null,
         statement = null,
@@ -129,7 +126,6 @@ suspend fun createSqliteWasmWebWorkerDriver(
   return SqliteWasmWebWorkerDriver(
     driver = WebWorkerDriver(lifecycleWrapper),
     lifecycleWrapper = lifecycleWrapper,
-    lifecycleRequestId = FIRST_LIFECYCLE_REQUEST_ID,
   )
 }
 
@@ -160,6 +156,3 @@ suspend fun createSqliteWasmWebWorkerDriver(
 }
 
 internal expect fun createSqliteWasmWorker(): Worker
-
-private const val CONFIGURE_REQUEST_ID = -1
-private const val FIRST_LIFECYCLE_REQUEST_ID = -2

@@ -10,7 +10,6 @@ actual fun createControllableWebWorkerDriver(): SqliteWasmWebWorkerDriver {
   return SqliteWasmWebWorkerDriver(
     driver = WebWorkerDriver(wrapper),
     lifecycleWrapper = wrapper,
-    lifecycleRequestId = -1,
   )
 }
 
