@@ -40,7 +40,7 @@ internal actual class WorkerSqlCursor actual constructor(
   }
 
   actual override fun getBoolean(index: Int): Boolean? {
-    return getColumn(index) { it.unsafeCast<JsBoolean>().toBoolean() }
+    return getColumn(index, ::isTrueBooleanOrOne)
   }
 
   private inline fun <T> getColumn(index: Int, transformer: (JsAny) -> T): T? {
@@ -48,3 +48,6 @@ internal actual class WorkerSqlCursor actual constructor(
     return transformer(column)
   }
 }
+
+@JsFun("(value) => value === true || value === 1")
+private external fun isTrueBooleanOrOne(value: JsAny): Boolean

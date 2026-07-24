@@ -31,7 +31,9 @@ async: true
     ```
 
 The web worker driver allows SQLDelight to communicate with a SQL implementation that is running in
-a [Web Worker]. This allows all database operations to happen in a background process.
+a [Web Worker]. This allows all database operations to happen in a background process. SQLDelight
+provides both an in-memory [SQL.js Worker] and a persistent [SQLite Wasm OPFS Worker] backed by the
+official SQLite Wasm build.
 
 !!! info
     The web worker driver is only compatible with browser targets. 
@@ -40,16 +42,16 @@ a [Web Worker]. This allows all database operations to happen in a background pr
 
 SQLDelight's web worker driver isn't tied to a specific implementation of a worker. Instead the
 driver communicates with the worker using a standardized set of messages. SQLDelight provides an
-implementation of a worker that uses [SQL.js].
+in-memory worker that uses [SQL.js] and a persistent worker that uses SQLite's standard OPFS VFS.
 
-See the [SQL.js Worker] page for details on setting it up for your project, or the [Custom Workers] 
+See the [SQL.js Worker] or [SQLite Wasm OPFS Worker] page for setup details, or the [Custom Workers]
 page for details on implementing your own.
 
 ## Using a Web Worker
 
-When creating an instance of a web worker driver, you must pass a reference to the web worker that
-will be used to handle all SQL operations. The `Worker` constructor accepts `URL` object that references
-the worker script.
+When creating a driver for SQL.js or a custom worker, pass a reference to the worker that will handle
+all SQL operations. The `Worker` constructor accepts a `URL` object that references the worker
+script. The [SQLite Wasm OPFS Worker] helper creates its dedicated module worker automatically.
 
 Webpack has special support for referencing a worker script from an installed NPM package by passing
 `import.meta.url` as a second argument to the `URL` constructor. Webpack will automatically bundle
@@ -77,4 +79,5 @@ From here, you can use the driver like any other SQLDelight driver.
 [Web Worker]: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
 [SQL.js]: https://github.com/sql-js/sql.js/
 [SQL.js Worker]: sqljs_worker.md
+[SQLite Wasm OPFS Worker]: sqlite_wasm_worker.md
 [Custom Workers]: custom_worker.md

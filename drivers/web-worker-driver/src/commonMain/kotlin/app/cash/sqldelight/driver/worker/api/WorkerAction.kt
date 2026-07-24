@@ -6,6 +6,11 @@ internal expect inline fun WorkerAction(value: String): WorkerAction
 
 internal object WorkerActions {
   /**
+   * Configure and open a persistent database.
+   */
+  inline val configure: WorkerAction get() = WorkerAction("configure")
+
+  /**
    * Execute a SQL statement.
    */
   inline val exec: WorkerAction get() = WorkerAction("exec")
@@ -24,4 +29,14 @@ internal object WorkerActions {
    * Roll back a transaction in the underlying SQL implementation.
    */
   inline val rollbackTransaction: WorkerAction get() = WorkerAction("rollback_transaction")
+
+  /**
+   * Close the database and worker.
+   */
+  inline val close: WorkerAction get() = WorkerAction("close")
+
+  /**
+   * Close and delete the configured persistent database.
+   */
+  inline val deleteDatabase: WorkerAction get() = WorkerAction("delete_database")
 }

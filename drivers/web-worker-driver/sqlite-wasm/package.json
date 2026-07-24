@@ -1,0 +1,25 @@
+{
+  "description": "A SQLite Wasm OPFS implementation of SQLDelight's web-worker-driver",
+  "homepage": "https://github.com/sqldelight/sqldelight#readme",
+  "license": "Apache-2.0",
+  "keywords": [
+    "sqlite",
+    "sqlite-wasm",
+    "opfs",
+    "sqldelight",
+    "sql"
+  ],
+  "bugs": {
+    "url": "https://github.com/sqldelight/sqldelight/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sqldelight/sqldelight.git"
+  },
+  "version": "0.0.0",
+  "name": "@cashapp/sqldelight-sqlite-wasm-worker",
+  "type": "module",
+  "peerDependencies": {
+    "@sqlite.org/sqlite-wasm": "3.53.0-build1"
+  }
+}

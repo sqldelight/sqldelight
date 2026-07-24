@@ -165,6 +165,7 @@ nav:
       - 'Multiplatform': js_sqlite/multiplatform.md
       - 'Web Workers':
           - SQL.js Worker: js_sqlite/sqljs_worker.md
+          - SQLite Wasm OPFS Worker: js_sqlite/sqlite_wasm_worker.md
           - Custom Workers: js_sqlite/custom_worker.md
       - 'SQL':
           - 'Type Projections': js_sqlite/custom_projections.md

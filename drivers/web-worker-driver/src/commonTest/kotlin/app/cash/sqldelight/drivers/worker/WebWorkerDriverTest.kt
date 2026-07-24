@@ -208,6 +208,20 @@ class WebWorkerDriverTest {
   }
 
   @Test
+  fun numeric_boolean_values_are_supported() = runTest { driver ->
+    driver.awaitQuery(
+      identifier = null,
+      sql = "SELECT 1, 0",
+      mapper = { cursor ->
+        assertTrue(cursor.next().await())
+        assertEquals(true, cursor.getBoolean(0))
+        assertEquals(false, cursor.getBoolean(1))
+      },
+      parameters = 0,
+    )
+  }
+
+  @Test
   fun sqlResultSet_getters_return_null_if_the_column_values_are_NULL() = runTest { driver ->
     val insert: InsertFunction = { binders: SqlPreparedStatement.() -> Unit ->
       driver.await(7, "INSERT INTO nullability_test VALUES (?, ?, ?, ?, ?);", 5, binders)

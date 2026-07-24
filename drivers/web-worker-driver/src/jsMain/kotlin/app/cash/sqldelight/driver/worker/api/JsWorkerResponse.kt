@@ -16,6 +16,11 @@ internal external interface JsWorkerResponse {
   var id: Int
 
   /**
+   * Number of rows changed by the request, when supplied by the worker.
+   */
+  var rowCount: Double?
+
+  /**
    * A [WorkerResult] containing any values that were returned by the worker.
    * @see WorkerResult
    */

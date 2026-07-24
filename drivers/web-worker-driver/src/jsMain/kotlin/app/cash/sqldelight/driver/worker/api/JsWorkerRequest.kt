@@ -25,6 +25,11 @@ internal external interface JsWorkerRequest {
    * SQL parameters to bind to the given [sql]
    */
   var params: Array<Any?>?
+
+  /**
+   * Database name used to configure a persistent worker.
+   */
+  var databaseName: String?
 }
 
 internal fun buildRequest(builder: JsWorkerRequest.() -> Unit): JsWorkerRequest {

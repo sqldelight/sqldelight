@@ -25,4 +25,9 @@ internal data class WorkerWrapperRequest(
    * SQL parameters to bind to the given [sql]
    */
   var statement: WorkerSqlPreparedStatement?,
+
+  /**
+   * Database name used to configure a persistent worker.
+   */
+  var databaseName: String? = null,
 )
