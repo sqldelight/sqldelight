@@ -54,6 +54,24 @@ sqldelight {
 }
 ```
 
+## Source set layout
+
+Driver dependencies are declared in `jsMain` and `wasmJsMain`, but the SQLDelight Gradle plugin does
+not read `.sq` and `.sqm` files from those source sets.
+
+A project applying `org.jetbrains.kotlin.multiplatform` keeps them in `src/commonMain/sqldelight`,
+even when `js` or `wasmJs` is its only target. A project applying `org.jetbrains.kotlin.js` keeps
+them in `src/main/sqldelight`.
+
+```sql title="src/commonMain/sqldelight/com/example/db/Player.sq"
+CREATE TABLE hockeyPlayer (
+  player_number INTEGER PRIMARY KEY NOT NULL,
+  full_name TEXT NOT NULL
+);
+```
+
+The generated database code is added to that same source set, so every target can see it.
+
 ## Browser and server requirements
 
 SQLite's standard `OpfsDb` VFS requires all of the following:
