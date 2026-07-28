@@ -16,6 +16,7 @@
 package app.cash.sqldelight.core.lang
 
 import app.cash.sqldelight.core.SqlDelightFileIndex
+import app.cash.sqldelight.core.capitalize
 import app.cash.sqldelight.core.compiler.integration.adapterProperty
 import app.cash.sqldelight.core.compiler.integration.needsAdapters
 import app.cash.sqldelight.core.compiler.model.BindableQuery
@@ -27,17 +28,21 @@ import app.cash.sqldelight.core.compiler.model.NamedQuery
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.table
+import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.core.psi.SqlDelightStmtList
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnInExpr
 import com.alecstrong.sql.psi.core.psi.SqlStmt
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.NameAllocator
 
 class SqlDelightQueriesFile(
   viewProvider: FileViewProvider,
@@ -102,16 +107,44 @@ class SqlDelightQueriesFile(
     return@lazy transactions().filterIsInstance<NamedExecute>() + statements
   }
 
+  internal val compositeCollectionArguments by lazy {
+    val arguments = (namedQueries + namedMutators + namedExecutes)
+      .flatMap { it.arguments }
+      .filter { it.collectionElementTypes != null }
+
+    val names = NameAllocator()
+    names.newName(queriesName.capitalize(), this)
+    namedQueries.forEach { query ->
+      names.newName(query.name.capitalize(), query)
+    }
+    arguments.forEach { argument ->
+      val typeName = checkNotNull(argument.collectionTypeName)
+      argument.collectionTypeName = ClassName(
+        typeName.packageName,
+        names.newName(typeName.simpleName, argument),
+      )
+    }
+    arguments
+  }
+
   /**
    * A collection of all the adapters needed for arguments or result columns in this query.
    */
   internal val requiredAdapters by lazy {
     val binders = PsiTreeUtil.findChildrenOfType(this, SqlBindExpr::class.java)
-    val argumentAdapters = binders.mapNotNull {
+    val argumentAdapters = binders.flatMap {
       it.parentOfType<SqlInsertStmt>()?.let {
-        if (it.acceptsTableInterface() && it.table.needsAdapters()) return@mapNotNull it.table.adapterProperty()
+        if (it.acceptsTableInterface() && it.table.needsAdapters()) {
+          return@flatMap listOfNotNull(it.table.adapterProperty())
+        }
       }
-      typeResolver.argumentType(it).parentAdapter()
+      val multiColumnInExpr = it.parent as? SqlMultiColumnInExpr
+      if (multiColumnInExpr != null) {
+        return@flatMap multiColumnInExpr.multiColumnExpression.exprList.mapNotNull { expression ->
+          expression.type().parentAdapter()
+        }
+      }
+      listOfNotNull(typeResolver.argumentType(it).parentAdapter())
     }
 
     val resultColumnAdapters = namedQueries.flatMap {

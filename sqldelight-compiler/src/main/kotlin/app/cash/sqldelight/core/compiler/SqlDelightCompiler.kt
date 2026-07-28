@@ -168,10 +168,16 @@ object SqlDelightCompiler {
     output: FileAppender,
   ) {
     val packageName = file.packageName ?: return
+    val compositeCollectionArguments = file.compositeCollectionArguments
     val queriesType = QueriesTypeGenerator(module, file, dialect)
       .generateType(packageName) ?: return
 
     val fileSpec = FileSpec.builder(packageName, file.queriesName.capitalize())
+      .apply {
+        compositeCollectionArguments.forEach { argument ->
+          addType(CollectionArgumentInterfaceGenerator(argument).kotlinImplementationSpec())
+        }
+      }
       .addType(queriesType)
       .build()
 

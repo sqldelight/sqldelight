@@ -10,6 +10,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCteTableName
 import com.alecstrong.sql.psi.core.psi.SqlNewTableName
 import com.alecstrong.sql.psi.core.psi.SqlTableAlias
 import com.alecstrong.sql.psi.core.psi.SqlTableName
+import com.alecstrong.sql.psi.core.psi.SqlTableOrSubquery
 import com.alecstrong.sql.psi.core.psi.SqlViewName
 import com.alecstrong.sql.psi.core.psi.SqlWithClause
 import com.intellij.psi.PsiElement
@@ -36,6 +37,11 @@ internal fun PsiElement.referencedTables(
   is SqlTableAlias -> source().referencedTables()
   is SqlNewTableName -> {
     listOf(TableNameElement.NewTableName(this))
+  }
+  is SqlTableOrSubquery -> {
+    findChildrenOfType<SqlTableName>()
+      .flatMap { it.referencedTables(compoundSelectStmt) }
+      .distinctBy { it.name }
   }
   is SqlTableName, is SqlViewName -> {
     when (val parentRule = parent!!) {
