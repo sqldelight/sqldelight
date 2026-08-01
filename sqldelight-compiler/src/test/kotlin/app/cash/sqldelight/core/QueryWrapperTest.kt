@@ -1034,4 +1034,28 @@ class QueryWrapperTest {
       )
     }
   }
+
+  @Test fun `capitalized module name generates a lowercase implementation package`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test_table(
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT
+      |);
+      """.trimMargin(),
+      tempFolder,
+      moduleName = "TestModule",
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).contains("package com.example.testmodule")
+
+    val databaseInterfaceFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    assertThat(databaseInterfaceFile).isNotNull()
+    assertThat(databaseInterfaceFile.toString()).contains("import com.example.testmodule.newInstance")
+    assertThat(databaseInterfaceFile.toString()).contains("import com.example.testmodule.schema")
+  }
 }
