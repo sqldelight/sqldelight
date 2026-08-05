@@ -91,6 +91,7 @@ public abstract class app/cash/sqldelight/Transacter$Transaction : app/cash/sqld
 	public fun afterRollback (Lkotlin/jvm/functions/Function0;)V
 	protected abstract fun endTransaction (Z)Lapp/cash/sqldelight/db/QueryResult;
 	protected abstract fun getEnclosingTransaction ()Lapp/cash/sqldelight/Transacter$Transaction;
+	protected fun isThreadConfined ()Z
 }
 
 public abstract interface class app/cash/sqldelight/TransacterBase {
