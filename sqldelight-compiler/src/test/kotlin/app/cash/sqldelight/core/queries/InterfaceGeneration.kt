@@ -758,6 +758,82 @@ class InterfaceGeneration {
     )
   }
 
+  @Test fun `foreign key with column referencing itself does not stack overflow`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE Node (
+      |  a INTEGER NOT NULL UNIQUE,
+      |  FOREIGN KEY (a) REFERENCES Node(a)
+      |);
+      |
+      |selectAll:
+      |SELECT * FROM Node;
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/Node.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example
+      |
+      |import kotlin.Long
+      |
+      |public data class Node(
+      |  public val a: Long,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
+  @Test fun `composite foreign key sharing a column with the referenced key does not stack overflow`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE Item (
+      |  id INTEGER PRIMARY KEY AUTOINCREMENT,
+      |  itemId INTEGER NOT NULL,
+      |  parentId INTEGER,
+      |  UNIQUE (itemId, id),
+      |  FOREIGN KEY (itemId, parentId)
+      |    REFERENCES Item(itemId, id) ON DELETE CASCADE
+      |);
+      |
+      |selectAll:
+      |SELECT * FROM Item;
+      """.trimMargin(),
+      temporaryFolder,
+    )
+
+    assertThat(result.errors).isEmpty()
+    val generatedInterface = result.compilerOutput.get(
+      File(result.outputDirectory, "com/example/Item.kt"),
+    )
+    assertThat(generatedInterface).isNotNull()
+    assertThat(generatedInterface.toString()).isEqualTo(
+      """
+      |@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
+      |
+      |package com.example
+      |
+      |import kotlin.Long
+      |
+      |public data class Item(
+      |  public val id: Long,
+      |  public val itemId: Long,
+      |  public val parentId: Long?,
+      |)
+      |
+      """.trimMargin(),
+    )
+  }
+
   @Test fun `avg aggregate has proper nullable type`() {
     val result = FixtureCompiler.compileSql(
       """
