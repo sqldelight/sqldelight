@@ -84,6 +84,9 @@ internal abstract class ColumnTypeMixin(
       ?.columnNameList?.singleOrNull() // Foreign Column
 
     (tableForeignKeyClause ?: columnConstraint)?.reference?.resolve()?.let { resolvedKey ->
+      // A foreign key can reference the column it constrains. The type is already known, and
+      // recursing into it would never terminate.
+      if (resolvedKey == columnName) return@let
       // Resolved Column
       val dialectType = resolvedKey.asSafely<SqlColumnName>() // Column Name
         ?.parent?.asSafely<SqlColumnDef>() // Column Definition
