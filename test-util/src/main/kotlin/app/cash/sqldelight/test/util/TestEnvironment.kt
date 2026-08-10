@@ -21,6 +21,7 @@ internal class TestEnvironment(
   private val dialect: SqlDelightDialect = SqliteDialect(),
   private val generateAsync: Boolean = false,
   private val expandSelectStar: Boolean = true,
+  private val codegenExcludedColumns: Set<String> = emptySet(),
 ) {
   fun build(
     root: String,
@@ -44,9 +45,11 @@ internal class TestEnvironment(
         override val rootDirectory = File(root)
         override val generateAsync: Boolean = this@TestEnvironment.generateAsync
         override val expandSelectStar: Boolean = this@TestEnvironment.expandSelectStar
+        override val codegenExcludedColumns: Set<String> = this@TestEnvironment.codegenExcludedColumns
       },
       dialect = dialect,
       verifyMigrations = true,
+      codegenExcludedColumns = codegenExcludedColumns,
       // hyphen in the name tests that our module name sanitizing works correctly
       moduleName = "test-module",
       compilationUnit = compilationUnit,

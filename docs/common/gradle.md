@@ -79,7 +79,7 @@ Type: `ConfigurableFileCollection`
 
 A collection of folders that the plugin will look in for your `.sq` and `.sqm` files.
 
-Defaults to `src/[prefix]main/sqldelight` with prefix depending on the applied kotlin plugin eg common for multiplatform.
+Defaults to `src/[prefix]main/sqldelight` with prefix depending on the applied Kotlin plugin, e.g., `common` for multiplatform.
 
 === "Kotlin"
     ```kotlin
@@ -165,7 +165,10 @@ Available dialects:
 * SQLite 3.30: `sqlite-3-30-dialect`
 * SQLite 3.33: `sqlite-3-33-dialect`
 * SQLite 3.35: `sqlite-3-35-dialect`
+* SQLite 3.37: `sqlite-3-37-dialect`
 * SQLite 3.38: `sqlite-3-38-dialect`
+* SQLite 3.39: `sqlite-3-39-dialect`
+* SQLite 3.44: `sqlite-3-44-dialect`
 
 === "Kotlin"
     ```kotlin
@@ -285,5 +288,35 @@ Defaults to `true`.
     expandSelectStar = true
     ```
 
-{% include 'common/gradle-dependencies.md' %}
+----
 
+### `codegenExcludedColumns`
+
+Type: `SetProperty<String>`
+
+A set of `table.column` values to omit from generated models and expanded `SELECT *` projections.
+Table and column names must use the same case as the SQLDelight schema source.
+This only affects code generation; it does not change the SQL schema or generated migration output.
+
+This can be used to update generated Kotlin APIs before a follow-up schema migration drops the column.
+SQLDelight fails compilation if a configured table or column does not exist, or if a model-bound insert,
+`SELECT` result column, or `RETURNING` clause explicitly lists a codegen-excluded column.
+Because this is codegen-only, applications are responsible for ensuring any still-existing excluded
+column can be omitted from writes until it is dropped, for example with a nullable column or default value.
+
+If your `.sq` files contain `CREATE TABLE` schema definitions, keep the excluded column in the schema
+definition until the physical schema migration drops it. Remove explicit query references to the column,
+but leave the schema source reflecting the current database shape.
+
+Defaults to empty.
+
+=== "Kotlin"
+    ```kotlin
+    codegenExcludedColumns.set(setOf("hockey_player.number"))
+    ```
+=== "Groovy"
+    ```groovy
+    codegenExcludedColumns = ["hockey_player.number"]
+    ```
+
+{% include 'common/gradle-dependencies.md' %}

@@ -11,6 +11,8 @@ sqldelight {
     CommonDb {
       packageName = "com.sample.android"
       dependency project(":MultiplatformProject")
+      dependency project(":AndroidLibraryA")
+      dependency project(":AndroidLibraryB")
     }
   }
 }
@@ -27,7 +29,9 @@ android {
 
   buildTypes {
     release {}
-    sqldelight {}
+    sqldelight {
+      matchingFallbacks = ['staging']
+    }
   }
 
   flavorDimensions "api"
@@ -35,15 +39,19 @@ android {
   productFlavors {
     minApi21 {
       dimension "api"
+      matchingFallbacks = ['minApi18']
     }
     minApi23 {
       dimension "api"
+      matchingFallbacks = ['minApi18']
     }
   }
 }
 
 dependencies {
   implementation project(path: ':MultiplatformProject')
+  implementation project(path: ':AndroidLibraryA')
+  implementation project(path: ':AndroidLibraryB')
   implementation "app.cash.sqldelight:sqlite-driver:${app.cash.sqldelight.VersionKt.VERSION}"
   implementation libs.truth
 }

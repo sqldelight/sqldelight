@@ -1,0 +1,13 @@
+CREATE TABLE test(
+  id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL,
+  removed TEXT
+);
+
+insertTest:
+INSERT INTO test
+VALUES ?;
+
+selectAll:
+SELECT *
+FROM test;

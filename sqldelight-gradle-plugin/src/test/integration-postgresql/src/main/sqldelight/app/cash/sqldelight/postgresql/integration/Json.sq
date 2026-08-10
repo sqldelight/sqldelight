@@ -20,8 +20,8 @@ CREATE TABLE TestJsonCheck(
 
 insert:
 INSERT INTO TestJson(data, datab) VALUES(
-  json_build_object(:key, :value),
-  jsonb_build_object('key', 'value')
+  json_build_object(:key::TEXT, :value::TEXT),
+  jsonb_build_object('key'::TEXT, 'value'::TEXT)
 );
 
 setJsonb:

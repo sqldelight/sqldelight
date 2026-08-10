@@ -41,6 +41,7 @@ class SqlDelightProjectResolverExtension : AbstractProjectResolverExtension() {
             databaseProperties.generateAsync,
             databaseProperties.rootDirectory,
             GradleCompatibility.readExpandSelectStar(sqlDelightModel, databaseProperties),
+            GradleCompatibility.readCodegenExcludedColumns(sqlDelightModel, databaseProperties),
           )
         },
         sqlDelightModel.dialectJars.toMutableList(),
@@ -76,6 +77,7 @@ data class SqlDelightDatabasePropertiesModel(
   override val generateAsync: Boolean = false,
   override val rootDirectory: File,
   override val expandSelectStar: Boolean = true,
+  override val codegenExcludedColumns: Set<String> = emptySet(),
 ) : SqlDelightDatabaseProperties
 
 data class SqlDelightDatabaseNameModel(

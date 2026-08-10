@@ -53,22 +53,33 @@ internal class KeyedQueryPagingSource<Key : Any, RowType : Any>(
               .executeAsList()
               .also { pageBoundaries = it }
 
-          val key = params.key ?: boundaries.first()
+          if (boundaries.isEmpty()) {
+            @Suppress("UNCHECKED_CAST")
+            currentQuery = pageBoundariesProvider(params.key, params.loadSize.toLong()) as Query<RowType>
 
-          require(key in boundaries)
+            LoadResult.Page(
+              data = emptyList(),
+              prevKey = null,
+              nextKey = null,
+            )
+          } else {
+            val key = params.key ?: boundaries.first()
 
-          val keyIndex = boundaries.indexOf(key)
-          val previousKey = boundaries.getOrNull(keyIndex - 1)
-          val nextKey = boundaries.getOrNull(keyIndex + 1)
-          val results = queryProvider(key, nextKey)
-            .also { currentQuery = it }
-            .executeAsList()
+            require(key in boundaries)
 
-          LoadResult.Page(
-            data = results,
-            prevKey = previousKey,
-            nextKey = nextKey,
-          )
+            val keyIndex = boundaries.indexOf(key)
+            val previousKey = boundaries.getOrNull(keyIndex - 1)
+            val nextKey = boundaries.getOrNull(keyIndex + 1)
+            val results = queryProvider(key, nextKey)
+              .also { currentQuery = it }
+              .executeAsList()
+
+            LoadResult.Page(
+              data = results,
+              prevKey = previousKey,
+              nextKey = nextKey,
+            )
+          }
         }
         when (transacter) {
           is Transacter -> transacter.transactionWithResult(bodyWithReturn = getPagingSourceLoadResult)

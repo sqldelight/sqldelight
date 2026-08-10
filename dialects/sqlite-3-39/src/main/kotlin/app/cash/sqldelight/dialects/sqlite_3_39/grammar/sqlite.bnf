@@ -1,0 +1,26 @@
+{
+  // Specify the parent parser.
+  overrides="com.alecstrong.sql.psi.core.SqlParser"
+  elementTypeClass = "com.alecstrong.sql.psi.core.SqlElementType"
+
+  implements="com.alecstrong.sql.psi.core.psi.SqlCompositeElement"
+  extends="com.alecstrong.sql.psi.core.psi.SqlCompositeElementImpl"
+  psiClassPrefix = "Sqlite"
+
+  parserImports=[
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.COMMA"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.CROSS"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.INNER"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.JOIN"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.NATURAL"
+    "static com.alecstrong.sql.psi.core.psi.SqlTypes.OUTER"
+  ]
+}
+overrides ::= join_operator
+
+join_operator ::= ( COMMA
+                  | [ NATURAL ] [ ( {left_join_operator} | {right_join_operator} | {full_join_operator} ) [ OUTER ] | INNER | CROSS ] JOIN ) {
+  extends = "com.alecstrong.sql.psi.core.psi.impl.SqlJoinOperatorImpl"
+  implements = "com.alecstrong.sql.psi.core.psi.SqlJoinOperator"
+  override = true
+}

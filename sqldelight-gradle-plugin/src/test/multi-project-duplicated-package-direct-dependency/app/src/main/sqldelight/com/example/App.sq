@@ -1,0 +1,7 @@
+CREATE TABLE AppTest(
+  value TEXT
+);
+
+selectFromBottom:
+SELECT *
+FROM bottomTest;

@@ -12,3 +12,8 @@ sqldelight {
     }
   }
 }
+
+dependencies {
+  implementation project(":middleA")
+  implementation project(":middleB")
+}

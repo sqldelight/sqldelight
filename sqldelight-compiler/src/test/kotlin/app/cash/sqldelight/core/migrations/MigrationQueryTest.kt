@@ -41,6 +41,10 @@ class MigrationQueryTest {
     checkFixtureCompiles("create-or-replace-view", PostgreSqlDialect())
   }
 
+  @Test fun `alter table alter column set not null with adapter`() {
+    checkFixtureCompiles("alter-table-alter-column-adapter", PostgreSqlDialect())
+  }
+
   private fun checkFixtureCompiles(fixtureRoot: String, dialect: SqlDelightDialect = SqliteDialect()) {
     val result = FixtureCompiler.compileFixture(
       overrideDialect = dialect,

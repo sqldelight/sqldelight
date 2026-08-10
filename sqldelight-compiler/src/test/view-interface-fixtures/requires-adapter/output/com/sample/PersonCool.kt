@@ -1,3 +1,5 @@
+@file:Suppress("REDUNDANT_VISIBILITY_MODIFIER", "ASSIGNED_VALUE_IS_NEVER_READ")
+
 package com.sample
 
 import com.squareup.Redacted

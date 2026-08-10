@@ -11,3 +11,7 @@ sqldelight {
     }
   }
 }
+
+dependencies {
+  api project(":bottom")
+}

@@ -23,8 +23,10 @@ import app.cash.sqldelight.core.lang.cursorGetter
 import app.cash.sqldelight.core.lang.parentAdapter
 import app.cash.sqldelight.core.lang.psi.StmtIdentifierMixin
 import app.cash.sqldelight.core.lang.util.TableNameElement
+import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
 import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.sqFile
+import app.cash.sqldelight.core.lang.util.table
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
@@ -44,6 +46,7 @@ import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
@@ -57,7 +60,7 @@ data class NamedQuery(
   private val statementIdentifier: StmtIdentifierMixin? = null,
 ) : BindableQuery(statementIdentifier, queryable.statement) {
   internal val select get() = queryable.statement
-  internal val pureTable get() = queryable.pureTable
+  internal val pureTable: NamedElement? by lazy { queryable.pureTable ?: codegenExcludedPureTable() }
 
   /**
    * Explodes the sqlite query into an ordered list (same order as the query) of types to be exposed
@@ -146,6 +149,21 @@ data class NamedQuery(
 
   internal fun needsQuerySubType() = arguments.isNotEmpty() || statement is SqlDelightStmtClojureStmtList
 
+  private fun codegenExcludedPureTable(): NamedElement? {
+    if (queryable.select.sqFile().codegenExcludedColumns.isEmpty()) return null
+    val insertStmt = statement as? SqlInsertStmt ?: return null
+    val pureColumns = queryable.select.queryExposed().singleOrNull()?.columns
+      ?.flattenCompoundedForCodegen()
+      ?.filterCodegenExcludedColumns { queryColumn -> queryColumn.element as? NamedElement }
+      ?: return null
+    val table = insertStmt.table
+    val tableColumns = table.query.columns
+      .flattenCompoundedForCodegen()
+      .filterCodegenExcludedColumns { queryColumn -> queryColumn.element as? NamedElement }
+
+    return if (tableColumns == pureColumns) table.tableName else null
+  }
+
   internal val tablesObserved: List<TableNameElement>? by lazy {
     if (queryable is SelectQueryable && queryable.select == queryable.statement) {
       queryable.select.tablesObserved()
@@ -221,43 +239,59 @@ data class NamedQuery(
     val selectStmt = this as? SqlSelectStmt
     val hasGroupBy = selectStmt?.groupBy != null
     val hasAggregate = selectStmt?.resultColumnList?.any { resultColumn ->
-      val expr = resultColumn.expr
-      expr is SqlFunctionExpr && expr.functionName.text.lowercase() in AGGREGATE_FUNCTIONS
+      resultColumn.expr?.asAggregateFunction() != null
     } ?: false
 
     return queryExposed().flatMap {
       val table = it.table?.name
-      return@flatMap it.columns.map { queryColumn ->
-        var name = queryColumn.element.functionName()
-        if (!namesUsed.add(name)) {
-          if (table != null) name = "${table}_$name"
-          while (!namesUsed.add(name)) name += "_"
-        }
+      return@flatMap it.columns
+        .filterCodegenExcludedColumns { queryColumn -> queryColumn.element as? NamedElement }
+        .map { queryColumn ->
+          var name = queryColumn.element.functionName()
+          if (!namesUsed.add(name)) {
+            if (table != null) name = "${table}_$name"
+            while (!namesUsed.add(name)) name += "_"
+          }
 
-        var type = queryColumn.type().copy(name = name)
+          val type = queryColumn.type().copy(name = name)
+          val aggregate = queryColumn.element.asAggregateFunction()
 
-        if (hasAggregate) {
-          val isAggregate = queryColumn.element is SqlFunctionExpr &&
-            (queryColumn.element as SqlFunctionExpr).functionName.text.lowercase() in AGGREGATE_FUNCTIONS
-
-          // Goup by statements filter out empty groups so we don't have to
-          // worry about non-null columns returning as nullable.
-          if (!hasGroupBy && !isAggregate) {
-            type = type.asNullable()
-          } else if (hasGroupBy && isAggregate) {
-            type = type.asNonNullable()
+          return@map when {
+            !hasAggregate -> type
+            // Without a GROUP BY the aggregate collapses every row, so other columns may
+            // read from no row and become nullable.
+            !hasGroupBy && aggregate == null -> type.asNullable()
+            // A grouped aggregate is non-null only when it can never return NULL.
+            hasGroupBy && aggregate != null && aggregate.alwaysReturnsNonNull() -> type.asNonNullable()
+            else -> type
           }
         }
-
-        return@map type
-      }
     }
+  }
+
+  private fun PsiElement.asAggregateFunction(): SqlFunctionExpr? = (this as? SqlFunctionExpr)?.takeIf { it.functionName.text.lowercase() in AGGREGATE_FUNCTIONS }
+
+  // count/total always return a value; max/min/sum/avg/group_concat return NULL when their
+  // argument is NULL (e.g. group_concat over a nullable LEFT JOIN column).
+  private fun SqlFunctionExpr.alwaysReturnsNonNull(): Boolean {
+    if (functionName.text.lowercase() in NON_NULLABLE_AGGREGATE_FUNCTIONS) return true
+    return exprList.isNotEmpty() && exprList.none { it.type().javaType.isNullable }
   }
 
   private fun QueryElement.QueryColumn.type(): IntermediateType {
     var rootType = element.type()
     nullable?.let { rootType = rootType.nullableIf(it) }
     return compounded.fold(rootType) { type, column -> superType(type, column.type()) }
+  }
+
+  private fun List<QueryElement.QueryColumn>.flattenCompoundedForCodegen(): List<QueryElement.QueryColumn> {
+    return map { column ->
+      if (column.compounded.none { it.element != column.element || it.nullable != column.nullable }) {
+        column.copy(compounded = emptyList())
+      } else {
+        column
+      }
+    }
   }
 
   override val id: Int
@@ -275,6 +309,11 @@ data class NamedQuery(
       "avg",
       "total",
       "group_concat",
+    )
+
+    private val NON_NULLABLE_AGGREGATE_FUNCTIONS = setOf(
+      "count",
+      "total",
     )
   }
 }

@@ -1,0 +1,17 @@
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.sqldelight)
+}
+
+sqldelight {
+  databases {
+    Database {
+      packageName = "com.example.app"
+      dependency project(':dependency')
+    }
+  }
+}
+
+dependencies {
+  implementation project(':dependency')
+}

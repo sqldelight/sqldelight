@@ -1,0 +1,8 @@
+CREATE TABLE old_analytics_message (
+  id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM old_analytics_message;

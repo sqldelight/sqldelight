@@ -1,0 +1,13 @@
+pluginManagement {
+    includeBuild("../build-logic-tests")
+}
+
+plugins {
+    id("sqldelightTests")
+}
+
+include ':app'
+include ':bottomA'
+include ':bottomB'
+include ':middleA'
+include ':middleB'

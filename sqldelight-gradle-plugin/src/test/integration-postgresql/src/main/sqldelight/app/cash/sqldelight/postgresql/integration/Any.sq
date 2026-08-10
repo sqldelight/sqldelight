@@ -1,0 +1,19 @@
+CREATE TABLE AnySome (
+  id INTEGER NOT NULL,
+  other_id INTEGER AS kotlin.Long NOT NULL,
+  txt TEXT NOT NULL
+);
+
+INSERT INTO AnySome (id, other_id, txt) VALUES (1, 100, 'alpha');
+INSERT INTO AnySome (id, other_id,  txt) VALUES (2, 200, 'beta');
+INSERT INTO AnySome (id, other_id, txt) VALUES (3, 300, 'gamma');
+
+selectAny:
+SELECT id
+FROM AnySome
+WHERE id = ANY(?);
+
+selectSome:
+SELECT txt
+FROM AnySome
+WHERE txt ILIKE SOME(?);

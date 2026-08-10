@@ -3,19 +3,12 @@ package app.cash.sqldelight.gradle.kotlin
 import app.cash.sqldelight.gradle.SqlDelightDatabase
 import app.cash.sqldelight.gradle.SqlDelightTask
 import com.android.build.api.AndroidPluginVersion
-import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.api.BaseVariant
-import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
-import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -49,7 +42,7 @@ internal fun SqlDelightDatabase.configureOnSources(action: (Source) -> Unit) {
   }
 
   project.extensions.findByName("androidComponents")?.let {
-    (it as AndroidComponentsExtension<*, *, *>).onSources(action)
+    (it as AndroidComponentsExtension<*, *, *>).onSources(project, action)
     return
   }
 
@@ -90,7 +83,6 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
       type = KotlinPlatformType.common,
       nativePresetName = "common",
       name = "commonMain",
-      variantName = null,
       sourceDirectories = project.provider { listOf(project.sqldelightDirectory("commonMain")) },
       registerSourceGeneration = { task ->
         sourceSets.getByName("commonMain").kotlin.srcDir(task)
@@ -99,23 +91,37 @@ private fun KotlinMultiplatformExtension.sources(): List<Source> {
   )
 }
 
-private fun AndroidComponentsExtension<*, *, *>.onSources(action: (Source) -> Unit) {
+private fun AndroidComponentsExtension<*, *, *>.onSources(project: Project, action: (Source) -> Unit) {
   registerSourceType("sqldelight")
 
   onVariants { variant ->
     val source = Source(
       type = KotlinPlatformType.androidJvm,
       name = variant.name,
-      variantName = variant.name,
+      buildType = variant.buildType,
+      flavours = variant.productFlavors,
       sourceDirectories = variant.sources.getByName("sqldelight").all,
       registerSourceGeneration = { task ->
-        if (pluginVersion < AndroidPluginVersion(9, 0)) {
-          // AGP versions before 9.0 wouldn't pick up the task dependency correctly when using the kotlin sources here,
-          // so we use the java ones instead
-          // https://issuetracker.google.com/issues/446220448
-          variant.sources.java?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
-        } else {
-          variant.sources.kotlin?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+        when {
+          pluginVersion < AndroidPluginVersion(8, 12, 0) -> {
+            // AGP 8.9-8.11 addGeneratedSourceDirectory overwrites the task's
+            // @OutputDirectory (DirectoryProperty.set vs .convention), so AGP registers
+            // an empty path as the variant source. Fixed in AGP 8.12.0. Bypass AGP and
+            // wire directly into KGP's variant source set.
+            val kotlinSourceSets =
+              project.extensions.getByType(KotlinProjectExtension::class.java).sourceSets
+            kotlinSourceSets.named(variant.name) { it.kotlin.srcDir(task) }
+          }
+          pluginVersion < AndroidPluginVersion(9, 0) -> {
+            // kotlin-android on AGP 8.x only wires AndroidSourceSet.java into Kotlin
+            // compilation; variant.sources.kotlin registrations are ignored. AGP 9.0's
+            // built-in Kotlin makes variant.sources.kotlin the canonical path.
+            // https://issuetracker.google.com/issues/446220448
+            variant.sources.java?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+          }
+          else -> {
+            variant.sources.kotlin?.addGeneratedSourceDirectory(task, SqlDelightTask::outputDirectory)
+          }
         }
       },
     )
@@ -132,29 +138,18 @@ internal data class Source(
   val type: KotlinPlatformType,
   val nativePresetName: String? = null,
   val name: String,
-  val variantName: String? = null,
+  val buildType: String? = null,
+  val flavours: List<Pair<String, String>>? = null,
   val sourceDirectories: Provider<out Collection<Directory>>,
   val registerSourceGeneration: (TaskProvider<SqlDelightTask>) -> Unit,
 ) {
   internal data class Key(
     val type: KotlinPlatformType,
     val name: String,
-    val variantName: String?,
+    val buildType: String?,
+    val flavours: List<Pair<String, String>>?,
     val nativePresetName: String?,
   )
 
-  val key get() = Key(type, name, variantName, nativePresetName)
-
-  fun closestMatch(sources: Collection<Key>): Key? {
-    var matches = sources.filter {
-      type == it.type || (type == KotlinPlatformType.androidJvm && it.type == KotlinPlatformType.jvm) || it.type == KotlinPlatformType.common
-    }
-    if (matches.size <= 1) return matches.singleOrNull()
-
-    // Multiplatform native matched or android variants matched.
-    matches = matches.filter {
-      nativePresetName == it.nativePresetName && variantName == it.variantName
-    }
-    return matches.singleOrNull()
-  }
+  val key get() = Key(type, name, buildType, flavours, nativePresetName)
 }

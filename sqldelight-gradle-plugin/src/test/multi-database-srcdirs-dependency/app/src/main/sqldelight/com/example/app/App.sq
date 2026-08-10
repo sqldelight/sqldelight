@@ -1,0 +1,8 @@
+CREATE TABLE app_value (
+  id INTEGER NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM app_value;

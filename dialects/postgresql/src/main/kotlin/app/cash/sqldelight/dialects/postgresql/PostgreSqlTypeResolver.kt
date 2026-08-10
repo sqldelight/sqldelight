@@ -2,6 +2,7 @@ package app.cash.sqldelight.dialects.postgresql
 
 import app.cash.sqldelight.dialect.api.DialectType
 import app.cash.sqldelight.dialect.api.IntermediateType
+import app.cash.sqldelight.dialect.api.PrimitiveType
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
 import app.cash.sqldelight.dialect.api.PrimitiveType.BOOLEAN
 import app.cash.sqldelight.dialect.api.PrimitiveType.REAL
@@ -18,11 +19,13 @@ import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.SMALL_INT
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP
 import app.cash.sqldelight.dialects.postgresql.PostgreSqlType.TIMESTAMP_TIMEZONE
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AggregateExpressionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AnyOperatorExprMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ArrayValueExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.AtTimeZoneOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.DoubleColonCastOperatorExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.ExtractTemporalExpressionMixin
 import app.cash.sqldelight.dialects.postgresql.grammar.mixins.WindowFunctionMixin
+import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAnyOperatorExpr
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlAtTimeZoneOperator
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDeleteStmtLimited
 import app.cash.sqldelight.dialects.postgresql.grammar.psi.PostgreSqlDoubleColonCastOperatorExpression
@@ -50,6 +53,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 
 open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
@@ -154,11 +158,15 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "max" -> encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, BLOB, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
     "min" -> encapsulatingTypePreferringKotlin(exprList, BLOB, TEXT, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE, ENUM).asNullable()
     "lower", "upper" -> {
-      val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
-      when (exprType.dialectType) {
-        PostgreSqlType.TSRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP).nullableIf(exprType.javaType.isNullable)
-        PostgreSqlType.TSTZRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE).nullableIf(exprType.javaType.isNullable)
-        else -> exprType
+      if (resolvedType(exprList.first()).dialectType == PrimitiveType.ARGUMENT) {
+        IntermediateType(TEXT).asNullable()
+      } else {
+        val exprType = encapsulatingTypePreferringKotlin(exprList, TEXT, PostgreSqlType.TSRANGE, PostgreSqlType.TSTZRANGE)
+        when (exprType.dialectType) {
+          PostgreSqlType.TSRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP).nullableIf(exprType.javaType.isNullable)
+          PostgreSqlType.TSTZRANGE -> IntermediateType(PostgreSqlType.TIMESTAMP_TIMEZONE).nullableIf(exprType.javaType.isNullable)
+          else -> exprType
+        }
       }
     }
     "sum" -> {
@@ -207,8 +215,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     "json_object_agg", "jsonb_object_agg", "json_object_agg_strict", "jsonb_object_agg_strict",
     "json_object_agg_unique", "jsonb_object_agg_unique", "json_object_agg_unique_strict", "jsonb_object_agg_unique_strict",
     -> IntermediateType(PostgreSqlType.JSON)
-    "json_build_object", "jsonb_build_object",
-    -> IntermediateType(TEXT)
+    "json_build_object", "jsonb_build_object" -> IntermediateType(PostgreSqlType.JSON)
     "array_agg" -> {
       val typeForAgg = encapsulatingTypePreferringKotlin(exprList, SMALL_INT, PostgreSqlType.INTEGER, BIG_INT, REAL, PostgreSqlType.NUMERIC, TEXT, TIMESTAMP_TIMEZONE, TIMESTAMP, DATE).asNullable()
       arrayIntermediateType(typeForAgg)
@@ -309,6 +316,10 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
       }
       is PostgreSqlJsonExpression -> {
         IntermediateType(PostgreSqlType.JSON)
+      }
+      is PostgreSqlAnyOperatorExpr -> {
+        val anyType = (parent.parent.parent.parent.firstChild as SqlExpr).postgreSqlType()
+        IntermediateType(CollectionDialectType(anyType), column = anyType.column)
       }
       else -> {
         parentResolver.argumentType(parent, argument)
@@ -424,6 +435,9 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         )
         arrayIntermediateType(elementType)
       }
+
+      anyOperatorExpr != null -> resolvedType((anyOperatorExpr as AnyOperatorExprMixin).expr)
+
       else -> parentResolver.resolvedType(this)
     }
 
@@ -481,6 +495,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     fun arrayIntermediateType(type: IntermediateType): IntermediateType {
       return IntermediateType(
         ArrayDialectType(type),
+        column = type.column,
       )
     }
 
@@ -491,6 +506,13 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
     // ArrayDialectType stores the original IntermediateType as parameterizedType so that the type can be returned by unnested
     private class ArrayDialectType(val parameterizedType: IntermediateType) : DialectType {
       override val javaType = Array::class.asTypeName().parameterizedBy(parameterizedType.javaType)
+      override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
+      override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
+    }
+
+    // CollectionDialectType is used for ANY/ALL bind args where a Collection<T> is preferred over Array<T> - cursorGetter is not used
+    private class CollectionDialectType(val parameterizedType: IntermediateType) : DialectType {
+      override val javaType = Collection::class.asTypeName().parameterizedBy(parameterizedType.javaType)
       override fun prepareStatementBinder(columnIndex: CodeBlock, value: CodeBlock) = CodeBlock.of("bindObject(%L, %L)\n", columnIndex, value)
       override fun cursorGetter(columnIndex: Int, cursorName: String) = CodeBlock.of("$cursorName.getArray<%T>($columnIndex)", parameterizedType.javaType)
     }

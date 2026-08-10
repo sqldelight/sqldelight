@@ -15,7 +15,7 @@ import app.cash.sqldelight.core.lang.util.TableNameElement
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columnDefSource
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
-import app.cash.sqldelight.core.lang.util.isArrayParameter
+import app.cash.sqldelight.core.lang.util.isSqlInExprArrayParameter
 import app.cash.sqldelight.core.lang.util.range
 import app.cash.sqldelight.core.lang.util.rawSqlText
 import app.cash.sqldelight.core.lang.util.sqFile
@@ -129,7 +129,7 @@ abstract class QueryGenerator(
     val extractedVariables = mutableMapOf<IntermediateType, String>()
     // extract the variable for duplicate types, so we don't encode twice
     for (type in duplicateTypes) {
-      if (type.bindArg?.isArrayParameter() == true) continue
+      if (type.bindArg?.isSqlInExprArrayParameter() == true) continue
       val encodedJavaType = type.encodedJavaType() ?: continue
       val variableName = argumentNameAllocator.newName(type.name)
       extractedVariables[type] = variableName
@@ -142,7 +142,7 @@ abstract class QueryGenerator(
     // For each argument in the sql
     orderedBindArgs.forEach { (_, argument, bindArg) ->
       val type = argument.type
-      if (bindArg?.isArrayParameter() == true) {
+      if (bindArg?.isSqlInExprArrayParameter() == true) {
         needsFreshStatement = true
 
         if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {

@@ -482,6 +482,33 @@ class MutatorQueryFunctionTest {
     )
   }
 
+  @Test fun `coalesce in update uses custom type for bind argument`(dialect: TestDialect) {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE data (
+      |  id INTEGER PRIMARY KEY,
+      |  value ${dialect.textType} AS kotlin.collections.List
+      |);
+      |
+      |updateData:
+      |UPDATE data
+      |SET value = COALESCE(:newValue, value)
+      |WHERE id = :id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = dialect.dialect,
+    )
+
+    val update = file.namedMutators.first()
+    val generator = MutatorQueryGenerator(update)
+
+    val function = generator.function().toString()
+    assertThat(function).contains("public fun updateData(newValue: kotlin.collections.List?,")
+    assertThat(function).contains(
+      "bindString(parameterIndex++, newValue?.let { data_Adapter.value_Adapter.encode(it) })",
+    )
+  }
+
   @Test fun `bind parameter inside inner select gets proper type`() {
     val file = FixtureCompiler.parseSql(
       """

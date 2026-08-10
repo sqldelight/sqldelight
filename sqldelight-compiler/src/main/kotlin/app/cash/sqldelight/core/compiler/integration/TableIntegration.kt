@@ -6,6 +6,8 @@ import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.SqlDelightFile
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.columnDefSource
+import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
+import app.cash.sqldelight.core.lang.util.isExcludedFromCodegen
 import com.alecstrong.sql.psi.core.psi.LazyQuery
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.SqlCreateTableStmt
@@ -31,8 +33,11 @@ internal fun LazyQuery.adapterProperty(): PropertySpec {
 }
 
 private fun LazyQuery.columns() = when (val parentRule = tableName.parent) {
-  is SqlCreateTableStmt -> parentRule.columnDefList
-  else -> query.columns.map { (it.element as NamedElement).columnDefSource()!! }
+  is SqlCreateTableStmt -> parentRule.columnDefList.filterNot { it.columnName.isExcludedFromCodegen() }
+  else ->
+    query.columns
+      .filterCodegenExcludedColumns { it.element as? NamedElement }
+      .map { (it.element as NamedElement).columnDefSource()!! }
 }
 
 internal val LazyQuery.adapterName

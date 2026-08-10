@@ -52,6 +52,7 @@ dependencies {
   testImplementation projects.dialects.sqlite333
   testImplementation projects.dialects.sqlite335
   testImplementation projects.dialects.sqlite338
+  testImplementation projects.dialects.sqlite339
   testImplementation projects.dialects.sqlite344
 }
 

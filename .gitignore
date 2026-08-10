@@ -6,6 +6,7 @@ sqldelight-gradle-plugin/**/gradlew
 sqldelight-gradle-plugin/**/gradlew.bat
 *.iml
 build
+build-cache
 local.properties
 /reports
 gen

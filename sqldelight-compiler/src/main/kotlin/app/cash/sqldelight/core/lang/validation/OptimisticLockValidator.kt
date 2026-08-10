@@ -1,6 +1,7 @@
 package app.cash.sqldelight.core.lang.validation
 
 import app.cash.sqldelight.core.lang.util.columnDefSource
+import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
 import com.alecstrong.sql.psi.core.psi.NamedElement
@@ -39,7 +40,9 @@ open class OptimisticLockValidator : Annotator {
     }
 
     val table = tableName.reference?.resolve()?.parentOfType<Queryable>()?.tableExposed() ?: return
-    val lock = table.query.columns.mapNotNull { (it.element as NamedElement).columnDefSource() }
+    val lock = table.query.columns
+      .filterCodegenExcludedColumns { it.element as? NamedElement }
+      .mapNotNull { (it.element as NamedElement).columnDefSource() }
       .singleOrNull {
         it.columnType.node.getChildren(null).any { it.text == "LOCK" }
       } ?: return

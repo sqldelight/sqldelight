@@ -82,3 +82,10 @@ FROM myTable;
 
 SELECT jsonb_object_agg_strict(t, datab ORDER BY t DESC)
 FROM myTable;
+
+SELECT jsonb_agg(jsonb_build_object('id', 1));
+
+SELECT jsonb_agg(t)
+FROM ( SELECT 1 AS id) AS t;
+
+SELECT json_build_object('foo', 1, 2, row(3,'bar'));

@@ -41,6 +41,7 @@ object FixtureCompiler {
     fileName: String = "Test.sq",
     treatNullAsUnknownForEquality: Boolean = false,
     generateAsync: Boolean = false,
+    codegenExcludedColumns: Set<String> = emptySet(),
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
@@ -49,6 +50,7 @@ object FixtureCompiler {
       overrideDialect = overrideDialect,
       treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
       generateAsync = generateAsync,
+      codegenExcludedColumns = codegenExcludedColumns,
     )
   }
 
@@ -73,14 +75,21 @@ object FixtureCompiler {
     dialect: SqlDelightDialect = SqliteDialect(),
     treatNullAsUnknownForEquality: Boolean = false,
     generateAsync: Boolean = false,
+    codegenExcludedColumns: Set<String> = emptySet(),
   ): SqlDelightQueriesFile {
     writeSql(sql, temporaryFolder, fileName)
     val errors = mutableListOf<String>()
-    val parser = TestEnvironment(dialect = dialect, treatNullAsUnknownForEquality = treatNullAsUnknownForEquality, generateAsync = generateAsync)
+    val parser = TestEnvironment(
+      dialect = dialect,
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
+      generateAsync = generateAsync,
+      codegenExcludedColumns = codegenExcludedColumns,
+    )
     val environment = parser.build(
       temporaryFolder.fixtureRoot().path,
       createAnnotationHolder(errors),
     )
+    errors += environment.validateCodegenExcludedColumns()
 
     if (errors.isNotEmpty()) {
       throw AssertionError("Got unexpected errors\n\n$errors")
@@ -103,15 +112,24 @@ object FixtureCompiler {
     deriveSchemaFromMigrations: Boolean = false,
     treatNullAsUnknownForEquality: Boolean = false,
     generateAsync: Boolean = false,
+    codegenExcludedColumns: Set<String> = emptySet(),
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
     val sourceFiles = StringBuilder()
-    val parser = TestEnvironment(outputDirectory, deriveSchemaFromMigrations, treatNullAsUnknownForEquality, overrideDialect, generateAsync)
+    val parser = TestEnvironment(
+      outputDirectory = outputDirectory,
+      deriveSchemaFromMigrations = deriveSchemaFromMigrations,
+      treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
+      dialect = overrideDialect,
+      generateAsync = generateAsync,
+      codegenExcludedColumns = codegenExcludedColumns,
+    )
     val fixtureRootDir = File(fixtureRoot)
     require(fixtureRootDir.exists()) { "$fixtureRoot does not exist" }
 
     val environment = parser.build(fixtureRootDir.path, createAnnotationHolder(errors))
+    errors += environment.validateCodegenExcludedColumns()
     val fileWriter = writer ?: fileWriter@{ fileName: String ->
       val builder = StringBuilder()
       compilerOutput += File(fileName) to builder
@@ -135,19 +153,21 @@ object FixtureCompiler {
       }
     }
 
-    if (topMigration != null) {
+    if (topMigration != null && errors.isEmpty()) {
+      val migration = checkNotNull(topMigration)
       SqlDelightCompiler.writeInterfaces(
-        file = topMigration!!,
+        file = migration,
         output = fileWriter,
         includeAll = true,
       )
     }
 
-    if (generateDb) {
-      SqlDelightCompiler.writeDatabaseInterface(environment.module, file!!, "testmodule", fileWriter)
+    if (generateDb && errors.isEmpty()) {
+      val compiledFile = checkNotNull(file)
+      SqlDelightCompiler.writeDatabaseInterface(environment.module, compiledFile, "testmodule", fileWriter)
       SqlDelightCompiler.writeImplementations(
         environment.module,
-        file!!,
+        compiledFile,
         "testmodule",
         fileWriter,
       )

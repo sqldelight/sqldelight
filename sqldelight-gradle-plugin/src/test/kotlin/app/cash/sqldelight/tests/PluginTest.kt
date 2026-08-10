@@ -50,6 +50,22 @@ class PluginTest {
   }
 
   @Test
+  fun `Android Kotlin compilation depends on generated sqldelight sources`() {
+    val fixtureRoot = File("src/test/android-generated-source-compilation")
+    val buildDir = File(fixtureRoot, "build/generated/sqldelight")
+    buildDir.delete()
+
+    val result = GradleRunner.create()
+      .withCommonConfiguration(fixtureRoot)
+      .withArguments("clean", "compileDebugKotlin", "--stacktrace")
+      .build()
+
+    assertThat(result.output).contains("generateDebugDatabaseInterface")
+    assertThat(result.output).contains("BUILD SUCCESSFUL")
+    assertThat(buildDir.exists()).isTrue()
+  }
+
+  @Test
   fun `Applying the plugin works fine for js projects`() {
     val runner = GradleRunner.create()
       .withCommonConfiguration(File("src/test/kotlin-js"))
@@ -90,7 +106,10 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlinJs", "--stacktrace")
       .build()
     assertThat(result.output).contains("generateCommonMainDatabaseInterface")
@@ -104,7 +123,10 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "compileKotlinJvm", "--stacktrace")
       .build()
     assertThat(result.output).contains("generateCommonMainDatabaseInterface")
@@ -118,7 +140,10 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
-      .withCommonConfiguration(fixtureRoot)
+      .withCommonConfiguration(
+        projectRoot = fixtureRoot,
+        enableIsolatedProject = false, // isolated projects currently not supported configureondemand
+      )
       .also {
         File(fixtureRoot, "gradle.properties").appendText("\norg.gradle.configureondemand=true")
       }

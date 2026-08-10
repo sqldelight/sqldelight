@@ -22,6 +22,7 @@ import app.cash.sqldelight.core.lang.ADAPTER_NAME
 import app.cash.sqldelight.core.lang.psi.ColumnTypeMixin
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.columnDefSource
+import app.cash.sqldelight.core.lang.util.filterCodegenExcludedColumns
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.core.psi.SqlDelightStmtIdentifier
 import com.alecstrong.sql.psi.core.psi.LazyQuery
@@ -37,6 +38,7 @@ import com.squareup.kotlinpoet.TypeSpec
 
 internal class TableInterfaceGenerator(private val table: LazyQuery) {
   private val typeName = allocateName(table.tableName).capitalize()
+  private val columns = table.query.columns.filterCodegenExcludedColumns { it.element as? NamedElement }
 
   fun kotlinImplementationSpec(): TypeSpec {
     val typeSpec = TypeSpec.classBuilder(typeName)
@@ -52,7 +54,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
 
     val constructor = FunSpec.constructorBuilder()
 
-    table.query.columns.forEach { queryColumn ->
+    columns.forEach { queryColumn ->
       val column = queryColumn.element as NamedElement
       val columnName = allocateName(column)
       val columnDef = column.columnDefSource()!!
@@ -73,7 +75,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       constructor.addParameter(param.build())
     }
 
-    val adapters = table.query.columns
+    val adapters = columns
       .map { (it.element as NamedElement).columnDefSource()!! }
       .mapNotNull { (it.columnType as ColumnTypeMixin).adapter() }
 
@@ -100,7 +102,7 @@ internal class TableInterfaceGenerator(private val table: LazyQuery) {
       )
     }
 
-    table.query.columns
+    columns
       .mapNotNull { column ->
         val columnDef = (column.element as NamedElement).columnDefSource()!!
         val columnType = columnDef.columnType as ColumnTypeMixin

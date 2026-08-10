@@ -41,6 +41,7 @@ import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmtValues
+import com.alecstrong.sql.psi.core.psi.SqlIsDistinctFromExpr
 import com.alecstrong.sql.psi.core.psi.SqlIsExpr
 import com.alecstrong.sql.psi.core.psi.SqlLikeEscapeCharacterExpr
 import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
@@ -60,8 +61,13 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.asClassName
 
-internal fun SqlBindExpr.isArrayParameter(): Boolean {
+internal fun SqlBindExpr.isSqlInExprArrayParameter(): Boolean {
   return (parent is SqlInExpr && this == parent.lastChild)
+}
+
+internal fun SqlBindExpr.isAnyExprArrayParameter(): Boolean {
+  val child = parent.firstChild
+  return ((child.textMatches("ANY") || child.textMatches("SOME")) && parent.children.last() == this)
 }
 
 internal fun SqlExpr.inferredType(): IntermediateType {
@@ -120,7 +126,12 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       }
     }
 
-    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlIsExpr, is SqlBinaryBooleanExpr -> {
+    is SqlIsExpr, is SqlIsDistinctFromExpr -> {
+      val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
+      (validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()).asNullable()
+    }
+
+    is SqlBinaryPipeExpr, is SqlBinaryEqualityExpr, is SqlBinaryBooleanExpr -> {
       val validArg = children.lastOrNull { it is SqlExpr && it !== argument && it !is SqlBindExpr }
       validArg?.type() ?: children.last { it is SqlExpr && it !== argument }.type()
     }

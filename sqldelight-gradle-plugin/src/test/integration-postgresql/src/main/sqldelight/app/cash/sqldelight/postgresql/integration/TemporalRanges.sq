@@ -26,3 +26,5 @@ SELECT tstzmultirange(
   tstzrange(CURRENT_TIMESTAMP + INTERVAL '3 day' , CURRENT_TIMESTAMP + INTERVAL '6 day'))
   @> CURRENT_TIMESTAMP + INTERVAL '1 day';
 
+selectLowerUpper:
+SELECT LOWER(?::tstzrange) low, UPPER(?::tstzrange) high;

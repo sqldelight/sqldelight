@@ -11,7 +11,10 @@ class TaskDependenciesTest {
   @Test
   fun `task dependencies are properly propagated`() {
     val output = GradleRunner.create()
-      .withCommonConfiguration(File("src/test/task-dependencies"))
+      .withCommonConfiguration(
+        projectRoot = File("src/test/task-dependencies"),
+        enableIsolatedProject = false,
+      )
       .withArguments("clean", "checkSources", "--stacktrace")
       .build()
 
