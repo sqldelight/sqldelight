@@ -43,6 +43,7 @@
 - [PostgreSQL Dialect] Fix json aggregate functions when using nested function call (#6281 by @griffio)
 - [Paging3 Extension] Fix KeyedQueryPagingSource crash on empty database (#6284 by @woods-marshes)
 - [Compiler] Fix Java type adapter issue when mutator statements are used with encapsulating functions like `COALESCE` (#6292 by @griffio)
+- [Compiler] Fix where the module name was capitalized, the generated code's package name also was capitalized (#6316 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
