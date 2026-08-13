@@ -25,7 +25,8 @@ intellijPlatform {
         bundledPlugin("org.jetbrains.kotlin")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("com.intellij.java")
-        bundledPlugin("org.jetbrains.android")
+        // No longer bundled with IntelliJ IDEA as of 2023.3, resolved from the marketplace instead.
+        plugin("org.jetbrains.android", libs.versions.idea.get())
 
         pluginVerifier()
         zipSigner()
@@ -44,7 +45,7 @@ intellijPlatform {
       }
     }
     ideaVersion {
-      sinceBuild.set("231.9392.1")
+      sinceBuild.set("233.14808.21")
       untilBuild.set(provider { null })
     }
   }
@@ -62,6 +63,7 @@ intellijPlatform {
     customFailureLevel.remove(FailureLevel.EXPERIMENTAL_API_USAGES)
     customFailureLevel.remove(FailureLevel.INTERNAL_API_USAGES)
     customFailureLevel.remove(FailureLevel.NOT_DYNAMIC)
+    customFailureLevel.remove(FailureLevel.OVERRIDE_ONLY_API_USAGES)
     customFailureLevel.remove(FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES)
 
     failureLevel = customFailureLevel
@@ -73,10 +75,18 @@ tasks.named('runIde') {
   maxHeapSize = "4g"
 }
 
+// The Android plugin is only needed to compile the optional android integration. Loading it in
+// tests aborts project post-startup activities, failing tests that never exercise android code.
+tasks.named('prepareTestSandbox') {
+  doLast {
+    sandboxConfigDirectory.get().file("disabled_plugins.txt").asFile.text = "org.jetbrains.android\n"
+  }
+}
+
 intellijPlatformTesting.runIde {
   customRun {
     type = IntelliJPlatformType.IntellijIdea
-    version = "2026.1"
+    version = "2026.2"
   }
 }
 
@@ -112,7 +122,6 @@ dependencies {
   implementation libs.kotlinx.serialization.json
 
   testImplementation libs.truth
-  testImplementation libs.intellij.android
   testImplementation projects.dialects.sqlite318
 }
 

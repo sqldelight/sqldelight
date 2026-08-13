@@ -42,7 +42,7 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
       it.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
       it.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
       it.addToTab("Device", "Plugin SHA", GIT_SHA)
-      PluginManagerCore.getPlugins().forEach { plugin ->
+      PluginManagerCore.plugins.forEach { plugin ->
         it.addToTab("Plugins", plugin.name, "${plugin.pluginId} : ${plugin.version}")
       }
     }

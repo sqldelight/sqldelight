@@ -18,7 +18,7 @@ class ExpandColumnNamesWildcardQuickFix : BaseElementAtCaretIntentionAction() {
   override fun getFamilyName() = INTENTIONS_FAMILY_NAME_REFACTORINGS
 
   override fun getText() = INTENTION_EXPAND_COLUMN_NAMES_TEXT
-  override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+  override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
     val selectStmt = PsiTreeUtil.getParentOfType(element, SqlSelectStmt::class.java)
       ?: return false
     return selectStmt.resultColumnList.any { it.textContains('*') && it.expr == null }
