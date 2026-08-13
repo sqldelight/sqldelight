@@ -1,5 +1,6 @@
 package app.cash.sqldelight.tests
 
+import app.cash.sqldelight.AGP_8_MAX_GRADLE_VERSION
 import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
@@ -212,7 +213,7 @@ class CompilationUnitTests {
         """.trimMargin(),
       )
 
-      properties().let { properties ->
+      properties(gradleVersion = AGP_8_MAX_GRADLE_VERSION).let { properties ->
         assertThat(properties.databases).hasSize(1)
 
         val database = properties.databases[0]

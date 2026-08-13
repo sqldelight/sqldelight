@@ -41,18 +41,25 @@ internal class TemporaryFixture : AutoCloseable {
     File(fixtureRoot, "build.gradle").apply { createNewFile() }.writeText(text)
   }
 
-  internal fun configure(runTask: String = "clean", enableIsolatedProject: Boolean = true) {
-    val result = GradleRunner.create()
+  internal fun configure(
+    runTask: String = "clean",
+    enableIsolatedProject: Boolean = true,
+    gradleVersion: String? = null,
+  ) {
+    val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot, enableIsolatedProject)
       .withArguments(runTask, "--stacktrace")
       .forwardOutput()
-      .build()
+
+    if (gradleVersion != null) runner.withGradleVersion(gradleVersion)
+
+    val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
-  internal fun properties(): SqlDelightPropertiesFile {
-    configure()
-    return properties(fixtureRoot)
+  internal fun properties(gradleVersion: String? = null): SqlDelightPropertiesFile {
+    configure(gradleVersion = gradleVersion)
+    return properties(fixtureRoot, gradleVersion)
   }
 
   override fun close() {
@@ -60,9 +67,13 @@ internal class TemporaryFixture : AutoCloseable {
   }
 }
 
-internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
-  val propertiesFile = GradleConnector.newConnector()
+internal fun properties(fixtureRoot: File, gradleVersion: String? = null): SqlDelightPropertiesFileImpl {
+  val connector = GradleConnector.newConnector()
     .forProjectDirectory(fixtureRoot)
+
+  if (gradleVersion != null) connector.useGradleVersion(gradleVersion)
+
+  val propertiesFile = connector
     .connect()
     .use { connection ->
       connection.action(FetchSqlDelightModel(fixtureRoot))
