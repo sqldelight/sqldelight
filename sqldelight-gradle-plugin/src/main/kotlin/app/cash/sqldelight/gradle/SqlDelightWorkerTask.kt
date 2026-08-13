@@ -55,19 +55,11 @@ abstract class SqlDelightWorkerTask : SourceTask() {
  * Suppress "WARNING: A terminally deprecated method in sun.misc.Unsafe has been called".
  * The IntelliJ platform runs on calls to terminally deprecated `sun.misc.Unsafe` memory access methods,
  * which JEP 498 warns about and eventually denies, in phases.
- *
- * Pick the most permissive value the JVM accepts. Values it does not accept prevent it from starting,
- * so JVMs newer than the phases below fall back to the value documented to survive them.
  */
 internal fun unsafeMemoryAccessJvmArgs(javaFeatureVersion: Int): List<String> {
   return when {
-    // The option was only added in JDK 23, and memory access is allowed anyway.
     javaFeatureVersion < 23 -> emptyList()
-    // Phase 1 and 2 warn about memory access, but still accept `allow` to silence it.
     javaFeatureVersion < 26 -> listOf("--sun-misc-unsafe-memory-access=allow")
-    // Phase 3 (JDK 26 at the earliest) denies memory access by default, which fails the compiler with
-    // an UnsupportedOperationException, and no longer accepts `allow`. Reverting to `warn` keeps the
-    // compiler working, at the cost of one warning per worker.
     else -> listOf("--sun-misc-unsafe-memory-access=warn")
   }
 }
