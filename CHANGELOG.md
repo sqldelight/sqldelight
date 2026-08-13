@@ -25,6 +25,7 @@
 - [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
 
 ### Fixed
+- [Gradle Plugin] Suppress `sun.misc.Unsafe` deprecation warnings from the compiler worker on JDK 24+ (#6321)
 - [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
