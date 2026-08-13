@@ -2,7 +2,7 @@
 kotlin = "2.3.10"
 dokka = "2.2.0"
 kotlinx-coroutines = "1.11.0"
-idea = "231.9392.1" # Hedgehog | 2023.1.1 Patch 2 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
+idea = "233.14808.21" # Jellyfish | 2023.3.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
 androidxSqlite = "2.7.0"
 schemaCrawler = "16.19.2"
 sqliter = "1.3.3"
@@ -12,7 +12,7 @@ ktlint = "1.7.1"
 agp = "9.2.1"
 compileSdk = "35"
 minSdk = "23"
-sqlPsi = "0.7.3"
+sqlPsi = "0.8.0"
 testContainers = "1.21.4"
 
 [libraries]
@@ -58,15 +58,14 @@ intellij-lang = { module = "com.jetbrains.intellij.platform:lang", version.ref =
 intellij-langImpl = { module = "com.jetbrains.intellij.platform:lang-impl", version.ref = "idea" }
 intellij-analysis = { module = "com.jetbrains.intellij.platform:analysis", version.ref = "idea" }
 intellij-analysisImpl = { module = "com.jetbrains.intellij.platform:analysis-impl", version.ref = "idea" }
-intellij-android = { module = "com.jetbrains.intellij.android:android-adt-ui-model", version.ref = "idea" }
 intellij-projectModel = { module = "com.jetbrains.intellij.platform:project-model", version.ref = "idea" }
 intellij-projectModelImpl = { module = "com.jetbrains.intellij.platform:project-model-impl", version.ref = "idea" }
 intellij-utilEx = { module = "com.jetbrains.intellij.platform:util-ex", version.ref = "idea" }
 intellij-utilUi = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "idea" }
 intellij-util = { module = "com.jetbrains.intellij.platform:util", version.ref = "idea" }
 
-sqlPsi = { module = "app.cash.sql-psi:core", version.ref = "sqlPsi" }
-sqlPsiEnvironment = { module = "app.cash.sql-psi:environment", version.ref = "sqlPsi" }
+sqlPsi = { module = "dev.lysine.sql-psi:core", version.ref = "sqlPsi" }
+sqlPsiEnvironment = { module = "dev.lysine.sql-psi:environment", version.ref = "sqlPsi" }
 robolectric = { module = "org.robolectric:robolectric", version = "4.16.1" }
 rxJava2 = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.21" }
 rxJava3 = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.12" }
@@ -106,7 +105,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-intellij = { id = "org.jetbrains.intellij.platform", version = "2.16.0" }
+intellij = { id = "org.jetbrains.intellij.platform", version = "2.18.1" }
 grammarKitComposer = { id = "app.cash.grammarkit-composer", version = "0.2.0" }
 publish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
 spotless = { id = "com.diffplug.spotless", version = "8.7.0" }
