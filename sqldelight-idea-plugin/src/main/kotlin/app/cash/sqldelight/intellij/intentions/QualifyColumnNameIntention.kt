@@ -22,7 +22,7 @@ class QualifyColumnNameIntention : BaseElementAtCaretIntentionAction() {
     return "Qualify identifier"
   }
 
-  override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+  override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
     val columnName = element.parentOfType<SqlColumnName>(true) ?: return false
     return columnName.parent is SqlColumnExpr && columnName.prevSibling.elementType != SqlTypes.DOT
   }

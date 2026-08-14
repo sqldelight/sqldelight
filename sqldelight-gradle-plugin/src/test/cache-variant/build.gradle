@@ -1,9 +1,6 @@
-import com.android.build.api.variant.HostTestBuilder
-
 plugins {
-  id("com.android.library").version("8.13.2")
+  alias(libs.plugins.android.library)
   alias(libs.plugins.sqldelight)
-  alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -16,9 +13,11 @@ android {
   }
 }
 
+def debugOnly = providers.gradleProperty("debugOnly").getOrElse("false").toBoolean()
+
 androidComponents {
   beforeVariants(selector().withBuildType("release")) {
-    enable = project.properties["debugOnly"] != "true"
+    enable = !debugOnly
   }
 }
 

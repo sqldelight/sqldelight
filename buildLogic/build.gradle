@@ -7,13 +7,13 @@ plugins {
 
 allprojects {
   tasks.withType(JavaCompile).configureEach {
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
   }
 
   tasks.withType(KotlinJvmCompile).configureEach {
     compilerOptions {
-      jvmTarget = JvmTarget.JVM_11
+      jvmTarget = JvmTarget.JVM_17
     }
   }
 }

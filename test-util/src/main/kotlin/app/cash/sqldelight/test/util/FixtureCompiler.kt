@@ -42,6 +42,7 @@ object FixtureCompiler {
     treatNullAsUnknownForEquality: Boolean = false,
     generateAsync: Boolean = false,
     codegenExcludedColumns: Set<String> = emptySet(),
+    moduleName: String = "testmodule",
   ): CompilationResult {
     writeSql(sql, temporaryFolder, fileName)
     return compileFixture(
@@ -51,6 +52,7 @@ object FixtureCompiler {
       treatNullAsUnknownForEquality = treatNullAsUnknownForEquality,
       generateAsync = generateAsync,
       codegenExcludedColumns = codegenExcludedColumns,
+      moduleName = moduleName,
     )
   }
 
@@ -113,6 +115,7 @@ object FixtureCompiler {
     treatNullAsUnknownForEquality: Boolean = false,
     generateAsync: Boolean = false,
     codegenExcludedColumns: Set<String> = emptySet(),
+    moduleName: String = "testmodule",
   ): CompilationResult {
     val compilerOutput = mutableMapOf<File, StringBuilder>()
     val errors = mutableListOf<String>()
@@ -164,11 +167,11 @@ object FixtureCompiler {
 
     if (generateDb && errors.isEmpty()) {
       val compiledFile = checkNotNull(file)
-      SqlDelightCompiler.writeDatabaseInterface(environment.module, compiledFile, "testmodule", fileWriter)
+      SqlDelightCompiler.writeDatabaseInterface(environment.module, compiledFile, moduleName, fileWriter)
       SqlDelightCompiler.writeImplementations(
         environment.module,
         compiledFile,
-        "testmodule",
+        moduleName,
         fileWriter,
       )
     }

@@ -23,6 +23,7 @@
 - [Gradle Plugin] Increase minimal support gradle to 8.2.1 (#6217 by @maxsav)
 - [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
 - [Runtime] Allow transactions to be scoped in a coroutine context and not confined to a thread (#6317 by @griffio)
+- [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
 
 ### Fixed
 - [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
@@ -44,6 +45,7 @@
 - [PostgreSQL Dialect] Fix json aggregate functions when using nested function call (#6281 by @griffio)
 - [Paging3 Extension] Fix KeyedQueryPagingSource crash on empty database (#6284 by @woods-marshes)
 - [Compiler] Fix Java type adapter issue when mutator statements are used with encapsulating functions like `COALESCE` (#6292 by @griffio)
+- [Compiler] Fix where the module name was capitalized, the generated code's package name also was capitalized (#6316 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
