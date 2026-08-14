@@ -656,6 +656,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#no-generative-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Generative Tools
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Contributions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sqldelight" class="md-nav__link">
     <span class="md-ellipsis">
       SQLDelight
@@ -5372,6 +5390,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#no-generative-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Generative Tools
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Contributions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sqldelight" class="md-nav__link">
     <span class="md-ellipsis">
       SQLDelight
@@ -5498,12 +5534,27 @@
 
 
 <h1 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h1>
+<p>Our goal with this project is to build a simple, fast, and secure component that you can trust. We
+have scoped the project deliberately to address common use cases easily, and made it extensible so
+it'll handle exotic use cases too.</p>
+<h2 id="no-generative-tools">No Generative Tools<a class="headerlink" href="#no-generative-tools" title="Permanent link">&para;</a></h2>
+<p>We don't use LLMs or generative tools in our source code or documentation. We don't use them for
+human-to-human communication in commits, issues, and pull requests. We believe writing is thinking,
+and want our work to be thoughtful.</p>
+<p>We require all contributors to do likewise. Building is more fun when everyone is making an effort.</p>
+<p>We’ll immediately reject LLM-generated contributions to protect the culture of our project. We ban
+repeat offenders.</p>
+<p>Some narrow exceptions to this policy:</p>
+<ul>
+<li>Non-English speakers may use machine translation tools if they are disclosed.</li>
+<li>Local autocomplete. (Avoid tools that are metered in tokens.)</li>
+</ul>
+<p>Coding is fun.</p>
+<h2 id="code-contributions">Code Contributions<a class="headerlink" href="#code-contributions" title="Permanent link">&para;</a></h2>
 <p>If you would like to contribute code to this project you can do so through GitHub by
 forking the repository and sending a pull request.</p>
 <p>When submitting code, please make every effort to follow existing conventions
 and style in order to keep the code as readable as possible.</p>
-<p>Before your code can be accepted into the project you must also sign the
-<a href="https://spreadsheets.google.com/spreadsheet/viewform?formkey=dDViT2xzUHAwRkI3X3k5Z0lQM091OGc6MQ&amp;ndplr=1">Individual Contributor License Agreement (CLA)</a>.</p>
 <h2 id="sqldelight">SQLDelight<a class="headerlink" href="#sqldelight" title="Permanent link">&para;</a></h2>
 <p>If you're looking to get started with contributing, look below for specific guides depending on which part
 of SQLDelight you'd like to contribute to. If you're still unsure, comment in the issue you're looking in to
@@ -5526,7 +5577,7 @@ or join the <a href="https://blog.jetbrains.com/platform/2019/10/introducing-jet
 <p>If you're interested in creating your own driver, you can do so outside of the SQLDelight repository using the <code>runtime</code> artifact. To test the driver
 you can depend on the <code>driver-test</code> and extend <code>DriverTest</code> and <code>TransactionTest</code> to ensure it works as SQLDelight would expect.</p>
 <h4 id="asynchronous-drivers">Asynchronous Drivers<a class="headerlink" href="#asynchronous-drivers" title="Permanent link">&para;</a></h4>
-<p>Drivers that make asynchronous calls can be implemented by using the <code>runtime-async</code> artifact. </p>
+<p>Drivers that make asynchronous calls can be implemented by using the <code>runtime-async</code> artifact.</p>
 <h3 id="gradle">Gradle<a class="headerlink" href="#gradle" title="Permanent link">&para;</a></h3>
 <p>If you're encountering a gradle issue, start by creating a test fixture in <code>sqldelight-gradle-plugin/src/test</code> similar to the other folders there
 which reproduces your issue. Feel free to just open a PR with this failing test if you don't know how to fix! Test cases are greatly appreciated.
@@ -5547,7 +5598,7 @@ a blog post on <a href="https://www.alecstrong.com/posts/multiple-dialects/">mul
 As with SQLDelight, if you're encountering an issue but don't know how to contribute a fix or need assistance, comment in the GitHub issue or
 create a new one to start the discussion.</p>
 <p>For any changes in SQL-PSI, you will want to add a test fixture in the corresponding <code>core/src/test/fixtures_*</code> folder. The <code>fixtures</code> folder (no suffix)
-runs for all dialects. After your change has been merged to sql-psi, if there are changes you also need to make in SQLDelight, check out the 
+runs for all dialects. After your change has been merged to sql-psi, if there are changes you also need to make in SQLDelight, check out the
 <code>sql-psi-dev</code> branch on SQLDelight and target it with your PR. It uses the snapshot releases of sql-psi so you can build your SQLDelight change
 roughly 10 minutes after the sql-psi change has been merged.</p>
 <h3 id="grammar">Grammar<a class="headerlink" href="#grammar" title="Permanent link">&para;</a></h3>
