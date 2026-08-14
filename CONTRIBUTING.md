@@ -1,18 +1,36 @@
 # Contributing
 
+Our goal with this project is to build a simple, fast, and secure component that you can trust. We
+have scoped the project deliberately to address common use cases easily, and made it extensible so
+it'll handle exotic use cases too.
+
+## No Generative Tools
+
+We don't use LLMs or generative tools in our source code or documentation. We don't use them for
+human-to-human communication in commits, issues, and pull requests. We believe writing is thinking,
+and want our work to be thoughtful.
+
+We require all contributors to do likewise. Building is more fun when everyone is making an effort.
+
+We’ll immediately reject LLM-generated contributions to protect the culture of our project. We ban
+repeat offenders.
+
+Some narrow exceptions to this policy:
+
+* Non-English speakers may use machine translation tools if they are disclosed.
+* Local autocomplete. (Avoid tools that are metered in tokens.)
+
+Coding is fun.
+
+## Code Contributions
+
 If you would like to contribute code to this project you can do so through GitHub by
 forking the repository and sending a pull request.
 
 When submitting code, please make every effort to follow existing conventions
 and style in order to keep the code as readable as possible.
 
-Before your code can be accepted into the project you must also sign the
-[Individual Contributor License Agreement (CLA)][1].
-
-
- [1]: https://spreadsheets.google.com/spreadsheet/viewform?formkey=dDViT2xzUHAwRkI3X3k5Z0lQM091OGc6MQ&ndplr=1
- 
-## SQLDelight 
+## SQLDelight
 
 If you're looking to get started with contributing, look below for specific guides depending on which part
 of SQLDelight you'd like to contribute to. If you're still unsure, comment in the issue you're looking in to
@@ -44,7 +62,7 @@ you can depend on the `driver-test` and extend `DriverTest` and `TransactionTest
 
 #### Asynchronous Drivers
 
-Drivers that make asynchronous calls can be implemented by using the `runtime-async` artifact. 
+Drivers that make asynchronous calls can be implemented by using the `runtime-async` artifact.
 
 ### Gradle
 
@@ -73,7 +91,7 @@ As with SQLDelight, if you're encountering an issue but don't know how to contri
 create a new one to start the discussion.
 
 For any changes in SQL-PSI, you will want to add a test fixture in the corresponding `core/src/test/fixtures_*` folder. The `fixtures` folder (no suffix)
-runs for all dialects. After your change has been merged to sql-psi, if there are changes you also need to make in SQLDelight, check out the 
+runs for all dialects. After your change has been merged to sql-psi, if there are changes you also need to make in SQLDelight, check out the
 `sql-psi-dev` branch on SQLDelight and target it with your PR. It uses the snapshot releases of sql-psi so you can build your SQLDelight change
 roughly 10 minutes after the sql-psi change has been merged.
 
