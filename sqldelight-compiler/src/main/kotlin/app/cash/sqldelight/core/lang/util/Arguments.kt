@@ -47,6 +47,7 @@ import com.alecstrong.sql.psi.core.psi.SqlLikeEscapeCharacterExpr
 import com.alecstrong.sql.psi.core.psi.SqlLimitingTerm
 import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlMultiColumnExpression
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnInExpr
 import com.alecstrong.sql.psi.core.psi.SqlNullExpr
 import com.alecstrong.sql.psi.core.psi.SqlParenExpr
 import com.alecstrong.sql.psi.core.psi.SqlResultColumn
@@ -62,7 +63,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.asClassName
 
 internal fun SqlBindExpr.isSqlInExprArrayParameter(): Boolean {
-  return (parent is SqlInExpr && this == parent.lastChild)
+  val multiColumnInExpr = parent as? SqlMultiColumnInExpr
+  return (parent is SqlInExpr && this == parent.lastChild) ||
+    this == multiColumnInExpr?.bindExpr
 }
 
 internal fun SqlBindExpr.isAnyExprArrayParameter(): Boolean {
@@ -109,6 +112,10 @@ internal fun SqlExpr.argumentType(argument: SqlExpr): IntermediateType {
       if (argument === firstChild) return IntermediateType(ARGUMENT)
 
       return exprList.first().type()
+    }
+
+    is SqlMultiColumnInExpr -> {
+      return multiColumnExpression.exprList.first().type()
     }
 
     is SqlCaseExpr -> {

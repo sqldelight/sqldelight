@@ -144,13 +144,28 @@ abstract class QueryGenerator(
       val type = argument.type
       if (bindArg?.isSqlInExprArrayParameter() == true) {
         needsFreshStatement = true
+        val collectionElementTypes = argument.collectionElementTypes
 
         if (!handledArrayArgs.contains(argument) && seenArrayArguments.add(argument)) {
-          result.addStatement(
-            """
-            |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
-            """.trimMargin(),
-          )
+          if (collectionElementTypes == null) {
+            result.addStatement(
+              """
+              |val ${type.name}Indexes = createArguments(count = ${type.name}.size)
+              """.trimMargin(),
+            )
+          } else {
+            result.add(
+              "val %NIndexes = %N.joinToString(prefix = %S, postfix = %S) {\n",
+              type.name,
+              type.name,
+              "(",
+              ")",
+            )
+            result.indent()
+            result.addStatement("createArguments(count = %L)", collectionElementTypes.size)
+            result.unindent()
+            result.add("}\n")
+          }
         }
 
         // Replace the single bind argument with the array of bind arguments:
@@ -159,16 +174,35 @@ abstract class QueryGenerator(
 
         // Perform the necessary binds using the appropriate indexing strategy
         val elementName = argumentNameAllocator.newName(type.name)
-        bindStatements.add(
-          """
-          |${type.name}.forEach { $elementName ->
-          |  %L}
-          |
-          """.trimMargin(),
-          type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
-        )
+        if (collectionElementTypes == null) {
+          bindStatements.add(
+            """
+            |${type.name}.forEach { $elementName ->
+            |  %L}
+            |
+            """.trimMargin(),
+            type.copy(name = elementName).preparedStatementBinder(CodeBlock.of("parameterIndex++")),
+          )
+        } else {
+          bindStatements.add("${type.name}.forEach { $elementName ->\n")
+          collectionElementTypes.forEach { field ->
+            val fieldExpression = CodeBlock.of("%N.%N", elementName, field.name).toString()
+            bindStatements.add(
+              "  %L",
+              field.copy(name = fieldExpression)
+                .preparedStatementBinder(CodeBlock.of("parameterIndex++")),
+            )
+          }
+          bindStatements.add("}\n")
+        }
 
-        arrayParameterSizes.add("${type.name}.size")
+        arrayParameterSizes.add(
+          if (collectionElementTypes == null) {
+            "${type.name}.size"
+          } else {
+            "${type.name}.size * ${collectionElementTypes.size}"
+          },
+        )
       } else {
         val bindParameter = bindArg?.bindParameter as? BindParameterMixin
         if (bindParameter == null || bindParameter.text != "DEFAULT") {

@@ -24,6 +24,7 @@ import app.cash.sqldelight.core.lang.types.typeResolver
 import app.cash.sqldelight.core.lang.util.argumentType
 import app.cash.sqldelight.core.lang.util.childOfType
 import app.cash.sqldelight.core.lang.util.findChildrenOfType
+import app.cash.sqldelight.core.lang.util.name
 import app.cash.sqldelight.core.lang.util.queryColumns
 import app.cash.sqldelight.core.lang.util.sqFile
 import app.cash.sqldelight.core.lang.util.type
@@ -36,11 +37,15 @@ import app.cash.sqldelight.dialect.grammar.mixins.BindParameterMixin
 import com.alecstrong.sql.psi.core.psi.SqlAnnotatedElement
 import com.alecstrong.sql.psi.core.psi.SqlBindExpr
 import com.alecstrong.sql.psi.core.psi.SqlBindParameter
+import com.alecstrong.sql.psi.core.psi.SqlColumnName
 import com.alecstrong.sql.psi.core.psi.SqlIdentifier
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
+import com.alecstrong.sql.psi.core.psi.SqlMultiColumnInExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.NameAllocator
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class BindableQuery(
@@ -67,7 +72,9 @@ abstract class BindableQuery(
         ),
       )
     }
-    return@lazy arguments.sortedBy { it.index }.map { it.type }
+    return@lazy arguments.sortedBy { it.index }.map { argument ->
+      argument.collectionTypeName?.let { argument.type.copy(javaType = it) } ?: argument.type
+    }
   }
 
   /**
@@ -103,7 +110,7 @@ abstract class BindableQuery(
             return@forEach
           }
           maxIndexSeen = maxOf(maxIndexSeen, index)
-          result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
+          result.add(argument(index, bindArg))
           return@forEach
         }
         bindParameter.identifier?.let {
@@ -114,12 +121,12 @@ abstract class BindableQuery(
           val index = ++maxIndexSeen
           indexesSeen.add(index)
           manuallyNamedIndexes.add(index)
-          result.add(Argument(index, typeResolver.argumentType(bindArg).copy(name = it.text), mutableListOf(bindArg)))
+          result.add(argument(index, bindArg, it.text))
           return@forEach
         }
         val index = ++maxIndexSeen
         indexesSeen.add(index)
-        result.add(Argument(index, typeResolver.argumentType(bindArg), mutableListOf(bindArg)))
+        result.add(argument(index, bindArg))
       }
     }
 
@@ -131,6 +138,15 @@ abstract class BindableQuery(
         name += "_"
       }
       it.copy(type = it.type.copy(name = name))
+    }
+
+    result.forEach { argument ->
+      if (argument.collectionElementTypes == null) return@forEach
+      val queryName = NameAllocator().newName(identifier?.name ?: "Query")
+      argument.collectionTypeName = ClassName(
+        statement.sqFile().packageName!!,
+        "${queryName.capitalize()}${argument.type.name.capitalize()}",
+      )
     }
 
     if (statement is SqlInsertStmt) {
@@ -146,6 +162,37 @@ abstract class BindableQuery(
     }
 
     return@lazy result
+  }
+
+  private fun argument(
+    index: Int,
+    bindArg: SqlBindExpr,
+    name: String? = null,
+  ): Argument {
+    val type = typeResolver.argumentType(bindArg).let {
+      if (name == null) it else it.copy(name = name)
+    }
+    val multiColumnInExpr = bindArg.parent as? SqlMultiColumnInExpr
+    val collectionElementTypes = multiColumnInExpr?.multiColumnExpression?.exprList?.let { expressions ->
+      val names = NameAllocator()
+      expressions.map { expression ->
+        expression.type().let { fieldType ->
+          val columnName = PsiTreeUtil.findChildOfType(expression, SqlColumnName::class.java)
+          val quotedName = expression.text
+            .takeIf { it.length >= 2 && it.first() == '"' && it.last() == '"' }
+            ?.substring(1, expression.text.length - 1)
+            ?.replace("\"\"", "\"")
+          val fieldName = columnName?.let(::allocateName) ?: quotedName ?: expression.name
+          fieldType.copy(name = names.newName(fieldName))
+        }
+      }
+    }
+    return Argument(
+      index = index,
+      type = type,
+      bindArgs = mutableListOf(bindArg),
+      collectionElementTypes = collectionElementTypes,
+    )
   }
 
   private fun MutableList<Argument>.findAndReplace(
@@ -205,7 +252,10 @@ abstract class BindableQuery(
     val index: Int,
     val type: IntermediateType,
     val bindArgs: MutableList<SqlBindExpr> = mutableListOf(),
-  )
+    val collectionElementTypes: List<IntermediateType>? = null,
+  ) {
+    var collectionTypeName: ClassName? = null
+  }
 
   companion object {
     /**

@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- [Compiler] Add collection binds for multi-column `IN` expressions
 - [Native Driver] Add `extendedConfig` parameter to `inMemoryDriver` (#5539 by @GuilhE)
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
@@ -25,6 +26,7 @@
 - [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
 
 ### Fixed
+- [Compiler] Resolve observed tables inside dialect-defined table expressions
 - [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
