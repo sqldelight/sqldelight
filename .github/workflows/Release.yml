@@ -110,15 +110,25 @@ jobs:
         id: version
 
       - name: Assemble NPM Packages
-        run: ./gradlew :drivers:web-worker-driver:sqljs:assemblePackage
+        run: ./gradlew :drivers:web-worker-driver:sqljs:assemblePackage :drivers:web-worker-driver:sqlite-wasm:assemblePackage
 
-      - name: Publish SNAPSHOT Packages
+      - name: Publish SQL.js SNAPSHOT Package
         working-directory: drivers/web-worker-driver/sqljs/build/package
         if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
         run: npm publish --tag snapshot
 
-      - name: Publish Packages
+      - name: Publish SQLite Wasm SNAPSHOT Package
+        working-directory: drivers/web-worker-driver/sqlite-wasm/build/package
+        if: ${{ success() && contains(steps.version.outputs.VERSION_NAME, 'SNAPSHOT') }}
+        run: npm publish --tag snapshot
+
+      - name: Publish SQL.js Package
         working-directory: drivers/web-worker-driver/sqljs/build/package
+        if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
+        run: npm publish
+
+      - name: Publish SQLite Wasm Package
+        working-directory: drivers/web-worker-driver/sqlite-wasm/build/package
         if: ${{ success() && !contains(steps.version.outputs.VERSION_NAME , 'SNAPSHOT') }}
         run: npm publish
 

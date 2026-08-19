@@ -20,5 +20,8 @@ internal actual class WorkerSqlCursor actual constructor(result: WorkerResult) :
 
   actual override fun getDouble(index: Int): Double? = values[currentRow][index].unsafeCast<Double?>()
 
-  actual override fun getBoolean(index: Int): Boolean? = values[currentRow][index].unsafeCast<Boolean?>()
+  actual override fun getBoolean(index: Int): Boolean? {
+    val value = values[currentRow][index] ?: return null
+    return value == true || value == 1
+  }
 }

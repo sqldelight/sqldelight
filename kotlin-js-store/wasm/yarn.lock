@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@cashapp/sqldelight-sqlite-wasm-worker@file:../../drivers/web-worker-driver/sqlite-wasm":
+  version "0.0.0"
+
 "@cashapp/sqldelight-sqljs-worker@file:../../drivers/web-worker-driver/sqljs":
   version "0.0.0"
 
@@ -25,6 +28,11 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@sqlite.org/sqlite-wasm@3.53.0-build1":
+  version "3.53.0-build1"
+  resolved "https://registry.yarnpkg.com/@sqlite.org/sqlite-wasm/-/sqlite-wasm-3.53.0-build1.tgz#066cab9189973c39edbb7078c55bb4daa1cd2d30"
+  integrity sha512-PfWPWN2n+/37doa8oh2/oUXk4OOsRYZsxc1W1sDXIGb/Pu5Yrb+f2eyYpgQMGITVX7HVgxhs9P18Rc6I97ym/g==
 
 "@types/json-schema@^7.0.8":
   version "7.0.15"

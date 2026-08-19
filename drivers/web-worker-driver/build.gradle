@@ -31,6 +31,8 @@ kotlin {
       implementation libs.kotlin.test
       implementation npm("sql.js", libs.versions.sqljs.get())
       implementation npm("@cashapp/sqldelight-sqljs-worker", file('sqljs'))
+      implementation npm("@sqlite.org/sqlite-wasm", libs.versions.sqliteWasm.get())
+      implementation npm("@cashapp/sqldelight-sqlite-wasm-worker", file('sqlite-wasm'))
       implementation devNpm("copy-webpack-plugin", "9.1.0")
       implementation libs.kotlinx.coroutines.test
       implementation project(":extensions:async-extensions")

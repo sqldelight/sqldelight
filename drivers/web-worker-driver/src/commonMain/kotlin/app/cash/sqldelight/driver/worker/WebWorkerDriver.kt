@@ -21,14 +21,15 @@ import app.cash.sqldelight.driver.worker.expected.checkWorkerResults
  * This driver is dialect-agnostic and is instead dependent on the Worker script's implementation
  * to handle queries and send results back from the Worker.
  *
- * @property worker The Worker running a SQL implementation that this driver communicates with.
  * @see [createDefaultWebWorkerDriver]
  */
-class WebWorkerDriver(private val worker: Worker) : SqlDriver {
+class WebWorkerDriver internal constructor(
+  private val wrapper: WorkerWrapper,
+) : SqlDriver {
+  constructor(worker: Worker) : this(WorkerWrapper(worker))
+
   private val listeners = mutableMapOf<String, MutableSet<Query.Listener>>()
-  private var messageCounter = 0
   private var transaction: Transacter.Transaction? = null
-  private val wrapper = WorkerWrapper(worker)
 
   override fun <R> executeQuery(
     identifier: Int?,
@@ -93,13 +94,13 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
 
   override fun newTransaction(): QueryResult<Transacter.Transaction> = QueryResult.AsyncValue {
     val enclosing = transaction
-    val transaction = Transaction(enclosing)
-    this.transaction = transaction
     if (enclosing == null) {
       wrapper.sendMessage(WorkerActions.beginTransaction)
     }
 
-    return@AsyncValue transaction
+    return@AsyncValue Transaction(enclosing).also {
+      transaction = it
+    }
   }
 
   override fun currentTransaction(): Transacter.Transaction? = transaction
@@ -108,14 +109,17 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> = QueryResult.AsyncValue {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          wrapper.sendMessage(WorkerActions.endTransaction)
-        } else {
-          wrapper.sendMessage(WorkerActions.rollbackTransaction)
+      try {
+        if (enclosingTransaction == null) {
+          if (successful) {
+            wrapper.sendMessage(WorkerActions.endTransaction)
+          } else {
+            wrapper.sendMessage(WorkerActions.rollbackTransaction)
+          }
         }
+      } finally {
+        transaction = enclosingTransaction
       }
-      transaction = enclosingTransaction
     }
   }
 
@@ -124,10 +128,8 @@ class WebWorkerDriver(private val worker: Worker) : SqlDriver {
     sql: String? = null,
     statement: WorkerSqlPreparedStatement? = null,
   ): WorkerResultWithRowCount {
-    val id = messageCounter++
     return execute(
       WorkerWrapperRequest(
-        id = id,
         action = action,
         sql = sql,
         statement = statement,

@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- [JS Driver] Add a persistent official SQLite Wasm standard-OPFS worker (by @colintheshots)
+- [JS Driver] Add `createDefaultWebWorkerDriver` overloads that create or migrate a schema before returning the driver (by @colintheshots)
 - [Native Driver] Add `extendedConfig` parameter to `inMemoryDriver` (#5539 by @GuilhE)
 - [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
 - [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
@@ -25,6 +27,9 @@
 - [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
 
 ### Fixed
+- [JS Driver] Read SQLite's numeric booleans correctly from `SqlCursor.getBoolean` (by @colintheshots)
+- [JS Driver] Fail pending worker requests when the driver is closed or the worker errors, instead of suspending forever (by @colintheshots)
+- [JS Driver] Clear the current transaction when `BEGIN`, `COMMIT`, or `ROLLBACK` fails (by @colintheshots)
 - [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
 - [Compiler] Other columns in a non-grouped aggregate result set are always nullable
 - [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull

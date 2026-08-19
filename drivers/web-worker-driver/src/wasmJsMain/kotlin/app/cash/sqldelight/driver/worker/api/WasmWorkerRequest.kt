@@ -25,4 +25,9 @@ internal external interface WasmWorkerRequest : JsAny {
    * SQL parameters to bind to the given [sql]
    */
   var params: JsArray<JsAny?>?
+
+  /**
+   * Database name used to configure a persistent worker.
+   */
+  var databaseName: String?
 }

@@ -7,11 +7,6 @@ import app.cash.sqldelight.driver.worker.expected.WorkerSqlPreparedStatement
  */
 internal data class WorkerWrapperRequest(
   /**
-   * A unique identifier used to identify responses to this message
-   * @see WorkerResponse.id
-   */
-  val id: Int,
-  /**
    * The action that the worker should run.
    * @see WorkerAction
    */
@@ -25,4 +20,9 @@ internal data class WorkerWrapperRequest(
    * SQL parameters to bind to the given [sql]
    */
   var statement: WorkerSqlPreparedStatement?,
+
+  /**
+   * Database name used to configure a persistent worker.
+   */
+  var databaseName: String? = null,
 )

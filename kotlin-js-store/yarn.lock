@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@cashapp/sqldelight-sqlite-wasm-worker@file:../../drivers/web-worker-driver/sqlite-wasm":
+  version "0.0.0"
+
 "@cashapp/sqldelight-sqljs-worker@file:../../drivers/web-worker-driver/sqljs":
   version "0.0.0"
 
@@ -115,6 +118,11 @@
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz#821f8442f4175d8f0467b9daf26e3a18e2d02af2"
   integrity sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==
+
+"@sqlite.org/sqlite-wasm@3.53.0-build1":
+  version "3.53.0-build1"
+  resolved "https://registry.yarnpkg.com/@sqlite.org/sqlite-wasm/-/sqlite-wasm-3.53.0-build1.tgz#066cab9189973c39edbb7078c55bb4daa1cd2d30"
+  integrity sha512-PfWPWN2n+/37doa8oh2/oUXk4OOsRYZsxc1W1sDXIGb/Pu5Yrb+f2eyYpgQMGITVX7HVgxhs9P18Rc6I97ym/g==
 
 "@types/cookie@^0.4.1":
   version "0.4.1"
