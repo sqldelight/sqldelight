@@ -72,7 +72,7 @@ open class PostgreSqlTypeResolver(private val parentResolver: TypeResolver) : Ty
         serialDataType != null -> PostgreSqlType.INTEGER
         bigSerialDataType != null -> PostgreSqlType.BIG_INT
         dateDataType != null -> {
-          when (dateDataType!!.firstChild.text) {
+          when (dateDataType!!.firstChild.text.uppercase()) {
             "DATE" -> PostgreSqlType.DATE
             "TIME" -> PostgreSqlType.TIME
             "TIMESTAMP" -> if (dateDataType!!.node.getChildren(null).any { it.text == "WITH" }) TIMESTAMP_TIMEZONE else TIMESTAMP
