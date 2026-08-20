@@ -46,6 +46,20 @@ abstract class SqlDelightWorkerTask : SourceTask() {
       forkOptions.environment("TMPDIR", tmpdir)
       forkOptions.minHeapSize = minHeapSize.orNull
       forkOptions.maxHeapSize = maxHeapSize.get()
+      forkOptions.jvmArgs(unsafeMemoryAccessJvmArgs(Runtime.version().feature()))
     }
+  }
+}
+
+/**
+ * Suppress "WARNING: A terminally deprecated method in sun.misc.Unsafe has been called".
+ * The IntelliJ platform runs on calls to terminally deprecated `sun.misc.Unsafe` memory access methods,
+ * which JEP 498 warns about and eventually denies, in phases.
+ */
+internal fun unsafeMemoryAccessJvmArgs(javaFeatureVersion: Int): List<String> {
+  return when {
+    javaFeatureVersion < 23 -> emptyList()
+    javaFeatureVersion < 26 -> listOf("--sun-misc-unsafe-memory-access=allow")
+    else -> listOf("--sun-misc-unsafe-memory-access=warn")
   }
 }
