@@ -14,9 +14,11 @@ import java.io.File
 import java.sql.DriverManager
 import java.util.Properties
 import java.util.ServiceLoader
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
+import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.MapProperty
@@ -55,8 +57,15 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
    * https://github.com/gradle/gradle/issues/14223 is resolved. */
-  @OutputFile
-  internal fun getDummyOutputFile(): File = File(temporaryDir, "success.txt")
+  @get:OutputFile
+  internal abstract val dummyOutputFile: RegularFileProperty
+
+  @get:Inject
+  internal abstract val projectLayout: ProjectLayout
+
+  init {
+    dummyOutputFile.convention(projectLayout.buildDirectory.file("tmp/$name/success.txt"))
+  }
 
   @TaskAction
   fun verifyMigrations() {
@@ -69,7 +78,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)
       it.driverProperties.set(driverProperties)
-      it.outputFile.set(getDummyOutputFile())
+      it.outputFile.set(dummyOutputFile)
     }
   }
 
@@ -131,7 +140,10 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
 
       checkForGaps()
-      parameters.outputFile.get().asFile.createNewFile()
+      parameters.outputFile.get().asFile.apply {
+        parentFile.mkdirs()
+        createNewFile()
+      }
     }
 
     private fun createCurrentDb(): CatalogDatabase {
