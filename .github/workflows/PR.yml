@@ -103,7 +103,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Run instrumentation tests
         if: matrix.os == 'ubuntu-latest' && matrix.job == 'instrumentation'
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 30
           arch: x86
