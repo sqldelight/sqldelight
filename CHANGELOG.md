@@ -22,6 +22,7 @@
 - [Gradle Plugin] Implement stricter MigrationFile versioning (#5730 by @madisp)
 - [Gradle Plugin] Increase minimal support gradle to 8.2.1 (#6217 by @maxsav)
 - [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
+- [Runtime] Allow transactions to be scoped in a coroutine context and not confined to a thread (#6317 by @griffio)
 - [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
 
 ### Fixed
