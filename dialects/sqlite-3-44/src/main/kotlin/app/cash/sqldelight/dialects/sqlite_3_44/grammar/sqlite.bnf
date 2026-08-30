@@ -41,8 +41,9 @@ ordering_term ::= <<expr '-1'>> [ COLLATE {collation_name} ] [ ASC | DESC ] [ 'N
   override = true
 }
 
-aggregate_function_expr ::= ('string_agg' | 'group_concat') LP [ DISTINCT ] <<expr '-1'>> [ COMMA {string_literal} ] [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
+aggregate_function_expr ::= ('string_agg' | 'group_concat') LP [ DISTINCT ] <<expr '-1'>> [ COMMA <<expr '-1'>> ] [ ORDER BY {ordering_term} ( COMMA {ordering_term} ) * ] RP
 [ 'FILTER' LP WHERE <<expr '-1'>> RP ] {
+  mixin = "app.cash.sqldelight.dialects.sqlite_3_44.grammar.mixins.AggregateFunctionExprMixin"
 }
 
 private sqlite_3_25_window_function_expr ::= <<windowFunctionExprExt <<window_function_expr_real>>>>

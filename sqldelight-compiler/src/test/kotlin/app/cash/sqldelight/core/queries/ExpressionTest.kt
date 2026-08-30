@@ -449,7 +449,7 @@ class ExpressionTest {
     ).inOrder()
   }
 
-  @Test fun `string_agg over a non null column stays nullable with a group`() {
+  @Test fun `string_agg over a non null column is non null with a group`() {
     val file = FixtureCompiler.parseSql(
       """
       |CREATE TABLE test (
@@ -469,7 +469,55 @@ class ExpressionTest {
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
       INT,
+      String::class.asClassName(),
+    ).inOrder()
+  }
+
+  @Test fun `string_agg with a filter stays nullable with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id, string_agg(name, ',') FILTER (WHERE id > 1)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = POSTGRESQL.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      INT,
       String::class.asClassName().copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `array_agg over a non null column is non null with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id, array_agg(name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = POSTGRESQL.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType.isNullable }).containsExactly(
+      false,
+      false,
     ).inOrder()
   }
 
@@ -493,6 +541,130 @@ class ExpressionTest {
     val query = file.namedQueries.first()
     assertThat(query.resultColumns.map { it.javaType }).containsExactly(
       INT.copy(nullable = true),
+      String::class.asClassName().copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `group_concat with an order by is non null with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       group_concat(name, ',' ORDER BY name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      String::class.asClassName(),
+    ).inOrder()
+  }
+
+  @Test fun `string_agg with an order by is non null with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       string_agg(name, ',' ORDER BY name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      String::class.asClassName(),
+    ).inOrder()
+  }
+
+  @Test fun `group_concat with an order by over a nullable column stays nullable with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       group_concat(name, ',' ORDER BY name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      String::class.asClassName().copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `group_concat with a filter stays nullable with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       group_concat(name, ',' ORDER BY name) FILTER (WHERE id > 1)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      String::class.asClassName().copy(nullable = true),
+    ).inOrder()
+  }
+
+  @Test fun `columns are nullable when a group_concat has no group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       group_concat(name, ',' ORDER BY name)
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG.copy(nullable = true),
       String::class.asClassName().copy(nullable = true),
     ).inOrder()
   }
