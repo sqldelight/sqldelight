@@ -30,3 +30,7 @@ FROM users;
 -- error[col 7]: Wrong number of arguments to function string_agg()
 SELECT STRING_AGG(DISTINCT name)
 FROM users;
+
+-- error[col 7]: DISTINCT aggregates must have exactly one argument
+SELECT STRING_AGG(DISTINCT name, name)
+FROM users;

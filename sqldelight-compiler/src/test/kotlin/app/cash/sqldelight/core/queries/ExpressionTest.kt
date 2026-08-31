@@ -473,6 +473,31 @@ class ExpressionTest {
     ).inOrder()
   }
 
+  @Test fun `string_agg with a column separator is non null with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL,
+      |  separator TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id, string_agg(name, separator)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = POSTGRESQL.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      INT,
+      String::class.asClassName(),
+    ).inOrder()
+  }
+
   @Test fun `string_agg with a filter stays nullable with a group`() {
     val file = FixtureCompiler.parseSql(
       """
@@ -595,6 +620,32 @@ class ExpressionTest {
     ).inOrder()
   }
 
+  @Test fun `string_agg with a column separator and an order by is non null with a group`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL,
+      |  separator TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT id,
+      |       string_agg(name, separator ORDER BY name)
+      |FROM test
+      |GROUP BY id;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(
+      LONG,
+      String::class.asClassName(),
+    ).inOrder()
+  }
+
   @Test fun `group_concat with an order by over a nullable column stays nullable with a group`() {
     val file = FixtureCompiler.parseSql(
       """
@@ -667,6 +718,45 @@ class ExpressionTest {
       LONG.copy(nullable = true),
       String::class.asClassName().copy(nullable = true),
     ).inOrder()
+  }
+
+  @Test fun `aliased aggregate keeps the aggregate nullability`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  id INTEGER NOT NULL,
+      |  name TEXT NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT count(*) AS total
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = TestDialect.SQLITE_3_44.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType }).containsExactly(LONG).inOrder()
+  }
+
+  @Test fun `aliased json_agg is non null`() {
+    val file = FixtureCompiler.parseSql(
+      """
+      |CREATE TABLE test (
+      |  data JSON NOT NULL
+      |);
+      |
+      |someSelect:
+      |SELECT json_agg(data) FILTER (WHERE data IS NOT NULL) AS rows
+      |FROM test;
+      """.trimMargin(),
+      tempFolder,
+      dialect = POSTGRESQL.dialect,
+    )
+
+    val query = file.namedQueries.first()
+    assertThat(query.resultColumns.map { it.javaType.isNullable }).containsExactly(false).inOrder()
   }
 
   @Test fun `instr function returns nullable int if any of the args are null`() {
