@@ -63,6 +63,7 @@
 - [Compiler] Fix Java type adapter issue when mutator statements are used with encapsulating functions like `COALESCE` (#6292 by @griffio)
 - [Compiler] Fix where the module name was capitalized, the generated code's package name also was capitalized (#6316 by @griffio)
 - [PostgreSQL Dialect] Allow date data types to be case-insensitive (#6328 by @griffio)
+- [PostgreSQL Dialect] Fix `string_agg` function to be nullable (#6340 by @griffio)
 
 ## [2.3.2] - 2026-03-16
 [2.3.2]: https://github.com/sqldelight/sqldelight/releases/tag/2.3.2
