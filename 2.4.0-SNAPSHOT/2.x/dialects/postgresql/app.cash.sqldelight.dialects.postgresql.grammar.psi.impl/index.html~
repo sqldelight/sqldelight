@@ -1879,7 +1879,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-agg-stmt-impl/index.html">PostgreSqlJsonAggStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-agg-stmt/index.html">PostgreSqlJsonAggStmt</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-agg-stmt-impl/index.html">PostgreSqlJsonAggStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-aggregate-expression-mixin/index.html">AggregateExpressionMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-agg-stmt/index.html">PostgreSqlJsonAggStmt</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -1969,7 +1969,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-object-agg-stmt-impl/index.html">PostgreSqlJsonObjectAggStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-object-agg-stmt/index.html">PostgreSqlJsonObjectAggStmt</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-json-object-agg-stmt-impl/index.html">PostgreSqlJsonObjectAggStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-aggregate-expression-mixin/index.html">AggregateExpressionMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-object-agg-stmt/index.html">PostgreSqlJsonObjectAggStmt</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -2719,7 +2719,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-string-agg-stmt-impl/index.html">PostgreSqlStringAggStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-string-agg-stmt/index.html">PostgreSqlStringAggStmt</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-postgre-sql-string-agg-stmt-impl/index.html">PostgreSqlStringAggStmtImpl</a> : <a href="../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-aggregate-expression-mixin/index.html">AggregateExpressionMixin</a>, <a href="../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-string-agg-stmt/index.html">PostgreSqlStringAggStmt</a></div></div></div>
                 </div>
               </div>
             </div>

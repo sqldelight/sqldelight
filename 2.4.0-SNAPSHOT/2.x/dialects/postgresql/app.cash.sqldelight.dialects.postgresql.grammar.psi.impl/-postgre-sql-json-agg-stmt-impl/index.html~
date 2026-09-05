@@ -93,7 +93,7 @@
   <div class="breadcrumbs"><a href="../../index.html">postgresql</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.dialects.postgresql.grammar.psi.impl</a><span class="delimiter">/</span><span class="current">PostgreSqlJsonAggStmtImpl</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Postgre</span><wbr><span>Sql</span><wbr><span>Json</span><wbr><span>Agg</span><wbr><span>Stmt</span><wbr><span><span>Impl</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">PostgreSqlJsonAggStmtImpl</a> : <span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlCompositeElementImpl///PointingToDeclaration/">SqlCompositeElementImpl</span>, <a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-agg-stmt/index.html">PostgreSqlJsonAggStmt</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">PostgreSqlJsonAggStmtImpl</a> : <a href="../../../../dialects/postgresql/app.cash.sqldelight.dialects.postgresql.grammar.mixins/-aggregate-expression-mixin/index.html">AggregateExpressionMixin</a>, <a href="../../app.cash.sqldelight.dialects.postgresql.grammar.psi/-postgre-sql-json-agg-stmt/index.html">PostgreSqlJsonAggStmt</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -753,6 +753,21 @@
               </div>
             </div>
           </div>
+<a data-name="-759358311%2FFunctions%2F-1264942193" anchor-label="getCanReturnNullForNonNullArguments" id="-759358311%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-postgre-sql-array-agg-stmt-impl/index.html#-759358311%2FFunctions%2F-1264942193"><span>get</span><wbr><span>Can</span><wbr><span>Return</span><wbr><span>Null</span><wbr><span>For</span><wbr><span>Non</span><wbr><span>Null</span><wbr><span><span>Arguments</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-759358311%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-postgre-sql-array-agg-stmt-impl/index.html#-759358311%2FFunctions%2F-1264942193"><span class="token function">getCanReturnNullForNonNullArguments</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="4617326%2FFunctions%2F-1264942193" anchor-label="getChildren" id="4617326%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -828,6 +843,21 @@
               </div>
             </div>
           </div>
+<a data-name="-849840525%2FFunctions%2F-1264942193" anchor-label="getExpr" id="-849840525%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-postgre-sql-array-agg-stmt-impl/index.html#-849840525%2FFunctions%2F-1264942193"><span>get</span><wbr><span><span>Expr</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-849840525%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../-postgre-sql-array-agg-stmt-impl/index.html#-849840525%2FFunctions%2F-1264942193"><span class="token function">getExpr</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="-1791918399%2FFunctions%2F-1264942193" anchor-label="getFirstChild" id="-1791918399%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
             <div class="main-subrow keyValue ">
@@ -839,6 +869,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../-postgre-sql-type-identifier-impl/index.html#-1791918399%2FFunctions%2F-1264942193"><span class="token function">getFirstChild</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="938630751%2FFunctions%2F-1264942193" anchor-label="getFunctionArguments" id="938630751%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-postgre-sql-array-agg-stmt-impl/index.html#938630751%2FFunctions%2F-1264942193"><span>get</span><wbr><span>Function</span><wbr><span><span>Arguments</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="938630751%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-postgre-sql-array-agg-stmt-impl/index.html#938630751%2FFunctions%2F-1264942193"><span class="token function">getFunctionArguments</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.alecstrong.sql.psi.core.psi/SqlExpr///PointingToDeclaration/">SqlExpr</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-634863270%2FFunctions%2F-1264942193" anchor-label="getFunctionName" id="-634863270%2FFunctions%2F-1264942193" data-filterable-set=":dialects:postgresql/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":dialects:postgresql/main" data-filterable-set=":dialects:postgresql/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-postgre-sql-array-agg-stmt-impl/index.html#-634863270%2FFunctions%2F-1264942193"><span>get</span><wbr><span>Function</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-634863270%2FFunctions%2F-1264942193"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dialects:postgresql/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-postgre-sql-array-agg-stmt-impl/index.html#-634863270%2FFunctions%2F-1264942193"><span class="token function">getFunctionName</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
