@@ -12,7 +12,9 @@ import app.cash.sqldelight.dialects.hsql.HsqlType.BIG_INT
 import app.cash.sqldelight.dialects.hsql.HsqlType.SMALL_INT
 import app.cash.sqldelight.dialects.hsql.HsqlType.TINY_INT
 import app.cash.sqldelight.dialects.hsql.grammar.psi.HsqlTypeName
+import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 
 class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver by parentResolver {
@@ -34,6 +36,22 @@ class HsqlTypeResolver(private val parentResolver: TypeResolver) : TypeResolver 
         intervalDataType != null -> IntermediateType(PrimitiveType.BLOB)
         else -> throw IllegalArgumentException("Unknown kotlin type for sql type ${typeName.text}")
       }
+    }
+  }
+
+  override fun resolvedType(expr: SqlExpr): IntermediateType {
+    return when (expr) {
+      is SqlLiteralExpr -> when {
+        expr.literalValue.numericLiteral != null -> {
+          if (expr.literalValue.text.contains('.')) {
+            IntermediateType(PrimitiveType.REAL)
+          } else {
+            IntermediateType(HsqlType.INTEGER)
+          }
+        }
+        else -> parentResolver.resolvedType(expr)
+      }
+      else -> parentResolver.resolvedType(expr)
     }
   }
 
