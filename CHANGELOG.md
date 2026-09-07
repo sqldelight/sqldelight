@@ -39,6 +39,7 @@
 - [Gradle Plugin] Increase minimal support gradle to 8.2.1 (#6217 by @maxsav)
 - [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
 - [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
+- [Runtime] Allow transactions to be scoped in a coroutine context and not confined to a thread (#6317 by @griffio)
 
 ### Fixed
 - [Gradle Plugin] Suppress `sun.misc.Unsafe` deprecation warnings from the compiler worker on JDK 24+ (#6321)
