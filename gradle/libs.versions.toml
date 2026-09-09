@@ -111,4 +111,4 @@ publish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
 spotless = { id = "com.diffplug.spotless", version = "8.10.1" }
 changelog = { id = "org.jetbrains.changelog", version = "2.5.0" }
 shadow = "com.gradleup.shadow:9.6.1"
-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }
+binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.2" }
