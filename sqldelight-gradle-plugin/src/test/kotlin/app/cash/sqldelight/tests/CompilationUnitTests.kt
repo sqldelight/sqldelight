@@ -2,6 +2,7 @@ package app.cash.sqldelight.tests
 
 import app.cash.sqldelight.AGP_8_MAX_GRADLE_VERSION
 import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
+import app.cash.sqldelight.gradle.SqlDelightDatabaseOptionsImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
 import app.cash.sqldelight.withTemporaryFixture
@@ -77,8 +78,11 @@ class CompilationUnitTests {
       properties().let { properties ->
         assertThat(properties.databases).containsExactly(
           SqlDelightDatabasePropertiesImpl(
-            className = "CommonDb",
-            packageName = "com.sample",
+            options = SqlDelightDatabaseOptionsImpl(
+              className = "CommonDb",
+              packageName = "com.sample",
+              dependencies = emptyList(),
+            ),
             compilationUnits = listOf(
               SqlDelightCompilationUnitImpl(
                 name = "main",
@@ -86,12 +90,16 @@ class CompilationUnitTests {
                 outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/CommonDb/main"),
               ),
             ),
-            dependencies = emptyList(),
             rootDirectory = fixtureRoot,
           ),
           SqlDelightDatabasePropertiesImpl(
-            className = "OtherDb",
-            packageName = "com.sample.otherdb",
+            options = SqlDelightDatabaseOptionsImpl(
+              className = "OtherDb",
+              packageName = "com.sample.otherdb",
+              dependencies = emptyList(),
+              treatNullAsUnknownForEquality = true,
+              codegenExcludedColumns = setOf("test.removed"),
+            ),
             compilationUnits = listOf(
               SqlDelightCompilationUnitImpl(
                 name = "main",
@@ -102,10 +110,7 @@ class CompilationUnitTests {
                 outputDirectoryFile = File(fixtureRoot, "build/generated/sqldelight/code/OtherDb/main"),
               ),
             ),
-            dependencies = emptyList(),
             rootDirectory = fixtureRoot,
-            treatNullAsUnknownForEquality = true,
-            codegenExcludedColumns = setOf("test.removed"),
           ),
         )
       }

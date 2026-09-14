@@ -14,11 +14,9 @@ import java.io.File
 import java.sql.DriverManager
 import java.util.Properties
 import java.util.ServiceLoader
-import javax.inject.Inject
 import kotlin.collections.ArrayList
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileTree
-import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.MapProperty
@@ -28,7 +26,6 @@ import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -44,10 +41,6 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
-
-  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
-
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @get:Input abstract val verifyDefinitions: Property<Boolean>
@@ -60,9 +53,6 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   @get:OutputFile
   internal abstract val dummyOutputFile: RegularFileProperty
 
-  @get:Inject
-  internal abstract val projectLayout: ProjectLayout
-
   init {
     dummyOutputFile.convention(projectLayout.buildDirectory.file("tmp/$name/success.txt"))
   }
@@ -73,7 +63,7 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     workQueue.submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
       it.projectName.set(projectName)
-      it.properties.set(properties)
+      it.properties.set(databaseProperties)
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)

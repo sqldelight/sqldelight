@@ -71,7 +71,7 @@ import kotlin.system.measureTimeMillis
  * running.
  */
 class SqlDelightEnvironment(
-  private val properties: SqlDelightDatabaseProperties,
+  private val properties: SqlDelightDatabaseOptions,
   private val compilationUnit: SqlDelightCompilationUnit,
   private val verifyMigrations: Boolean,
   override var dialect: SqlDelightDialect,

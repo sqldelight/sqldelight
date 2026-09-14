@@ -18,6 +18,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedArtifactResult
 import org.gradle.api.artifacts.result.ResolvedVariantResult
 import org.gradle.api.attributes.Usage
 import org.gradle.api.file.ConfigurableFileCollection
@@ -198,13 +199,12 @@ abstract class SqlDelightDatabase @Inject constructor(
   internal fun registerTasks() {
     configureOnSources { source ->
       registerSourceAsVariant(source, sourceCollector.localSourceFolders(source))
-      val allFiles = sourceCollector.sourceFolders(source)
-      val sourceFiles = project.files(allFiles.map { folders -> folders.map { it.folder } })
+      val sourceFiles = sourceCollector.register(source)
 
       // Register the sqldelight generating task.
       val task = project.tasks.register("generate${source.name.capitalize()}${name}Interface", SqlDelightTask::class.java) {
         it.projectName.set(project.name)
-        it.properties.set(sourceCollector.databaseProperties())
+        it.options.set(sourceCollector.databaseOptions(source))
         it.compilationUnit.set(sourceCollector.compilationUnits().map { units -> units.single { unit -> unit.name == source.name } })
         it.outputDirectory.set(source.outputDir)
         it.source(sourceFiles)
@@ -251,7 +251,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.workingDirectory.set(File(project.buildDir, "sqldelight/migration_verification/${source.name.capitalize()}$name"))
         it.group = SqlDelightPlugin.GROUP
         it.description = "Verify ${source.name} $name migrations and CREATE statements match."
-        it.properties.set(sourceCollector.databaseProperties())
+        it.options.set(sourceCollector.databaseOptions(source))
         it.verifyMigrations.set(verifyMigrations)
         it.verifyDefinitions.set(verifyDefinitions)
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
@@ -267,7 +267,7 @@ abstract class SqlDelightDatabase @Inject constructor(
         it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
         it.group = SqlDelightPlugin.GROUP
         it.description = "Generate a .db file containing the current $name schema for ${source.name}."
-        it.properties.set(sourceCollector.databaseProperties())
+        it.options.set(sourceCollector.databaseOptions(source))
         it.verifyMigrations.set(verifyMigrations)
         it.classpath.setFrom(intellijEnv, migrationEnv, configuration)
       }
@@ -293,7 +293,7 @@ abstract class SqlDelightDatabase @Inject constructor(
       it.outputDirectory.set(migrationOutputDirectory)
       it.group = SqlDelightPlugin.GROUP
       it.description = "Generate valid sql migration files for ${source.name} $name."
-      it.properties.set(sourceCollector.databaseProperties())
+      it.options.set(sourceCollector.databaseOptions(source))
       it.classpath.setFrom(intellijEnv, configuration)
     }
   }
@@ -309,7 +309,7 @@ abstract class SqlDelightDatabase @Inject constructor(
       it.include("**${File.separatorChar}*.$MIGRATION_EXTENSION")
       it.group = SqlDelightPlugin.GROUP
       it.description = "Squash migrations into a single file for ${source.name} $name."
-      it.properties.set(sourceCollector.databaseProperties())
+      it.options.set(sourceCollector.databaseOptions(source))
       it.classpath.setFrom(intellijEnv, configuration)
     }
   }
@@ -356,7 +356,19 @@ abstract class SqlDelightDatabase @Inject constructor(
   private inner class SqlDelightSourceCollector {
     private val compilationUnits = mutableMapOf<Source.Key, Provider<SqlDelightCompilationUnitImpl>>()
 
-    fun databaseProperties(): Provider<SqlDelightDatabasePropertiesImpl> {
+    /** The full database model for the IDE. */
+    fun databaseProperties(): Provider<SqlDelightDatabasePropertiesImpl> = databaseOptions(compilationUnits.keys).map { options ->
+      SqlDelightDatabasePropertiesImpl(
+        options = options,
+        compilationUnits = compilationUnits.values.map { it.get() },
+        rootDirectory = project.projectDir,
+      )
+    }
+
+    /** The database settings a task compiling [source] depends on. Only that variant's dependencies are included. */
+    fun databaseOptions(source: Source): Provider<SqlDelightDatabaseOptionsImpl> = databaseOptions(setOf(source.key))
+
+    private fun databaseOptions(units: Collection<Source.Key>): Provider<SqlDelightDatabaseOptionsImpl> {
       require(packageName.isPresent) { "property packageName for $name database must be provided" }
 
       if (!addedDialect) {
@@ -375,26 +387,11 @@ abstract class SqlDelightDatabase @Inject constructor(
 
       return projectDependenciesConfiguration.flatMap { config ->
         project.provider {
-          SqlDelightDatabasePropertiesImpl(
+          SqlDelightDatabaseOptionsImpl(
             packageName = packageName.get(),
-            compilationUnits = compilationUnits().get(),
-            rootDirectory = project.projectDir,
             className = name,
-            dependencies =
-            compilationUnits.keys.flatMap { compilationUnit ->
-              config.incoming
-                .filterByVariant(compilationUnit.buildType, compilationUnit.flavours)
-                .artifacts
-                .map { artifactResult ->
-                  SqlDelightDatabaseNameImpl(
-                    artifactResult.variant.latest().attributes.getAttribute(
-                      SqlDelightPackageAttribute.ATTR,
-                    )!!.name,
-                    artifactResult.variant.latest().attributes.getAttribute(
-                      SqlDelightDatabaseNameAttribute.ATTR,
-                    )!!.name,
-                  )
-                }
+            dependencies = units.flatMap { unit ->
+              config.incoming.filterByVariant(unit.buildType, unit.flavours).artifacts.map { it.databaseName() }
             },
             deriveSchemaFromMigrations = deriveSchemaFromMigrations.get(),
             treatNullAsUnknownForEquality = treatNullAsUnknownForEquality.get(),
@@ -410,9 +407,9 @@ abstract class SqlDelightDatabase @Inject constructor(
       compilationUnits.values.map { it.get() }
     }
 
-    fun sourceFolders(source: Source): Provider<Set<SqlDelightSourceFolderImpl>> {
+    /** Records [source] as a compilation unit of this database. Must run while sources are configured so the IDE model sees every unit. */
+    fun register(source: Source): FileCollection {
       val folderProvider = provideSourceFolders(source)
-
       compilationUnits[source.key] = project.provider {
         SqlDelightCompilationUnitImpl(
           name = source.name,
@@ -421,7 +418,17 @@ abstract class SqlDelightDatabase @Inject constructor(
         )
       }
 
-      return folderProvider
+      /**
+       * Every folder a task compiling [source] reads. Unlike [provideSourceFolders] building this
+       * only records the artifact task dependencies without resolving them, so it is safe to wire
+       * into task file inputs before the task graph exists.
+       */
+      return project.files(
+        localSourceFolders(source),
+        projectDependenciesConfiguration.map { configuration ->
+          configuration.incoming.filterByVariant(source.buildType, source.flavours).files
+        },
+      )
     }
 
     fun localSourceFolders(source: Source): Provider<Set<File>> {
@@ -479,6 +486,14 @@ abstract class SqlDelightDatabase @Inject constructor(
         }
       }
       return sourceFolders.zip(dependencySet) { files, dependencies -> files + dependencies }
+    }
+
+    private fun ResolvedArtifactResult.databaseName(): SqlDelightDatabaseNameImpl {
+      val attributes = variant.latest().attributes
+      return SqlDelightDatabaseNameImpl(
+        packageName = attributes.getAttribute(SqlDelightPackageAttribute.ATTR)!!.name,
+        className = attributes.getAttribute(SqlDelightDatabaseNameAttribute.ATTR)!!.name,
+      )
     }
 
     private fun ResolvedVariantResult.latest(): ResolvedVariantResult {

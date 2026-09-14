@@ -5,6 +5,7 @@ import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 
 class PluginTest {
@@ -40,6 +41,25 @@ class PluginTest {
       .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
       .build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
+  }
+
+  @Test
+  fun `Android multiplatform tasks do not resolve database dependencies during configuration`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/configuration-time-resolution"))
+      .withArguments(
+        "clean",
+        "compileAndroidMain",
+        "verifyCommonMainDatabaseMigration",
+        "-Pandroid.dependencyResolutionAtConfigurationTime.disallow=true",
+        "--stacktrace",
+      )
+      .build()
+
+    assertThat(result.task(":generateCommonMainDatabaseInterface")!!.outcome)
+      .isEqualTo(TaskOutcome.SUCCESS)
+    assertThat(result.task(":verifyCommonMainDatabaseMigration")!!.outcome)
+      .isEqualTo(TaskOutcome.SUCCESS)
   }
 
   @Test
