@@ -93,24 +93,24 @@
   <div class="breadcrumbs"><a href="../../index.html">sqldelight-gradle-plugin</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.gradle</a><span class="delimiter">/</span><span class="current">SqlDelightDatabasePropertiesImpl</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Properties</span><wbr><span><span>Impl</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">SqlDelightDatabasePropertiesImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>packageName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>compilationUnits<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>className<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>dependencies<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-database-name-impl/index.html">SqlDelightDatabaseNameImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>deriveSchemaFromMigrations<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>treatNullAsUnknownForEquality<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>generateAsync<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>expandSelectStar<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>codegenExcludedColumns<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptySet()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>rootDirectory<span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></span></span><span class="token punctuation">)</span> : <a href="../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-properties/index.html">SqlDelightDatabaseProperties</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">SqlDelightDatabasePropertiesImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>options<span class="token operator">: </span><a href="../-sql-delight-database-options-impl/index.html">SqlDelightDatabaseOptionsImpl</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>compilationUnits<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>rootDirectory<span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></span></span><span class="token punctuation">)</span> : <a href="../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-properties/index.html">SqlDelightDatabaseProperties</a>, <a href="../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-options/index.html">SqlDelightDatabaseOptions</a></div><p class="paragraph"><a href="../../../sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database-properties-impl/--root--.html">options</a> plus the project layout needed to locate sources. The tooling model builds one with every compilation unit for the IDE. Tasks build one with a single unit at execution time. This should not be used as a task input since it carries absolute paths.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="tableheader">Constructors</h2>
-        <div class="table"><a data-name="891374327%2FConstructors%2F-879533229" anchor-label="SqlDelightDatabasePropertiesImpl" id="891374327%2FConstructors%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+        <div class="table"><a data-name="-1025498871%2FConstructors%2F-879533229" anchor-label="SqlDelightDatabasePropertiesImpl" id="-1025498871%2FConstructors%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-sql-delight-database-properties-impl.html"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Properties</span><wbr><span><span>Impl</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="891374327%2FConstructors%2F-879533229"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1025498871%2FConstructors%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">packageName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">compilationUnits<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">className<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">dependencies<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-database-name-impl/index.html">SqlDelightDatabaseNameImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">deriveSchemaFromMigrations<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">treatNullAsUnknownForEquality<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">generateAsync<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">expandSelectStar<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">codegenExcludedColumns<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptySet()<span class="token punctuation">, </span></span><span class="parameter ">rootDirectory<span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">options<span class="token operator">: </span><a href="../-sql-delight-database-options-impl/index.html">SqlDelightDatabaseOptionsImpl</a><span class="token punctuation">, </span></span><span class="parameter ">compilationUnits<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">rootDirectory<span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -119,32 +119,32 @@
       </div>
       <div data-togglable="PROPERTY">
         <h2 class="tableheader">Properties</h2>
-        <div class="table"><a data-name="-724202811%2FProperties%2F-879533229" anchor-label="className" id="-724202811%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+        <div class="table"><a data-name="864577060%2FProperties%2F-879533229" anchor-label="className" id="864577060%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="class-name.html"><span>class</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-724202811%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#864577060%2FProperties%2F-879533229"><span>class</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="864577060%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="class-name.html">className</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#864577060%2FProperties%2F-879533229">className</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1304533022%2FProperties%2F-879533229" anchor-label="codegenExcludedColumns" id="-1304533022%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="-778748189%2FProperties%2F-879533229" anchor-label="codegenExcludedColumns" id="-778748189%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="codegen-excluded-columns.html"><span>codegen</span><wbr><span>Excluded</span><wbr><span><span>Columns</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1304533022%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#-778748189%2FProperties%2F-879533229"><span>codegen</span><wbr><span>Excluded</span><wbr><span><span>Columns</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-778748189%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="codegen-excluded-columns.html">codegenExcludedColumns</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#-778748189%2FProperties%2F-879533229">codegenExcludedColumns</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -159,82 +159,97 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Internal///PointingToDeclaration/"><span class="token annotation builtin">Internal</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="compilation-units.html">compilationUnits</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="compilation-units.html">compilationUnits</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="664443145%2FProperties%2F-879533229" anchor-label="dependencies" id="664443145%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="1465978186%2FProperties%2F-879533229" anchor-label="dependencies" id="1465978186%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="dependencies.html"><span><span>dependencies</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="664443145%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#1465978186%2FProperties%2F-879533229"><span><span>dependencies</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1465978186%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="dependencies.html">dependencies</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-database-name-impl/index.html">SqlDelightDatabaseNameImpl</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#1465978186%2FProperties%2F-879533229">dependencies</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../../sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-name/index.html">SqlDelightDatabaseName</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-366754373%2FProperties%2F-879533229" anchor-label="deriveSchemaFromMigrations" id="-366754373%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="1145386044%2FProperties%2F-879533229" anchor-label="deriveSchemaFromMigrations" id="1145386044%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="derive-schema-from-migrations.html"><span>derive</span><wbr><span>Schema</span><wbr><span>From</span><wbr><span><span>Migrations</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-366754373%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#1145386044%2FProperties%2F-879533229"><span>derive</span><wbr><span>Schema</span><wbr><span>From</span><wbr><span><span>Migrations</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1145386044%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="derive-schema-from-migrations.html">deriveSchemaFromMigrations</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#1145386044%2FProperties%2F-879533229">deriveSchemaFromMigrations</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1162267882%2FProperties%2F-879533229" anchor-label="expandSelectStar" id="1162267882%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="-2008598357%2FProperties%2F-879533229" anchor-label="expandSelectStar" id="-2008598357%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="expand-select-star.html"><span>expand</span><wbr><span>Select</span><wbr><span><span>Star</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1162267882%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#-2008598357%2FProperties%2F-879533229"><span>expand</span><wbr><span>Select</span><wbr><span><span>Star</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2008598357%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="expand-select-star.html">expandSelectStar</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#-2008598357%2FProperties%2F-879533229">expandSelectStar</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="948163553%2FProperties%2F-879533229" anchor-label="generateAsync" id="948163553%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="25946048%2FProperties%2F-879533229" anchor-label="generateAsync" id="25946048%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="generate-async.html"><span>generate</span><wbr><span><span>Async</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="948163553%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#25946048%2FProperties%2F-879533229"><span>generate</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="25946048%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="generate-async.html">generateAsync</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#25946048%2FProperties%2F-879533229">generateAsync</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-323349513%2FProperties%2F-879533229" anchor-label="packageName" id="-323349513%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="-733788310%2FProperties%2F-879533229" anchor-label="options" id="-733788310%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="package-name.html"><span>package</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-323349513%2FProperties%2F-879533229"></span>
+                  <div><a href="options.html"><span><span>options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-733788310%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="package-name.html">packageName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="options.html">options</a><span class="token operator">: </span><a href="../-sql-delight-database-options-impl/index.html">SqlDelightDatabaseOptionsImpl</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1780716438%2FProperties%2F-879533229" anchor-label="packageName" id="1780716438%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1780716438%2FProperties%2F-879533229"><span>package</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1780716438%2FProperties%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#1780716438%2FProperties%2F-879533229">packageName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -249,22 +264,22 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Internal///PointingToDeclaration/"><span class="token annotation builtin">Internal</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="root-directory.html">rootDirectory</a><span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="root-directory.html">rootDirectory</a><span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html">File</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1656427748%2FProperties%2F-879533229" anchor-label="treatNullAsUnknownForEquality" id="-1656427748%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="901734651%2FProperties%2F-879533229" anchor-label="treatNullAsUnknownForEquality" id="901734651%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="treat-null-as-unknown-for-equality.html"><span>treat</span><wbr><span>Null</span><wbr><span>As</span><wbr><span>Unknown</span><wbr><span>For</span><wbr><span><span>Equality</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1656427748%2FProperties%2F-879533229"></span>
+                  <div><a href="index.html#901734651%2FProperties%2F-879533229"><span>treat</span><wbr><span>Null</span><wbr><span>As</span><wbr><span>Unknown</span><wbr><span>For</span><wbr><span><span>Equality</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="901734651%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="treat-null-as-unknown-for-equality.html">treatNullAsUnknownForEquality</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="index.html#901734651%2FProperties%2F-879533229">treatNullAsUnknownForEquality</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>

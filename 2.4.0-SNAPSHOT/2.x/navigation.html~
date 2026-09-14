@@ -5397,52 +5397,57 @@
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-name/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span><span>Name</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-6" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightDatabaseProperties///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-6" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightDatabaseOptions///PointingToDeclaration//121786803" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-options/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span><span>Options</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-7" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightDatabaseProperties///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-database-properties/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span><span>Properties</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-7" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightException///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-8" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightException///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-exception/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon exception-class"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Exception</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-8" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightFileIndex///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-9" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightFileIndex///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightFileIndex" onclick="window.handleTocButtonClick(event, 'sqldelight-compiler-nav-submenu-1-8')"></button><a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-file-index/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>File</span><wbr><span><span>Index</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-compiler/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightFileIndex" onclick="window.handleTocButtonClick(event, 'sqldelight-compiler-nav-submenu-1-9')"></button><a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-file-index/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>File</span><wbr><span><span>Index</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-compiler/">Skip to content</a>
     </div>
-    <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-8-0" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightFileIndex.Companion///PointingToDeclaration//121786803" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-9-0" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightFileIndex.Companion///PointingToDeclaration//121786803" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-file-index/-companion/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon object"></span><span><span><span>Companion</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-9" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqldelightParser///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-10" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqldelightParser///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sqldelight-parser/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class"></span><span><span>Sqldelight</span><wbr><span><span>Parser</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-10" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqldelightParserUtil///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-11" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqldelightParserUtil///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sqldelight-parser-util/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon object"></span><span><span>Sqldelight</span><wbr><span>Parser</span><wbr><span><span>Util</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-11" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightProjectService///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-12" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightProjectService///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightProjectService" onclick="window.handleTocButtonClick(event, 'sqldelight-compiler-nav-submenu-1-11')"></button><a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-project-service/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Project</span><wbr><span><span>Service</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-compiler/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightProjectService" onclick="window.handleTocButtonClick(event, 'sqldelight-compiler-nav-submenu-1-12')"></button><a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-project-service/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Project</span><wbr><span><span>Service</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-compiler/">Skip to content</a>
     </div>
-    <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-11-0" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightProjectService.Companion///PointingToDeclaration//121786803" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-12-0" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightProjectService.Companion///PointingToDeclaration//121786803" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-project-service/-companion/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon object"></span><span><span><span>Companion</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-12" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightPropertiesFile///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-13" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightPropertiesFile///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-properties-file/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Properties</span><wbr><span><span>File</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-13" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightSourceFolder///PointingToDeclaration//121786803" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-compiler-nav-submenu-1-14" pageid="sqldelight-compiler::app.cash.sqldelight.core/SqlDelightSourceFolder///PointingToDeclaration//121786803" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-compiler/app.cash.sqldelight.core/-sql-delight-source-folder/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Source</span><wbr><span><span>Folder</span></span></span></span></a>
     </div>
@@ -6277,81 +6282,86 @@
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database-name-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Name</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-7" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabasePropertiesImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-7" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabaseOptionsImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
+    <div class="toc--row">
+     <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database-options-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Options</span><wbr><span><span>Impl</span></span></span></span></a>
+    </div>
+   </div>
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-8" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDatabasePropertiesImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-database-properties-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span>Properties</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-8" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDsl///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-9" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightDsl///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-dsl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon annotation-class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Dsl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-9" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightExtension///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-10" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightExtension///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-extension/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Extension</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-10" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPackageAttribute///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-11" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPackageAttribute///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightPackageAttribute" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-10')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-package-attribute/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Package</span><wbr><span><span>Attribute</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightPackageAttribute" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-11')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-package-attribute/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Package</span><wbr><span><span>Attribute</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
     </div>
-    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-10-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPackageAttribute.Companion///PointingToDeclaration//-879533229" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-11-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPackageAttribute.Companion///PointingToDeclaration//-879533229" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-package-attribute/-companion/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon object"></span><span><span><span>Companion</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-11" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-12" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightPlugin" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-11')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-plugin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Plugin</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightPlugin" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-12')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-plugin/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Plugin</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
     </div>
-    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-11-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin.PropertiesModelBuilder///PointingToDeclaration//-879533229" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-12-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPlugin.PropertiesModelBuilder///PointingToDeclaration//-879533229" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-plugin/-properties-model-builder/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Properties</span><wbr><span>Model</span><wbr><span><span>Builder</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-12" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPropertiesFileImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-13" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightPropertiesFileImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-properties-file-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Properties</span><wbr><span>File</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-13" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightSourceFolderImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-14" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightSourceFolderImpl///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-source-folder-impl/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Source</span><wbr><span>Folder</span><wbr><span><span>Impl</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-14" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-15" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightTask" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-14')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Task</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="SqlDelightTask" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-15')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span><span>Task</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
     </div>
-    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-14-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfaces///PointingToDeclaration//-879533229" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-15-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfaces///PointingToDeclaration//-879533229" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/-generate-interfaces/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Generate</span><wbr><span><span>Interfaces</span></span></span></span></a>
      </div>
     </div>
-    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-14-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfacesWorkParameters///PointingToDeclaration//-879533229" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-15-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightTask.GenerateInterfacesWorkParameters///PointingToDeclaration//-879533229" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-task/-generate-interfaces-work-parameters/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Generate</span><wbr><span>Interfaces</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-15" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightWorkerTask///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-16" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/SqlDelightWorkerTask///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
      <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-sql-delight-worker-task/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Sql</span><wbr><span>Delight</span><wbr><span>Worker</span><wbr><span><span>Task</span></span></span></span></a>
     </div>
    </div>
-   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-16" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask///PointingToDeclaration//-879533229" data-nesting-level="2">
+   <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-17" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask///PointingToDeclaration//-879533229" data-nesting-level="2">
     <div class="toc--row">
-     <button class="toc--button" aria-expanded="false" aria-label="VerifyMigrationTask" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-16')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Verify</span><wbr><span>Migration</span><wbr><span><span>Task</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
+     <button class="toc--button" aria-expanded="false" aria-label="VerifyMigrationTask" onclick="window.handleTocButtonClick(event, 'sqldelight-gradle-plugin-nav-submenu-2-17')"></button><a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Verify</span><wbr><span>Migration</span><wbr><span><span>Task</span></span></span></span></a><a class="toc--skip-link" href="sqldelight-gradle-plugin/">Skip to content</a>
     </div>
-    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-16-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationAction///PointingToDeclaration//-879533229" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-17-0" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationAction///PointingToDeclaration//-879533229" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/-verify-migration-action/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon abstract-class-kt"></span><span><span>Verify</span><wbr><span>Migration</span><wbr><span><span>Action</span></span></span></span></a>
      </div>
     </div>
-    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-16-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationWorkParameters///PointingToDeclaration//-879533229" data-nesting-level="3">
+    <div class="toc--part" id="sqldelight-gradle-plugin-nav-submenu-2-17-1" pageid="sqldelight-gradle-plugin::app.cash.sqldelight.gradle/VerifyMigrationTask.VerifyMigrationWorkParameters///PointingToDeclaration//-879533229" data-nesting-level="3">
      <div class="toc--row">
       <a href="sqldelight-gradle-plugin/app.cash.sqldelight.gradle/-verify-migration-task/-verify-migration-work-parameters/index.html" class="toc--link"><span class="toc--link-grid"><span class="toc--icon interface-kt"></span><span><span>Verify</span><wbr><span>Migration</span><wbr><span>Work</span><wbr><span><span>Parameters</span></span></span></span></a>
      </div>

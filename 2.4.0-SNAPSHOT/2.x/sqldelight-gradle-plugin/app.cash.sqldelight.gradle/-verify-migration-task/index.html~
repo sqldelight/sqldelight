@@ -213,17 +213,17 @@
               </div>
             </div>
           </div>
-<a data-name="-2068365670%2FProperties%2F-879533229" anchor-label="compilationUnit" id="-2068365670%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+<a data-name="-545389044%2FProperties%2F-879533229" anchor-label="compilationUnit" id="-545389044%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="compilation-unit.html"><span>compilation</span><wbr><span><span>Unit</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2068365670%2FProperties%2F-879533229"></span>
+                  <div><a href="../-sql-delight-worker-task/compilation-unit.html"><span>compilation</span><wbr><span><span>Unit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-545389044%2FProperties%2F-879533229"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="compilation-unit.html">compilationUnit</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.gradle.api.tasks/Internal///PointingToDeclaration/"><span class="token annotation builtin">Internal</span></span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-worker-task/compilation-unit.html">compilationUnit</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="../-sql-delight-compilation-unit-impl/index.html">SqlDelightCompilationUnitImpl</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -633,6 +633,21 @@
               </div>
             </div>
           </div>
+<a data-name="-909651147%2FProperties%2F-879533229" anchor-label="options" id="-909651147%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-sql-delight-worker-task/options.html"><span><span>options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-909651147%2FProperties%2F-879533229"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-worker-task/options.html">options</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="../-sql-delight-database-options-impl/index.html">SqlDelightDatabaseOptionsImpl</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
 <a data-name="1166557606%2FProperties%2F-879533229" anchor-label="outputs" id="1166557606%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
             <div class="main-subrow keyValue ">
@@ -689,21 +704,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.gradle.api.tasks/Input///PointingToDeclaration/"><span class="token annotation builtin">Input</span></span></div></div><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="project-name.html">projectName</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1681990522%2FProperties%2F-879533229" anchor-label="properties" id="-1681990522%2FProperties%2F-879533229" data-filterable-set=":sqldelight-gradle-plugin/main"></a>
-          <div class="table-row table-row_content" data-filterable-current=":sqldelight-gradle-plugin/main" data-filterable-set=":sqldelight-gradle-plugin/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="properties.html"><span><span>properties</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1681990522%2FProperties%2F-879533229"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-gradle-plugin/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="properties.html">properties</a><span class="token operator">: </span><span data-unresolved-link="org.gradle.api.provider/Property///PointingToDeclaration/">Property</span><span class="token operator">&lt;</span><a href="../-sql-delight-database-properties-impl/index.html">SqlDelightDatabasePropertiesImpl</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>

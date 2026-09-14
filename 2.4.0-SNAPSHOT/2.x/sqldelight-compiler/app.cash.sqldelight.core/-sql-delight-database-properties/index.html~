@@ -93,39 +93,39 @@
   <div class="breadcrumbs"><a href="../../index.html">sqldelight-compiler</a><span class="delimiter">/</span><a href="../index.html">app.cash.sqldelight.core</a><span class="delimiter">/</span><span class="current">SqlDelightDatabaseProperties</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Sql</span><wbr><span>Delight</span><wbr><span>Database</span><wbr><span><span>Properties</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">SqlDelightDatabaseProperties</a> : <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html">Serializable</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">SqlDelightDatabaseProperties</a> : <a href="../-sql-delight-database-options/index.html">SqlDelightDatabaseOptions</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="PROPERTY">
         <h2 class="tableheader">Properties</h2>
-        <div class="table"><a data-name="394607773%2FProperties%2F121786803" anchor-label="className" id="394607773%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+        <div class="table"><a data-name="864577060%2FProperties%2F121786803" anchor-label="className" id="864577060%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="class-name.html"><span>class</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="394607773%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/class-name.html"><span>class</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="864577060%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="class-name.html">className</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/class-name.html">className</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1870165258%2FProperties%2F121786803" anchor-label="codegenExcludedColumns" id="1870165258%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="-778748189%2FProperties%2F121786803" anchor-label="codegenExcludedColumns" id="-778748189%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="codegen-excluded-columns.html"><span>codegen</span><wbr><span>Excluded</span><wbr><span><span>Columns</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1870165258%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/codegen-excluded-columns.html"><span>codegen</span><wbr><span>Excluded</span><wbr><span><span>Columns</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-778748189%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="codegen-excluded-columns.html">codegenExcludedColumns</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/codegen-excluded-columns.html">codegenExcludedColumns</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -145,77 +145,77 @@
               </div>
             </div>
           </div>
-<a data-name="-2090633167%2FProperties%2F121786803" anchor-label="dependencies" id="-2090633167%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="1465978186%2FProperties%2F121786803" anchor-label="dependencies" id="1465978186%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="dependencies.html"><span><span>dependencies</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2090633167%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/dependencies.html"><span><span>dependencies</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1465978186%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="dependencies.html">dependencies</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-database-name/index.html">SqlDelightDatabaseName</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/dependencies.html">dependencies</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-sql-delight-database-name/index.html">SqlDelightDatabaseName</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="868417251%2FProperties%2F121786803" anchor-label="deriveSchemaFromMigrations" id="868417251%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="1145386044%2FProperties%2F121786803" anchor-label="deriveSchemaFromMigrations" id="1145386044%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="derive-schema-from-migrations.html"><span>derive</span><wbr><span>Schema</span><wbr><span>From</span><wbr><span><span>Migrations</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="868417251%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/derive-schema-from-migrations.html"><span>derive</span><wbr><span>Schema</span><wbr><span>From</span><wbr><span><span>Migrations</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1145386044%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="derive-schema-from-migrations.html">deriveSchemaFromMigrations</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/derive-schema-from-migrations.html">deriveSchemaFromMigrations</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-977545198%2FProperties%2F121786803" anchor-label="expandSelectStar" id="-977545198%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="-2008598357%2FProperties%2F121786803" anchor-label="expandSelectStar" id="-2008598357%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="expand-select-star.html"><span>expand</span><wbr><span>Select</span><wbr><span><span>Star</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-977545198%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/expand-select-star.html"><span>expand</span><wbr><span>Select</span><wbr><span><span>Star</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2008598357%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="expand-select-star.html">expandSelectStar</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/expand-select-star.html">expandSelectStar</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1440143801%2FProperties%2F121786803" anchor-label="generateAsync" id="1440143801%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="25946048%2FProperties%2F121786803" anchor-label="generateAsync" id="25946048%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="generate-async.html"><span>generate</span><wbr><span><span>Async</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1440143801%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/generate-async.html"><span>generate</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="25946048%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="generate-async.html">generateAsync</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/generate-async.html">generateAsync</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1111797711%2FProperties%2F121786803" anchor-label="packageName" id="1111797711%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="1780716438%2FProperties%2F121786803" anchor-label="packageName" id="1780716438%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="package-name.html"><span>package</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1111797711%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/package-name.html"><span>package</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1780716438%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="package-name.html">packageName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/package-name.html">packageName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -235,17 +235,17 @@
               </div>
             </div>
           </div>
-<a data-name="356598004%2FProperties%2F121786803" anchor-label="treatNullAsUnknownForEquality" id="356598004%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
+<a data-name="901734651%2FProperties%2F121786803" anchor-label="treatNullAsUnknownForEquality" id="901734651%2FProperties%2F121786803" data-filterable-set=":sqldelight-compiler/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":sqldelight-compiler/main" data-filterable-set=":sqldelight-compiler/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="treat-null-as-unknown-for-equality.html"><span>treat</span><wbr><span>Null</span><wbr><span>As</span><wbr><span>Unknown</span><wbr><span>For</span><wbr><span><span>Equality</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="356598004%2FProperties%2F121786803"></span>
+                  <div><a href="../-sql-delight-database-options/treat-null-as-unknown-for-equality.html"><span>treat</span><wbr><span>Null</span><wbr><span>As</span><wbr><span>Unknown</span><wbr><span>For</span><wbr><span><span>Equality</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="901734651%2FProperties%2F121786803"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="treat-null-as-unknown-for-equality.html">treatNullAsUnknownForEquality</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sqldelight-compiler/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="../-sql-delight-database-options/treat-null-as-unknown-for-equality.html">treatNullAsUnknownForEquality</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
