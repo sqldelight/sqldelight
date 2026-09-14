@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabaseNameImpl
+import app.cash.sqldelight.gradle.SqlDelightDatabaseOptionsImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightPropertiesFileImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
@@ -86,7 +87,21 @@ internal fun properties(fixtureRoot: File, gradleVersion: String? = null): SqlDe
     dialectJars = listOf(File("test")),
     databases = propertiesFile.databases.map {
       SqlDelightDatabasePropertiesImpl(
-        packageName = it.packageName,
+        options = SqlDelightDatabaseOptionsImpl(
+          packageName = it.packageName,
+          className = it.className,
+          dependencies = it.dependencies.map {
+            SqlDelightDatabaseNameImpl(
+              packageName = it.packageName,
+              className = it.className,
+            )
+          },
+          deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
+          treatNullAsUnknownForEquality = it.treatNullAsUnknownForEquality,
+          generateAsync = it.generateAsync,
+          expandSelectStar = it.expandSelectStar,
+          codegenExcludedColumns = it.codegenExcludedColumns,
+        ),
         compilationUnits = it.compilationUnits.map {
           SqlDelightCompilationUnitImpl(
             name = it.name,
@@ -99,17 +114,7 @@ internal fun properties(fixtureRoot: File, gradleVersion: String? = null): SqlDe
             outputDirectoryFile = it.outputDirectoryFile,
           )
         },
-        className = it.className,
-        dependencies = it.dependencies.map {
-          SqlDelightDatabaseNameImpl(
-            packageName = it.packageName,
-            className = it.className,
-          )
-        },
-        deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
-        treatNullAsUnknownForEquality = it.treatNullAsUnknownForEquality,
         rootDirectory = it.rootDirectory,
-        codegenExcludedColumns = it.codegenExcludedColumns,
       )
     },
   )

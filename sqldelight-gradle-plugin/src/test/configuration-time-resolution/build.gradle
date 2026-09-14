@@ -1,0 +1,21 @@
+plugins {
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.multiplatform)
+  alias(libs.plugins.sqldelight)
+}
+
+kotlin {
+  android {
+    namespace = "com.example"
+    compileSdk = libs.versions.compileSdk.get() as int
+    minSdk = libs.versions.minSdk.get() as int
+  }
+}
+
+sqldelight {
+  databases {
+    Database {
+      packageName = "com.example"
+    }
+  }
+}

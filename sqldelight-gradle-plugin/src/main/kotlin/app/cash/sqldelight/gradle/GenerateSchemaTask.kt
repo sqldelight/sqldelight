@@ -19,7 +19,6 @@ import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -35,10 +34,6 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
 
   @get:Input abstract val projectName: Property<String>
 
-  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
-
-  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
-
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @get:Input abstract val driverProperties: MapProperty<String, String>
@@ -48,7 +43,7 @@ abstract class GenerateSchemaTask : SqlDelightWorkerTask() {
     workQueue().submit(GenerateSchema::class.java) {
       it.outputDirectory.set(outputDirectory)
       it.moduleName.set(projectName)
-      it.properties.set(properties)
+      it.properties.set(databaseProperties)
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
       it.driverProperties.set(driverProperties)

@@ -1,0 +1,25 @@
+// This fixture intentionally does not apply the shared "sqldelightTests" settings plugin. That
+// plugin is loaded with includeBuild, and AGP disables its configuration-time dependency resolution
+// check for builds that have included builds.
+pluginManagement {
+  repositories {
+    maven { url = "$sqldelightRepoRoot/build/localMaven" }
+    mavenCentral()
+    google()
+    gradlePluginPortal()
+  }
+}
+
+dependencyResolutionManagement {
+  versionCatalogs {
+    libs {
+      from(files("$sqldelightRepoRoot/gradle/libs.versions.toml"))
+      plugin("sqldelight", "app.cash.sqldelight").version(sqldelightVersion)
+    }
+  }
+  repositories {
+    maven { url = "$sqldelightRepoRoot/build/localMaven" }
+    mavenCentral()
+    google()
+  }
+}
