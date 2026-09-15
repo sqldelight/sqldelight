@@ -13,6 +13,7 @@
 ### Fixed
 
 - [IntelliJ Plugin] Fix plugin publishing violations by changing IntelliJ API use (#6366 @griffio) 
+- [Intellij Plugin] Improve stability when typing by trapping unhandled errors. (#6355 by @griffio)
 
 
 ## [2.4.0] - 2026-09-17
