@@ -15,6 +15,59 @@
 - Nothing yet!
 
 
+## [2.4.0] - 2026-09-17
+[2.4.0]: https://github.com/sqldelight/sqldelight/releases/tag/2.4.0
+
+### Added
+- [Native Driver] Add `extendedConfig` parameter to `inMemoryDriver` (#5539 by @GuilhE)
+- [PostgreSQL Dialect] Add query support for implicitly defined System Columns (#5834 by @griffio)
+- [PostgreSQL Dialect] Add basic Array literal support (#5997 by @griffio)
+- [PostgreSQL Dialect] Add basic LTREE support (#5880 by @yesitskev @griffio)
+- [MySQL Dialect] Add support for INET functions (#5072 by @mcxinyu)
+- [PostgreSQL Dialect] Add support for ALTER INDEX (#6224 by @griffio)
+- [SQLite Dialect] Add support for SQLite 3.44 aggregate functions DISTINCT, ORDER BY and FILTER (#6236 by @griffio)
+- [SQLite Dialect] Add support for SQLite 3.37 STRICT table (#6230 by @griffio)
+- [Gradle Plugin] Add support for excluding columns from generated models with `codegenExcludedColumns` (#6243 by @sokolikp)
+- [Compiler] Add `allTableNames` function to schema (#6245 by @edenman)
+- [PostgreSQL Dialect] Add support for ANY operator (#6253 by @griffio)
+- [SQLite Dialect] Add SQLite 3.39 support RIGHT JOIN and FULL JOIN (#6273 by @griffio)
+- [PostgreSQL Dialect] Add support for `RAISE` statement and `FOUND` variable in trigger functions (#6297 by @griffio)
+
+### Changed
+- [PostgreSQL Dialect] Change arrayIntermediateType visibility to public (#5835 by @griffio)
+- [Gradle Plugin] Implement stricter MigrationFile versioning (#5730 by @madisp)
+- [Gradle Plugin] Increase minimal support gradle to 8.2.1 (#6217 by @maxsav)
+- [Gradle Plugin] Support gradle isolated projects (#6217 by @maxsav)
+- [IntelliJ Plugin] Minimum version of 2023.3 / Android Studio Jellyfish
+
+### Fixed
+- [Gradle Plugin] Suppress `sun.misc.Unsafe` deprecation warnings from the compiler worker on JDK 24+ (#6321)
+- [Compiler] Suppress Kotlin extra warnings in generated code (#6208 by @eyupcanakman)
+- [Compiler] Other columns in a non-grouped aggregate result set are always nullable
+- [PostgreSQL Dialect] Resolve nullability correctly for coalesce and ifnull
+- [PostgreSQL Dialect] Fixed IDE integration of the PostgreSQL dialect
+- [PostgreSQL Dialect] Improve IDE plugin for PostgreSQL dialect (#6209 by @griffio)
+- [Intellij Plugin] IDE plugin can perform code completions for all dialects (#6210 by @griffio)
+- [Gradle Plugin] Fix circular dependency error running verify database task (#6221 by @griffio)
+- [Compiler] Fix optimistic lock for multirow update (#6240 by @griffio)
+- [Intellij Plugin] Fix deprecations causing crash in IDEA 2026.2 (#6247 by @griffio)
+- [Gradle Plugin] Fix generated sources not being picked up by Kotlin compilation on AGP 8.9 through 8.11
+- [PostgreSQL Dialect] Fix lower and upper functions using Primitive bind argument to default as TEXT (#6262 by @griffio)
+- [Compiler] Fix insert values with data class binding using adapters and migrations changing nullability (#6269 by griffio)
+- [Compiler] Use nullable bind argument with null safe operators(IS and IS DISTINCT FROM) (#6265 by @griffio)
+- [Gradle Plugin] Use AGP's variant resolution for project dependencies (#6217 by @maxsav)
+- [Gradle Plugin] Fix build cache miss for generateDatabaseInterface when the list of AGP variants differ between builds
+- [Gradle Plugin] Fix IDE sync crash when the plugin is applied without configuring any databases (#6088)
+- [PostgreSQL Dialect] Fix json aggregate functions when using nested function call (#6281 by @griffio)
+- [Paging3 Extension] Fix KeyedQueryPagingSource crash on empty database (#6284 by @woods-marshes)
+- [Compiler] Fix Java type adapter issue when mutator statements are used with encapsulating functions like `COALESCE` (#6292 by @griffio)
+- [Compiler] Fix where the module name was capitalized, the generated code's package name also was capitalized (#6316 by @griffio)
+- [PostgreSQL Dialect] Allow date data types to be case-insensitive (#6328 by @griffio)
+- [PostgreSQL Dialect] Fix `string_agg` function to be nullable (#6340 by @griffio)
+- [SQLite Dialect] Fix SQLite 3.44 aggregate functions using `GROUP BY` (#6343 by @griffio)
+- [Gradle Plugin] Avoid resolving database dependencies at configuration time. (#6353 by @joshfriend)
+
+
 ## [2.4.0-rc2] - 2026-09-14
 [2.4.0-rc2]: https://github.com/sqldelight/sqldelight/releases/tag/2.4.0-rc2
 
