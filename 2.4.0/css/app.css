@@ -1,0 +1,105 @@
+@font-face {
+  font-family: cash-market;
+  src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: cash-market;
+  src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal
+}
+
+@font-face {
+  font-family: cash-market;
+  src: url("https://cash-f.squarecdn.com/static/fonts/cash-market/v2/CashMarket-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal
+}
+
+body, input {
+  font-family: cash-market, "Helvetica Neue", helvetica, sans-serif;
+}
+
+.md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4 {
+  font-family: cash-market, "Helvetica Neue", helvetica, sans-serif;
+  line-height: normal;
+  font-weight: bold;
+  color: var(--md-default-fg-color)
+}
+
+button.dl {
+  font-weight: 300;
+  font-size: 25px;
+  line-height: 40px;
+  padding: 3px 10px;
+  display: inline-block;
+  border-radius: 6px;
+  color: #f0f0f0;
+  margin: 5px 0;
+  width: auto;
+}
+
+.logo {
+  text-align: center;
+  margin-top: 150px;
+}
+
+/* Table header. */
+.md-typeset table:not([class]) th {
+  background-color: #eee5ff;
+}
+.md-typeset table:not([class]) th {
+  color: black !important;
+}
+
+.cash-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.cash-grid-item {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: calc(50% - 0.5em);
+  border: 2px solid var(--md-default-fg-color--light);
+  padding: 1em;
+  border-radius: 8px;
+}
+
+.cash-grid-title {
+  margin: 0;
+  font-size: 1.3em;
+}
+
+.cash-subtle {
+  opacity: 0.62;
+}
+
+.cash-grid-item hr {
+  margin: 0.5em 0;
+}
+
+.sqldelight {
+  color: var(--md-primary-fg-color);
+}
+
+@media only screen and (max-width: 960px) {
+  .cash-grid-item {
+    width: 100%;
+  }
+}
+
+:root {
+  --md-primary-fg-color:        #d2522b;
+  --md-primary-fg-color--light: #d8633f;
+  --md-primary-fg-color--dark:  #bd4a27;
+}
+
+.md-logo:hover img {
+  content: url('../images/icon-cashapp.png');
+}
