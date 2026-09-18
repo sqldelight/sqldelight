@@ -1,0 +1,36 @@
+@import url("/sqldelight/css/app.css");
+
+:root {
+  --color-dark: #d2522b;
+  --sidemenu-section-active-color: #d2522b;
+}
+
+.library-name a {
+  display: flex;
+  font-size: 1.1rem;
+}
+
+.library-name a::before {
+  content: ' ';
+  background: url("../../images/icon-sqldelight.png") center no-repeat;
+  height: 24px;
+  width: 24px;
+  background-size: cover;
+  display: inline-block;
+  margin-right: 24px;
+}
+
+.library-name a:hover::before {
+  content: ' ';
+  background: url("../../images/icon-cashapp.png") center no-repeat;
+  height: 24px;
+  width: 24px;
+  background-size: cover;
+  display: inline-block;
+  margin-right: 24px;
+}
+
+h1, h2, h3, h4, .library-name a {
+  font-family: cash-market, "Helvetica Neue", helvetica, sans-serif !important;
+  font-weight: bold;
+}
