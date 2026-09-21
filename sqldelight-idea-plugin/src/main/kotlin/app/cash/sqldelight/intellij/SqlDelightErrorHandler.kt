@@ -20,7 +20,6 @@ import app.cash.sqldelight.VERSION
 import com.bugsnag.Bugsnag
 import com.bugsnag.Severity
 import com.intellij.diagnostic.AbstractMessage
-import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent
@@ -42,9 +41,6 @@ class SqlDelightErrorHandler : ErrorReportSubmitter() {
       it.addToTab("Device", "IDE Version", ApplicationInfo.getInstance().fullVersion)
       it.addToTab("Device", "IDE Build #", ApplicationInfo.getInstance().build)
       it.addToTab("Device", "Plugin SHA", GIT_SHA)
-      PluginManagerCore.plugins.forEach { plugin ->
-        it.addToTab("Plugins", plugin.name, "${plugin.pluginId} : ${plugin.version}")
-      }
     }
   }
 
