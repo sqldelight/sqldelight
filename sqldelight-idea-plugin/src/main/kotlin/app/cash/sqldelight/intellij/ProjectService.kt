@@ -47,7 +47,6 @@ import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
-import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
@@ -179,18 +178,15 @@ class ProjectService(val project: Project) :
       MigrationParserDefinition.stubVersion++
       ApplicationManager.getApplication().runReadAction { invalidateAllFiles() }
       ApplicationManager.getApplication().invokeLater {
-        ToolWindowManager.getInstance(project).getToolWindow("SqlDelight")?.remove()
-
-        val connectionManager = dialect.connectionManager
-        if (connectionManager != null) {
-          ToolWindowManager.getInstance(project).registerToolWindow(id = "SqlDelight") {
-            anchor = ToolWindowAnchor.BOTTOM
-            contentFactory = SqlDelightToolWindowFactory(connectionManager)
-            canCloseContent = true
-            icon = dialect.icon
-          }.apply {
-            show()
-            hide()
+        val toolWindow = ToolWindowManager.getInstance(project)
+          .getToolWindow(SqlDelightToolWindowFactory.ID)
+          ?: return@invokeLater
+        val available = dialect.connectionManager != null
+        toolWindow.setAvailable(available)
+        if (available) {
+          toolWindow.setIcon(dialect.icon)
+          if (toolWindow.contentManagerIfCreated != null) {
+            SqlDelightToolWindowFactory().createToolWindowContent(project, toolWindow)
           }
         }
       }
