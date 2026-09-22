@@ -12,7 +12,7 @@
 
 ### Fixed
 
-- Nothing yet!
+- [IntelliJ Plugin] Fix plugin publishing violations by changing IntelliJ API use (#6366 @griffio) 
 
 
 ## [2.4.0] - 2026-09-17
