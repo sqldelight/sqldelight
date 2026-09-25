@@ -22,6 +22,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
 import app.cash.sqldelight.db.SqlSchema
+import app.cash.sqldelight.db.StaleWindowException
 import app.cash.sqldelight.driver.android.Api28Impl.setWindowSize
 
 private const val DEFAULT_CACHE_SIZE = 20
@@ -323,6 +324,10 @@ private class AndroidCursor(
   private val cursor: Cursor,
   windowSizeBytes: Long?,
 ) : SqlCursor {
+
+  // Only windowed cursors are subject to the CursorWindow issue.
+  private val windowedCursor: AbstractWindowedCursor? = cursor as? AbstractWindowedCursor
+
   init {
     if (
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
@@ -334,11 +339,68 @@ private class AndroidCursor(
   }
 
   override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(cursor.moveToNext())
-  override fun getString(index: Int) = if (cursor.isNull(index)) null else cursor.getString(index)
-  override fun getLong(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index)
-  override fun getBytes(index: Int) = if (cursor.isNull(index)) null else cursor.getBlob(index)
-  override fun getDouble(index: Int) = if (cursor.isNull(index)) null else cursor.getDouble(index)
-  override fun getBoolean(index: Int) = if (cursor.isNull(index)) null else cursor.getLong(index) == 1L
+  override fun getString(index: Int): String? {
+    ensureRowValid()
+    return if (cursor.isNull(index)) null else cursor.getString(index)
+  }
+
+  override fun getLong(index: Int): Long? {
+    ensureRowValid()
+    return if (cursor.isNull(index)) null else cursor.getLong(index)
+  }
+
+  override fun getBytes(index: Int): ByteArray? {
+    ensureRowValid()
+    return if (cursor.isNull(index)) null else cursor.getBlob(index)
+  }
+
+  override fun getDouble(index: Int): Double? {
+    ensureRowValid()
+    return if (cursor.isNull(index)) null else cursor.getDouble(index)
+  }
+
+  override fun getBoolean(index: Int): Boolean? {
+    ensureRowValid()
+    return if (cursor.isNull(index)) null else cursor.getLong(index) == 1L
+  }
+
+  /**
+   * Ensures that the current cursor position is actually backed by the
+   * active CursorWindow. This check is performed immediately before any
+   * get*() call so that we validate against the most up-to-date window
+   * state. If the window has changed (e.g., due to concurrent deletes),
+   * the row may no longer be valid and a StaleWindowException is thrown.
+   */
+  private fun ensureRowValid() {
+    if (!isRowBackedByWindow()) {
+      val window = windowedCursor?.window
+      val start = window?.startPosition
+      val numRows = window?.numRows
+      val pos = cursor.position
+
+      throw StaleWindowException(
+        "Stale CursorWindow row: position=$pos, windowStart=$start, windowRows=$numRows",
+      )
+    }
+  }
+
+  /**
+   * Checks whether the current cursor position is actually present in the
+   * underlying CursorWindow. If we can't reason about it (non-windowed cursor),
+   * we default to "true" to preserve existing behavior.
+   */
+  private fun isRowBackedByWindow(): Boolean {
+    val window = windowedCursor?.window ?: return true
+
+    val numRows = window.numRows
+    if (numRows <= 0) return false
+
+    val pos = cursor.position
+    val start = window.startPosition
+    val local = pos - start
+
+    return local >= 0 && local < numRows
+  }
 }
 
 @RequiresApi(Build.VERSION_CODES.P)
