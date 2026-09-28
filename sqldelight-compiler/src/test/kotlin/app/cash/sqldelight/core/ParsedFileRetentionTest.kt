@@ -58,10 +58,13 @@ class ParsedFileRetentionTest {
   }
 
   private fun forceGarbageCollection() {
-    val sentinel = WeakReference(Any())
+    val sentinel = unreachableSentinel()
     while (sentinel.get() != null) {
       System.gc()
+      Thread.sleep(100)
     }
     System.gc()
   }
+
+  private fun unreachableSentinel() = WeakReference(Any())
 }
