@@ -16,12 +16,14 @@
 
 package app.cash.sqldelight.test.util
 
+import app.cash.sqldelight.core.SqlDelightEnvironment
 import app.cash.sqldelight.core.compiler.SqlDelightCompiler
 import app.cash.sqldelight.core.lang.MigrationFile
 import app.cash.sqldelight.core.lang.SqlDelightQueriesFile
 import app.cash.sqldelight.dialect.api.SqlDelightDialect
 import app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect
 import com.alecstrong.sql.psi.core.SqlAnnotationHolder
+import com.alecstrong.sql.psi.core.SqlCoreEnvironment
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -179,6 +181,15 @@ object FixtureCompiler {
     return CompilationResult(outputDirectory, compilerOutput, errors, sourceFiles.toString(), file!!)
   }
 
+  fun generateFixture(fixtureRoot: String): GenerationResult {
+    val errors = mutableListOf<String>()
+    val environment = TestEnvironment(outputDirectory = File(fixtureRoot, "output"))
+      .build(fixtureRoot, createAnnotationHolder(errors))
+    val status = environment.generateSqlDelightFiles {}
+    if (status is SqlDelightEnvironment.CompilationStatus.Failure) errors += status.errors
+    return GenerationResult(environment, errors)
+  }
+
   private fun createAnnotationHolder(
     errors: MutableList<String>,
   ) = SqlAnnotationHolder { element, message ->
@@ -211,6 +222,11 @@ object FixtureCompiler {
     val errors: List<String>,
     val sourceFiles: String,
     val compiledFile: SqlDelightQueriesFile,
+  )
+
+  class GenerationResult(
+    val environment: SqlCoreEnvironment,
+    val errors: List<String>,
   )
 }
 

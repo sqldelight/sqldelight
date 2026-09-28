@@ -89,6 +89,9 @@ class SqlDelightEnvironment(
   val module = MockModule(project, projectEnvironment.parentDisposable)
   private val moduleName = SqlDelightFileIndex.sanitizeDirectoryName(moduleName)
 
+  // IntelliJ caches parsed files weakly. Holding them here stops them from being parsed again.
+  private val retainedFiles = mutableListOf<SqlFileBase>()
+
   init {
     project.registerService(SqlDelightProjectService::class.java, this)
 
@@ -265,6 +268,7 @@ class SqlDelightEnvironment(
    * Run the SQLDelight compiler and return the error or success status.
    */
   fun generateSqlDelightFiles(logger: (String) -> Unit): CompilationStatus {
+    retainSqlFiles()
     val errors = sortedMapOf<Long, MutableList<String>>()
     val extraAnnotators = listOf(OptimisticLockCompilerAnnotator())
     annotate(
@@ -338,6 +342,21 @@ class SqlDelightEnvironment(
     }
 
     return CompilationStatus.Success
+  }
+
+  private fun retainSqlFiles() {
+    if (retainedFiles.isNotEmpty()) return
+    fun PsiDirectory.collect() {
+      children.forEach {
+        if (it is PsiDirectory) it.collect()
+        if (it is SqlFileBase) retainedFiles += it
+      }
+    }
+    val psiManager = PsiManager.getInstance(projectEnvironment.project)
+    (sourceFolders + dependencyFolders)
+      .mapNotNull { localFileSystem.findFileByPath(it.absolutePath) }
+      .mapNotNull { psiManager.findDirectory(it) }
+      .forEach { it.collect() }
   }
 
   fun forMigrationFiles(body: (MigrationFile) -> Unit) {
