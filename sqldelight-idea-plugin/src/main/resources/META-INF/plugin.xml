@@ -51,7 +51,7 @@
       contextId="SQLDELIGHT"/>
 
     <fileIconProvider implementation="app.cash.sqldelight.intellij.SqlDelightFileIconProvider" />
-    <errorHandler implementation="app.cash.sqldelight.intellij.SqlDelightErrorHandler"/>
+    <errorHandler implementation="com.intellij.diagnostic.JetBrainsMarketplaceErrorReportSubmitter"/>
 
     <toolWindow id="SqlDelight" anchor="bottom" canCloseContents="true" doNotActivateOnStart="true"
         factoryClass="app.cash.sqldelight.intellij.run.window.SqlDelightToolWindowFactory"/>

@@ -9,6 +9,7 @@
 ### Changed
 
 - [Gradle Plugin] Keep parsed `.sq` files in memory for the whole code generation task, so they are not parsed again after garbage collection. This can make code generation faster in large projects (#6374 by @C2H6O)
+- [IntelliJ Plugin] Crashes are now reported to the JetBrains Marketplace instead of a custom Bugsnag instance (#6376 by @JakeWharton)
 
 ### Fixed
 
