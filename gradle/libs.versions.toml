@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.3.10"
+kotlin = "2.4.20"
 dokka = "2.2.0"
 kotlinx-coroutines = "1.11.0"
 idea = "233.14808.21" # Jellyfish | 2023.3.1 (see https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html)
