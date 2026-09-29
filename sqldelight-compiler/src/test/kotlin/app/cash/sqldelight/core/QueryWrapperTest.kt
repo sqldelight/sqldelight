@@ -771,7 +771,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Long,
         |      newVersion: Long,
-        |    ): QueryResult.Value<Unit> {
+        |    ) {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
         |            |CREATE TABLE test (
@@ -785,7 +785,6 @@ class QueryWrapperTest {
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
         |      }
-        |      return QueryResult.Unit
         |    }
         |
         |    override fun migrate(
@@ -890,7 +889,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Long,
         |      newVersion: Long,
-        |    ): QueryResult.Value<Unit> {
+        |    ) {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, "PRAGMA journal_mode=wal", 0)
         |        driver.execute(null, ""${'"'}
@@ -899,7 +898,6 @@ class QueryWrapperTest {
         |            |)
         |            ""${'"'}.trimMargin(), 0)
         |      }
-        |      return QueryResult.Unit
         |    }
         |
         |    override fun migrate(
