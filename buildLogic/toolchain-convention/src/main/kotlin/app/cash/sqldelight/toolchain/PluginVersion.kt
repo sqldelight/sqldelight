@@ -12,11 +12,6 @@ import org.gradle.api.tasks.TaskAction
 @CacheableTask
 abstract class PluginVersion : DefaultTask() {
   @get:Input
-  val gitHash: Provider<String> = project.providers.exec {
-    it.commandLine("git", "rev-parse", "--short", "HEAD")
-  }.standardOutput.asText
-
-  @get:Input
   val version: String = project.version.toString()
 
   @get:OutputDirectory
@@ -33,7 +28,6 @@ abstract class PluginVersion : DefaultTask() {
 package app.cash.sqldelight
 
 val VERSION = "$version"
-val GIT_SHA = "${gitHash.get().trim()}"
 """,
     )
   }

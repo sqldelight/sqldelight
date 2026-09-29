@@ -2,7 +2,6 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
-import app.cash.sqldelight.toolchain.BugsnagKey
 
 plugins {
   alias(libs.plugins.intellij)
@@ -117,7 +116,6 @@ dependencies {
   implementation projects.sqldelightCompiler
 
   implementation libs.sqliteJdbc
-  implementation libs.bugsnag
   implementation libs.picnic
   implementation libs.kotlinx.serialization.json
 
@@ -129,9 +127,4 @@ configurations.named("runtimeClasspath") {
   exclude group: "org.slf4j"
   exclude group: "org.jetbrains.kotlin"
   exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines"
-}
-
-def bugsnagKey = tasks.register('bugsnagKey', BugsnagKey)
-sourceSets.main {
-  kotlin.srcDir(bugsnagKey)
 }
