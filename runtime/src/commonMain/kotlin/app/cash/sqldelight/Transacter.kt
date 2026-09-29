@@ -100,8 +100,9 @@ interface Transacter : TransacterBase {
    * A SQL transaction. Can be created through the driver via [SqlDriver.newTransaction] or
    * through an implementation of [Transacter] by calling [Transacter.transaction].
    *
-   * A transaction is expected never to escape the thread it is created on, or more specifically,
-   * never to escape the lambda scope of [Transacter.transaction] and [Transacter.transactionWithResult].
+   * A transaction is expected never to escape the lambda scope of [Transacter.transaction] and
+   * [Transacter.transactionWithResult]. By default, it is also expected never to escape the thread
+   * it is created on, unless the driver's transaction opts out via [isThreadConfined].
    */
   abstract class Transaction : TransactionCallbacks {
     private val ownerThreadId = currentThreadId()
@@ -120,6 +121,19 @@ interface Transacter : TransacterBase {
      * The parent transaction, if there is any.
      */
     protected abstract val enclosingTransaction: Transaction?
+
+    /**
+     * Whether this transaction may only be used on the thread it was created on.
+     *
+     * When true (the default), using this transaction from another thread is treated as the
+     * transaction object escaping the lambda scope of [Transacter.transaction] and
+     * [Transacter.transactionWithResult], and throws an [IllegalStateException].
+     *
+     * Drivers whose transaction bookkeeping is not bound to a thread, for example an
+     * asynchronous driver whose suspending transaction body may resume on a different thread,
+     * should override this to return false to disable the thread-identity check.
+     */
+    protected open val isThreadConfined: Boolean get() = true
 
     internal fun enclosingTransaction() = enclosingTransaction
 
@@ -151,7 +165,7 @@ interface Transacter : TransacterBase {
       postRollbackHooks.add(function)
     }
 
-    internal fun checkThreadConfinement() = check(ownerThreadId == currentThreadId()) {
+    internal fun checkThreadConfinement() = check(!isThreadConfined || ownerThreadId == currentThreadId()) {
       """
         Transaction objects (`TransactionWithReturn` and `TransactionWithoutReturn`) must be used
         only within the transaction lambda scope.
