@@ -186,10 +186,11 @@ internal class DatabaseGenerator(
 
     val migrateFunction = FunSpec.builder("migrateInternal")
       .addModifiers(PRIVATE)
-      .returns(
-        (if (generateAsync) ASYNC_RESULT_TYPE else VALUE_RESULT_TYPE)
-          .parameterizedBy(Unit::class.asTypeName()),
-      )
+      .apply {
+        if (generateAsync) {
+          returns(ASYNC_RESULT_TYPE.parameterizedBy(Unit::class.asTypeName()))
+        }
+      }
       .addParameter(DRIVER_NAME, DRIVER_TYPE)
       .addParameter(oldVersion)
       .addParameter(newVersion)
@@ -273,7 +274,6 @@ internal class DatabaseGenerator(
 
     if (!generateAsync) {
       createFunction.addStatement("return %T", UNIT_RESULT_TYPE)
-      migrateFunction.addStatement("return %T", UNIT_RESULT_TYPE)
     } else {
       createFunction.endControlFlow()
       migrateFunction.endControlFlow()
