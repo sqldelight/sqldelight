@@ -8,11 +8,11 @@
 
 ### Changed
 
-- Nothing yet!
+- [Gradle Plugin] Keep parsed `.sq` files in memory for the whole code generation task, so they are not parsed again after garbage collection. This can make code generation faster in large projects (#6374 by @C2H6O)
 
 ### Fixed
 
-- [IntelliJ Plugin] Fix plugin publishing violations by changing IntelliJ API use (#6366 #6368 by @griffio) 
+- [IntelliJ Plugin] Fix plugin publishing violations by changing IntelliJ API use (#6366 #6368 by @griffio)
 
 
 ## [2.4.0] - 2026-09-17
