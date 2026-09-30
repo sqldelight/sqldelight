@@ -217,6 +217,10 @@ public abstract interface class app/cash/sqldelight/db/SqlSchema {
 	public abstract fun migrate (Lapp/cash/sqldelight/db/SqlDriver;JJ[Lapp/cash/sqldelight/db/AfterVersion;)Lapp/cash/sqldelight/db/QueryResult;
 }
 
+public final class app/cash/sqldelight/db/StaleWindowException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
 public final class app/cash/sqldelight/logs/LogSqliteDriver : app/cash/sqldelight/db/SqlDriver {
 	public fun <init> (Lapp/cash/sqldelight/db/SqlDriver;Lkotlin/jvm/functions/Function1;)V
 	public fun addListener ([Ljava/lang/String;Lapp/cash/sqldelight/Query$Listener;)V
