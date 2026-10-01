@@ -14,6 +14,7 @@
 ### Fixed
 
 - [IntelliJ Plugin] Fix plugin publishing violations by changing IntelliJ API use (#6366 #6368 by @griffio)
+- [Android Driver] Make queries transactional to prevent torn results
 
 
 ## [2.4.0] - 2026-09-17

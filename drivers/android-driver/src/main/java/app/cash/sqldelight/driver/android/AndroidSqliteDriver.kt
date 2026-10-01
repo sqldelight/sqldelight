@@ -304,8 +304,16 @@ private class AndroidQuery(
   override fun execute() = throw UnsupportedOperationException()
 
   override fun <R> executeQuery(mapper: (SqlCursor) -> QueryResult<R>): R {
-    return database.query(this)
-      .use { cursor -> mapper(AndroidCursor(cursor, windowSizeBytes)).value }
+    val ownsTransaction = !database.inTransaction()
+    if (ownsTransaction) database.beginTransactionNonExclusive()
+    try {
+      val result = database.query(this)
+        .use { cursor -> mapper(AndroidCursor(cursor, windowSizeBytes)).value }
+      if (ownsTransaction) database.setTransactionSuccessful()
+      return result
+    } finally {
+      if (ownsTransaction) database.endTransaction()
+    }
   }
 
   override fun bindTo(statement: SupportSQLiteProgram) {
