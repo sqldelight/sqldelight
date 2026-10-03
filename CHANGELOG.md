@@ -4,7 +4,7 @@
 
 ### Added
 
-- Nothing yet!
+- [Documentation] Additional Android SQLite transaction documentation (#6381 by @griffio) 
 
 ### Changed
 
