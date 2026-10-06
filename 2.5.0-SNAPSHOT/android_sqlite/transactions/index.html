@@ -930,6 +930,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#consistency-of-large-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consistency of Large Queries
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5322,6 +5331,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#consistency-of-large-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consistency of Large Queries
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5407,6 +5425,24 @@ a value for the transaction to return.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<h2 id="consistency-of-large-queries">Consistency of Large Queries<a class="headerlink" href="#consistency-of-large-queries" title="Permanent link">&para;</a></h2>
+<p>Using <code>AndroidSqliteDriver</code>, query results are read through a <code>CursorWindow</code> of limited size (2 MB by default). When
+a result does not fit in one window, <code>AndroidSqliteDriver</code> executes the statement again to fill the next one. A
+query executed outside a transaction can observe changes committed by another thread between windows,
+and return inconsistent rows from the database.</p>
+<p>To guarantee that a large query reads a single consistent snapshot, execute it inside a transaction.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">players</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Player</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">transactionWithResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">database</span><span class="p">.</span><span class="na">playerQueries</span><span class="p">.</span><span class="na">selectAll</span><span class="p">().</span><span class="na">executeAsList</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Using a transaction means other writers wait until the transaction ends.</p>
+<p>Setting a larger <code>windowSizeBytes</code> on <code>AndroidSqliteDriver</code> (API 28+) can avoid creating an additional window.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Avoid <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code> statements with a <code>RETURNING</code> clause whose result may not
+fit in one window. The statement is executed again for each additional window, so its changes
+are applied more than once. A transaction does not prevent this.</p>
+</div>
 
 
 
