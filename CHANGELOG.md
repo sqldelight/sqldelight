@@ -4,7 +4,23 @@
 
 ### Added
 
-- [Documentation] Additional Android SQLite transaction documentation (#6381 by @griffio) 
+- Nothing yet!
+
+### Changed
+
+- Nothing yet!
+
+### Fixed
+
+- Nothing yet!
+
+
+## [2.4.1] - 2026-10-06
+[2.4.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.4.1
+
+### Added
+
+- [Documentation] Additional Android SQLite transaction documentation (#6381 by @griffio)
 
 ### Changed
 
