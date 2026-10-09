@@ -10,4 +10,9 @@
     <line>4</line>
     <description>Join compares two columns of different types</description>
   </problem>
+  <problem>
+    <file>SelfJoin.sq</file>
+    <line>32</line>
+    <description>Join condition always evaluates to true</description>
+  </problem>
 </problems>

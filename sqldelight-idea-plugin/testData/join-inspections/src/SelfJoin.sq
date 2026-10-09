@@ -1,0 +1,32 @@
+CREATE TABLE MyTable (
+  id TEXT PRIMARY KEY,
+  name TEXT
+);
+
+CREATE VIEW MyView AS
+SELECT t.id, t.name FROM MyTable t;
+
+selfJoin:
+SELECT t1.name, t2.name
+FROM MyTable t1
+JOIN MyTable t2 ON t2.id = t1.id;
+
+selfJoinUnaliasedTable:
+SELECT MyTable.name, t2.name
+FROM MyTable
+JOIN MyTable t2 ON t2.id = MyTable.id;
+
+viewToOwnTable:
+SELECT v.name, t.name
+FROM MyView v
+JOIN MyTable t ON t.id = v.id;
+
+viewToOwnTableUnaliased:
+SELECT MyView.name, MyTable.name
+FROM MyView
+JOIN MyTable ON MyTable.id = MyView.id;
+
+sameAliasedColumn:
+SELECT t1.name, t2.name
+FROM MyTable t1
+JOIN MyTable t2 ON t1.id = t1.id;
