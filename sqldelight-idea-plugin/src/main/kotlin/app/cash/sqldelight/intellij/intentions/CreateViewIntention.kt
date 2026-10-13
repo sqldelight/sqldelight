@@ -30,7 +30,7 @@ internal class CreateViewIntention : BaseElementAtCaretIntentionAction() {
     return "Create view"
   }
 
-  override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+  override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
     val selectStmt = element.parentOfType<SqlCompoundSelectStmt>(true)
     return selectStmt != null && selectStmt.parentOfType<SqlCreateViewStmt>() == null
   }

@@ -1,0 +1,6 @@
+CREATE TABLE message (
+  value TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM message;

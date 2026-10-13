@@ -30,6 +30,7 @@ import app.cash.sqldelight.core.lang.util.table
 import app.cash.sqldelight.core.lang.util.tablesObserved
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.core.psi.SqlDelightStmtClojureStmtList
+import app.cash.sqldelight.dialect.api.AggregateFunctionExpression
 import app.cash.sqldelight.dialect.api.IntermediateType
 import app.cash.sqldelight.dialect.api.PrimitiveType.ARGUMENT
 import app.cash.sqldelight.dialect.api.PrimitiveType.BLOB
@@ -42,12 +43,14 @@ import app.cash.sqldelight.dialect.api.QueryWithResults
 import app.cash.sqldelight.dialect.api.SelectQueryable
 import com.alecstrong.sql.psi.core.psi.NamedElement
 import com.alecstrong.sql.psi.core.psi.QueryElement
+import com.alecstrong.sql.psi.core.psi.SqlColumnAlias
 import com.alecstrong.sql.psi.core.psi.SqlCompoundSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlCreateVirtualTableStmt
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
 import com.alecstrong.sql.psi.core.psi.SqlInsertStmt
 import com.alecstrong.sql.psi.core.psi.SqlPragmaName
+import com.alecstrong.sql.psi.core.psi.SqlResultColumn
 import com.alecstrong.sql.psi.core.psi.SqlSelectStmt
 import com.alecstrong.sql.psi.core.psi.SqlValuesExpression
 import com.intellij.psi.PsiElement
@@ -269,13 +272,45 @@ data class NamedQuery(
     }
   }
 
-  private fun PsiElement.asAggregateFunction(): SqlFunctionExpr? = (this as? SqlFunctionExpr)?.takeIf { it.functionName.text.lowercase() in AGGREGATE_FUNCTIONS }
+  private fun PsiElement.asAggregateFunction(): AggregateFunction? = when (val expr = resolveAliasedExpression().unwrapAggregateExpression()) {
+    is SqlFunctionExpr -> expr.functionName.text.lowercase()
+      .takeIf { it in AGGREGATE_FUNCTIONS }
+      ?.let { AggregateFunction(it, expr.exprList, canReturnNullForNonNullArguments = false) }
+    is AggregateFunctionExpression -> AggregateFunction(
+      name = expr.functionName.lowercase(),
+      arguments = expr.functionArguments,
+      canReturnNullForNonNullArguments = expr.canReturnNullForNonNullArguments,
+    )
+    else -> null
+  }
+
+  // An aliased result column exposes the alias rather than the expression it names, so look the
+  // expression back up to keep the nullability of an aliased aggregate.
+  private fun PsiElement.resolveAliasedExpression(): PsiElement = if (this is SqlColumnAlias) (parent as? SqlResultColumn)?.expr ?: this else this
+
+  // A dialect can parse an aggregate as its own expression wrapped in other expressions, e.g. Sqlite
+  // 3.44 parses group_concat as SqlOtherExpr(SqliteExtensionExpr(SqliteAggregateFunctionExpr)), so
+  // descend through single child wrappers to find it.
+  private fun PsiElement.unwrapAggregateExpression(): PsiElement {
+    var current = this
+    while (current !is SqlFunctionExpr && current !is AggregateFunctionExpression) {
+      current = current.children.singleOrNull() ?: return this
+    }
+    return current
+  }
+
+  private class AggregateFunction(
+    val name: String,
+    val arguments: List<SqlExpr>,
+    val canReturnNullForNonNullArguments: Boolean,
+  )
 
   // count/total always return a value; max/min/sum/avg/group_concat return NULL when their
   // argument is NULL (e.g. group_concat over a nullable LEFT JOIN column).
-  private fun SqlFunctionExpr.alwaysReturnsNonNull(): Boolean {
-    if (functionName.text.lowercase() in NON_NULLABLE_AGGREGATE_FUNCTIONS) return true
-    return exprList.isNotEmpty() && exprList.none { it.type().javaType.isNullable }
+  private fun AggregateFunction.alwaysReturnsNonNull(): Boolean {
+    if (canReturnNullForNonNullArguments) return false
+    if (name in NON_NULLABLE_AGGREGATE_FUNCTIONS) return true
+    return arguments.isNotEmpty() && arguments.none { it.type().javaType.isNullable }
   }
 
   private fun QueryElement.QueryColumn.type(): IntermediateType {

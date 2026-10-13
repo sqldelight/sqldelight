@@ -6,8 +6,8 @@ import com.intellij.ide.actions.CreateDirectoryCompletionContributor
 import com.intellij.ide.actions.CreateDirectoryCompletionContributor.Variant
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiDirectory
+import java.io.File
 import org.jetbrains.jps.model.module.UnknownSourceRootType
-import org.jetbrains.kotlin.konan.file.File
 
 internal class SqlDelightDirectoryCompletionContributor : CreateDirectoryCompletionContributor {
   override fun getDescription(): String {

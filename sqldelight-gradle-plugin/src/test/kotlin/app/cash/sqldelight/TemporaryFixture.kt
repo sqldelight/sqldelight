@@ -4,6 +4,7 @@ import app.cash.sqldelight.core.MINIMUM_SUPPORTED_VERSION
 import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.gradle.SqlDelightCompilationUnitImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabaseNameImpl
+import app.cash.sqldelight.gradle.SqlDelightDatabaseOptionsImpl
 import app.cash.sqldelight.gradle.SqlDelightDatabasePropertiesImpl
 import app.cash.sqldelight.gradle.SqlDelightPropertiesFileImpl
 import app.cash.sqldelight.gradle.SqlDelightSourceFolderImpl
@@ -41,18 +42,25 @@ internal class TemporaryFixture : AutoCloseable {
     File(fixtureRoot, "build.gradle").apply { createNewFile() }.writeText(text)
   }
 
-  internal fun configure(runTask: String = "clean", enableIsolatedProject: Boolean = true) {
-    val result = GradleRunner.create()
+  internal fun configure(
+    runTask: String = "clean",
+    enableIsolatedProject: Boolean = true,
+    gradleVersion: String? = null,
+  ) {
+    val runner = GradleRunner.create()
       .withCommonConfiguration(fixtureRoot, enableIsolatedProject)
       .withArguments(runTask, "--stacktrace")
       .forwardOutput()
-      .build()
+
+    if (gradleVersion != null) runner.withGradleVersion(gradleVersion)
+
+    val result = runner.build()
     assertThat(result.output).contains("BUILD SUCCESSFUL")
   }
 
-  internal fun properties(): SqlDelightPropertiesFile {
-    configure()
-    return properties(fixtureRoot)
+  internal fun properties(gradleVersion: String? = null): SqlDelightPropertiesFile {
+    configure(gradleVersion = gradleVersion)
+    return properties(fixtureRoot, gradleVersion)
   }
 
   override fun close() {
@@ -60,9 +68,13 @@ internal class TemporaryFixture : AutoCloseable {
   }
 }
 
-internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
-  val propertiesFile = GradleConnector.newConnector()
+internal fun properties(fixtureRoot: File, gradleVersion: String? = null): SqlDelightPropertiesFileImpl {
+  val connector = GradleConnector.newConnector()
     .forProjectDirectory(fixtureRoot)
+
+  if (gradleVersion != null) connector.useGradleVersion(gradleVersion)
+
+  val propertiesFile = connector
     .connect()
     .use { connection ->
       connection.action(FetchSqlDelightModel(fixtureRoot))
@@ -75,7 +87,21 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
     dialectJars = listOf(File("test")),
     databases = propertiesFile.databases.map {
       SqlDelightDatabasePropertiesImpl(
-        packageName = it.packageName,
+        options = SqlDelightDatabaseOptionsImpl(
+          packageName = it.packageName,
+          className = it.className,
+          dependencies = it.dependencies.map {
+            SqlDelightDatabaseNameImpl(
+              packageName = it.packageName,
+              className = it.className,
+            )
+          },
+          deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
+          treatNullAsUnknownForEquality = it.treatNullAsUnknownForEquality,
+          generateAsync = it.generateAsync,
+          expandSelectStar = it.expandSelectStar,
+          codegenExcludedColumns = it.codegenExcludedColumns,
+        ),
         compilationUnits = it.compilationUnits.map {
           SqlDelightCompilationUnitImpl(
             name = it.name,
@@ -88,17 +114,7 @@ internal fun properties(fixtureRoot: File): SqlDelightPropertiesFileImpl {
             outputDirectoryFile = it.outputDirectoryFile,
           )
         },
-        className = it.className,
-        dependencies = it.dependencies.map {
-          SqlDelightDatabaseNameImpl(
-            packageName = it.packageName,
-            className = it.className,
-          )
-        },
-        deriveSchemaFromMigrations = it.deriveSchemaFromMigrations,
-        treatNullAsUnknownForEquality = it.treatNullAsUnknownForEquality,
         rootDirectory = it.rootDirectory,
-        codegenExcludedColumns = it.codegenExcludedColumns,
       )
     },
   )

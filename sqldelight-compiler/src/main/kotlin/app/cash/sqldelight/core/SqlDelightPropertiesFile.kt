@@ -27,17 +27,25 @@ interface SqlDelightPropertiesFile : Serializable {
   val currentVersion: String
 }
 
-interface SqlDelightDatabaseProperties : Serializable {
+/**
+ * The database settings that determine what the compiler generates. Everything the compiler
+ * reads about a database lives here. Project layout that only the IDE needs lives in
+ * [SqlDelightDatabaseProperties].
+ */
+interface SqlDelightDatabaseOptions : Serializable {
   val packageName: String
-  val compilationUnits: List<SqlDelightCompilationUnit>
   val className: String
   val dependencies: List<SqlDelightDatabaseName>
   val deriveSchemaFromMigrations: Boolean
   val treatNullAsUnknownForEquality: Boolean
-  val rootDirectory: File
   val generateAsync: Boolean
   val expandSelectStar: Boolean
   val codegenExcludedColumns: Set<String>
+}
+
+interface SqlDelightDatabaseProperties : SqlDelightDatabaseOptions {
+  val compilationUnits: List<SqlDelightCompilationUnit>
+  val rootDirectory: File
 }
 
 /**

@@ -309,7 +309,7 @@ class MigrationTest {
       |      driver: SqlDriver,
       |      oldVersion: Long,
       |      newVersion: Long,
-      |    ): QueryResult.Value<Unit> {
+      |    ) {
       |      if (oldVersion <= 1 && newVersion > 1) {
       |        driver.execute(null, "ALTER TABLE test ADD COLUMN value2 TEXT", 0)
       |        driver.execute(null, "CREATE INDEX testIndex ON test(value)", 0)
@@ -326,7 +326,6 @@ class MigrationTest {
       |            |FROM test
       |            ""${'"'}.trimMargin(), 0)
       |      }
-      |      return QueryResult.Unit
       |    }
       |
       |    override fun migrate(

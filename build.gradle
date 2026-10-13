@@ -1,3 +1,5 @@
+import org.jetbrains.grammarkit.tasks.GenerateParserTask
+
 buildscript {
   dependencies {
     classpath("com.squareup.okhttp3:okhttp") {
@@ -51,6 +53,10 @@ allprojects {
       events = ["failed", "skipped", "passed"]
       exceptionFormat "full"
     }
+  }
+
+  tasks.withType(GenerateParserTask).configureEach {
+    systemProperty('idea.config.path', 'some/non/existent/path')
   }
 
   // Workaround for yarn concurrency issue - https://youtrack.jetbrains.com/issue/KT-43320

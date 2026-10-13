@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.run.window
 
+import app.cash.sqldelight.core.SqlDelightProjectService
 import app.cash.sqldelight.dialect.api.ConnectionManager
 import app.cash.sqldelight.intellij.run.ConnectionOptions
 import com.intellij.openapi.project.Project
@@ -14,13 +15,20 @@ import java.awt.Insets
 import javax.swing.GroupLayout
 import javax.swing.JPanel
 
-internal class SqlDelightToolWindowFactory(
-  private val connectionManager: ConnectionManager,
-) : ToolWindowFactory {
+internal class SqlDelightToolWindowFactory : ToolWindowFactory {
+  override fun shouldBeAvailable(project: Project): Boolean = connectionManager(project) != null
+
+  override fun init(toolWindow: ToolWindow) {
+    toolWindow.setIcon(SqlDelightProjectService.getInstance(toolWindow.project).dialect.icon)
+  }
+
   override fun createToolWindowContent(
     project: Project,
     toolWindow: ToolWindow,
   ) {
+    toolWindow.contentManager.removeAllContents(true)
+    val connectionManager = connectionManager(project) ?: return
+
     val runSqlText = JPanel(BorderLayout()).apply {
       add(
         JBTextArea("Create a connection to get started.").apply {
@@ -36,6 +44,12 @@ internal class SqlDelightToolWindowFactory(
       content.isCloseable = false
       addContent(content)
     }
+  }
+
+  companion object {
+    const val ID = "SqlDelight"
+
+    private fun connectionManager(project: Project): ConnectionManager? = SqlDelightProjectService.getInstance(project).dialect.connectionManager
   }
 }
 

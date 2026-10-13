@@ -125,6 +125,7 @@ tasks.named('test') {
     languageVersion = JavaLanguageVersion.of(ToolchainConventions.BUILD_JDK)
   }
   environment("ORG_GRADLE_PROJECT_sqldelightVersion", project.version)
+  environment("ORG_GRADLE_PROJECT_sqldelightRepoRoot", rootDir.absolutePath)
 
   if (System.getenv("CI")) {
     reports.html.required = false

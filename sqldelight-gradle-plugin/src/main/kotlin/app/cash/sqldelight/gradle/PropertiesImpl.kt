@@ -2,13 +2,11 @@ package app.cash.sqldelight.gradle
 
 import app.cash.sqldelight.core.SqlDelightCompilationUnit
 import app.cash.sqldelight.core.SqlDelightDatabaseName
+import app.cash.sqldelight.core.SqlDelightDatabaseOptions
 import app.cash.sqldelight.core.SqlDelightDatabaseProperties
 import app.cash.sqldelight.core.SqlDelightPropertiesFile
 import app.cash.sqldelight.core.SqlDelightSourceFolder
 import java.io.File
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Nested
 
 data class SqlDelightPropertiesFileImpl(
   override val databases: List<SqlDelightDatabasePropertiesImpl>,
@@ -17,38 +15,47 @@ data class SqlDelightPropertiesFileImpl(
   override val currentVersion: String,
 ) : SqlDelightPropertiesFile
 
+/**
+ * The settings that decide what gets generated for a database and nothing else. Tasks declare
+ * this whole value as an `@Input`, so it must not carry absolute paths or anything that varies
+ * with how many variants a build happens to configure.
+ */
+data class SqlDelightDatabaseOptionsImpl(
+  override val packageName: String,
+  override val className: String,
+  override val dependencies: List<SqlDelightDatabaseNameImpl>,
+  override val deriveSchemaFromMigrations: Boolean = false,
+  override val treatNullAsUnknownForEquality: Boolean = false,
+  override val generateAsync: Boolean = false,
+  override val expandSelectStar: Boolean = true,
+  override val codegenExcludedColumns: Set<String> = emptySet(),
+) : SqlDelightDatabaseOptions
+
+/**
+ * [options] plus the project layout needed to locate sources. The tooling model builds one with
+ * every compilation unit for the IDE. Tasks build one with a single unit at execution time. This
+ * should not be used as a task input since it carries absolute paths.
+ */
 data class SqlDelightDatabasePropertiesImpl(
-  @Input override val packageName: String,
-  // Not a cache input: the task-specific compilationUnit property already captures the relevant
-  // compilation unit. Including all variants here makes the cache key depend on how many AGP
-  // variants are configured at build time (e.g. CI configures all variants; assembleDebug only
-  // configures debug), causing cache misses between environments.
-  @Internal override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
-  @Input override val className: String,
-  @Nested override val dependencies: List<SqlDelightDatabaseNameImpl>,
-  @Input override val deriveSchemaFromMigrations: Boolean = false,
-  @Input override val treatNullAsUnknownForEquality: Boolean = false,
-  @Input override val generateAsync: Boolean = false,
-  @Input override val expandSelectStar: Boolean = true,
-  @Input override val codegenExcludedColumns: Set<String> = emptySet(),
+  val options: SqlDelightDatabaseOptionsImpl,
+  override val compilationUnits: List<SqlDelightCompilationUnitImpl>,
   // Only used by intellij plugin to help with resolution.
-  @Internal override val rootDirectory: File,
-) : SqlDelightDatabaseProperties
+  override val rootDirectory: File,
+) : SqlDelightDatabaseProperties,
+  SqlDelightDatabaseOptions by options
 
 data class SqlDelightDatabaseNameImpl(
-  @Input override val packageName: String,
-  @Input override val className: String,
+  override val packageName: String,
+  override val className: String,
 ) : SqlDelightDatabaseName
 
 data class SqlDelightCompilationUnitImpl(
-  @Input override val name: String,
-  @Nested override val sourceFolders: Set<SqlDelightSourceFolderImpl>,
-  // Output directory is already cached [SqlDelightTask.outputDirectory].
-  @Internal override val outputDirectoryFile: File,
+  override val name: String,
+  override val sourceFolders: Set<SqlDelightSourceFolderImpl>,
+  override val outputDirectoryFile: File,
 ) : SqlDelightCompilationUnit
 
 data class SqlDelightSourceFolderImpl(
-  // Sources are already cached [SqlDelightTask.getSources]
-  @Internal override val folder: File,
-  @Input override val dependency: Boolean = false,
+  override val folder: File,
+  override val dependency: Boolean = false,
 ) : SqlDelightSourceFolder

@@ -9,9 +9,8 @@ import app.cash.sqldelight.intellij.FileIndex
 import app.cash.sqldelight.intellij.SqlDelightFileIndexImpl
 import app.cash.sqldelight.intellij.notifications.FileIndexingNotification
 import app.cash.sqldelight.intellij.resolvers.SQL_DELIGHT_MODEL_KEY
-import com.intellij.ide.plugins.PluginManagerCore
+import com.intellij.ide.plugins.cl.PluginAwareClassLoader
 import com.intellij.openapi.extensions.PluginDescriptor
-import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.module.Module
 import com.intellij.util.lang.ClassPath
@@ -46,8 +45,7 @@ internal class FileIndexMap {
         return@computeIfAbsent defaultIndex
       }
 
-      val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId("com.squareup.sqldelight"))!!
-
+      val pluginDescriptor = (FileIndexMap::class.java.classLoader as PluginAwareClassLoader).pluginDescriptor
       val shouldInvalidate = pluginDescriptor.addDialect(
         propertiesFile.dialectJars.filterNot { it.path.contains("org.jetbrains.kotlin") }.map { it.toURI() },
       )

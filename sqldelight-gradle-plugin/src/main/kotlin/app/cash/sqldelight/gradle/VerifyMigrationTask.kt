@@ -26,7 +26,6 @@ import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -42,10 +41,6 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /** Directory where the database files are copied for the migration scripts to run against. */
   @get:Internal abstract val workingDirectory: DirectoryProperty
 
-  @get:Nested abstract val properties: Property<SqlDelightDatabasePropertiesImpl>
-
-  @get:Nested abstract val compilationUnit: Property<SqlDelightCompilationUnitImpl>
-
   @get:Input abstract val verifyMigrations: Property<Boolean>
 
   @get:Input abstract val verifyDefinitions: Property<Boolean>
@@ -55,8 +50,12 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
   /* Tasks without an output are never considered UP-TO-DATE by Gradle. Adding an output file that's created when the
    * task completes successfully works around the lack of an output for this task. There may be a better solution once
    * https://github.com/gradle/gradle/issues/14223 is resolved. */
-  @OutputFile
-  internal fun getDummyOutputFile(): File = File(temporaryDir, "success.txt")
+  @get:OutputFile
+  internal abstract val dummyOutputFile: RegularFileProperty
+
+  init {
+    dummyOutputFile.convention(projectLayout.buildDirectory.file("tmp/$name/success.txt"))
+  }
 
   @TaskAction
   fun verifyMigrations() {
@@ -64,12 +63,12 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
     workQueue.submit(VerifyMigrationAction::class.java) {
       it.workingDirectory.set(workingDirectory)
       it.projectName.set(projectName)
-      it.properties.set(properties)
+      it.properties.set(databaseProperties)
       it.verifyMigrations.set(verifyMigrations)
       it.compilationUnit.set(compilationUnit)
       it.verifyDefinitions.set(verifyDefinitions)
       it.driverProperties.set(driverProperties)
-      it.outputFile.set(getDummyOutputFile())
+      it.outputFile.set(dummyOutputFile)
     }
   }
 
@@ -131,7 +130,10 @@ abstract class VerifyMigrationTask : SqlDelightWorkerTask() {
       }
 
       checkForGaps()
-      parameters.outputFile.get().asFile.createNewFile()
+      parameters.outputFile.get().asFile.apply {
+        parentFile.mkdirs()
+        createNewFile()
+      }
     }
 
     private fun createCurrentDb(): CatalogDatabase {

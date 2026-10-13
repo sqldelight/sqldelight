@@ -771,7 +771,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Long,
         |      newVersion: Long,
-        |    ): QueryResult.Value<Unit> {
+        |    ) {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, ""${'"'}
         |            |CREATE TABLE test (
@@ -785,7 +785,6 @@ class QueryWrapperTest {
         |      if (oldVersion <= 2 && newVersion > 2) {
         |        driver.execute(null, "ALTER TABLE test ADD COLUMN value3 REAL", 0)
         |      }
-        |      return QueryResult.Unit
         |    }
         |
         |    override fun migrate(
@@ -890,7 +889,7 @@ class QueryWrapperTest {
         |      driver: SqlDriver,
         |      oldVersion: Long,
         |      newVersion: Long,
-        |    ): QueryResult.Value<Unit> {
+        |    ) {
         |      if (oldVersion <= 0 && newVersion > 0) {
         |        driver.execute(null, "PRAGMA journal_mode=wal", 0)
         |        driver.execute(null, ""${'"'}
@@ -899,7 +898,6 @@ class QueryWrapperTest {
         |            |)
         |            ""${'"'}.trimMargin(), 0)
         |      }
-        |      return QueryResult.Unit
         |    }
         |
         |    override fun migrate(
@@ -1033,5 +1031,29 @@ class QueryWrapperTest {
         """.trimMargin(),
       )
     }
+  }
+
+  @Test fun `capitalized module name generates a lowercase implementation package`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |CREATE TABLE test_table(
+      |  _id INTEGER NOT NULL PRIMARY KEY,
+      |  value TEXT
+      |);
+      """.trimMargin(),
+      tempFolder,
+      moduleName = "TestModule",
+    )
+
+    assertThat(result.errors).isEmpty()
+
+    val queryWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/testmodule/TestDatabaseImpl.kt")]
+    assertThat(queryWrapperFile).isNotNull()
+    assertThat(queryWrapperFile.toString()).contains("package com.example.testmodule")
+
+    val databaseInterfaceFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDatabase.kt")]
+    assertThat(databaseInterfaceFile).isNotNull()
+    assertThat(databaseInterfaceFile.toString()).contains("import com.example.testmodule.newInstance")
+    assertThat(databaseInterfaceFile.toString()).contains("import com.example.testmodule.schema")
   }
 }

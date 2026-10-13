@@ -1,5 +1,5 @@
 SELECT *
 FROM CacheTerritoryPoint
--- error[col 39]: <expr> expected, got 'LIKE'
-WHERE address LIKE ? OR name  LIKE ? OR  LIKE ?
+-- error[col 39]: <expr> expected, got 'BETWEEN'
+WHERE address LIKE ? OR name  LIKE ? OR  BETWEEN ?
 LIMIT ? OFFSET ?;

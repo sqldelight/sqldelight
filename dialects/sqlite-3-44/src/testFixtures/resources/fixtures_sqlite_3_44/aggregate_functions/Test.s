@@ -30,3 +30,20 @@ FROM users;
 SELECT STRING_AGG(name, ', ' ORDER BY created_at DESC)
 FROM users;
 
+
+-- The separator is any expression, not only a string literal
+SELECT GROUP_CONCAT(name, created_at)
+FROM users;
+
+SELECT STRING_AGG(name, created_at)
+FROM users;
+
+SELECT STRING_AGG(name, created_at ORDER BY name)
+FROM users;
+
+SELECT STRING_AGG(name, ', ' || ' ' ORDER BY name)
+FROM users;
+
+SELECT STRING_AGG(name, created_at ORDER BY name)
+   FILTER (WHERE active = 1)
+FROM users;

@@ -1,9 +1,11 @@
 package app.cash.sqldelight.tests
 
+import app.cash.sqldelight.AGP_8_MAX_GRADLE_VERSION
 import app.cash.sqldelight.withCommonConfiguration
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 
 class PluginTest {
@@ -22,6 +24,7 @@ class PluginTest {
   @Test
   fun `Applying the plugin without Kotlin applied throws for Android`() {
     val result = GradleRunner.create()
+      .withGradleVersion(AGP_8_MAX_GRADLE_VERSION)
       .withCommonConfiguration(File("src/test/no-kotlin-android-agp8"))
       .withArguments("build", "--stacktrace")
       .buildAndFail()
@@ -41,8 +44,28 @@ class PluginTest {
   }
 
   @Test
+  fun `Android multiplatform tasks do not resolve database dependencies during configuration`() {
+    val result = GradleRunner.create()
+      .withCommonConfiguration(File("src/test/configuration-time-resolution"))
+      .withArguments(
+        "clean",
+        "compileAndroidMain",
+        "verifyCommonMainDatabaseMigration",
+        "-Pandroid.dependencyResolutionAtConfigurationTime.disallow=true",
+        "--stacktrace",
+      )
+      .build()
+
+    assertThat(result.task(":generateCommonMainDatabaseInterface")!!.outcome)
+      .isEqualTo(TaskOutcome.SUCCESS)
+    assertThat(result.task(":verifyCommonMainDatabaseMigration")!!.outcome)
+      .isEqualTo(TaskOutcome.SUCCESS)
+  }
+
+  @Test
   fun `Applying the android plugin works fine for library projects AGP 8`() {
     val result = GradleRunner.create()
+      .withGradleVersion(AGP_8_MAX_GRADLE_VERSION)
       .withCommonConfiguration(File("src/test/library-project-agp8"))
       .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
       .build()
@@ -56,6 +79,7 @@ class PluginTest {
     buildDir.delete()
 
     val result = GradleRunner.create()
+      .withGradleVersion(AGP_8_MAX_GRADLE_VERSION)
       .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "compileDebugKotlin", "--stacktrace")
       .build()
@@ -209,6 +233,7 @@ class PluginTest {
     assertThat(garbage.exists()).isTrue()
 
     val result = GradleRunner.create()
+      .withGradleVersion(AGP_8_MAX_GRADLE_VERSION)
       .withCommonConfiguration(fixtureRoot)
       .withArguments("clean", "generateDebugDatabaseInterface", "--stacktrace")
       .build()
