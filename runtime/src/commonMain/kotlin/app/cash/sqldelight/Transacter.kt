@@ -201,6 +201,18 @@ interface SuspendingTransacter : TransacterBase {
 
 private class RollbackException(val value: Any? = null) : Throwable()
 
+private inline fun suppressingAnyNewException(thrownException: Throwable?, block: () -> Unit) {
+  if (thrownException == null || thrownException is RollbackException) {
+    block()
+  } else {
+    try {
+      block()
+    } catch (e: Throwable) {
+      thrownException.addSuppressed(e)
+    }
+  }
+}
+
 private class TransactionWrapper<R>(
   val transaction: Transaction,
 ) : TransactionWithoutReturn,
@@ -277,14 +289,8 @@ abstract class BaseTransacterImpl(protected val driver: SqlDriver) {
   protected fun <R> postTransactionCleanup(transaction: Transaction, enclosing: Transaction?, thrownException: Throwable?, returnValue: R?): R {
     if (enclosing == null) {
       if (!transaction.successful || !transaction.childrenSuccessful) {
-        // TODO: If this throws, and we threw in [body] then create a composite exception.
-        try {
+        suppressingAnyNewException(thrownException) {
           transaction.postRollbackHooks.forEach { it.invoke() }
-        } catch (rollbackException: Throwable) {
-          thrownException?.let {
-            throw Throwable("Exception while rolling back from an exception.\nOriginal exception: $thrownException\nwith cause ${thrownException.cause}\n\nRollback exception: $rollbackException", rollbackException)
-          }
-          throw rollbackException
         }
         transaction.postRollbackHooks.clear()
       } else {
@@ -388,7 +394,7 @@ abstract class TransacterImpl(driver: SqlDriver) :
     } catch (e: Throwable) {
       thrownException = e
     } finally {
-      transaction.endTransaction()
+      suppressingAnyNewException(thrownException) { transaction.endTransaction() }
       return postTransactionCleanup(transaction, enclosing, thrownException, returnValue)
     }
   }
@@ -439,7 +445,7 @@ abstract class SuspendingTransacterImpl(driver: SqlDriver) :
     } catch (e: Throwable) {
       thrownException = e
     } finally {
-      transaction.endTransaction().await()
+      suppressingAnyNewException(thrownException) { transaction.endTransaction().await() }
       return postTransactionCleanup(transaction, enclosing, thrownException, returnValue)
     }
   }
