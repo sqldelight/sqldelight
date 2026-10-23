@@ -10,7 +10,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
+import kotlin.test.assertIs
 
 abstract class TransacterTest {
   protected lateinit var transacter: TransacterImpl
@@ -189,10 +189,10 @@ abstract class TransacterTest {
   }
 
   @Test
-  fun anExceptionThrownInPostRollbackFunctionIsCombinedWithTheExceptionInTheMainBody() {
+  fun anExceptionThrownInPostRollbackFunctionIsSuppressedByTheExceptionInTheMainBody() {
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
-    val t = assertFailsWith<Throwable> {
+    val t = assertFailsWith<ExceptionB> {
       transacter.transaction {
         afterRollback {
           throw ExceptionA()
@@ -200,8 +200,7 @@ abstract class TransacterTest {
         throw ExceptionB()
       }
     }
-    assertTrue("Exception thrown in body not in message($t)") { t.toString().contains("ExceptionA") }
-    assertTrue("Exception thrown in rollback not in message($t)") { t.toString().contains("ExceptionB") }
+    assertIs<ExceptionA>(t.suppressedExceptions.single())
   }
 
   @Test
