@@ -1,5 +1,6 @@
 package app.cash.sqldelight.intellij.usages
 
+import app.cash.sqldelight.intellij.util.unwrappingInvocationTarget
 import com.intellij.find.findUsages.FindUsagesHandler
 import com.intellij.find.findUsages.FindUsagesHandlerFactory
 import com.intellij.find.findUsages.FindUsagesOptions
@@ -16,8 +17,8 @@ class ReflectiveKotlinFindUsagesFactory private constructor(
   private val findFunctionOptionsMethod: Method = wrapped.javaClass.getMethod("getFindFunctionOptions")
   private val findPropertyOptionsMethod: Method = wrapped.javaClass.getMethod("getFindPropertyOptions")
 
-  val findFunctionOptions get() = findFunctionOptionsMethod.invoke(wrapped) as FindUsagesOptions
-  val findPropertyOptions get() = findPropertyOptionsMethod.invoke(wrapped) as FindUsagesOptions
+  val findFunctionOptions get() = unwrappingInvocationTarget { findFunctionOptionsMethod.invoke(wrapped) } as FindUsagesOptions
+  val findPropertyOptions get() = unwrappingInvocationTarget { findPropertyOptionsMethod.invoke(wrapped) } as FindUsagesOptions
 
   fun createFindUsagesHandler(element: PsiElement, forHighlightUsages: Boolean): FindUsagesHandler {
     return wrapped.createFindUsagesHandler(element, forHighlightUsages)!!
@@ -50,7 +51,7 @@ class ReflectiveKotlinFindUsagesFactory private constructor(
 
     private fun createKotlinFindUsagesHandlerFactory(project: Project): FindUsagesHandlerFactory {
       val ctor = factoryClass.getConstructor(Project::class.java)
-      return ctor.newInstance(project) as FindUsagesHandlerFactory
+      return unwrappingInvocationTarget { ctor.newInstance(project) } as FindUsagesHandlerFactory
     }
   }
 }
