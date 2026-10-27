@@ -1,0 +1,2 @@
+1.s line 20:19 - id is not a foreign key.
+2.s line 16:19 - id is not a foreign key.
