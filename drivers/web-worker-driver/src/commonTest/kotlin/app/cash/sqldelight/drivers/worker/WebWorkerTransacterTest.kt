@@ -11,8 +11,7 @@ import app.cash.sqldelight.driver.worker.createDefaultWebWorkerDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
-import kotlin.test.fail
+import kotlin.test.assertIs
 
 class WebWorkerTransacterTest {
   private val schema = object : SqlSchema<QueryResult.Value<Unit>> {
@@ -177,24 +176,17 @@ class WebWorkerTransacterTest {
     }
   }
 
-  @Test fun an_exception_thrown_in_postRollback_function_is_combined_with_the_exception_in_the_main_body() = runTest { _, transacter ->
+  @Test fun an_exception_thrown_in_postRollback_function_is_suppressed_by_the_exception_in_the_main_body() = runTest { _, transacter ->
     class ExceptionA : RuntimeException()
     class ExceptionB : RuntimeException()
-    try {
+    val e = assertFailsWith<ExceptionB> {
       transacter.transaction {
         afterRollback {
           throw ExceptionA()
         }
         throw ExceptionB()
       }
-      fail("Should have thrown!")
-    } catch (e: Throwable) {
-      assertTrue("Exception thrown in body not in message($e)") {
-        e.toString().contains("ExceptionA")
-      }
-      assertTrue("Exception thrown in rollback not in message($e)") {
-        e.toString().contains("ExceptionB")
-      }
     }
+    assertIs<ExceptionA>(e.suppressedExceptions.single())
   }
 }

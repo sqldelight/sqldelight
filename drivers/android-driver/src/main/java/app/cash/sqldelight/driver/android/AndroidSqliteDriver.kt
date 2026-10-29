@@ -136,15 +136,18 @@ class AndroidSqliteDriver private constructor(
     override val enclosingTransaction: Transacter.Transaction?,
   ) : Transacter.Transaction() {
     override fun endTransaction(successful: Boolean): QueryResult<Unit> {
-      if (enclosingTransaction == null) {
-        if (successful) {
-          database.setTransactionSuccessful()
-          database.endTransaction()
-        } else {
-          database.endTransaction()
+      try {
+        if (enclosingTransaction == null) {
+          if (successful) {
+            database.setTransactionSuccessful()
+            database.endTransaction()
+          } else {
+            database.endTransaction()
+          }
         }
+      } finally {
+        transactions.set(enclosingTransaction)
       }
-      transactions.set(enclosingTransaction)
       return QueryResult.Unit
     }
   }

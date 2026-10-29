@@ -12,7 +12,7 @@
 
 ### Fixed
 
-- Nothing yet!
+- [Runtime] Keep the transaction body's exception when ending the transaction or a post-rollback hook also fails, for example with `cannot rollback - no transaction is active` after SQLite rolled the transaction back on its own. The second exception is added as suppressed, and the Android driver now clears its current transaction even when `endTransaction()` throws (#6387 by @pyricau)
 
 
 ## [2.4.1] - 2026-10-06
