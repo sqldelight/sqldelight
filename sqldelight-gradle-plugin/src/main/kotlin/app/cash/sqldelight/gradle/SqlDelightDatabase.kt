@@ -55,20 +55,17 @@ abstract class SqlDelightDatabase @Inject constructor(
 
   internal val configuration = project.configurations.create(configurationName).apply {
     isCanBeConsumed = false
-    isVisible = false
     exclude(mapOf("group" to "org.jetbrains.kotlin", "module" to "kotlin-stdlib"))
     exclude(mapOf("group" to "org.jetbrains.kotlin", "module" to "kotlin-reflect"))
   }
 
   private val intellijEnv = project.configurations.create("${name}IntellijEnv").apply {
     isCanBeConsumed = false
-    isVisible = false
     dependencies.add(project.dependencies.create("app.cash.sqldelight:compiler-env:$VERSION"))
   }
 
   private val migrationEnv = project.configurations.create("${name}MigrationEnv").apply {
     isCanBeConsumed = false
-    isVisible = false
     dependencies.add(project.dependencies.create("app.cash.sqldelight:migration-env:$VERSION"))
   }
 
@@ -82,7 +79,6 @@ abstract class SqlDelightDatabase @Inject constructor(
       it.extendsFrom(dependencyScope.get())
       it.isCanBeConsumed = false
       it.isCanBeResolved = true
-      it.isVisible = false
       it.attributes.attribute(
         Usage.USAGE_ATTRIBUTE,
         project.objects.named(Usage::class.java, SQLDELIGHT_SCHEMA_USAGE),
@@ -98,7 +94,6 @@ abstract class SqlDelightDatabase @Inject constructor(
       it.extendsFrom(dependencyScope.get())
       it.isCanBeConsumed = true
       it.isCanBeResolved = false
-      it.isVisible = false
       it.attributes.attribute(
         Usage.USAGE_ATTRIBUTE,
         project.objects.named(Usage::class.java, SQLDELIGHT_SCHEMA_USAGE),
