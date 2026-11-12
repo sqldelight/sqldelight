@@ -17,7 +17,9 @@ package app.cash.sqldelight.core.lang.psi
 
 import app.cash.sqldelight.core.lang.util.type
 import app.cash.sqldelight.dialect.api.IntermediateType
+import com.alecstrong.sql.psi.core.psi.SqlColumnExpr
 import com.alecstrong.sql.psi.core.psi.SqlColumnName
+import com.intellij.psi.PsiNamedElement
 import com.squareup.kotlinpoet.PropertySpec
 
 internal interface TypedColumn {
@@ -33,5 +35,27 @@ internal interface TypedColumn {
   fun adapter(): PropertySpec?
 }
 
-fun SqlColumnName.isColumnSameAs(other: SqlColumnName) = type().let { it.column != null && it.column == other.type().column }
+/**
+ * @return true if both column names refer to the same column of the same table instance in the
+ * query. Two references to the same column definition through different table instances e.g a self
+ * join or a view joined to the table it selects from are not the same column instance.
+ */
+fun SqlColumnName.isColumnSameAs(other: SqlColumnName): Boolean {
+  val column = type().column ?: return false
+  if (column != other.type().column) return false
+  return sourceTable() == other.sourceTable()
+}
+
+/**
+ * The table, alias or view this column name is selected from or null if it cannot be determined.
+ */
+private fun SqlColumnName.sourceTable(): PsiNamedElement? {
+  val resolved = reference?.resolve() ?: return null
+  val tableName = (parent as? SqlColumnExpr)?.tableName
+  return queryAvailable(this)
+    .filter { tableName == null || it.table?.name == tableName.name }
+    .firstOrNull { result -> result.columns.any { it.element == resolved } }
+    ?.table
+}
+
 fun SqlColumnName.isTypeSameAs(other: SqlColumnName) = type().asNonNullable().javaType == other.type().asNonNullable().javaType

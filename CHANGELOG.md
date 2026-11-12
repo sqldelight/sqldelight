@@ -14,6 +14,7 @@
 
 - [Runtime] Keep the transaction body's exception when ending the transaction or a post-rollback hook also fails, for example with `cannot rollback - no transaction is active` after SQLite rolled the transaction back on its own. The second exception is added as suppressed, and the Android driver now clears its current transaction even when `endTransaction()` throws (#6387 by @pyricau)
 - [Gradle Plugin] Configuration.visible property no longer has any effect. The property is now deprecated and will be removed in Gradle 11 (#6394 by @griffio)
+- [IntelliJ Plugin] Fixes join inspection showing a false positive (#6398 by @griffio)
 
 ## [2.4.1] - 2026-10-06
 [2.4.1]: https://github.com/sqldelight/sqldelight/releases/tag/2.4.1
