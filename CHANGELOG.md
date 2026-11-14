@@ -8,7 +8,7 @@
 
 ### Changed
 
-- Nothing yet!
+- [JDBC Driver] `JdbcSqliteDriver.IN_MEMORY` is now `jdbc:sqlite::memory:` (private in-memory database). Pass the literal `jdbc:sqlite:` to keep the previous temporary-file database. Already-compiled callers keep the old URL until they recompile (#4653)
 
 ### Fixed
 

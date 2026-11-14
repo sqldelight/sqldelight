@@ -17,7 +17,7 @@ class IntegrationTests {
   private lateinit var keywordsQueries: SqliteKeywordsQueries
 
   @Before fun before() {
-    val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
+    val database = JdbcSqliteDriver("jdbc:sqlite:test.db")
     QueryWrapper.Schema.create(database)
 
     queryWrapper = QueryWrapper(database)

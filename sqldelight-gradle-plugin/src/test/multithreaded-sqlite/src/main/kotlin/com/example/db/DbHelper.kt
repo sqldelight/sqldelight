@@ -45,7 +45,7 @@ class DbHelper(
   }
 
   private val driver: JdbcSqliteDriver by lazy {
-    JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db", Properties())
+    JdbcSqliteDriver("jdbc:sqlite:test.db", Properties())
   }
 
   private var version: Long

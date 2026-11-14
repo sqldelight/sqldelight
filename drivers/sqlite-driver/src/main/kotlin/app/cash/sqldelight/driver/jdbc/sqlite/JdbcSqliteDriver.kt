@@ -63,7 +63,10 @@ class JdbcSqliteDriver constructor(
   }
 
   companion object {
-    const val IN_MEMORY = "jdbc:sqlite:"
+    /**
+     * A private in-memory database. The temporary-file URL remains the literal `jdbc:sqlite:`.
+     */
+    const val IN_MEMORY = "jdbc:sqlite::memory:"
   }
 }
 

@@ -12,7 +12,7 @@ class DebugIntegrationTests {
   private lateinit var debugQueries: DebugQueries
 
   @Before fun before() {
-    val database = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + "test.db")
+    val database = JdbcSqliteDriver("jdbc:sqlite:test.db")
     QueryWrapper.Schema.create(database)
 
     queryWrapper = QueryWrapper(database)
