@@ -65,4 +65,19 @@ class SyntaxErrors {
       "Test.sq: (2, 16): ')', ',', <column constraint real> or AS expected, got 'as'",
     )
   }
+
+  @Test fun `missing colon after label reports both possible followers`() {
+    val result = FixtureCompiler.compileSql(
+      """
+      |distinctFetchedAt
+      |SELECT DISTINCT(fetchedAt);
+      |
+      """.trimMargin(),
+      tempFolder,
+    )
+
+    assertThat(result.errors).containsExactly(
+      "Test.sq: (2, 0): ':' or '{' expected, got 'SELECT'",
+    )
+  }
 }
