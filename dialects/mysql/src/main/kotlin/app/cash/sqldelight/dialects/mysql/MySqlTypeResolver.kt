@@ -22,6 +22,7 @@ import com.alecstrong.sql.psi.core.psi.SqlBinaryMultExpr
 import com.alecstrong.sql.psi.core.psi.SqlBinaryPipeExpr
 import com.alecstrong.sql.psi.core.psi.SqlExpr
 import com.alecstrong.sql.psi.core.psi.SqlFunctionExpr
+import com.alecstrong.sql.psi.core.psi.SqlLiteralExpr
 import com.alecstrong.sql.psi.core.psi.SqlTypeName
 import com.alecstrong.sql.psi.core.psi.SqlTypes
 import com.intellij.psi.PsiElement
@@ -82,6 +83,16 @@ class MySqlTypeResolver(
             BLOB,
           )
         }
+      }
+      is SqlLiteralExpr -> when {
+        expr.literalValue.numericLiteral != null -> {
+          if (expr.literalValue.text.contains('.')) {
+            IntermediateType(MySqlType.NUMERIC)
+          } else {
+            IntermediateType(MySqlType.INTEGER)
+          }
+        }
+        else -> parentResolver.resolvedType(expr)
       }
       else -> parentResolver.resolvedType(expr)
     }
