@@ -12,6 +12,9 @@ base {
 
 dependencies {
   api projects.runtime
+
+  testImplementation libs.kotlin.test.junit
+  testImplementation libs.sqliteJdbc
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
