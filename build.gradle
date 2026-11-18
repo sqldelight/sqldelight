@@ -45,7 +45,7 @@ allprojects {
     maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
     maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
     // Repo for the backported Android IntelliJ Plugin by Jetbrains used in Ultimate
-    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/" }
+    maven { url "https://packages.jetbrains.team/maven/p/kt/kotlin-ide-plugin-dependencies/" }
   }
 
   tasks.withType(Test).configureEach {
