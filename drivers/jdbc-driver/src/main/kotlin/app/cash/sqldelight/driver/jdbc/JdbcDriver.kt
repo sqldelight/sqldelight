@@ -85,7 +85,7 @@ abstract class JdbcDriver :
   }
 
   override fun Connection.endTransaction() {
-    AutoCloseable { closeConnection(this) }.use {
+    finishWith({ closeConnection(this) }) {
       try {
         commit()
       } catch (commitException: Throwable) {
@@ -103,14 +103,16 @@ abstract class JdbcDriver :
         }
         throw commitException
       }
-      // commit successful, safe to reset
+      // commit was successful, safe to reset
       autoCommit = true
     }
   }
 
-  override fun Connection.rollbackTransaction() = AutoCloseable { closeConnection(this) }.use {
-    rollback()
-    autoCommit = true
+  override fun Connection.rollbackTransaction() {
+    finishWith({ closeConnection(this) }) {
+      rollback()
+      autoCommit = true
+    }
   }
 
   override fun Connection.beginTransaction() {
@@ -355,4 +357,27 @@ class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? = converter(index + 1).takeUnless { resultSet.wasNull() }
 
   override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(resultSet.next())
+}
+
+/**
+ * Equivalent of running `AutoCloseable { finish() }.use { block() }` with matching suppression semantics
+ */
+private inline fun finishWith(finish: () -> Unit, block: () -> Unit) {
+  var thrown: Throwable? = null
+  try {
+    block()
+  } catch (ex: Throwable) {
+    thrown = ex
+    throw ex
+  } finally {
+    try {
+      finish()
+    } catch (finishEx: Throwable) {
+      if (thrown != null) {
+        thrown.addSuppressed(finishEx)
+      } else {
+        throw finishEx
+      }
+    }
+  }
 }
