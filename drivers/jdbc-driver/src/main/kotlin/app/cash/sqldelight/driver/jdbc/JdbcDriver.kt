@@ -85,15 +85,34 @@ abstract class JdbcDriver :
   }
 
   override fun Connection.endTransaction() {
-    commit()
-    autoCommit = true
-    closeConnection(this)
+    finishWith({ closeConnection(this) }) {
+      try {
+        commit()
+      } catch (commitException: Throwable) {
+        try {
+          // From the JDBC docs:
+          //   > If [setAutoCommit] method is called during a transaction and the
+          //   > auto-commit mode is changed, the transaction is committed.
+          // Given we don't know the current state of the transaction after a failed commit, we attempt a rollback
+          // _before_ autoCommit=true to ensure we don't subsequently commit something we're reporting as failed.
+          rollback()
+          // rollback succeeded after commit failure, safe to reset
+          autoCommit = true
+        } catch (ex: Throwable) {
+          commitException.addSuppressed(ex)
+        }
+        throw commitException
+      }
+      // commit was successful, safe to reset
+      autoCommit = true
+    }
   }
 
   override fun Connection.rollbackTransaction() {
-    rollback()
-    autoCommit = true
-    closeConnection(this)
+    finishWith({ closeConnection(this) }) {
+      rollback()
+      autoCommit = true
+    }
   }
 
   override fun Connection.beginTransaction() {
@@ -167,13 +186,23 @@ abstract class JdbcDriver :
   override fun newTransaction(): QueryResult<Transacter.Transaction> {
     val enclosing = transaction
     val connection = enclosing?.connection ?: getConnection()
-    val transaction = Transaction(enclosing, this, connection)
-    this.transaction = transaction
 
+    // open any new transaction before setting it so we don't leak a failed transaction on failure
     if (enclosing == null) {
-      connection.beginTransaction()
+      try {
+        connection.beginTransaction()
+      } catch (ex: Throwable) {
+        try {
+          closeConnection(connection)
+        } catch (closeEx: Throwable) {
+          ex.addSuppressed(closeEx)
+        }
+        throw ex
+      }
     }
 
+    val transaction = Transaction(enclosing, this, connection)
+    this.transaction = transaction
     return QueryResult.Value(transaction)
   }
 
@@ -328,4 +357,27 @@ class JdbcCursor(val resultSet: ResultSet) : SqlCursor {
   private fun <T> getAtIndex(index: Int, converter: (Int) -> T): T? = converter(index + 1).takeUnless { resultSet.wasNull() }
 
   override fun next(): QueryResult.Value<Boolean> = QueryResult.Value(resultSet.next())
+}
+
+/**
+ * Equivalent of running `AutoCloseable { finish() }.use { block() }` with matching suppression semantics
+ */
+private inline fun finishWith(finish: () -> Unit, block: () -> Unit) {
+  var thrown: Throwable? = null
+  try {
+    block()
+  } catch (ex: Throwable) {
+    thrown = ex
+    throw ex
+  } finally {
+    try {
+      finish()
+    } catch (finishEx: Throwable) {
+      if (thrown != null) {
+        thrown.addSuppressed(finishEx)
+      } else {
+        throw finishEx
+      }
+    }
+  }
 }
